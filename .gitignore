@@ -1,0 +1,20 @@
+#sublime text 2 files
+*.sublime-*
+
+#temp files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+#vim swap files
+*.sw*
+
+#emacs temp files
+*~
+\#*#
+
+#project ignores
+node_modules/
+build/*
+docs/*
+!.gitkeep
