@@ -1,15 +1,16 @@
 (function(Z) {
     var worlds = [],
+        entities = [],
         currentWorld = 0;
 
     Z.WorldManager = {
         addWorld: function(world) {
-            //use loader to download world file, and parse
+            //init a tilemap and then add it to `worlds`
         },
         loadWorld: function(world, type) {
-            //default to json type but can also be "tmx"
-            type = type || 'json';
-            //load this world for use (init tilemap, etc)
+            //use loader to download world file, and parse
+            //need to load each texture for each layer (tilelayer types)
+            //need to load each sprite texture for each layer (objectgroup types, with sprite objects)
         }
     }; 
 })(window.ZJS);
