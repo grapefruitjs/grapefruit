@@ -20,7 +20,7 @@
         '   tileIndex = tiles[(pixelCoord.x + (pixelCoord.y * (tilesetSize.x * inverseTileSize.x)))];', //get the index of this coord
         '   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);', //hand this position to WebGL
         '}'
-    ].join("\n");
+    ].join('\n');
 
     var tilemapFS = [
         //"precision highp float;",
@@ -41,14 +41,14 @@
 
         'void main(void) {',
         '   vec2 tileCoord = vec2(tileIndex % tilesetSize.x, tileIndex * inverseTilesetSize.x);', //convert tile index into a coordinate
-        "   vec4 tile = texture2D(tileset, tileCoord);",/* * inverseTilesetSize*/ //load this tile of the tileset
-        "   gl_FragColor = tile;", //hand our texture to WebGL
+        '   vec4 tile = texture2D(tileset, tileCoord);',/* * inverseTilesetSize*/ //load this tile of the tileset
+        '   gl_FragColor = tile;', //hand our texture to WebGL
         '}'
-    ].join("\n");
+    ].join('\n');
 
     //Each tilemap layer is just a Plane entity with the map drawn on it
     Z.TilemapLayer = Z.SceneObject.extend({
-        init: function(layer, tilewidth, tileheight, tilesets) {
+        init: function(layer, tileSize, tilesets) {
             this._super();
             this.parent = parent;
 
@@ -56,7 +56,7 @@
             this.data = layer.data;
             this.name = layer.name;
             this.size = new THREE.Vector2(layer.width, layer.height);
-            this.tileSize = new THREE.Vector2(tilewidth, tileheight);
+            this.tileSize = tileSize;
             //this.offset = new THREE.Vector2(layer.x, layer.y);
 
             this.opacity = layer.opacity;
