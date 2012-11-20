@@ -33,7 +33,7 @@ module.exports = function(grunt) {
             license: 'MIT License',
             licenseUrl: 'http://www.opensource.org/licenses/mit-license.php',
             banner: [
-                '/**!',
+                '/**',
                 ' * @license <%= meta.name %> - v<%= meta.version %>',
                 ' * Copyright (c) 2012, Chad Engler',
                 ' * <%= meta.url %>',
@@ -82,4 +82,5 @@ module.exports = function(grunt) {
 
     //Load tasks
     grunt.registerTask('default', 'concat min');
+    grunt.registerTask('build', 'concat min');
 };
