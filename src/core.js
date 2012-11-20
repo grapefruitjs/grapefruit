@@ -7,11 +7,11 @@
 *
 */
 
-// Setup global ZJS object
+/****************************************************************************
+ * Global ZJS Object
+ ****************************************************************************/
 var document = window.document;
 window.ZJS = {};
-
-
 
 /****************************************************************************
  * Javascript Inheritance Helper (use functional mixins instead?)
