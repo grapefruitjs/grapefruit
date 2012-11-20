@@ -3,7 +3,7 @@
         init: function(set) {
             this.size = new THREE.Vector2(set.imagewidth, set.imageheight);
             this.tileSize = new THREE.Vector2(set.tilewidth, set.tileheight);
-            this.texture = Z.loader.loadTexture(set.image);
+            this.texture = set.texture || throw new Error('No texture defined for tileset');
 
             this.firstgid = set.firstgid;
             this.name = set.name;
