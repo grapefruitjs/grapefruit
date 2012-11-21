@@ -2,6 +2,8 @@ var path = require('path');
 
 module.exports = function(grunt) {
     var fSrc = [
+            '<%= dirs.src %>/vendor/game-shim.js',
+            '<%= dirs.src %>/vendor/eventemitter2.js',
             '<%= dirs.src %>/core.js',
             '<%= dirs.src %>/audio/audio.js',
             '<%= dirs.src %>/controls/controls.js',
@@ -12,13 +14,11 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/entity/Sprite.js',
             '<%= dirs.src %>/gui/gui.js',
             '<%= dirs.src %>/loader/loader.js',
+            '<%= dirs.src %>/renderer/renderer.js',
             '<%= dirs.src %>/utils/utils.js',
-            '<%= dirs.src %>/utils/Emitter.js',
             '<%= dirs.src %>/world/worldManger.js',
             '<%= dirs.src %>/world/Tilemap.js',
-            '<%= dirs.src %>/world/TilemapLayer.js',
-            '<%= dirs.src %>/vendor/game-shim.js',
-            '<%= dirs.src %>/vendor/eventemitter2.js'
+            '<%= dirs.src %>/world/TilemapLayer.js'
         ],
         tSrc = [
         ];
@@ -26,8 +26,8 @@ module.exports = function(grunt) {
     //Project Configuration
     grunt.initConfig({
         meta: {
-            name: 'ZJS Game Engine',
-            fname: 'zjs',
+            name: 'GrapeFruit Game Engine',
+            fname: 'gf',
             version: '0.0.1',
             url: 'http://patherdev.com',
             license: 'MIT License',

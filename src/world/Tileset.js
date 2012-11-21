@@ -1,5 +1,5 @@
-(function(Z) {
-    Z.Tileset = Class.extend({
+(function() {
+    gf.Tileset = Class.extend({
         init: function(set) {
             this.size = new THREE.Vector2(set.imagewidth, set.imageheight);
             this.tileSize = new THREE.Vector2(set.tilewidth, set.tileheight);
@@ -13,4 +13,4 @@
             this.properties = set.properties;
         }
     });
-})(window.ZJS);
+})();

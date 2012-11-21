@@ -1,16 +1,16 @@
-(function(Z) {
-    Z.util = {
+(function() {
+    gf.util = {
         b64: {
             // private property
             _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 
             // public method for encoding
-            encode: window.btoa || function (input) {
+            encode: (window.btoa !== undefined) ? function() { return window.btoa.apply(window, arguments); } : function (input) {
                 var output = "";
                 var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
                 var i = 0;
 
-                input = Z.util.b64._utf8_encode(input);
+                input = gf.util.b64._utf8_encode(input);
 
                 while (i < input.length) {
 
@@ -39,7 +39,7 @@
             },
 
             // public method for decoding
-            decode: window.atob || function (input) {
+            decode: (window.atob !== undefined) ? function() { return window.atob.apply(window, arguments); } : function (input) {
                 var output = "";
                 var chr1, chr2, chr3;
                 var enc1, enc2, enc3, enc4;
@@ -69,7 +69,7 @@
 
                 }
 
-                output = Z.util.b64._utf8_decode(output);
+                output = gf.util.b64._utf8_decode(output);
 
                 return output;
 
@@ -134,4 +134,4 @@
             }
         }
     };
-})(window.ZJS);
+})();

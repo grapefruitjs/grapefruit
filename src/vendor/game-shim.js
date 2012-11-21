@@ -102,7 +102,6 @@
     //=====================
     // Fullscreen
     //=====================
-    
     // document.fullscreenEnabled
     if(!document.hasOwnProperty("fullscreenEnabled")) {
         getter = (function() {
