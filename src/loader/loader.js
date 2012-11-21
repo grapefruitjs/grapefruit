@@ -1,9 +1,9 @@
-(function(Z) {
+(function() {
     //simple memory cache
     var _cache = {};
 
-    Z.resources = {};
-    Z.loader = {
+    gf.resources = {};
+    gf.loader = {
         /**
          * Resource format:
             {
@@ -20,25 +20,31 @@
             }
          */
         load: function(resource, callbacks) {
+            //do this so we can just call load, without having to type the long one
+            if(resource instanceof Array) {
+                gf.loader.loadResources.apply(gf.loader, arguments);
+                return;
+            }
+
             if(typeof callbacks == 'function')
                 callbacks = { load: callbacks };
 
             callbacks = callbacks || {};
 
-            var cached = getCached(resource);
+            var cached = gf.loader._getCached(resource);
 
             if(cached) {
-                Z.resources[resource.name] = resource;
+                gf.resources[resource.name] = resource;
                 if(callbacks.load)
                     callbacks.load(cached);
 
                 return cached;
             }
 
-            if(Z.loader._loaders[resource.type] && Z.loader._loaders[resource.type].load) {
-                Z.loader._setCache(resource);
-                Z.resources[resource.name] = resource;
-                Z.loader._loaders[resource.type].load.apply(this, arguments);
+            if(gf.loader._loaders[resource.type] && gf.loader._loaders[resource.type].load) {
+                gf.loader._setCache(resource);
+                gf.resources[resource.name] = resource;
+                gf.loader._loaders[resource.type].load.apply(this, arguments);
             } else {
                 //at this point we have no loader for this type
                 throw new Error('Unknown resource type: ' + resource.type + ' for res');
@@ -72,9 +78,9 @@
             var done = 0;
 
             for(var r = 0, rl = resources.length; r < rl; ++r) {
-                if(callbacks.start) callbacks.start(resources[i]);
+                if(callbacks.start) callbacks.start(resources[r]);
 
-                Z.loader.load(resources[i], {
+                gf.loader.load(resources[r], {
                     error: callbacks.error,
                     progress: callbacks.progress,
                     load: function() {
@@ -96,13 +102,13 @@
         //Privates for loaders only, not public use
         _loaders: {},
         _getCacheKey: function(resource) {
-            return Z.util.b64.encode(resource.src + '_!_' + resource.type);
+            return gf.util.b64.encode(resource.src + '_!_' + resource.type);
         },
         _getCached: function(resource) {
-            return _cache[Z.loader._getCacheKey(resource)];
+            return _cache[gf.loader._getCacheKey(resource)];
         },
         _setCache: function(resource) {
-            return _cache[Z.loader._getCacheKey(resource)] = resource;
+            return _cache[gf.loader._getCacheKey(resource)] = resource;
         },
         _get: function(url, dataType, progress, cb) {
             $.ajax({
@@ -131,7 +137,7 @@
     };
 
     //Image loader
-    Z.loader._loaders.image = {
+    gf.loader._loaders.image = {
         load: function(resource, callbacks) {
             resource.data = new Image();
             resource.data.addEventListener('load', function() {
@@ -142,9 +148,9 @@
     };
 
     //JSON and XML loaders
-    Z.loader._loaders.json = Z.loader._loaders.xml = {
+    gf.loader._loaders.json = gf.loader._loaders.xml = {
         load: function(resource, callbacks) {
-            Z.loader._get(
+            gf.loader._get(
                 resource.src,
                 resource.type,
                 function(pct) { //progress
@@ -164,7 +170,7 @@
     };
 
     //Texture loader
-    Z.loader._loaders.texture = {
+    gf.loader._loaders.texture = {
         load: function(resource, callbacks) {
             var tloader = new THREE.TextureLoader();
                     
@@ -182,11 +188,11 @@
     };
 
     //World loader, loads a world JSON file and all of its resources listed within
-    Z.loader._loaders.world = {
+    gf.loader._loaders.world = {
         load: function(resource, callbacks) {
             //set the type to json, and load it first
             resource.type = 'json';
-            Z.loader.load(resource, {
+            gf.loader.load(resource, {
                 error: callbacks.error,
                 progress: callbacks.progress,
                 load: function() {
@@ -196,9 +202,9 @@
                     var done = 0, max = 0;
 
                     //loop through each layer and load the sprites (objectgroup types)
-                    for(var i = 0, il = resource.data.layers.length; i < il ++i) {
+                    for(var i = 0, il = resource.data.layers.length; i < il; ++i) {
                         var layer = resource.data.layers[i];
-                        if(layer.type != 'objectgroup') continue;
+                        if(layer.type != gf.types.LAYER.OBJECT_GROUP) continue;
 
                         //loop through each object, and load the textures
                         for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
@@ -207,7 +213,7 @@
 
                             (function(layer, obj) {
                                 addRes();
-                                Z.loader.load(
+                                gf.loader.load(
                                     {
                                         name: layer.name + '_' + obj.name + '_texture',
                                         type: 'texture',
@@ -236,7 +242,7 @@
 
                         (function(set) {
                             addRes();
-                            Z.loader.load(
+                            gf.loader.load(
                                 {
                                     name: set.name + '_texture',
                                     type: 'texture',
@@ -270,4 +276,4 @@
             });
         }
     };
-})(window.ZJS);
+})();

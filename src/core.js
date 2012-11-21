@@ -1,17 +1,17 @@
 /**
-* @license ZJS Game Engine
+* @license GrapeFruit Game Engine
 * Copyright (x) 2012, Chad Engler
 *
-* ZJS is licensed under the MIT License.
+* GrapeFruit is licensed under the MIT License.
 * http://www.opensource.org/licenses/mit-license.php
 *
 */
 
 /****************************************************************************
- * Global ZJS Object
+ * Global GrapeFruit Object
  ****************************************************************************/
 var document = window.document;
-window.ZJS = {
+window.gf = {
     types: {
         ENTITY: {
             PLAYER: 'player',
@@ -19,6 +19,10 @@ window.ZJS = {
             FRIENDLY: 'friendly',
             NEUTRAL: 'neutral',
             COLLECTABLE: 'collectable'
+        },
+        LAYER: {
+            TILE_LAYER: 'tilelayer',
+            OBJECT_GROUP: 'objectgroup'
         }
     }
 };
@@ -89,3 +93,9 @@ Class.extend = function(prop) {
     
     return Class;
 };
+
+//small hack to be able to use EventEmitter2 in the class hierarchy
+EventEmitter2.extend = Class.extend;
+EventEmitter2.prototype.init = EventEmitter2;
+
+gf.Emitter = EventEmitter2;

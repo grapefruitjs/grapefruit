@@ -1,5 +1,5 @@
-(function(Z) {
-    Z.Tilemap = Class.extend({
+(function() {
+    gf.Tilemap = Class.extend({
         //Init Tilemap and all layers
         init: function(map) {
             this.size = new THREE.Vector2(map.width, map.height);
@@ -14,14 +14,15 @@
             this.layers = [];
 
             for(var i = 0, il = map.layers.length; i < il; ++i) {
-                this.addLayer(map.layers[i]);
+                if(map.layers[i].type == gf.types.LAYER.TILE_LAYER)
+                    this.addLayer(map.layers[i]);
             }
 
             //TODO: zones??
         },
         //add a new layer to this tilemap
         addLayer: function(layer) {
-            var tilemapLayer = new Z.TilemapLayer(layer, this.tileSize, this.tilesets);
+            var tilemapLayer = new gf.TilemapLayer(layer, this.tileSize, this.tilesets);
             this.layers.push(tilemapLayer);
 
             //incase they add the map to the scene first, then add layers
@@ -109,4 +110,4 @@
             }
         }
     });
-})(window.ZJS);
+})();

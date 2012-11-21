@@ -1,17 +1,72 @@
-(function(Z) {
-    Z.SceneObject = Z.Emitter.extend({
-        init: function(engine) {
+(function() {
+    gf.SceneObject = gf.Emitter.extend({
+        //for typing arrays as strings in Tiled
+        _arrayDelim: '|',
+
+        //raw mesh that is the actual object in the scene
+        _mesh: null,
+
+        //initialize this scene object
+        init: function(settings) {
             //setup the emitter
             this._super({ wildcard: true, delimiter: '::', maxListeners: 10 });
 
-            this.engine = engine;
             this.animationQueue = [];
+
+            this.setValues(settings);
         },
         addToScene: function(scene) {
             this.scene = scene;
 
             if(this._mesh) scene.add(this._mesh);
         },
+        //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
+        setValues: function(values) {
+            if(!values) return;
+
+            for(var key in values) {
+                var newVal = values[key];
+
+                if(newVal === undefined) {
+                    console.warn('Object parameter "' + key + '" is undefined.');
+                    continue;
+                }
+
+                if(key in this) {
+                    var curVal = this[key];
+
+                    //type massaging
+                    if(typeof curVal === 'number' && typeof newVal === 'string') {
+                        var n;
+                        if(newVal.indexOf('0x') === 0) n = parseInt(newVal, 16);
+                        else n = parseInt(newVal, 10);
+
+                        if(!isNaN(n))
+                            curVal = n;
+                        else
+                            console.warn('Object parameter "' + key + '" evaluated to NaN, using default. Value passed: ' + newVal);
+
+                    } else if(curVal instanceof THREE.Color && typeof newVal === 'number') {
+                        curVal.setHex(newVal);
+                    } else if(curVal instanceof THREE.Vector2 && newVal instanceof Array) {
+                        curVal.set(newVal[0], newVal[1]);
+                    } else if(curVal instanceof THREE.Vector3 && newVal instanceof Array) {
+                        curVal.set(newVal[0], newVal[1], newVal[2]);
+                    } else if(curVal instanceof THREE.Vector2 && typeof newVal === 'string') {
+                        var a = newVal.split(_arrayDelim, 2);
+                        curVal.set(a[0], a[1]);
+                    } else if(curVal instanceof THREE.Vector3 && typeof newVal === 'string') {
+                        var a = newVal.split(this._arrayDelim, 3);
+                        curVal.set(a[0], a[1], a[3]);
+                    } else if(curVal instanceof Array && typeof newVal === 'string') {
+                        curVal = newVal.split(this._arrayDelim);
+                    } else {
+                        this[key] = newVal;
+                    }
+                }
+            }
+        },
+        //set the position of this object in the scene
         setPosition: function(x, y, z) {
             if(!this._mesh) return;
 
@@ -20,9 +75,9 @@
             if(x instanceof THREE.Vector2)
                 this._mesh.position.set(x.x, x.y, zi);
             else if(x instanceof THREE.Vector3)
-                this._mesh.position.set(x.x, x.y, x.z);
+                this._mesh.position.copy(x);
             else
-                this._mesh.position.set(x, y, zi);
+                this._mesh.position.set(x, y, z);
         },
         update: function(delta) {
             //go backwards so we can splice off things without destroying the array iteration
@@ -74,6 +129,7 @@
             }
         },
         //object to aniamte, properties to animate, duration of animation, completed callback
+        //not really "Queue" right now, so much as a "list" of animations. There is no deferal yet
         animate: function(obj, opts) {
             this.animationQueue.push({
                 object: obj,
@@ -86,4 +142,4 @@
             });
         }
     });
-})(window.ZJS);
+})();
