@@ -11,7 +11,17 @@
  * Global ZJS Object
  ****************************************************************************/
 var document = window.document;
-window.ZJS = {};
+window.ZJS = {
+    types: {
+        ENTITY: {
+            PLAYER: 'player',
+            ENEMY: 'enemy',
+            FRIENDLY: 'friendly',
+            NEUTRAL: 'neutral',
+            COLLECTABLE: 'collectable'
+        }
+    }
+};
 
 /****************************************************************************
  * Javascript Inheritance Helper (use functional mixins instead?)
