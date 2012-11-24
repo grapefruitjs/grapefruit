@@ -2,8 +2,6 @@ var path = require('path');
 
 module.exports = function(grunt) {
     var fSrc = [
-            '<%= dirs.src %>/vendor/game-shim.js',
-            '<%= dirs.src %>/vendor/eventemitter2.js',
             '<%= dirs.src %>/core.js',
             '<%= dirs.src %>/audio/audio.js',
             '<%= dirs.src %>/controls/controls.js',
@@ -16,6 +14,7 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/loader/loader.js',
             '<%= dirs.src %>/renderer/renderer.js',
             '<%= dirs.src %>/utils/utils.js',
+            '<%= dirs.src %>/vendor/game-shim.js',
             '<%= dirs.src %>/world/worldManger.js',
             '<%= dirs.src %>/world/Tilemap.js',
             '<%= dirs.src %>/world/TilemapLayer.js'
