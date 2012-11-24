@@ -1,5 +1,6 @@
 (function() {
     gf.util = {
+        isPowerOfTwo: function(x) { return ((x & (x - 1)) === 0); },
         b64: {
             // private property
             _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",

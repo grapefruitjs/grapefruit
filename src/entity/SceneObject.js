@@ -1,5 +1,5 @@
 (function() {
-    gf.SceneObject = gf.Emitter.extend({
+    gf.SceneObject = Class.extend({
         //for typing arrays as strings in Tiled
         _arrayDelim: '|',
 
@@ -8,9 +8,6 @@
 
         //initialize this scene object
         init: function(settings) {
-            //setup the emitter
-            this._super({ wildcard: true, delimiter: '::', maxListeners: 10 });
-
             this.animationQueue = [];
 
             this.setValues(settings);
@@ -19,6 +16,8 @@
             this.scene = scene;
 
             if(this._mesh) scene.add(this._mesh);
+            if(this._outlineMesh) { scene.add(this._outlineMesh); console.log('adding outline to scene'); }
+            if(this._hitboxMesh) scene.add(this._hitboxMesh);
         },
         //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
         setValues: function(values) {
@@ -73,11 +72,28 @@
             var zi = (z !== undefined ? z : (this.zindex ? this.zindex : 0));
 
             if(x instanceof THREE.Vector2)
-                this._mesh.position.set(x.x, x.y, zi);
+                this._doSetPos(x.x, x.y, zi);
             else if(x instanceof THREE.Vector3)
-                this._mesh.position.copy(x);
-            else
-                this._mesh.position.set(x, y, z);
+                this._doSetPos(x.x, x.y, x.z);
+            else if(x instanceof Array) {
+                if(x.length === 2) this._doSetPos(x[0], x[1], zi);
+                else if(x.length === 3) this._doSetPos(x[0], x[1], x[2]);
+            } else
+                this._doSetPos(x, y, z);
+        },
+        _doSetPos: function(x, y, z) {
+            this._mesh.position.set(x, y, z);
+
+            if(this._outlineMesh)
+                this._outlineMesh.position.set(x, y, z);
+
+            if(this._hitboxMesh) {
+                this._hitboxMesh.position.set(x, y, z);
+                if(this.hitOffset) {
+                    this._hitboxMesh.translateX(this.hitOffset.x);
+                    this._hitboxMesh.translateY(this.hitOffset.y);
+                }
+            }
         },
         update: function(delta) {
             //go backwards so we can splice off things without destroying the array iteration

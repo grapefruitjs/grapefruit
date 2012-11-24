@@ -250,12 +250,12 @@
                                 },
                                 {
                                     error: function(err, rsrc) {
-                                        obj.texture = null;
-                                        obj._error = err;
+                                        set.texture = null;
+                                        set._error = err;
                                         resDone();
                                     },
                                     load: function(rsrc) {
-                                        obj.texture = rsrc.data;
+                                        set.texture = rsrc.data;
                                         resDone();
                                     }
                                 }
