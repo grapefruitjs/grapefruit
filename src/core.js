@@ -201,6 +201,8 @@ Class.extend = function(prop) {
         _initialized: false,
 
         init: function(contId, width, height) {
+            if(gf.controls._initialized) return;
+
             //cache the container object
             gf.game._$cont = $('#' + contId);
 
@@ -257,13 +259,14 @@ Class.extend = function(prop) {
             return this;
         },
         checkCollision: function(obj) {
-            for(var i = 0, il = gf.game.objects.length, o; i < il; ++i, o = gf.game.objects[i]) {
+            for(var i = 0, il = gf.game.objects.length; i < il; ++i) {
+                var o = gf.game.objects[i];
                 //check if this object collides with any others
                 if(/*o.inViewport &&*/ o.isVisible && o.isCollidable && /*o.isEntity &&*/ (o != obj)) {
-                    //if this does
-                    if(o.collide.call(o, obj)) {
-                        o.onCollision.call(o, obj);
-                        return this;
+                    var collider = o.intersects(obj);
+                    if(collider) {
+                        o.onCollision(obj);
+                        return collider;
                     }
                 }
             }

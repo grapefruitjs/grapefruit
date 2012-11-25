@@ -36,8 +36,11 @@
         //velocity of the entity
         velocity: new THREE.Vector2(0, 0),
 
-        //acceleration of the entity when moving
-        accel: new THREE.Vector2(250, 250),
+        //max velocity
+        maxVelocity: new THREE.Vector2(10, 10),
+
+        //acceleration of the entity when moving (units per second)
+        accel: new THREE.Vector2(10, 10),
 
         //position of the entity
         pos: new THREE.Vector2(0, 0),
@@ -72,9 +75,6 @@
             else
                 this.createHitboxMesh();
 
-            //if we need to show the outline of this entity, create a mesh to show it
-            //if(gf.debug.showOutline) this.createOutlineMesh();
-
             //set default position
             this.setPosition(this.pos);
         },
@@ -98,17 +98,6 @@
             //set visible
             //this._mesh.visible = this.isVisible;
         },
-        /*createOutlineMesh: function() {
-            this._outlineMaterial = new THREE.MeshBasicMaterial({
-                color: gf.debug.outlineColor,
-                wireframe: true,
-                wireframeLinewidth: 5
-            });
-
-            this._outlineGeom = new THREE.PlaneGeometry(this.scaledSize.x, this.scaledSize.y);
-
-            this._outlineMesh = new THREE.Mesh(this._outlineGeom, this._outlineMaterial);
-        },*/
         createHitboxMesh: function() {
             this._hitboxMaterial = new THREE.MeshBasicMaterial({
                 color: gf.debug.hitboxColor,
@@ -131,6 +120,21 @@
             //if(this._outlineMesh) { scene.add(this._outlineMesh); console.log('adding outline to scene'); }
             if(this._hitboxMesh) scene.add(this._hitboxMesh);
         },
+        moveEntity: function() {
+            //clamp velocity
+            this.velocity.x = Math.max(-this.maxVelocity.x, Math.min(this.maxVelocity.x, this.velocity.x));
+            this.velocity.y = Math.max(-this.maxVelocity.y, Math.min(this.maxVelocity.y, this.velocity.y));
+
+            //TODO: Map collision checks
+            //this.setPosition(this.velocity);
+            this._mesh.translateX(this.velocity.x);
+            this._mesh.translateY(this.velocity.y);
+
+            if(this._hitboxMesh) {
+                this._hitboxMesh.translateX(this.velocity.x);
+                this._hitboxMesh.translateY(this.velocity.y);
+            }
+        },
         _doSetPos: function(x, y, z) {
             this._super(x, y, z);
 
@@ -143,6 +147,8 @@
                     this._hitboxMesh.translateY(this.hitOffset.y);
                 }
             }
-        }
+        },
+        //collision event, param is the object it collides with
+        onCollision: function(obj) {}
     });
 })();
