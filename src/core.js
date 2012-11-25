@@ -13,6 +13,7 @@
 var document = window.document;
 window.gf = {
     types: {
+        //Entity types
         ENTITY: {
             PLAYER: 'player',
             ENEMY: 'enemy',
@@ -20,9 +21,90 @@ window.gf = {
             NEUTRAL: 'neutral',
             COLLECTABLE: 'collectable'
         },
+        //Layer types
         LAYER: {
             TILE_LAYER: 'tilelayer',
             OBJECT_GROUP: 'objectgroup'
+        },
+        //Bindable keycodes
+        KEY: {
+            BACKSPACE: 8,
+            TAB: 9,
+            ENTER: 13,
+            SHIFT: 16,
+            CTRL: 17,
+            ALT: 18,
+            PAUSE: 19,
+            ESC: 27,
+            SPACE: 32,
+            PAGE_UP: 33,
+            PAGE_DOWN: 34,
+            END: 35,
+            HOME: 36,
+            LEFT: 37,
+            UP: 38,
+            RIGHT: 39,
+            DOWN: 40,
+            INSERT: 45,
+            DELETE: 46,
+            NUM0: 48,
+            NUM1: 49,
+            NUM2: 50,
+            NUM3: 51,
+            NUM4: 52,
+            NUM5: 53,
+            NUM6: 54,
+            NUM7: 55,
+            NUM8: 56,
+            NUM9: 57,
+            PLUS: 61,
+            A : 65,
+            B : 66,
+            C : 67,
+            D : 68,
+            E : 69,
+            F : 70,
+            G : 71,
+            H : 72,
+            I : 73,
+            J : 74,
+            K : 75,
+            L : 76,
+            M : 77,
+            N : 78,
+            O : 79,
+            P : 80,
+            Q : 81,
+            R : 82,
+            S : 83,
+            T : 84,
+            U : 85,
+            V : 86,
+            W : 87,
+            X : 88,
+            Y : 89,
+            Z : 90,
+            NUMPAD0: 96,
+            NUMPAD1: 97,
+            NUMPAD2: 98,
+            NUMPAD3: 99,
+            NUMPAD4: 100,
+            NUMPAD5: 101,
+            NUMPAD6: 102,
+            NUMPAD7: 103,
+            NUMPAD8: 104,
+            NUMPAD9: 105,
+            NUMPAD_STAR: 106,
+            NUMPAD_PLUS: 107,
+            NUMPAD_MINUS: 109,
+            NUMPAD_DOT: 110,
+            NUMPAD_SLASH: 111,
+            F1: 112,
+            F2: 113,
+            F3: 114,
+            F4: 115,
+            MINUS: 173,
+            TILDE: 192
         }
     }
 };
@@ -93,3 +175,117 @@ Class.extend = function(prop) {
     
     return Class;
 };
+
+/****************************************************************************
+ * Main game object
+ ****************************************************************************/
+
+(function() {
+    gf.game = {
+        //array of objects in the scene
+        objects: [],
+
+        //maximum Z index, where the camera lies
+        MAX_Z: 300,
+
+        //raw THREE objects that will control rendering
+        _scene: new THREE.Scene(),
+        _clock: new THREE.Clock(false),
+        _renderer: new THREE.WebGLRenderer(),
+        _camera: null,
+
+        //the object that will contain the render domElement
+        _$cont: null,
+
+        //have we initialized the game already?
+        _initialized: false,
+
+        init: function(contId, width, height) {
+            //cache the container object
+            gf.game._$cont = $('#' + contId);
+
+            var w = width || gf.game._$cont.width(),
+                h = height || gf.game._$cont.height();
+
+            //initialize the renderer
+            gf.game._renderer.setSize(w, h);
+            gf.game._$cont.append(gf.game._renderer.domElement);
+
+            //initialize the camera
+            gf.game._camera = new THREE.OrthographicCamera(w / -2, w / 2, h / 2, h / -2, 1, 1000);
+            gf.game._camera.position.z = gf.game.MAX_Z;
+
+            gf.game._scene.add(this.camera);
+
+            //add ambient light to the scene
+            gf.game._scene.add(new THREE.AmbientLight(0xffffff));
+
+            //initialize the controls
+            gf.controls.init();
+
+            //initialize the audio player
+            gf.audio.init();
+
+            //initialize the GUI (HUD, menus, etc)
+            gf.gui.init();
+
+            //fps counter
+            if(gf.debug.showFps) {
+                gf.debug._fpsCounter = new Stats();
+                gf.debug._fpsCounter.domElement.style.position = gf.debug.fpsStyle.position;
+                gf.debug._fpsCounter.domElement.style.top = gf.debug.fpsStyle.top;
+                gf.debug._fpsCounter.domElement.style.left =gf.debug.fpsStyle.left;
+
+                $('body').append(gf.debug._fpsCounter.domElement);
+            }
+
+            gf.game._initialized = true;
+
+            return this;
+        },
+        addObject: function(obj) {
+            gf.game.objects.push(obj);
+
+            if(obj && obj.addToScene)
+                obj.addToScene(gf.game._scene);
+
+            return this;
+        },
+        render: function() {
+            gf.game._clock.start();
+            gf.game._tick();
+            return this;
+        },
+        checkCollision: function(obj) {
+            for(var i = 0, il = gf.game.objects.length, o; i < il; ++i, o = gf.game.objects[i]) {
+                //check if this object collides with any others
+                if(/*o.inViewport &&*/ o.isVisible && o.isCollidable && /*o.isEntity &&*/ (o != obj)) {
+                    //if this does
+                    if(o.collide.call(o, obj)) {
+                        o.onCollision.call(o, obj);
+                        return this;
+                    }
+                }
+            }
+        },
+        _tick: function() {
+            //start render loop
+            requestAnimationFrame(gf.game._tick);
+
+            //get clock delta
+            var delta = gf.game._clock.getDelta();
+
+            //update fps box
+            if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
+
+            //update each object
+            for(var i = 0, il = gf.game.objects.length; i < il; ++i) {
+                //run update for this object
+                gf.game.objects[i].update(delta);
+            }
+
+            //render scene
+            gf.game._renderer.render(gf.game._scene, gf.game._camera);
+        }
+    };
+})();

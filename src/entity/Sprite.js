@@ -8,9 +8,6 @@
         //zindex in the scene
         zindex: 0,
 
-        //visible on screen (do draw)
-        visible: true,
-
         //size of the sprite (each frame)
         size: new THREE.Vector2(0, 0),
 
@@ -22,9 +19,6 @@
 
         //opacity of the sprite
         opacity: 1.0,
-
-        //image url to use as the texture
-        image: '',
 
         //raw THREE.Texture instance loaded by the gf.loader
         texture: null,
@@ -57,32 +51,22 @@
             this.texture.offset.y = 1 - (this.size.y / this.texture.image.height) - (this.offset.y / this.texture.image.height); //convert a topleft offset to a bottomleft offset
 
             //create the geometry, material, and mesh objects
+            this._materials = [];
+
+            this._materials.push(new THREE.MeshBasicMaterial({ map: this.texture, transparent: true }));
+
+            //add outline material if needed
+            if(gf.debug.showOutline) {
+                this._materials.push(new THREE.MeshBasicMaterial({
+                    color: gf.debug.outlineColor,
+                    wireframe: true,
+                    wireframeLinewidth: 5
+                }));
+            }
+
             this._geom = new THREE.PlaneGeometry(this.scaledSize.x, this.scaledSize.y);
-            this._material = new THREE.MeshBasicMaterial({ map: this.texture, transparent: true });
-            this._mesh = new THREE.Mesh(this._geom, this._material);
-
-            /*this._mesh =  new THREE.Sprite({
-                name: this.name || '',
-                map: this.texture,
-                affectedByDistance: true,
-                scaleByViewport: true,
-                useScreenCoordinates: false
-            });
-
-            //set scale to be 1 / number of frames
-            this._mesh.scale.set(this.scale, this.scale);
-
-            //set the offset to the first frame
-            this._mesh.uvOffset.set(
-                1 - (1 / this.numFrames.x),
-                1 - (1 / this.numFrames.y)
-            );
-
-            //uvScale
-            this._mesh.uvScale.set(
-                1 / this.numFrames.x,
-                1 / this.numFrames.y
-            );*/
+            this._mesh = THREE.SceneUtils.createMultiMaterialObject(this._geom, this._materials);//new THREE.Mesh(this._geom, this._material);
+            window._mesh = this._mesh;
         }
     });
 })();
