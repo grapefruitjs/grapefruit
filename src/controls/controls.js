@@ -11,11 +11,18 @@
         //tracks the status of each action
         actstatus: {},
 
+        //have we initialized the controls already?
+        _initialized: false,
+
         init: function() {
+            if(gf.controls._initialized) return;
+
             this.$doc = $(document).on({
                 keydown: $.proxy(this.onKeyDown, this),
                 keyup: $.proxy(this.onKeyUp, this)
             });
+
+            gf.controls._initialized = true;
         },
         //binds an action to a keycode
         bindKey: function(keycode, action, fn) {
@@ -30,7 +37,7 @@
             return this;
         },
         //unbind an action from a keycode
-        unbindKey = function(keycode) {
+        unbindKey: function(keycode) {
             delete this.keybinds[keycode];
 
             //leak callbacks and action status
@@ -41,31 +48,35 @@
         //and call any registered callbacks
         onKeyDown: function(e) {
             //if this key is bound
-            if(keybinds[e.which]) {
+            if(this.keybinds[e.which]) {
                 e.preventDefault();
 
                 //track that this action is active
-                this.actstatus[keybinds[e.which]] = true;
+                this.actstatus[this.keybinds[e.which]] = true;
 
                 //call each callback
-                var cbs = this.callbacks[keybinds[e.which]];
-                for(var i = 0, il = cbs.length; i < il; ++i) {
-                    cbs[i](keybinds[e.which], true);
+                var cbs = this.callbacks[this.keybinds[e.which]];
+                if(cbs) {
+                    for(var i = 0, il = cbs.length; i < il; ++i) {
+                        cbs[i](this.keybinds[e.which], true);
+                    }
                 }
             }
         },
         onKeyUp: function(e) {
             //if this key is bound
-            if(keybinds[e.which]) {
+            if(this.keybinds[e.which]) {
                 e.preventDefault();
 
                 //track that this action is active
-                this.actstatus[keybinds[e.which]] = false;
+                this.actstatus[this.keybinds[e.which]] = false;
 
                 //call each callback
-                var cbs = this.callbacks[keybinds[e.which]];
-                for(var i = 0, il = cbs.length; i < il; ++i) {
-                    cbs[i](keybinds[e.which], false);
+                var cbs = this.callbacks[this.keybinds[e.which]];
+                if(cbs) {
+                    for(var i = 0, il = cbs.length; i < il; ++i) {
+                        cbs[i](this.keybinds[e.which], false);
+                    }
                 }
             }
         },
