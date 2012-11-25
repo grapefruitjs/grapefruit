@@ -1,5 +1,8 @@
 (function() {
     gf.SceneObject = Class.extend({
+        //size of the entity
+        size: new THREE.Vector2(1, 1),
+
         //for typing arrays as strings in Tiled
         _arrayDelim: '|',
 
@@ -16,9 +19,60 @@
             this.scene = scene;
 
             if(this._mesh) scene.add(this._mesh);
-            if(this._outlineMesh) { scene.add(this._outlineMesh); console.log('adding outline to scene'); }
-            if(this._hitboxMesh) scene.add(this._hitboxMesh);
         },
+        //returns a collision vector
+        //similar to https://github.com/obiot/melonJS/blob/master/src/math/geometry.js#L627
+        /**
+        if (v.x != 0 || v.y != 0) //a collision occurred
+        {
+            if (v.x != 0) //we collided on the x axis
+            {
+                // x axis
+                if (v.x<0)
+                    console.log("x axis : left side !");
+                else
+                    console.log("x axis : right side !");
+            }
+            else //we collided on the y axis
+            {
+                // y axis
+                if (v.y<0)
+                    console.log("y axis : top side !");
+                else
+                    console.log("y axis : bottom side !");
+            }
+        
+        }
+        *//*
+        collideVsAABB: function(geom) {
+            //response vector
+            var p = new THREE.Vector2(0, 0);
+
+            //check if both boxes are overlaping
+            if(this.intersects(geom)) {
+                //compute delta between this & geom
+                var tLeft = this.position.x - (this.size.x / 2), //this left
+                    tTop = this.position.y + (this.size.y / 2), //this top
+                    gLeft = geom.position.x - (this.size.x / 2), //geom left
+                    gTop = geom.position.y + (this.size.y / 2), //geom top
+                    dx = tLeft + this.size.x - gLeft - geom.size.x,
+                    dy = tTop + this.size.y - gTop - geom.size.y;
+
+                //compute penetration depth for both axis
+                p.x = (geom.size.x + this.size.x) - (dx < 0 ? -dx : dx); // - Math.abs(dx);
+                p.y = (geom.size.y + this.size.y) - (dy < 0 ? -dy : dy); // - Math.abs(dy);
+
+                //check and "normalize" axis
+                if (p.x < p.y) {
+                    p.y = 0;
+                    p.x = dx < 0 ? -p.x : p.x;
+                } else {
+                    p.x = 0;
+                    p.y = dy < 0 ? -p.y : p.y;
+                }
+            }
+            return p;
+        },*/
         //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
         setValues: function(values) {
             if(!values) return;
@@ -83,19 +137,9 @@
         },
         _doSetPos: function(x, y, z) {
             this._mesh.position.set(x, y, z);
-
-            if(this._outlineMesh)
-                this._outlineMesh.position.set(x, y, z);
-
-            if(this._hitboxMesh) {
-                this._hitboxMesh.position.set(x, y, z);
-                if(this.hitOffset) {
-                    this._hitboxMesh.translateX(this.hitOffset.x);
-                    this._hitboxMesh.translateY(this.hitOffset.y);
-                }
-            }
         },
         update: function(delta) {
+            return;
             //go backwards so we can splice off things without destroying the array iteration
             for(var i = this.animationQueue.length - 1; i >= 0 && this.animationQueue.length; --i) {
                 var item = this.animationQueue[i], ms = delta * 1000;

@@ -2,6 +2,11 @@
     gf.debug = {
         //show fps counter
         showFps: false,
+        fpsStyle: {
+            position: 'absolute',
+            top: '0px',
+            left: '0px'
+        },
 
         //draw hitboxes on entities
         showHitbox: false,
