@@ -1,64 +1,76 @@
 (function() {
     gf.Entity = gf.SceneObject.extend({
-        //Properties that are defined in the `settings` object,
-        //these can be specified in the properties of the object layer
-        //in Tiled, and overriden on a per-object basis
-        type: gf.types.ENTITY.NEUTRAL,
-
-        //scale of the entity
-        scale: 1,
-
-        //can be lifted by another entity
-        isLiftable: false,
-
-        //can be effected by bombs
-        isExplodable: true,
-
-        //can collide with other entities
-        isCollidable: true,
-
-        //can collide with the map when moving
-        isMapCollidable: true,
-
-        //is the entity visible
-        isVisible: true,
-
-        //will break the sprint of an entity that hits this one
-        breakSprint: false,
-
-        //maximum health of this entity
-        maxHealth: 3,
-
-        //current health of this entity
-        health: 3,
-
-        //you can still set these in Tiled by using "x|y" notation
-        //velocity of the entity
-        velocity: new THREE.Vector2(0, 0),
-
-        //max velocity
-        maxVelocity: new THREE.Vector2(10, 10),
-
-        //acceleration of the entity when moving (units per second)
-        accel: new THREE.Vector2(10, 10),
-
-        //position of the entity
-        pos: new THREE.Vector2(0, 0),
-
-        //size of the hitbox
-        hitSize: new THREE.Vector2(0, 0),
-
-        //offset from the center to have the hitbox NOT IMPLEMENTED
-        hitOffset: new THREE.Vector2(0, 0),
-
-        //the name of this entitiy
-        name: '',
-
-        //initializes a new entity with the start position (pos) and
-        //the settings (defined in Tiled)
+        //initializes a new entity with the start position (pos)
+        //and properties (settings). Many of these properties can
+        //be specified in Tiled.
         init: function(pos, settings) {
+            /****************************************************************************
+             * Properties that are defined in the `settings` object,
+             * these can be specified in the properties of the object layer
+             * in Tiled, and overriden on a per-object basis
+             ****************************************************************************/
+            this.type = gf.types.ENTITY.NEUTRAL;
+
+            //scale of the entity
+            this.scale = 1;
+
+            //can be lifted by another entity
+            this.isLiftable = false;
+
+            //can be effected by bombs
+            this.isExplodable = true;
+
+            //can collide with other entities
+            this.isCollidable = true;
+
+            //can collide with the map when moving
+            this.isMapCollidable = true;
+
+            //is the entity visible
+            this.isVisible = true;
+
+            //is cutable by a sword
+            this.isCutable = false;
+
+            //will break the sprint of an entity that hits this one
+            this.breakSprint = false;
+
+            //maximum health of this entity
+            this.maxHealth = 3;
+
+            //current health of this entity
+            this.health = 3;
+
+            //you can still set these in Tiled by using "x|y" notation
+            //velocity of the entity
+            this.velocity = new THREE.Vector2(0, 0);
+
+            //max velocity
+            this.maxVelocity = new THREE.Vector2(10, 10);
+
+            //acceleration of the entity when moving (units per second)
+            this.accel = new THREE.Vector2(10, 10);
+
+            //position of the entity
+            this.pos = new THREE.Vector2(0, 0);
+
+            //size of the hitbox
+            this.hitSize = new THREE.Vector2(0, 0);
+
+            //offset from the center to have the hitbox NOT IMPLEMENTED
+            this.hitOffset = new THREE.Vector2(0, 0);
+
+            //the name of this entitiy
+            this.name = '';
+
+            /****************************************************************************
+             * Call base constructor
+             ****************************************************************************/
             this._super(settings);
 
+            /****************************************************************************
+             * Create the actual object for the scene
+             ****************************************************************************/
             //if the hitbox size isn't set, use the same as normal size
             if(this.hitSize.x === 0 && this.hitSize.y === 0) this.hitSize = this.size.clone();
 
