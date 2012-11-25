@@ -190,6 +190,9 @@
     //World loader, loads a world JSON file and all of its resources listed within
     gf.loader._loaders.world = {
         load: function(resource, callbacks) {
+            if(!resource.texturePath)
+                resource.texturePath = resource.src.substr(0, resource.src.lastIndexOf('/') + 1);
+
             //set the type to json, and load it first
             resource.type = 'json';
             gf.loader.load(resource, {
@@ -217,7 +220,7 @@
                                     {
                                         name: layer.name + '_' + obj.name + '_texture',
                                         type: 'texture',
-                                        src: obj.properties.spritesheet
+                                        src: resource.texturePath + obj.properties.spritesheet
                                     },
                                     {
                                         error: function(err, rsrc) {
@@ -246,7 +249,7 @@
                                 {
                                     name: set.name + '_texture',
                                     type: 'texture',
-                                    src: set.image
+                                    src: resource.texturePath + set.image
                                 },
                                 {
                                     error: function(err, rsrc) {

@@ -1,30 +1,33 @@
 (function() {
     gf.Sprite = gf.Entity.extend({
-        /****************************************************************************
-         * Properties that are defined in the `settings` object,
-         * these can be specified in the properties of the object layer
-         * in Tiled, and overriden on a per-object basis
-         ****************************************************************************/
-        //zindex in the scene
-        zindex: 0,
-
-        //size of the sprite (each frame)
-        size: new THREE.Vector2(0, 0),
-
-        //offset in the image to the first frame (in pixels)
-        offset: new THREE.Vector2(0, 0),
-
-        //number of frames accross x / y (calculated, not set)
-        numFrames: new THREE.Vector2(0, 0),
-
-        //opacity of the sprite
-        opacity: 1.0,
-
-        //raw THREE.Texture instance loaded by the gf.loader
-        texture: null,
-
         //initializes a new entity with the start position (pos) and the settings defined in Tiled
         init: function(pos, settings) {
+            /****************************************************************************
+             * Properties that are defined in the `settings` object,
+             * these can be specified in the properties of the object layer
+             * in Tiled, and overriden on a per-object basis
+             ****************************************************************************/
+            //zindex in the scene
+            this.zindex = 0;
+
+            //size of the sprite (each frame)
+            this.size = new THREE.Vector2(0, 0);
+
+            //offset in the image to the first frame (in pixels)
+            this.offset = new THREE.Vector2(0, 0);
+
+            //number of frames accross x / y (calculated, not set)
+            this.numFrames = new THREE.Vector2(0, 0);
+
+            //opacity of the sprite
+            this.opacity = 1.0;
+
+            //raw THREE.Texture instance loaded by the gf.loader
+            this.texture = null;
+
+            /****************************************************************************
+             * Call base constructor
+             ****************************************************************************/
             this._super(pos, settings);
         },
         //override Entity mesh with a sprite instead

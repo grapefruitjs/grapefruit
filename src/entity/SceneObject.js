@@ -1,16 +1,16 @@
 (function() {
     gf.SceneObject = Class.extend({
-        //size of the entity
-        size: new THREE.Vector2(1, 1),
-
-        //for typing arrays as strings in Tiled
-        _arrayDelim: '|',
-
-        //raw mesh that is the actual object in the scene
-        _mesh: null,
-
         //initialize this scene object
         init: function(settings) {
+            //size of the entity
+            this.size = new THREE.Vector2(1, 1);
+
+            //for typing arrays as strings in Tiled
+            this._arrayDelim = '|';
+
+            //raw mesh that is the actual object in the scene
+            this._mesh = null;
+
             this.animationQueue = [];
 
             this.setValues(settings);

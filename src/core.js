@@ -24,7 +24,17 @@ window.gf = {
         //Layer types
         LAYER: {
             TILE_LAYER: 'tilelayer',
-            OBJECT_GROUP: 'objectgroup'
+            OBJECT_GROUP: 'objectgroup' // each zone is defined as an object group
+        },
+        //Tile collision types
+        COLLISION: {
+            NONE: 0,
+            SOLID: 1,
+            CLIFF: 2,
+            STAIRS: 3,
+            WATER: 4,
+            DEEP_WATER: 5,
+            DAMAGING: 6
         },
         //Bindable keycodes
         KEY: {
@@ -263,6 +273,7 @@ Class.extend = function(prop) {
                 var o = gf.game.objects[i];
                 //check if this object collides with any others
                 if(/*o.inViewport &&*/ o.isVisible && o.isCollidable && /*o.isEntity &&*/ (o != obj)) {
+                    console.log(o);
                     var collider = o.intersects(obj);
                     if(collider) {
                         o.onCollision(obj);
