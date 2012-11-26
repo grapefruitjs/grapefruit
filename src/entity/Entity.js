@@ -1,4 +1,11 @@
 (function() {
+    //Features TODO:
+    // * Movement:
+    //      - Gravity
+    //      - Friction
+    //      - Jumping
+    //      - Falling
+    // * 
     gf.Entity = gf.SceneObject.extend({
         //initializes a new entity with the start position (pos)
         //and properties (settings). Many of these properties can
@@ -13,13 +20,6 @@
 
             //scale of the entity
             this.scale = 1;
-
-            //can be lifted by another entity
-            this.isLiftable = false;
-
-            //can be effected by bombs
-            this.isExplodable = true;
-
             //can collide with other entities
             this.isCollidable = true;
 
@@ -28,12 +28,6 @@
 
             //is the entity visible
             this.isVisible = true;
-
-            //is cutable by a sword
-            this.isCutable = false;
-
-            //will break the sprint of an entity that hits this one
-            this.breakSprint = false;
 
             //maximum health of this entity
             this.maxHealth = 3;
@@ -45,11 +39,8 @@
             //velocity of the entity
             this.velocity = new THREE.Vector2(0, 0);
 
-            //max velocity
-            this.maxVelocity = new THREE.Vector2(10, 10);
-
             //acceleration of the entity when moving (units per second)
-            this.accel = new THREE.Vector2(10, 10);
+            this.accel = new THREE.Vector2(250, 250);
 
             //position of the entity
             this.pos = new THREE.Vector2(0, 0);
@@ -133,9 +124,7 @@
             if(this._hitboxMesh) scene.add(this._hitboxMesh);
         },
         moveEntity: function() {
-            //clamp velocity
-            this.velocity.x = Math.max(-this.maxVelocity.x, Math.min(this.maxVelocity.x, this.velocity.x));
-            this.velocity.y = Math.max(-this.maxVelocity.y, Math.min(this.maxVelocity.y, this.velocity.y));
+            if(this.velocity.isZero()) return;
 
             //TODO: Map collision checks
             //this.setPosition(this.velocity);
@@ -146,6 +135,8 @@
                 this._hitboxMesh.translateX(this.velocity.x);
                 this._hitboxMesh.translateY(this.velocity.y);
             }
+
+            gf.event.publish(gf.types.EVENT.ENTITY_MOVE + '.' + this.name, this.velocity);
         },
         _doSetPos: function(x, y, z) {
             this._super(x, y, z);
@@ -160,7 +151,8 @@
                 }
             }
         },
-        //collision event, param is the object it collides with
-        onCollision: function(obj) {}
+        //event virtuals
+        onCollision: function(obj) {},
+        onMove: function() {}
     });
 })();

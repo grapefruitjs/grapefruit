@@ -19,24 +19,18 @@
 
             }
          */
-        load: function(resource, callbacks) {
+        load: function(resource) {
             //do this so we can just call load, without having to type the long one
             if(resource instanceof Array) {
                 gf.loader.loadResources.apply(gf.loader, arguments);
                 return;
             }
 
-            if(typeof callbacks == 'function')
-                callbacks = { load: callbacks };
-
-            callbacks = callbacks || {};
-
             var cached = gf.loader._getCached(resource);
 
             if(cached) {
                 gf.resources[resource.name] = resource;
-                if(callbacks.load)
-                    callbacks.load(cached);
+                gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, cached);
 
                 return cached;
             }
@@ -44,7 +38,7 @@
             if(gf.loader._loaders[resource.type] && gf.loader._loaders[resource.type].load) {
                 gf.loader._setCache(resource);
                 gf.resources[resource.name] = resource;
-                gf.loader._loaders[resource.type].load.apply(this, arguments);
+                gf.loader._loaders[resource.type].load(resource);
             } else {
                 //at this point we have no loader for this type
                 throw new Error('Unknown resource type: ' + resource.type + ' for res');
@@ -69,34 +63,32 @@
                 complete: function(resources),          //all resources have completed loading
             }
          */
-        loadResources: function(resources, callbacks) {
-            if(typeof callbacks == 'function')
-                callbacks = { complete: callbacks };
-
-            callbacks = callbacks || {};
-
-            var done = 0;
+        loadResources: function(resources) {
+            var done = 0, handles = [];
 
             for(var r = 0, rl = resources.length; r < rl; ++r) {
-                if(callbacks.start) callbacks.start(resources[r]);
+                gf.event.publish(gf.types.EVENT.LOADER_START, resources[r]);
 
-                gf.loader.load(resources[r], {
-                    error: callbacks.error,
-                    progress: callbacks.progress,
-                    load: function() {
-                        if(callbacks.load) callbacks.load.apply(this, arguments);
-
-                        loadDone();
-                    }
+                handles.push({
+                    load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + resources[r].name, loadDone.bind(null, r, null)),
+                    error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + resources[r].name, loadDone.bind(null, r))
                 });
+                gf.loader.load(resources[r]);
             }
 
-            function loadDone() {
+            function loadDone(r, err, resource) {
                 done++;
 
-                if(done >= resources.length && callbacks.complete) {
-                    callbacks.complete(resources);
-                }
+                if(err)
+                    gf.event.publish(gf.types.EVENT.LOADER_ERROR, err, resource);
+                else
+                    gf.event.publish(gf.types.EVENT.LOADER_LOAD, resource);
+
+                gf.event.unsubscribe(handles[r].load);
+                gf.event.unsubscribe(handles[r].error);
+
+                if(done >= resources.length)
+                    gf.event.publish(gf.types.EVENT.LOADER_COMPLETE, resources);
             }
         },
         //Privates for loaders only, not public use
@@ -141,7 +133,7 @@
         load: function(resource, callbacks) {
             resource.data = new Image();
             resource.data.addEventListener('load', function() {
-                if(callbacks.load) callbacks.load(resource);
+                gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, resource);
             }, false);
             resource.data.src = resource.src;
         }
@@ -154,16 +146,16 @@
                 resource.src,
                 resource.type,
                 function(pct) { //progress
-                    if(callbacks.progress) callbacks.progress(pct, resource);
+                    gf.event.publish(gf.types.EVENT.LOADER_PROGRESS + '.' + resource.name, pct, resource);
                 },
                 function(err, data) {
                     if(err) {
-                        if(callbacks.error) callbacks.error(err, resource);
+                        gf.event.publish(gf.types.EVENT.LOADER_ERROR + '.' + resource.name, err, resource);
                         return;
                     }
 
                     resource.data = data;
-                    if(callbacks.load) callbacks.load(resource);
+                    gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, resource);
                 }
             );
         }
@@ -175,12 +167,12 @@
             var tloader = new THREE.TextureLoader();
                     
             tloader.addEventListener('error', function(err) {
-                if(callbacks.error) callbacks.error(err, resource);
+                gf.event.publish(gf.types.EVENT.LOADER_ERROR + '.' + resource.name, err, resource);
             });
 
             tloader.addEventListener('load', function(evt) {
                 resource.data = evt.content;
-                if(callbacks.load) callbacks.load(resource);
+                gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, resource);
             });
 
             tloader.load(resource.src);
@@ -193,90 +185,121 @@
             if(!resource.texturePath)
                 resource.texturePath = resource.src.substr(0, resource.src.lastIndexOf('/') + 1);
 
-            //set the type to json, and load it first
-            resource.type = 'json';
-            gf.loader.load(resource, {
-                error: callbacks.error,
-                progress: callbacks.progress,
-                load: function() {
-                    //set the resource back to world
-                    resource.type = 'world';
+            var handles = {};
 
-                    var done = 0, max = 0;
+            handles.load = gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, function() {
+                //gf.event.unsubscribe(handles.load);
+                //gf.event.unsubscribe(handles.progress);
+                //gf.event.unsubscribe(handles.error);
 
-                    //loop through each layer and load the sprites (objectgroup types)
-                    for(var i = 0, il = resource.data.layers.length; i < il; ++i) {
-                        var layer = resource.data.layers[i];
-                        if(layer.type != gf.types.LAYER.OBJECT_GROUP) continue;
+                //set the resource back to world
+                resource.name = resource._oldName;
+                resource.type = 'world';
 
-                        //loop through each object, and load the textures
-                        for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
-                            var obj = layer.objects[o];
-                            if(!obj.properties.spritesheet) continue;
+                var done = 0, max = 0, lhandles = [], thandles = [];
 
-                            (function(layer, obj) {
-                                addRes();
-                                gf.loader.load(
-                                    {
-                                        name: layer.name + '_' + obj.name + '_texture',
-                                        type: 'texture',
-                                        src: resource.texturePath + obj.properties.spritesheet
-                                    },
-                                    {
-                                        error: function(err, rsrc) {
-                                            obj.properties.texture = null;
-                                            obj.properties._error = err;
-                                            resDone();
-                                        },
-                                        load: function(rsrc) {
-                                            obj.properties.texture = rsrc.data;
-                                            resDone();
-                                        }
-                                    }
-                                );
-                            })(layer, obj);
-                        }
-                    }
+                //loop through each layer and load the sprites (objectgroup types)
+                for(var i = 0, il = resource.data.layers.length; i < il; ++i) {
+                    var layer = resource.data.layers[i];
+                    if(layer.type != gf.types.LAYER.OBJECT_GROUP) continue;
 
-                    //loop through each tileset and load the texture
-                    for(var s = 0, sl = resource.data.tilesets.length; s < sl; ++s) {
-                        var set = resource.data.tilesets[s];
-                        if(!set.image) continue;
+                    //loop through each object, and load the textures
+                    for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
+                        var obj = layer.objects[o];
+                        if(!obj.properties.spritesheet) continue;
 
-                        (function(set) {
+                        (function(layer, obj) {
                             addRes();
-                            gf.loader.load(
-                                {
-                                    name: set.name + '_texture',
-                                    type: 'texture',
-                                    src: resource.texturePath + set.image
-                                },
-                                {
-                                    error: function(err, rsrc) {
-                                        set.texture = null;
-                                        set._error = err;
-                                        resDone();
-                                    },
-                                    load: function(rsrc) {
-                                        set.texture = rsrc.data;
-                                        resDone();
-                                    }
-                                }
-                            )
-                        })(set);
-                    }
-
-                    //for counting downloading resources, and tracking when all are done
-                    function addRes() { max++; }
-                    function resDone() {
-                        done++;
-
-                        if(done >= max) {
-                            callbacks.load(resource);
-                        }
+                            var name = layer.name + '_' + obj.name + '_texture';
+                            lhandles.push({
+                                load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + name, function(rsrc) {
+                                    obj.properties.texture = rsrc.data;
+                                    resDone(o, true, null, rsrc);
+                                }),
+                                error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + name, function(err, rsrc) {
+                                    obj.properties.texture = null;
+                                    obj.properties._error = err;
+                                    resDone(o, true, err, rsrc);
+                                })
+                            });
+                            gf.loader.load({
+                                name: layer.name + '_' + obj.name + '_texture',
+                                type: 'texture',
+                                src: resource.texturePath + obj.properties.spritesheet
+                            });
+                        })(layer, obj);
                     }
                 }
+
+                //loop through each tileset and load the texture
+                for(var s = 0, sl = resource.data.tilesets.length; s < sl; ++s) {
+                    var set = resource.data.tilesets[s];
+                    if(!set.image) continue;
+
+                    (function(set) {
+                        addRes();
+                        var name = set.name + '_texture';
+                        thandles.push({
+                            load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + name, function(rsrc) {
+                                set.texture = rsrc.data;
+                                resDone(o, false, null, rsrc);
+                            }),
+                            error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + name, function(err, rsrc) {
+                                set.texture = null;
+                                set._error = err;
+                                resDone(o, false, err, rsrc);
+                            })
+                        });
+                        gf.loader.load({
+                            name: set.name + '_texture',
+                            type: 'texture',
+                            src: resource.texturePath + set.image
+                        });
+                    })(set);
+                }
+
+                //for counting downloading resources, and tracking when all are done
+                function addRes() { max++; }
+                function resDone(i, layer, err, rsrc) {
+                    done++;
+
+                    if(err)
+                        gf.event.publish(gf.types.EVENT.LOADER_ERROR + '.' + rsrc.name, err, rsrc);
+                    else
+                        gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + rsrc.name, rsrc);
+
+                    if(layer) {
+                        gf.event.unsubscribe(lhandles[i].load);
+                        gf.event.unsubscribe(lhandles[i].error);
+                    } else {
+                        gf.event.unsubscribe(thandles[i].load);
+                        gf.event.unsubscribe(thandles[i].error);
+                    }
+
+                    if(done >= max)
+                        gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, resource);
+                }
             });
+
+            handles.error = gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + resource.name, function(err, resource) {
+                //gf.event.unsubscribe(handles.load);
+                //gf.event.unsubscribe(handles.progress);
+                //gf.event.unsubscribe(handles.error);
+
+                gf.event.publish(gf.types.EVENT.LOADER_PROGRESS + '.' + resource._oldName, err, resource);
+            });
+
+            handles.progress = gf.event.subscribe(gf.types.EVENT.LOADER_PROGRESS + '.' + resource.name, function(pct, resource) {
+                gf.event.publish(gf.types.EVENT.LOADER_PROGRESS + '.' + resource._oldName, pct, resource);
+            });
+
+
+            //set the type to json, and load it first
+            resource._oldName = resource.name;
+            resource.name = resource.name + '_json';
+            resource.type = 'json';
+
+            gf.loader.load(resource);
         }
     };
 })();

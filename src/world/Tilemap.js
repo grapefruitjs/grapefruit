@@ -22,7 +22,7 @@
         },
         //add a new layer to this tilemap
         addLayer: function(layer) {
-            var tilemapLayer = new gf.TilemapLayer(layer, this.tileSize, this.tilesets, this.layers.length);
+            var tilemapLayer = new gf.TilemapLayer(layer, this.tileSize, this.tilesets, this.layers.length, this.properties.scale || 1);
             this.layers.push(tilemapLayer);
 
             //incase they add the map to the scene first, then add layers

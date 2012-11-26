@@ -15,6 +15,7 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/renderer/renderer.js',
             '<%= dirs.src %>/utils/utils.js',
             '<%= dirs.src %>/vendor/game-shim.js',
+            '<%= dirs.src %>/vendor/pubsub.js',
             '<%= dirs.src %>/world/worldManger.js',
             '<%= dirs.src %>/world/Tilemap.js',
             '<%= dirs.src %>/world/TilemapLayer.js'
