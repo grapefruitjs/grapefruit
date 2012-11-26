@@ -71,7 +71,7 @@
 
     //Each tilemap layer is just a Plane object with the map drawn on it
     gf.TilemapLayer = gf.SceneObject.extend({
-        init: function(layer, tileSize, tilesets, zIndex) {
+        init: function(layer, tileSize, tilesets, zIndex, scale) {
             this._super();
             //this.parent = parent;
 
@@ -89,7 +89,7 @@
 
             this.repeat = false;
             this.filtered = false;
-            this.scale = 1.0;
+            this.scale = scale;
 
             //set maps
             this.tileset = tilesets[0].texture;

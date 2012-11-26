@@ -36,6 +36,10 @@ window.gf = {
             DEEP_WATER: 5,
             DAMAGING: 6
         },
+        //pubsub events
+        EVENT: {
+            ENTITY_MOVE: 'gf.entity.move'
+        },
         //Bindable keycodes
         KEY: {
             BACKSPACE: 8,
@@ -281,6 +285,18 @@ Class.extend = function(prop) {
                     }
                 }
             }
+        },
+        //lock the camera on an entity
+        //I need an event system :/
+        cameraTrack: function(ent) {
+            if(this._entMoveHandle) {
+                gf.event.unsubscribe(this._entMoveHandle);
+            }
+
+            this._entMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.name, function(velocity) {
+                gf.game._camera.translateX(velocity.x);
+                gf.game._camera.translateY(velocity.y);
+            });
         },
         _tick: function() {
             //start render loop
