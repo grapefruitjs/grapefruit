@@ -56,11 +56,10 @@
         '   vec4 tileId = texture2D(tileIds, texCoord);', //grab this tileId from the layer data
         '   tileId.rgba = tileId.abgr;', //flip flop due to endianess
         '   float tileValue = decode32(tileId);', //decode the vec4 into the float ID
-        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.y), floor(tileValue / numTiles.y));', //convert the ID into x, y coords
-        '   vec2 offset = floor(tileLoc * 256.0) * tileSize;', //offset in the tileset
-        '   vec2 coord = mod(pixelCoord, tileSize);', //coord of this tile
-        '   gl_FragColor = texture2D(tileset, (offset + coord) * inverseTilesetSize);', //grab tile from tilset
-        //'   gl_FragColor = texture2D(tileset, coord * inverseTilesetSize);',
+        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.y), tileValue / numTiles.y);', //convert the ID into x, y coords
+        '   vec2 coord = floor(tileLoc * 256.0) * tileSize;', //coord in the tileset
+        '   vec2 offset = mod(pixelCoord, tileSize);', //how much to draw
+        '   gl_FragColor = texture2D(tileset, (coord + offset) * inverseTilesetSize);', //grab tile from tilset
         '}'
     ].join('\n');
 
@@ -117,7 +116,7 @@
 
             //Setup Tileset
             this.tileset.wrapS = this.tileset.wrapT = THREE.ClampToEdgeWrapping;
-            this.tileset.flipY = false;
+            //this.tileset.flipY = false;
             if(this.filtered) {
                 this.tileset.magFilter = THREE.LinearFilter;
                 this.tileset.minFilter = THREE.LinearMipMapLinearFilter;//THREE.LinearFilter;
