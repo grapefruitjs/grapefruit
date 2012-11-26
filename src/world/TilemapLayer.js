@@ -63,7 +63,8 @@
         //'   if(tileId.g > 0.08 && tileId.b > 0.2431) { discard; }',
         '   float tileValue = decode24(tileId);', //decode the normalized vec4 into the float ID
         //'   if(tileValue == 5438.0) { discard; }',
-        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.x) - 1.0, floor(tileValue / numTiles.x));', //convert the ID into x, y coords
+        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.x) - 1.0, floor(tileValue / numTiles.x));', //convert the ID into x, y coords;
+        '   tileLoc.y = numTiles.y - 1.0 - tileLoc.y;', //convert the coord from bottomleft to topleft
 
         '   vec2 offset = floor(tileLoc) * tileSize;', //offset in the tileset
         '   vec2 coord = mod(pixelCoord, tileSize);', //coord of the tile.
@@ -134,7 +135,7 @@
 
             //Setup Tileset
             this.tileset.wrapS = this.tileset.wrapT = THREE.ClampToEdgeWrapping;
-            this.tileset.flipY = false;
+            //this.tileset.flipY = false;
             if(this.filtered) {
                 this.tileset.magFilter = THREE.LinearFilter;
                 this.tileset.minFilter = THREE.LinearMipMapLinearFilter;//THREE.LinearFilter;
