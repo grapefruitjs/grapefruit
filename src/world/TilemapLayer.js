@@ -16,9 +16,11 @@
         //'uniform sampler2D tileIds;'
         //'uniform int repeatTiles;',
         //'uniform float opacity;',
+        'uniform float bias;',
+        'uniform float inverseScale;',
 
         'void main(void) {',
-        '   pixelCoord = (uv * mapSize);',
+        '   pixelCoord = (uv * mapSize) - ((1.0 - bias) * inverseScale);', //this bias fixes a strange wrapping error
         '   texCoord = pixelCoord * inverseLayerSize * inverseTileSize;', //calculate the coord on this map
         '   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);', //hand this position to WebGL
         '}'
@@ -42,6 +44,8 @@
         'uniform sampler2D tileIds;',
         'uniform int repeatTiles;',
         'uniform float opacity;',
+        'uniform float bias;',
+        'uniform float inverseScale;',
 
         'float decode24(vec3 rgb) {',
         '   const vec3 bit_shift = vec3((256.0*256.0), 256.0, 1.0);',
@@ -55,10 +59,10 @@
         '   vec3 tileId = texture2D(tileIds, texCoord).rgb;', //grab this tileId from the layer data
         //'   tileId.rgb = tileId.bgr;', //if some hardware is different endian (little?) then we need to flip here
         '   float tileValue = decode24(tileId);', //decode the normalized vec3 into the float ID
-        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.x) - 0.5, tileValue / numTiles.x);', //convert the ID into x, y coords; the 0.5 fixes a precision error by making the later floor go down by 1
+        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.x) - (bias * inverseScale), tileValue / numTiles.x);', //convert the ID into x, y coords; the bias fixes a precision error by making the later floor go down by 1
         '   tileLoc.y = numTiles.y - tileLoc.y;', //convert the coord from bottomleft to topleft
 
-        '   vec2 offset = (floor(tileLoc) * tileSize) + 0.1;', //offset in the tileset; the 0.1 bias reduces tearing between tiles where it just shows space
+        '   vec2 offset = (floor(tileLoc) * tileSize) + (bias * inverseScale);', //offset in the tileset; the bias removes the spacing between tiles
         '   vec2 coord = mod(pixelCoord, tileSize);', //coord of the tile
 
         '   vec4 color = texture2D(tileset, (offset + coord) * inverseTilesetSize);', //grab tile from tileset
@@ -158,7 +162,9 @@
                 tileset:            { type: 't', value: this.tileset },
                 tileIds:            { type: 't', value: this.dataTex },
                 repeatTiles:        { type: 'i', value: this.repeat ? 1 : 0 },
-                opacity:            { type: 'f', value: this.opacity }
+                opacity:            { type: 'f', value: this.opacity },
+                bias:               { type: 'f', value: 0.1 },
+                inverseScale:       { type: 'f', value: 1 / this.scale }
             };
 
             //create the shader material
