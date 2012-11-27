@@ -38,7 +38,12 @@ window.gf = {
         },
         //pubsub events
         EVENT: {
-            ENTITY_MOVE: 'gf.entity.move'
+            ENTITY_MOVE: 'gf.entity.move',
+            LOADER_START: 'gf.loader.start',
+            LOADER_ERROR: 'gf.loader.error',
+            LOADER_PROGRESS: 'gf.loader.progress',
+            LOADER_LOAD: 'gf.loader.load',
+            LOADER_COMPLETE: 'gf.loader.complete'
         },
         //Bindable keycodes
         KEY: {

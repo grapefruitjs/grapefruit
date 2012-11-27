@@ -87,6 +87,8 @@
                 gf.event.unsubscribe(handles[r].load);
                 gf.event.unsubscribe(handles[r].error);
 
+                handles[r] = null;
+
                 if(done >= resources.length)
                     gf.event.publish(gf.types.EVENT.LOADER_COMPLETE, resources);
             }
@@ -185,6 +187,11 @@
             if(!resource.texturePath)
                 resource.texturePath = resource.src.substr(0, resource.src.lastIndexOf('/') + 1);
 
+            //set the type to json, and load it first
+            resource._oldName = resource.name;
+            resource.name = resource.name + '_json';
+            resource.type = 'json';
+
             var handles = {};
 
             handles.load = gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, function() {
@@ -208,7 +215,7 @@
                         var obj = layer.objects[o];
                         if(!obj.properties.spritesheet) continue;
 
-                        (function(layer, obj) {
+                        (function(layer, obj, o) {
                             addRes();
                             var name = layer.name + '_' + obj.name + '_texture';
                             lhandles.push({
@@ -227,7 +234,7 @@
                                 type: 'texture',
                                 src: resource.texturePath + obj.properties.spritesheet
                             });
-                        })(layer, obj);
+                        })(layer, obj, o);
                     }
                 }
 
@@ -236,37 +243,34 @@
                     var set = resource.data.tilesets[s];
                     if(!set.image) continue;
 
-                    (function(set) {
+                    (function(set, s) {
                         addRes();
                         var name = set.name + '_texture';
                         thandles.push({
                             load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + name, function(rsrc) {
                                 set.texture = rsrc.data;
-                                resDone(o, false, null, rsrc);
+                                resDone(s, false, null, rsrc);
                             }),
                             error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + name, function(err, rsrc) {
                                 set.texture = null;
                                 set._error = err;
-                                resDone(o, false, err, rsrc);
+                                resDone(s, false, err, rsrc);
                             })
                         });
                         gf.loader.load({
-                            name: set.name + '_texture',
+                            name: name,
                             type: 'texture',
                             src: resource.texturePath + set.image
                         });
-                    })(set);
+                    })(set, s);
                 }
+
+                if(max === 0) gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, resource);
 
                 //for counting downloading resources, and tracking when all are done
                 function addRes() { max++; }
                 function resDone(i, layer, err, rsrc) {
                     done++;
-
-                    if(err)
-                        gf.event.publish(gf.types.EVENT.LOADER_ERROR + '.' + rsrc.name, err, rsrc);
-                    else
-                        gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + rsrc.name, rsrc);
 
                     if(layer) {
                         gf.event.unsubscribe(lhandles[i].load);
@@ -292,12 +296,6 @@
             handles.progress = gf.event.subscribe(gf.types.EVENT.LOADER_PROGRESS + '.' + resource.name, function(pct, resource) {
                 gf.event.publish(gf.types.EVENT.LOADER_PROGRESS + '.' + resource._oldName, pct, resource);
             });
-
-
-            //set the type to json, and load it first
-            resource._oldName = resource.name;
-            resource.name = resource.name + '_json';
-            resource.type = 'json';
 
             gf.loader.load(resource);
         }

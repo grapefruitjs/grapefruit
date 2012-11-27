@@ -11,7 +11,6 @@
         //'uniform vec2 tileSize;',
         'uniform vec2 inverseTileSize;',
         //'uniform vec2 numTiles;',
-        'uniform float scale;',
 
         //'uniform sampler2D tileset;',
         //'uniform sampler2D tileIds;'
@@ -38,14 +37,13 @@
         'uniform vec2 tileSize;',
         //'uniform vec2 inverseTileSize;',
         'uniform vec2 numTiles;',
-        //'uniform float scale;',
 
         'uniform sampler2D tileset;',
         'uniform sampler2D tileIds;',
         'uniform int repeatTiles;',
         'uniform float opacity;',
 
-        'float decode24(const in vec3 rgb) {',
+        'float decode24(vec3 rgb) {',
         '   const vec3 bit_shift = vec3((256.0*256.0), 256.0, 1.0);',
         '   float fl = dot(rgb, bit_shift);', //shift the values appropriately
         '   return fl * 255.0;', //denormalize the value
@@ -57,11 +55,11 @@
         '   vec3 tileId = texture2D(tileIds, texCoord).rgb;', //grab this tileId from the layer data
         //'   tileId.rgb = tileId.bgr;', //if some hardware is different endian (little?) then we need to flip here
         '   float tileValue = decode24(tileId);', //decode the normalized vec3 into the float ID
-        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.x) - 1.0, floor(tileValue / numTiles.x));', //convert the ID into x, y coords;
-        '   tileLoc.y = numTiles.y - 1.0 - tileLoc.y;', //convert the coord from bottomleft to topleft
+        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.x) - 0.5, tileValue / numTiles.x);', //convert the ID into x, y coords; the 0.5 fixes a precision error by making the later floor go down by 1
+        '   tileLoc.y = numTiles.y - tileLoc.y;', //convert the coord from bottomleft to topleft
 
-        '   vec2 offset = floor(tileLoc) * tileSize;', //offset in the tileset
-        '   vec2 coord = mod(pixelCoord, tileSize);', //coord of the tile.
+        '   vec2 offset = (floor(tileLoc) * tileSize) + 0.1;', //offset in the tileset; the 0.1 bias reduces tearing between tiles where it just shows space
+        '   vec2 coord = mod(pixelCoord, tileSize);', //coord of the tile
 
         '   vec4 color = texture2D(tileset, (offset + coord) * inverseTilesetSize);', //grab tile from tileset
         '   color.a = opacity;',
@@ -123,10 +121,10 @@
             //this.tileset.flipY = false;
             if(this.filtered) {
                 this.tileset.magFilter = THREE.LinearFilter;
-                this.tileset.minFilter = THREE.LinearMipMapLinearFilter;//THREE.LinearFilter;
+                this.tileset.minFilter = THREE.LinearMipMapLinearFilter;
             } else {
                 this.tileset.magFilter = THREE.NearestFilter;
-                this.tileset.minFilter = THREE.NearestMipMapNearestFilter;//THREE.NearestFilter;
+                this.tileset.minFilter = THREE.NearestMipMapNearestFilter;
             }
             //setup shader uniforms
             //
@@ -156,7 +154,6 @@
                 tileSize:           { type: 'v2', value: this.tileSize },
                 inverseTileSize:    { type: 'v2', value: new THREE.Vector2(1 / this.tileSize.x, 1 / this.tileSize.y) },
                 numTiles:           { type: 'v2', value: new THREE.Vector2(this.tileset.image.width / this.tileSize.x, this.tileset.image.height / this.tileSize.y) },
-                scale:              { type: 'f', value: 1 / this.scale },
 
                 tileset:            { type: 't', value: this.tileset },
                 tileIds:            { type: 't', value: this.dataTex },
