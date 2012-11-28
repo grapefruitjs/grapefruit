@@ -15,5 +15,9 @@
         //draw outline around entities
         showOutline: false,
         outlineColor: new THREE.Color(0x000000),
+
+        //draw map collision points
+        showMapColliders: false,
+        solidMapColor: new THREE.Color(0xff0000)
     };
 })();
