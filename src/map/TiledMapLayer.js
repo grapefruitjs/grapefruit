@@ -163,7 +163,7 @@
             };
 
             if(gf.debug.accessTiledUniforms)
-                gf.debug._tiledUniforms.push(this._uniforms);
+                gf.debug.tiledUniforms.push(this._uniforms);
 
             //create the shader material
             this._material = new THREE.ShaderMaterial({

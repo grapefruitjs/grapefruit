@@ -124,6 +124,12 @@ window.gf = window.gf || {
             MINUS: 173,
             TILDE: 192
         }
+    },
+    support: {
+        canvas: !! window.CanvasRenderingContext2D,
+        webgl: ( function () { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } } )(),
+        workers: !! window.Worker,
+        fileapi: window.File && window.FileReader && window.FileList && window.Blob,
     }
 };
 
@@ -209,7 +215,7 @@ Class.extend = function(prop) {
         //raw THREE objects that will control rendering
         _scene: new THREE.Scene(),
         _clock: new THREE.Clock(false),
-        _renderer: new THREE.WebGLRenderer(),
+        _renderer: null,
         _camera: null,
 
         //id for the next entity to be added
@@ -221,8 +227,45 @@ Class.extend = function(prop) {
         //have we initialized the game already?
         _initialized: false,
 
-        init: function(contId, width, height) {
+        init: function(contId, width, height, renderMethod) {
             if(gf.controls._initialized) return;
+
+            //if they speciy a method, check if it is available
+            if(renderMethod) {
+                if(!gf.support[renderMethod]) {
+                    throw 'Render method ' + renderMethod + ' is not supported by this browser!';
+                    return;
+                }
+            }
+            //if they don't specify a method, guess the best to use
+            else {
+                if(gf.support.webgl) renderMethod = 'webgl';
+                else if(gf.support.canvas) renderMethod = 'canvas';
+                else {
+                    throw 'Neither WebGL nor Canvas is supported by this browser!';
+                    return;
+                }
+            }
+
+            //initialize the correct renderer
+            if(renderMethod == 'webgl') {
+                gf.game._renderer = new THREE.WebGLRenderer({
+                    //can also specify 'canvas' dom element, but we just let THREE generate one
+                    precision: 'highp',
+                    alpha: true,
+                    premultipliedAlpha: true,
+                    antialias: false,
+                    clearColor: 0xff00ff,
+                    clearAlpha: 0,
+                    maxLights: 4
+                });
+            } else if(renderMethod == 'canvas') {
+                gf.game._renderer = new THREE.CanvasRenderer({
+                    //can also specify 'canvas' dom element, but we just let THREE generate one
+                });
+            }
+
+            gf.game._renderMethod = renderMethod;
 
             //cache the container object
             gf.game._$cont = $('#' + contId);

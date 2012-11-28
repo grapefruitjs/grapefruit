@@ -5,6 +5,10 @@
     gf.TiledMap = gf.Map.extend({
         //Init Tilemap and all layers
         init: function(map) {
+            if(!gf.support.webgl) {
+                throw 'TiledMap is only supported using WebGL rendering.';
+            }
+
             this._super(map);
 
             //tile size
