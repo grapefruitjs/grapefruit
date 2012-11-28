@@ -7,9 +7,6 @@
              * these can be specified in the properties of the object layer
              * in Tiled, and overriden on a per-object basis
              ****************************************************************************/
-            //zindex in the scene
-            this.zindex = 0;
-
             //size of the sprite (each frame)
             this.size = new THREE.Vector2(0, 0);
 
@@ -31,7 +28,9 @@
             this._super(pos, settings);
         },
         //override Entity mesh with a sprite instead
-        createMesh: function() {
+        _createMesh: function() {
+            if(this._mesh) return;
+
             if(this.filtered) {
                 this.texture.magFilter = THREE.LinearFilter;
                 this.texture.minFilter = THREE.LinearMipMapLinearFilter;
@@ -69,7 +68,6 @@
 
             this._geom = new THREE.PlaneGeometry(this.scaledSize.x, this.scaledSize.y);
             this._mesh = THREE.SceneUtils.createMultiMaterialObject(this._geom, this._materials);//new THREE.Mesh(this._geom, this._material);
-            window._mesh = this._mesh;
         }
     });
 })();

@@ -96,7 +96,7 @@
         //Privates for loaders only, not public use
         _loaders: {},
         _getCacheKey: function(resource) {
-            return gf.util.b64.encode(resource.src + '_!_' + resource.type);
+            return gf.utils.b64.encode(resource.src + '_!_' + resource.type);
         },
         _getCached: function(resource) {
             return _cache[gf.loader._getCacheKey(resource)];

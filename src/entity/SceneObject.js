@@ -5,6 +5,8 @@
             //size of the entity
             this.size = new THREE.Vector2(1, 1);
 
+            this.zIndex = settings.zIndex || 0;
+
             //for typing arrays as strings in Tiled
             this._arrayDelim = '|';
 
@@ -19,6 +21,11 @@
             this.scene = scene;
 
             if(this._mesh) scene.add(this._mesh);
+        },
+        removeFromScene: function(scene) {
+            this.scene = null;
+
+            if(this._mesh) scene.remove(this._mesh);
         },
         //returns a collision vector
         //similar to https://github.com/obiot/melonJS/blob/master/src/math/geometry.js#L627
@@ -123,7 +130,7 @@
         setPosition: function(x, y, z) {
             if(!this._mesh) return;
 
-            var zi = (z !== undefined ? z : (this.zindex ? this.zindex : 0));
+            var zi = (z !== undefined ? z : (this.zIndex ? this.zIndex : 0));
 
             if(x instanceof THREE.Vector2)
                 this._doSetPos(x.x, x.y, zi);
@@ -138,7 +145,9 @@
         _doSetPos: function(x, y, z) {
             this._mesh.position.set(x, y, z);
         },
-        update: function(delta) {
+        update: function() {}
+        //This is being replaced by TWEEN
+        /*update: function() {
             return;
             //go backwards so we can splice off things without destroying the array iteration
             for(var i = this.animationQueue.length - 1; i >= 0 && this.animationQueue.length; --i) {
@@ -200,6 +209,6 @@
                 ms: 0,
                 interpol: {}
             });
-        }
+        }*/
     });
 })();

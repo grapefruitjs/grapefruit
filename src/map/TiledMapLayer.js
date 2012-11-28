@@ -72,29 +72,21 @@
     ].join('\n');
 
     //Each tilemap layer is just a Plane object with the map drawn on it
-    gf.TilemapLayer = gf.SceneObject.extend({
-        init: function(layer, tileSize, tilesets, zIndex, scale) {
-            this._super();
-            //this.parent = parent;
+    gf.TiledMapLayer = gf.MapLayer.extend({
+        init: function(layer, tileSize, tilesets) {
+            this._mesh = true; //skip parent creating mesh
+            this._super(layer);
 
             //set options
             this.dataBuffer = new ArrayBuffer(layer.data.length * 3);
             this.data = new Uint8Array(this.dataBuffer);
-            this.name = layer.name;
-            this.size = new THREE.Vector2(layer.width, layer.height);
             this.tileSize = tileSize;
-            this.offset = new THREE.Vector2(layer.x, layer.y);
-
-            this.opacity = layer.opacity;
-            this.visible = layer.visible;
-            this.zIndex = zIndex;
 
             this.repeat = false;
             this.filtered = false;
-            this.scale = scale;
 
             //set maps
-            this.tileset = tilesets[0].texture;
+            this.tileset = new gf.TiledMapTileset(tilesets[0]);//.texture;
 
             //pack our layer data array into an 8-bit uint array
             for (var i = 0, y = 0, il = layer.data.length; i < il; ++i, y += 3) {
@@ -106,6 +98,18 @@
                 this.data[y + 2] = (value & 0x000000ff);
             }
 
+            //Setup Tileset
+            this.tileset.texture.wrapS = this.tileset.texture.wrapT = THREE.ClampToEdgeWrapping;
+            //this.tileset.flipY = false;
+            if(this.filtered) {
+                this.tileset.texture.magFilter = THREE.LinearFilter;
+                this.tileset.texture.minFilter = THREE.LinearMipMapLinearFilter;
+            } else {
+                this.tileset.texture.magFilter = THREE.NearestFilter;
+                this.tileset.texture.minFilter = THREE.NearestMipMapNearestFilter;
+            }
+
+            //For some reason I have to make the mesh in `init` or it explodes!
             this.dataTex = new THREE.DataTexture(
                                 this.data,
                                 this.size.x, //width
@@ -119,17 +123,8 @@
                                 THREE.NearestMipMapNearestFilter //minFilter
                             );
             this.dataTex.needsUpdate = true;
+            console.log(this.dataTex);
 
-            //Setup Tileset
-            this.tileset.wrapS = this.tileset.wrapT = THREE.ClampToEdgeWrapping;
-            //this.tileset.flipY = false;
-            if(this.filtered) {
-                this.tileset.magFilter = THREE.LinearFilter;
-                this.tileset.minFilter = THREE.LinearMipMapLinearFilter;
-            } else {
-                this.tileset.magFilter = THREE.NearestFilter;
-                this.tileset.minFilter = THREE.NearestMipMapNearestFilter;
-            }
             //setup shader uniforms
             //
             //Types:
@@ -153,13 +148,13 @@
             this._uniforms = window._uniforms = {
                 mapSize:            { type: 'v2', value: new THREE.Vector2(this.size.x * this.tileSize.x, this.size.y * this.tileSize.y) },
                 inverseLayerSize:   { type: 'v2', value: new THREE.Vector2(1 / this.size.x, 1 / this.size.y) },
-                inverseTilesetSize: { type: 'v2', value: new THREE.Vector2(1 / this.tileset.image.width, 1 / this.tileset.image.height) },
+                inverseTilesetSize: { type: 'v2', value: new THREE.Vector2(1 / this.tileset.texture.image.width, 1 / this.tileset.texture.image.height) },
 
                 tileSize:           { type: 'v2', value: this.tileSize },
                 inverseTileSize:    { type: 'v2', value: new THREE.Vector2(1 / this.tileSize.x, 1 / this.tileSize.y) },
-                numTiles:           { type: 'v2', value: new THREE.Vector2(this.tileset.image.width / this.tileSize.x, this.tileset.image.height / this.tileSize.y) },
+                numTiles:           { type: 'v2', value: new THREE.Vector2(this.tileset.texture.image.width / this.tileSize.x, this.tileset.texture.image.height / this.tileSize.y) },
 
-                tileset:            { type: 't', value: this.tileset },
+                tileset:            { type: 't', value: this.tileset.texture },
                 tileIds:            { type: 't', value: this.dataTex },
                 repeatTiles:        { type: 'i', value: this.repeat ? 1 : 0 },
                 opacity:            { type: 'f', value: this.opacity },
@@ -181,8 +176,11 @@
             );
 
             this._mesh = new THREE.Mesh(this._plane, this._material);
-            this._mesh.visible = layer.visible;
-            this._mesh.z = this.zIndex;
+            this._mesh.visible = this.visible;
+            this._mesh.position.z = this.zIndex;
+        },
+        _createMesh: function() {
+            if(this._mesh) return;
         }
     });
 })();

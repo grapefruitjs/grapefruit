@@ -1,5 +1,14 @@
 (function() {
-    gf.util = {
+    gf.utils = {
+        applyFriction: function(vel, friction) {
+            return (vel + friction < 0) ? 
+                        vel + (friction * gf.game._delta) : 
+                    (vel - friction > 0) ? 
+                        vel - (friction * gf.game._delta) : 
+                        0;
+        },
+        clamp: function(n, min, max) { return Math.max(min, Math.min(max, n)); },
+        RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
         isPowerOfTwo: function(x) { return ((x & (x - 1)) === 0); },
         b64: {
             // private property

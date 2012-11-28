@@ -201,7 +201,7 @@ Class.extend = function(prop) {
 (function() {
     gf.game = {
         //array of objects in the scene
-        objects: [],
+        objects: {},
 
         //maximum Z index, where the camera lies
         MAX_Z: 500,
@@ -211,6 +211,9 @@ Class.extend = function(prop) {
         _clock: new THREE.Clock(false),
         _renderer: new THREE.WebGLRenderer(),
         _camera: null,
+
+        //id for the next entity to be added
+        _nextId: Date.now(),
 
         //the object that will contain the render domElement
         _$cont: null,
@@ -264,10 +267,22 @@ Class.extend = function(prop) {
             return this;
         },
         addObject: function(obj) {
-            gf.game.objects.push(obj);
+            if(!obj) return;
 
-            if(obj && obj.addToScene)
-                obj.addToScene(gf.game._scene);
+            obj._id = gf.game._nextId;
+            gf.game.objects[gf.game._nextId++] = obj;
+
+            if(obj.addToScene) obj.addToScene(gf.game._scene);
+
+            return this;
+        },
+        removeObject: function(obj) {
+            if(!obj) return;
+
+            //remove object from our list
+            delete gf.game.objects[obj._id];
+
+            if(obj.removeFromScene) obj.removeFromScene(gf.game._scene);
 
             return this;
         },
@@ -276,19 +291,29 @@ Class.extend = function(prop) {
             gf.game._tick();
             return this;
         },
-        checkCollision: function(obj) {
-            for(var i = 0, il = gf.game.objects.length; i < il; ++i) {
-                var o = gf.game.objects[i];
+        //Check if passed entity collides with any others
+        checkCollisions: function(obj) {
+            var colliders = [];
+
+            $.each(gf.game.objects, function(id, o) {
                 //check if this object collides with any others
-                if(/*o.inViewport &&*/ o.isVisible && o.isCollidable && /*o.isEntity &&*/ (o != obj)) {
-                    console.log(o);
-                    var collider = o.intersects(obj);
-                    if(collider) {
+                if(/*o.inViewport &&*/ o.isVisible && o.isCollidable && o.isEntity && (o != obj)) {
+                    var collisionVector = o.checkCollision(obj);
+                    if(!collisionVector.isZero()) {
+                        colliders.push({
+                            entity: o,
+                            vector: collisionVector
+                        });
                         o.onCollision(obj);
-                        return collider;
                     }
                 }
-            }
+            });
+
+            return colliders;
+        },
+        //check if passed entity collides with any map tile after applying the velocity movement
+        checkMapCollision: function() {
+
         },
         //lock the camera on an entity
         //I need an event system :/
@@ -307,16 +332,15 @@ Class.extend = function(prop) {
             requestAnimationFrame(gf.game._tick);
 
             //get clock delta
-            var delta = gf.game._clock.getDelta();
+            gf.game._delta = gf.game._clock.getDelta();
 
             //update fps box
             if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
 
             //update each object
-            for(var i = 0, il = gf.game.objects.length; i < il; ++i) {
-                //run update for this object
-                gf.game.objects[i].update(delta);
-            }
+            $.each(gf.game.objects, function(id, o) {
+                o.update();
+            });
 
             //render scene
             gf.game._renderer.render(gf.game._scene, gf.game._camera);
