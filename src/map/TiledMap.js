@@ -1,43 +1,39 @@
 (function() {
-    gf.Tilemap = Class.extend({
+    //Tiled map, expects a Tiled TMX file loaded by the gf.loader as the argument.
+    //The loader knows to load all textures and other resources when loading a world TMX
+    //file, and this expets that to already be done.
+    gf.TiledMap = gf.Map.extend({
         //Init Tilemap and all layers
         init: function(map) {
-            this.size = new THREE.Vector2(map.width, map.height);
+            this._super(map);
+
+            //tile size
             this.tileSize = new THREE.Vector2(map.tilewidth, map.tileheight);
 
-            this.orientation = map.orientation; //only orthogonal supported
-            this.properties = map.properties;
+            //tilesets
             this.tilesets = map.tilesets;
 
-            this.version = map.version;
+            //user-defined properties
+            this.properties = map.properties;
 
-            this.layers = [];
+            //version
+            this.version = map.version;
 
             for(var i = 0, il = map.layers.length; i < il; ++i) {
                 if(map.layers[i].type == gf.types.LAYER.TILE_LAYER)
                     this.addLayer(map.layers[i]);
             }
-
-            //TODO: zones??
         },
         //add a new layer to this tilemap
         addLayer: function(layer) {
-            var tilemapLayer = new gf.TilemapLayer(layer, this.tileSize, this.tilesets, this.layers.length, this.properties.scale || 1);
+            layer.scale = this.properties.scale || 1;
+            layer.zIndex = this.layers.length;
+            var tilemapLayer = new gf.TiledMapLayer(layer, this.tileSize, this.tilesets);
             this.layers.push(tilemapLayer);
 
             //incase they add the map to the scene first, then add layers
             if(this.scene)
                 tilemapLayer.addToScene(this.scene);
-        },
-        //add all layers to the scene
-        addToScene: function(scene) {
-            this.scene = scene;
-
-            //incase they add layers first, then add the map to the scene
-            this.eachLayer(function(layer) {
-                if(!layer.scene || layer.scene != scene)
-                    layer.addToScene(scene);
-            });
         },
         //load a new zone as the player enters it
         loadZone: function(zone) {
@@ -95,19 +91,27 @@
 
             return coord;
         },
-        //apply an iterator to each layer
-        eachLayer: function(fn) {
-            for(var i = 0, il = this.layers.length; i < il; ++i) {
-                if(fn.call(this, this.layers[i], i, this.layers) === false)
-                    break;
-            }
-        },
         //apply an iterator to each zone
         eachZone: function(fn) {
             for(var i = 0, il = this.zones.length; i < il; ++i) {
                 if(fn.call(this, this.zones[i], i, this.zones) === false)
                     break;
             }
+        }
+    });
+
+    gf.TiledMapTileset = Class.extend({
+        init: function(settings) {
+            this.size = new THREE.Vector2(settings.imagewidth, settings.imageheight);
+            this.tileSize = new THREE.Vector2(settings.tilewidth, settings.tileheight);
+            this.texture = settings.texture;
+
+            this.firstgid = settings.firstgid;
+            this.name = settings.name;
+            this.margin = settings.margin;
+            this.spacing = settings.spacing;
+
+            this.properties = settings.properties;
         }
     });
 })();
