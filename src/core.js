@@ -266,11 +266,14 @@ Class.extend = function(prop) {
 
             return this;
         },
+        getNextObjectId: function() {
+            return gf.game._nextId++;
+        },
         addObject: function(obj) {
             if(!obj) return;
 
-            obj._id = gf.game._nextId;
-            gf.game.objects[gf.game._nextId++] = obj;
+            if(!obj.id) obj.id = gf.game.getNextObjectId();
+            gf.game.objects[obj.id] = obj;
 
             if(obj.addToScene) obj.addToScene(gf.game._scene);
 
@@ -280,7 +283,7 @@ Class.extend = function(prop) {
             if(!obj) return;
 
             //remove object from our list
-            delete gf.game.objects[obj._id];
+            delete gf.game.objects[obj.id];
 
             if(obj.removeFromScene) obj.removeFromScene(gf.game._scene);
 
@@ -289,6 +292,7 @@ Class.extend = function(prop) {
         render: function() {
             gf.game._clock.start();
             gf.game._tick();
+
             return this;
         },
         //Check if passed entity collides with any others
@@ -318,14 +322,18 @@ Class.extend = function(prop) {
         //lock the camera on an entity
         //I need an event system :/
         cameraTrack: function(ent) {
-            if(this._entMoveHandle) {
-                gf.event.unsubscribe(this._entMoveHandle);
+            if(ent.isEntity) {
+                if(this._trackedEntMoveHandle) {
+                    gf.event.unsubscribe(this._trackedEntMoveHandle);
+                }
+
+                this._trackedEntMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.id, function(velocity) {
+                    gf.game._camera.translateX(velocity.x);
+                    gf.game._camera.translateY(velocity.y);
+                });
             }
 
-            this._entMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.name, function(velocity) {
-                gf.game._camera.translateX(velocity.x);
-                gf.game._camera.translateY(velocity.y);
-            });
+            return this;
         },
         _tick: function() {
             //start render loop
