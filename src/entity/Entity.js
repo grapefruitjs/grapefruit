@@ -124,12 +124,12 @@
             //check if hitboxes intersect
             if (this.intersects(entity)) {
                 //compute delta between this & entity
-                var dx = (this.position.x + (this.size.x / 2)) - (entity.position.x - (entity.size.x / 2));
-                var dy = (this.position.y + (this.size.y / 2)) - (entity.position.y - (entity.size.y / 2));
+                var dx = this._hitboxMesh.position.x - entity._hitboxMesh.position.x;
+                var dy = this._hitboxMesh.position.y - entity._hitboxMesh.position.y;
 
                 //compute penetration depth for both axis
-                p.x = (entity.size.x + this.size.x) - (dx < 0 ? -dx : dx); // - Math.abs(dx);
-                p.y = (entity.size.y + this.size.y) - (dy < 0 ? -dy : dy); // - Math.abs(dy);
+                p.x = dx / 2;
+                p.y = dy / 2;
 
                 //check and "normalize" axis
                 if (p.x < p.y) {
