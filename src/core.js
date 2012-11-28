@@ -8,10 +8,9 @@
 */
 
 /****************************************************************************
- * Global GrapeFruit Object
+ * Global GrapeFruit Object with constants
  ****************************************************************************/
-var document = window.document;
-window.gf = {
+window.gf = window.gf || {
     types: {
         //Entity types
         ENTITY: {
@@ -205,7 +204,7 @@ Class.extend = function(prop) {
         objects: [],
 
         //maximum Z index, where the camera lies
-        MAX_Z: 300,
+        MAX_Z: 500,
 
         //raw THREE objects that will control rendering
         _scene: new THREE.Scene(),

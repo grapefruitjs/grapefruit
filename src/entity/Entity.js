@@ -117,31 +117,56 @@
             return (Math.abs(this._hitboxMesh.position.x - entity._hitboxMesh.position.x) * 2 < (this.size.x + entity.size.x)) && 
                     (Math.abs(this._hitboxMesh.position.y - entity._hitboxMesh.position.y) * 2 < (this.size.y + entity.size.y));
         },
+        checkCollision: function(entity) {
+            //response vector
+            var p = new me.Vector2d(0, 0);
+
+            //check if hitboxes intersect
+            if (this.intersects(entity)) {
+                //compute delta between this & entity
+                var dx = (this.position.x + (this.size.x / 2)) - (entity.position.x - (entity.size.x / 2));
+                var dy = (this.position.y + (this.size.y / 2)) - (entity.position.y - (entity.size.y / 2));
+
+                //compute penetration depth for both axis
+                p.x = (entity.size.x + this.size.x) - (dx < 0 ? -dx : dx); // - Math.abs(dx);
+                p.y = (entity.size.y + this.size.y) - (dy < 0 ? -dy : dy); // - Math.abs(dy);
+
+                //check and "normalize" axis
+                if (p.x < p.y) {
+                    p.y = 0;
+                    p.x = dx < 0 ? -p.x : p.x;
+                } else {
+                    p.x = 0;
+                    p.y = dy < 0 ? -p.y : p.y;
+                }
+            }
+            return p;
+        },
         addToScene: function(scene) {
             this._super(scene);
 
             //if(this._outlineMesh) { scene.add(this._outlineMesh); console.log('adding outline to scene'); }
             if(this._hitboxMesh) scene.add(this._hitboxMesh);
         },
-        moveEntity: function() {
-            if(this.velocity.isZero()) return;
+        moveEntity: function(vel) {
+            vel = vel || this.velocity;
+
+            if(vel.isZero()) return;
 
             //TODO: Map collision checks
             //this.setPosition(this.velocity);
-            this._mesh.translateX(this.velocity.x);
-            this._mesh.translateY(this.velocity.y);
+            this._mesh.translateX(vel.x);
+            this._mesh.translateY(vel.y);
 
             if(this._hitboxMesh) {
-                this._hitboxMesh.translateX(this.velocity.x);
-                this._hitboxMesh.translateY(this.velocity.y);
+                this._hitboxMesh.translateX(vel.x);
+                this._hitboxMesh.translateY(vel.y);
             }
 
-            gf.event.publish(gf.types.EVENT.ENTITY_MOVE + '.' + this.name, this.velocity);
+            gf.event.publish(gf.types.EVENT.ENTITY_MOVE + '.' + this.name, vel);
         },
         _doSetPos: function(x, y, z) {
             this._super(x, y, z);
-
-            //if(this._outlineMesh) this._outlineMesh.position.set(x, y, z);
 
             if(this._hitboxMesh) {
                 this._hitboxMesh.position.set(x, y, z);
@@ -151,8 +176,15 @@
                 }
             }
         },
-        //event virtuals
-        onCollision: function(obj) {},
-        onMove: function() {}
+        //On Collision Event
+        // called when this object is collided into by another
+        //vec - Collision Vector (THREE.Vector2)
+        //obj - Colliding object (gf.Entity)
+        onCollision: function(vec, obj) {},
+
+        //On Move Event
+        // called when this entity moves
+        //vel - Velocity the entity moved (THREE.Vector2)
+        onMove: function(vel) {}
     });
 })();
