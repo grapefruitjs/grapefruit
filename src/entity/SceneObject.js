@@ -10,6 +10,8 @@
             //for typing arrays as strings in Tiled
             this._arrayDelim = '|';
 
+            this.id = gf.game.getNextObjectId();
+
             //raw mesh that is the actual object in the scene
             this._mesh = null;
 

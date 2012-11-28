@@ -145,7 +145,7 @@
             // v2v - array of Vector2s
             // v3v - array of Vector3s
             // v4v - array of Vector4s
-            this._uniforms = window._uniforms = {
+            this._uniforms = {
                 mapSize:            { type: 'v2', value: new THREE.Vector2(this.size.x * this.tileSize.x, this.size.y * this.tileSize.y) },
                 inverseLayerSize:   { type: 'v2', value: new THREE.Vector2(1 / this.size.x, 1 / this.size.y) },
                 inverseTilesetSize: { type: 'v2', value: new THREE.Vector2(1 / this.tileset.texture.image.width, 1 / this.tileset.texture.image.height) },
@@ -158,9 +158,12 @@
                 tileIds:            { type: 't', value: this.dataTex },
                 repeatTiles:        { type: 'i', value: this.repeat ? 1 : 0 },
                 opacity:            { type: 'f', value: this.opacity },
-                bias:               { type: 'f', value: 0.1 },
+                bias:               { type: 'f', value: 0.002 },
                 inverseScale:       { type: 'f', value: 1 / this.scale }
             };
+
+            if(gf.debug.accessTiledUniforms)
+                gf.debug._tiledUniforms.push(this._uniforms);
 
             //create the shader material
             this._material = new THREE.ShaderMaterial({

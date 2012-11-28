@@ -249,7 +249,7 @@
             this.onMove(this.velocity);
 
             //emit movement
-            gf.event.publish(gf.types.EVENT.ENTITY_MOVE + '.' + this.name, this.velocity);
+            gf.event.publish(gf.types.EVENT.ENTITY_MOVE + '.' + this.id, this.velocity);
 
             return collision;
         },

@@ -16,6 +16,10 @@
         showOutline: false,
         outlineColor: new THREE.Color(0x000000),
 
+        //provide access directly to the tiledmap layer shader uniforms
+        accessTiledUniforms: false,
+        tiledUniforms: [],
+
         //draw map collision points
         showMapColliders: false,
         solidMapColor: new THREE.Color(0xff0000)
