@@ -67,7 +67,7 @@
         '   vec2 coord = mod(pixelCoord, tileSize);', //coord of the tile
 
         '   vec4 color = texture2D(tileset, (offset + coord) * inverseTilesetSize);', //grab tile from tileset
-        '   color.a = opacity;',
+        '   color.a = opacity;', //set opacity of this layer
         '   gl_FragColor = color;',
         '}'
     ].join('\n');
