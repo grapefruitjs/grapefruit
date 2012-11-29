@@ -84,7 +84,8 @@
              * Create the actual object for the scene
              ****************************************************************************/
             //if the hitbox size isn't set, use the same as normal size
-            if(this.hitSize.x === 0 && this.hitSize.y === 0) this.hitSize = this.size.clone();
+            if(this.hitSize.x === 0 && this.hitSize.y === 0)
+                this.hitSize = this.size.clone();
 
             //scale size vectors
             this.scaledSize = this.size.clone().multiplyScalar(this.scale);
@@ -93,11 +94,8 @@
             //create main entity mesh
             this._createMesh();
 
-            //only create a second mesh for the hitbox, if the size is different
-            if(this.hitSize.equals(this.size))
-                this._hitboxMesh = this._mesh;
-            else
-                this._createHitboxMesh();
+            //create a second mesh for the hitbox
+            this._createHitboxMesh();
 
             //set default position
             this.setPosition(pos);
@@ -240,9 +238,12 @@
             this._mesh.translateY(this.velocity.y);
 
             //also update the hitbox mesh if it is different
-            if(this._hitboxMesh != this._mesh) {
-                this._hitboxMesh.translateX(this.velocity.x);
-                this._hitboxMesh.translateY(this.velocity.y);
+            if(this._hitboxMesh) {
+                this._hitboxMesh.position.x += this.velocity.x;
+                this._hitboxMesh.position.y += this.velocity.y;
+                //translate doesn't seem to work
+                //this._hitboxMesh.translateX(this.velocity.x);
+                //this._hitboxMesh.translateY(this.velocity.y);
             }
 
             //onMove event
@@ -280,8 +281,11 @@
             if(this._hitboxMesh) {
                 this._hitboxMesh.position.set(x, y, z);
                 if(this.hitOffset) {
-                    this._hitboxMesh.translateX(this.hitOffset.x);
-                    this._hitboxMesh.translateY(this.hitOffset.y);
+                    this._hitboxMesh.position.x += this.hitOffset.x;
+                    this._hitboxMesh.position.y += this.hitOffset.y;
+                    //translate doesn't seem to work
+                    //this._hitboxMesh.translateX(this.hitOffset.x);
+                    //this._hitboxMesh.translateY(this.hitOffset.y);
                 }
             }
         },
@@ -316,9 +320,10 @@
                 wireframeLinewidth: 5
             });
 
-            this._hitboxGeom = new THREE.PlaneGeometry(this.scaledHitSize.x, this.scaledHitSize.y);
+            this._hitboxGeom = new THREE.PlaneGeometry(1, 1);
 
             this._hitboxMesh = new THREE.Mesh(this._hitboxGeom, this._hitboxMaterial);
+            this._hitboxMesh.scale.set(this.scaledHitSize.x, this.scaledHitSize.y);
         },
     });
 })();
