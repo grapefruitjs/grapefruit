@@ -59,7 +59,8 @@
         '   vec3 tileId = texture2D(tileIds, texCoord).rgb;', //grab this tileId from the layer data
         //'   tileId.rgb = tileId.bgr;', //if some hardware is different endian (little?) then we need to flip here
         '   float tileValue = decode24(tileId);', //decode the normalized vec3 into the float ID
-        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.x) - (bias * inverseScale), tileValue / numTiles.x);', //convert the ID into x, y coords; the bias fixes a precision error by making the later floor go down by 1
+        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.x), tileValue / numTiles.x);', //convert the ID into x, y coords
+        '   tileLoc.x = tileLoc.x - (bias * inverseScale);', //the bias fixes a precision error by making the later floor go down by 1
         '   tileLoc.y = numTiles.y - tileLoc.y;', //convert the coord from bottomleft to topleft
 
         '   vec2 offset = (floor(tileLoc) * tileSize) + (bias * inverseScale);', //offset in the tileset; the bias removes the spacing between tiles
