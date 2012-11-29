@@ -123,7 +123,6 @@
                                 THREE.NearestMipMapNearestFilter //minFilter
                             );
             this.dataTex.needsUpdate = true;
-            console.log(this.dataTex);
 
             //setup shader uniforms
             //
