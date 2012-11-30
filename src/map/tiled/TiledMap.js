@@ -14,31 +14,52 @@
             //tile size
             this.tileSize = new THREE.Vector2(map.tilewidth, map.tileheight);
 
-            //tilesets
-            this.tilesets = map.tilesets;
-
             //user-defined properties
             this.properties = map.properties;
+
+            //tilesets
+            this.tilesets = [];
+
+            //object groups
+            this.objectGroups = [];
 
             //version
             this.version = map.version;
 
+            //create the tileset objects
+            for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
+                this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
+            }
+
             for(var i = 0, il = map.layers.length; i < il; ++i) {
                 if(map.layers[i].type == gf.types.LAYER.TILE_LAYER)
                     this.addLayer(map.layers[i]);
+                else if(map.layers[i].type == gf.types.LAYER.OBJECT_GROUP)
+                    this.addObjectGroup(map.layers[i]);
             }
         },
         //add a new layer to this tilemap
         addLayer: function(layer) {
             layer.scale = this.properties.scale || 1;
             layer.zIndex = this.layers.length;
-            var tilemapLayer = new gf.TiledMapLayer(layer, this.tileSize, this.tilesets);
+            var tilemapLayer = new gf.TiledLayer(layer, this.tileSize, this.tilesets);
             this.layers.push(tilemapLayer);
 
             //incase they add the map to the scene first, then add layers
             if(this.scene)
                 tilemapLayer.addToScene(this.scene);
         },
+        //add a new object group to this tilemap
+        addObjectGroup: function(group) {
+            group.zIndex = this.objectGroups.length + 1;
+            var objgroup = new gf.TiledObjectGroup(group, this.tilesets);
+            this.objectGroups.push(group);
+        },
+
+        /////////////////////////
+        // REMOVE BELOW??
+        /////////////////////////
+
         //load a new zone as the player enters it
         loadZone: function(zone) {
             //set the new zone
@@ -101,21 +122,6 @@
                 if(fn.call(this, this.zones[i], i, this.zones) === false)
                     break;
             }
-        }
-    });
-
-    gf.TiledMapTileset = Class.extend({
-        init: function(settings) {
-            this.size = new THREE.Vector2(settings.imagewidth, settings.imageheight);
-            this.tileSize = new THREE.Vector2(settings.tilewidth, settings.tileheight);
-            this.texture = settings.texture;
-
-            this.firstgid = settings.firstgid;
-            this.name = settings.name;
-            this.margin = settings.margin;
-            this.spacing = settings.spacing;
-
-            this.properties = settings.properties;
         }
     });
 })();

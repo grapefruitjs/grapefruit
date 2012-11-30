@@ -219,6 +219,9 @@ a+"px",m=b,r=0);return b},update:function(){l=this.end()}}};
         //array of objects in the scene
         objects: {},
 
+        //special user-defined entity types
+        entTypes: {},
+
         //maximum Z index, where the camera lies
         MAX_Z: 500,
 

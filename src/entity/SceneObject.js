@@ -111,15 +111,15 @@
                     } else if(curVal instanceof THREE.Color && typeof newVal === 'number') {
                         curVal.setHex(newVal);
                     } else if(curVal instanceof THREE.Vector2 && newVal instanceof Array) {
-                        curVal.set(newVal[0], newVal[1]);
+                        curVal.set(newVal[0] || 0, newVal[1] || 0);
                     } else if(curVal instanceof THREE.Vector3 && newVal instanceof Array) {
-                        curVal.set(newVal[0], newVal[1], newVal[2]);
+                        curVal.set(newVal[0] || 0, newVal[1] || 0, newVal[2] || 0);
                     } else if(curVal instanceof THREE.Vector2 && typeof newVal === 'string') {
                         var a = newVal.split(_arrayDelim, 2);
-                        curVal.set(a[0], a[1]);
+                        curVal.set(a[0] || 0, a[1] || 0);
                     } else if(curVal instanceof THREE.Vector3 && typeof newVal === 'string') {
                         var a = newVal.split(this._arrayDelim, 3);
-                        curVal.set(a[0], a[1], a[3]);
+                        curVal.set(a[0] || 0, a[1] || 0, a[3] || 0);
                     } else if(curVal instanceof Array && typeof newVal === 'string') {
                         curVal = newVal.split(this._arrayDelim);
                     } else {

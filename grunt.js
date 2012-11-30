@@ -7,9 +7,9 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/controls/controls.js',
             '<%= dirs.src %>/debug/debug.js',
             '<%= dirs.src %>/entity/SceneObject.js',
-            '<%= dirs.src %>/entity/camera.js',
             '<%= dirs.src %>/entity/Entity.js',
             '<%= dirs.src %>/entity/Sprite.js',
+            '<%= dirs.src %>/entity/entityPool.js',
             '<%= dirs.src %>/gui/gui.js',
             '<%= dirs.src %>/loader/loader.js',
             '<%= dirs.src %>/renderer/renderer.js',
@@ -17,9 +17,11 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/vendor/game-shim.js',
             '<%= dirs.src %>/vendor/pubsub.js',
             '<%= dirs.src %>/map/Map.js',
-            '<%= dirs.src %>/map/MapLayer.js',
-            '<%= dirs.src %>/map/TiledMap.js',
-            '<%= dirs.src %>/map/TiledMapLayer.js'
+            '<%= dirs.src %>/map/Layer.js',
+            '<%= dirs.src %>/map/tiled/TiledMap.js',
+            '<%= dirs.src %>/map/tiled/TiledLayer.js',
+            '<%= dirs.src %>/map/tiled/TiledTileset.js',
+            '<%= dirs.src %>/map/tiled/TiledObjectGroup.js'
         ],
         tSrc = [
         ];
