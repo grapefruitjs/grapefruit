@@ -232,7 +232,7 @@
                             gf.loader.load({
                                 name: layer.name + '_' + obj.name + '_texture',
                                 type: 'texture',
-                                src: resource.texturePath + obj.properties.spritesheet
+                                src: obj.properties.spritesheet
                             });
                         })(layer, obj, o);
                     }

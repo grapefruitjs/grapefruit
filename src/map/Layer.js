@@ -1,5 +1,5 @@
 (function() {
-    gf.MapLayer = gf.SceneObject.extend({
+    gf.Layer = gf.SceneObject.extend({
         init: function(settings) {
             this._super(settings);
 
