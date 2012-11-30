@@ -7,6 +7,15 @@
                         vel - (friction * gf.game._delta) : 
                         0;
         },
+        _arrayDelim: '|',
+        strToVec: function(str) {
+            var a = str.split(gf.utils._arrayDelim);
+
+            if(a.length === 2)
+                return new THREE.Vector2(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
+            else if(a.length === 3)
+                return new THREE.Vector3(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10));
+        },
         clamp: function(n, min, max) { return Math.max(min, Math.min(max, n)); },
         RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
         isPowerOfTwo: function(x) { return ((x & (x - 1)) === 0); },
