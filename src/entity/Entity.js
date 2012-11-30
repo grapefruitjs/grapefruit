@@ -167,23 +167,44 @@
 
             if(this._hitboxMesh) scene.remove(this._hitboxMesh);
         },
-        moveEntity: function(vel) {
-            //optionally override current speed
-            if(vel) this.velocity.set(vel.x, vel.y);
-
+        updateMovement: function(vel) {
             if(this.velocity.isZero()) return;
 
             //apply gravity, friction, etc to this velocity
             this.computeVelocity(this.velocity);
 
             //TODO: check for map collision here
-            var collision = { x: false, y: false }; //gf.game.checkMapCollision(this._hitboxMesh, this.velocity);
+            var colliders = gf.game.world.checkCollision(this._hitboxMesh, this.hitSize, this.velocity);
 
             //update flags
             this.onladder = false;
 
+            //collisions
+            gf.utils.each(colliders, function(i, collider) {
+                var tile = collider.tile,
+                    axis = collider.axis;
+
+                this.onladder = (tile.type == gf.types.COLLISION.LADDER ? true : this.onladder);
+
+                //if a solid tile
+                if(tile.isSolid) {
+                    //if it is a slope, apply the normal
+                    if(tile.normal) {
+                        var badMovement = tile.normal.multiplyScalar(this.velocity.dot(tile.normal)),
+                            newMovement = this.velocity.clone().subSelf(badMovement);
+
+                        this.velocity.addSelf(newMovement);
+                    }
+                    //TODO: Half tiles
+                    //otherwise just stop movement
+                    else {
+                        this.velocity[axis] = 0;
+                    }
+                }
+            });
+
             //collision on y axis
-            if(collision.y) {
+            /*if(collision.y) {
                 this.onladder = collision.yprop.isLadder;
 
                 //going down, collision with the floor
@@ -196,7 +217,7 @@
                         this.velocity.y = this.falling ? collision.ytile.pos.y - hitboxBottom : 0;
                         this.falling = false;
                     }
-                    /*else if (collision.yprop.isSlope && !this.jumping) {
+                    else if (collision.yprop.isSlope && !this.jumping) {
                         // we stop falling
                         this.checkSlope(collision.ytile, collision.yprop.isLeftSlope);
                         this.falling = false;
@@ -213,7 +234,7 @@
                             this.vel.y = (this.falling) ?collision.ytile.pos.y - this.collisionBox.bottom: 0;
                             this.falling = false;
                         }
-                    }*/
+                    }
                 }
                 //going up, collision with ceiling
                 else if(collision.y < 0) {
@@ -222,37 +243,34 @@
                         this.velocity.y = 0;
                     }
                 }
-            }
+            }*/
 
-            //collision on x axis
-            if(collision.x) {
-                this.onladder = collision.xprop.isLadder;
+            this.moveEntity();
 
-                if(collision.xprop.isSolid) {
-                    this.velocity.x = 0;
-                }
-            }
+            return collision;
+        },
+        moveEntity: function(vel) {
+            //optionally override current velocity
+            vel = vel || this.velocity;
 
             //update the entity position
-            this._mesh.translateX(this.velocity.x);
-            this._mesh.translateY(this.velocity.y);
+            this._mesh.translateX(vel.x);
+            this._mesh.translateY(vel.y);
 
             //also update the hitbox mesh if it is different
             if(this._hitboxMesh) {
-                this._hitboxMesh.position.x += this.velocity.x;
-                this._hitboxMesh.position.y += this.velocity.y;
-                //translate doesn't seem to work
-                //this._hitboxMesh.translateX(this.velocity.x);
-                //this._hitboxMesh.translateY(this.velocity.y);
+                this._hitboxMesh.position.x += vel.x;
+                this._hitboxMesh.position.y += vel.y;
+                //translate doesn't seem to work when using size of 1, 1 and scaling
+                //this._hitboxMesh.translateX(vel.x);
+                //this._hitboxMesh.translateY(vel.y);
             }
 
             //onMove event
-            this.onMove(this.velocity);
+            this.onMove(vel);
 
             //emit movement
-            gf.event.publish(gf.types.EVENT.ENTITY_MOVE + '.' + this.id, this.velocity);
-
-            return collision;
+            gf.event.publish(gf.types.EVENT.ENTITY_MOVE + '.' + this.id, vel);
         },
         //On Collision Event
         // called when this object is collided into by another, by default if something collides with
