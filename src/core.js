@@ -342,6 +342,10 @@ a+"px",m=b,r=0);return b},update:function(){l=this.end()}}};
 
             if(obj.removeFromScene) obj.removeFromScene(gf.game._scene);
 
+            //deallocate resources for this entity
+            gf.game._renderer.deallocateObject(obj._mesh);
+            gf.game._renderer.deallocateObject(obj._hitboxMesh);
+
             return this;
         },
         loadWorld: function(world) {
