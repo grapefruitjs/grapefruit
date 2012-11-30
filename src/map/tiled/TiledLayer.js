@@ -73,7 +73,7 @@
     ].join('\n');
 
     //Each tilemap layer is just a Plane object with the map drawn on it
-    gf.TiledMapLayer = gf.MapLayer.extend({
+    gf.TiledLayer = gf.Layer.extend({
         init: function(layer, tileSize, tilesets) {
             this._mesh = true; //skip parent creating mesh
             this._super(layer);
@@ -86,8 +86,8 @@
             this.repeat = false;
             this.filtered = false;
 
-            //set maps
-            this.tileset = new gf.TiledMapTileset(tilesets[0]);//.texture;
+            //TODO: only works with 1 tileset right now, so assume the first one :/
+            this.tileset = tilesets[0];
 
             //pack our layer data array into an 8-bit uint array
             for (var i = 0, y = 0, il = layer.data.length; i < il; ++i, y += 3) {
