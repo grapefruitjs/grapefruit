@@ -27,13 +27,12 @@ window.gf = window.gf || {
         },
         //Tile collision types
         COLLISION: {
-            NONE: 0,
-            SOLID: 1,
-            CLIFF: 2,
-            STAIRS: 3,
-            WATER: 4,
-            DEEP_WATER: 5,
-            DAMAGING: 6
+            NONE: 'none',
+            SOLID: 'solid',
+            CLIFF: 'cliff',
+            LADDER: 'ladder',
+            WATER: 'water',
+            DEEP_WATER: 'deep_water'
         },
         //pubsub events
         EVENT: {
@@ -344,6 +343,18 @@ a+"px",m=b,r=0);return b},update:function(){l=this.end()}}};
             if(obj.removeFromScene) obj.removeFromScene(gf.game._scene);
 
             return this;
+        },
+        loadWorld: function(world) {
+            if(typeof world == 'string'){
+                if(gf.resources[world]) world = gf.resources[world].data;
+                else {
+                    throw 'World not found in resources!';
+                    return;
+                }
+            }
+
+            gf.game.world = new gf.TiledMap(world);
+            gf.game.addObject(gf.game.world);
         },
         render: function() {
             gf.game._clock.start();
