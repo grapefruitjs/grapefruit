@@ -354,7 +354,7 @@ a+"px",m=b,r=0);return b},update:function(){l=this.end()}}};
 
             $.each(gf.game.objects, function(id, o) {
                 //check if this object collides with any others
-                if(/*o.inViewport &&*/ o.isVisible && o.isCollidable && o.isEntity && (o != obj)) {
+                if(o.inViewport && o.isVisible && o.isCollidable && o.isEntity && (o != obj)) {
                     var collisionVector = o.checkCollision(obj);
                     if(!collisionVector.isZero()) {
                         colliders.push({
@@ -383,6 +383,22 @@ a+"px",m=b,r=0);return b},update:function(){l=this.end()}}};
                 this._trackedEntMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.id, function(velocity) {
                     gf.game._camera.translateX(velocity.x);
                     gf.game._camera.translateY(velocity.y);
+
+                    //If this gets heavy, then just remove it
+                    //update if each object is within the viewport
+
+                    //update matrices
+                    //camera.updateMatrix(); // make sure camera's local matrix is updated
+                    //camera.updateMatrixWorld(); // make sure camera's world matrix is updated
+                    //camera.matrixWorldInverse.getInverse( camera.matrixWorld );
+
+                    //plane.updateMatrix(); // make sure plane's local matrix is updated
+                    //plane.updateMatrixWorld(); // make sure plane's world matrix is updated
+                    var frustum = new THREE.Frustum();
+                    frustum.setFromMatrix(new THREE.Matrix4().multiply(camera.projectionMatrix, camera.matrixWorldInverse));
+                    gf.utils.each(gf.game.objects, function(id, o) {
+                        o.inViewport = frustum.contains(o._mesh.geometry);
+                    });
                 });
             }
 
@@ -399,8 +415,10 @@ a+"px",m=b,r=0);return b},update:function(){l=this.end()}}};
             if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
 
             //update each object
-            $.each(gf.game.objects, function(id, o) {
-                o.update();
+            gf.utils.each(gf.game.objects, function(id, o) {
+                if(o.inViewport && o.isVisible) {
+                    o.update();
+                }
             });
 
             //render scene

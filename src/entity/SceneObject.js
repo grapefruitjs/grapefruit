@@ -7,6 +7,8 @@
 
             this.zIndex = settings.zIndex || 0;
 
+            this.inViewport = true;
+
             //for typing arrays as strings in Tiled
             this._arrayDelim = '|';
 
