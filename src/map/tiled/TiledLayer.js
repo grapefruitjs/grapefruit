@@ -75,12 +75,12 @@
     //Each tilemap layer is just a Plane object with the map drawn on it
     gf.TiledLayer = gf.Layer.extend({
         init: function(layer, tileSize, tilesets) {
-            this._mesh = true; //skip parent creating mesh
             this._super(layer);
 
             //set options
             this.dataBuffer = new ArrayBuffer(layer.data.length * 3);
-            this.data = new Uint8Array(this.dataBuffer);
+            this.data = new Uint32Array(this.dataBuffer);
+            this.data8 = new Uint8Array(this.dataBuffer);
             this.tileSize = tileSize;
 
             this.repeat = false;
@@ -94,9 +94,9 @@
                 var value = layer.data[i];
 
                 //this.data[y + 0] = (value & 0xff000000) >> 24;
-                this.data[y + 0] = (value & 0x00ff0000) >> 16;
-                this.data[y + 1] = (value & 0x0000ff00) >> 8;
-                this.data[y + 2] = (value & 0x000000ff);
+                this.data8[y + 0] = (value & 0x00ff0000) >> 16;
+                this.data8[y + 1] = (value & 0x0000ff00) >> 8;
+                this.data8[y + 2] = (value & 0x000000ff);
             }
 
             //Setup Tileset
@@ -112,7 +112,7 @@
 
             //For some reason I have to make the mesh in `init` or it explodes!
             this.dataTex = new THREE.DataTexture(
-                                this.data,
+                                this.data8,
                                 this.size.x, //width
                                 this.size.y, //height
                                 THREE.RGBFormat, //format
@@ -182,8 +182,18 @@
             this._mesh.visible = this.visible;
             this._mesh.position.z = this.zIndex;
         },
-        _createMesh: function() {
-            if(this._mesh) return;
+        //get ID of tile at specified location
+        getTileId: function(x, y) {
+            if(x instanceof THREE.Vector2 || x instanceof THREE.Vector3) {
+                y = x.y;
+                x = x.x;
+            }
+
+            var idx = (x + (y * (this.tileset.texture.image.width / this.tileSize.x)));
+
+            return this.data[idx];
         }
+        //skip parent creating mesh
+        _createMesh: function() {}
     });
 })();

@@ -116,12 +116,15 @@
                         curVal.set(newVal[0] || 0, newVal[1] || 0, newVal[2] || 0);
                     } else if(curVal instanceof THREE.Vector2 && typeof newVal === 'string') {
                         var a = newVal.split(_arrayDelim, 2);
-                        curVal.set(a[0] || 0, a[1] || 0);
+                        curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
                     } else if(curVal instanceof THREE.Vector3 && typeof newVal === 'string') {
                         var a = newVal.split(this._arrayDelim, 3);
-                        curVal.set(a[0] || 0, a[1] || 0, a[3] || 0);
+                        curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10) || 0);
                     } else if(curVal instanceof Array && typeof newVal === 'string') {
                         curVal = newVal.split(this._arrayDelim);
+                        gf.utils.each(curVal, function(i, val) {
+                            if(!isNaN(val)) curVal[i] = parseInt(val, 10);
+                        });
                     } else {
                         this[key] = newVal;
                     }
