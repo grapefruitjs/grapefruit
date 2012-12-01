@@ -147,7 +147,7 @@
                 if(x.length === 2) this._doSetPos(x[0], x[1], zi);
                 else if(x.length === 3) this._doSetPos(x[0], x[1], x[2]);
             } else
-                this._doSetPos(x, y, z);
+                this._doSetPos(x, y, zi);
         },
         _doSetPos: function(x, y, z) {
             this._mesh.position.set(x, y, z);

@@ -46,7 +46,7 @@
             this.velocity = new THREE.Vector2(0, 0);
 
             //max velocity to cap the entity at
-            this.maxVelocity = new THREE.Vector2(1000, 1000);
+            this.maxVelocity = new THREE.Vector2(15, 15);
 
             //acceleration of the entity when moving (units per second)
             this.accel = new THREE.Vector2(250, 250);
@@ -90,6 +90,7 @@
             //scale size vectors
             this.scaledSize = this.size.clone().multiplyScalar(this.scale);
             this.scaledHitSize = this.hitSize.clone().multiplyScalar(this.scale);
+            this.scaledHitOffset = this.hitOffset.clone().multiplyScalar(this.scale);
 
             //create main entity mesh
             this._createMesh();
@@ -170,9 +171,6 @@
         updateMovement: function(vel) {
             if(this.velocity.isZero()) return;
 
-            //apply gravity, friction, etc to this velocity
-            this.computeVelocity(this.velocity);
-
             //TODO: check for map collision here
             var colliders = gf.game.world.checkCollision(this._hitboxMesh, this.hitSize, this.velocity);
 
@@ -180,28 +178,38 @@
             this.onladder = false;
 
             //collisions
+            var self = this;
             gf.utils.each(colliders, function(i, collider) {
                 var tile = collider.tile,
                     axis = collider.axis;
 
-                this.onladder = (tile.type == gf.types.COLLISION.LADDER ? true : this.onladder);
+                self.onladder = (tile.type == gf.types.COLLISION.LADDER ? true : self.onladder);
 
                 //if a solid tile
                 if(tile.type == gf.types.COLLISION.SOLID) {
                     //if it is a slope, apply the normal
-                    if(tile.normal) {
-                        var badMovement = tile.normal.multiplyScalar(this.velocity.dot(tile.normal)),
-                            newMovement = this.velocity.clone().subSelf(badMovement);
+                    //TODO: Slopes are kinda jumpy
+                    if(tile.normal && (!self.velocity.x || !self.velocity.y)) {
+                        var badMovement = tile.normal.clone().multiplyScalar(self.velocity.dot(tile.normal)),
+                            newMovement = self.velocity.clone().subSelf(badMovement);
 
-                        this.velocity.addSelf(newMovement);
+                        self.velocity.addSelf(newMovement);
+                        return false;
                     }
                     //TODO: Half tiles
                     //otherwise just stop movement
                     else {
-                        this.velocity[axis] = 0;
+                        /*if(axis == 'x')
+                            self.setPosition(Math.floor(self._mesh.position.x), self._mesh.position.y);
+                        else
+                            self.setPosition(self._mesh.position.x, Math.floor(self._mesh.position.y));*/
+                        self.velocity[axis] = 0;
                     }
                 }
             });
+
+            //apply gravity, friction, etc to this velocity
+            this.computeVelocity(this.velocity);
 
             //collision on y axis
             /*if(collision.y) {
@@ -301,8 +309,8 @@
             if(this._hitboxMesh) {
                 this._hitboxMesh.position.set(x, y, z);
                 if(this.hitOffset) {
-                    this._hitboxMesh.position.x += this.hitOffset.x;
-                    this._hitboxMesh.position.y += this.hitOffset.y;
+                    this._hitboxMesh.position.x += this.scaledHitOffset.x;
+                    this._hitboxMesh.position.y += this.scaledHitOffset.y;
                     //translate doesn't seem to work
                     //this._hitboxMesh.translateX(this.hitOffset.x);
                     //this._hitboxMesh.translateY(this.hitOffset.y);
