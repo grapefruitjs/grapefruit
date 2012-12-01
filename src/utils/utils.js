@@ -19,6 +19,41 @@
         clamp: function(n, min, max) { return Math.max(min, Math.min(max, n)); },
         RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
         isPowerOfTwo: function(x) { return ((x & (x - 1)) === 0); },
+        each: function(object, callback, args) {
+            var name, i = 0,
+                length = object.length,
+                isObj = length === undefined || typeof object == 'function';
+            if (args) {
+                if (isObj) {
+                    for (name in object) {
+                        if (callback.apply(object[name], args) === false) {
+                            break;
+                        }
+                    }
+                } else {
+                    for (; i < length;) {
+                        if (callback.apply(object[i++], args) === false) {
+                            break;
+                        }
+                    }
+                }
+            } else {
+                if (isObj) {
+                    for (name in object) {
+                        if (callback.call(object[name], name, object[name]) === false) {
+                            break;
+                        }
+                    }
+                } else {
+                    for (; i < length;) {
+                        if (callback.call(object[i], i, object[i++]) === false) {
+                            break;
+                        }
+                    }
+                }
+            }
+            return object;
+        },
         b64: {
             // private property
             _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",

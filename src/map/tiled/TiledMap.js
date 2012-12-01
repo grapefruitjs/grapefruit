@@ -5,9 +5,9 @@
     gf.TiledMap = gf.Map.extend({
         //Init Tilemap and all layers
         init: function(map) {
-            if(!gf.support.webgl) {
+            /*if(!gf.support.webgl) {
                 throw 'TiledMap is only supported using WebGL rendering.';
-            }
+            }*/
 
             this._super(map);
 
@@ -35,7 +35,7 @@
                 var ts = new gf.TiledTileset(map.tilesets[t]);
                 this.tilesets.push(ts);
 
-                if(ts.name.toLowerCase().indexOf('collision') === 0) {
+                if(ts.name.toLowerCase().indexOf('collider') === 0) {
                     this.collisionTileset = ts;
                 }
             }
@@ -51,11 +51,12 @@
         addLayer: function(layer) {
             layer.scale = this.properties.scale || 1;
             layer.zIndex = this.layers.length;
-            var tilemapLayer = new gf.TiledLayer(layer, this.tileSize, this.tilesets);
+            var tilemapLayer = new gf.TiledLayer(layer, this.tileSize, this.tilesets[layer.zIndex]);
             this.layers.push(tilemapLayer);
 
             if(tilemapLayer.name.toLowerCase().indexOf('collision') === 0) {
                 this.collisionLayer = tilemapLayer;
+                if(!gf.debug.showMapColliders) tilemapLayer.hide();
             }
 
             //incase they add the map to the scene first, then add layers
@@ -70,6 +71,7 @@
         },
         //if object is moved by pv get the tile it would be at
         checkCollision: function(mesh, size, pv) {
+            //TODO: This isn't working at like all (xxTile is always null)
             if(!this.collisionLayer) return;
 
             var pos = (new THREE.Vector2(mesh.position.x, mesh.position.y)), //simulate movement
