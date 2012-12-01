@@ -234,6 +234,9 @@
 
             this._geom = new THREE.PlaneGeometry(this.scaledSize.x, this.scaledSize.y);
             this._mesh = THREE.SceneUtils.createMultiMaterialObject(this._geom, this._materials);//new THREE.Mesh(this._geom, this._material);
+
+            //multimaterials object doesn't have .geometry defined
+            this._mesh.geometry = this._geom;
         }
     });
 })();

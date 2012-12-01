@@ -187,7 +187,7 @@
                 this.onladder = (tile.type == gf.types.COLLISION.LADDER ? true : this.onladder);
 
                 //if a solid tile
-                if(tile.isSolid) {
+                if(tile.type == gf.types.COLLISION.SOLID) {
                     //if it is a slope, apply the normal
                     if(tile.normal) {
                         var badMovement = tile.normal.multiplyScalar(this.velocity.dot(tile.normal)),
@@ -247,7 +247,9 @@
 
             this.moveEntity();
 
-            return collision;
+            gf.debug._playerColliders = colliders;
+
+            return colliders;
         },
         moveEntity: function(vel) {
             //optionally override current velocity
@@ -325,6 +327,9 @@
 
             this._geom = new THREE.PlaneGeometry(this.scaledSize.x, this.scaledSize.y);
             this._mesh = THREE.SceneUtils.createMultiMaterialObject(this._geom, this._materials);//new THREE.Mesh(this._geom, this._materials);
+
+            //multimaterials object doesn't have .geometry defined
+            this._mesh.geometry = this._geom;
 
             //set visible
             //this._mesh.visible = this.isVisible;

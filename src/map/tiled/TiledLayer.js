@@ -18,6 +18,7 @@
         //'uniform float opacity;',
         'uniform float bias;',
         'uniform float inverseScale;',
+        //'uniform float firstGid;',
 
         'void main(void) {',
         '   pixelCoord = (uv * mapSize) - ((1.0 - bias) * inverseScale);', //this bias fixes a strange wrapping error
@@ -46,6 +47,7 @@
         'uniform float opacity;',
         'uniform float bias;',
         'uniform float inverseScale;',
+        'uniform float firstGid;',
 
         'float decode24(vec3 rgb) {',
         '   const vec3 bit_shift = vec3((256.0*256.0), 256.0, 1.0);',
@@ -58,7 +60,8 @@
 
         '   vec3 tileId = texture2D(tileIds, texCoord).rgb;', //grab this tileId from the layer data
         //'   tileId.rgb = tileId.bgr;', //if some hardware is different endian (little?) then we need to flip here
-        '   float tileValue = decode24(tileId);', //decode the normalized vec3 into the float ID
+        '   float tileValue = decode24(tileId) - (firstGid - 1.0);', //decode the normalized vec3 into the float ID
+        '   if(tileValue <= 1.0) { discard; }',
         '   vec2 tileLoc = vec2(mod(tileValue, numTiles.x), tileValue / numTiles.x);', //convert the ID into x, y coords
         '   tileLoc.x = tileLoc.x - (bias * inverseScale);', //the bias fixes a precision error by making the later floor go down by 1
         '   tileLoc.y = numTiles.y - tileLoc.y;', //convert the coord from bottomleft to topleft
@@ -67,14 +70,15 @@
         '   vec2 coord = mod(pixelCoord, tileSize);', //coord of the tile
 
         '   vec4 color = texture2D(tileset, (offset + coord) * inverseTilesetSize);', //grab tile from tileset
-        '   color.a = opacity;', //set opacity of this layer
+        '   color.a -= (1.0 - opacity);', //subtract the opacity of this layer
+        '   if(color.a < 0.0) { color.a = 0.0; }',
         '   gl_FragColor = color;',
         '}'
     ].join('\n');
 
     //Each tilemap layer is just a Plane object with the map drawn on it
     gf.TiledLayer = gf.Layer.extend({
-        init: function(layer, tileSize, tilesets) {
+        init: function(layer, tileSize, tileset) {
             this._super(layer);
 
             //set options
@@ -86,8 +90,8 @@
             this.repeat = false;
             this.filtered = false;
 
-            //TODO: only works with 1 tileset right now, so assume the first one :/
-            this.tileset = tilesets[0];
+            //TODO: only works with 1 tileset right now :/
+            this.tileset = tileset;
 
             //pack our layer data array into an 8-bit uint array
             for (var i = 0, y = 0, il = layer.data.length; i < il; ++i, y += 3) {
@@ -156,6 +160,7 @@
 
                 tileset:            { type: 't', value: this.tileset.texture },
                 tileIds:            { type: 't', value: this.dataTex },
+                firstGid:           { type: 'f', value: this.tileset.firstgid },
                 repeatTiles:        { type: 'i', value: this.repeat ? 1 : 0 },
                 opacity:            { type: 'f', value: this.opacity },
                 bias:               { type: 'f', value: 0.002 },
@@ -170,7 +175,7 @@
                 uniforms: this._uniforms,
                 vertexShader: vShader,
                 fragmentShader: fShader,
-                transparent: (this.opacity !== 1) //if the opacity isn't 1.0, then this needs to be transparent
+                transparent: true//(this.opacity !== 1) //if the opacity isn't 1.0, then this needs to be transparent
             });
 
             this._plane = new THREE.PlaneGeometry(
@@ -192,7 +197,13 @@
             var idx = (x + (y * (this.tileset.texture.image.width / this.tileSize.x)));
 
             return this.data[idx];
-        }
+        },
+        hide: function() {
+            this.visible = this._mesh.visible = false;
+        },
+        show: function() {
+            this.visible = this._mesh.visible = true;
+        },
         //skip parent creating mesh
         _createMesh: function() {}
     });

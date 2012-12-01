@@ -16,6 +16,9 @@
             gf.utils.each(this.properties, function(k, v) {
                 if(v.normal && !(v.normal instanceof THREE.Vector2))
                     v.normal = gf.utils.strToVec(v.normal);
+
+                if(v.isCollidable == 'true') v.isCollidable = true;
+                if(v.isBreakable == 'true') v.isBreakable = true;
             });
         },
         getTileProperties: function(tileId) {
