@@ -61,10 +61,10 @@
             this.name = '';
 
             //friction to apply to this entities movement
-            this.friction = gf.game.friction != undefined ? gf.game.friction : new THREE.Vector2(0, 0);
+            this.friction = settings.friction || (gf.game.friction != undefined ? gf.game.friction : new THREE.Vector2(0, 0));
 
             //gravity of the world
-            this.gravity = gf.game.gravity != undefined ? gf.game.gravity : 0.98;
+            this.gravity = settings.gravity || (gf.game.gravity != undefined ? gf.game.gravity : 0.98);
 
             //entity alive
             this.alive = true;
