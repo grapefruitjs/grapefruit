@@ -70,11 +70,13 @@
             this.objectGroups.push(group);
         },
         //if object is moved by pv get the tile it would be at
-        checkCollision: function(mesh, size, pv) {
-            //TODO: This isn't working at like all (xxTile is always null)
+        checkCollision: function(mesh, sz, vec) {
             if(!this.collisionLayer) return;
 
-            var pos = (new THREE.Vector2(mesh.position.x, mesh.position.y)), //simulate movement
+            var pos = new THREE.Vector2(mesh.position.x, mesh.position.y),
+                size = sz.clone(),
+                pv = new THREE.Vector2(~~vec.x, ~~vec.y),
+                haveX = false, haveY = false,
                 res = [];/*{
                     xtiles: [],
                     ytiles: []
@@ -83,87 +85,119 @@
             size.divideScalar(2);
 
             //TODO: This is ungly since I am simulating movement in each axis separately. There
-            // must be a cleaner way to accomplish this :/
+            // must be a cleaner way to accomplish this :/ PLus I am counting from `pos` to `pos + vec`
+            // in a loop, it is just nasty
 
-            //if moving along X axis
-            if(pv.x) {
-                //simulate X movement
-                var posX = pos.clone(); posX.x += pv.x;
+            for(var x = 1, y = 1; (!haveX && x <= Math.abs(pv.x)) || (!haveY && y <= Math.abs(pv.y)); ++x, ++y) {
+                //if moving along X axis
+                if(pv.x && !haveX && x <= Math.abs(pv.x)) {
+                    //if moving left check bl and tl positions
+                    if(pv.x < 0) {
+                        //simulate X movement
+                        var posX = pos.clone(); posX.x -= x;
 
-                //if moving left check bl and tl positions
-                if(pv.x < 0) {
-                    //calc corners
-                    var bl = posX.clone(), tl = posX.clone();
-                    bl.x -= size.x;
-                    bl.y -= size.y;
-                    tl.x -= size.x;
-                    tl.y += size.y;
+                        //calc corners
+                        var bl = posX.clone(), tl = posX.clone();
+                        bl.x -= size.x;
+                        bl.y -= size.y;
+                        tl.x -= size.x;
+                        tl.y += size.y;
 
-                    //get corner tiles
-                    var blTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(bl)),
-                        tlTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tl));
+                        //get corner tiles
+                        var blTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(bl)),
+                            tlTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tl));
 
-                    //TODO: Corner rolling?
-                    if(blTile && blTile.isCollidable) res.push({ axis: 'x', tile: blTile });//res.xtiles.push(blTile);
-                    if(tlTile && tlTile.isCollidable) res.push({ axis: 'x', tile: tlTile });//res.xtiles.push(tlTile);
+                        //TODO: Corner rolling?
+                        if(blTile && blTile.isCollidable) {
+                            res.push({ axis: 'x', tile: blTile });//res.xtiles.push(blTile);
+                            haveX = true;
+                        }
+                        if(tlTile && tlTile.isCollidable) {
+                            res.push({ axis: 'x', tile: tlTile });//res.xtiles.push(tlTile);
+                            haveX = true;
+                        }
+                    }
+                    //if moving right check br and tr positions
+                    else {
+                        //simulate X movement
+                        var posX = pos.clone(); posX.x += x;
+
+                        //calc corners
+                        var br = posX.clone(), tr = posX.clone();
+                        br.x += size.x;
+                        br.y -= size.y;
+                        tr.x += size.x;
+                        tr.y += size.y;
+
+                        //get corner tiles
+                        var brTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(br)),
+                            trTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tr));
+
+                        //TODO: Corner rolling?
+                        if(brTile && brTile.isCollidable) {
+                            res.push({ axis: 'x', tile: brTile });//res.xtiles.push(brTile);
+                            haveX = true;
+                        }
+                        if(trTile && trTile.isCollidable) {
+                            res.push({ axis: 'x', tile: trTile });//res.xtiles.push(trTile);
+                            haveX = true;
+                        }
+                    }
                 }
-                //if moving right check br and tr positions
-                else {
-                    //calc corners
-                    var br = posX.clone(), tr = posX.clone();
-                    br.x += size.x;
-                    br.y -= size.y;
-                    tr.x += size.x;
-                    tr.y += size.y;
 
-                    //get corner tiles
-                    var brTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(br)),
-                        trTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tr));
+                if(pv.y && !haveY && y <= Math.abs(pv.y)) {
+                    //if moving down check bl and br positions
+                    if(pv.y < 0) {
+                        //simulate Y movement
+                        var posY = pos.clone(); posY.y -= y;
 
-                    //TODO: Corner rolling?
-                    if(brTile && brTile.isCollidable) res.push({ axis: 'x', tile: brTile });//res.xtiles.push(brTile);
-                    if(trTile && trTile.isCollidable) res.push({ axis: 'x', tile: trTile });//res.xtiles.push(trTile);
-                }
-            }
+                        //calc corners
+                        var bl = posY.clone(), br = posY.clone();
+                        bl.x -= size.x;
+                        bl.y -= size.y;
+                        br.x += size.x;
+                        br.y -= size.y;
 
-            //if moving along Y axis
-            if(pv.y) {
-                //simulate Y movement
-                var posY = pos.clone(); posY.y += pv.y;
+                        //get corner tiles
+                        var blTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(bl)),
+                            brTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(br));
 
-                //if moving down check bl and br positions
-                if(pv.y < 0) {
-                    //calc corners
-                    var bl = posY.clone(), br = posY.clone();
-                    bl.x -= size.x;
-                    bl.y -= size.y;
-                    br.x += size.x;
-                    br.y -= size.y;
+                        //TODO: Corner rolling?
+                        if(blTile && blTile.isCollidable) {
+                            res.push({ axis: 'y', tile: blTile });//res.ytiles.push(blTile);
+                            haveY = true;
+                        }
+                        if(brTile && brTile.isCollidable) {
+                            res.push({ axis: 'y', tile: brTile });//res.ytiles.push(brTile);
+                            haveY = true;
+                        }
+                    }
+                    //if moving up check tl and tr positions
+                    else {
+                        //simulate Y movement
+                        var posY = pos.clone(); posY.y += y;
 
-                    //get corner tiles
-                    var blTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(bl)),
-                        brTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(br));
+                        //calc corners
+                        var tl = posY.clone(), tr = posY.clone();
+                        tl.x -= size.x;
+                        tl.y += size.y;
+                        tr.x += size.x;
+                        tr.y += size.y;
 
-                    //TODO: Corner rolling?
-                    if(blTile && blTile.isCollidable) res.push({ axis: 'y', tile: blTile });//res.ytiles.push(blTile);
-                    if(brTile && brTile.isCollidable) res.push({ axis: 'y', tile: brTile });//res.ytiles.push(brTile);
-                }
-                //if moving up check tl and tr positions
-                else {
-                    //calc corners
-                    var tl = posY.clone(), tr = posY.clone();
-                    tl.x -= size.x;
-                    tl.y += size.y;
-                    tr.x += size.x;
-                    tr.y += size.y;
+                        //get corner tiles
+                        var tlTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tl)),
+                            trTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tr));
 
-                    //get corner tiles
-                    var tlTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tl)),
-                        trTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tr));
-
-                    //TODO: Corner rolling?
-                    if(tlTile && tlTile.isCollidable) res.push({ axis: 'y', tile: tlTile });//res.ytiles.push(tlTile);
-                    if(trTile && trTile.isCollidable) res.push({ axis: 'y', tile: trTile });//res.ytiles.push(trTile);
+                        //TODO: Corner rolling?
+                        if(tlTile && tlTile.isCollidable) {
+                            res.push({ axis: 'y', tile: tlTile });//res.ytiles.push(tlTile);
+                            haveY = true;
+                        }
+                        if(trTile && trTile.isCollidable) {
+                            res.push({ axis: 'y', tile: trTile });//res.ytiles.push(trTile);
+                            haveY = true;
+                        }
+                    }
                 }
             }
 

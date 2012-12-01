@@ -11,9 +11,10 @@
             this.spacing = settings.spacing;
 
             this.properties = settings.properties || {};
+            this.tileproperties = settings.tileproperties || {};
 
             //massage normal
-            gf.utils.each(this.properties, function(k, v) {
+            gf.utils.each(this.tileproperties, function(k, v) {
                 if(v.normal && !(v.normal instanceof THREE.Vector2))
                     v.normal = gf.utils.strToVec(v.normal);
 
@@ -22,13 +23,17 @@
             });
         },
         getTileProperties: function(tileId) {
-            if(!tileId) return null;
+            if(tileId === undefined) return null;
 
-            return this.properties[tileId.toString()] ?
+            tileId = tileId - this.firstgid;
+
+            if(tileId < 0) return null;
+
+            return this.tileproperties[tileId.toString()] ?
                     //get this value
-                    this.properties[tileId.toString()] :
+                    this.tileproperties[tileId.toString()] :
                     //set this id to default values and cache
-                    this.properties[tileId.toString()] = {
+                    this.tileproperties[tileId.toString()] = {
                         isCollidable: false,
                         isBreakable: false,
                         type: gf.types.COLLISION.NONE

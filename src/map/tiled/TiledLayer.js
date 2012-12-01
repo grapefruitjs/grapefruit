@@ -82,8 +82,8 @@
             this._super(layer);
 
             //set options
+            this.data = layer.data;
             this.dataBuffer = new ArrayBuffer(layer.data.length * 3);
-            this.data = new Uint32Array(this.dataBuffer);
             this.data8 = new Uint8Array(this.dataBuffer);
             this.tileSize = tileSize;
 
@@ -188,13 +188,31 @@
             this._mesh.position.z = this.zIndex;
         },
         //get ID of tile at specified location
-        getTileId: function(x, y) {
-            if(x instanceof THREE.Vector2 || x instanceof THREE.Vector3) {
-                y = x.y;
-                x = x.x;
+        getTileId: function(pos, realCoords) {
+            pos = pos.clone();
+            //if not realCoords, they are world coords; and must be converted
+            if(!realCoords) {
+                //do some division to make position be in "tiles from center" instead of "pixels from center"
+                pos.divideScalar(this.scale);
+                pos.x = pos.x / this.tileSize.x;
+                pos.y = pos.y / this.tileSize.y;
+
+                //inverse the Y so the next addSelf will actually subtract from Y
+                pos.y = -pos.y;
+
+                //pos is now the offset from the center, to make it from the top left
+                //we add half the size of the tilemap to x (and sub from y since we inverted)
+                pos.addSelf(this.hSize);
+
+                pos.x = ~~pos.x; //floor
+                pos.y = ~~pos.y;
+
+                //pos.x -= 1;
+                //pos.y = Math.abs(pos.y) - 1;
             }
 
-            var idx = (x + (y * (this.tileset.texture.image.width / this.tileSize.x)));
+            //calculate index
+            var idx = Math.floor(pos.x + (pos.y * (this.size.x)));
 
             return this.data[idx];
         },

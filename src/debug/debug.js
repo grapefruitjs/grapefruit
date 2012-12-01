@@ -100,10 +100,15 @@
                                                 ', Z: ' + gf.game.player._hitboxMesh.position.z.toFixed(3) :
                                             'none';
 
-                    tilesVal.innerHTML = '';
+                    tilesVal.innerHTML = '<br/>';
                     if(gf.debug._playerColliders) {
                         for(var i = 0, il = gf.debug._playerColliders.length; i < il; ++i) {
-                            tilesVal.innerHTML += 'Tile: ' + gf.debug._playerColliders.type + ' (' + gf.debug._playerColliders.axis + ')<br/>';
+                            tilesVal.innerHTML += 'Tile (' + gf.debug._playerColliders[i].axis + '): ' + 
+                                                gf.debug._playerColliders[i].tile.type + 
+                                                ' (' + (!!gf.debug._playerColliders[i].tile.normal ? 
+                                                        gf.debug._playerColliders[i].tile.normal.x + ', ' + gf.debug._playerColliders[i].tile.normal.y :
+                                                        '0, 0')
+                                                    + ')<br/>';
                         }
                     }
                 }
