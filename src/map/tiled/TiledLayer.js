@@ -66,7 +66,7 @@
         'vec4 getColor(float tileValue) {',
         '   for(int i = 0; i < NUM_TILESETS; ++i) {',
         '       if(tileValue >= firstgids[i] && tileValue <= lastgids[i]) {', //choose the right tileset, and use it
-        '           tileValue -= (float(firstgids[i]) - 1.0);',
+        '           tileValue -= (firstgids[i] - 1.0);',
         '           if(tileValue <= 1.0) { break; }',
 
         '           vec2 tileLoc = vec2(mod(tileValue, numTiles[i].x), tileValue / numTiles[i].x);', //convert the ID into x, y coords
