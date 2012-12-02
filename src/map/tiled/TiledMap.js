@@ -31,8 +31,34 @@
             this.version = map.version;
 
             //create the tileset objects
+            this.tilesetMaps = {
+                textures: [],
+                firstgids: [],
+                lastgids: [],
+                sizes: [],
+                inverseSizes: [],
+                numTiles: []
+            };
             for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
                 var ts = new gf.TiledTileset(map.tilesets[t]);
+
+                //Since Three.js doesn't support passing structs into a shader
+                //we have to create some arrays with each index corresponding
+                //to the values of each element.
+                //
+                //Basically instead of 
+                //struct Tileset { gid, ... }
+                //uniform Tileset tilesets[];
+                //
+                //We do:
+                //uniform int gids[];
+                //uniform sampler2D textures[];
+                this.tilesetMaps.textures.push(ts.texture);
+                this.tilesetMaps.firstgids.push(ts.firstgid);
+                this.tilesetMaps.lastgids.push(ts.lastgid);
+                this.tilesetMaps.sizes.push(ts.size);
+                this.tilesetMaps.inverseSizes.push(new THREE.Vector2(1 / ts.size.x, 1 / ts.size.y));
+                this.tilesetMaps.numTiles.push(ts.numTiles);
                 this.tilesets.push(ts);
 
                 if(ts.name.toLowerCase().indexOf('collider') === 0) {
@@ -51,7 +77,7 @@
         addLayer: function(layer) {
             layer.scale = this.properties.scale || 1;
             layer.zIndex = this.layers.length;
-            var tilemapLayer = new gf.TiledLayer(layer, this.tileSize, this.tilesets[layer.zIndex]);
+            var tilemapLayer = new gf.TiledLayer(layer, this.tileSize, this.tilesetMaps);
             this.layers.push(tilemapLayer);
 
             if(tilemapLayer.name.toLowerCase().indexOf('collision') === 0) {

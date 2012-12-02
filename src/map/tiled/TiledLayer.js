@@ -6,19 +6,23 @@
 
         'uniform vec2 mapSize;',
         'uniform vec2 inverseLayerSize;',
-        //'uniform vec2 inverseTilesetSize;',
 
         //'uniform vec2 tileSize;',
         'uniform vec2 inverseTileSize;',
-        //'uniform vec2 numTiles;',
 
-        //'uniform sampler2D tileset;',
         //'uniform sampler2D tileIds;'
         //'uniform int repeatTiles;',
         //'uniform float opacity;',
         'uniform float bias;',
         'uniform float inverseScale;',
-        //'uniform float firstGid;',
+
+        //tileset maps
+        //'uniform sampler2D textures[NUM_TILESETS];',
+        //'uniform float firstgids[NUM_TILESETS];',
+        //'uniform float lastgids[NUM_TILESETS];',
+        //'uniform vec2 sizes[NUM_TILESETS];',
+        //'uniform vec2 inverseSizes[NUM_TILESETS];',
+        //'uniform vec2 numTiles[NUM_TILESETS];',
 
         'void main(void) {',
         '   pixelCoord = (uv * mapSize) - ((1.0 - bias) * inverseScale);', //this bias fixes a strange wrapping error
@@ -35,19 +39,23 @@
 
         //'uniform vec2 mapSize;',
         //'uniform vec2 inverseLayerSize;',
-        'uniform vec2 inverseTilesetSize;',
 
         'uniform vec2 tileSize;',
         //'uniform vec2 inverseTileSize;',
-        'uniform vec2 numTiles;',
 
-        'uniform sampler2D tileset;',
         'uniform sampler2D tileIds;',
         'uniform int repeatTiles;',
         'uniform float opacity;',
         'uniform float bias;',
         'uniform float inverseScale;',
-        'uniform float firstGid;',
+
+        //tileset maps
+        'uniform sampler2D textures[NUM_TILESETS];',
+        'uniform float firstgids[NUM_TILESETS];',
+        'uniform float lastgids[NUM_TILESETS];',
+        //'uniform vec2 sizes[NUM_TILESETS];',
+        'uniform vec2 inverseSizes[NUM_TILESETS];',
+        'uniform vec2 numTiles[NUM_TILESETS];',
 
         'float decode24(vec3 rgb) {',
         '   const vec3 bit_shift = vec3((256.0*256.0), 256.0, 1.0);',
@@ -55,21 +63,36 @@
         '   return fl * 255.0;', //denormalize the value
         '}',
 
+        'vec4 getColor(float tileValue) {',
+        '   for(int i = 0; i < NUM_TILESETS; ++i) {',
+        '       if(tileValue >= firstgids[i] && tileValue <= lastgids[i]) {', //choose the right tileset, and use it
+        '           tileValue -= (float(firstgids[i]) - 1.0);',
+        '           if(tileValue <= 1.0) { break; }',
+
+        '           vec2 tileLoc = vec2(mod(tileValue, numTiles[i].x), tileValue / numTiles[i].x);', //convert the ID into x, y coords
+        '           tileLoc.x = tileLoc.x - (bias * inverseScale);', //the bias fixes a precision error by making the later floor go down by 1
+        '           tileLoc.y = numTiles[i].y - tileLoc.y;', //convert the coord from bottomleft to topleft
+
+        '           vec2 offset = (floor(tileLoc) * tileSize) + (bias * inverseScale);', //offset in the tileset; the bias removes the spacing between tiles
+        '           vec2 coord = mod(pixelCoord, tileSize);', //coord of the tile
+
+        '           return texture2D(textures[i], (offset + coord) * inverseSizes[i]);', //grab tile from tileset
+        '       }',
+        '   }',
+
+        '   return vec4(0.0, 0.0, 0.0, 0.0);', //tileValue was 0 for gid was bad
+        '}',
+
         'void main(void) {',
         '   if(repeatTiles == 0 && (texCoord.x < 0.0 || texCoord.x > 1.0 || texCoord.y < 0.0 || texCoord.y > 1.0)) { discard; }',
 
         '   vec3 tileId = texture2D(tileIds, texCoord).rgb;', //grab this tileId from the layer data
         //'   tileId.rgb = tileId.bgr;', //if some hardware is different endian (little?) then we need to flip here
-        '   float tileValue = decode24(tileId) - (firstGid - 1.0);', //decode the normalized vec3 into the float ID
-        '   if(tileValue <= 1.0) { discard; }',
-        '   vec2 tileLoc = vec2(mod(tileValue, numTiles.x), tileValue / numTiles.x);', //convert the ID into x, y coords
-        '   tileLoc.x = tileLoc.x - (bias * inverseScale);', //the bias fixes a precision error by making the later floor go down by 1
-        '   tileLoc.y = numTiles.y - tileLoc.y;', //convert the coord from bottomleft to topleft
+        '   float tileValue = decode24(tileId);', //decode the normalized vec3 into the float ID
 
-        '   vec2 offset = (floor(tileLoc) * tileSize) + (bias * inverseScale);', //offset in the tileset; the bias removes the spacing between tiles
-        '   vec2 coord = mod(pixelCoord, tileSize);', //coord of the tile
+        '   vec4 color = getColor(tileValue);',
+        '   if(color.r == 0.0 && color.g == 0.0 && color.b == 0.0 && color.a == 0.0) { discard; }',
 
-        '   vec4 color = texture2D(tileset, (offset + coord) * inverseTilesetSize);', //grab tile from tileset
         '   color.a -= (1.0 - opacity);', //subtract the opacity of this layer
         '   if(color.a < 0.0) { color.a = 0.0; }',
         '   gl_FragColor = color;',
@@ -78,7 +101,7 @@
 
     //Each tilemap layer is just a Plane object with the map drawn on it
     gf.TiledLayer = gf.Layer.extend({
-        init: function(layer, tileSize, tileset) {
+        init: function(layer, tileSize, tilesetMaps) {
             this._super(layer);
 
             //set options
@@ -90,8 +113,7 @@
             this.repeat = false;
             this.filtered = false;
 
-            //TODO: only works with 1 tileset right now :/
-            this.tileset = tileset;
+            this.tilesetMaps = tilesetMaps;
 
             //pack our layer data array into an 8-bit uint array
             for (var i = 0, y = 0, il = layer.data.length; i < il; ++i, y += 3) {
@@ -103,18 +125,6 @@
                 this.data8[y + 2] = (value & 0x000000ff);
             }
 
-            //Setup Tileset
-            this.tileset.texture.wrapS = this.tileset.texture.wrapT = THREE.ClampToEdgeWrapping;
-            //this.tileset.flipY = false;
-            if(this.filtered) {
-                this.tileset.texture.magFilter = THREE.LinearFilter;
-                this.tileset.texture.minFilter = THREE.LinearMipMapLinearFilter;
-            } else {
-                this.tileset.texture.magFilter = THREE.NearestFilter;
-                this.tileset.texture.minFilter = THREE.NearestMipMapNearestFilter;
-            }
-
-            //For some reason I have to make the mesh in `init` or it explodes!
             this.dataTex = new THREE.DataTexture(
                                 this.data8,
                                 this.size.x, //width
@@ -152,29 +162,41 @@
             this._uniforms = {
                 mapSize:            { type: 'v2', value: new THREE.Vector2(this.size.x * this.tileSize.x, this.size.y * this.tileSize.y) },
                 inverseLayerSize:   { type: 'v2', value: new THREE.Vector2(1 / this.size.x, 1 / this.size.y) },
-                inverseTilesetSize: { type: 'v2', value: new THREE.Vector2(1 / this.tileset.texture.image.width, 1 / this.tileset.texture.image.height) },
 
                 tileSize:           { type: 'v2', value: this.tileSize },
                 inverseTileSize:    { type: 'v2', value: new THREE.Vector2(1 / this.tileSize.x, 1 / this.tileSize.y) },
-                numTiles:           { type: 'v2', value: new THREE.Vector2(this.tileset.texture.image.width / this.tileSize.x, this.tileset.texture.image.height / this.tileSize.y) },
 
-                tileset:            { type: 't', value: this.tileset.texture },
                 tileIds:            { type: 't', value: this.dataTex },
-                firstGid:           { type: 'f', value: this.tileset.firstgid },
                 repeatTiles:        { type: 'i', value: this.repeat ? 1 : 0 },
                 opacity:            { type: 'f', value: this.opacity },
                 bias:               { type: 'f', value: 0.002 },
-                inverseScale:       { type: 'f', value: 1 / this.scale }
+                inverseScale:       { type: 'f', value: 1 / this.scale },
+
+                //tileset maps
+                textures:           { type: 'tv', value: this.tilesetMaps.textures },
+                firstgids:          { type: 'fv1', value: this.tilesetMaps.firstgids },
+                lastgids:           { type: 'fv1', value: this.tilesetMaps.lastgids },
+                //sizes:              { type: 'v2v', value: this.tilesetMaps.sizes },
+                inverseSizes:       { type: 'v2v', value: this.tilesetMaps.inverseSizes },
+                numTiles:           { type: 'v2v', value: this.tilesetMaps.numTiles }
+
+                //firstGid:           { type: 'f', value: this.tileset.firstgid },
+                //tilesets:           { type: 't', value: this.tilesets.texture },
+                //numTiles:           { type: 'v2', value: new THREE.Vector2(this.tileset.texture.image.width / this.tileSize.x, this.tileset.texture.image.height / this.tileSize.y) },
+                //inverseTilesetSize: { type: 'v2', value: new THREE.Vector2(1 / this.tileset.texture.image.width, 1 / this.tileset.texture.image.height) },
             };
 
             if(gf.debug.accessTiledUniforms)
                 gf.debug.tiledUniforms.push(this._uniforms);
 
+            this.vShader = vShader;
+            this.fShader = '#define NUM_TILESETS ' + this.tilesetMaps.textures.length + '\n' + fShader;
+
             //create the shader material
             this._material = new THREE.ShaderMaterial({
                 uniforms: this._uniforms,
-                vertexShader: vShader,
-                fragmentShader: fShader,
+                vertexShader: this.vShader,
+                fragmentShader: this.fShader,
                 transparent: true//(this.opacity !== 1) //if the opacity isn't 1.0, then this needs to be transparent
             });
 

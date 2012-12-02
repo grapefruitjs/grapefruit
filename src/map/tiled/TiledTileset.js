@@ -5,13 +5,29 @@
             this.tileSize = new THREE.Vector2(settings.tilewidth, settings.tileheight);
             this.texture = settings.texture;
 
-            this.firstgid = settings.firstgid;
             this.name = settings.name;
             this.margin = settings.margin;
             this.spacing = settings.spacing;
 
+            this.numTiles = new THREE.Vector2(
+                ~~((this.texture.image.width - this.margin) / (this.tileSize.x + this.spacing)),
+                ~~((this.texture.image.height - this.margin) / (this.tileSize.y + this.spacing))
+            );
+            this.firstgid = settings.firstgid;
+            this.lastgid = this.firstgid + ( ((this.numTiles.x * this.numTiles.y) - 1) || 0);
+
             this.properties = settings.properties || {};
             this.tileproperties = settings.tileproperties || {};
+
+            this.texture.wrapS = this.texture.wrapT = THREE.ClampToEdgeWrapping;
+            //this.texture.flipY = false;
+            if(this.properties.filtered) {
+                this.texture.magFilter = THREE.LinearFilter;
+                this.texture.minFilter = THREE.LinearMipMapLinearFilter;
+            } else {
+                this.texture.magFilter = THREE.NearestFilter;
+                this.texture.minFilter = THREE.NearestMipMapNearestFilter;
+            }
 
             //massage normal
             gf.utils.each(this.tileproperties, function(k, v) {
