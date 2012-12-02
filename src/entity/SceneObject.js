@@ -150,7 +150,7 @@
                 this._doSetPos(x, y, zi);
         },
         _doSetPos: function(x, y, z) {
-            this._mesh.position.set(x, y, z);
+            if(this._mesh) this._mesh.position.set(x, y, z);
         },
         update: function() {}
         //This is being replaced by TWEEN
