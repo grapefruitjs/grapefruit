@@ -280,6 +280,7 @@ Class.extend = function(prop) {
             //initialize the renderer
             gf.game._renderer.setSize(w, h);
             gf.game._$cont.append(gf.game._renderer.domElement);
+            gf.game._$domElement = $(gf.game._renderer.domElement);
 
             //initialize the camera
             gf.game._camera = new THREE.OrthographicCamera(w / -2, w / 2, h / 2, h / -2, 1, 1000);

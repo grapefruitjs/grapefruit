@@ -1,11 +1,28 @@
 (function() {
     gf.utils = {
+        _projector: new THREE.Projector(),
+        positionToScreenCoords: function(position) {
+            var pos = position.clone(),
+                projScreenMat = new THREE.Matrix4();
+
+            projScreenMat.multiply(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse);
+            projScreenMat.multiplyVector3(pos);
+
+            return {
+                x: (pos.x + 1) * gf.game._$domElement.width() / 2 + gf.game._$domElement.offset().left,
+                y: (-pos.y + 1) * gf.game._$domElement.height() / 2 + gf.game._$domElement.offset().top
+            };
+        },
         applyFriction: function(vel, friction) {
-            return (vel + friction < 0) ? 
+            return (
+                        vel + friction < 0 ? 
                         vel + (friction * gf.game._delta) : 
-                    (vel - friction > 0) ? 
-                        vel - (friction * gf.game._delta) : 
-                        0;
+                        (
+                            vel - friction > 0 ? 
+                            vel - (friction * gf.game._delta) : 
+                            0
+                        )
+                    );
         },
         _arrayDelim: '|',
         strToVec: function(str) {
