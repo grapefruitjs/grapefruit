@@ -172,7 +172,7 @@
             if(this.velocity.isZero()) return;
 
             //TODO: check for map collision here
-            var colliders = gf.game.world.checkCollision(this._hitboxMesh, this.hitSize, this.velocity);
+            var colliders = gf.game.world.checkCollision(this._hitboxMesh, this.scaledHitSize, this.velocity);
 
             //update flags
             this.onladder = false;
