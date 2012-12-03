@@ -11,7 +11,8 @@
             /****************************************************************************
              * Call base constructor
              ****************************************************************************/
-            this._super(settings);
+            gf.SceneObject.prototype.setValues.call(this, settings);
+            //this._super(settings);
 
             /****************************************************************************
              * Create the actual object for the scene
@@ -42,17 +43,6 @@
             } else {
                 this._super(x, y, z);
             }
-
-            // if(this._hitboxMesh) {
-            //     this._hitboxMesh.position.set(x, y, z);
-            //     if(this.hitOffset) {
-            //         this._hitboxMesh.position.x += this.scaledHitOffset.x;
-            //         this._hitboxMesh.position.y += this.scaledHitOffset.y;
-            //         //translate doesn't seem to work
-            //         //this._hitboxMesh.translateX(this.hitOffset.x);
-            //         //this._hitboxMesh.translateY(this.hitOffset.y);
-            //     }
-            // }
         },
     });
 })();
