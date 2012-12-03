@@ -9,8 +9,8 @@
             projScreenMat.multiplyVector3(pos);
 
             return {
-                x: (pos.x + 1) * gf.game._$domElement.width() / 2 + gf.game._$domElement.offset().left,
-                y: (-pos.y + 1) * gf.game._$domElement.height() / 2 + gf.game._$domElement.offset().top
+                x: (pos.x + 1) * gf.game._$domElement.width() / 2/* + gf.game._$domElement.offset().left*/,
+                y: (-pos.y + 1) * gf.game._$domElement.height() / 2/* + gf.game._$domElement.offset().top*/
             };
         },
         applyFriction: function(vel, friction) {
