@@ -25,65 +25,16 @@
             this.scene = scene;
 
             if(this._mesh) scene.add(this._mesh);
+
+            return this;
         },
         removeFromScene: function(scene) {
             this.scene = null;
 
             if(this._mesh) scene.remove(this._mesh);
+
+            return this;
         },
-        //returns a collision vector
-        //similar to https://github.com/obiot/melonJS/blob/master/src/math/geometry.js#L627
-        /**
-        if (v.x != 0 || v.y != 0) //a collision occurred
-        {
-            if (v.x != 0) //we collided on the x axis
-            {
-                // x axis
-                if (v.x<0)
-                    console.log("x axis : left side !");
-                else
-                    console.log("x axis : right side !");
-            }
-            else //we collided on the y axis
-            {
-                // y axis
-                if (v.y<0)
-                    console.log("y axis : top side !");
-                else
-                    console.log("y axis : bottom side !");
-            }
-        
-        }
-        *//*
-        collideVsAABB: function(geom) {
-            //response vector
-            var p = new THREE.Vector2(0, 0);
-
-            //check if both boxes are overlaping
-            if(this.intersects(geom)) {
-                //compute delta between this & geom
-                var tLeft = this.position.x - (this.size.x / 2), //this left
-                    tTop = this.position.y + (this.size.y / 2), //this top
-                    gLeft = geom.position.x - (this.size.x / 2), //geom left
-                    gTop = geom.position.y + (this.size.y / 2), //geom top
-                    dx = tLeft + this.size.x - gLeft - geom.size.x,
-                    dy = tTop + this.size.y - gTop - geom.size.y;
-
-                //compute penetration depth for both axis
-                p.x = (geom.size.x + this.size.x) - (dx < 0 ? -dx : dx); // - Math.abs(dx);
-                p.y = (geom.size.y + this.size.y) - (dy < 0 ? -dy : dy); // - Math.abs(dy);
-
-                //check and "normalize" axis
-                if (p.x < p.y) {
-                    p.y = 0;
-                    p.x = dx < 0 ? -p.x : p.x;
-                } else {
-                    p.x = 0;
-                    p.y = dy < 0 ? -p.y : p.y;
-                }
-            }
-            return p;
-        },*/
         //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
         setValues: function(values) {
             if(!values) return;
@@ -132,6 +83,8 @@
                     }
                 }
             }
+
+            return this;
         },
         //set the position of this object in the scene
         setPosition: function(x, y, z) {
@@ -148,11 +101,17 @@
                 else if(x.length === 3) this._doSetPos(x[0], x[1], x[2]);
             } else
                 this._doSetPos(x, y, zi);
+
+            return this;
         },
         _doSetPos: function(x, y, z) {
             if(this._mesh) this._mesh.position.set(x, y, z);
+
+            return this;
         },
-        update: function() {}
+        update: function() {
+            return this;
+        }
         //This is being replaced by TWEEN
         /*update: function() {
             return;

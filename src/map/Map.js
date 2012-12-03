@@ -13,6 +13,8 @@
         //virtual add layer
         addLayer: function(layer) {
             this.layers.push(layer);
+
+            return this;
         },
         getLayer: function(id) {
             if(typeof id == 'number')
@@ -29,6 +31,8 @@
 
                 return lyr;
             }
+
+            return this;
         },
         //add all layers to the scene
         addToScene: function(scene) {
@@ -39,6 +43,8 @@
                 if(!layer.scene || layer.scene != scene)
                     layer.addToScene(scene);
             });
+
+            return this;
         },
         //apply an iterator to each layer
         eachLayer: function(fn) {
@@ -46,6 +52,8 @@
                 if(fn.call(this, this.layers[i], i, this.layers) === false)
                     break;
             }
+
+            return this;
         }
     });
 })();

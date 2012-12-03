@@ -1,41 +1,5 @@
 (function() {
     gf.utils = {
-        project: {
-            _projector: new THREE.Projector(),
-            positionToViewport: function(position) {
-                var vector = gf.utils.project._projector.projectVector(position, gf.game._camera),
-                    hWidth = gf.game._$domElement.width() / 2,
-                    hHeight = gf.game._$domElement.height() / 2;
-
-                return new THREE.Vector2(
-                    Math.round(vector.x * hWidth + hWidth),
-                    Math.round(-vector.y * hHeight + hHeight)
-                );
-            },
-            positionToScreen: function(position) {
-                var pos = gf.utils.project.positionToViewport(position);
-
-                pos.x += gf.game._$domElement.offset().left;
-                pos.y += gf.game._$domElement.offset().top;
-
-                return pos;
-            },
-            screenToPosition: function(pos) {
-                var vector = new THREE.Vector3(
-                        (pos.x * 2) - 1,
-                        (-pos.y * 2) + 1,
-                        0.5
-                    );
-
-                gf.utils.project._projector.unprojectVector(vector, gf.game._camera);
-
-                var dir = vector.subSelf(gf.game._camera.position).normalize(),
-                    ray = new THREE.Ray(gf.game._camera.position, dir),
-                    distance = - gf.game._camera.position.z / dir.z;
-
-                return gf.game._camera.position.clone().addSelf(dir.multiplyScalar(distance));
-            }
-        },
         applyFriction: function(vel, friction) {
             return (
                         vel + friction < 0 ? 
@@ -93,6 +57,42 @@
                 }
             }
             return object;
+        },
+        project: {
+            _projector: new THREE.Projector(),
+            positionToViewport: function(position) {
+                var vector = gf.utils.project._projector.projectVector(position, gf.game._camera),
+                    hWidth = gf.game._$domElement.width() / 2,
+                    hHeight = gf.game._$domElement.height() / 2;
+
+                return new THREE.Vector2(
+                    Math.round(vector.x * hWidth + hWidth),
+                    Math.round(-vector.y * hHeight + hHeight)
+                );
+            },
+            positionToScreen: function(position) {
+                var pos = gf.utils.project.positionToViewport(position);
+
+                pos.x += gf.game._$domElement.offset().left;
+                pos.y += gf.game._$domElement.offset().top;
+
+                return pos;
+            },
+            screenToPosition: function(pos) {
+                var vector = new THREE.Vector3(
+                        (pos.x * 2) - 1,
+                        (-pos.y * 2) + 1,
+                        0.5
+                    );
+
+                gf.utils.project._projector.unprojectVector(vector, gf.game._camera);
+
+                var dir = vector.subSelf(gf.game._camera.position).normalize(),
+                    ray = new THREE.Ray(gf.game._camera.position, dir),
+                    distance = - gf.game._camera.position.z / dir.z;
+
+                return gf.game._camera.position.clone().addSelf(dir.multiplyScalar(distance));
+            }
         },
         b64: {
             // private property

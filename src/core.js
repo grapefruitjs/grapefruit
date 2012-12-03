@@ -391,10 +391,6 @@ Class.extend = function(prop) {
 
             return colliders;
         },
-        //check if passed entity collides with any map tile after applying the velocity movement
-        checkMapCollision: function() {
-
-        },
         //lock the camera on an entity
         cameraTrack: function(ent) {
             if(ent.isEntity) {

@@ -62,6 +62,8 @@
                     }
                 }
             }
+
+            return this;
         },
         onKeyUp: function(e) {
             //if this key is bound
@@ -79,6 +81,8 @@
                     }
                 }
             }
+
+            return this;
         },
         isActionActive: function(action) {
             return this.actstatus[action];
