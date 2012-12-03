@@ -125,12 +125,54 @@ window.gf = window.gf || {
         }
     },
     support: {
-        canvas: !! window.CanvasRenderingContext2D,
-        webgl: ( function () { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } } )(),
-        workers: !! window.Worker,
+        //user agent
+        ua: navigator.userAgent.toLowerCase(),
+
+        //canvas supported?
+        canvas: !!window.CanvasRenderingContext2D,
+
+        //webgl supported?
+        webgl: (function () { try { return !!window.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl'); } catch(e) { return false; } })(),
+
+        //web workers supported?
+        workers: !!window.Worker,
+
+        //fileapi supported?
         fileapi: window.File && window.FileReader && window.FileList && window.Blob,
+
+        //can this browser play audio?
+        audio: {
+            play: !!document.createElement('audio').canPlayType,
+            m4a: false,
+            mp3: false,
+            ogg: false,
+            wav: false,
+        },
+
+        //local storage supported?
+        localStorage: !!window.localStorage
     }
 };
+
+//additional audio support checks
+if(gf.support.audio.play) {
+    var a = document.createElement('audio');
+
+    gf.support.audio.m4a = !!a.canPlayType('audio/mp4; codecs="mp4a.40.2"').replace(/no/, '');
+    gf.support.audio.mp3 = !!a.canPlayType('audio/mpeg').replace(/no/, '');
+    gf.support.audio.ogg = !!a.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, '');
+    gf.support.audio.wav = !!a.canPlayType('audio/wav; codecs="1"').replace(/no/, '');
+
+    //check for specific platforms
+    if(gf.support.ua.search('iphone') > -1 || gf.support.ua.search('ipod') > -1 ||
+        gf.support.ua.search('ipad') > -1 || gf.support.ua.search('android') > -1) {
+
+        //if on mobile device, without a specific HTML5 acceleration framework
+        if(!navigator.isCocoonJS) {
+            gf.support.audio.play = false;
+        }
+    }
+}
 
 /****************************************************************************
  * Javascript Inheritance Helper (use functional mixins instead?)
