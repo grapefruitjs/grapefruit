@@ -30,6 +30,7 @@
             if(!loop) {
                 sound.addEventListener('ended', function(e) {
                     sound.removeEventListener('ended', arguments.callee, false);
+                    sound.currentTime = resetTime;
                     delete playing[soundid];
                     if(cb) cb();
                 }, false);
