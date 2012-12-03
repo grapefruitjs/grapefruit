@@ -396,7 +396,6 @@ Class.extend = function(prop) {
 
         },
         //lock the camera on an entity
-        //I need an event system :/
         cameraTrack: function(ent) {
             if(ent.isEntity) {
                 if(this._trackedEntMoveHandle) {
@@ -443,7 +442,7 @@ Class.extend = function(prop) {
 
             //update each object
             gf.utils.each(gf.game.objects, function(id, o) {
-                if(o.inViewport && o.isVisible) {
+                if(o.inViewport && o.isVisible && o.update) {
                     o.update();
                 }
             });
