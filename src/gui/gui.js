@@ -5,6 +5,9 @@
 
     gf.GuiObject = gf.SceneObject.extend({
         init: function(pos, settings) {
+            //Are the coords the user will pass actually relative to the element (screenCoords)?
+            this.useScreenCoords = true;
+
             /****************************************************************************
              * Call base constructor
              ****************************************************************************/
@@ -32,7 +35,13 @@
             this.setPosition(pos);
         },
         _doSetPos: function(x, y, z) {
-            this._super(x, y, z);
+            if(this.useScreenCoords) {
+                //transform the coords into world coords before setting the position
+                var pos = gf.utils.project.screenToPosition(new THREE.Vector2(x, y));
+                this._super(pos.x, pos.y, z);
+            } else {
+                this._super(x, y, z);
+            }
 
             // if(this._hitboxMesh) {
             //     this._hitboxMesh.position.set(x, y, z);
