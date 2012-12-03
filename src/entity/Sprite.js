@@ -83,6 +83,8 @@
             }
             this.anim[name].length = this.anim[name].frames.length;
             this.anim[name].frameTime = (settings.duration || 0) / this.anim[name].frames.length;
+
+            return this;
         },
         setActiveAnimation: function(name, resetAnim) {
             if(!this.anim[name]) {
@@ -124,36 +126,8 @@
             }
 
             this.currentFrameTime = 0;
-            /*this.setAnimationFrame(this.current.idx); // or 0 ?
-            this.currentFrameTime = 0;
-            this.currentFrame = 0;
 
-            if(!name) {
-                this.currentAnim = null;
-
-                this.texture.repeat.set(
-                    1 / this.numFrames.x,
-                    1 / this.numFrames.y
-                );
-
-                //reset to the default frame
-                this.texture.offset.x = (this.offset.x / this.texture.image.width);
-                this.texture.offset.y = 1 - (this.size.y / this.texture.image.height) - (this.offset.y / this.texture.image.height);
-            }
-            else if(this.anim && this.anim[name]) {
-                this.currentAnim = this.anim[name];
-                this.currentAnim._done = false;
-
-                this.texture.repeat.set(
-                    (this.currentAnim.inverseX ? -1 : 1) / this.numFrames.x,
-                    (this.currentAnim.inverseY ? -1 : 1) / this.numFrames.y
-                );
-
-                //dont need to set these, since the animate function should do it for us
-                this._setOffset();
-            }
-
-            return this.currentAnim;*/
+            return this;
         },
         isActiveAnimation: function(name) {
             return this.currentAnim.name == name;
@@ -184,6 +158,8 @@
                     this._setOffset();
                 }
             }
+
+            return this;
         },
         _setOffset: function() {
             //for some reason when inversed, the tiles need to start at 1 instead of 0

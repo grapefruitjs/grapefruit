@@ -4,6 +4,6 @@
     };
 
     gf.GuiObject = gf.Sprite.extend({
-        init: function(pos, )
+        init: function(pos, x) {}
     });
 })();

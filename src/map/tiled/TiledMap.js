@@ -88,12 +88,16 @@
             //incase they add the map to the scene first, then add layers
             if(this.scene)
                 tilemapLayer.addToScene(this.scene);
+
+            return this;
         },
         //add a new object group to this tilemap
         addObjectGroup: function(group) {
             group.zIndex = this.objectGroups.length + 1;
             var objgroup = new gf.TiledObjectGroup(group, this.tilesets);
             this.objectGroups.push(group);
+
+            return this;
         },
         //if object is moved by pv get the tile it would be at
         checkCollision: function(mesh, sz, vec) {
@@ -238,6 +242,8 @@
         loadZone: function(zone) {
             //set the new zone
             this.zone = this.findZoneIndex(zone);
+
+            return this;
         },
         //find the index of a zone based on different inputs
         findZoneIndex: function(z) {
@@ -277,6 +283,8 @@
                 this.upgradeCoord(zone.vertices[i]);
             }
             zone.vertexUnits = types.UNIT.OFFSETS;
+
+            return this;
         },
         //converts a coord from pixel position to world coord
         upgradeCoord: function(coord) {
@@ -296,6 +304,8 @@
                 if(fn.call(this, this.zones[i], i, this.zones) === false)
                     break;
             }
+
+            return this;
         }
     });
 })();

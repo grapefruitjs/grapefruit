@@ -43,6 +43,8 @@
                 //at this point we have no loader for this type
                 throw new Error('Unknown resource type: ' + resource.type + ' for res');
             }
+
+            return this;
         },
         /**
          * Resources format:
@@ -92,6 +94,8 @@
                 if(done >= resources.length)
                     gf.event.publish(gf.types.EVENT.LOADER_COMPLETE, resources);
             }
+
+            return this;
         },
         //Privates for loaders only, not public use
         _loaders: {},

@@ -47,6 +47,8 @@
                 //add the new entity to the game
                 gf.game.addObject(this.ents[i]);
             }
+
+            return this;
         },
         despawn: function() {
             //remove each entity from the game
@@ -56,6 +58,8 @@
 
             //lose references so they get cleaned up
             this.ents = [];
+
+            return this;
         }
     });
 })();

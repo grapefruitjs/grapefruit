@@ -240,9 +240,13 @@
         },
         hide: function() {
             this.visible = this._mesh.visible = false;
+
+            return this;
         },
         show: function() {
             this.visible = this._mesh.visible = true;
+
+            return this;
         },
         //skip parent creating mesh
         _createMesh: function() {}

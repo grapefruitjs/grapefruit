@@ -126,6 +126,8 @@
             //cap velocity
             if(vel.x) vel.x = gf.utils.clamp(vel.x, -this.maxVelocity.x, this.maxVelocity.x);
             if(vel.y) vel.y = gf.utils.clamp(vel.y, -this.maxVelocity.y, this.maxVelocity.y);
+
+            return this;
         },
         //from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
         intersects: function(entity)  {
@@ -162,11 +164,18 @@
             this._super(scene);
 
             if(this._hitboxMesh) scene.add(this._hitboxMesh);
+
+            return this;
+        },
+        addToPool: function(name) {
+            return gf.entityPool.add(name || this.name, this);
         },
         removeFromScene: function(scene) {
             this._super(scene);
 
             if(this._hitboxMesh) scene.remove(this._hitboxMesh);
+
+            return this;
         },
         updateMovement: function(vel) {
             if(this.velocity.isZero()) return;
@@ -211,48 +220,7 @@
             //apply gravity, friction, etc to this velocity
             this.computeVelocity(this.velocity);
 
-            //collision on y axis
-            /*if(collision.y) {
-                this.onladder = collision.yprop.isLadder;
-
-                //going down, collision with the floor
-                if (collision.y > 0) {
-                    var hitboxBottom = this._hitboxMesh.position.y - this._hitboxMesh.geometry.height;
-
-                    if(collision.yprop.isSolid || (collision.yprop.isPlatform && (hitboxBottom - 1 <= collision.ytile.position.y))) {
-                        //adjust position to the corresponding tile
-                        this.setPosition(this._mesh.position.x, Math.floor(this._mesh.position.y));
-                        this.velocity.y = this.falling ? collision.ytile.pos.y - hitboxBottom : 0;
-                        this.falling = false;
-                    }
-                    else if (collision.yprop.isSlope && !this.jumping) {
-                        // we stop falling
-                        this.checkSlope(collision.ytile, collision.yprop.isLeftSlope);
-                        this.falling = false;
-                    }
-                    else if (collision.yprop.isBreakable) {
-                        if (this.canBreakTile) {
-                            // remove the tile
-                            me.game.currentLevel.clearTile(collision.ytile.col, collision.ytile.row);
-                            this.onTileBreak();
-                        }
-                        else {
-                            // adjust position to the corresponding tile
-                            this.pos.y = ~~this.pos.y;
-                            this.vel.y = (this.falling) ?collision.ytile.pos.y - this.collisionBox.bottom: 0;
-                            this.falling = false;
-                        }
-                    }
-                }
-                //going up, collision with ceiling
-                else if(collision.y < 0) {
-                    if(!collision.yprop.isPlatform && !collision.yprop.isLadder) {
-                        this.falling = true;
-                        this.velocity.y = 0;
-                    }
-                }
-            }*/
-
+            //do the actual entity movement
             this.moveEntity();
 
             gf.debug._playerColliders = colliders;
@@ -281,6 +249,8 @@
 
             //emit movement
             gf.event.publish(gf.types.EVENT.ENTITY_MOVE + '.' + this.id, vel);
+
+            return this;
         },
         //On Collision Event
         // called when this object is collided into by another, by default if something collides with
@@ -290,17 +260,23 @@
         onCollision: function(vec, obj) {
             if(this.collidable && this.type == gf.types.ENTIY.COLLECTABLE)
                 gf.game.removeObject(this);
+
+            return this;
         },
 
         //On Move Event
         // called when this entity moves
         //vel - Velocity the entity moved (THREE.Vector2)
-        onMove: function(vel) {},
+        onMove: function(vel) {
+            return this;
+        },
 
         //On Tile Break Event
         // called when a tile is broken
         //tile - the tile that is broken
-        onTileBreak: function(tile) {},
+        onTileBreak: function(tile) {
+            return this;
+        },
 
         //Privates
         _doSetPos: function(x, y, z) {
