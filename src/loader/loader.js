@@ -1,4 +1,6 @@
 (function() {
+    //TODO: Retries?
+
     //simple memory cache
     var _cache = {};
 
@@ -136,7 +138,7 @@
 
     //Image loader
     gf.loader._loaders.image = {
-        load: function(resource, callbacks) {
+        load: function(resource) {
             resource.data = new Image();
             resource.data.addEventListener('load', function() {
                 gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, resource);
@@ -147,7 +149,7 @@
 
     //JSON and XML loaders
     gf.loader._loaders.json = gf.loader._loaders.xml = {
-        load: function(resource, callbacks) {
+        load: function(resource) {
             gf.loader._get(
                 resource.src,
                 resource.type,
@@ -169,7 +171,7 @@
 
     //Texture loader
     gf.loader._loaders.texture = {
-        load: function(resource, callbacks) {
+        load: function(resource) {
             var tloader = new THREE.TextureLoader();
                     
             tloader.addEventListener('error', function(err) {
@@ -185,9 +187,39 @@
         }
     };
 
+    //Audio loader
+    gf.loader._loaders.audio = gf.loader._loaders.sound = gf.loader._loaders.music = {
+        load: function(resource) {
+            if(!gf.support.audio.play) {
+                gf.event.publish(gf.types.EVENT.LOADER_ERROR + '.' + resource.name, 'This browser does not support HTML5 Audio!', resource);
+                return false;
+            }
+
+            var ext = resource.src.substr(resource.src.lastIndexOf('.') + 1);
+            if(!gf.support.audio[ext]) {
+                gf.event.publish(gf.types.EVENT.LOADER_ERROR + '.' + resource.name, 'This browser does not support playing ' + ext + ' audio files!', resource);
+                return false;
+            }
+
+            var sound = resource.data = new Audio(resource.src);
+            sound.preload = 'auto';
+
+            sound.addEventListener('canplaythrough', function(e) {
+                this.removeEventListener('canplaythrough', arguments.callee, false);
+                gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, resource);
+            }, false);
+
+            sound.addEventListener('error', function(e) {
+                gf.event.publish(gf.types.EVENT.LOADER_ERROR + '.' + resource.name, 'Error loading the audio file!', resource);
+            }, false);
+
+            sound.load();
+        }
+    };
+
     //World loader, loads a world JSON file and all of its resources listed within
     gf.loader._loaders.world = {
-        load: function(resource, callbacks) {
+        load: function(resource) {
             if(!resource.texturePath)
                 resource.texturePath = resource.src.substr(0, resource.src.lastIndexOf('/') + 1);
 
