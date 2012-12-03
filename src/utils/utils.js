@@ -1,17 +1,42 @@
 (function() {
     gf.utils = {
-        _projector: new THREE.Projector(),
-        positionToScreenCoords: function(position) {
-            var pos = position.clone(),
-                projScreenMat = new THREE.Matrix4();
+        project: {
+            _projector: new THREE.Projector(),
+            positionToViewport: function(position) {
+                var pos = position.clone(),
+                    projScreenMat = new THREE.Matrix4();
 
-            projScreenMat.multiply(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse);
-            projScreenMat.multiplyVector3(pos);
+                projScreenMat.multiply(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse);
+                projScreenMat.multiplyVector3(pos);
 
-            return {
-                x: (pos.x + 1) * gf.game._$domElement.width() / 2/* + gf.game._$domElement.offset().left*/,
-                y: (-pos.y + 1) * gf.game._$domElement.height() / 2/* + gf.game._$domElement.offset().top*/
-            };
+                return {
+                    x: (pos.x + 1) * gf.game._$domElement.width() / 2/* + gf.game._$domElement.offset().left*/,
+                    y: (-pos.y + 1) * gf.game._$domElement.height() / 2/* + gf.game._$domElement.offset().top*/
+                };
+            },
+            positionToScreen: function(position) {
+                var pos = gf.utils.project.positionToViewport(position);
+
+                pos.x += gf.game._$domElement.offset().left;
+                pos.y += gf.game._$domElement.offset().top;
+
+                return pos;
+            },
+            screenToPosition: function(pos) {
+                var vector = new THREE.Vector3(
+                        (pos.x * 2) - 1,
+                        (-pos.y * 2) + 1,
+                        0.5
+                    );
+
+                gf.utils._projector.unprojectVector(vector, gf.game._camera);
+
+                var dir = vector.subSelf(gf.game._camera.position).normalize(),
+                    ray = new THREE.Ray(gf.game._camera.position, dir),
+                    distance = - gf.game._camera.position.z / dir.z;
+
+                return gf.game._camera.position.clone().addSelf(dir.multiplyScalar(distance));
+            }
         },
         applyFriction: function(vel, friction) {
             return (
