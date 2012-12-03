@@ -34,6 +34,9 @@
             //animations paused
             this.animPaused = false;
 
+            //use screen coords instead of world coords
+            this.useScreenCoords = false;
+
             /****************************************************************************
              * Call base constructor
              ****************************************************************************/
@@ -206,6 +209,27 @@
             }
 
             this.numFrames.set(this.texture.image.width / this.size.x, this.texture.image.height / this.size.y);
+
+            /*
+             * Really need to be using sprite, not a plane...
+
+            this._mesh = new THREE.Sprite({
+                map: this.texture,
+                useScreenCoordinates: this.useScreenCoords,
+                scaleByViewport: true
+            });
+            //scale mesh
+            this._mesh.scale.x = -(1 / this.numFrames.x);
+            this._mesh.scale.y = (1 / this.numFrames.y);
+
+            //texture offset to first frame
+            this._mesh.uvOffset.x = 1 - this._mesh.scale.x;
+            this._mesh.uvOffset.y = 1 - this._mesh.scale.y;
+
+            //scale texture
+            this._mesh.uvScale.x = (1 / this.numFrames.x);
+            this._mesh.uvScale.y = (1 / this.numFrames.y);
+            */
 
             //setup wrapping of the texture
             this.texture.wrapS = this.texture.wrapT = THREE.RepeatWrapping;
