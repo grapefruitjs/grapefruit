@@ -3,16 +3,14 @@
         project: {
             _projector: new THREE.Projector(),
             positionToViewport: function(position) {
-                var pos = position.clone(),
-                    projScreenMat = new THREE.Matrix4();
+                var vector = gf.utils.project._projector.projectVector(position, gf.game._camera),
+                    hWidth = gf.game._$domElement.width() / 2,
+                    hHeight = gf.game._$domElement.height() / 2;
 
-                projScreenMat.multiply(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse);
-                projScreenMat.multiplyVector3(pos);
-
-                return {
-                    x: (pos.x + 1) * gf.game._$domElement.width() / 2/* + gf.game._$domElement.offset().left*/,
-                    y: (-pos.y + 1) * gf.game._$domElement.height() / 2/* + gf.game._$domElement.offset().top*/
-                };
+                return new THREE.Vector2(
+                    Math.round(vector.x * hWidth + hWidth),
+                    Math.round(-vector.y * hHeight + hHeight)
+                );
             },
             positionToScreen: function(position) {
                 var pos = gf.utils.project.positionToViewport(position);
@@ -29,7 +27,7 @@
                         0.5
                     );
 
-                gf.utils._projector.unprojectVector(vector, gf.game._camera);
+                gf.utils.project._projector.unprojectVector(vector, gf.game._camera);
 
                 var dir = vector.subSelf(gf.game._camera.position).normalize(),
                     ray = new THREE.Ray(gf.game._camera.position, dir),
