@@ -233,6 +233,9 @@ Class.extend = function(prop) {
         init: function(contId, width, height, renderMethod) {
             if(gf.controls._initialized) return;
 
+            /****************************************************************************
+             * Choose a render method (WebGL or Canvas)
+             ****************************************************************************/
             //if they speciy a method, check if it is available
             if(renderMethod) {
                 if(!gf.support[renderMethod]) {
@@ -271,6 +274,9 @@ Class.extend = function(prop) {
 
             gf.game._renderMethod = renderMethod;
 
+            /****************************************************************************
+             * Setup game container
+             ****************************************************************************/
             //cache the container object
             gf.game._$cont = $('#' + contId);
 
@@ -282,6 +288,9 @@ Class.extend = function(prop) {
             gf.game._$cont.append(gf.game._renderer.domElement);
             gf.game._$domElement = $(gf.game._renderer.domElement);
 
+            /****************************************************************************
+             * Initialize the camera and lighting
+             ****************************************************************************/
             //initialize the camera
             gf.game._camera = new THREE.OrthographicCamera(w / -2, w / 2, h / 2, h / -2, 1, 1000);
             gf.game._camera.position.z = gf.game.MAX_Z;
@@ -291,6 +300,9 @@ Class.extend = function(prop) {
             //add ambient light to the scene
             gf.game._scene.add(new THREE.AmbientLight(0xffffff));
 
+            /****************************************************************************
+             * Initialize the various game components
+             ****************************************************************************/
             //initialize the controls
             gf.controls.init();
 
@@ -300,6 +312,9 @@ Class.extend = function(prop) {
             //initialize the GUI (HUD, menus, etc)
             gf.gui.init();
 
+            /****************************************************************************
+             * Add some debug elements
+             ****************************************************************************/
             //fps counter
             if(gf.debug.showFps) {
                 gf.debug._fpsCounter = new gf.debug.FpsCounter();
