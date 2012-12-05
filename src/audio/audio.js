@@ -14,8 +14,15 @@
 
             gf.audio._initialized = true;
         },
-        play: function(soundid, loop, cb) {
+        play: function(soundid, opts, cb) {
             if(!gf.resources[soundid]) return this;
+
+            if(typeof opts == 'function') {
+                cb = opts;
+                opts = null;
+            }
+
+            opts = opts || {};
 
             //paused
             if(playing[soundid]) {
@@ -24,12 +31,14 @@
             }
 
             var sound = playing[soundid] = gf.resources[soundid].data;
-            sound.loop = loop || false;
+            sound.loop = opts.loop || false;
+            sound.volume = opts.volume || 1.0;
             sound.play();
 
-            if(!loop) {
+            if(!opts.loop) {
                 sound.addEventListener('ended', function(e) {
                     sound.removeEventListener('ended', arguments.callee, false);
+                    sound.pause();
                     sound.currentTime = resetTime;
                     delete playing[soundid];
                     if(cb) cb();
