@@ -62,6 +62,9 @@
             playing[soundid].pause();
 
             return this;
+        },
+        isPlaying: function(soundid) {
+            return !!playing[soundid];
         }
     };
 })();

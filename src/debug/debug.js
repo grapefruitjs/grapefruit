@@ -100,8 +100,9 @@
                                                 ', Z: ' + gf.game.player._hitboxMesh.position.z.toFixed(3) :
                                             'none';
 
-                    tilesVal.innerHTML = '<br/>';
-                    if(gf.debug._playerColliders) {
+                    if(gf.debug._playerColliders && gf.debug._playerColliders.dirty) {
+                        gf.debug._playerColliders.dirty = false;
+                        tilesVal.innerHTML = '<br/>';
                         for(var i = 0, il = gf.debug._playerColliders.length; i < il; ++i) {
                             tilesVal.innerHTML += 'Tile (' + gf.debug._playerColliders[i].axis + '): ' + 
                                                 gf.debug._playerColliders[i].tile.type + 
