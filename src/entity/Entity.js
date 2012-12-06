@@ -61,10 +61,10 @@
             this.name = '';
 
             //friction to apply to this entities movement
-            this.friction = settings.friction || (gf.game.friction != undefined ? gf.game.friction : new THREE.Vector2(0, 0));
+            this.friction = settings.friction || gf.game.friction;
 
             //gravity of the world
-            this.gravity = settings.gravity || (gf.game.gravity != undefined ? gf.game.gravity : 0.98);
+            this.gravity = settings.gravity || gf.game.gravity;
 
             //entity alive
             this.alive = true;
@@ -181,7 +181,7 @@
             if(this.velocity.isZero()) return;
 
             //TODO: check for map collision here
-            var colliders = gf.game.world.checkCollision(this._hitboxMesh, this.scaledHitSize, this.velocity);
+            var colliders = gf.game.world !== undefined ? gf.game.world.checkCollision(this._hitboxMesh, this.scaledHitSize, this.velocity) : [];
 
             //update flags
             this.onladder = false;

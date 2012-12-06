@@ -32,7 +32,7 @@
             //massage normal
             gf.utils.each(this.tileproperties, function(k, v) {
                 if(v.normal && !(v.normal instanceof THREE.Vector2))
-                    v.normal = gf.utils.strToVec(v.normal);
+                    v.normal = gf.utils.ensureVector(v.normal);
 
                 if(v.isCollidable == 'true') v.isCollidable = true;
                 if(v.isBreakable == 'true') v.isBreakable = true;

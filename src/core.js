@@ -272,14 +272,20 @@ Class.extend = function(prop) {
         //have we initialized the game already?
         _initialized: false,
 
-        init: function(contId, width, height, renderMethod) {
+        init: function(contId, opts) {
             if(gf.controls._initialized) return;
+
+            opts = opts || {};
+
+            gf.game.gravity = opts.gravity || 0.98;
+            gf.game.friction = gf.utils.ensureVector(opts.friction);
+            gf.game.clearColor = opts.clearColor || 0xcccccc;
 
             /****************************************************************************
              * Choose a render method (WebGL or Canvas)
              ****************************************************************************/
             //if they speciy a method, check if it is available
-            if(renderMethod) {
+            if(opts.renderMethod) {
                 if(!gf.support[renderMethod]) {
                     throw 'Render method ' + renderMethod + ' is not supported by this browser!';
                     return;
@@ -296,7 +302,6 @@ Class.extend = function(prop) {
             }
 
             //initialize the correct renderer
-            renderMethod = 'webgl';
             if(renderMethod == 'webgl') {
                 gf.game._renderer = new THREE.WebGLRenderer({
                     //can also specify 'canvas' dom element, but we just let THREE generate one
@@ -304,7 +309,7 @@ Class.extend = function(prop) {
                     alpha: true,
                     premultipliedAlpha: true,
                     antialias: false,
-                    clearColor: 0xff00ff,
+                    clearColor: gf.game.clearColor,
                     clearAlpha: 0,
                     maxLights: 4
                 });
@@ -322,8 +327,8 @@ Class.extend = function(prop) {
             //cache the container object
             gf.game._$cont = $('#' + contId);
 
-            var w = width || gf.game._$cont.width(),
-                h = height || gf.game._$cont.height();
+            var w = opts.width || gf.game._$cont.width(),
+                h = opts.height || gf.game._$cont.height();
 
             //initialize the renderer
             gf.game._renderer.setSize(w, h);
@@ -469,7 +474,7 @@ Class.extend = function(prop) {
                     var frustum = new THREE.Frustum();
                     frustum.setFromMatrix(new THREE.Matrix4().multiply(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
                     gf.utils.each(gf.game.objects, function(id, o) {
-                        if(o.isEntity) {
+                        if(o.isEntity && o._mesh && o._mesh.geometry) {
                             //o._mesh.updateMatrix(); // make sure plane's local matrix is updated
                             //o._mesh.updateMatrixWorld(); // make sure plane's world matrix is updated
                             o.inViewport = frustum.contains(o._mesh);
