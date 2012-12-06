@@ -12,13 +12,22 @@
                     );
         },
         _arrayDelim: '|',
-        strToVec: function(str) {
-            var a = str.split(gf.utils._arrayDelim);
+        ensureVector: function(vec) {
+            if(vec instanceof THREE.Vector2 || vec instanceof THREE.Vector3)
+                return vec;
 
-            if(a.length === 2)
-                return new THREE.Vector2(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
-            else if(a.length === 3)
-                return new THREE.Vector3(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10));
+            var a = vec;
+            if(typeof vec == 'string') a = vec.split(gf.utils._arrayDelim);
+
+            if(vec instanceof Array) {
+                switch(vec.length) {
+                    case 2: return new THREE.Vector2(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
+                    case 3: return new THREE.Vector3(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10));
+                }
+            }
+            else {
+                return new THREE.Vector2();
+            }
         },
         clamp: function(n, min, max) { return Math.max(min, Math.min(max, n)); },
         RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },

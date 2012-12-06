@@ -197,7 +197,7 @@
                 uniforms: this._uniforms,
                 vertexShader: this.vShader,
                 fragmentShader: this.fShader,
-                transparent: true//(this.opacity !== 1) //if the opacity isn't 1.0, then this needs to be transparent
+                transparent: (this.opacity !== 1) //if the opacity isn't 1.0, then this needs to be transparent
             });
 
             this._plane = new THREE.PlaneGeometry(
