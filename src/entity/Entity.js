@@ -224,6 +224,7 @@
             this.moveEntity();
 
             gf.debug._playerColliders = colliders;
+            gf.debug._playerColliders.dirty = true;
 
             return colliders;
         },
