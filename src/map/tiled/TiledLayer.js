@@ -210,11 +210,11 @@
             this._mesh.position.z = this.zIndex;
         },
         //get ID of tile at specified location
-        getTileId: function(pos, realCoords) {
-            pos = pos.clone();
+        getTileId: function(x, y, realCoords) {
+            pos = x instanceof THREE.Vector2 ? x.clone() : new THREE.Vector2(x, y);
             //if not realCoords, they are world coords; and must be converted
             if(!realCoords) {
-                //do some division to make position be in "tiles from center" instead of "pixels from center"
+                //do some division to make position be in "tiles from center" instead of "units from center"
                 pos.divideScalar(this.scale);
                 pos.x = pos.x / this.tileSize.x;
                 pos.y = pos.y / this.tileSize.y;

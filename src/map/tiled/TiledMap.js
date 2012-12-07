@@ -15,7 +15,26 @@
             this.tileSize = new THREE.Vector2(map.tilewidth, map.tileheight);
 
             //user-defined properties
-            this.properties = map.properties;
+            map.properties = map.properties || {};
+            this.scale = map.properties.scale || 1;
+
+            //scaled size (size * tileSize * scale)
+            this.scaledSize = new THREE.Vector2(
+                this.size.x * this.tileSize.x * this.scale,
+                this.size.y * this.tileSize.y * this.scale
+            );
+            //assuming 0,0 is in the middle of the map, calculate the minimum
+            //and maximum extent of the map
+            this.extent = {
+                x: {
+                    min: ~~(this.scaledSize.x / 2) - this.scaledSize.x, 
+                    max: this.scaledSize.x - ~~(this.scaledSize.x / 2)
+                },
+                y: {
+                    min: ~~(this.scaledSize.y / 2) - this.scaledSize.y,
+                    max: this.scaledSize.y - ~~(this.scaledSize.y / 2)
+                }
+            };
 
             //tilesets
             this.tilesets = [];
@@ -75,7 +94,7 @@
         },
         //add a new layer to this tilemap
         addLayer: function(layer) {
-            layer.scale = this.properties.scale || 1;
+            layer.scale = this.scale;
             layer.zIndex = this.layers.length;
             var tilemapLayer = new gf.TiledLayer(layer, this.tileSize, this.tilesetMaps);
             this.layers.push(tilemapLayer);
@@ -100,133 +119,50 @@
             return this;
         },
         //if object is moved by pv get the tile it would be at
-        checkCollision: function(mesh, sz, vec) {
+        checkCollision: function(mesh, sz, pv) {
             if(!this.collisionLayer || !this.collisionTileset) return;
 
             var pos = new THREE.Vector2(mesh.position.x, mesh.position.y),
-                size = sz.clone(),
-                pv = new THREE.Vector2(~~vec.x, ~~vec.y),
-                haveX = false, haveY = false,
-                res = [];/*{
-                    xtiles: [],
-                    ytiles: []
-                };*/
+                size = sz.clone().divideScalar(2),
+                left = pos.x - size.x,
+                right = pos.x + size.x,
+                top = pos.y + size.y,
+                bottom = pos.y - size.y,
+                x = (pv.x < 0) ? Math.floor(left + pv.x) : Math.ceil(right + pv.x),
+                y = (pv.y < 0) ? Math.floor(bottom + pv.y) : Math.ceil(top + pv.y),
+                res = [],
+                tile = null;
 
-            size.divideScalar(2);
-
-            //TODO: This is ungly since I am simulating movement in each axis separately. There
-            // must be a cleaner way to accomplish this :/ PLus I am counting from `pos` to `pos + vec`
-            // in a loop, it is just nasty
-
-            for(var x = 1, y = 1; (!haveX && x <= Math.abs(pv.x)) || (!haveY && y <= Math.abs(pv.y)); ++x, ++y) {
-                //if moving along X axis
-                if(pv.x && !haveX && x <= Math.abs(pv.x)) {
-                    //if moving left check bl and tl positions
-                    if(pv.x < 0) {
-                        //simulate X movement
-                        var posX = pos.clone(); posX.x -= x;
-
-                        //calc corners
-                        var bl = posX.clone(), tl = posX.clone();
-                        bl.x -= size.x;
-                        bl.y -= size.y;
-                        tl.x -= size.x;
-                        tl.y += size.y;
-
-                        //get corner tiles
-                        var blTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(bl)),
-                            tlTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tl));
-
-                        //TODO: Corner rolling?
-                        if(blTile && blTile.isCollidable) {
-                            res.push({ axis: 'x', tile: blTile });//res.xtiles.push(blTile);
-                            haveX = true;
-                        }
-                        if(tlTile && tlTile.isCollidable) {
-                            res.push({ axis: 'x', tile: tlTile });//res.xtiles.push(tlTile);
-                            haveX = true;
-                        }
-                    }
-                    //if moving right check br and tr positions
-                    else {
-                        //simulate X movement
-                        var posX = pos.clone(); posX.x += x;
-
-                        //calc corners
-                        var br = posX.clone(), tr = posX.clone();
-                        br.x += size.x;
-                        br.y -= size.y;
-                        tr.x += size.x;
-                        tr.y += size.y;
-
-                        //get corner tiles
-                        var brTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(br)),
-                            trTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tr));
-
-                        //TODO: Corner rolling?
-                        if(brTile && brTile.isCollidable) {
-                            res.push({ axis: 'x', tile: brTile });//res.xtiles.push(brTile);
-                            haveX = true;
-                        }
-                        if(trTile && trTile.isCollidable) {
-                            res.push({ axis: 'x', tile: trTile });//res.xtiles.push(trTile);
-                            haveX = true;
-                        }
+            //check X movement
+            if(x <= this.extent.x.min || x >= this.extent.x.max) {
+                res.push({ axis: 'x', tile: { type: gf.types.COLLISION.SOLID } });
+            } else if(pv.x) {
+                //x, bottom corner
+                tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.floor(bottom)));
+                if(tile && tile.isCollidable) {
+                    res.push({ axis: 'x', tile: tile });
+                } else {
+                    //x, top corner
+                    tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.ceil(top)));
+                    if(tile && tile.isCollidable) {
+                        res.push({ axis: 'x', tile: tile });
                     }
                 }
+            }
 
-                if(pv.y && !haveY && y <= Math.abs(pv.y)) {
-                    //if moving down check bl and br positions
-                    if(pv.y < 0) {
-                        //simulate Y movement
-                        var posY = pos.clone(); posY.y -= y;
-
-                        //calc corners
-                        var bl = posY.clone(), br = posY.clone();
-                        bl.x -= size.x;
-                        bl.y -= size.y;
-                        br.x += size.x;
-                        br.y -= size.y;
-
-                        //get corner tiles
-                        var blTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(bl)),
-                            brTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(br));
-
-                        //TODO: Corner rolling?
-                        if(blTile && blTile.isCollidable) {
-                            res.push({ axis: 'y', tile: blTile });//res.ytiles.push(blTile);
-                            haveY = true;
-                        }
-                        if(brTile && brTile.isCollidable) {
-                            res.push({ axis: 'y', tile: brTile });//res.ytiles.push(brTile);
-                            haveY = true;
-                        }
-                    }
-                    //if moving up check tl and tr positions
-                    else {
-                        //simulate Y movement
-                        var posY = pos.clone(); posY.y += y;
-
-                        //calc corners
-                        var tl = posY.clone(), tr = posY.clone();
-                        tl.x -= size.x;
-                        tl.y += size.y;
-                        tr.x += size.x;
-                        tr.y += size.y;
-
-                        //get corner tiles
-                        var tlTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tl)),
-                            trTile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(tr));
-
-                        //TODO: Corner rolling?
-                        if(tlTile && tlTile.isCollidable) {
-                            res.push({ axis: 'y', tile: tlTile });//res.ytiles.push(tlTile);
-                            haveY = true;
-                        }
-                        if(trTile && trTile.isCollidable) {
-                            res.push({ axis: 'y', tile: trTile });//res.ytiles.push(trTile);
-                            haveY = true;
-                        }
+            //check Y movement
+            if(y <= this.extent.y.min || y >= this.extent.y.max) {
+                res.push({ axis: 'y', tile: { type: gf.types.COLLISION.SOLID } });
+            } else if(pv.y) {
+                //y, left corner
+                tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x < 0) ? Math.floor(left) : Math.ceil(right), y));
+                if(tile && tile.isCollidable) {
+                    res.push({ axis: 'y', tile: tile });
+                } else {
+                    //y, right corner
+                    tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x < 0) ? Math.ceil(right) : Math.floor(left), y));
+                    if(tile && tile.isCollidable) {
+                        res.push({ axis: 'y', tile: tile });
                     }
                 }
             }
