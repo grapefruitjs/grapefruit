@@ -29,6 +29,14 @@
                 return new THREE.Vector2();
             }
         },
+        spawnSquare: function(x, y, w, h, color) {
+            var mesh = new THREE.Mesh(
+                new THREE.PlaneGeometry(w || 1, h || 1),
+                new THREE.MeshBasicMaterial({ color: color || 0xff0000 })
+            );
+            mesh.position.set(x || 0, y || 0, 400);
+            gf.game._scene.add(mesh);
+        },
         clamp: function(n, min, max) { return Math.max(min, Math.min(max, n)); },
         RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
         isPowerOfTwo: function(x) { return ((x & (x - 1)) === 0); },

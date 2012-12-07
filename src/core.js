@@ -277,7 +277,7 @@ Class.extend = function(prop) {
 
             opts = opts || {};
 
-            gf.game.gravity = opts.gravity || 0.98;
+            gf.game.gravity = (opts.gravity !== undefined ? opts.velocity : 0.98);
             gf.game.friction = gf.utils.ensureVector(opts.friction);
             gf.game.clearColor = opts.clearColor || 0xcccccc;
 

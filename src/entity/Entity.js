@@ -112,7 +112,7 @@
         computeVelocity: function(vel) {
             //apply gravity
             if(this.gravity) {
-                vel.y += !this.onladder ? (this.gravity * gf.game._delta) : 0;
+                vel.y -= !this.onladder ? (this.gravity * gf.game._delta) : 0;
 
                 //check if falling/jumping
                 this.falling = (vel.y > 0);
@@ -206,12 +206,9 @@
                         return false;
                     }
                     //TODO: Half tiles
+
                     //otherwise just stop movement
                     else {
-                        /*if(axis == 'x')
-                            self.setPosition(Math.floor(self._mesh.position.x), self._mesh.position.y);
-                        else
-                            self.setPosition(self._mesh.position.x, Math.floor(self._mesh.position.y));*/
                         self.velocity[axis] = 0;
                     }
                 }
@@ -231,6 +228,8 @@
         moveEntity: function(vel) {
             //optionally override current velocity
             vel = vel || this.velocity;
+
+            if(vel.isZero()) return;
 
             //update the entity position
             this._mesh.translateX(vel.x);
