@@ -1,9 +1,6 @@
 (function() {
     gf.HUD = {
         init: function(settings) {
-            //background color
-            this.bgColor = 'rgba(0,0,0,0)'; //any valid css color notation works
-
             //is the HUD visible?
             this.visible = true;
 
@@ -68,9 +65,9 @@
         update: function() {
             if(!this.dirty) return;
 
-            if(this.bgColor) {
-                this.$elm.css('backgroundColor', this.bgColor);
-            }
+            this.$elm.css({
+                backgroundColor: this.bgColor
+            });
 
             gf.utils.each(this.items, function(name, item) {
                 if(item.visible) {
@@ -82,6 +79,7 @@
         },
         _createElement: function() {
             this.$elm = $('<div/>', {
+                'class': 'gf-hud',
                 position: 'absolute',
                 top: gf.game._$cont.pos().top,
                 left: gf.game._$cont.pos().left

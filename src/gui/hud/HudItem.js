@@ -11,6 +11,8 @@
             this.default = 0;
             this.value = 0;
 
+            this.name = '';
+
             //use the passed settings object ot override the default values above
             gf.utils.setValues(this, settings);
 
@@ -70,6 +72,7 @@
         //private functions
         _createElement: function(x, y) {
             this.$elm = $('<div/>', {
+                'class': 'gf-hud-item ' + this.name,
                 position: 'relative',
                 top: y,
                 left: x
