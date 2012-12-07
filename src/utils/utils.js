@@ -37,8 +37,60 @@
             mesh.position.set(x || 0, y || 0, 400);
             gf.game._scene.add(mesh);
         },
-        clamp: function(n, min, max) { return Math.max(min, Math.min(max, n)); },
+        numToHexColor: function(num) { return ("00000000" + num.toString(16)).substr(-8); },
         RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
+        //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
+        setValues: function(obj, values) {
+            if(!values) return;
+
+            for(var key in values) {
+                var newVal = values[key];
+
+                if(newVal === undefined) {
+                    console.warn('Object parameter "' + key + '" is undefined.');
+                    continue;
+                }
+
+                if(key in obj) {
+                    var curVal = obj[key];
+
+                    //type massaging
+                    if(typeof curVal === 'number' && typeof newVal === 'string') {
+                        var n;
+                        if(newVal.indexOf('0x') === 0) n = parseInt(newVal, 16);
+                        else n = parseInt(newVal, 10);
+
+                        if(!isNaN(n))
+                            curVal = n;
+                        else
+                            console.warn('Object parameter "' + key + '" evaluated to NaN, using default. Value passed: ' + newVal);
+
+                    } else if(curVal instanceof THREE.Color && typeof newVal === 'number') {
+                        curVal.setHex(newVal);
+                    } else if(curVal instanceof THREE.Vector2 && newVal instanceof Array) {
+                        curVal.set(newVal[0] || 0, newVal[1] || 0);
+                    } else if(curVal instanceof THREE.Vector3 && newVal instanceof Array) {
+                        curVal.set(newVal[0] || 0, newVal[1] || 0, newVal[2] || 0);
+                    } else if(curVal instanceof THREE.Vector2 && typeof newVal === 'string') {
+                        var a = newVal.split(gf.utils._arrayDelim, 2);
+                        curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
+                    } else if(curVal instanceof THREE.Vector3 && typeof newVal === 'string') {
+                        var a = newVal.split(gf.utils._arrayDelim, 3);
+                        curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10) || 0);
+                    } else if(curVal instanceof Array && typeof newVal === 'string') {
+                        curVal = newVal.split(gf.utils._arrayDelim);
+                        gf.utils.each(curVal, function(i, val) {
+                            if(!isNaN(val)) curVal[i] = parseInt(val, 10);
+                        });
+                    } else {
+                        obj[key] = newVal;
+                    }
+                }
+            }
+
+            return obj;
+        },
+        clamp: function(n, min, max) { return Math.max(min, Math.min(max, n)); },
         isPowerOfTwo: function(x) { return ((x & (x - 1)) === 0); },
         each: function(object, callback, args) {
             var name, i = 0,

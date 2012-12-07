@@ -387,8 +387,9 @@ Class.extend = function(prop) {
             if(!obj) return;
 
             if(!obj.id) obj.id = gf.game.getNextObjectId();
+            if(!gf.game.objects[obj.id]) gf.game.numObjects++;
+
             gf.game.objects[obj.id] = obj;
-            gf.game.numObjects++;
 
             if(obj.addToScene) obj.addToScene(gf.game._scene);
 
@@ -426,6 +427,8 @@ Class.extend = function(prop) {
 
             gf.game.world = new gf.TiledMap(world);
             gf.game.addObject(gf.game.world);
+
+            return this;
         },
         render: function() {
             gf.game._clock.start();

@@ -19,7 +19,7 @@
 
             this.animationQueue = [];
 
-            this.setValues(settings);
+            gf.utils.setValues(this, settings);
         },
         addToScene: function(scene) {
             this.scene = scene;
@@ -32,57 +32,6 @@
             this.scene = null;
 
             if(this._mesh) scene.remove(this._mesh);
-
-            return this;
-        },
-        //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
-        setValues: function(values) {
-            if(!values) return;
-
-            for(var key in values) {
-                var newVal = values[key];
-
-                if(newVal === undefined) {
-                    console.warn('Object parameter "' + key + '" is undefined.');
-                    continue;
-                }
-
-                if(key in this) {
-                    var curVal = this[key];
-
-                    //type massaging
-                    if(typeof curVal === 'number' && typeof newVal === 'string') {
-                        var n;
-                        if(newVal.indexOf('0x') === 0) n = parseInt(newVal, 16);
-                        else n = parseInt(newVal, 10);
-
-                        if(!isNaN(n))
-                            curVal = n;
-                        else
-                            console.warn('Object parameter "' + key + '" evaluated to NaN, using default. Value passed: ' + newVal);
-
-                    } else if(curVal instanceof THREE.Color && typeof newVal === 'number') {
-                        curVal.setHex(newVal);
-                    } else if(curVal instanceof THREE.Vector2 && newVal instanceof Array) {
-                        curVal.set(newVal[0] || 0, newVal[1] || 0);
-                    } else if(curVal instanceof THREE.Vector3 && newVal instanceof Array) {
-                        curVal.set(newVal[0] || 0, newVal[1] || 0, newVal[2] || 0);
-                    } else if(curVal instanceof THREE.Vector2 && typeof newVal === 'string') {
-                        var a = newVal.split(_arrayDelim, 2);
-                        curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
-                    } else if(curVal instanceof THREE.Vector3 && typeof newVal === 'string') {
-                        var a = newVal.split(this._arrayDelim, 3);
-                        curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10) || 0);
-                    } else if(curVal instanceof Array && typeof newVal === 'string') {
-                        curVal = newVal.split(this._arrayDelim);
-                        gf.utils.each(curVal, function(i, val) {
-                            if(!isNaN(val)) curVal[i] = parseInt(val, 10);
-                        });
-                    } else {
-                        this[key] = newVal;
-                    }
-                }
-            }
 
             return this;
         },
