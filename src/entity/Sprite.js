@@ -228,7 +228,7 @@
                 this._materials.push(new THREE.MeshBasicMaterial({
                     color: gf.debug.outlineColor,
                     wireframe: true,
-                    wireframeLinewidth: 5
+                    wireframeLinewidth: 1
                 }));
             }
 

@@ -8,13 +8,14 @@
             this.visible = true;
 
             //value of the item
-            this.default = 0;
             this.value = 0;
 
             this.name = '';
 
             //use the passed settings object ot override the default values above
             gf.utils.setValues(this, settings);
+
+            this.default = this.value;
 
             //create the base div of this element
             this._createElement(x, y);
@@ -53,7 +54,9 @@
                 y: e.clientY
             }
         },
-        onMouseUp: function(e) { this.dragging = false; },
+        onMouseUp: function(e) {
+            this.dragging = false;
+        },
         onMouseMove: function(e) {
             if(!this.draggable || !this.dragging) return;
 
@@ -72,7 +75,8 @@
         //private functions
         _createElement: function(x, y) {
             this.$elm = $('<div/>', {
-                'class': 'gf-hud-item ' + this.name,
+                'class': 'gf-hud-item ' + this.name.toLowerCase().replace(' ', '-')
+            }).css({
                 position: 'relative',
                 top: y,
                 left: x
