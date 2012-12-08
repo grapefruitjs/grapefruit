@@ -305,7 +305,7 @@
                 this._materials.push(new THREE.MeshBasicMaterial({
                     color: gf.debug.outlineColor,
                     wireframe: true,
-                    wireframeLinewidth: 5
+                    wireframeLinewidth: 1
                 }));
             }
 
@@ -324,7 +324,7 @@
             this._hitboxMaterial = new THREE.MeshBasicMaterial({
                 color: gf.debug.hitboxColor,
                 wireframe: gf.debug.showHitbox,
-                wireframeLinewidth: 5
+                wireframeLinewidth: 1
             });
 
             this._hitboxGeom = new THREE.PlaneGeometry(1, 1);

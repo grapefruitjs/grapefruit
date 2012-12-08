@@ -1,6 +1,11 @@
 (function() {
     gf.HUD = {
+        //has the HUD been initialized
+        initialized: false,
+
         init: function(settings) {
+            if(this.initialized) return;
+
             //is the HUD visible?
             this.visible = true;
 
@@ -8,7 +13,9 @@
             gf.utils.setValues(this, settings);
 
             //create the base div of this element
-            this._createElement(x, y);
+            this._createElement();
+
+            this.initialized = true;
 
             //some private stuffs
             this.dirty = true;
@@ -21,12 +28,15 @@
             //increment if a new item
             if(!this.items[name]) this.numItems++;
 
+            item.name = name;
             this.items[name] = item;
             this.dirty = true;
+            this.$elm.append(item.$elm);
             return this;
         },
         removeItem: function(name) {
             if(this.items[name]) {
+                this.items[name].$elm.remove();
                 this.items[name] = null;
                 this.numItems--;
                 this.dirty = true;
@@ -65,10 +75,6 @@
         update: function() {
             if(!this.dirty) return;
 
-            this.$elm.css({
-                backgroundColor: this.bgColor
-            });
-
             gf.utils.each(this.items, function(name, item) {
                 if(item.visible) {
                     item.update();
@@ -79,11 +85,15 @@
         },
         _createElement: function() {
             this.$elm = $('<div/>', {
-                'class': 'gf-hud',
+                'class': 'gf-hud'
+            }).css({
                 position: 'absolute',
-                top: gf.game._$cont.pos().top,
-                left: gf.game._$cont.pos().left
-            }).prependTo(gf.game._$cont);
+                width: '100%',
+                height: '100%',
+                /*top: gf.game._$cont.position().top,
+                left: gf.game._$cont.position().left,*/
+                zIndex: 6
+            }).appendTo(gf.game._$cont);
         }
     };
 })();

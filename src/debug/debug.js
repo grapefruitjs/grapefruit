@@ -5,7 +5,8 @@
         fpsStyle: {
             position: 'absolute',
             top: '0px',
-            left: '0px'
+            left: '0px',
+            'z-index': 10
         },
 
         //provide detailed debug info such as player position, number of entities,
@@ -15,6 +16,7 @@
             position: 'absolute',
             top: '50px',
             left: '0px',
+            'z-index': 10,
             color: '#fff'
         },
 

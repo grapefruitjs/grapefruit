@@ -331,6 +331,7 @@ Class.extend = function(prop) {
                 h = opts.height || gf.game._$cont.height();
 
             //initialize the renderer
+            gf.game._renderer.domElement.style['z-index'] = 5;
             gf.game._renderer.setSize(w, h);
             gf.game._$cont.append(gf.game._renderer.domElement);
             gf.game._$domElement = $(gf.game._renderer.domElement);
@@ -500,6 +501,9 @@ Class.extend = function(prop) {
 
             //update debug info
             if(gf.debug._info) gf.debug._info.update();
+
+            //update the HUD
+            if(gf.HUD.initialized) gf.HUD.update();
 
             //update each object
             gf.utils.each(gf.game.objects, function(id, o) {
