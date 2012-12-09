@@ -19,8 +19,8 @@
             var a = vec;
             if(typeof vec == 'string') a = vec.split(gf.utils._arrayDelim);
 
-            if(vec instanceof Array) {
-                switch(vec.length) {
+            if(a instanceof Array) {
+                switch(a.length) {
                     case 2: return new THREE.Vector2(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
                     case 3: return new THREE.Vector3(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10));
                 }
