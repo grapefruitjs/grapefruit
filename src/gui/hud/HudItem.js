@@ -8,7 +8,7 @@
             this.visible = true;
 
             //value of the item
-            this.value = 0;
+            this.value = typeof settings.value == 'string' ? '' : 0;
 
             this.name = '';
 
