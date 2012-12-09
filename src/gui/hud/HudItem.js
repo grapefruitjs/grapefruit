@@ -75,9 +75,9 @@
         //private functions
         _createElement: function(x, y) {
             this.$elm = $('<div/>', {
-                'class': 'gf-hud-item ' + this.name.toLowerCase().replace(' ', '-')
+                'class': 'gf-hud-item ' + this.name
             }).css({
-                position: 'relative',
+                position: 'absolute',
                 top: y,
                 left: x
             });
