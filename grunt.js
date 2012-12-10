@@ -14,16 +14,16 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/gui/hud.js',
             '<%= dirs.src %>/gui/hud/HudItem.js',
             '<%= dirs.src %>/loader/loader.js',
-            '<%= dirs.src %>/renderer/renderer.js',
-            '<%= dirs.src %>/utils/utils.js',
-            '<%= dirs.src %>/vendor/game-shim.js',
-            '<%= dirs.src %>/vendor/pubsub.js',
             '<%= dirs.src %>/map/Map.js',
             '<%= dirs.src %>/map/Layer.js',
             '<%= dirs.src %>/map/tiled/TiledMap.js',
             '<%= dirs.src %>/map/tiled/TiledLayer.js',
             '<%= dirs.src %>/map/tiled/TiledTileset.js',
-            '<%= dirs.src %>/map/tiled/TiledObjectGroup.js'
+            '<%= dirs.src %>/map/tiled/TiledObjectGroup.js',
+            '<%= dirs.src %>/plugin/plugin.js',
+            '<%= dirs.src %>/utils/utils.js',
+            '<%= dirs.src %>/vendor/game-shim.js',
+            '<%= dirs.src %>/vendor/pubsub.js'
         ],
         tSrc = [
         ];
