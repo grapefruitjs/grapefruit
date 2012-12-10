@@ -8,177 +8,162 @@
 */
 
 /****************************************************************************
- * Global GrapeFruit Object with constants
+ * Global GrapeFruit Object
  ****************************************************************************/
-window.gf = window.gf || {
-    version: '0.0.1',
-    types: {
-        //Entity types
-        ENTITY: {
-            PLAYER: 'player',
-            ENEMY: 'enemy',
-            FRIENDLY: 'friendly',
-            NEUTRAL: 'neutral',
-            COLLECTABLE: 'collectable'
-        },
-        //Layer types
-        LAYER: {
-            TILE_LAYER: 'tilelayer',
-            OBJECT_GROUP: 'objectgroup' // each zone is defined as an object group
-        },
-        //Tile collision types
-        COLLISION: {
-            NONE: 'none',
-            SOLID: 'solid',
-            CLIFF: 'cliff',
-            LADDER: 'ladder',
-            WATER: 'water',
-            DEEP_WATER: 'deep_water'
-        },
-        //pubsub events
-        EVENT: {
-            ENTITY_MOVE: 'gf.entity.move',
-            LOADER_START: 'gf.loader.start',
-            LOADER_ERROR: 'gf.loader.error',
-            LOADER_PROGRESS: 'gf.loader.progress',
-            LOADER_LOAD: 'gf.loader.load',
-            LOADER_COMPLETE: 'gf.loader.complete'
-        },
-        //Bindable keycodes
-        KEY: {
-            BACKSPACE: 8,
-            TAB: 9,
-            ENTER: 13,
-            SHIFT: 16,
-            CTRL: 17,
-            ALT: 18,
-            PAUSE: 19,
-            ESC: 27,
-            SPACE: 32,
-            PAGE_UP: 33,
-            PAGE_DOWN: 34,
-            END: 35,
-            HOME: 36,
-            LEFT: 37,
-            UP: 38,
-            RIGHT: 39,
-            DOWN: 40,
-            INSERT: 45,
-            DELETE: 46,
-            NUM0: 48,
-            NUM1: 49,
-            NUM2: 50,
-            NUM3: 51,
-            NUM4: 52,
-            NUM5: 53,
-            NUM6: 54,
-            NUM7: 55,
-            NUM8: 56,
-            NUM9: 57,
-            PLUS: 61,
-            A : 65,
-            B : 66,
-            C : 67,
-            D : 68,
-            E : 69,
-            F : 70,
-            G : 71,
-            H : 72,
-            I : 73,
-            J : 74,
-            K : 75,
-            L : 76,
-            M : 77,
-            N : 78,
-            O : 79,
-            P : 80,
-            Q : 81,
-            R : 82,
-            S : 83,
-            T : 84,
-            U : 85,
-            V : 86,
-            W : 87,
-            X : 88,
-            Y : 89,
-            Z : 90,
-            NUMPAD0: 96,
-            NUMPAD1: 97,
-            NUMPAD2: 98,
-            NUMPAD3: 99,
-            NUMPAD4: 100,
-            NUMPAD5: 101,
-            NUMPAD6: 102,
-            NUMPAD7: 103,
-            NUMPAD8: 104,
-            NUMPAD9: 105,
-            NUMPAD_STAR: 106,
-            NUMPAD_PLUS: 107,
-            NUMPAD_MINUS: 109,
-            NUMPAD_DOT: 110,
-            NUMPAD_SLASH: 111,
-            F1: 112,
-            F2: 113,
-            F3: 114,
-            F4: 115,
-            MINUS: 173,
-            TILDE: 192
-        }
+window.gf = window.gf || {};
+
+/****************************************************************************
+ * GrapeFruit Version
+ ****************************************************************************/
+gf.version = '0.0.1';
+
+/****************************************************************************
+ * GrapeFruit Type Constants
+ ****************************************************************************/
+gf.types = {
+    //Entity types
+    ENTITY: {
+        PLAYER: 'player',
+        ENEMY: 'enemy',
+        FRIENDLY: 'friendly',
+        NEUTRAL: 'neutral',
+        COLLECTABLE: 'collectable'
     },
-    support: {
-        //user agent
-        ua: navigator.userAgent.toLowerCase(),
-
-        //canvas supported?
-        canvas: !!window.CanvasRenderingContext2D,
-
-        //webgl supported?
-        webgl: (function () { try { return !!window.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl'); } catch(e) { return false; } })(),
-
-        //web workers supported?
-        workers: !!window.Worker,
-
-        //fileapi supported?
-        fileapi: window.File && window.FileReader && window.FileList && window.Blob,
-
-        //can this browser play audio?
-        audio: {
-            play: !!document.createElement('audio').canPlayType,
-            m4a: false,
-            mp3: false,
-            ogg: false,
-            wav: false,
-        },
-
-        //local storage supported?
-        localStorage: !!window.localStorage
+    //Layer types
+    LAYER: {
+        TILE_LAYER: 'tilelayer',
+        OBJECT_GROUP: 'objectgroup' // each zone is defined as an object group
     },
-    //returns a number representing how far off a version is.
-    //
-    //will return a negative value if the first version is behind the second,
-    //the negative number will show how many versions behind it is on largest version
-    //point.
-    //That is: '1.0' compared with '1.1' will yield -1
-    //and    : '1.2.3' compared with '1.2.1' will yield -2
-    //
-    //0 is returned if the versions match, and a positive number is returned if
-    //the first version is larger than the second.
-    checkVersion: function(first, second) {
-        second = second || gf.version;
-
-        var a = first.split('.'),
-            b = second.split('.'),
-            len = Math.min(a.length, b.length),
-            result = 0;
-
-        for(var i = 0; i < len; ++i) {
-            if(result = +a[i] - +b[i]) {
-                break;
-            }
-        }
-
-        return result ? result : a.length - b.length;
+    //Tile collision types
+    COLLISION: {
+        NONE: 'none',
+        SOLID: 'solid',
+        CLIFF: 'cliff',
+        LADDER: 'ladder',
+        WATER: 'water',
+        DEEP_WATER: 'deep_water'
+    },
+    //pubsub events
+    EVENT: {
+        ENTITY_MOVE: 'gf.entity.move',
+        LOADER_START: 'gf.loader.start',
+        LOADER_ERROR: 'gf.loader.error',
+        LOADER_PROGRESS: 'gf.loader.progress',
+        LOADER_LOAD: 'gf.loader.load',
+        LOADER_COMPLETE: 'gf.loader.complete'
+    },
+    //Bindable keycodes
+    KEY: {
+        BACKSPACE: 8,
+        TAB: 9,
+        ENTER: 13,
+        SHIFT: 16,
+        CTRL: 17,
+        ALT: 18,
+        PAUSE: 19,
+        ESC: 27,
+        SPACE: 32,
+        PAGE_UP: 33,
+        PAGE_DOWN: 34,
+        END: 35,
+        HOME: 36,
+        LEFT: 37,
+        UP: 38,
+        RIGHT: 39,
+        DOWN: 40,
+        INSERT: 45,
+        DELETE: 46,
+        NUM0: 48,
+        NUM1: 49,
+        NUM2: 50,
+        NUM3: 51,
+        NUM4: 52,
+        NUM5: 53,
+        NUM6: 54,
+        NUM7: 55,
+        NUM8: 56,
+        NUM9: 57,
+        PLUS: 61,
+        A : 65,
+        B : 66,
+        C : 67,
+        D : 68,
+        E : 69,
+        F : 70,
+        G : 71,
+        H : 72,
+        I : 73,
+        J : 74,
+        K : 75,
+        L : 76,
+        M : 77,
+        N : 78,
+        O : 79,
+        P : 80,
+        Q : 81,
+        R : 82,
+        S : 83,
+        T : 84,
+        U : 85,
+        V : 86,
+        W : 87,
+        X : 88,
+        Y : 89,
+        Z : 90,
+        NUMPAD0: 96,
+        NUMPAD1: 97,
+        NUMPAD2: 98,
+        NUMPAD3: 99,
+        NUMPAD4: 100,
+        NUMPAD5: 101,
+        NUMPAD6: 102,
+        NUMPAD7: 103,
+        NUMPAD8: 104,
+        NUMPAD9: 105,
+        NUMPAD_STAR: 106,
+        NUMPAD_PLUS: 107,
+        NUMPAD_MINUS: 109,
+        NUMPAD_DOT: 110,
+        NUMPAD_SLASH: 111,
+        F1: 112,
+        F2: 113,
+        F3: 114,
+        F4: 115,
+        MINUS: 173,
+        TILDE: 192
     }
+};
+
+/****************************************************************************
+ * GrapeFruit Browser Support Sniffing
+ ****************************************************************************/
+gf.support = {
+    //user agent
+    ua: navigator.userAgent.toLowerCase(),
+
+    //canvas supported?
+    canvas: !!window.CanvasRenderingContext2D,
+
+    //webgl supported?
+    webgl: (function () { try { return !!window.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl'); } catch(e) { return false; } })(),
+
+    //web workers supported?
+    workers: !!window.Worker,
+
+    //fileapi supported?
+    fileapi: window.File && window.FileReader && window.FileList && window.Blob,
+
+    //can this browser play audio?
+    audio: {
+        play: !!document.createElement('audio').canPlayType,
+        m4a: false,
+        mp3: false,
+        ogg: false,
+        wav: false,
+    },
+
+    //local storage supported?
+    localStorage: !!window.localStorage
 };
 
 //additional audio support checks
@@ -200,6 +185,36 @@ if(gf.support.audio.play) {
         }
     }
 }
+
+/****************************************************************************
+ * GrapeFruit Version Checking
+ ****************************************************************************/
+//returns a number representing how far off a version is.
+//
+//will return a negative value if the first version is behind the second,
+//the negative number will show how many versions behind it is on largest version
+//point.
+//That is: '1.0' compared with '1.1' will yield -1
+//and    : '1.2.3' compared with '1.2.1' will yield -2
+//
+//0 is returned if the versions match, and a positive number is returned if
+//the first version is larger than the second.
+gf.checkVersion = function(first, second) {
+    second = second || gf.version;
+
+    var a = first.split('.'),
+        b = second.split('.'),
+        len = Math.min(a.length, b.length),
+        result = 0;
+
+    for(var i = 0; i < len; ++i) {
+        if(result = +a[i] - +b[i]) {
+            break;
+        }
+    }
+
+    return result ? result : a.length - b.length;
+};
 
 /****************************************************************************
  * Javascript Inheritance Helper (use functional mixins instead?)
