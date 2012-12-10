@@ -52,6 +52,17 @@ gf.types = {
         LOADER_LOAD: 'gf.loader.load',
         LOADER_COMPLETE: 'gf.loader.complete'
     },
+    //resource types
+    RESOURCE: {
+        AUDIO: 'audio',
+        SOUND: 'sound',
+        MUSIC: 'music',
+        JSON: 'json',
+        XML: 'xml',
+        WORLD: 'world',
+        TEXTURE: 'texture',
+        IMAGE: 'image'
+    },
     //Bindable keycodes
     KEY: {
         BACKSPACE: 8,
