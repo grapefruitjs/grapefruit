@@ -46,16 +46,20 @@
         },
         //virtual events
         onClick: function(e) {},
+        onDragStart: function(e) {},
+        onDragEnd: function(e) {},
         onMouseDown: function(e) {
             if(!this.draggable) return;
 
             this.dragging = {
                 x: e.clientX,
                 y: e.clientY
-            }
+            };
+            this.onDragStart(e);
         },
         onMouseUp: function(e) {
             this.dragging = false;
+            this.onDragEnd(e);
         },
         onMouseMove: function(e) {
             if(!this.draggable || !this.dragging) return;
