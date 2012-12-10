@@ -23,6 +23,7 @@
 
             //scale of the entity
             this.scale = 1;
+
             //can collide with other entities
             this.isCollidable = true;
 
@@ -34,12 +35,6 @@
 
             //is an entity
             this.isEntity = true;
-
-            //maximum health of this entity
-            this.maxHealth = 3;
-
-            //current health of this entity
-            this.health = 3;
 
             //you can still set these in Tiled by using "x|y" notation
             //velocity of the entity
