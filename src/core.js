@@ -1,6 +1,6 @@
 /**
 * @license GrapeFruit Game Engine
-* Copyright (x) 2012, Chad Engler
+* Copyright (c) 2012, Chad Engler
 *
 * GrapeFruit is licensed under the MIT License.
 * http://www.opensource.org/licenses/mit-license.php
