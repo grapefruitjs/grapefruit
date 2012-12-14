@@ -149,6 +149,32 @@ gf.types = {
         F4: 115,
         MINUS: 173,
         TILDE: 192
+    },
+    //Bindable Gamepad Buttons
+    GP_BUTTONS: {
+        FACE_1: 0, // Face (main) buttons
+        FACE_2: 1,
+        FACE_3: 2,
+        FACE_4: 3,
+        LEFT_SHOULDER: 4, // Top shoulder buttons
+        RIGHT_SHOULDER: 5,
+        LEFT_SHOULDER_BOTTOM: 6, // Bottom shoulder buttons
+        RIGHT_SHOULDER_BOTTOM: 7,
+        SELECT: 8,
+        START: 9,
+        LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
+        RIGHT_ANALOGUE_STICK: 11,
+        PAD_TOP: 12, // Directional (discrete) pad
+        PAD_BOTTOM: 13,
+        PAD_LEFT: 14,
+        PAD_RIGHT: 15
+    },
+    //Bindable Gamepad Axes
+    GP_AXES: {
+        LEFT_ANALOGUE_HOR: 0,
+        LEFT_ANALOGUE_VERT: 1,
+        RIGHT_ANALOGUE_HOR: 2,
+        RIGHT_ANALOGUE_VERT: 3
     }
 };
 
@@ -181,7 +207,10 @@ gf.support = {
     },
 
     //local storage supported?
-    localStorage: !!window.localStorage
+    localStorage: !!window.localStorage,
+
+    //gamepad API supported?
+    gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') != -1)
 };
 
 //additional audio support checks
@@ -420,6 +449,9 @@ Class.extend = function(prop) {
             //initialize the GUI (HUD, menus, etc)
             gf.gui.init();
 
+            //initialize gamepad support
+            gf.gamepad.init();
+
             /****************************************************************************
              * Add some debug elements
              ****************************************************************************/
@@ -564,6 +596,9 @@ Class.extend = function(prop) {
 
             //update the HUD
             if(gf.HUD.initialized) gf.HUD.update();
+
+            //update the gamepad poller
+            gf.gamepad.update();
 
             //update each object
             gf.utils.each(gf.game.objects, function(id, o) {
