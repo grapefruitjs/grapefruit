@@ -139,12 +139,12 @@
             } else if(pv.x) {
                 //x, bottom corner
                 tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.floor(bottom)));
-                if(tile && tile.isCollidable) {
+                if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
                     res.push({ axis: 'x', tile: tile });
                 } else {
                     //x, top corner
                     tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.ceil(top)));
-                    if(tile && tile.isCollidable) {
+                    if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
                         res.push({ axis: 'x', tile: tile });
                     }
                 }
@@ -156,18 +156,44 @@
             } else if(pv.y) {
                 //y, left corner
                 tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x < 0) ? Math.floor(left) : Math.ceil(right), y));
-                if(tile && tile.isCollidable) {
+                if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
                     res.push({ axis: 'y', tile: tile });
                 } else {
                     //y, right corner
                     tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x < 0) ? Math.ceil(right) : Math.floor(left), y));
-                    if(tile && tile.isCollidable) {
+                    if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
                         res.push({ axis: 'y', tile: tile });
                     }
                 }
             }
 
             return res;
+        },
+
+        _checkHalfBlock: function(half, x, y) {
+            tx = Math.floor(x / this.tileSize.x) * this.tileSize.x;
+            ty = Math.floor(y / this.tileSize.y) * this.tileSize.y;
+
+            var midX = tx + ((this.tileSize.x) / 2),
+                endX = tx + (this.tileSize.x),
+                midY = ty - ((this.tileSize.y) / 2),
+                endY = ty - (this.tileSize.y);
+
+            switch(half) {
+                case gf.types.HALF.LEFT:
+                    return (x > tx && x < midX);
+
+                case gf.types.HALF.RIGHT:
+                    return (x > midX && x < endX);
+
+                case gf.types.HALF.TOP:
+                    return (y > midY && y < ty);
+
+                case gf.types.HALF.BOTTOM:
+                    return (y > endY && y < midY);
+            }
+
+            return false;
         },
 
         /////////////////////////

@@ -43,6 +43,13 @@ gf.types = {
         WATER: 'water',
         DEEP_WATER: 'deep_water'
     },
+    //Half tile types
+    HALF: {
+        LEFT: 'left',
+        RIGHT: 'right',
+        TOP: 'top',
+        BOTTOM: 'bottom'
+    },
     //pubsub events
     EVENT: {
         ENTITY_MOVE: 'gf.entity.move',
