@@ -228,9 +228,6 @@
 
                 pos.x = ~~pos.x; //floor
                 pos.y = ~~pos.y;
-
-                //pos.x -= 1;
-                //pos.y = Math.abs(pos.y) - 1;
             }
 
             //calculate index
