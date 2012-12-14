@@ -97,9 +97,9 @@
                 update: function() {
                     entsVal.textContent = gf.game.numObjects;
                     posVal.textContent = gf.game.player ?
-                                            'X: ' + gf.game.player._hitboxMesh.position.x.toFixed(3) +
-                                                ', Y: ' + gf.game.player._hitboxMesh.position.y.toFixed(3) +
-                                                ', Z: ' + gf.game.player._hitboxMesh.position.z.toFixed(3) :
+                                            'X: ' + gf.game.player._hitboxMesh.position.x.toFixed(1) +
+                                                ', Y: ' + gf.game.player._hitboxMesh.position.y.toFixed(1) +
+                                                ', Z: ' + gf.game.player._hitboxMesh.position.z.toFixed(1) :
                                             'none';
 
                     if(gf.debug._playerColliders && gf.debug._playerColliders.dirty) {

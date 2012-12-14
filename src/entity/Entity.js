@@ -37,10 +37,10 @@
             this.isEntity = true;
 
             //you can still set these in Tiled by using "x|y" notation
-            //velocity of the entity
+            //velocity of the entity (units per tick)
             this.velocity = new THREE.Vector2(0, 0);
 
-            //max velocity to cap the entity at
+            //max velocity to cap the entity at (units per tick)
             this.maxVelocity = new THREE.Vector2(15, 15);
 
             //acceleration of the entity when moving (units per second)
@@ -172,7 +172,7 @@
 
             return this;
         },
-        updateMovement: function(vel) {
+        updateMovement: function() {
             if(this.velocity.isZero()) return;
 
             //TODO: check for map collision here
@@ -192,7 +192,6 @@
                 //if a solid tile
                 if(tile.type == gf.types.COLLISION.SOLID) {
                     //if it is a slope, apply the normal
-                    //TODO: Slopes are kinda jumpy
                     if(tile.normal && (!self.velocity.x || !self.velocity.y)) {
                         var badMovement = tile.normal.clone().multiplyScalar(self.velocity.dot(tile.normal)),
                             newMovement = self.velocity.clone().subSelf(badMovement);
@@ -200,14 +199,14 @@
                         self.velocity.addSelf(newMovement);
                         return false;
                     }
-                    //TODO: Half tiles
-
                     //otherwise just stop movement
                     else {
                         self.velocity[axis] = 0;
                     }
                 }
             });
+
+            //TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
 
             //apply gravity, friction, etc to this velocity
             this.computeVelocity(this.velocity);
