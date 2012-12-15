@@ -13,9 +13,9 @@
 
         // How “deep” does an analogue button need to be depressed to consider it
         // a button down.
-        ANALOGUE_BUTTON_THRESHOLD: 0.5,
+        ANALOGUE_BUTTON_THRESHOLD: 0.4,
 
-        AXIS_THRESHOLD = 0.75,
+        AXIS_THRESHOLD: 0.5,
 
         //are we polling for status/connections?
         ticking: false,
@@ -113,16 +113,15 @@
                 for(var b = 0, bl = pad.buttons.length; b < bl; ++b) {
                     if(!gf.controls.gpButton.binds[b]) continue;
 
-                    if(pad.buttons[b] > gf.gpButton.ANALOGUE_BUTTON_THRESHOLD)
-                        gf.controls.gpButton.status[gf.controls.gpButton.binds[b]] = true;
-                    else
-                        gf.controls.gpButton.status[gf.controls.gpButton.binds[b]] = false;
+                    gf.controls.gpButton.status[gf.controls.gpButton.binds[b]] = (pad.buttons[b] > gf.gamepad.ANALOGUE_BUTTON_THRESHOLD);
                 }
 
                 for(var a = 0, al = pad.axes.length; a < al; ++a) {
                     if(gf.controls.gpStick.binds[a + 'true']) { //negative direction
                         gf.controls.gpStick.status[gf.controls.gpStick.binds[a + 'true']] = (pad.axes[a] < -gf.gamepad.AXIS_THRESHOLD);
-                    } else if(gf.controls.gpStick.binds[a + 'false']) { //positive direction
+                    }
+
+                    if(gf.controls.gpStick.binds[a + 'false']) { //positive direction
 
                         gf.controls.gpStick.status[gf.controls.gpStick.binds[a + 'false']] = (pad.axes[a] > gf.gamepad.AXIS_THRESHOLD);
                     }

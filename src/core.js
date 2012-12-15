@@ -169,12 +169,36 @@ gf.types = {
         PAD_LEFT: 14,
         PAD_RIGHT: 15
     },
+    getGpButtonName: function(i) {
+        var name = '';
+
+        gf.utils.each(gf.types.GP_BUTTONS, function(k, v) {
+            if(v == i) {
+                name = k;
+                return false; //break
+            }
+        });
+
+        return name;
+    },
     //Bindable Gamepad Axes
     GP_AXES: {
         LEFT_ANALOGUE_HOR: 0,
         LEFT_ANALOGUE_VERT: 1,
         RIGHT_ANALOGUE_HOR: 2,
         RIGHT_ANALOGUE_VERT: 3
+    },
+    getGpAxisName: function(i) {
+        var name = '';
+
+        gf.utils.each(gf.types.GP_AXES, function(k, v) {
+            if(v == i) {
+                name = k;
+                return false; //break
+            }
+        });
+
+        return name;
     }
 };
 
