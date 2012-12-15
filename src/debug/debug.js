@@ -17,7 +17,8 @@
             top: '50px',
             left: '0px',
             'z-index': 10,
-            color: '#fff'
+            color: '#fff',
+            'font-size': '0.9em'
         },
 
         //draw hitboxes on entities
@@ -35,7 +36,8 @@
         //draw map collision points
         showMapColliders: false,
 
-
+        //show gamepad info in the info box
+        showGamepadInfo: false,
 
         /****************************************************************************
          * DebugInfo box that displays live-updaing debug info
@@ -48,7 +50,7 @@
             container.id = 'gf-debug-info';
 
             //title
-            var title = document.createElement('h5');
+            var title = document.createElement('h3');
             title.id = 'gf-debug-info-title';
             title.textContent = 'Debug Info';
             title.style.cssText = 'margin:1px;display:block;';
@@ -66,6 +68,12 @@
             ents.appendChild(entsVal);
             container.appendChild(ents);
             container.appendChild(br.cloneNode());
+
+            //gamepads
+            var pads = document.createElement('span');
+            pads.id = 'gf-debug-info-gamepads';
+
+            container.appendChild(pads);
 
             //player position
             var pos = document.createElement('span'),
@@ -106,12 +114,27 @@
                         gf.debug._playerColliders.dirty = false;
                         tilesVal.innerHTML = '<br/>';
                         for(var i = 0, il = gf.debug._playerColliders.length; i < il; ++i) {
-                            tilesVal.innerHTML += 'Tile (' + gf.debug._playerColliders[i].axis + '): ' + 
+                            tilesVal.innerHTML += '&nbsp;&nbsp;&nbsp;Tile (' + gf.debug._playerColliders[i].axis + '): ' + 
                                                 gf.debug._playerColliders[i].tile.type + 
                                                 ' (' + (!!gf.debug._playerColliders[i].tile.normal ? 
                                                         gf.debug._playerColliders[i].tile.normal.x + ', ' + gf.debug._playerColliders[i].tile.normal.y :
                                                         '0, 0')
                                                     + ')<br/>';
+                        }
+                    }
+
+                    if(gf.debug.showGamepadInfo) {
+                        pads.innerHTML = '';
+                        if(gf.gamepad.pads && gf.gamepad.pads.length) {
+                            for(var i = 0, il = gf.gamepad.pads.length; i < il; ++i) {
+                                var pad = gf.gamepad.pads[i];
+
+                                pads.innerHTML += 'Gamepad: [' + pad.index + '] ' + pad.id + '<br/>';
+                                pads.innerHTML += '&nbsp;&nbsp;&nbsp;Buttons:<br/>' + 
+                                                    pad.buttons.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.types.getGpButtonName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
+                                pads.innerHTML += '&nbsp;&nbsp;&nbsp;Axes:<br/>' + 
+                                                    pad.axes.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.types.getGpAxisName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
+                            }
                         }
                     }
                 }

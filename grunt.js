@@ -5,6 +5,7 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/core.js',
             '<%= dirs.src %>/audio/audio.js',
             '<%= dirs.src %>/controls/controls.js',
+            '<%= dirs.src %>/controls/gamepad.js',
             '<%= dirs.src %>/debug/debug.js',
             '<%= dirs.src %>/entity/SceneObject.js',
             '<%= dirs.src %>/entity/Entity.js',
