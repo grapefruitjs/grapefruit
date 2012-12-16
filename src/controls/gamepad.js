@@ -26,8 +26,6 @@
         //timestamp tracking for state changes
         prevTimestamps: [],
 
-        oldStates: [],
-
         //have we initialized the controls already?
         _initialized: false,
 
@@ -113,18 +111,39 @@
                 for(var b = 0, bl = pad.buttons.length; b < bl; ++b) {
                     if(!gf.controls.gpButton.binds[b]) continue;
 
-                    gf.controls.gpButton.status[gf.controls.gpButton.binds[b]] = (pad.buttons[b] > gf.gamepad.ANALOGUE_BUTTON_THRESHOLD);
+                    var pressed = (pad.buttons[b] > gf.gamepad.ANALOGUE_BUTTON_THRESHOLD);
+
+                    //state changed
+                    if(gf.controls.gpButton.status[gf.controls.gpButton.binds[b]] !== pressed) {
+                        //call each callback
+                        var cbs = gf.controls.gpButton.callbacks[gf.controls.gpButton.binds[b]];
+                        if(cbs) {
+                            for(var i = 0, il = cbs.length; i < il; ++i) {
+                                cbs[i](gf.controls.gpButton.binds[b], pressed);
+                            }
+                        }
+                        gf.controls.gpButton.status[gf.controls.gpButton.binds[b]] = pressed;
+                    }
                 }
 
                 for(var a = 0, al = pad.axes.length; a < al; ++a) {
-                    if(gf.controls.gpStick.binds[a + 'true']) { //negative direction
-                        gf.controls.gpStick.status[gf.controls.gpStick.binds[a + 'true']] = (pad.axes[a] < -gf.gamepad.AXIS_THRESHOLD);
-                    }
+                    gf.utils.each(['true', 'false'], function(i, v) {
+                        if(!gf.controls.gpStick.binds[a + v]) return;
 
-                    if(gf.controls.gpStick.binds[a + 'false']) { //positive direction
+                        var moved = v == 'true' ? (pad.axes[a] < -gf.gamepad.AXIS_THRESHOLD) : (pad.axes[a] > gf.gamepad.AXIS_THRESHOLD);
 
-                        gf.controls.gpStick.status[gf.controls.gpStick.binds[a + 'false']] = (pad.axes[a] > gf.gamepad.AXIS_THRESHOLD);
-                    }
+                        //movement state updated
+                        if(gf.controls.gpStick.status[gf.controls.gpStick.binds[a + v]] !== moved) {
+                            //call each callback
+                            var cbs = gf.controls.gpStick.callbacks[gf.controls.gpStick.binds[b + v]];
+                            if(cbs) {
+                                for(var i = 0, il = cbs.length; i < il; ++i) {
+                                    cbs[i](gf.controls.gpStick.binds[b + v], moved);
+                                }
+                            }
+                            gf.controls.gpStick.status[gf.controls.gpStick.binds[a + v]] = moved;
+                        }
+                    });
                 }
             }
         },
