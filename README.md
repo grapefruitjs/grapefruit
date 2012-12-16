@@ -18,3 +18,4 @@ as dependencies, or packaged with it (jQuery can be removed with some refactorin
 * Loader retries
 * Support for canvas fallback int TiledMapLayer
 * Falling/Jumping support (need to check gravity/friction/slopes in side scroller)
+* Tween animations for SceneObject movements
