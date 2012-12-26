@@ -230,11 +230,8 @@
 
             //also update the hitbox mesh if it is different
             if(this._hitboxMesh) {
-                this._hitboxMesh.position.x += vel.x;
-                this._hitboxMesh.position.y += vel.y;
-                //translate doesn't seem to work when using size of 1, 1 and scaling
-                //this._hitboxMesh.translateX(vel.x);
-                //this._hitboxMesh.translateY(vel.y);
+                this._hitboxMesh.translateX(vel.x);
+                this._hitboxMesh.translateY(vel.y);
             }
 
             //onMove event
@@ -278,11 +275,8 @@
             if(this._hitboxMesh) {
                 this._hitboxMesh.position.set(x, y, z);
                 if(this.hitOffset) {
-                    this._hitboxMesh.position.x += this.scaledHitOffset.x;
-                    this._hitboxMesh.position.y += this.scaledHitOffset.y;
-                    //translate doesn't seem to work
-                    //this._hitboxMesh.translateX(this.hitOffset.x);
-                    //this._hitboxMesh.translateY(this.hitOffset.y);
+                    this._hitboxMesh.translateX(this.hitOffset.x);
+                    this._hitboxMesh.translateY(this.hitOffset.y);
                 }
             }
         },
@@ -323,7 +317,7 @@
             this._hitboxGeom = new THREE.PlaneGeometry(1, 1);
 
             this._hitboxMesh = new THREE.Mesh(this._hitboxGeom, this._hitboxMaterial);
-            this._hitboxMesh.scale.set(this.scaledHitSize.x, this.scaledHitSize.y);
+            this._hitboxMesh.scale.set(this.scaledHitSize.x, this.scaledHitSize.y, 1);
         },
     });
 })();

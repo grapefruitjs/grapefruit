@@ -133,7 +133,7 @@
                     this.hitOffset.copy(this._baseHitOffset);
                 }
 
-                this._hitboxMesh.scale.set(this.scaledHitSize.x, this.scaledHitSize.y);
+                this._hitboxMesh.scale.set(this.scaledHitSize.x, this.scaledHitSize.y, 1);
                 this.setPosition(this._mesh.position);
             }
 
