@@ -104,7 +104,8 @@
                 var cbs = this.key.callbacks[this.key.binds[e.which]];
                 if(cbs) {
                     for(var i = 0, il = cbs.length; i < il; ++i) {
-                        cbs[i](this.key.binds[e.which], false);
+                        if(cbs[i].code === e.which)
+                            cbs[i].fn(this.key.binds[e.which], false);
                     }
                 }
             }
