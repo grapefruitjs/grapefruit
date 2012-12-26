@@ -84,7 +84,8 @@
                 var cbs = this.key.callbacks[this.key.binds[e.which]];
                 if(cbs) {
                     for(var i = 0, il = cbs.length; i < il; ++i) {
-                        cbs[i](this.key.binds[e.which], true);
+                        if(cbs[i].code === e.which)
+                            cbs[i].fn(this.key.binds[e.which], true);
                     }
                 }
             }
@@ -121,8 +122,8 @@
             this[type].status[action] = false;
 
             if(fn) {
-                if(this[type].callbacks[action]) this[type].callbacks[action].push(fn);
-                else this[type].callbacks[action] = [fn];
+                if(this[type].callbacks[action]) this[type].callbacks[action].push({ code: code, fn: fn });
+                else this[type].callbacks[action] = [{ code: code, fn: fn }];
             }
 
             return this;
