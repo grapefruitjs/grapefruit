@@ -31,12 +31,12 @@
             item.name = name;
             this.items[name] = item;
             this.dirty = true;
-            this.$elm.append(item.$elm);
+            this.elm.appendChild(item.elm);
             return this;
         },
         removeItem: function(name) {
             if(this.items[name]) {
-                this.items[name].$elm.remove();
+                this.items[name].elm.parentNode.removeChild(this.items[name].elm);
                 this.items[name] = null;
                 this.numItems--;
                 this.dirty = true;
@@ -84,16 +84,12 @@
             this.dirty = false;
         },
         _createElement: function() {
-            this.$elm = $('<div/>', {
-                'class': 'gf-hud'
-            }).css({
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                /*top: gf.game._$cont.position().top,
-                left: gf.game._$cont.position().left,*/
-                zIndex: 6
-            }).appendTo(gf.game._$cont);
+            this.elm = document.createElement('div');
+            this.elm.className = 'gf-hud';
+
+            this.elm.style.cssText = 'position: absolute; width: 100%; height: 100%; z-index: 6;';
+
+            gf.game._cont.appendChild(this.elm);
         }
     };
 })();

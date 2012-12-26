@@ -1,7 +1,5 @@
 (function() {
     gf.controls = {
-        $doc: null,
-
         key: {
             //maps a keycode to an action
             binds: {},
@@ -39,10 +37,8 @@
         init: function() {
             if(gf.controls._initialized) return;
 
-            this.$doc = $(document).on({
-                keydown: $.proxy(this.onKeyDown, this),
-                keyup: $.proxy(this.onKeyUp, this)
-            });
+            document.addEventListener('keydown', this.onKeyDown.bind(this), false);
+            document.addEventListener('keyup', this.onKeyUp.bind(this), false);
 
             gf.controls._initialized = true;
         },

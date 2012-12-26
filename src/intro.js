@@ -1,2 +1,2 @@
-(function($, window, undefined) {
+(function(window, undefined) {
     document = window.document;

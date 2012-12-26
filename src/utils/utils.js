@@ -92,6 +92,64 @@
         },
         clamp: function(n, min, max) { return Math.max(min, Math.min(max, n)); },
         isPowerOfTwo: function(x) { return ((x & (x - 1)) === 0); },
+        getPosition: function(o) {
+            var l = o.offsetLeft,
+                t = o.offsetTop;
+
+            while(o = o.offsetParent) {
+                l += o.offsetLeft;
+                t += o.offsetTop;
+            }
+
+            return {
+                top: t,
+                left: l
+            };
+        },
+        getStyle: function(elm, prop) {
+            var style = window.getComputedStyle(elm);
+
+            return parseInt(style.getPropertyValue(prop).replace(/px|em|%|pt/, ''), 10);
+        },
+        setStyle: function(elm, prop, value) {
+            var style = window.getComputedStyle(elm);
+
+            return style.setPropertyValue(prop, value);
+        },
+        //Some things stolen from jQuery
+        getOffset: function(elem) {
+            var doc = elem && elem.ownerDocument,
+                docElem = doc.documentElement;
+
+            try {
+                box = elem.getBoundingClientRect();
+            } catch(e) {}
+
+            // Make sure we're not dealing with a disconnected DOM node
+            if (!box || !(docElem !== elem && (docElem.contains ? docElem.contains(elem) : true))) {  //(!box || !jQuery.contains(docElem, elem)) {
+                return box ? {
+                    top: box.top,
+                    left: box.left
+                } : {
+                    top: 0,
+                    left: 0
+                };
+            }
+
+            var body = doc.body,
+                win = window,
+                clientTop = docElem.clientTop || body.clientTop || 0,
+                clientLeft = docElem.clientLeft || body.clientLeft || 0,
+                scrollTop = win.pageYOffset || docElem.scrollTop || body.scrollTop,
+                scrollLeft = win.pageXOffset || docElem.scrollLeft || body.scrollLeft,
+                top = box.top + scrollTop - clientTop,
+                left = box.left + scrollLeft - clientLeft;
+
+            return {
+                top: top,
+                left: left
+            };
+        },
         each: function(object, callback, args) {
             var name, i = 0,
                 length = object.length,
@@ -131,8 +189,8 @@
             _projector: new THREE.Projector(),
             positionToViewport: function(position) {
                 var vector = gf.utils.project._projector.projectVector(position, gf.game._camera),
-                    hWidth = gf.game._$domElement.width() / 2,
-                    hHeight = gf.game._$domElement.height() / 2;
+                    hWidth = gf.game._domElement.width / 2,
+                    hHeight = gf.game._domElement.height / 2;
 
                 return new THREE.Vector2(
                     Math.round(vector.x * hWidth + hWidth),
@@ -140,10 +198,11 @@
                 );
             },
             positionToScreen: function(position) {
-                var pos = gf.utils.project.positionToViewport(position);
+                var pos = gf.utils.project.positionToViewport(position),
+                    offset = gf.utils.getOffset(gf.game._domElement);
 
-                pos.x += gf.game._$domElement.offset().left;
-                pos.y += gf.game._$domElement.offset().top;
+                pos.x += offset.left;
+                pos.y += offset.top;
 
                 return pos;
             },
