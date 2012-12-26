@@ -46,7 +46,7 @@
         },
         setItemValue: function(name, value) {
             if(this.items[name]) {
-                this.items[name].setValue;
+                this.items[name].setValue(value);
                 this.dirty = true;
             }
 
