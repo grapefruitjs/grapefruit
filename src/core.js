@@ -380,7 +380,7 @@ Class.extend = function(prop) {
         _nextId: Date.now(),
 
         //the object that will contain the render domElement
-        _$cont: null,
+        _cont: null,
 
         //have we initialized the game already?
         _initialized: false,
@@ -438,16 +438,15 @@ Class.extend = function(prop) {
              * Setup game container
              ****************************************************************************/
             //cache the container object
-            gf.game._$cont = $('#' + contId);
+            gf.game._cont = document.getElementById(contId);
 
-            var w = opts.width || gf.game._$cont.width(),
-                h = opts.height || gf.game._$cont.height();
+            var w = opts.width || gf.utils.getStyle(gf.game._cont, 'width'),
+                h = opts.height || gf.utils.getStyle(gf.game._cont, 'height');
 
             //initialize the renderer
             gf.game._renderer.domElement.style['z-index'] = 5;
             gf.game._renderer.setSize(w, h);
-            gf.game._$cont.append(gf.game._renderer.domElement);
-            gf.game._$domElement = $(gf.game._renderer.domElement);
+            gf.game._cont.appendChild(gf.game._renderer.domElement);
 
             /****************************************************************************
              * Initialize the camera and lighting
@@ -557,7 +556,7 @@ Class.extend = function(prop) {
         checkCollisions: function(obj) {
             var colliders = [];
 
-            $.each(gf.game.objects, function(id, o) {
+            gf.utils.each(gf.game.objects, function(id, o) {
                 //check if this object collides with any others
                 if(o.inViewport && o.isVisible && o.isCollidable && o.isEntity && (o != obj)) {
                     var collisionVector = o.checkCollision(obj);
