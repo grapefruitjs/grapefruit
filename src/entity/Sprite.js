@@ -86,12 +86,24 @@
 
             return this;
         },
-        setActiveAnimation: function(name, resetAnim) {
+        setActiveAnimation: function(name, resetAnim, cb) {
+            if(typeof resetAnim == 'function') {
+                cb = resetAnim;
+                resetAnim = null;
+            }
+
             if(!this.anim[name]) {
                 this.currentAnim = name;
             } else {
+                if(this.currentAnim._cb && !this.currentAnim._cbCalled) {
+                    this.currentAnim._cbCalled = true;
+                    this.currentAnim._cb(true);
+                }
+
                 this.currentAnim = this.anim[name];
                 this.currentAnim._done = false;
+                this.currentAnim._cbCalled = false;
+                this.currentAnim._cb = cb;
                 if(resetAnim) this.currentAnim.idx = 0;
                 this._setOffset();
 
@@ -151,6 +163,10 @@
                         }
                         else {
                             this.currentAnim._done = true;
+                            if(this.currentAnim._cb && !this.currentAnim._cbCalled) {
+                                this.currentAnim._cbCalled = true;
+                                this.currentAnim._cb();
+                            }
                             return;
                         }
                     }
