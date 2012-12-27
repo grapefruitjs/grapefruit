@@ -108,6 +108,10 @@
                 //so this loop will blow away the changes each iteration (only the "last" gamepad is supported)
                 //
                 //As such callbacks don't work properly either (until I do the above)
+                //
+                //I also notice that since multiple buttons can map to a single action, whichever changed most 
+                //recently will set the gf.controls.gpButton.status for that action. If multiple change, it
+                //will only take the last one to change...not sure how else to handle it though...
                 for(var b = 0, bl = pad.buttons.length; b < bl; ++b) {
                     if(!gf.controls.gpButton.binds[b]) continue;
 
