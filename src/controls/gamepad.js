@@ -106,19 +106,19 @@
                 //I would like to be able to emit events when something updates, but for now
                 //just update the status of bound keys in controls; controls only has 1 "gamepad"
                 //so this loop will blow away the changes each iteration (only the "last" gamepad is supported)
-                //
-                //As such callbacks don't work properly either (until I do the above)
-                //
-                //I also notice that since multiple buttons can map to a single action, whichever changed most 
-                //recently will set the gf.controls.gpButton.status for that action. If multiple change, it
-                //will only take the last one to change...not sure how else to handle it though...
                 for(var b = 0, bl = pad.buttons.length; b < bl; ++b) {
                     if(!gf.controls.gpButton.binds[b]) continue;
 
                     var pressed = (pad.buttons[b] > gf.gamepad.ANALOGUE_BUTTON_THRESHOLD);
 
+                    if(!gf.controls.gpButton.buttons[b])
+                        gf.controls.gpButton.buttons[b] = { pressed: !pressed, code: b };
+
+                    gf.controls.gpButton.buttons[b].val = pad.buttons[b];
+
                     //state changed
-                    if(gf.controls.gpButton.status[gf.controls.gpButton.binds[b]] !== pressed) {
+                    if(gf.controls.gpButton.buttons[b].pressed !== pressed) {
+                        gf.controls.gpButton.buttons[b].pressed = pressed;
                         //call each callback
                         var cbs = gf.controls.gpButton.callbacks[gf.controls.gpButton.binds[b]];
                         if(cbs) {
@@ -132,14 +132,20 @@
                 }
 
                 for(var a = 0, al = pad.axes.length; a < al; ++a) {
-                    gf.controls.gpStick.axes[a] = pad.axes[a];
                     gf.utils.each(['true', 'false'], function(i, v) {
                         if(!gf.controls.gpStick.binds[a + v]) return;
 
                         var moved = v == 'true' ? (pad.axes[a] < -gf.gamepad.AXIS_THRESHOLD) : (pad.axes[a] > gf.gamepad.AXIS_THRESHOLD);
 
+
+                        if(!gf.controls.gpStick.axes[a + v])
+                            gf.controls.gpStick.axes[a + v] = { moved: !moved, code: a, negative: v == 'true' };
+
+                        gf.controls.gpStick.axes[a + v].val = pad.axes[a];
+
                         //movement state updated
-                        if(gf.controls.gpStick.status[gf.controls.gpStick.binds[a + v]] !== moved) {
+                        if(gf.controls.gpStick.axes[a + v].moved !== moved) {
+                            gf.controls.gpStick.axes[a + v].moved = moved;
                             //call each callback
                             var cbs = gf.controls.gpStick.callbacks[gf.controls.gpStick.binds[a + v]];
                             if(cbs) {
