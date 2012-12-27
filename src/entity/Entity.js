@@ -131,7 +131,7 @@
         },
         checkCollision: function(entity) {
             //response vector
-            var p = new me.Vector2d(0, 0);
+            var p = new THREE.Vector2(0, 0);
 
             //check if hitboxes intersect
             if (this.intersects(entity)) {
@@ -173,7 +173,7 @@
             return this;
         },
         updateMovement: function() {
-            if(this.velocity.isZero()) return;
+            if(this.velocity.x === 0 && this.velocity.y === 0) return;
 
             var colliders = gf.game.world !== undefined ? gf.game.world.checkCollision(this._hitboxMesh, this.scaledHitSize, this.velocity) : [];
 
@@ -222,7 +222,7 @@
             //optionally override current velocity
             vel = vel || this.velocity;
 
-            if(vel.isZero()) return;
+            if(vel.x === 0 && vel.y === 0) return;
 
             //update the entity position
             this._mesh.translateX(vel.x);

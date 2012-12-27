@@ -95,7 +95,7 @@
             if(!this.anim[name]) {
                 this.currentAnim = name;
             } else {
-                if(this.currentAnim._cb && !this.currentAnim._cbCalled) {
+                if(this.currentAnim && this.currentAnim._cb && !this.currentAnim._cbCalled) {
                     this.currentAnim._cbCalled = true;
                     this.currentAnim._cb(true);
                 }

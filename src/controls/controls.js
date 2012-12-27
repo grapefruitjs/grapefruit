@@ -10,6 +10,22 @@
             //tracks the status of each action
             status: {}
         },
+        mouse: {
+            //maps a mouse event to an action
+            binds: {},
+            //maps an action to callbacks
+            callbacks: {},
+            //count of how many keys an action is bound to
+            bindCount: {},
+            //tracks the status of each action
+            status: {},
+            //the current screen touches
+            touches: [{ x: 0, y: 0 }],
+            //the position of the mouse
+            position: new THREE.Vector2(0, 0),
+            //the offset of the mouse
+            offset: null
+        },
         gpButton: {
             //maps a keycode to an action
             binds: {},
@@ -37,112 +53,241 @@
         init: function() {
             if(gf.controls._initialized) return;
 
-            document.addEventListener('keydown', this.onKeyDown.bind(this), false);
-            document.addEventListener('keyup', this.onKeyUp.bind(this), false);
+            gf.controls.mouse.offset = gf.utils.getPosition(gf.game._renderer.domElement);
+
+            document.addEventListener('keydown', gf.controls.onKeyDown, false);
+            document.addEventListener('keyup', gf.controls.onKeyUp, false);
+
+            //bind all the mouse/touch events
+            if(gf.support.touch) {
+                gf.game._renderer.domElement.addEventListener('touchmove', gf.controls.onMouseMove, false);
+                gf.utils.each(gf.types.TOUCH, function(k, v) {
+                    if(v === 'touchmove') return;
+                    gf.game._renderer.domElement.addEventListener(v, gf.controls.onTouch, false);
+                });
+            } else {
+                gf.game._renderer.domElement.addEventListener('mousemove', gf.controls.onMouseMove, false);
+                document.addEventListener('mousewheel', gf.controls.onMouseWheel, false);
+                gf.utils.each(gf.types.MOUSE, function(k, v) {
+                    if(v === 'mousemove' || v === 'mousewheel') return;
+                    gf.game._renderer.domElement.addEventListener(v, gf.controls.onMouse, false);
+                });
+            }
 
             gf.controls._initialized = true;
         },
         //binds an action to a keycode
         bindKey: function(keycode, action, fn) {
-            return this._doBind('key', keycode, action, fn);
+            return gf.controls._doBind('key', keycode, action, fn);
+        },
+        //binds an action to mouse event
+        bindMouse: function(evt, action, fn) {
+            return gf.controls._doBind('mouse', evt, action, fn);
         },
         //binds an action to a gamepad button
         bindGamepadButton: function(code, action, fn) {
-            return this._doBind('gpButton', code, action, fn);
+            return gf.controls._doBind('gpButton', code, action, fn);
         },
         //bind an action to a stick movement
         bindGamepadStick: function(code, negative, action, fn) {
-            negative = negative ? true : false; //I want this to be true/false, not truthy or falsey
+            negative = !!negative; //I want gf.controls to be true/false, not truthy or falsey
 
-            return this._doBind('gpStick', code.toString() + negative, action, fn);
+            return gf.controls._doBind('gpStick', code.toString() + negative, action, fn);
         },
         //unbind an action from a keycode
         unbindKey: function(keycode) {
-            return this._doUnbind('key', keycode);
+            return gf.controls._doUnbind('key', keycode);
+        },
+        //unbind an action to mouse event
+        unbindMouse: function(evt) {
+            return gf.controls._doUnbind('mouse', evt);
         },
         //unbind an action from a gamepad button
         unbindGamepadButton: function(code) {
-            return this._doUnbind('gpButton', code);
+            return gf.controls._doUnbind('gpButton', code);
         },
         //bind an action to a stick movement
         unbindGamepadStick: function(code, negative) {
-            negative = negative ? true : false; //I want this to be true/false, not truthy or falsey
+            negative = negative ? true : false; //I want gf.controls to be true/false, not truthy or falsey
 
-            return this._doUnbind('gpStick', code.toString() + negative);
+            return gf.controls._doUnbind('gpStick', code.toString() + negative);
         },
-        //on keydown event set this keycode's action as active
+        //on keydown event set gf.controls keycode's action as active
         //and call any registered callbacks
-        onKeyDown: function(e) {
-            //if this key is bound
-            if(this.key.binds[e.which]) {
-                e.preventDefault();
+        onKeyDown: function(e, override) {
+            var which = override || e.keyCode || e.which;
 
-                //track that this action is active
-                this.key.status[this.key.binds[e.which]] = true;
+            //if gf.controls key is bound
+            if(gf.controls.key.binds[which]) {
+                //track that gf.controls action is active
+                gf.controls.key.status[gf.controls.key.binds[which]] = true;
 
                 //call each callback
-                var cbs = this.key.callbacks[this.key.binds[e.which]];
+                var cbs = gf.controls.key.callbacks[gf.controls.key.binds[which]];
                 if(cbs) {
                     for(var i = 0, il = cbs.length; i < il; ++i) {
-                        if(cbs[i].code === e.which)
-                            cbs[i].fn(this.key.binds[e.which], true);
+                        if(cbs[i].code === which)
+                            cbs[i].fn(gf.controls.key.binds[which], true);
                     }
+                }
+
+                return gf.controls.preventDefault(e);
+            }
+
+            return gf.controls;
+        },
+        onKeyUp: function(e, override) {
+            var which = override || e.keyCode || e.which;
+
+            //if gf.controls key is bound
+            if(gf.controls.key.binds[which]) {
+                //track that gf.controls action is active
+                gf.controls.key.status[gf.controls.key.binds[which]] = false;
+
+                //call each callback
+                var cbs = gf.controls.key.callbacks[gf.controls.key.binds[which]];
+                if(cbs) {
+                    for(var i = 0, il = cbs.length; i < il; ++i) {
+                        if(cbs[i].code === which)
+                            cbs[i].fn(gf.controls.key.binds[which], false);
+                    }
+                }
+
+                return gf.controls.preventDefault(e);
+            }
+
+            return gf.controls;
+        },
+        //mouse/touch move event
+        onMouseMove: function(e) {
+            gf.controls.updateCoords(e);
+
+            if(gf.controls.dispatchMouseEvent(e)) return gf.controls.preventDefault(e);
+
+            return true;
+        },
+        //generic mouse event (click, down, up, etc)
+        onMouse: function(e) {
+            if(gf.controls.dispatchMouseEvent(e)) return gf.controls.preventDefault(e);
+
+            //incase touch event button is undefined
+            var keycode = gf.controls.mouse.binds[e.button || 0];
+
+            if(keycode) {
+                if(e.type === 'mousedown' || e.type === 'touchstart')
+                    return gf.controls.onKeyDown(e, keycode);
+                else
+                    return gf.controls.onKeyUp(e, keycode);
+            }
+
+            return true;
+        },
+        onMouseWheel: function(e) {
+            if(e.target == gf.game._renderer.domElement) {
+                if(gf.controls.dispatchMouseEvent(e)) return gf.controls.preventDefault(e);
+            }
+
+            return true;
+        },
+        //generic touch event (tap, start, end, etc)
+        onTouch: function(e) {
+            gf.controls.updateCoords(e);
+
+            return gf.controls.onMouse(e);
+        },
+        //update the mouse coords
+        updateCoords: function(e) {
+            gf.controls.mouse.touches.length = 0;
+
+            var off = gf.controls.mouse.offset;
+
+            //mouse event
+            if(!e.touches) {
+                gf.controls.mouse.touches.push({
+                    x: e.pageX - off.x,
+                    y: e.pageY - off.y,
+                    id: 0
+                });
+            }
+            //touch event
+            else {
+                for(var i = 0, il = e.changedTouches.length; i < il; ++i) {
+                    var t = e.changedTouches[i];
+
+                    gf.controls.mouse.touches.push({
+                        x: t.clientX - off.x,
+                        y: t.clientY - off.y
+                    });
                 }
             }
 
-            return this;
+            gf.controls.mouse.position.set(gf.controls.mouse.touches[0].x, gf.controls.mouse.touches[0].y);
         },
-        onKeyUp: function(e) {
-            //if this key is bound
-            if(this.key.binds[e.which]) {
-                e.preventDefault();
+        dispatchMouseEvent: function(e) {
+            if(gf.controls.mouse.binds[e.type]) {
+                //track that gf.controls action is active
+                gf.controls.mouse.status[gf.controls.mouse.binds[e.type]] = true;
 
-                //track that this action is active
-                this.key.status[this.key.binds[e.which]] = false;
-
-                //call each callback
-                var cbs = this.key.callbacks[this.key.binds[e.which]];
+                //for each touch
+                var cbs = gf.controls.mouse.callbacks[gf.controls.mouse.binds[e.type]];
                 if(cbs) {
-                    for(var i = 0, il = cbs.length; i < il; ++i) {
-                        if(cbs[i].code === e.which)
-                            cbs[i].fn(this.key.binds[e.which], false);
+                    for(var t = 0, tl = gf.controls.mouse.touches.length; t < tl; ++t) {
+                        //call each callback
+                        for(var i = 0, il = cbs.length; i < il; ++i) {
+                            if(cbs[i].code === e.type)
+                                cbs[i].fn(gf.controls.mouse.binds[e.type], gf.controls.mouse.touches[t]);
+                        }
                     }
-                }
-            }
 
-            return this;
+                    return gf.controls.preventDefault(e);
+                }
+
+                return true;
+            }
         },
+        //helper to prevent default stuffs accross different browsers
+        preventDefault: function(e) {
+            if(e.stopPropagation) e.stopPropagation();
+            else e.cancelBubble = true;
+
+            if(e.preventDefault) e.preventDefault();
+            else e.returnValue = false;
+
+            return false;
+        },
+        //check if an action is active accross any binds
         isActionActive: function(action) {
-            return this.key.status[action] ||
-                    this.gpButton.status[action] ||
-                    this.gpStick.status[action];
+            return gf.controls.key.status[action] ||
+                    gf.controls.mouse.status[action] ||
+                    gf.controls.gpButton.status[action] ||
+                    gf.controls.gpStick.status[action];
         },
         _doBind: function(type, code, action, fn) {
-            this[type].binds[code] = action;
-            this[type].bindCount[action]++;
-            this[type].status[action] = false;
+            gf.controls[type].binds[code] = action;
+            gf.controls[type].bindCount[action]++;
+            gf.controls[type].status[action] = false;
 
             if(fn) {
-                if(this[type].callbacks[action]) this[type].callbacks[action].push({ code: code, fn: fn });
-                else this[type].callbacks[action] = [{ code: code, fn: fn }];
+                if(gf.controls[type].callbacks[action]) gf.controls[type].callbacks[action].push({ code: code, fn: fn });
+                else gf.controls[type].callbacks[action] = [{ code: code, fn: fn }];
             }
 
-            return this;
+            return gf.controls;
         },
         _doUnbind: function(type, code) {
-            var act = this[type].binds[code];
+            var act = gf.controls[type].binds[code];
 
-            delete this[type].binds[code];
+            delete gf.controls[type].binds[code];
 
-            this[type].bindCount[action]--;
+            gf.controls[type].bindCount[action]--;
 
-            if(this[type].bindCount <= 0) {
-                this[type].bindCount = 0;
-                delete this[type].status[action];
-                delete this[type].callbacks[action];
+            if(gf.controls[type].bindCount <= 0) {
+                gf.controls[type].bindCount = 0;
+                delete gf.controls[type].status[action];
+                delete gf.controls[type].callbacks[action];
             }
 
-            return this;
+            return gf.controls;
         },
     };
 })();
