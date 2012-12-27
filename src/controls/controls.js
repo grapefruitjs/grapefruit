@@ -34,7 +34,9 @@
             //count of how many buttons an action is bound to
             bindCount: {},
             //tracks the status of each action
-            status: {}
+            status: {},
+            //track the status of each button
+            buttons: {}
         },
         gpStick: {
             //maps a keycode to an action
