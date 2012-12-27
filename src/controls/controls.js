@@ -44,7 +44,9 @@
             //count of how many buttons an action is bound to
             bindCount: {},
             //tracks the status of each action
-            status: {}
+            status: {},
+            //track the status of the axes
+            axes: {}
         },
 
         //have we initialized the controls already?
@@ -53,24 +55,24 @@
         init: function() {
             if(gf.controls._initialized) return;
 
-            gf.controls.mouse.offset = gf.utils.getPosition(gf.game._renderer.domElement);
+            gf.controls.mouse.offset = gf.utils.getOffset(gf.game._renderer.domElement);
 
             document.addEventListener('keydown', gf.controls.onKeyDown, false);
             document.addEventListener('keyup', gf.controls.onKeyUp, false);
 
             //bind all the mouse/touch events
             if(gf.support.touch) {
-                gf.game._renderer.domElement.addEventListener('touchmove', gf.controls.onMouseMove, false);
+                gf.game._cont.addEventListener('touchmove', gf.controls.onMouseMove, false);
                 gf.utils.each(gf.types.TOUCH, function(k, v) {
                     if(v === 'touchmove') return;
-                    gf.game._renderer.domElement.addEventListener(v, gf.controls.onTouch, false);
+                    gf.game._cont.addEventListener(v, gf.controls.onTouch, false);
                 });
             } else {
-                gf.game._renderer.domElement.addEventListener('mousemove', gf.controls.onMouseMove, false);
+                gf.game._cont.addEventListener('mousemove', gf.controls.onMouseMove, false);
                 document.addEventListener('mousewheel', gf.controls.onMouseWheel, false);
                 gf.utils.each(gf.types.MOUSE, function(k, v) {
                     if(v === 'mousemove' || v === 'mousewheel') return;
-                    gf.game._renderer.domElement.addEventListener(v, gf.controls.onMouse, false);
+                    gf.game._cont.addEventListener(v, gf.controls.onMouse, false);
                 });
             }
 
@@ -168,6 +170,8 @@
         },
         //generic mouse event (click, down, up, etc)
         onMouse: function(e) {
+            gf.controls.updateCoords(e);
+
             if(gf.controls.dispatchMouseEvent(e)) return gf.controls.preventDefault(e);
 
             //incase touch event button is undefined
@@ -204,8 +208,8 @@
             //mouse event
             if(!e.touches) {
                 gf.controls.mouse.touches.push({
-                    x: e.pageX - off.x,
-                    y: e.pageY - off.y,
+                    x: e.pageX - off.left,
+                    y: e.pageY - off.top,
                     id: 0
                 });
             }
@@ -215,12 +219,11 @@
                     var t = e.changedTouches[i];
 
                     gf.controls.mouse.touches.push({
-                        x: t.clientX - off.x,
-                        y: t.clientY - off.y
+                        x: t.clientX - off.left,
+                        y: t.clientY - off.top
                     });
                 }
             }
-
             gf.controls.mouse.position.set(gf.controls.mouse.touches[0].x, gf.controls.mouse.touches[0].y);
         },
         dispatchMouseEvent: function(e) {

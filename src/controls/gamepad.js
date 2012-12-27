@@ -119,7 +119,8 @@
                         var cbs = gf.controls.gpButton.callbacks[gf.controls.gpButton.binds[b]];
                         if(cbs) {
                             for(var i = 0, il = cbs.length; i < il; ++i) {
-                                cbs[i](gf.controls.gpButton.binds[b], pressed);
+                                if(cbs[i].code === b)
+                                    cbs[i].fn(gf.controls.gpButton.binds[b], pressed);
                             }
                         }
                         gf.controls.gpButton.status[gf.controls.gpButton.binds[b]] = pressed;
@@ -127,6 +128,7 @@
                 }
 
                 for(var a = 0, al = pad.axes.length; a < al; ++a) {
+                    gf.controls.gpStick.axes[a] = pad.axes[a];
                     gf.utils.each(['true', 'false'], function(i, v) {
                         if(!gf.controls.gpStick.binds[a + v]) return;
 
@@ -135,10 +137,11 @@
                         //movement state updated
                         if(gf.controls.gpStick.status[gf.controls.gpStick.binds[a + v]] !== moved) {
                             //call each callback
-                            var cbs = gf.controls.gpStick.callbacks[gf.controls.gpStick.binds[b + v]];
+                            var cbs = gf.controls.gpStick.callbacks[gf.controls.gpStick.binds[a + v]];
                             if(cbs) {
                                 for(var i = 0, il = cbs.length; i < il; ++i) {
-                                    cbs[i](gf.controls.gpStick.binds[b + v], moved);
+                                    if(cbs[i].code === a)
+                                        cbs[i].fn(gf.controls.gpStick.binds[a + v], pad.axes[a]);
                                 }
                             }
                             gf.controls.gpStick.status[gf.controls.gpStick.binds[a + v]] = moved;
