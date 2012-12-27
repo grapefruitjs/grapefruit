@@ -225,10 +225,9 @@
 
             this._mesh = new THREE.Sprite(this._material);
 
-            var bias = 1 + (this.numFrames.x / this.scaledSize.x);
             this._mesh.scale.set(
-                1 / (this.scaledSize.x / bias),
-                1 / (this.scaledSize.y / bias),
+                1 / this.numFrames.x / 2, //(this.scaledSize.x / bias),
+                1 / this.numFrames.y / 3, (this.scaledSize.y / bias),
                 1
             );
         }
