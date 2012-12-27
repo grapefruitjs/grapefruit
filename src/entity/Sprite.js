@@ -182,11 +182,10 @@
             var add = this.currentAnim.inverse ? 1 : 0,
                 frame = this.currentAnim.frames[this.currentAnim.idx];
 
-            //var currColumn = (this.currentFrame + add) % (this.currentAnim.numFrames.x + add);
-            this.texture.offset.x = (frame.x / this.texture.image.width);//(frame.x / this.currentAnim.numFrames.x);// + (this.offset.x / this.numFrames.x) + (this.currentAnim.offset.x / this.numFrames.x);
-
-            //var currRow = Math.floor((this.currentTile + add) / (this.currentAnim.numFrames.x + add));
-            this.texture.offset.y = 1 - (this.size.y / this.texture.image.height) - (frame.y / this.texture.image.height);//(frame.y / this.currentAnim.numFrames.y);// + (this.offset.y / this.numFrames.y) + (this.currentAnim.offset.y / this.numFrames.y);
+            this._material.uvOffset.set(
+                frame.x / this.texture.image.width,
+                1 - (this.size.y / this.texture.image.height) - (frame.y / this.texture.image.height)
+            );
         },
         //override Entity mesh with a sprite instead
         _createMesh: function() {
@@ -202,57 +201,36 @@
 
             this.numFrames.set(this.texture.image.width / this.size.x, this.texture.image.height / this.size.y);
 
-            /*
-             * Really need to be using sprite, not a plane...
-
-            this._mesh = new THREE.Sprite({
+            this._material = new THREE.SpriteMaterial({
+                color: 0xffffff,
+                opacity: 1,
                 map: this.texture,
+
+                blending: THREE.NormalBlending,
+                alignment: THREE.SpriteAlignment.center,
                 useScreenCoordinates: this.useScreenCoords,
-                scaleByViewport: true
+                //depthTest: false, //default: !useScreenCoordinates
+                sizeAttenuation: true, //default: !useScreenCoordinates
+                //scaledByViewport: true //default: !sizeAttenuation
             });
-            //scale mesh
-            this._mesh.scale.x = -(1 / this.numFrames.x);
-            this._mesh.scale.y = (1 / this.numFrames.y);
 
-            //texture offset to first frame
-            this._mesh.uvOffset.x = 1 - this._mesh.scale.x;
-            this._mesh.uvOffset.y = 1 - this._mesh.scale.y;
-
-            //scale texture
-            this._mesh.uvScale.x = (1 / this.numFrames.x);
-            this._mesh.uvScale.y = (1 / this.numFrames.y);
-            */
-
-            //setup wrapping of the texture
-            this.texture.wrapS = this.texture.wrapT = THREE.RepeatWrapping;
-            //scale the texture to show only one frame
-            this.texture.repeat.set(
-                (1 / this.numFrames.x),
-                (1 / this.numFrames.y)
+            this._material.uvScale.set(
+                1 / this.numFrames.x,
+                1 / this.numFrames.y
             );
-            //move the texture to the frame defined in offset
-            this.texture.offset.x = (this.offset.x / this.texture.image.width);
-            this.texture.offset.y = 1 - (this.size.y / this.texture.image.height) - (this.offset.y / this.texture.image.height); //convert a topleft offset to a bottomleft offset
+            this._material.uvOffset.set(
+                0,
+                1 - this._material.uvScale.y //transform to topleft offset
+            );
 
-            //create the geometry, material, and mesh objects
-            this._materials = [];
+            this._mesh = new THREE.Sprite(this._material);
 
-            this._materials.push(new THREE.MeshBasicMaterial({ map: this.texture, transparent: true }));
-
-            //add outline material if needed
-            if(gf.debug.showOutline) {
-                this._materials.push(new THREE.MeshBasicMaterial({
-                    color: gf.debug.outlineColor,
-                    wireframe: true,
-                    wireframeLinewidth: 1
-                }));
-            }
-
-            this._geom = new THREE.PlaneGeometry(this.scaledSize.x, this.scaledSize.y);
-            this._mesh = THREE.SceneUtils.createMultiMaterialObject(this._geom, this._materials);//new THREE.Mesh(this._geom, this._material);
-
-            //multimaterials object doesn't have .geometry defined
-            this._mesh.geometry = this._geom;
+            var bias = 1 + (this.numFrames.x / this.scaledSize.x);
+            this._mesh.scale.set(
+                1 / (this.scaledSize.x / bias),
+                1 / (this.scaledSize.y / bias),
+                1
+            );
         }
     });
 })();
