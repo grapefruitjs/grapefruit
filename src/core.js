@@ -150,6 +150,27 @@ gf.types = {
         MINUS: 173,
         TILDE: 192
     },
+    //Bindable Mouse Events
+    MOUSE: {
+        WHEEL: 'mousewheel',
+        MOVE: 'mousemove',
+        DOWN: 'mousedown',
+        UP: 'mouseup',
+        CLICK: 'click',
+        DBLCLICK: 'dblclick',
+        RCLICK: 'contextmenu',
+        CONTEXTMENU: 'contextmenu'
+    },
+    TOUCH: {
+        //WHEEL: undefined,
+        MOVE: 'touchmove',
+        START: 'touchstart',
+        END: 'touchend',
+        TAP: 'tap',
+        DBLTAP: 'dbltap',
+        //RCLICK: undefined,
+        //CONTEXTMENU: undefined
+    },
     //Bindable Gamepad Buttons
     GP_BUTTONS: {
         FACE_1: 0, // Face (main) buttons
@@ -232,6 +253,9 @@ gf.support = {
 
     //local storage supported?
     localStorage: !!window.localStorage,
+
+    //is this a touch device
+    touch: ('createTouch' in document) || ('ontouchstart' in $) || (navigator.isCocoonJS),
 
     //gamepad API supported?
     gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') != -1)
@@ -527,10 +551,20 @@ Class.extend = function(prop) {
                 gf.game.player = null;
 
             //deallocate resources for this entity
-            gf.game._renderer.deallocateObject(obj._mesh);
-            gf.game._renderer.deallocateObject(obj._hitboxMesh);
+            gf.game._dealloc(obj._geom, obj._materials);
+            gf.game._dealloc(obj._hitboxGeom, obj._hitboxMaterial);
 
             return this;
+        },
+        _dealloc: function(geom, mats) {
+            if(mats) {
+                if(mats instanceof Array) {
+                    mats.forEach(function(mat) { mat.dispose(); });
+                }
+                else mats.dispose();
+            }
+
+            if(geom) geom.dispose();
         },
         loadWorld: function(world) {
             if(typeof world == 'string'){
@@ -560,7 +594,7 @@ Class.extend = function(prop) {
                 //check if this object collides with any others
                 if(o.inViewport && o.isVisible && o.isCollidable && o.isEntity && (o != obj)) {
                     var collisionVector = o.checkCollision(obj);
-                    if(!collisionVector.isZero()) {
+                    if(collisionVector.x !== 0 && collisionVector.y !== 0) {
                         colliders.push({
                             entity: o,
                             vector: collisionVector
