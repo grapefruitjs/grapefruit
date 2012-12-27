@@ -112,7 +112,7 @@
                     var pressed = (pad.buttons[b] > gf.gamepad.ANALOGUE_BUTTON_THRESHOLD);
 
                     if(!gf.controls.gpButton.buttons[b])
-                        gf.controls.gpButton.buttons[b] = { pressed: !pressed, code: b };
+                        gf.controls.gpButton.buttons[b] = { pressed: false, code: b };
 
                     gf.controls.gpButton.buttons[b].val = pad.buttons[b];
 
@@ -137,9 +137,8 @@
 
                         var moved = v == 'true' ? (pad.axes[a] < -gf.gamepad.AXIS_THRESHOLD) : (pad.axes[a] > gf.gamepad.AXIS_THRESHOLD);
 
-
                         if(!gf.controls.gpStick.axes[a + v])
-                            gf.controls.gpStick.axes[a + v] = { moved: !moved, code: a, negative: v == 'true' };
+                            gf.controls.gpStick.axes[a + v] = { moved: false, code: a, negative: v == 'true' };
 
                         gf.controls.gpStick.axes[a + v].val = pad.axes[a];
 

@@ -179,8 +179,8 @@ gf.types = {
         FACE_4: 3,
         LEFT_SHOULDER: 4, // Top shoulder buttons
         RIGHT_SHOULDER: 5,
-        LEFT_SHOULDER_BOTTOM: 6, // Bottom shoulder buttons
-        RIGHT_SHOULDER_BOTTOM: 7,
+        LEFT_TRIGGER: 6, // Bottom shoulder buttons
+        RIGHT_TRIGGER: 7,
         SELECT: 8,
         START: 9,
         LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
