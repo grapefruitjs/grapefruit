@@ -311,7 +311,9 @@
             this._hitboxMaterial = new THREE.MeshBasicMaterial({
                 color: gf.debug.hitboxColor,
                 wireframe: gf.debug.showHitbox,
-                wireframeLinewidth: 1
+                wireframeLinewidth: 1,
+                transparent: true,
+                opacity: gf.debug.showHitbox ? 0.8 : 0
             });
 
             this._hitboxGeom = new THREE.PlaneGeometry(1, 1);
