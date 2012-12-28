@@ -1,6 +1,6 @@
 ### GrapeFruit Game Engine
 
-The game engine that powers [lttp-webgl](https://github.com/englercj/lttp-webgl).
+The game engine that powers [lttp-webgl](https://github.com/englercj/lttp-webgl), and the soon to come _Mana_.
 
 ## Dependencies
 
