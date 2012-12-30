@@ -47,7 +47,7 @@
             this._baseHitOffset = this.hitOffset.clone();
 
             // create a default animation sequence with all sprites
-            this.addAnimation('default', null, 1000, true);
+            this.addAnimation('default', { frames: null, duration: 1000 });
             // set as default
             this.setActiveAnimation('default');
         },
