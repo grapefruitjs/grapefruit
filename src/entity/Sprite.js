@@ -218,16 +218,13 @@
                 1 / this.numFrames.x,
                 1 / this.numFrames.y
             );
-            this._material.uvOffset.set(
-                0,
-                1 - this._material.uvScale.y //transform to topleft offset
-            );
+            this._material.uvOffset.set(0, 0);
 
             this._mesh = new THREE.Sprite(this._material);
 
             this._mesh.scale.set(
-                1 / this.numFrames.x / 2,
-                1 / this.numFrames.y / 3,
+                (1 / this.numFrames.x) * this.scale,
+                (1 / this.numFrames.x) * this.scale,
                 1
             );
         }
