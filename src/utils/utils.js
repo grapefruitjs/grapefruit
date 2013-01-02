@@ -91,9 +91,10 @@
             return obj;
         },
         clamp: function(n, min, max) { return Math.max(min, Math.min(max, n)); },
-        isPowerOfTwo: function(x) { return ((x & (x - 1)) === 0); },
+        isPowerOfTwo: function(n) { return ((n & (n - 1)) === 0); },
+        nextPowerofTwo: function(n) { return Math.pow(2, Math.ceil(Math.log(n)/Math.LN2)); },
         //http://jsperf.com/find-power
-        getTwoPower: function(n) {
+        getPowerofTwoPower: function(n) {
             if(!gf.utils.isPowerOfTwo(n) || n === 0) return undefined;
 
             var p = 0;
