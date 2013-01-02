@@ -92,6 +92,14 @@
         },
         clamp: function(n, min, max) { return Math.max(min, Math.min(max, n)); },
         isPowerOfTwo: function(x) { return ((x & (x - 1)) === 0); },
+        //http://jsperf.com/find-power
+        getTwoPower: function(n) {
+            if(!gf.utils.isPowerOfTwo(n) || n === 0) return undefined;
+
+            var p = 0;
+            while (n >>= 1) ++p;
+            return p;
+        },
         getPosition: function(o) {
             var l = o.offsetLeft,
                 t = o.offsetTop;
