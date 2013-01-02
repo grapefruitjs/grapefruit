@@ -222,11 +222,10 @@
 
             this._mesh = new THREE.Sprite(this._material);
 
-            this._mesh.scale.set(
-                (1 / this.numFrames.x) * this.scale,
-                (1 / this.numFrames.x) * this.scale,
-                1
-            );
+            var scale = (this.size.x / this.texture.image.width); //scale of a frame
+            scale *= (this.texture.image.width / gf.game._renderer.domElement.height); //relationship to viewport
+            scale *= this.scale; //user defined scale
+            this._mesh.scale.set(scale, scale, 1);
         }
     });
 })();
