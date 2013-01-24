@@ -37,6 +37,13 @@
             //use screen coords instead of world coords
             this.useScreenCoords = false;
 
+            if(typeof settings.texture == 'string') {
+                if(gf.resources[settings.texture])
+                    settings.texture = gf.resources[settings.texture].data;
+                else
+                    throw 'Unable to find texture ' + settings.texture + '; resource not loaded.';
+            }
+
             /****************************************************************************
              * Call base constructor
              ****************************************************************************/
