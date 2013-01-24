@@ -580,7 +580,7 @@ Class.extend = function(prop) {
             gf.game.addObject(gf.game.world);
 
             if(gf.game.world.properties.music) {
-                gf.audio.play(gf.game.world.properties.music);
+                gf.audio.play(gf.game.world.properties.music, { loop: gf.game.world.properties.music_loop === 'true' });
             }
 
             return this;
