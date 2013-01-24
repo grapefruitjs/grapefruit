@@ -170,7 +170,7 @@
     };
 
     //Texture loader
-    gf.loader._loaders.texture = {
+    gf.loader._loaders.texture = gf.loader._loaders.sprite = {
         load: function(resource) {
             var tloader = new THREE.TextureLoader();
                     

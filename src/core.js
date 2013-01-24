@@ -68,6 +68,7 @@ gf.types = {
         XML: 'xml',
         WORLD: 'world',
         TEXTURE: 'texture',
+        SPRITE: 'sprite',
         IMAGE: 'image'
     },
     //Bindable keycodes
