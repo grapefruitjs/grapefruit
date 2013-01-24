@@ -1,14 +1,17 @@
 (function() {
     gf.TiledObjectGroup = Class.extend({
-        init: function(group, tilesets) {
+        init: function(group, map) {
             //objects in this group
             this.objects = group.objects;
 
             //spawned enitites
             this.ents = [];
 
+            //map reference
+            this.map = map;
+
             //tilesets in the map
-            this.tilesets = tilesets;
+            this.tilesets = map.tilesets;
 
             //name
             this.name = group.name;
@@ -16,33 +19,41 @@
             //size
             this.size = new THREE.Vector2(group.width, group.height);
 
+            //position
+            this.position = new THREE.Vector2(group.x * this.map.scale, group.y * this.map.scale);
+
             //visible
             this.visible = group.visible;
+
+            //opacity
+            this.opacity = group.opacity;
 
             //zIndex
             this.zIndex = group.zIndex;
 
             //user-defined properties
-            this.properties = group.properties;
+            this.properties = group.properties || {};
         },
         spawn: function() {
             for(var i = 0, il = this.objects.length; i < il; ++i) {
-                var o = this.objects[i];
+                var o = this.objects[i],
+                    props = o.properties || {};
 
-                //copy properties to main object
-                if(o.properties) {
-                    gf.utils.each(o.properties, function(k, v) {
-                        o[k] = v;
-                    });
-                    delete o.properties;
-                }
-
-                //massage size and index in
-                if(o.size === undefined) o.size = [o.width, o.height];
-                if(o.zIndex === undefined) o.zIndex = this.zIndex;
+                props.name = o.name;
+                props.type = o.type;
+                props.size = [o.width, o.height];
+                props.zIndex = this.zIndex;
+                props.opacity = this.opacity;
+                props.visible = this.visible;
+                //convert tiled x,y coords into world coords
+                //tiled does x,y from top left. We do x,y from center
+                props.position = [
+                    (o.x * this.map.scale) - (this.map.scaledSize.x / 2),
+                    -((o.y * this.map.scale) - (this.map.scaledSize.y / 2))
+                ];
 
                 //spawn from entity pool
-                this.ents.push(gf.entityPool.create(o));
+                this.ents.push(gf.entityPool.create(props.name, props));
 
                 //add the new entity to the game
                 gf.game.addObject(this.ents[i]);
@@ -56,8 +67,8 @@
                 gf.game.removeObject(this.ents[i]);
             }
 
-            //lose references so they get cleaned up
-            this.ents = [];
+            //empty the ents array
+            this.ents.length = 0;
 
             return this;
         }
