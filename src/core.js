@@ -256,7 +256,7 @@ gf.support = {
     localStorage: !!window.localStorage,
 
     //is this a touch device
-    touch: ('createTouch' in document) || ('ontouchstart' in $) || (navigator.isCocoonJS),
+    touch: ('createTouch' in document) || ('ontouchstart' in window) || (navigator.isCocoonJS),
 
     //gamepad API supported?
     gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') != -1)
