@@ -125,7 +125,7 @@
         },
         //if object is moved by pv get the tile it would be at
         checkCollision: function(mesh, sz, pv) {
-            if(!this.collisionLayer || !this.collisionTileset) return;
+            if(!this.collisionLayer || !this.collisionTileset) return [];
 
             var pos = new THREE.Vector2(mesh.position.x, mesh.position.y),
                 size = sz.clone().divideScalar(2),
