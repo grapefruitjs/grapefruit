@@ -21,7 +21,7 @@
 
             }
          */
-        load: function(resource) {
+        load: function(resource, cb) {
             //do this so we can just call load, without having to type the long one
             if(resource instanceof Array) {
                 gf.loader.loadResources.apply(gf.loader, arguments);
@@ -33,6 +33,7 @@
             if(cached) {
                 gf.resources[resource.name] = resource;
                 gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, cached);
+                if(cb) cb(null, cached);
 
                 return cached;
             }
@@ -41,6 +42,10 @@
                 gf.loader._setCache(resource);
                 gf.resources[resource.name] = resource;
                 gf.loader._loaders[resource.type].load(resource);
+                if(cb) {
+                    gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, cb.bind(null, null));
+                    gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + resource.name, cb);
+                }
             } else {
                 //at this point we have no loader for this type
                 throw new Error('Unknown resource type: ' + resource.type + ' for res');
