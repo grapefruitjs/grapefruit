@@ -67,7 +67,7 @@
                 complete: function(resources),          //all resources have completed loading
             }
          */
-        loadResources: function(resources) {
+        loadResources: function(resources, cb) {
             var done = 0, handles = [];
 
             for(var r = 0, rl = resources.length; r < rl; ++r) {
@@ -93,8 +93,10 @@
 
                 handles[r] = null;
 
-                if(done >= resources.length)
+                if(done >= resources.length) {
                     gf.event.publish(gf.types.EVENT.LOADER_COMPLETE, resources);
+                    if(cb) cb(null, resources);
+                }
             }
 
             return this;
