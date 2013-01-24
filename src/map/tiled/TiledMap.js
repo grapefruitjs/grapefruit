@@ -15,8 +15,8 @@
             this.tileSize = new THREE.Vector2(map.tilewidth, map.tileheight);
 
             //user-defined properties
-            map.properties = map.properties || {};
-            this.scale = map.properties.scale || 1;
+            this.properties = map.properties || {};
+            this.scale = this.properties.scale || 1;
 
             //scaled size (size * tileSize * scale)
             this.scaledSize = new THREE.Vector2(
@@ -88,8 +88,13 @@
             for(var i = 0, il = map.layers.length; i < il; ++i) {
                 if(map.layers[i].type == gf.types.LAYER.TILE_LAYER)
                     this.addLayer(map.layers[i]);
-                else if(map.layers[i].type == gf.types.LAYER.OBJECT_GROUP)
-                    this.addObjectGroup(map.layers[i]);
+                else if(map.layers[i].type == gf.types.LAYER.OBJECT_GROUP) {
+                    var grp = this.addObjectGroup(map.layers[i]);
+
+                    //auto spawn the player object group
+                    if(grp.name === 'player' && !grp.properties.manual)
+                        grp.spawn();
+                }
             }
         },
         //add a new layer to this tilemap
@@ -108,15 +113,15 @@
             if(this.scene)
                 tilemapLayer.addToScene(this.scene);
 
-            return this;
+            return tilemapLayer;
         },
         //add a new object group to this tilemap
         addObjectGroup: function(group) {
             group.zIndex = this.objectGroups.length + 1;
-            var objgroup = new gf.TiledObjectGroup(group, this.tilesets);
-            this.objectGroups.push(group);
+            var objgroup = new gf.TiledObjectGroup(group, this);
+            this.objectGroups.push(objgroup);
 
-            return this;
+            return objgroup;
         },
         //if object is moved by pv get the tile it would be at
         checkCollision: function(mesh, sz, pv) {

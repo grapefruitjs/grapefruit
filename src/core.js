@@ -578,6 +578,10 @@ Class.extend = function(prop) {
             gf.game.world = new gf.TiledMap(world);
             gf.game.addObject(gf.game.world);
 
+            if(gf.game.world.properties.music) {
+                gf.audio.play(gf.game.world.properties.music);
+            }
+
             return this;
         },
         render: function() {
@@ -613,6 +617,8 @@ Class.extend = function(prop) {
                     gf.event.unsubscribe(this._trackedEntMoveHandle);
                 }
 
+                gf.game._camera.position.x = ent._mesh.position.x;
+                gf.game._camera.position.y = ent._mesh.position.y;
                 this._trackedEntMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.id, function(velocity) {
                     gf.game._camera.translateX(velocity.x);
                     gf.game._camera.translateY(velocity.y);
