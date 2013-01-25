@@ -118,14 +118,14 @@
             return _cache[gf.loader._getCacheKey(resource)] = resource;
         },
         _get: function(url, dataType, progress, cb) {
-            $.ajax({
+            util.ajax({
                 url: url,
                 dataType: dataType,
                 type: 'GET',
-                error: function(jqXHR, textStatus, errorThrown) {
-                    if(cb) cb(errorThrown || textStatus);
+                error: function(errorThrown) {
+                    if(cb) cb(errorThrown || this.statusText);
                 },
-                success: function(data, textStatus, jqXHR) {
+                success: function(data) {
                     _cache[url] = data;
 
                     if(cb) cb(null, data);

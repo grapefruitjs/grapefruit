@@ -39,6 +39,47 @@
         },
         numToHexColor: function(num) { return ("00000000" + num.toString(16)).substr(-8); },
         RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
+        noop: function() {},
+        ajax: function(sets) {
+            //base settings
+            sets = sets || {};
+            sets.method = sets.method || 'GET';
+            sets.dataType = sets.dataType || 'text';
+
+            //callbacks
+            sets.progress = sets.progress || util.noop;
+            sets.load = sets.load || util.noop;
+            sets.error = sets.error || util.noop;
+            sets.abort = sets.abort || util.noop;
+            sets.complete = sets.complete || util.noop;
+
+            //start the XHR request
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = sets.dataType === 'xml' ? 'document' : sets.dataType;
+
+            xhr.addEventListener('progress', sets.progress.bind(xhr), false);
+            xhr.addEventListener('error', sets.error.bind(xhr), false);
+            xhr.addEventListener('abort', sets.abort.bind(xhr), false);
+            xhr.addEventListener('loadend', sets.complete.bind(xhr), false);
+            xhr.addEventListener('load', function() {
+                var res = xhr.response,
+                    err = null;
+
+                if(sets.dataType === 'json' && typeof res === 'string') {
+                    try { res = JSON.parse(res); }
+                    catch(e) { err = e; }
+                }
+
+                if(err) {
+                    if(sets.error) sets.error.call(xhr, err);
+                } else {
+                    if(sets.load) sets.load.call(xhr, res);
+                }
+            }, false);
+
+            xhr.open(sets.method, sets.url, true);
+            xhr.send();
+        },
         //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
         setValues: function(obj, values) {
             if(!values) return;
