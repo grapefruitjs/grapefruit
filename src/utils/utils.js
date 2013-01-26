@@ -47,11 +47,11 @@
             sets.dataType = sets.dataType || 'text';
 
             //callbacks
-            sets.progress = sets.progress || util.noop;
-            sets.load = sets.load || util.noop;
-            sets.error = sets.error || util.noop;
-            sets.abort = sets.abort || util.noop;
-            sets.complete = sets.complete || util.noop;
+            sets.progress = sets.progress || gf.utils.noop;
+            sets.load = sets.load || gf.utils.noop;
+            sets.error = sets.error || gf.utils.noop;
+            sets.abort = sets.abort || gf.utils.noop;
+            sets.complete = sets.complete || gf.utils.noop;
 
             //start the XHR request
             var xhr = new XMLHttpRequest();
