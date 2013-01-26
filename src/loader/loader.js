@@ -125,7 +125,7 @@
                 error: function(errorThrown) {
                     if(cb) cb(errorThrown || this.statusText);
                 },
-                success: function(data) {
+                load: function(data) {
                     _cache[url] = data;
 
                     if(cb) cb(null, data);
