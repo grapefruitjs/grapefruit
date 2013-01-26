@@ -118,7 +118,7 @@
             return _cache[gf.loader._getCacheKey(resource)] = resource;
         },
         _get: function(url, dataType, progress, cb) {
-            util.ajax({
+            gf.utils.ajax({
                 url: url,
                 dataType: dataType,
                 type: 'GET',
