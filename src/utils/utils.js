@@ -55,7 +55,6 @@
 
             //start the XHR request
             var xhr = new XMLHttpRequest();
-            xhr.responseType = sets.dataType === 'xml' ? 'document' : sets.dataType;
 
             xhr.addEventListener('progress', sets.progress.bind(xhr), false);
             xhr.addEventListener('error', sets.error.bind(xhr), false);
