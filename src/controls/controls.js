@@ -94,7 +94,7 @@
         },
         //bind an action to a stick movement
         bindGamepadStick: function(code, negative, action, fn) {
-            negative = !!negative; //I want gf.controls to be true/false, not truthy or falsey
+            negative = !!negative; //I want negative to be true/false, not truthy or falsey
 
             return gf.controls._doBind('gpStick', code.toString() + negative, action, fn);
         },
@@ -112,7 +112,7 @@
         },
         //bind an action to a stick movement
         unbindGamepadStick: function(code, negative) {
-            negative = negative ? true : false; //I want gf.controls to be true/false, not truthy or falsey
+            negative = !!negative; //I want negative to be true/false, not truthy or falsey
 
             return gf.controls._doUnbind('gpStick', code.toString() + negative);
         },
