@@ -123,6 +123,10 @@
 
             //if gf.controls key is bound
             if(gf.controls.key.binds[which]) {
+                //Don't fire events for repeats on hold
+                if(gf.controls.key.status[gf.controls.key.binds[which]] === true)
+                    return gf.controls.preventDefault(e);
+
                 //track that gf.controls action is active
                 gf.controls.key.status[gf.controls.key.binds[which]] = true;
 
@@ -145,6 +149,10 @@
 
             //if gf.controls key is bound
             if(gf.controls.key.binds[which]) {
+                //Don't fire events for repeats
+                if(gf.controls.key.status[gf.controls.key.binds[which]] === false)
+                    return gf.controls.preventDefault(e);
+
                 //track that gf.controls action is active
                 gf.controls.key.status[gf.controls.key.binds[which]] = false;
 
