@@ -229,10 +229,16 @@
 
             this._mesh = new THREE.Sprite(this._material);
 
-            var scale = (this.size.x / this.texture.image.width); //scale of a frame
-            scale *= (this.texture.image.width / gf.game._renderer.domElement.height); //relationship to viewport
-            scale *= this.scale; //user defined scale
-            this._mesh.scale.set(scale, scale, 1);
+            //scale of a frame
+            var scale = new THREE.Vector3(
+                (this.size.x / this.texture.image.width),
+                (this.size.y / this.texture.image.width),
+                1
+            );
+            scale.multiplyScalar(this.texture.image.width / gf.game._renderer.domElement.height); //relationship to viewport
+            scale.multiplyScalar(this.scale); //user defined scale
+            scale.z = 1;
+            this._mesh.scale.copy(scale);
         }
     });
 })();

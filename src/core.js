@@ -417,7 +417,6 @@ Class.extend = function(prop) {
 
             gf.game.gravity = (opts.gravity !== undefined ? opts.velocity : 0.98);
             gf.game.friction = gf.utils.ensureVector(opts.friction);
-            gf.game.clearColor = opts.clearColor || 0xcccccc;
 
             /****************************************************************************
              * Choose a render method (WebGL or Canvas)
@@ -447,7 +446,6 @@ Class.extend = function(prop) {
                     alpha: true,
                     premultipliedAlpha: true,
                     antialias: false,
-                    clearColor: gf.game.clearColor,
                     clearAlpha: 0,
                     maxLights: 4
                 });
@@ -599,7 +597,7 @@ Class.extend = function(prop) {
                 //check if this object collides with any others
                 if(o.inViewport && o.isVisible && o.isCollidable && o.isEntity && (o != obj)) {
                     var collisionVector = o.checkCollision(obj);
-                    if(collisionVector.x !== 0 && collisionVector.y !== 0) {
+                    if(collisionVector.x !== 0 || collisionVector.y !== 0) {
                         colliders.push({
                             entity: o,
                             vector: collisionVector
