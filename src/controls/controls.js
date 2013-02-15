@@ -99,22 +99,22 @@
             return gf.controls._doBind('gpStick', code.toString() + negative, action, fn);
         },
         //unbind an action from a keycode
-        unbindKey: function(keycode) {
-            return gf.controls._doUnbind('key', keycode);
+        unbindKey: function(keycode, action) {
+            return gf.controls._doUnbind('key', keycode, action);
         },
         //unbind an action to mouse event
         unbindMouse: function(evt) {
-            return gf.controls._doUnbind('mouse', evt);
+            return gf.controls._doUnbind('mouse', evt, action);
         },
         //unbind an action from a gamepad button
         unbindGamepadButton: function(code) {
-            return gf.controls._doUnbind('gpButton', code);
+            return gf.controls._doUnbind('gpButton', code, action);
         },
         //bind an action to a stick movement
-        unbindGamepadStick: function(code, negative) {
+        unbindGamepadStick: function(code, negative, action) {
             negative = !!negative; //I want negative to be true/false, not truthy or falsey
 
-            return gf.controls._doUnbind('gpStick', code.toString() + negative);
+            return gf.controls._doUnbind('gpStick', code.toString() + negative, action);
         },
         //on keydown event set gf.controls keycode's action as active
         //and call any registered callbacks
@@ -287,7 +287,7 @@
 
             return gf.controls;
         },
-        _doUnbind: function(type, code) {
+        _doUnbind: function(type, code, action) {
             var act = gf.controls[type].binds[code];
 
             delete gf.controls[type].binds[code];
