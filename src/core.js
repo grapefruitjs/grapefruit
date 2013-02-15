@@ -593,6 +593,8 @@ Class.extend = function(prop) {
         checkCollisions: function(obj) {
             var colliders = [];
 
+            if(!obj.isCollidable) return colliders;
+
             gf.utils.each(gf.game.objects, function(id, o) {
                 //check if this object collides with any others
                 if(o.inViewport && o.isVisible && o.isCollidable && o.isEntity && (o != obj)) {

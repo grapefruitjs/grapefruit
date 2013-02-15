@@ -68,9 +68,19 @@
 
             return this;
         },
+        stopAll: function() {
+            for(var sid in playing) {
+                gf.audio.stop(sid);
+            }
+        },
         pauseAll: function() {
             for(var sid in playing) {
                 gf.audio.pause(sid);
+            }
+        },
+        playAll: function() {
+            for(var sid in playing) {
+                gf.audio.play(sid);
             }
         },
         isPlaying: function(soundid) {
