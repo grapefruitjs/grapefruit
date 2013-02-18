@@ -11,13 +11,8 @@ These dependencies are required for the Engine to work properly, but are not pac
 as dependencies, or packaged with it.
 
 * [Three.js r54+](https://github.com/mrdoob/three.js)
-* [Tween.js v0.3.0+](http://www.createjs.com/#!/TweenJS)
 
-## TODO
+## Current State
 
-* Entity sugar methods
-* Map collider edge rolling
-* Loader retries
-* Support for canvas fallback int TiledMapLayer
-* Falling/Jumping support (need to check gravity/friction/slopes in side scroller)
-* Tween animations for SceneObject movements
+This project is under heavy development, and the API is subject to change at any time. Check the GitHub issue list
+to see what is needed to reach `v0.1.0`, the first unstable release.
