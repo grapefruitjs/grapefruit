@@ -1,0 +1,26 @@
+{
+    "name": "gf",
+    "version": "0.0.2",
+    "longName": "GrapeFruit Game Engine",
+    "description": "A fun and easy WebGL-enabled JavaScript Game Engine",
+    "author": "Chad Engler <chad@pantherdev.com>",
+    "homepage": "https://github.com/englercj/grapefruit",
+    "bugs": "https://github.com/englercj/grapefruit/issues",
+    "contributors": [],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/englercj/grapefruit.git"
+    },
+    "scripts": {
+        "build": "grunt build"
+    },
+    "license": "MIT",
+    "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
+    "dependencies": {},
+    "devDependencies": {
+        "grunt": "0.4.x",
+        "grunt-contrib-jshint": "0.1.1",
+        "grunt-contrib-concat": "0.1.2",
+        "grunt-contrib-uglify": "0.1.1"
+    }
+}
