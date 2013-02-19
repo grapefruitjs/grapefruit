@@ -15,5 +15,4 @@ Desktop.ini
 
 #project ignores
 node_modules/
-build/*
 !.gitkeep

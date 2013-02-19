@@ -103,11 +103,11 @@
             return gf.controls._doUnbind('key', keycode, action);
         },
         //unbind an action to mouse event
-        unbindMouse: function(evt) {
+        unbindMouse: function(evt, action) {
             return gf.controls._doUnbind('mouse', evt, action);
         },
         //unbind an action from a gamepad button
-        unbindGamepadButton: function(code) {
+        unbindGamepadButton: function(code, action) {
             return gf.controls._doUnbind('gpButton', code, action);
         },
         //bind an action to a stick movement
@@ -277,8 +277,12 @@
         },
         _doBind: function(type, code, action, fn) {
             gf.controls[type].binds[code] = action;
-            gf.controls[type].bindCount[action]++;
             gf.controls[type].status[action] = false;
+
+            if(!gf.controls[type].bindCount[action])
+                gf.controls[type].bindCount[action] = 1;
+            else
+                gf.controls[type].bindCount[action]++;
 
             if(fn) {
                 if(gf.controls[type].callbacks[action]) gf.controls[type].callbacks[action].push({ code: code, fn: fn });
@@ -288,14 +292,15 @@
             return gf.controls;
         },
         _doUnbind: function(type, code, action) {
-            var act = gf.controls[type].binds[code];
-
+            //remove the bind (code -> action)
             delete gf.controls[type].binds[code];
 
+            //reduce bind count
             gf.controls[type].bindCount[action]--;
 
-            if(gf.controls[type].bindCount <= 0) {
-                gf.controls[type].bindCount = 0;
+            //if this action isn't bound anymore clean it up
+            if(gf.controls[type].bindCount[action] <= 0) {
+                gf.controls[type].bindCount[action] = 0;
                 delete gf.controls[type].status[action];
                 delete gf.controls[type].callbacks[action];
             }
