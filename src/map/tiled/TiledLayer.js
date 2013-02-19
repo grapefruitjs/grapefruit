@@ -219,12 +219,12 @@
                 pos.x = pos.x / this.tileSize.x;
                 pos.y = pos.y / this.tileSize.y;
 
-                //inverse the Y so the next addSelf will actually subtract from Y
+                //inverse the Y so the next add will actually subtract from Y
                 pos.y = -pos.y;
 
                 //pos is now the offset from the center, to make it from the top left
                 //we add half the size of the tilemap to x (and sub from y since we inverted)
-                pos.addSelf(this.hSize);
+                pos.add(this.hSize);
 
                 pos.x = ~~pos.x; //floor
                 pos.y = ~~pos.y;
