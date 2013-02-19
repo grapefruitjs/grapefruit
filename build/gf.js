@@ -1704,7 +1704,6 @@ Class.extend = function(prop) {
 
             //initialize the renderer
             gf.game._renderer.domElement.style['z-index'] = 5;
-            gf.game._renderer.setSize(w, h);
             gf.game._cont.appendChild(gf.game._renderer.domElement);
 
             /****************************************************************************
@@ -1718,6 +1717,10 @@ Class.extend = function(prop) {
 
             //add ambient light to the scene
             gf.game._scene.add(new THREE.AmbientLight(0xffffff));
+
+            //set aspect
+            window.addEventListener('resize', gf.game.onWindowResize, false);
+            gf.game.onWindowResize();
 
             /****************************************************************************
              * Initialize the various game components
@@ -1754,6 +1757,14 @@ Class.extend = function(prop) {
             gf.game._initialized = true;
 
             return this;
+        },
+        onWindowResize: function() {
+            var w = gf.utils.getStyle(gf.game._cont, 'width'),
+                h = gf.utils.getStyle(gf.game._cont, 'height');
+
+            gf.game._renderer.setSize(w, h);
+            gf.game._camera.aspect = w / h;
+            gf.game._camera.updateProjectionMatrix();
         },
         getNextObjectId: function() {
             return gf.game._nextId++;
@@ -1868,7 +1879,7 @@ Class.extend = function(prop) {
                     //gf.game._camera.updateMatrixWorld(); // make sure camera's world matrix is updated
                     //gf.game._camera.matrixWorldInverse.getInverse( camera.matrixWorld );
                     var frustum = new THREE.Frustum();
-                    frustum.setFromMatrix(new THREE.Matrix4().multiply(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
+                    frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
                     gf.utils.each(gf.game.objects, function(id, o) {
                         if(o.isEntity && o._mesh && o._mesh.geometry) {
                             //o._mesh.updateMatrix(); // make sure plane's local matrix is updated
@@ -2961,9 +2972,9 @@ Class.extend = function(prop) {
                     //if it is a slope, apply the normal
                     if(tile.normal && (!self.velocity.x || !self.velocity.y)) {
                         var badMovement = tile.normal.clone().multiplyScalar(self.velocity.dot(tile.normal)),
-                            newMovement = self.velocity.clone().subSelf(badMovement);
+                            newMovement = self.velocity.clone().sub(badMovement);
 
-                        self.velocity.addSelf(newMovement);
+                        self.velocity.add(newMovement);
                         return false;
                     }
                     //otherwise just stop movement
@@ -4520,12 +4531,12 @@ Class.extend = function(prop) {
                 pos.x = pos.x / this.tileSize.x;
                 pos.y = pos.y / this.tileSize.y;
 
-                //inverse the Y so the next addSelf will actually subtract from Y
+                //inverse the Y so the next add will actually subtract from Y
                 pos.y = -pos.y;
 
                 //pos is now the offset from the center, to make it from the top left
                 //we add half the size of the tilemap to x (and sub from y since we inverted)
-                pos.addSelf(this.hSize);
+                pos.add(this.hSize);
 
                 pos.x = ~~pos.x; //floor
                 pos.y = ~~pos.y;
@@ -5019,11 +5030,11 @@ Class.extend = function(prop) {
 
                 gf.utils.project._projector.unprojectVector(vector, gf.game._camera);
 
-                var dir = vector.subSelf(gf.game._camera.position).normalize(),
+                var dir = vector.sub(gf.game._camera.position).normalize(),
                     ray = new THREE.Ray(gf.game._camera.position, dir),
                     distance = - gf.game._camera.position.z / dir.z;
 
-                return gf.game._camera.position.clone().addSelf(dir.multiplyScalar(distance));
+                return gf.game._camera.position.clone().add(dir.multiplyScalar(distance));
             }
         },
         b64: {
