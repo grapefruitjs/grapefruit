@@ -193,9 +193,9 @@
                     //if it is a slope, apply the normal
                     if(tile.normal && (!self.velocity.x || !self.velocity.y)) {
                         var badMovement = tile.normal.clone().multiplyScalar(self.velocity.dot(tile.normal)),
-                            newMovement = self.velocity.clone().subSelf(badMovement);
+                            newMovement = self.velocity.clone().sub(badMovement);
 
-                        self.velocity.addSelf(newMovement);
+                        self.velocity.add(newMovement);
                         return false;
                     }
                     //otherwise just stop movement

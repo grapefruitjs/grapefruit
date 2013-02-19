@@ -264,11 +264,11 @@
 
                 gf.utils.project._projector.unprojectVector(vector, gf.game._camera);
 
-                var dir = vector.subSelf(gf.game._camera.position).normalize(),
+                var dir = vector.sub(gf.game._camera.position).normalize(),
                     ray = new THREE.Ray(gf.game._camera.position, dir),
                     distance = - gf.game._camera.position.z / dir.z;
 
-                return gf.game._camera.position.clone().addSelf(dir.multiplyScalar(distance));
+                return gf.game._camera.position.clone().add(dir.multiplyScalar(distance));
             }
         },
         b64: {

@@ -635,7 +635,7 @@ Class.extend = function(prop) {
                     //gf.game._camera.updateMatrixWorld(); // make sure camera's world matrix is updated
                     //gf.game._camera.matrixWorldInverse.getInverse( camera.matrixWorld );
                     var frustum = new THREE.Frustum();
-                    frustum.setFromMatrix(new THREE.Matrix4().multiply(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
+                    frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
                     gf.utils.each(gf.game.objects, function(id, o) {
                         if(o.isEntity && o._mesh && o._mesh.geometry) {
                             //o._mesh.updateMatrix(); // make sure plane's local matrix is updated
