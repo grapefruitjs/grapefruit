@@ -471,7 +471,6 @@ Class.extend = function(prop) {
 
             //initialize the renderer
             gf.game._renderer.domElement.style['z-index'] = 5;
-            gf.game._renderer.setSize(w, h);
             gf.game._cont.appendChild(gf.game._renderer.domElement);
 
             /****************************************************************************
@@ -485,6 +484,10 @@ Class.extend = function(prop) {
 
             //add ambient light to the scene
             gf.game._scene.add(new THREE.AmbientLight(0xffffff));
+
+            //set aspect
+            window.addEventListener('resize', gf.game.onWindowResize, false);
+            gf.game.onWindowResize();
 
             /****************************************************************************
              * Initialize the various game components
@@ -521,6 +524,14 @@ Class.extend = function(prop) {
             gf.game._initialized = true;
 
             return this;
+        },
+        onWindowResize: function() {
+            var w = gf.utils.getStyle(gf.game._cont, 'width'),
+                h = gf.utils.getStyle(gf.game._cont, 'height');
+
+            gf.game._renderer.setSize(w, h);
+            gf.game._camera.aspect = w / h;
+            gf.game._camera.updateProjectionMatrix();
         },
         getNextObjectId: function() {
             return gf.game._nextId++;
