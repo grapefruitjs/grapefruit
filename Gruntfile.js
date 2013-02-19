@@ -5,6 +5,31 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
+    //explicity set source files because order is important
+    var srcFiles = [
+        '<%= dirs.src %>/core.js',
+        '<%= dirs.src %>/audio/audio.js',
+        '<%= dirs.src %>/controls/controls.js',
+        '<%= dirs.src %>/controls/gamepad.js',
+        '<%= dirs.src %>/debug/debug.js',
+        '<%= dirs.src %>/entity/SceneObject.js',
+        '<%= dirs.src %>/entity/Entity.js',
+        '<%= dirs.src %>/entity/Sprite.js',
+        '<%= dirs.src %>/entity/entityPool.js',
+        '<%= dirs.src %>/gui/gui.js',
+        '<%= dirs.src %>/gui/hud.js',
+        '<%= dirs.src %>/gui/hud/HudItem.js',
+        '<%= dirs.src %>/loader/loader.js',
+        '<%= dirs.src %>/map/Map.js',
+        '<%= dirs.src %>/map/Layer.js',
+        '<%= dirs.src %>/map/tiled/TiledMap.js',
+        '<%= dirs.src %>/map/tiled/TiledLayer.js',
+        '<%= dirs.src %>/map/tiled/TiledTileset.js',
+        '<%= dirs.src %>/map/tiled/TiledObjectGroup.js',
+        '<%= dirs.src %>/plugin/plugin.js',
+        '<%= dirs.src %>/utils/utils.js'
+    ]
+
     var banner = [
         '/**',
         ' * @license',
@@ -33,8 +58,6 @@ module.exports = function(grunt) {
         },
         files: {
             vendor: '<%= dirs.vendor %>/**/*js',
-            core: 'core.js',
-            components: '<%= dirs.src %>/**/*.js',
             intro: '<%= dirs.src %>/intro.js',
             outro: '<%= dirs.src %>/outro.js',
             build: '<%= dirs.build %>/<%= pkg.name %>.js',
@@ -45,13 +68,14 @@ module.exports = function(grunt) {
                 banner: banner
             },
             dist: {
-                src: ['<%= files.intro %>', '<%= files.vendor %>', '<%= files.core %>', '<%= files.components %>', '<%= files.outro %>'],
+                src: ['<%= files.intro %>', '<%= files.vendor %>'].concat(srcFiles).concat(['<%= files.outro %>']),
                 dest: '<%= files.build %>'
             }
         },
         uglify: {
             options: {
-                banner: banner
+                banner: banner,
+                mangle: false
             },
             dist: {
                 src: '<%= files.build %>',

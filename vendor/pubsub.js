@@ -19,7 +19,7 @@
 	var channels = {},
 		funcType = Function;
 
-	gf.event = {
+	context.pubsub = {
 		/*
 		 * @public
 		 *
