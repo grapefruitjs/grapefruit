@@ -37,7 +37,7 @@
             mesh.position.set(x || 0, y || 0, 400);
             gf.game._scene.add(mesh);
         },
-        numToHexColor: function(num) { return ("00000000" + num.toString(16)).substr(-8); },
+        numToHexColor: function(num) { return ('00000000' + num.toString(16)).substr(-8); },
         RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
         noop: function() {},
         ajax: function(sets) {
