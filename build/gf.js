@@ -1993,7 +1993,7 @@ Class.extend = function(prop) {
             //we haven't played this sound yet, create a new channel list
             if(!playing[id]) {
                 playing[id] = [gf.resources[id].data];
-                playing[id].channel = 0;
+                playing[id][0].channel = 0;
             }
 
             var sound = getOpen(id);
@@ -2042,7 +2042,7 @@ Class.extend = function(prop) {
                 var chans = playing[sid];
 
                 for(var i = 0, il = chans.length; i < il; ++i)
-                    gf.audio.play(sid, i);
+                    gf.audio.play({ id: sid, channel: i });
             }
         },
         stopAll: function() {
