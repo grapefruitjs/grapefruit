@@ -37,7 +37,7 @@
         removeItem: function(name) {
             if(this.items[name]) {
                 this.items[name].elm.parentNode.removeChild(this.items[name].elm);
-                this.items[name] = null;
+                delete this.items[name];
                 this.numItems--;
                 this.dirty = true;
             }
