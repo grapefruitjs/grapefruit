@@ -3,7 +3,7 @@
         //initialize this scene object
         init: function(settings) {
             //size of the entity
-            this.size = new THREE.Vector2(1, 1);
+            this.size = new gf.Vector(1, 1);
 
             this.zIndex = settings.zIndex || 0;
 
@@ -41,7 +41,7 @@
 
             var zi = (z !== undefined ? z : (this.zIndex ? this.zIndex : 0));
 
-            if(x instanceof THREE.Vector2)
+            if(x instanceof gf.Vector)
                 this._doSetPos(x.x, x.y, zi);
             else if(x instanceof THREE.Vector3)
                 this._doSetPos(x.x, x.y, x.z);

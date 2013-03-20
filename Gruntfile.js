@@ -8,6 +8,8 @@ module.exports = function(grunt) {
     //explicity set source files because order is important
     var srcFiles = [
         '<%= dirs.src %>/core.js',
+        '<%= dirs.src %>/utils/utils.js',
+        '<%= dirs.src %>/utils/vector.js',
         '<%= dirs.src %>/audio/audio.js',
         '<%= dirs.src %>/controls/controls.js',
         '<%= dirs.src %>/controls/gamepad.js',
@@ -26,8 +28,7 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/map/tiled/TiledLayer.js',
         '<%= dirs.src %>/map/tiled/TiledTileset.js',
         '<%= dirs.src %>/map/tiled/TiledObjectGroup.js',
-        '<%= dirs.src %>/plugin/plugin.js',
-        '<%= dirs.src %>/utils/utils.js'
+        '<%= dirs.src %>/plugin/plugin.js'
     ]
 
     var banner = [

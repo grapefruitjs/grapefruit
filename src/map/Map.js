@@ -2,7 +2,7 @@
     gf.Map = gf.SceneObject.extend({
         init: function(settings) {
             //size of the map
-            this.size = new THREE.Vector2(settings.width, settings.height);
+            this.size = new gf.Vector(settings.width, settings.height);
 
             //orientation of the map
             this.orientation = settings.orientation; //only orthogonal supported

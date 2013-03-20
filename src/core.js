@@ -13,7 +13,6 @@
 window.gf = window.gf || {};
 
 gf.event = window.pubsub;
-gf.THREE = THREE;
 
 /****************************************************************************
  * GrapeFruit Version
@@ -383,9 +382,60 @@ Class.extend = function(prop) {
 };
 
 /****************************************************************************
+ * High performance clock (thanks mrdoob): https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js
+ ****************************************************************************/
+gf.Clock = Class.extend({
+    init: function(autoStart) {
+        this.autoStart = (autoStart !== undefined) ? autoStart : true;
+
+        this.startTime = 0;
+        this.oldTime = 0;
+        this.elapsedTime = 0;
+
+        this.running = false;
+    },
+    start: function() {
+        this.startTime = window.performance !== undefined && window.performance.now !== undefined
+                            ? window.performance.now()
+                            : Date.now();
+
+        this.oldTime = this.startTime;
+        this.running = true;
+    },
+    stop: function() {
+        this.getElapsedTime();
+        this.running = false;
+    },
+    getElapsedTime: function() {
+        this.getDelta();
+
+        return this.elapsedTime;
+    },
+    getDelta: function() {
+        var diff = 0;
+
+        if(this.autoStart && !this.running) {
+            this.start();
+        }
+
+        if(this.running) {
+            var newTime = window.performance !== undefined && window.performance.now !== undefined
+                            ? window.performance.now()
+                            : Date.now();
+
+            diff = 0.001 * (newTime - this.oldTime);
+            this.oldTime = newTime;
+
+            this.elapsedTime += diff;
+        }
+
+        return diff;
+    }
+});
+
+/****************************************************************************
  * Main game object
  ****************************************************************************/
-
 (function() {
     gf.game = {
         //array of objects in the scene
@@ -398,9 +448,9 @@ Class.extend = function(prop) {
         //maximum Z index, where the camera lies
         MAX_Z: 500,
 
-        //raw THREE objects that will control rendering
-        _scene: new THREE.Scene(),
-        _clock: new THREE.Clock(false),
+        //raw PIXI objects that will control rendering
+        _scene: new PIXI.Stage(),
+        _clock: new PIXI.Clock(false),
         _renderer: null,
         _camera: null,
 
@@ -441,21 +491,14 @@ Class.extend = function(prop) {
                 }
             }
 
+            var w = opts.width || gf.utils.getStyle(gf.game._cont, 'width'),
+                h = opts.height || gf.utils.getStyle(gf.game._cont, 'height');
+
             //initialize the correct renderer
             if(renderMethod == 'webgl') {
-                gf.game._renderer = new THREE.WebGLRenderer({
-                    //can also specify 'canvas' dom element, but we just let THREE generate one
-                    precision: 'highp',
-                    alpha: true,
-                    premultipliedAlpha: true,
-                    antialias: false,
-                    clearAlpha: 0,
-                    maxLights: 4
-                });
+                gf.game._renderer = new PIXI.WebGLRenderer(w, h);
             } else if(renderMethod == 'canvas') {
-                gf.game._renderer = new THREE.CanvasRenderer({
-                    //can also specify 'canvas' dom element, but we just let THREE generate one
-                });
+                gf.game._renderer = new THREE.CanvasRenderer(w, h);
             }
 
             gf.game._renderMethod = renderMethod;
@@ -466,28 +509,25 @@ Class.extend = function(prop) {
             //cache the container object
             gf.game._cont = document.getElementById(contId);
 
-            var w = opts.width || gf.utils.getStyle(gf.game._cont, 'width'),
-                h = opts.height || gf.utils.getStyle(gf.game._cont, 'height');
-
             //initialize the renderer
-            gf.game._renderer.domElement.style['z-index'] = 5;
-            gf.game._cont.appendChild(gf.game._renderer.domElement);
+            gf.game._renderer.domElement.style['z-index'] = opts.zIndex || 5;
+            gf.game._cont.appendChild(gf.game._renderer.view);
 
             /****************************************************************************
              * Initialize the camera and lighting
              ****************************************************************************/
             //initialize the camera
-            gf.game._camera = new THREE.OrthographicCamera(w / -2, w / 2, h / 2, h / -2, 1, 1000);
-            gf.game._camera.position.z = gf.game.MAX_Z;
+            //gf.game._camera = new THREE.OrthographicCamera(w / -2, w / 2, h / 2, h / -2, 1, 1000);
+            //gf.game._camera.position.z = gf.game.MAX_Z;
 
-            gf.game._scene.add(this.camera);
+            //gf.game._scene.addChild(this.camera);
 
             //add ambient light to the scene
-            gf.game._scene.add(new THREE.AmbientLight(0xffffff));
+            //gf.game._scene.addChild(new THREE.AmbientLight(0xffffff));
 
             //set aspect
-            window.addEventListener('resize', gf.game.onWindowResize, false);
-            gf.game.onWindowResize();
+            //window.addEventListener('resize', gf.game.onWindowResize, false);
+            //gf.game.onWindowResize();
 
             /****************************************************************************
              * Initialize the various game components
@@ -525,14 +565,14 @@ Class.extend = function(prop) {
 
             return this;
         },
-        onWindowResize: function() {
+        /*onWindowResize: function() {
             var w = gf.utils.getStyle(gf.game._cont, 'width'),
                 h = gf.utils.getStyle(gf.game._cont, 'height');
 
             gf.game._renderer.setSize(w, h);
             gf.game._camera.aspect = w / h;
             gf.game._camera.updateProjectionMatrix();
-        },
+        },*/
         getNextObjectId: function() {
             return gf.game._nextId++;
         },
@@ -564,12 +604,12 @@ Class.extend = function(prop) {
                 gf.game.player = null;
 
             //deallocate resources for this entity
-            gf.game._dealloc(obj._geom, obj._materials);
-            gf.game._dealloc(obj._hitboxGeom, obj._hitboxMaterial);
+            //gf.game._dealloc(obj._geom, obj._materials);
+            //gf.game._dealloc(obj._hitboxGeom, obj._hitboxMaterial);
 
             return this;
         },
-        _dealloc: function(geom, mats) {
+        /*_dealloc: function(geom, mats) {
             if(mats) {
                 if(mats instanceof Array) {
                     mats.forEach(function(mat) { mat.dispose(); });
@@ -578,7 +618,7 @@ Class.extend = function(prop) {
             }
 
             if(geom) geom.dispose();
-        },
+        },*/
         loadWorld: function(world) {
             if(typeof world == 'string'){
                 if(gf.resources[world]) world = gf.resources[world].data;

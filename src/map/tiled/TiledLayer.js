@@ -160,11 +160,11 @@
             // v3v - array of Vector3s
             // v4v - array of Vector4s
             this._uniforms = {
-                mapSize:            { type: 'v2', value: new THREE.Vector2(this.size.x * this.tileSize.x, this.size.y * this.tileSize.y) },
-                inverseLayerSize:   { type: 'v2', value: new THREE.Vector2(1 / this.size.x, 1 / this.size.y) },
+                mapSize:            { type: 'v2', value: new gf.Vector(this.size.x * this.tileSize.x, this.size.y * this.tileSize.y) },
+                inverseLayerSize:   { type: 'v2', value: new gf.Vector(1 / this.size.x, 1 / this.size.y) },
 
                 tileSize:           { type: 'v2', value: this.tileSize },
-                inverseTileSize:    { type: 'v2', value: new THREE.Vector2(1 / this.tileSize.x, 1 / this.tileSize.y) },
+                inverseTileSize:    { type: 'v2', value: new gf.Vector(1 / this.tileSize.x, 1 / this.tileSize.y) },
 
                 tileIds:            { type: 't', value: this.dataTex },
                 repeatTiles:        { type: 'i', value: this.repeat ? 1 : 0 },
@@ -182,8 +182,8 @@
 
                 //firstGid:           { type: 'f', value: this.tileset.firstgid },
                 //tilesets:           { type: 't', value: this.tilesets.texture },
-                //numTiles:           { type: 'v2', value: new THREE.Vector2(this.tileset.texture.image.width / this.tileSize.x, this.tileset.texture.image.height / this.tileSize.y) },
-                //inverseTilesetSize: { type: 'v2', value: new THREE.Vector2(1 / this.tileset.texture.image.width, 1 / this.tileset.texture.image.height) },
+                //numTiles:           { type: 'v2', value: new gf.Vector(this.tileset.texture.image.width / this.tileSize.x, this.tileset.texture.image.height / this.tileSize.y) },
+                //inverseTilesetSize: { type: 'v2', value: new gf.Vector(1 / this.tileset.texture.image.width, 1 / this.tileset.texture.image.height) },
             };
 
             if(gf.debug.accessTiledUniforms)
@@ -211,7 +211,7 @@
         },
         //get ID of tile at specified location
         getTileId: function(x, y, realCoords) {
-            pos = x instanceof THREE.Vector2 ? x.clone() : new THREE.Vector2(x, y);
+            pos = x instanceof gf.Vector ? x.clone() : new gf.Vector(x, y);
             //if not realCoords, they are world coords; and must be converted
             if(!realCoords) {
                 //do some division to make position be in "tiles from center" instead of "units from center"

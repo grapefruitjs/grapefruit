@@ -8,13 +8,13 @@
              * in Tiled, and overriden on a per-object basis
              ****************************************************************************/
             //size of the sprite (each frame)
-            this.size = new THREE.Vector2(0, 0);
+            this.size = new gf.Vector(0, 0);
 
             //number of frames accross x / y (calculated, not set)
-            this.numFrames = new THREE.Vector2(0, 0);
+            this.numFrames = new gf.Vector(0, 0);
 
             //offset in the image to the first frame (in pixels)
-            this.offset = new THREE.Vector2(0, 0);
+            this.offset = new gf.Vector(0, 0);
 
             //opacity of the sprite
             this.opacity = 1.0;
@@ -86,7 +86,7 @@
 
             // compute and add the offset of each frame
             for(var i = 0, il = settings.frames.length; i < il; ++i) {
-                this.anim[name].frames[i] = new THREE.Vector2(this.size.x * (settings.frames[i] % this.numFrames.x), this.size.y * Math.floor(settings.frames[i] / this.numFrames.x));
+                this.anim[name].frames[i] = new gf.Vector(this.size.x * (settings.frames[i] % this.numFrames.x), this.size.y * Math.floor(settings.frames[i] / this.numFrames.x));
             }
             this.anim[name].length = this.anim[name].frames.length;
             this.anim[name].frameTime = (settings.duration || 0) / this.anim[name].frames.length;
@@ -116,7 +116,7 @@
 
                 //if we are changing hitbox, save current settings and update
                 if(this.currentAnim.hitSize) {
-                    if(this.currentAnim.hitSize instanceof THREE.Vector2) {
+                    if(this.currentAnim.hitSize instanceof gf.Vector) {
                         this.hitSize.copy(this.currentAnim.hitSize);
                         this.scaledHitSize.copy(this.currentAnim.hitSize).multiplyScalar(this.scale);
                     }
@@ -131,7 +131,7 @@
                 }
 
                 if(this.currentAnim.hitOffset) {
-                    if(this.currentAnim.hitOffset instanceof THREE.Vector2)
+                    if(this.currentAnim.hitOffset instanceof gf.Vector)
                         this.hitOffset.copy(this.currentAnim.hitOffset);
                     else if(this.currentAnim.hitOffset instanceof Array)
                         this.hitOffset.set(this.currentAnim.hitOffset[0], this.currentAnim.hitOffset[1]);

@@ -1,15 +1,15 @@
 (function() {
     gf.TiledTileset = Class.extend({
         init: function(settings) {
-            this.size = new THREE.Vector2(settings.imagewidth, settings.imageheight);
-            this.tileSize = new THREE.Vector2(settings.tilewidth, settings.tileheight);
+            this.size = new gf.Vector(settings.imagewidth, settings.imageheight);
+            this.tileSize = new gf.Vector(settings.tilewidth, settings.tileheight);
             this.texture = settings.texture;
 
             this.name = settings.name;
             this.margin = settings.margin;
             this.spacing = settings.spacing;
 
-            this.numTiles = new THREE.Vector2(
+            this.numTiles = new gf.Vector(
                 ~~((this.texture.image.width - this.margin) / (this.tileSize.x + this.spacing)),
                 ~~((this.texture.image.height - this.margin) / (this.tileSize.y + this.spacing))
             );
@@ -31,7 +31,7 @@
 
             //massage normal
             gf.utils.each(this.tileproperties, function(k, v) {
-                if(v.normal && !(v.normal instanceof THREE.Vector2))
+                if(v.normal && !(v.normal instanceof gf.Vector))
                     v.normal = gf.utils.ensureVector(v.normal);
 
                 if(v.isCollidable == 'true') v.isCollidable = true;
