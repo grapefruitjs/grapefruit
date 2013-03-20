@@ -12,14 +12,14 @@
             this._super(map);
 
             //tile size
-            this.tileSize = new THREE.Vector2(map.tilewidth, map.tileheight);
+            this.tileSize = new gf.Vector(map.tilewidth, map.tileheight);
 
             //user-defined properties
             this.properties = map.properties || {};
             this.scale = this.properties.scale || 1;
 
             //scaled size (size * tileSize * scale)
-            this.scaledSize = new THREE.Vector2(
+            this.scaledSize = new gf.Vector(
                 this.size.x * this.tileSize.x * this.scale,
                 this.size.y * this.tileSize.y * this.scale
             );
@@ -76,7 +76,7 @@
                 this.tilesetMaps.firstgids.push(ts.firstgid);
                 this.tilesetMaps.lastgids.push(ts.lastgid);
                 this.tilesetMaps.sizes.push(ts.size);
-                this.tilesetMaps.inverseSizes.push(new THREE.Vector2(1 / ts.size.x, 1 / ts.size.y));
+                this.tilesetMaps.inverseSizes.push(new gf.Vector(1 / ts.size.x, 1 / ts.size.y));
                 this.tilesetMaps.numTiles.push(ts.numTiles);
                 this.tilesets.push(ts);
 
@@ -127,7 +127,7 @@
         checkCollision: function(mesh, sz, pv) {
             if(!this.collisionLayer || !this.collisionTileset) return [];
 
-            var pos = new THREE.Vector2(mesh.position.x, mesh.position.y),
+            var pos = new gf.Vector(mesh.position.x, mesh.position.y),
                 size = sz.clone().divideScalar(2),
                 left = pos.x - size.x,
                 right = pos.x + size.x,
@@ -218,7 +218,7 @@
             var check, index = null;
 
             //if z is a vector, make it an array
-            if(z instanceof THREE.Vector2) z = [z.x, z.y];
+            if(z instanceof gf.Vector) z = [z.x, z.y];
 
             //if z is an Array we use it as a point to find which zone that point is in
             if(z instanceof Array) {
@@ -255,7 +255,7 @@
         },
         //converts a coord from pixel position to world coord
         upgradeCoord: function(coord) {
-            if(coord instanceof THREE.Vector2) {
+            if(coord instanceof gf.Vector) {
                 coord.x = (coord.x - (this.tilemapSize.x / 2)) * this.tileSize * this.tileScale;
                 coord.y = ((this.tilemapSize.y / 2) - coord.y) * this.tileSize * this.tileScale;
             } else if(coord instanceof Array) {

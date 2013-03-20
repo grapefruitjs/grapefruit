@@ -38,19 +38,19 @@
 
             //you can still set these in Tiled by using "x|y" notation
             //velocity of the entity (units per tick)
-            this.velocity = new THREE.Vector2(0, 0);
+            this.velocity = new gf.Vector(0, 0);
 
             //max velocity to cap the entity at (units per tick)
-            this.maxVelocity = new THREE.Vector2(15, 15);
+            this.maxVelocity = new gf.Vector(15, 15);
 
             //acceleration of the entity when moving (units per second)
-            this.accel = new THREE.Vector2(250, 250);
+            this.accel = new gf.Vector(250, 250);
 
             //size of the hitbox
-            this.hitSize = new THREE.Vector2(0, 0);
+            this.hitSize = new gf.Vector(0, 0);
 
             //offset from the center to have the hitbox NOT IMPLEMENTED
-            this.hitOffset = new THREE.Vector2(0, 0);
+            this.hitOffset = new gf.Vector(0, 0);
 
             //the name of this entitiy
             this.name = '';
@@ -131,7 +131,7 @@
         },
         checkCollision: function(entity) {
             //response vector
-            var p = new THREE.Vector2(0, 0);
+            var p = new gf.Vector(0, 0);
 
             //check if hitboxes intersect
             if (this.intersects(entity)) {
@@ -245,7 +245,7 @@
         //On Collision Event
         // called when this object is collided into by another, by default if something collides with
         // a collectable entity we remove the collectable
-        //vec - Collision Vector (THREE.Vector2)
+        //vec - Collision Vector (gf.Vector)
         //obj - Colliding object (gf.Entity)
         onCollision: function(vec, obj) {
             if(this.collidable && this.type == gf.types.ENTIY.COLLECTABLE)
@@ -256,7 +256,7 @@
 
         //On Move Event
         // called when this entity moves
-        //vel - Velocity the entity moved (THREE.Vector2)
+        //vel - Velocity the entity moved (gf.Vector)
         onMove: function(vel) {
             return this;
         },

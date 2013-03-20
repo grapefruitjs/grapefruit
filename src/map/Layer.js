@@ -7,13 +7,13 @@
             this.name = settings.name || '';
 
             //size of this layer
-            this.size = new THREE.Vector2(settings.width || 1, settings.height || 1);
+            this.size = new gf.Vector(settings.width || 1, settings.height || 1);
 
             //half size
             this.hSize = this.size.clone().divideScalar(2);
 
             //offset of this layer
-            this.offset = new THREE.Vector2(settings.x || 0, settings.y || 0);
+            this.offset = new gf.Vector(settings.x || 0, settings.y || 0);
 
             //scale of this layer
             this.scale = settings.scale || 1;

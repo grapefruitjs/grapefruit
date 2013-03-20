@@ -17,10 +17,10 @@
             this.name = group.name;
 
             //size
-            this.size = new THREE.Vector2(group.width, group.height);
+            this.size = new gf.Vector(group.width, group.height);
 
             //position
-            this.position = new THREE.Vector2(group.x * this.map.scale, group.y * this.map.scale);
+            this.position = new gf.Vector(group.x * this.map.scale, group.y * this.map.scale);
 
             //visible
             this.visible = group.visible;

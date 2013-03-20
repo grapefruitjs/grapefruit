@@ -13,29 +13,22 @@
         },
         _arrayDelim: '|',
         ensureVector: function(vec) {
-            if(vec instanceof THREE.Vector2 || vec instanceof THREE.Vector3)
+            if(vec instanceof gf.Vector)
                 return vec;
 
             var a = vec;
-            if(typeof vec == 'string') a = vec.split(gf.utils._arrayDelim);
+            if(typeof vec == 'string')
+                a = vec.split(gf.utils._arrayDelim);
 
             if(a instanceof Array) {
                 switch(a.length) {
-                    case 2: return new THREE.Vector2(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
-                    case 3: return new THREE.Vector3(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10));
+                    case 1: return new gf.Vector(parseInt(a[0], 10) || 0, parseInt(a[0], 10) || 0);
+                    case 2: return new gf.Vector(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
                 }
             }
             else {
-                return new THREE.Vector2();
+                return new gf.Vector();
             }
-        },
-        spawnSquare: function(x, y, w, h, color) {
-            var mesh = new THREE.Mesh(
-                new THREE.PlaneGeometry(w || 1, h || 1),
-                new THREE.MeshBasicMaterial({ color: color || 0xff0000 })
-            );
-            mesh.position.set(x || 0, y || 0, 400);
-            gf.game._scene.add(mesh);
         },
         numToHexColor: function(num) { return ('00000000' + num.toString(16)).substr(-8); },
         RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
@@ -107,11 +100,9 @@
 
                     } else if(curVal instanceof THREE.Color && typeof newVal === 'number') {
                         curVal.setHex(newVal);
-                    } else if(curVal instanceof THREE.Vector2 && newVal instanceof Array) {
-                        curVal.set(newVal[0] || 0, newVal[1] || 0);
-                    } else if(curVal instanceof THREE.Vector3 && newVal instanceof Array) {
-                        curVal.set(newVal[0] || 0, newVal[1] || 0, newVal[2] || 0);
-                    } else if(curVal instanceof THREE.Vector2 && typeof newVal === 'string') {
+                    } else if(curVal instanceof gf.Vector && newVal instanceof Array) {
+                        curVal.set(parseInt(newVal[0], 10) || 0, parseInt(newVal[1], 10) || 0);
+                    } else if(curVal instanceof gf.Vector && typeof newVal === 'string') {
                         var a = newVal.split(gf.utils._arrayDelim, 2);
                         curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
                     } else if(curVal instanceof THREE.Vector3 && typeof newVal === 'string') {
@@ -241,7 +232,7 @@
                     hWidth = gf.game._domElement.width / 2,
                     hHeight = gf.game._domElement.height / 2;
 
-                return new THREE.Vector2(
+                return new gf.Vector(
                     Math.round(vector.x * hWidth + hWidth),
                     Math.round(-vector.y * hHeight + hHeight)
                 );

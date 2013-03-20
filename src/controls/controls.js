@@ -22,7 +22,7 @@
             //the current screen touches
             touches: [{ x: 0, y: 0 }],
             //the position of the mouse
-            position: new THREE.Vector2(0, 0),
+            position: new gf.Vector(0, 0),
             //the offset of the mouse
             offset: null
         },
