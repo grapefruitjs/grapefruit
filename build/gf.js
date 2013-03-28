@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-03-19
+ * Compiled: 2013-03-28
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -1243,7 +1243,7 @@ fragmentShader:"uniform vec3 color;\nuniform sampler2D map;\nuniform float opaci
 /****************************************************************************
  * Global GrapeFruit Object
  ****************************************************************************/
-window.gf = window.gf || {};
+var gf = {};
 
 gf.event = window.pubsub;
 gf.THREE = THREE;
@@ -4846,16 +4846,7 @@ Class.extend = function(prop) {
                 return new THREE.Vector2();
             }
         },
-        spawnSquare: function(x, y, w, h, color) {
-            var mesh = new THREE.Mesh(
-                new THREE.PlaneGeometry(w || 1, h || 1),
-                new THREE.MeshBasicMaterial({ color: color || 0xff0000 })
-            );
-            mesh.position.set(x || 0, y || 0, 400);
-            gf.game._scene.add(mesh);
-        },
         numToHexColor: function(num) { return ('00000000' + num.toString(16)).substr(-8); },
-        RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
         noop: function() {},
         ajax: function(sets) {
             //base settings
@@ -4907,7 +4898,6 @@ Class.extend = function(prop) {
                     console.warn('Object parameter "' + key + '" is undefined.');
                     continue;
                 }
-
                 if(key in obj) {
                     var curVal = obj[key];
 
@@ -4918,7 +4908,7 @@ Class.extend = function(prop) {
                         else n = parseInt(newVal, 10);
 
                         if(!isNaN(n))
-                            curVal = n;
+                            obj[key] = n;
                         else
                             console.warn('Object parameter "' + key + '" evaluated to NaN, using default. Value passed: ' + newVal);
 
@@ -4935,9 +4925,9 @@ Class.extend = function(prop) {
                         var a = newVal.split(gf.utils._arrayDelim, 3);
                         curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10) || 0);
                     } else if(curVal instanceof Array && typeof newVal === 'string') {
-                        curVal = newVal.split(gf.utils._arrayDelim);
-                        gf.utils.each(curVal, function(i, val) {
-                            if(!isNaN(val)) curVal[i] = parseInt(val, 10);
+                        obj[key] = newVal.split(gf.utils._arrayDelim);
+                        gf.utils.each(obj[key], function(i, val) {
+                            if(!isNaN(val)) obj[key][i] = parseInt(val, 10);
                         });
                     } else {
                         obj[key] = newVal;
@@ -4973,9 +4963,13 @@ Class.extend = function(prop) {
             };
         },
         getStyle: function(elm, prop) {
-            var style = window.getComputedStyle(elm);
+            var style = window.getComputedStyle(elm),
+                val = style.getPropertyValue(prop).replace(/px|em|%|pt/, '');
 
-            return parseInt(style.getPropertyValue(prop).replace(/px|em|%|pt/, ''), 10);
+            if(!isNaN(val))
+                val = parseInt(val, 10);
+
+            return val;
         },
         setStyle: function(elm, prop, value) {
             var style = window.getComputedStyle(elm);
@@ -5224,4 +5218,14 @@ Class.extend = function(prop) {
     };
 })();
 
+    if (typeof exports === 'object') {
+        // CommonJS
+        exports.gf = gf;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(gf);
+    } else {
+        // Browser globals
+        window.gf = gf;
+    }
 })(window);
