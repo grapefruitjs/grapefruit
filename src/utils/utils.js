@@ -29,16 +29,7 @@
                 return new THREE.Vector2();
             }
         },
-        spawnSquare: function(x, y, w, h, color) {
-            var mesh = new THREE.Mesh(
-                new THREE.PlaneGeometry(w || 1, h || 1),
-                new THREE.MeshBasicMaterial({ color: color || 0xff0000 })
-            );
-            mesh.position.set(x || 0, y || 0, 400);
-            gf.game._scene.add(mesh);
-        },
         numToHexColor: function(num) { return ('00000000' + num.toString(16)).substr(-8); },
-        RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
         noop: function() {},
         ajax: function(sets) {
             //base settings
@@ -90,7 +81,6 @@
                     console.warn('Object parameter "' + key + '" is undefined.');
                     continue;
                 }
-
                 if(key in obj) {
                     var curVal = obj[key];
 
@@ -101,7 +91,7 @@
                         else n = parseInt(newVal, 10);
 
                         if(!isNaN(n))
-                            curVal = n;
+                            obj[key] = n;
                         else
                             console.warn('Object parameter "' + key + '" evaluated to NaN, using default. Value passed: ' + newVal);
 
@@ -118,9 +108,9 @@
                         var a = newVal.split(gf.utils._arrayDelim, 3);
                         curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10) || 0);
                     } else if(curVal instanceof Array && typeof newVal === 'string') {
-                        curVal = newVal.split(gf.utils._arrayDelim);
-                        gf.utils.each(curVal, function(i, val) {
-                            if(!isNaN(val)) curVal[i] = parseInt(val, 10);
+                        obj[key] = newVal.split(gf.utils._arrayDelim);
+                        gf.utils.each(obj[key], function(i, val) {
+                            if(!isNaN(val)) obj[key][i] = parseInt(val, 10);
                         });
                     } else {
                         obj[key] = newVal;
@@ -156,9 +146,13 @@
             };
         },
         getStyle: function(elm, prop) {
-            var style = window.getComputedStyle(elm);
+            var style = window.getComputedStyle(elm),
+                val = style.getPropertyValue(prop).replace(/px|em|%|pt/, '');
 
-            return parseInt(style.getPropertyValue(prop).replace(/px|em|%|pt/, ''), 10);
+            if(!isNaN(val))
+                val = parseInt(val, 10);
+
+            return val;
         },
         setStyle: function(elm, prop, value) {
             var style = window.getComputedStyle(elm);

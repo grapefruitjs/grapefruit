@@ -1,0 +1,170 @@
+define(function() {
+    Q.module('Utils');
+
+    Q.test('#applyFriction', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#_arrayDelim', function() {
+        Q.strictEqual(gf.utils._arrayDelim, '|', 'Array delim is set to "|"');
+    });
+
+    Q.test('#ensureVector', function() {
+        var v2s = gf.utils.ensureVector('10|5'),
+            v2a = gf.utils.ensureVector([10,5]),
+            v3s = gf.utils.ensureVector('5|10|5'),
+            v3a = gf.utils.ensureVector([5,10,5]);
+
+        Q.ok(v2s instanceof gf.THREE.Vector2, 'String converts to a Vector2');
+        Q.ok(v2a instanceof gf.THREE.Vector2, 'Array converts to a Vector2');
+
+        Q.strictEqual(v2s.x, 10, 'String (V2) has X set correctly');
+        Q.strictEqual(v2s.y, 5, 'String (V2) has Y set correctly');
+        Q.strictEqual(v2a.x, 10, 'Array (V2) has Y set correctly');
+        Q.strictEqual(v2a.y, 5, 'Array (V2) has Y set correctly');
+
+        Q.ok(v3s instanceof gf.THREE.Vector3, 'String converts to a Vector3');
+        Q.ok(v3a instanceof gf.THREE.Vector3, 'String converts to a Vector3');
+
+        Q.strictEqual(v3s.x, 5, 'String (V3) has X set correctly');
+        Q.strictEqual(v3s.y, 10, 'String (V3) has Y set correctly');
+        Q.strictEqual(v3s.z, 5, 'String (V3) has Z set correctly');
+        Q.strictEqual(v3a.x, 5, 'Array (V3) has X set correctly');
+        Q.strictEqual(v3a.y, 10, 'Array (V3) has Y set correctly');
+        Q.strictEqual(v3a.z, 5, 'Array (V3) has Z set correctly');
+    });
+
+    Q.test('#numToHexColor', function() {
+        var clr1 = [gf.utils.numToHexColor(0x12ffeeff), '12ffeeff'],
+            clr2 = [gf.utils.numToHexColor(0x54165fff), '54165fff'],
+            clr3 = [gf.utils.numToHexColor(0x900054ff), '900054ff'];
+
+        Q.strictEqual(clr1[0], clr1[1], 'Color number 0x12ffeeff outputs "12ffeeff"');
+        Q.strictEqual(clr2[0], clr2[1], 'Color number 0x54165fff outputs "54165fff"');
+        Q.strictEqual(clr3[0], clr3[1], 'Color number 0x900054ff outputs "900054ff"');
+    });
+
+    Q.test('#noop', function() {
+        Q.equal(gf.utils.noop(), undefined);
+    });
+
+    Q.test('#ajax', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#setValues', function() {
+        var obj;
+
+        // Numbers
+        Q.deepEqual(
+            gf.utils.setValues({ num: 1 }, { num: '2' }),
+            { num: 2 },
+            'Strings convert to numbers'
+        );
+
+        Q.deepEqual(
+            gf.utils.setValues({ num: 1 }, { num: 2 }),
+            { num: 2 },
+            'Numbers override numbers'
+        );
+
+        Q.deepEqual(
+            gf.utils.setValues({ num: 1 }, {}),
+            { num: 1 },
+            'Numbers retain their value'
+        );
+
+        // Vector2s
+        obj = gf.utils.setValues({ vec2: new THREE.Vector2(10, 10) }, { vec2: '2|5' });
+        Q.ok(
+            obj.vec2.x === 2 && obj.vec2.y === 5,
+            'Strings convert to vector2s'
+        );
+
+        obj = gf.utils.setValues({ vec2: new THREE.Vector2(10, 10) }, { vec2: ['2', 5] });
+        Q.ok(
+            obj.vec2.x === 2 && obj.vec2.y === 5,
+            'Arrays convert to vector2s'
+        );
+
+        // Vector3s
+        obj = gf.utils.setValues({ vec3: new THREE.Vector3(10, 10, 10) }, { vec2: '2|5|8' });
+        Q.ok(
+            obj.vec2.x === 2 && obj.vec2.y === 5 && obj.vec3.z === 8,
+            'Strings convert to vector3s'
+        );
+
+        obj = gf.utils.setValues({ vec3: new THREE.Vector3(10, 10, 10) }, { vec2: ['2', 5, '8'] });
+        Q.ok(
+            obj.vec3.x === 2 && obj.vec3.y === 5 && obj.vec3.z === 8,
+            'Arrays convert to vector3s'
+        );
+
+        // Arrays
+        obj = ;
+        Q.deepEqual(
+            gf.utils.setValues({ arr: [] }, { arr: '5|4|3' }).arr,
+            [5, 4, 3],
+            'Strings are converted to arrays'
+        );
+
+        // Normal Values Override
+        Q.deepEqual(
+            gf.utils.setValues({ not: 1, over: 's' }, { over: 'q' }),
+            { not: 1, over: 'q' },
+            'Defaults are overriden'
+        );
+    });
+
+    Q.test('#clamp', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#isPowerOfTwo', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#nextPowerofTwo', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#getPowerofTwoPower', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#getPosition', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#getStyle', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#setStyle', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#getOffset', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#each', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#b64.encode', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#b64.decode', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#b64._utf8_encode', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#b64._utf8_decode', function() {
+        Q.skip('Need Tests');
+    });
+});
