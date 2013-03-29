@@ -1,6 +1,6 @@
 (function() {
-    gf.SceneObject = Class.extend({
-        //initialize this scene object
+    gf.SceneObject = Class.extend.call(PIXI.DisplayObjectContainer, {
+        //initialize this stage object
         init: function(settings) {
             //size of the entity
             this.size = new gf.Vector(1, 1);
@@ -14,47 +14,43 @@
 
             this.id = gf.game.getNextObjectId();
 
-            //raw mesh that is the actual object in the scene
+            //raw mesh that is the actual object in the stage
             this._mesh = null;
 
             this.animationQueue = [];
 
             gf.utils.setValues(this, settings);
         },
-        addToScene: function(scene) {
-            this.scene = scene;
+        addToScene: function(stage) {
+            this.stage = stage;
 
-            if(this._mesh) scene.add(this._mesh);
-
-            return this;
-        },
-        removeFromScene: function(scene) {
-            this.scene = null;
-
-            if(this._mesh) scene.remove(this._mesh);
+            stage.addChild(this);
 
             return this;
         },
-        //set the position of this object in the scene
-        setPosition: function(x, y, z) {
+        removeFromScene: function(stage) {
+            this.stage = null;
+
+            stage.removeChild(this._mesh);
+
+            return this;
+        },
+        //set the position of this object in the stage
+        setPosition: function(x, y) {
             if(!this._mesh) return;
 
-            var zi = (z !== undefined ? z : (this.zIndex ? this.zIndex : 0));
+            //var zi = (z !== undefined ? z : (this.zIndex ? this.zIndex : 0));
 
-            if(x instanceof gf.Vector)
-                this._doSetPos(x.x, x.y, zi);
-            else if(x instanceof THREE.Vector3)
-                this._doSetPos(x.x, x.y, x.z);
-            else if(x instanceof Array) {
-                if(x.length === 2) this._doSetPos(x[0], x[1], zi);
-                else if(x.length === 3) this._doSetPos(x[0], x[1], x[2]);
-            } else
-                this._doSetPos(x, y, zi);
-
-            return this;
-        },
-        _doSetPos: function(x, y, z) {
-            if(this._mesh) this._mesh.position.set(x, y, z);
+            if(x instanceof gf.Vector) {
+                this._mesh.position.x = x.x;
+                this._mesh.position.y = x.y;
+            } else if(x instanceof Array) {
+                this._mesh.position.x = x[0];
+                this._mesh.position.y = x[1];
+            } else {
+                this._mesh.position.x = x;
+                this._mesh.position.y = y;
+            }
 
             return this;
         },
