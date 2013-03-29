@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-02-19
+ * Compiled: 2013-03-28
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -1243,7 +1243,7 @@ fragmentShader:"uniform vec3 color;\nuniform sampler2D map;\nuniform float opaci
 /****************************************************************************
  * Global GrapeFruit Object
  ****************************************************************************/
-window.gf = window.gf || {};
+var gf = {};
 
 gf.event = window.pubsub;
 gf.THREE = THREE;
@@ -1926,7 +1926,32 @@ Class.extend = function(prop) {
 (function() {
     //the list of audio channels
     var playing = {},
-        resetTime = 0;
+        resetTime = 0,
+        settings = {
+            loop: false,
+            volume: 1.0
+        };
+
+    function getOpen(id) {
+        var chans = playing[id];
+
+        //find an open channel
+        for(var i = 0, clip; clip = chans[i++];) {
+            if(clip.ended || !clip.currentTime) {
+                clip.currentTime = resetTime;
+                return clip;
+            }
+        }
+
+        //create a new channel
+        var sound = new Audio(chans[0].src);
+        sound.preload = 'auto';
+        sound.load();
+        sound.channel = chans.length;
+        chans.push(sound);
+
+        return chans[chans.length - 1];
+    }
 
     gf.audio = {
         //have we initialized the audio already?
@@ -1935,81 +1960,106 @@ Class.extend = function(prop) {
         init: function() {
             if(gf.audio._initialized) return;
 
-            //activeAudioExt = gf.audio.getSupportedAudioFormat(!!format ? format.toString() : 'mp3');
-
             gf.audio._initialized = true;
         },
-        play: function(soundid, opts, cb) {
-            if(!gf.resources[soundid]) return this;
+        play: function(id, opts, cb) {
+            if(!gf.resources[id]) {
+                console.warn('Tried to play unloaded audio: %s', id);
+                return false;
+            }
 
             if(typeof opts == 'function') {
                 cb = opts;
                 opts = null;
             }
 
-            opts = opts || {};
-
-            //paused
-            if(playing[soundid]) {
-                playing[soundid].play();
-                return this;
+            if(typeof id == 'object') {
+                opts = id;
+                id = opts.id;
             }
 
-            var sound = playing[soundid] = gf.resources[soundid].data;
-            sound.loop = opts.loop || false;
-            sound.volume = opts.volume || 1.0;
+            opts = opts || {};
+
+            opts.id = id;
+            opts.loop = opts.loop || settings.loop;
+            opts.volume = opts.volume || settings.volume
+
+            //resume a paused channel
+            if(opts.channel !== undefined && playing[id]) {
+                playing[id][opts.channel].play();
+                return opts;
+            }
+
+            //we haven't played this sound yet, create a new channel list
+            if(!playing[id]) {
+                playing[id] = [gf.resources[id].data];
+                playing[id][0].channel = 0;
+            }
+
+            var sound = getOpen(id);
+            sound.loop = opts.loop;
+            sound.volume = opts.volume;
             sound.play();
+
+            opts.channel = sound.channel;
 
             if(!opts.loop) {
                 sound.addEventListener('ended', function(e) {
                     sound.removeEventListener('ended', arguments.callee, false);
-                    sound.pause();
-                    sound.currentTime = resetTime;
-                    delete playing[soundid];
+                    gf.audio.stop(opts);
                     if(cb) cb();
                 }, false);
             }
 
-            return this;
+            return opts;
         },
-        stop: function(soundid) {
-            if(!playing[soundid]) return this;
+        stop: function(id, channel) {
+            if(typeof id == 'object') {
+                channel = id.channel;
+                id = id.id;
+            }
 
-            playing[soundid].pause();
-            playing[soundid].currentTime = resetTime;
-            delete playing[soundid];
+            if(!playing[id]) return;
+            if(!playing[id][channel]) return;
 
-            return this;
+            playing[id][channel].pause();
+            playing[id][channel].currentTime = resetTime;
+            playing[id][channel].ended = true;
         },
-        stopAll: function() {
+        pause: function(id, channel) {
+            if(typeof id == 'object') {
+                channel = id.channel;
+                id = id.id;
+            }
+
+            if(!playing[id]) return;
+            if(!playing[id][channel]) return;
+
+            playing[id][channel].pause();
+        },
+        playAll: function() {
             for(var sid in playing) {
-                gf.audio.stop(sid);
+                var chans = playing[sid];
+
+                for(var i = 0, il = chans.length; i < il; ++i)
+                    gf.audio.play({ id: sid, channel: i });
             }
         },
-        pause: function(soundid) {
-            if(!playing[soundid]) return this;
-
-            playing[soundid].pause();
-
-            return this;
-        },
         stopAll: function() {
             for(var sid in playing) {
-                gf.audio.stop(sid);
+                var chans = playing[sid];
+
+                for(var i = 0, il = chans.length; i < il; ++i)
+                    gf.audio.stop(sid, i);
             }
         },
         pauseAll: function() {
             for(var sid in playing) {
-                gf.audio.pause(sid);
+                var chans = playing[sid];
+
+                for(var i = 0, il = chans.length; i < il; ++i)
+                    gf.audio.pause(sid, i);
             }
-        },
-        playAll: function() {
-            for(var sid in playing) {
-                gf.audio.play(sid);
-            }
-        },
-        isPlaying: function(soundid) {
-            return !!playing[soundid];
         }
     };
 })();
@@ -3420,7 +3470,7 @@ Class.extend = function(prop) {
         removeItem: function(name) {
             if(this.items[name]) {
                 this.items[name].elm.parentNode.removeChild(this.items[name].elm);
-                this.items[name] = null;
+                delete this.items[name];
                 this.numItems--;
                 this.dirty = true;
             }
@@ -3476,6 +3526,7 @@ Class.extend = function(prop) {
         }
     };
 })();
+
 (function() {
     gf.HudItem = Class.extend({
         init: function(x, y, settings) {
@@ -4795,16 +4846,7 @@ Class.extend = function(prop) {
                 return new THREE.Vector2();
             }
         },
-        spawnSquare: function(x, y, w, h, color) {
-            var mesh = new THREE.Mesh(
-                new THREE.PlaneGeometry(w || 1, h || 1),
-                new THREE.MeshBasicMaterial({ color: color || 0xff0000 })
-            );
-            mesh.position.set(x || 0, y || 0, 400);
-            gf.game._scene.add(mesh);
-        },
-        numToHexColor: function(num) { return ("00000000" + num.toString(16)).substr(-8); },
-        RGBToHex: function(r, g, b) { return r.toHex() + g.toHex() + b.toHex(); },
+        numToHexColor: function(num) { return ('00000000' + num.toString(16)).substr(-8); },
         noop: function() {},
         ajax: function(sets) {
             //base settings
@@ -4856,7 +4898,6 @@ Class.extend = function(prop) {
                     console.warn('Object parameter "' + key + '" is undefined.');
                     continue;
                 }
-
                 if(key in obj) {
                     var curVal = obj[key];
 
@@ -4867,7 +4908,7 @@ Class.extend = function(prop) {
                         else n = parseInt(newVal, 10);
 
                         if(!isNaN(n))
-                            curVal = n;
+                            obj[key] = n;
                         else
                             console.warn('Object parameter "' + key + '" evaluated to NaN, using default. Value passed: ' + newVal);
 
@@ -4884,9 +4925,9 @@ Class.extend = function(prop) {
                         var a = newVal.split(gf.utils._arrayDelim, 3);
                         curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10) || 0);
                     } else if(curVal instanceof Array && typeof newVal === 'string') {
-                        curVal = newVal.split(gf.utils._arrayDelim);
-                        gf.utils.each(curVal, function(i, val) {
-                            if(!isNaN(val)) curVal[i] = parseInt(val, 10);
+                        obj[key] = newVal.split(gf.utils._arrayDelim);
+                        gf.utils.each(obj[key], function(i, val) {
+                            if(!isNaN(val)) obj[key][i] = parseInt(val, 10);
                         });
                     } else {
                         obj[key] = newVal;
@@ -4922,9 +4963,13 @@ Class.extend = function(prop) {
             };
         },
         getStyle: function(elm, prop) {
-            var style = window.getComputedStyle(elm);
+            var style = window.getComputedStyle(elm),
+                val = style.getPropertyValue(prop).replace(/px|em|%|pt/, '');
 
-            return parseInt(style.getPropertyValue(prop).replace(/px|em|%|pt/, ''), 10);
+            if(!isNaN(val))
+                val = parseInt(val, 10);
+
+            return val;
         },
         setStyle: function(elm, prop, value) {
             var style = window.getComputedStyle(elm);
@@ -5173,4 +5218,14 @@ Class.extend = function(prop) {
     };
 })();
 
+    if (typeof exports === 'object') {
+        // CommonJS
+        exports.gf = gf;
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(gf);
+    } else {
+        // Browser globals
+        window.gf = gf;
+    }
 })(window);
