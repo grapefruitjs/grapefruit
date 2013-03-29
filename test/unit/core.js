@@ -1,13 +1,13 @@
-define(function(require) {
-    QUnit.module('Core');
+define(function() {
+    Q.module('Core');
 
-    QUnit.test('Exports', function() {
-        QUnit.ok(gf);
-        QUnit.ok(gf.version);
-        QUnit.ok(gf.types);
-        QUnit.ok(gf.support);
-        QUnit.ok(gf.checkVersion)
-        QUnit.equal(typeof gf.checkVersion, 'function');
-        QUnit.ok(gf.game);
+    Q.test('Exports', function() {
+        Q.ok(gf);
+        Q.ok(gf.version);
+        Q.ok(gf.types);
+        Q.ok(gf.support);
+        Q.ok(gf.checkVersion);
+        Q.equal(typeof gf.checkVersion, 'function');
+        Q.ok(gf.game);
     });
 });

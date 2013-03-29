@@ -53,8 +53,6 @@ define(function() {
     });
 
     Q.test('#setValues', function() {
-        var obj;
-
         // Numbers
         Q.deepEqual(
             gf.utils.setValues({ num: 1 }, { num: '2' }),
@@ -76,28 +74,15 @@ define(function() {
 
         // Vector2s
         Q.deepEqual(
-            gf.utils.setValues({ vec2: new gf.THREE.Vector2(10, 10) }, { vec2: '2|5' }),
+            gf.utils.setValues({ vec2: new gf.Vector(10, 10) }, { vec2: '2|5' }),
             { vec2: new gf.THREE.Vector2(2, 5) },
             'Strings convert to vector2s'
         );
 
         Q.deepEqual(
-            gf.utils.setValues({ vec2: new gf.THREE.Vector2(10, 10) }, { vec2: [2, 5] }),
+            gf.utils.setValues({ vec2: new gf.Vector(10, 10) }, { vec2: [2, 5] }),
             { vec2: new gf.THREE.Vector2(2, 5) },
             'Arrays convert to vector2s'
-        );
-
-        // Vector3s
-        Q.deepEqual(
-            gf.utils.setValues({ vec3: new gf.THREE.Vector3(10, 10, 10) }, { vec3: '2|5|8' }),
-            { vec3: new gf.THREE.Vector3(2, 5, 8) },
-            'Strings convert to vector3s'
-        );
-
-        Q.deepEqual(
-            gf.utils.setValues({ vec3: new gf.THREE.Vector3(10, 10, 10) }, { vec3: [2, 5, 8] }),
-            { vec3: new gf.THREE.Vector3(2, 5, 8) },
-            'Arrays convert to vector3s'
         );
 
         // Arrays
@@ -163,7 +148,7 @@ define(function() {
     });
 
     Q.test('#getPosition', function() {
-        Q.skip('TODO: Sometimes this can fail because jQuery values are not rounded off...')
+        Q.skip('TODO: Sometimes this can fail because jQuery values are not rounded off...');
 
         Q.deepEqual(
             gf.utils.getPosition(document.getElementById('qunit-header')),
@@ -197,7 +182,7 @@ define(function() {
     });
 
     Q.test('#getStyle', function() {
-        skipIf(!window.getComputedStyle, 'No getComputedStyle support in this browser, need a fallback...', function() {
+        Q.skipIf(!window.getComputedStyle, 'No getComputedStyle support in this browser, need a fallback...', function() {
             Q.deepEqual(
                 gf.utils.getStyle(document.getElementById('qunit-header'), 'margin-top'),
                 parseInt($('#qunit-header').css('margin-top').replace(/px|em|%|pt/, ''), 10),
