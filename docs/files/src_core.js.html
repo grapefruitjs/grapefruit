@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\core.js - gf</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title="gf"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.0.2</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src\core.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;**
+* @license GrapeFruit Game Engine
+* Copyright (c) 2012, Chad Engler
+*
+* GrapeFruit is licensed under the MIT License.
+* http:&#x2F;&#x2F;www.opensource.org&#x2F;licenses&#x2F;mit-license.php
+*
+*&#x2F;
+
+&#x2F;****************************************************************************
+ * Global GrapeFruit Object
+ ****************************************************************************&#x2F;
+window.gf = window.gf || {};
+
+gf.Point = PIXI.Point;
+gf.Texture = PIXI.Texture;
+
+&#x2F;****************************************************************************
+ * GrapeFruit Version
+ ****************************************************************************&#x2F;
+gf.version = &#x27;0.0.2&#x27;;
+
+&#x2F;****************************************************************************
+ * GrapeFruit Type Constants
+ ****************************************************************************&#x2F;
+gf.types = {
+    &#x2F;&#x2F;Entity types
+    ENTITY: {
+        PLAYER: &#x27;player&#x27;,
+        ENEMY: &#x27;enemy&#x27;,
+        FRIENDLY: &#x27;friendly&#x27;,
+        NEUTRAL: &#x27;neutral&#x27;,
+        COLLECTABLE: &#x27;collectable&#x27;
+    },
+    &#x2F;&#x2F;Layer types
+    LAYER: {
+        TILE_LAYER: &#x27;tilelayer&#x27;,
+        OBJECT_GROUP: &#x27;objectgroup&#x27; &#x2F;&#x2F; each zone is defined as an object group
+    },
+    &#x2F;&#x2F;Tile collision types
+    COLLISION: {
+        NONE: &#x27;none&#x27;,
+        SOLID: &#x27;solid&#x27;,
+        CLIFF: &#x27;cliff&#x27;,
+        LADDER: &#x27;ladder&#x27;,
+        WATER: &#x27;water&#x27;,
+        DEEP_WATER: &#x27;deep_water&#x27;
+    },
+    &#x2F;&#x2F;Half tile types
+    HALF: {
+        LEFT: &#x27;left&#x27;,
+        RIGHT: &#x27;right&#x27;,
+        TOP: &#x27;top&#x27;,
+        BOTTOM: &#x27;bottom&#x27;
+    },
+    &#x2F;&#x2F;pubsub events
+    EVENT: {
+        ENTITY_MOVE: &#x27;gf.entity.move&#x27;,
+        LOADER_START: &#x27;gf.loader.start&#x27;,
+        LOADER_ERROR: &#x27;gf.loader.error&#x27;,
+        LOADER_PROGRESS: &#x27;gf.loader.progress&#x27;,
+        LOADER_LOAD: &#x27;gf.loader.load&#x27;,
+        LOADER_COMPLETE: &#x27;gf.loader.complete&#x27;
+    },
+    &#x2F;&#x2F;resource types
+    RESOURCE: {
+        AUDIO: &#x27;audio&#x27;,
+        SOUND: &#x27;sound&#x27;,
+        MUSIC: &#x27;music&#x27;,
+        JSON: &#x27;json&#x27;,
+        XML: &#x27;xml&#x27;,
+        WORLD: &#x27;world&#x27;,
+        TEXTURE: &#x27;texture&#x27;,
+        SPRITE: &#x27;sprite&#x27;,
+        IMAGE: &#x27;image&#x27;
+    },
+    &#x2F;&#x2F;Bindable keycodes
+    KEY: {
+        BACKSPACE: 8,
+        TAB: 9,
+        ENTER: 13,
+        SHIFT: 16,
+        CTRL: 17,
+        ALT: 18,
+        PAUSE: 19,
+        ESC: 27,
+        SPACE: 32,
+        PAGE_UP: 33,
+        PAGE_DOWN: 34,
+        END: 35,
+        HOME: 36,
+        LEFT: 37,
+        UP: 38,
+        RIGHT: 39,
+        DOWN: 40,
+        INSERT: 45,
+        DELETE: 46,
+        NUM0: 48,
+        NUM1: 49,
+        NUM2: 50,
+        NUM3: 51,
+        NUM4: 52,
+        NUM5: 53,
+        NUM6: 54,
+        NUM7: 55,
+        NUM8: 56,
+        NUM9: 57,
+        PLUS: 61,
+        A : 65,
+        B : 66,
+        C : 67,
+        D : 68,
+        E : 69,
+        F : 70,
+        G : 71,
+        H : 72,
+        I : 73,
+        J : 74,
+        K : 75,
+        L : 76,
+        M : 77,
+        N : 78,
+        O : 79,
+        P : 80,
+        Q : 81,
+        R : 82,
+        S : 83,
+        T : 84,
+        U : 85,
+        V : 86,
+        W : 87,
+        X : 88,
+        Y : 89,
+        Z : 90,
+        NUMPAD0: 96,
+        NUMPAD1: 97,
+        NUMPAD2: 98,
+        NUMPAD3: 99,
+        NUMPAD4: 100,
+        NUMPAD5: 101,
+        NUMPAD6: 102,
+        NUMPAD7: 103,
+        NUMPAD8: 104,
+        NUMPAD9: 105,
+        NUMPAD_STAR: 106,
+        NUMPAD_PLUS: 107,
+        NUMPAD_MINUS: 109,
+        NUMPAD_DOT: 110,
+        NUMPAD_SLASH: 111,
+        F1: 112,
+        F2: 113,
+        F3: 114,
+        F4: 115,
+        MINUS: 173,
+        TILDE: 192
+    },
+    &#x2F;&#x2F;Bindable Mouse Events
+    MOUSE: {
+        WHEEL: &#x27;mousewheel&#x27;,
+        MOVE: &#x27;mousemove&#x27;,
+        DOWN: &#x27;mousedown&#x27;,
+        UP: &#x27;mouseup&#x27;,
+        CLICK: &#x27;click&#x27;,
+        DBLCLICK: &#x27;dblclick&#x27;,
+        RCLICK: &#x27;contextmenu&#x27;,
+        CONTEXTMENU: &#x27;contextmenu&#x27;
+    },
+    TOUCH: {
+        &#x2F;&#x2F;WHEEL: undefined,
+        MOVE: &#x27;touchmove&#x27;,
+        START: &#x27;touchstart&#x27;,
+        END: &#x27;touchend&#x27;,
+        TAP: &#x27;tap&#x27;,
+        DBLTAP: &#x27;dbltap&#x27;,
+        &#x2F;&#x2F;RCLICK: undefined,
+        &#x2F;&#x2F;CONTEXTMENU: undefined
+    },
+    &#x2F;&#x2F;Bindable Gamepad Buttons
+    GP_BUTTONS: {
+        FACE_1: 0, &#x2F;&#x2F; Face (main) buttons
+        FACE_2: 1,
+        FACE_3: 2,
+        FACE_4: 3,
+        LEFT_SHOULDER: 4, &#x2F;&#x2F; Top shoulder buttons
+        RIGHT_SHOULDER: 5,
+        LEFT_TRIGGER: 6, &#x2F;&#x2F; Bottom shoulder buttons
+        RIGHT_TRIGGER: 7,
+        SELECT: 8,
+        START: 9,
+        LEFT_ANALOGUE_STICK: 10, &#x2F;&#x2F; Analogue sticks (if depressible)
+        RIGHT_ANALOGUE_STICK: 11,
+        PAD_TOP: 12, &#x2F;&#x2F; Directional (discrete) pad
+        PAD_BOTTOM: 13,
+        PAD_LEFT: 14,
+        PAD_RIGHT: 15
+    },
+    getGpButtonName: function(i) {
+        var name = &#x27;&#x27;;
+
+        gf.utils.each(gf.types.GP_BUTTONS, function(k, v) {
+            if(v == i) {
+                name = k;
+                return false; &#x2F;&#x2F;break
+            }
+        });
+
+        return name;
+    },
+    &#x2F;&#x2F;Bindable Gamepad Axes
+    GP_AXES: {
+        LEFT_ANALOGUE_HOR: 0,
+        LEFT_ANALOGUE_VERT: 1,
+        RIGHT_ANALOGUE_HOR: 2,
+        RIGHT_ANALOGUE_VERT: 3
+    },
+    getGpAxisName: function(i) {
+        var name = &#x27;&#x27;;
+
+        gf.utils.each(gf.types.GP_AXES, function(k, v) {
+            if(v == i) {
+                name = k;
+                return false; &#x2F;&#x2F;break
+            }
+        });
+
+        return name;
+    }
+};
+
+&#x2F;****************************************************************************
+ * GrapeFruit Browser Support Sniffing
+ ****************************************************************************&#x2F;
+gf.support = {
+    &#x2F;&#x2F;user agent
+    ua: navigator.userAgent.toLowerCase(),
+
+    &#x2F;&#x2F;canvas supported?
+    canvas: !!window.CanvasRenderingContext2D,
+
+    &#x2F;&#x2F;webgl supported?
+    webgl: (function () { try { return !!window.WebGLRenderingContext &amp;&amp; !!document.createElement(&#x27;canvas&#x27;).getContext(&#x27;experimental-webgl&#x27;); } catch(e) { return false; } })(),
+
+    &#x2F;&#x2F;web workers supported?
+    workers: !!window.Worker,
+
+    &#x2F;&#x2F;fileapi supported?
+    fileapi: window.File &amp;&amp; window.FileReader &amp;&amp; window.FileList &amp;&amp; window.Blob,
+
+    &#x2F;&#x2F;can this browser play audio?
+    audio: {
+        play: !!document.createElement(&#x27;audio&#x27;).canPlayType,
+        m4a: false,
+        mp3: false,
+        ogg: false,
+        wav: false,
+    },
+
+    &#x2F;&#x2F;local storage supported?
+    localStorage: !!window.localStorage,
+
+    &#x2F;&#x2F;is this a touch device
+    touch: (&#x27;createTouch&#x27; in document) || (&#x27;ontouchstart&#x27; in window) || (navigator.isCocoonJS),
+
+    &#x2F;&#x2F;gamepad API supported?
+    gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf(&#x27;Firefox&#x2F;&#x27;) != -1)
+};
+
+&#x2F;&#x2F;additional audio support checks
+if(gf.support.audio.play) {
+    var a = document.createElement(&#x27;audio&#x27;);
+
+    gf.support.audio.m4a = !!a.canPlayType(&#x27;audio&#x2F;mp4; codecs=&quot;mp4a.40.2&quot;&#x27;).replace(&#x2F;no&#x2F;, &#x27;&#x27;);
+    gf.support.audio.mp3 = !!a.canPlayType(&#x27;audio&#x2F;mpeg&#x27;).replace(&#x2F;no&#x2F;, &#x27;&#x27;);
+    gf.support.audio.ogg = !!a.canPlayType(&#x27;audio&#x2F;ogg; codecs=&quot;vorbis&quot;&#x27;).replace(&#x2F;no&#x2F;, &#x27;&#x27;);
+    gf.support.audio.wav = !!a.canPlayType(&#x27;audio&#x2F;wav; codecs=&quot;1&quot;&#x27;).replace(&#x2F;no&#x2F;, &#x27;&#x27;);
+
+    &#x2F;&#x2F;check for specific platforms
+    if(gf.support.ua.search(&#x27;iphone&#x27;) &gt; -1 || gf.support.ua.search(&#x27;ipod&#x27;) &gt; -1 ||
+        gf.support.ua.search(&#x27;ipad&#x27;) &gt; -1 || gf.support.ua.search(&#x27;android&#x27;) &gt; -1) {
+
+        &#x2F;&#x2F;if on mobile device, without a specific HTML5 acceleration framework
+        if(!navigator.isCocoonJS) {
+            gf.support.audio.play = false;
+        }
+    }
+}
+
+&#x2F;****************************************************************************
+ * GrapeFruit Version Checking
+ ****************************************************************************&#x2F;
+&#x2F;&#x2F;returns a number representing how far off a version is.
+&#x2F;&#x2F;
+&#x2F;&#x2F;will return a negative value if the first version is behind the second,
+&#x2F;&#x2F;the negative number will show how many versions behind it is on largest version
+&#x2F;&#x2F;point.
+&#x2F;&#x2F;That is: &#x27;1.0&#x27; compared with &#x27;1.1&#x27; will yield -1
+&#x2F;&#x2F;and    : &#x27;1.2.3&#x27; compared with &#x27;1.2.1&#x27; will yield -2
+&#x2F;&#x2F;
+&#x2F;&#x2F;0 is returned if the versions match, and a positive number is returned if
+&#x2F;&#x2F;the first version is larger than the second.
+gf.checkVersion = function(first, second) {
+    second = second || gf.version;
+
+    var a = first.split(&#x27;.&#x27;),
+        b = second.split(&#x27;.&#x27;),
+        len = Math.min(a.length, b.length),
+        result = 0;
+
+    for(var i = 0; i &lt; len; ++i) {
+        if(result = +a[i] - +b[i]) {
+            break;
+        }
+    }
+
+    return result ? result : a.length - b.length;
+};
+
+&#x2F;****************************************************************************
+ * Javascript Inheritance Helper (use functional mixins instead?)
+ ****************************************************************************&#x2F;
+
+&#x2F;* Simple JavaScript Inheritance
+ * By John Resig http:&#x2F;&#x2F;ejohn.org&#x2F;
+ * MIT Licensed.
+ *&#x2F;
+&#x2F;&#x2F; Inspired by base2 and Prototype
+var initializing = false, fnTest = &#x2F;xyz&#x2F;.test(function(){xyz;}) ? &#x2F;\b_super\b&#x2F; : &#x2F;.*&#x2F;;
+    
+&#x2F;&#x2F; The base Class implementation (does nothing)
+Class = function() {};
+
+&#x2F;&#x2F; Create a new Class that inherits from this class
+Class.extend = function(prop) {
+    var _super = this.prototype;
+    
+    &#x2F;&#x2F; Instantiate a base class (but only create the instance,
+    &#x2F;&#x2F; don&#x27;t run the init constructor)
+    initializing = true;
+    var prototype = new this();
+    initializing = false;
+    
+    &#x2F;&#x2F; Copy the properties over onto the new prototype
+    for (var name in prop) {
+        &#x2F;&#x2F; Check if we&#x27;re overwriting an existing function
+        prototype[name] = typeof prop[name] == &quot;function&quot; &amp;&amp;
+            typeof _super[name] == &quot;function&quot; &amp;&amp; fnTest.test(prop[name]) ?
+            (function(name, fn){
+                return function() {
+                    var tmp = this._super;
+                   
+                    &#x2F;&#x2F; Add a new ._super() method that is the same method
+                    &#x2F;&#x2F; but on the super-class
+                    this._super = _super[name];
+                   
+                    &#x2F;&#x2F; The method only need to be bound temporarily, so we
+                    &#x2F;&#x2F; remove it when we&#x27;re done executing
+                    var ret = fn.apply(this, arguments);
+                    this._super = tmp;
+                   
+                    return ret;
+                };
+            })(name, prop[name]) :
+            prop[name];
+    }
+    
+    &#x2F;&#x2F; The dummy class constructor
+    Class = function () {
+        &#x2F;&#x2F; All construction is actually done in the init method
+        if ( !initializing &amp;&amp; this.init )
+            this.init.apply(this, arguments);
+    }
+    
+    &#x2F;&#x2F; Populate our constructed prototype object
+    Class.prototype = prototype;
+    
+    &#x2F;&#x2F; Enforce the constructor to be what we expect
+    Class.constructor = Class;
+    
+    &#x2F;&#x2F; And make this class extendable
+    Class.extend = arguments.callee;
+    
+    return Class;
+};
+
+&#x2F;****************************************************************************
+ * High performance clock (thanks mrdoob): https:&#x2F;&#x2F;github.com&#x2F;mrdoob&#x2F;three.js&#x2F;blob&#x2F;master&#x2F;src&#x2F;core&#x2F;Clock.js
+ ****************************************************************************&#x2F;
+gf.Clock = Class.extend({
+    init: function(autoStart) {
+        this.autoStart = (autoStart !== undefined) ? autoStart : true;
+
+        this.startTime = 0;
+        this.oldTime = 0;
+        this.elapsedTime = 0;
+
+        this.running = false;
+    },
+    start: function() {
+        this.startTime = window.performance !== undefined &amp;&amp; window.performance.now !== undefined
+                            ? window.performance.now()
+                            : Date.now();
+
+        this.oldTime = this.startTime;
+        this.running = true;
+    },
+    stop: function() {
+        this.getElapsedTime();
+        this.running = false;
+    },
+    getElapsedTime: function() {
+        this.getDelta();
+
+        return this.elapsedTime;
+    },
+    getDelta: function() {
+        var diff = 0;
+
+        if(this.autoStart &amp;&amp; !this.running) {
+            this.start();
+        }
+
+        if(this.running) {
+            var newTime = window.performance !== undefined &amp;&amp; window.performance.now !== undefined
+                            ? window.performance.now()
+                            : Date.now();
+
+            diff = 0.001 * (newTime - this.oldTime);
+            this.oldTime = newTime;
+
+            this.elapsedTime += diff;
+        }
+
+        return diff;
+    }
+});
+
+&#x2F;****************************************************************************
+ * Main game object
+ ****************************************************************************&#x2F;
+(function() {
+    gf.game = {
+        &#x2F;&#x2F;array of objects in the scene
+        objects: {},
+        numObjects: 0,
+
+        &#x2F;&#x2F;special user-defined entity types
+        entTypes: {},
+
+        &#x2F;&#x2F;maximum Z index, where the camera lies
+        MAX_Z: 500,
+
+        &#x2F;&#x2F;raw PIXI objects that will control rendering
+        _stage: new PIXI.Stage(),
+        _clock: new gf.Clock(false),
+        _renderer: null,
+        &#x2F;&#x2F;_camera: null,
+
+        &#x2F;&#x2F;id for the next entity to be added
+        _nextId: Date.now(),
+
+        &#x2F;&#x2F;the object that will contain the render domElement
+        _cont: null,
+
+        &#x2F;&#x2F;have we initialized the game already?
+        _initialized: false,
+
+        init: function(contId, opts) {
+            if(gf.controls._initialized) return;
+
+            opts = opts || {};
+
+            gf.game.gravity = (opts.gravity !== undefined ? opts.velocity : 0.98);
+            gf.game.friction = gf.utils.ensureVector(opts.friction);
+
+            &#x2F;****************************************************************************
+             * Choose a render method (WebGL or Canvas)
+             ****************************************************************************&#x2F;
+            &#x2F;&#x2F;if they speciy a method, check if it is available
+            if(opts.renderMethod) {
+                if(!gf.support[renderMethod]) {
+                    throw &#x27;Render method &#x27; + renderMethod + &#x27; is not supported by this browser!&#x27;;
+                    return;
+                }
+            }
+            &#x2F;&#x2F;if they don&#x27;t specify a method, guess the best to use
+            else {
+                if(gf.support.webgl) renderMethod = &#x27;webgl&#x27;;
+                else if(gf.support.canvas) renderMethod = &#x27;canvas&#x27;;
+                else {
+                    throw &#x27;Neither WebGL nor Canvas is supported by this browser!&#x27;;
+                    return;
+                }
+            }
+
+            var w = opts.width || gf.utils.getStyle(gf.game._cont, &#x27;width&#x27;),
+                h = opts.height || gf.utils.getStyle(gf.game._cont, &#x27;height&#x27;);
+
+            &#x2F;&#x2F;initialize the correct renderer
+            if(renderMethod == &#x27;webgl&#x27;) {
+                gf.game._renderer = new PIXI.WebGLRenderer(w, h);
+            } else if(renderMethod == &#x27;canvas&#x27;) {
+                gf.game._renderer = new PIXI.CanvasRenderer(w, h);
+            }
+
+            gf.game._renderMethod = renderMethod;
+
+            &#x2F;****************************************************************************
+             * Setup game container
+             ****************************************************************************&#x2F;
+            &#x2F;&#x2F;cache the container object
+            gf.game._cont = document.getElementById(contId);
+
+            &#x2F;&#x2F;initialize the renderer
+            gf.game._renderer.view.style[&#x27;z-index&#x27;] = opts.zIndex || 5;
+            gf.game._cont.appendChild(gf.game._renderer.view);
+
+            &#x2F;****************************************************************************
+             * Initialize the camera and lighting
+             ****************************************************************************&#x2F;
+            &#x2F;&#x2F;initialize the camera
+            &#x2F;&#x2F;gf.game._camera = new THREE.OrthographicCamera(w &#x2F; -2, w &#x2F; 2, h &#x2F; 2, h &#x2F; -2, 1, 1000);
+            &#x2F;&#x2F;gf.game._camera.position.z = gf.game.MAX_Z;
+
+            &#x2F;&#x2F;gf.game._scene.addChild(this.camera);
+
+            &#x2F;&#x2F;add ambient light to the scene
+            &#x2F;&#x2F;gf.game._scene.addChild(new THREE.AmbientLight(0xffffff));
+
+            &#x2F;&#x2F;set aspect
+            &#x2F;&#x2F;window.addEventListener(&#x27;resize&#x27;, gf.game.onWindowResize, false);
+            &#x2F;&#x2F;gf.game.onWindowResize();
+
+            &#x2F;****************************************************************************
+             * Initialize the various game components
+             ****************************************************************************&#x2F;
+            &#x2F;&#x2F;initialize the controls
+            gf.controls.init();
+
+            &#x2F;&#x2F;initialize the audio player
+            gf.audio.init();
+
+            &#x2F;&#x2F;initialize the GUI (HUD, menus, etc)
+            gf.gui.init();
+
+            &#x2F;&#x2F;initialize gamepad support
+            gf.gamepad.init();
+
+            &#x2F;****************************************************************************
+             * Add some debug elements
+             ****************************************************************************&#x2F;
+            &#x2F;&#x2F;fps counter
+            if(gf.debug.showFps) {
+                gf.debug._fpsCounter = new gf.debug.FpsCounter();
+                gf.utils.each(gf.debug.fpsStyle, function(k, v) { gf.debug._fpsCounter.domElement.style[k] = v; });
+                document.body.appendChild(gf.debug._fpsCounter.domElement);
+            }
+
+            &#x2F;&#x2F;debug info
+            if(gf.debug.showInfo) {
+                gf.debug._info = new gf.debug.Info();
+                gf.utils.each(gf.debug.infoStyle, function(k, v) { gf.debug._info.domElement.style[k] = v; });
+                document.body.appendChild(gf.debug._info.domElement);
+            }
+
+            gf.game._initialized = true;
+
+            return this;
+        },
+        &#x2F;*onWindowResize: function() {
+            var w = gf.utils.getStyle(gf.game._cont, &#x27;width&#x27;),
+                h = gf.utils.getStyle(gf.game._cont, &#x27;height&#x27;);
+
+            gf.game._renderer.setSize(w, h);
+            gf.game._camera.aspect = w &#x2F; h;
+            gf.game._camera.updateProjectionMatrix();
+        },*&#x2F;
+        getNextObjectId: function() {
+            return gf.game._nextId++;
+        },
+        addObject: function(obj) {
+            if(!obj) return this;
+
+            if(!obj.id) obj.id = gf.game.getNextObjectId();
+            if(!gf.game.objects[obj.id]) gf.game.numObjects++;
+
+            gf.game.objects[obj.id] = obj;
+            gf.game._stage.addChild(obj);
+
+            return this;
+        },
+        removeObject: function(obj) {
+            if(!obj) return;
+
+            &#x2F;&#x2F;remove object from our list
+            delete gf.game.objects[obj.id];
+            gf.game.numObjects--;
+
+            if(obj.removeFromScene) obj.removeFromScene(gf.game._scene);
+
+            if(obj.type == gf.types.ENTITY.PLAYER)
+                gf.game.player = null;
+
+            return this;
+        },
+        loadWorld: function(world) {
+            if(typeof world == &#x27;string&#x27;){
+                if(gf.resources[world]) world = gf.resources[world].data;
+                else {
+                    throw &#x27;World not found in resources!&#x27;;
+                    return;
+                }
+            }
+
+            gf.game.world = new gf.TiledMap(world);
+            gf.game.addObject(gf.game.world);
+
+            if(gf.game.world.properties.music) {
+                gf.audio.play(gf.game.world.properties.music, { loop: gf.game.world.properties.music_loop === &#x27;true&#x27; });
+            }
+
+            return this;
+        },
+        render: function() {
+            gf.game._clock.start();
+            gf.game._tick();
+
+            return this;
+        },
+        &#x2F;&#x2F;Check if passed entity collides with any others
+        checkCollisions: function(obj) {
+            var colliders = [];
+
+            if(!obj.isCollidable) return colliders;
+
+            for(var id in gf.game.objects) {
+                var o = gf.game.objects[id];
+
+                &#x2F;&#x2F;check if this object collides with any others
+                if(o.inViewport &amp;&amp; o.isVisible &amp;&amp; o.isCollidable &amp;&amp; o.isEntity &amp;&amp; (o != obj)) {
+                    var collisionVector = o.checkCollision(obj);
+                    if(collisionVector.x !== 0 || collisionVector.y !== 0) {
+                        colliders.push({
+                            entity: o,
+                            vector: collisionVector
+                        });
+                        o.onCollision(obj);
+                    }
+                }
+            }
+
+            return colliders;
+        },
+        &#x2F;&#x2F;lock the camera on an entity
+        cameraTrack: function(ent) {
+            if(ent.isEntity) {
+                if(this._trackedEntMoveHandle) {
+                    gf.event.unsubscribe(this._trackedEntMoveHandle);
+                }
+
+                &#x2F;&#x2F;gf.game._camera.position.x = ent._mesh.position.x;
+                &#x2F;&#x2F;gf.game._camera.position.y = ent._mesh.position.y;
+                this._trackedEntMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + &#x27;.&#x27; + ent.id, function(velocity) {
+                    &#x2F;&#x2F;gf.game._camera.translateX(velocity.x);
+                    &#x2F;&#x2F;gf.game._camera.translateY(velocity.y);
+
+                    &#x2F;&#x2F;If this gets heavy, then just remove it
+                    &#x2F;&#x2F;update if each object is within the viewport
+
+                    &#x2F;&#x2F;update matrices
+                    &#x2F;&#x2F;gf.game._camera.updateMatrix(); &#x2F;&#x2F; make sure camera&#x27;s local matrix is updated
+                    &#x2F;&#x2F;gf.game._camera.updateMatrixWorld(); &#x2F;&#x2F; make sure camera&#x27;s world matrix is updated
+                    &#x2F;&#x2F;gf.game._camera.matrixWorldInverse.getInverse( camera.matrixWorld );
+                    &#x2F;*var frustum = new THREE.Frustum();
+                    frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
+                    gf.utils.each(gf.game.objects, function(id, o) {
+                        if(o.isEntity &amp;&amp; o._mesh &amp;&amp; o._mesh.geometry) {
+                            &#x2F;&#x2F;o._mesh.updateMatrix(); &#x2F;&#x2F; make sure plane&#x27;s local matrix is updated
+                            &#x2F;&#x2F;o._mesh.updateMatrixWorld(); &#x2F;&#x2F; make sure plane&#x27;s world matrix is updated
+                            o.inViewport = frustum.contains(o._mesh);
+                        }
+                    });*&#x2F;
+                });
+            }
+
+            return this;
+        },
+        _tick: function() {
+            &#x2F;&#x2F;start render loop
+            requestAnimationFrame(gf.game._tick);
+
+            &#x2F;&#x2F;get clock delta
+            gf.game._delta = gf.game._clock.getDelta();
+
+            &#x2F;&#x2F;update fps box
+            if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
+
+            &#x2F;&#x2F;update debug info
+            if(gf.debug._info) gf.debug._info.update();
+
+            &#x2F;&#x2F;update the HUD
+            if(gf.HUD.initialized) gf.HUD.update();
+
+            &#x2F;&#x2F;update the gamepad poller
+            gf.gamepad.update();
+
+            &#x2F;&#x2F;update each object
+            for(var id in gf.game.objects) {
+                var o = gf.game.objects[id];
+
+                if(o.inViewport &amp;&amp; o.isVisible &amp;&amp; o.update) {
+                    o.update();
+                }
+            }
+
+            &#x2F;&#x2F;render scene
+            gf.game._renderer.render(gf.game._scene&#x2F;*, gf.game._camera*&#x2F;);
+        }
+    };
+})();
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

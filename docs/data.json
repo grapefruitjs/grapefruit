@@ -1,0 +1,437 @@
+{
+    "project": {
+        "name": "gf",
+        "description": "A fun and easy WebGL-enabled JavaScript Game Engine",
+        "version": "0.0.2",
+        "url": "https://github.com/englercj/grapefruit"
+    },
+    "files": {
+        "src\\debug\\debug.js": {
+            "name": "src\\debug\\debug.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\entity\\Entity.js": {
+            "name": "src\\entity\\Entity.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\entity\\Sprite.js": {
+            "name": "src\\entity\\Sprite.js",
+            "modules": {},
+            "classes": {
+                "Sprite": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\loader\\loader.js": {
+            "name": "src\\loader\\loader.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\utils\\vector.js": {
+            "name": "src\\utils\\vector.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\core.js": {
+            "name": "src\\core.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "Sprite": {
+            "name": "Sprite",
+            "shortname": "Sprite",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\entity\\Sprite.js",
+            "line": 3,
+            "description": "The base Sprite class. This class is the base for all images on the screen",
+            "extends": "PIXI.MovieClip",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "pos",
+                    "description": "The starting position of the sprite",
+                    "type": "Array|gf.Vector|gf.Point"
+                },
+                {
+                    "name": "settings",
+                    "description": "Settings to override the defauls, acceptable values\n         are size {gf.Vector}, name {String}, animations {Object}",
+                    "type": "Object"
+                }
+            ],
+            "example": [
+                "\n     var spr = new gf.Sprite([10, 1], { name: 'MySprite' });"
+            ]
+        }
+    },
+    "classitems": [
+        {
+            "file": "src\\debug\\debug.js",
+            "line": 40,
+            "description": "DebugInfo box that displays live-updaing debug info",
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\debug\\debug.js",
+            "line": 141,
+            "description": "mrdoob's stats.js (stats.js r10 - http://github.com/mrdoob/stats.js)",
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 17,
+            "description": "Properties that are defined in the `settings` object,\nthese can be specified in the properties of the object layer\nin Tiled, and overriden on a per-object basis",
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 67,
+            "description": "Call base constructor",
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\entity\\Sprite.js",
+            "line": 16,
+            "description": "The size of the sprite",
+            "itemtype": "property",
+            "name": "size",
+            "type": "gf.Vector",
+            "default": "new gf.Vector(0, 0);",
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\entity\\Sprite.js",
+            "line": 25,
+            "description": "The name of this sprite",
+            "itemtype": "property",
+            "name": "name",
+            "type": "String",
+            "default": "''",
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\entity\\Sprite.js",
+            "line": 56,
+            "description": "Defines a new animation on the Sprite",
+            "itemtype": "method",
+            "name": "addAnimation",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The name of the animation, any string you want to name it",
+                    "type": "String"
+                },
+                {
+                    "name": "frames",
+                    "description": "The frames of the animation, you can pass one gf.Texture\n     as a frame, or an Array of gf.Texture's",
+                    "type": "gf.Texture|Array"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "gf.Sprite"
+            },
+            "example": [
+                "\n     spr.addAnimation('walk-left', new gf.Texture())\n         .addAnimation('walk-right', [new gf.Texture(), new gf.Texture()]);"
+            ],
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\entity\\Sprite.js",
+            "line": 87,
+            "description": "Sets the active animation of the sprite, and starts the animation at index 0",
+            "itemtype": "method",
+            "name": "setActiveAnimation",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The name of the animation to play (defined with addAnimation());",
+                    "type": "String"
+                },
+                {
+                    "name": "cb",
+                    "description": "Callback when the animation completes, NOT YET IMPLEMENTED",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "gf.Sprite"
+            },
+            "example": [
+                "\n     spr.addAnimation('me', new gf.Texture())\n         .setActiveAnimation('me');"
+            ],
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\entity\\Sprite.js",
+            "line": 110,
+            "description": "Convenience method for setting the position of the Sprite.",
+            "itemtype": "method",
+            "name": "setPosition",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "X coord to put the sprite at.\n      If an Array, gf.Vector, or gf.Point is passed then the y parameter is ignored",
+                    "type": "int|Array|gf.Vector|gf.Point"
+                },
+                {
+                    "name": "y",
+                    "description": "Y coord to put the sprite at",
+                    "type": "Int"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "gf.Sprite"
+            },
+            "example": [
+                "\n     spr.setPosition(1, 1)\n         .setPosition([5, 5])\n         .setPosition(new gf.Point(10, 10))\n         .setPosition(new gf.Vector(20, 20));"
+            ],
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\entity\\Sprite.js",
+            "line": 139,
+            "description": "Checks if the name is the active animation",
+            "itemtype": "method",
+            "name": "isActiveAnimation",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The name of the animation to check if it is currently active",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "true if the animation is active, false otherwise.",
+                "type": "Bool"
+            },
+            "example": [
+                "\n     spr.addAnimation('walk-left', new gf.Texture())\n         .isActiveAnimation('walk-left'); //false\n\n     spr.setActiveAnimation('walk-left')\n         .isActiveAnimation('walk-left'); //true"
+            ],
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\entity\\Sprite.js",
+            "line": 155,
+            "description": "Frame update stub",
+            "itemtype": "method",
+            "name": "update",
+            "access": "private",
+            "tagname": "",
+            "class": "Sprite"
+        },
+        {
+            "file": "src\\loader\\loader.js",
+            "line": 9,
+            "description": "Resource format:\n           {\n               name: String,   //key name\n               type: String,   //image, json, xml, texture, world\n               src: String     //url\n           }\nCallbacks format:\n           {\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n\n           }",
+            "class": ""
+        },
+        {
+            "file": "src\\loader\\loader.js",
+            "line": 56,
+            "description": "Resources format:\n           [\n               {\n                   name: String,   //key name\n                   type: String,   //image, json, xml, texture, world\n                   src: String     //url\n               },\n               ...\n           ]\nCallbacks format:\n           {\n               start: function(resource),              //when loading of a resource starts\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n               complete: function(resources),          //all resources have completed loading\n           }",
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\vector.js",
+            "line": 1,
+            "description": "Based on Vector2 from three.js\nthanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 1,
+            "license": "GrapeFruit Game Engine\nCopyright (c) 2012, Chad Engler\n\nGrapeFruit is licensed under the MIT License.\nhttp://www.opensource.org/licenses/mit-license.php",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 10,
+            "description": "Global GrapeFruit Object",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 18,
+            "description": "GrapeFruit Version",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 23,
+            "description": "GrapeFruit Type Constants",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 230,
+            "description": "GrapeFruit Browser Support Sniffing",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 288,
+            "description": "GrapeFruit Version Checking",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 318,
+            "description": "Javascript Inheritance Helper (use functional mixins instead?)",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 385,
+            "description": "High performance clock (thanks mrdoob): https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 437,
+            "description": "Main game object",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 475,
+            "description": "Choose a render method (WebGL or Canvas)",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 507,
+            "description": "Setup game container",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 517,
+            "description": "Initialize the camera and lighting",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 533,
+            "description": "Initialize the various game components",
+            "class": ""
+        },
+        {
+            "file": "src\\core.js",
+            "line": 548,
+            "description": "Add some debug elements",
+            "class": ""
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: license",
+            "line": " src\\core.js:1"
+        },
+        {
+            "message": "Missing item type\nDebugInfo box that displays live-updaing debug info",
+            "line": " src\\debug\\debug.js:40"
+        },
+        {
+            "message": "Missing item type\nmrdoob's stats.js (stats.js r10 - http://github.com/mrdoob/stats.js)",
+            "line": " src\\debug\\debug.js:141"
+        },
+        {
+            "message": "Missing item type\nProperties that are defined in the `settings` object,\nthese can be specified in the properties of the object layer\nin Tiled, and overriden on a per-object basis",
+            "line": " src\\entity\\Entity.js:17"
+        },
+        {
+            "message": "Missing item type\nCall base constructor",
+            "line": " src\\entity\\Entity.js:67"
+        },
+        {
+            "message": "Missing item type\nResource format:\n           {\n               name: String,   //key name\n               type: String,   //image, json, xml, texture, world\n               src: String     //url\n           }\nCallbacks format:\n           {\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n\n           }",
+            "line": " src\\loader\\loader.js:9"
+        },
+        {
+            "message": "Missing item type\nResources format:\n           [\n               {\n                   name: String,   //key name\n                   type: String,   //image, json, xml, texture, world\n                   src: String     //url\n               },\n               ...\n           ]\nCallbacks format:\n           {\n               start: function(resource),              //when loading of a resource starts\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n               complete: function(resources),          //all resources have completed loading\n           }",
+            "line": " src\\loader\\loader.js:56"
+        },
+        {
+            "message": "Missing item type\nBased on Vector2 from three.js\nthanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js",
+            "line": " src\\utils\\vector.js:1"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\core.js:1"
+        },
+        {
+            "message": "Missing item type\nGlobal GrapeFruit Object",
+            "line": " src\\core.js:10"
+        },
+        {
+            "message": "Missing item type\nGrapeFruit Version",
+            "line": " src\\core.js:18"
+        },
+        {
+            "message": "Missing item type\nGrapeFruit Type Constants",
+            "line": " src\\core.js:23"
+        },
+        {
+            "message": "Missing item type\nGrapeFruit Browser Support Sniffing",
+            "line": " src\\core.js:230"
+        },
+        {
+            "message": "Missing item type\nGrapeFruit Version Checking",
+            "line": " src\\core.js:288"
+        },
+        {
+            "message": "Missing item type\nJavascript Inheritance Helper (use functional mixins instead?)",
+            "line": " src\\core.js:318"
+        },
+        {
+            "message": "Missing item type\nHigh performance clock (thanks mrdoob): https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js",
+            "line": " src\\core.js:385"
+        },
+        {
+            "message": "Missing item type\nMain game object",
+            "line": " src\\core.js:437"
+        },
+        {
+            "message": "Missing item type\nChoose a render method (WebGL or Canvas)",
+            "line": " src\\core.js:475"
+        },
+        {
+            "message": "Missing item type\nSetup game container",
+            "line": " src\\core.js:507"
+        },
+        {
+            "message": "Missing item type\nInitialize the camera and lighting",
+            "line": " src\\core.js:517"
+        },
+        {
+            "message": "Missing item type\nInitialize the various game components",
+            "line": " src\\core.js:533"
+        },
+        {
+            "message": "Missing item type\nAdd some debug elements",
+            "line": " src\\core.js:548"
+        }
+    ]
+}
