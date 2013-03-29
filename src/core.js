@@ -452,7 +452,7 @@ gf.Clock = Class.extend({
         _scene: new PIXI.Stage(),
         _clock: new PIXI.Clock(false),
         _renderer: null,
-        _camera: null,
+        //_camera: null,
 
         //id for the next entity to be added
         _nextId: Date.now(),
@@ -498,7 +498,7 @@ gf.Clock = Class.extend({
             if(renderMethod == 'webgl') {
                 gf.game._renderer = new PIXI.WebGLRenderer(w, h);
             } else if(renderMethod == 'canvas') {
-                gf.game._renderer = new THREE.CanvasRenderer(w, h);
+                gf.game._renderer = new PIXI.CanvasRenderer(w, h);
             }
 
             gf.game._renderMethod = renderMethod;
@@ -510,7 +510,7 @@ gf.Clock = Class.extend({
             gf.game._cont = document.getElementById(contId);
 
             //initialize the renderer
-            gf.game._renderer.domElement.style['z-index'] = opts.zIndex || 5;
+            gf.game._renderer.view.style['z-index'] = opts.zIndex || 5;
             gf.game._cont.appendChild(gf.game._renderer.view);
 
             /****************************************************************************
@@ -649,7 +649,9 @@ gf.Clock = Class.extend({
 
             if(!obj.isCollidable) return colliders;
 
-            gf.utils.each(gf.game.objects, function(id, o) {
+            for(var id in gf.game.objects) {
+                var o = gf.game.objects[id];
+
                 //check if this object collides with any others
                 if(o.inViewport && o.isVisible && o.isCollidable && o.isEntity && (o != obj)) {
                     var collisionVector = o.checkCollision(obj);
@@ -661,7 +663,7 @@ gf.Clock = Class.extend({
                         o.onCollision(obj);
                     }
                 }
-            });
+            }
 
             return colliders;
         },
@@ -672,11 +674,11 @@ gf.Clock = Class.extend({
                     gf.event.unsubscribe(this._trackedEntMoveHandle);
                 }
 
-                gf.game._camera.position.x = ent._mesh.position.x;
-                gf.game._camera.position.y = ent._mesh.position.y;
+                //gf.game._camera.position.x = ent._mesh.position.x;
+                //gf.game._camera.position.y = ent._mesh.position.y;
                 this._trackedEntMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.id, function(velocity) {
-                    gf.game._camera.translateX(velocity.x);
-                    gf.game._camera.translateY(velocity.y);
+                    //gf.game._camera.translateX(velocity.x);
+                    //gf.game._camera.translateY(velocity.y);
 
                     //If this gets heavy, then just remove it
                     //update if each object is within the viewport
@@ -685,7 +687,7 @@ gf.Clock = Class.extend({
                     //gf.game._camera.updateMatrix(); // make sure camera's local matrix is updated
                     //gf.game._camera.updateMatrixWorld(); // make sure camera's world matrix is updated
                     //gf.game._camera.matrixWorldInverse.getInverse( camera.matrixWorld );
-                    var frustum = new THREE.Frustum();
+                    /*var frustum = new THREE.Frustum();
                     frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
                     gf.utils.each(gf.game.objects, function(id, o) {
                         if(o.isEntity && o._mesh && o._mesh.geometry) {
@@ -693,7 +695,7 @@ gf.Clock = Class.extend({
                             //o._mesh.updateMatrixWorld(); // make sure plane's world matrix is updated
                             o.inViewport = frustum.contains(o._mesh);
                         }
-                    });
+                    });*/
                 });
             }
 
@@ -719,14 +721,16 @@ gf.Clock = Class.extend({
             gf.gamepad.update();
 
             //update each object
-            gf.utils.each(gf.game.objects, function(id, o) {
+            for(var id in gf.game.objects) {
+                var o = gf.game.objects[id];
+
                 if(o.inViewport && o.isVisible && o.update) {
                     o.update();
                 }
-            });
+            }
 
             //render scene
-            gf.game._renderer.render(gf.game._scene, gf.game._camera);
+            gf.game._renderer.render(gf.game._scene/*, gf.game._camera*/);
         }
     };
 })();

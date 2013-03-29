@@ -1,5 +1,5 @@
 (function() {
-    gf.Sprite = gf.Entity.extend({
+    gf.Sprite = Class.extend.call(PIXI.Sprite, {
         //initializes a new entity with the start position (pos) and the settings defined in Tiled
         init: function(pos, settings) {
             /****************************************************************************
@@ -15,9 +15,6 @@
 
             //offset in the image to the first frame (in pixels)
             this.offset = new gf.Vector(0, 0);
-
-            //opacity of the sprite
-            this.opacity = 1.0;
 
             //raw THREE.Texture instance loaded by the gf.loader
             this.texture = null;
@@ -47,7 +44,8 @@
             /****************************************************************************
              * Call base constructor
              ****************************************************************************/
-            this._super(pos, settings);
+            //this._super(pos, settings);
+            PIXI.Sprite.call(this, this.texture);
 
             this._baseHitSize = this.hitSize.clone();
             this._baseScaledHitSize = this.scaledHitSize.clone();

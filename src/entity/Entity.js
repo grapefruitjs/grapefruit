@@ -9,7 +9,7 @@
     //      - forceJump
     //      - checkSlope
     //      - updateMovement (slopes/breakable tiles)
-    gf.Entity = gf.SceneObject.extend({
+    gf.Entity = gf.Sprite.extend({
         //initializes a new entity with the start position (pos)
         //and properties (settings). Many of these properties can
         //be specified in Tiled.
@@ -156,21 +156,17 @@
             return p;
         },
         addToScene: function(scene) {
-            this._super(scene);
-
             if(this._hitboxMesh) scene.add(this._hitboxMesh);
 
-            return this;
+            return this._super(scene);
+        },
+        removeFromScene: function(scene) {
+            if(this._hitboxMesh) scene.remove(this._hitboxMesh);
+
+            return this._super(scene);
         },
         addToPool: function(name) {
             return gf.entityPool.add(name || this.name, this);
-        },
-        removeFromScene: function(scene) {
-            this._super(scene);
-
-            if(this._hitboxMesh) scene.remove(this._hitboxMesh);
-
-            return this;
         },
         updateMovement: function() {
             if(this.velocity.x === 0 && this.velocity.y === 0) return;
@@ -182,8 +178,9 @@
 
             //collisions
             var self = this;
-            gf.utils.each(colliders, function(i, collider) {
-                var tile = collider.tile,
+            for(var i = 0, il = colliders.length; i < il; ++i) {
+                var collider = colliders[i],
+                    tile = collider.tile,
                     axis = collider.axis;
 
                 self.onladder = (tile.type == gf.types.COLLISION.LADDER ? true : self.onladder);
@@ -203,7 +200,7 @@
                         self.velocity[axis] = 0;
                     }
                 }
-            });
+            }
 
             //TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
 
@@ -225,13 +222,17 @@
             if(vel.x === 0 && vel.y === 0) return;
 
             //update the entity position
-            this._mesh.translateX(vel.x);
-            this._mesh.translateY(vel.y);
+            this._mesh.position.x += vel.x;
+            this._mesh.position.y += vel.y;
+            //this._mesh.translateX(vel.x);
+            //this._mesh.translateY(vel.y);
 
             //also update the hitbox mesh if it is different
             if(this._hitboxMesh) {
-                this._hitboxMesh.translateX(vel.x);
-                this._hitboxMesh.translateY(vel.y);
+                this._hitboxMesh.position.x += vel.x;
+                this._hitboxMesh.position.y += vel.y;
+                //this._hitboxMesh.translateX(vel.x);
+                //this._hitboxMesh.translateY(vel.y);
             }
 
             //onMove event
@@ -253,33 +254,41 @@
 
             return this;
         },
-
         //On Move Event
         // called when this entity moves
         //vel - Velocity the entity moved (gf.Vector)
         onMove: function(vel) {
             return this;
         },
-
         //On Tile Break Event
         // called when a tile is broken
         //tile - the tile that is broken
         onTileBreak: function(tile) {
             return this;
         },
+        //set the position of this object in the scene
+        setPosition: function(x, y) {
+            this._super(x, y);
 
-        //Privates
-        _doSetPos: function(x, y, z) {
-            this._super(x, y, z);
-
-            if(this._hitboxMesh) {
-                this._hitboxMesh.position.set(x, y, z);
-                if(this.hitOffset) {
-                    this._hitboxMesh.translateX(this.hitOffset.x);
-                    this._hitboxMesh.translateY(this.hitOffset.y);
-                }
+            if(x instanceof gf.Vector) {
+                this._hitboxMesh.position.x = x.x;
+                this._hitboxMesh.position.y = x.y;
+            } else if(x instanceof Array) {
+                this._hitboxMesh.position.x = x[0];
+                this._hitboxMesh.position.y = x[1];
+            } else {
+                this._hitboxMesh.position.x = x;
+                this._hitboxMesh.position.y = y;
             }
+
+            if(this.hitOffset) {
+                this._hitboxMesh.position.x += this.hitOffset.x;
+                this._hitboxMesh.position.y += this.hitOffset.y;
+            }
+
+            return this;
         },
+        //Privates
         _createMesh: function() {
             if(this._mesh) return;
 
@@ -288,13 +297,13 @@
             this._materials.push(new THREE.MeshBasicMaterial({ transparent: true }));
 
             //add outline material if needed
-            if(gf.debug.showOutline) {
+            /*if(gf.debug.showOutline) {
                 this._materials.push(new THREE.MeshBasicMaterial({
                     color: gf.debug.outlineColor,
                     wireframe: true,
                     wireframeLinewidth: 1
                 }));
-            }
+            }*/
 
             this._geom = new THREE.PlaneGeometry(this.scaledSize.x, this.scaledSize.y);
             this._mesh = THREE.SceneUtils.createMultiMaterialObject(this._geom, this._materials);//new THREE.Mesh(this._geom, this._materials);
