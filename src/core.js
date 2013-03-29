@@ -7,24 +7,40 @@
 *
 */
 
-/****************************************************************************
- * Global GrapeFruit Object
- ****************************************************************************/
+/**
+ * The base grapefruit object
+ *
+ * @module gf
+ * @main gf
+ */
 window.gf = window.gf || {};
 
 gf.Point = PIXI.Point;
 gf.Texture = PIXI.Texture;
 
-/****************************************************************************
- * GrapeFruit Version
- ****************************************************************************/
+
+/**
+ * The current grapefruit version
+ *
+ * @module gf
+ * @property version
+ * @type String
+ */
 gf.version = '0.0.2';
 
-/****************************************************************************
- * GrapeFruit Type Constants
- ****************************************************************************/
+/**
+ * Constant types for easy use in code
+ *
+ * @module gf
+ * @class types
+ */
 gf.types = {
-    //Entity types
+    /**
+     * Entity types
+     *
+     * @property ENTITY
+     * @type Object
+     */
     ENTITY: {
         PLAYER: 'player',
         ENEMY: 'enemy',
@@ -32,12 +48,22 @@ gf.types = {
         NEUTRAL: 'neutral',
         COLLECTABLE: 'collectable'
     },
-    //Layer types
+    /**
+     * Layer types
+     *
+     * @property LAYER
+     * @type Object
+     */
     LAYER: {
         TILE_LAYER: 'tilelayer',
         OBJECT_GROUP: 'objectgroup' // each zone is defined as an object group
     },
-    //Tile collision types
+    /**
+     * Tile collision types
+     *
+     * @property COLLISION
+     * @type Object
+     */
     COLLISION: {
         NONE: 'none',
         SOLID: 'solid',
@@ -46,14 +72,13 @@ gf.types = {
         WATER: 'water',
         DEEP_WATER: 'deep_water'
     },
-    //Half tile types
-    HALF: {
-        LEFT: 'left',
-        RIGHT: 'right',
-        TOP: 'top',
-        BOTTOM: 'bottom'
-    },
-    //pubsub events
+    /**
+     * Event definitions
+     *
+     * @property EVENT
+     * @type Object
+     * @deprecated
+     */
     EVENT: {
         ENTITY_MOVE: 'gf.entity.move',
         LOADER_START: 'gf.loader.start',
@@ -62,7 +87,13 @@ gf.types = {
         LOADER_LOAD: 'gf.loader.load',
         LOADER_COMPLETE: 'gf.loader.complete'
     },
-    //resource types
+    /**
+     * Resource types
+     *
+     * @property RESOURCE
+     * @type Object
+     * @deprecated
+     */
     RESOURCE: {
         AUDIO: 'audio',
         SOUND: 'sound',
@@ -74,7 +105,12 @@ gf.types = {
         SPRITE: 'sprite',
         IMAGE: 'image'
     },
-    //Bindable keycodes
+    /**
+     * Bindable keycodes
+     *
+     * @property KEY
+     * @type Object
+     */
     KEY: {
         BACKSPACE: 8,
         TAB: 9,
@@ -154,7 +190,12 @@ gf.types = {
         MINUS: 173,
         TILDE: 192
     },
-    //Bindable Mouse Events
+    /**
+     * Bindable Mouse Events
+     *
+     * @property MOUSE
+     * @type Object
+     */
     MOUSE: {
         WHEEL: 'mousewheel',
         MOVE: 'mousemove',
@@ -165,6 +206,12 @@ gf.types = {
         RCLICK: 'contextmenu',
         CONTEXTMENU: 'contextmenu'
     },
+    /**
+     * Bindable Touch Events
+     *
+     * @property TOUCH
+     * @type Object
+     */
     TOUCH: {
         //WHEEL: undefined,
         MOVE: 'touchmove',
@@ -175,7 +222,12 @@ gf.types = {
         //RCLICK: undefined,
         //CONTEXTMENU: undefined
     },
-    //Bindable Gamepad Buttons
+    /**
+     * Bindable Gamepad Buttons
+     *
+     * @property GP_BUTTONS
+     * @type Object
+     */
     GP_BUTTONS: {
         FACE_1: 0, // Face (main) buttons
         FACE_2: 1,
@@ -206,7 +258,12 @@ gf.types = {
 
         return name;
     },
-    //Bindable Gamepad Axes
+    /**
+     * Bindable Gamepad Axes
+     *
+     * @property GP_AXES
+     * @type Object
+     */
     GP_AXES: {
         LEFT_ANALOGUE_HOR: 0,
         LEFT_ANALOGUE_VERT: 1,
@@ -227,26 +284,59 @@ gf.types = {
     }
 };
 
-/****************************************************************************
- * GrapeFruit Browser Support Sniffing
- ****************************************************************************/
+/**
+ * Feature detection so we cans witch between renderers, play audio correctly, and other things.
+ *
+ * @module gf
+ * @class support
+ */
 gf.support = {
-    //user agent
+    /**
+     * The current user agent string
+     *
+     * @property ua
+     * @type String
+     */
     ua: navigator.userAgent.toLowerCase(),
 
-    //canvas supported?
+    /**
+     * Whether or not canvas is supported
+     *
+     * @property canvas
+     * @type bool
+     */
     canvas: !!window.CanvasRenderingContext2D,
 
-    //webgl supported?
+    /**
+     * Whether or not webgl is supported
+     *
+     * @property webgl
+     * @type bool
+     */
     webgl: (function () { try { return !!window.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl'); } catch(e) { return false; } })(),
 
-    //web workers supported?
+    /**
+     * Whether or not web workers are supported
+     *
+     * @property workers
+     * @type bool
+     */
     workers: !!window.Worker,
 
-    //fileapi supported?
+    /**
+     * Whether or not the filesystem API is supported
+     *
+     * @property fileapi
+     * @type bool
+     */
     fileapi: window.File && window.FileReader && window.FileList && window.Blob,
 
-    //can this browser play audio?
+    /**
+     * Whether or not the audio elements are supported, and if so which types
+     *
+     * @property audio
+     * @type Object
+     */
     audio: {
         play: !!document.createElement('audio').canPlayType,
         m4a: false,
@@ -255,13 +345,28 @@ gf.support = {
         wav: false,
     },
 
-    //local storage supported?
+    /**
+     * Whether or not local storage is supported
+     *
+     * @property localStorage
+     * @type bool
+     */
     localStorage: !!window.localStorage,
 
-    //is this a touch device
+    /**
+     * Whether or not touch is supported
+     *
+     * @property touch
+     * @type bool
+     */
     touch: ('createTouch' in document) || ('ontouchstart' in window) || (navigator.isCocoonJS),
 
-    //gamepad API supported?
+    /**
+     * Whether or not the gamepad API is supported
+     *
+     * @property gamepad
+     * @type bool
+     */
     gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') != -1)
 };
 
@@ -285,19 +390,25 @@ if(gf.support.audio.play) {
     }
 }
 
-/****************************************************************************
- * GrapeFruit Version Checking
- ****************************************************************************/
-//returns a number representing how far off a version is.
-//
-//will return a negative value if the first version is behind the second,
-//the negative number will show how many versions behind it is on largest version
-//point.
-//That is: '1.0' compared with '1.1' will yield -1
-//and    : '1.2.3' compared with '1.2.1' will yield -2
-//
-//0 is returned if the versions match, and a positive number is returned if
-//the first version is larger than the second.
+/**
+ * Compares version numbers, useful for plugins to specify a required gf version
+ *
+ * @module gf
+ * @method checkVersion
+ * @param first {String} The first version
+ * @param second {String} The second version
+ * @return
+ *      returns a number representing how far off a version is.
+ *      
+ *      will return a negative value if the first version is behind the second,
+ *      the negative number will show how many versions behind it is on largest version
+ *      point.
+ *      That is: '1.0' compared with '1.1' will yield -1
+ *      and    : '1.2.3' compared with '1.2.1' will yield -2
+ *      
+ *      0 is returned if the versions match, and a positive number is returned if
+ *      the first version is larger than the second.
+ */
 gf.checkVersion = function(first, second) {
     second = second || gf.version;
 
@@ -314,10 +425,6 @@ gf.checkVersion = function(first, second) {
 
     return result ? result : a.length - b.length;
 };
-
-/****************************************************************************
- * Javascript Inheritance Helper (use functional mixins instead?)
- ****************************************************************************/
 
 /* Simple JavaScript Inheritance
  * By John Resig http://ejohn.org/
@@ -382,10 +489,22 @@ Class.extend = function(prop) {
     return Class;
 };
 
-/****************************************************************************
- * High performance clock (thanks mrdoob): https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js
- ****************************************************************************/
 gf.Clock = Class.extend({
+    /**
+     * High performance clock, from mrdoob's Three.js
+     * https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js 
+     *
+     * @module gf
+     * @class Clock
+     * @constructor
+     * @param autoStart {Boolean} Automatically start the counter or not
+     * @example
+     *      var clock = new gf.Clock(false);
+     *      //... some code ...
+     *      clock.start();
+     *      //... some long code ...
+     *      var delta = clock.getDelta();
+     */
     init: function(autoStart) {
         this.autoStart = (autoStart !== undefined) ? autoStart : true;
 
@@ -395,6 +514,13 @@ gf.Clock = Class.extend({
 
         this.running = false;
     },
+    /**
+     * Starts the timer
+     *
+     * @method start
+     * @example
+     *      clock.start();
+     */
     start: function() {
         this.startTime = window.performance !== undefined && window.performance.now !== undefined
                             ? window.performance.now()
@@ -403,15 +529,38 @@ gf.Clock = Class.extend({
         this.oldTime = this.startTime;
         this.running = true;
     },
+    /**
+     * Stops the timer
+     *
+     * @method stop
+     * @example
+     *      clock.stop();
+     */
     stop: function() {
         this.getElapsedTime();
         this.running = false;
     },
+    /**
+     * Gets the total time that the timer has been running
+     *
+     * @method getElapsedTime
+     * @return {Number} Total ellapsed time in ms
+     * @example
+     *      clock.getElapsedTime();
+     */
     getElapsedTime: function() {
         this.getDelta();
 
         return this.elapsedTime;
     },
+    /**
+     * Gets the difference in time since getDelta() was called last
+     *
+     * @method getDelta
+     * @return {Number} Ellapsed time since last call in seconds
+     * @example
+     *      clock.getDelta();
+     */
     getDelta: function() {
         var diff = 0;
 
@@ -434,47 +583,115 @@ gf.Clock = Class.extend({
     }
 });
 
-/****************************************************************************
- * Main game object
- ****************************************************************************/
 (function() {
+    /**
+     * Main game object, controls the entire instance of the game
+     *
+     * @module gf
+     * @class game
+     */
     gf.game = {
-        //array of objects in the scene
+        /**
+         * List of all objects on the stage by id
+         *
+         * @property objects
+         * @type {Object}
+         */
         objects: {},
+
+        /**
+         * Number of objects added to the stage
+         *
+         * @property numObjects
+         * @type {Number}
+         */
         numObjects: 0,
 
-        //special user-defined entity types
-        entTypes: {},
-
-        //maximum Z index, where the camera lies
+        /**
+         * Maximum Z value
+         *
+         * @property MAX_Z
+         * @type {Number}
+         * @default 500
+         * @private
+         * @readOnly
+         */
         MAX_Z: 500,
 
-        //raw PIXI objects that will control rendering
+        /**
+         * Raw PIXI.stage instance
+         *
+         * @property _stage
+         * @type {PIXI.Stage}
+         * @private
+         * @readOnly
+         */
         _stage: new PIXI.Stage(),
-        _clock: new gf.Clock(false),
-        _renderer: null,
-        //_camera: null,
 
-        //id for the next entity to be added
+        /**
+         * Raw gf.Clock instance for internal timing
+         *
+         * @property _clock
+         * @type {gf.Clock}
+         * @private
+         * @readOnly
+         */
+        _clock: new gf.Clock(false),
+
+        /**
+         * Raw rendering engine
+         *
+         * @property _renderer
+         * @type {PIXI.WebGLRenderer|PIXI.CanvasRenderer}
+         * @private
+         * @readOnly
+         */
+        _renderer: null,
+
+        /**
+         * Internal ID counter for object IDs
+         *
+         * @property _nextId
+         * @type {Number}
+         * @private
+         */
         _nextId: Date.now(),
 
-        //the object that will contain the render domElement
+        /**
+         * The domElement that we are rendering into (the container)
+         *
+         * @property _cont
+         * @type {DOMELement}
+         * @private
+         */
         _cont: null,
 
-        //have we initialized the game already?
+        /**
+         * Tracker to see if the game has been initialized yet
+         *
+         * @property _cont
+         * @type {Boolean}
+         * @private
+         */
         _initialized: false,
 
+        /**
+         * Initializes a new game instance, only one allowed
+         *
+         * @method init
+         * @param contId {String} The container for the new canvas we will create for the game
+         * @param opts {Object} Options such as gravity, friction, and renderMethod
+         * @example gf.game.init('myDiv', { renderMethod: 'webgl' });
+         * @return {game} Returns itself for chainability
+         */
         init: function(contId, opts) {
             if(gf.controls._initialized) return;
 
             opts = opts || {};
 
-            gf.game.gravity = (opts.gravity !== undefined ? opts.velocity : 0.98);
+            gf.game.gravity = (opts.gravity !== undefined ? opts.gravity : 0.98);
             gf.game.friction = gf.utils.ensureVector(opts.friction);
 
-            /****************************************************************************
-             * Choose a render method (WebGL or Canvas)
-             ****************************************************************************/
             //if they speciy a method, check if it is available
             if(opts.renderMethod) {
                 if(!gf.support[renderMethod]) {
@@ -502,11 +719,9 @@ gf.Clock = Class.extend({
                 gf.game._renderer = new PIXI.CanvasRenderer(w, h);
             }
 
+            //save rendering method string
             gf.game._renderMethod = renderMethod;
 
-            /****************************************************************************
-             * Setup game container
-             ****************************************************************************/
             //cache the container object
             gf.game._cont = document.getElementById(contId);
 
@@ -514,25 +729,6 @@ gf.Clock = Class.extend({
             gf.game._renderer.view.style['z-index'] = opts.zIndex || 5;
             gf.game._cont.appendChild(gf.game._renderer.view);
 
-            /****************************************************************************
-             * Initialize the camera and lighting
-             ****************************************************************************/
-            //initialize the camera
-            //gf.game._camera = new THREE.OrthographicCamera(w / -2, w / 2, h / 2, h / -2, 1, 1000);
-            //gf.game._camera.position.z = gf.game.MAX_Z;
-
-            //gf.game._scene.addChild(this.camera);
-
-            //add ambient light to the scene
-            //gf.game._scene.addChild(new THREE.AmbientLight(0xffffff));
-
-            //set aspect
-            //window.addEventListener('resize', gf.game.onWindowResize, false);
-            //gf.game.onWindowResize();
-
-            /****************************************************************************
-             * Initialize the various game components
-             ****************************************************************************/
             //initialize the controls
             gf.controls.init();
 
@@ -545,9 +741,6 @@ gf.Clock = Class.extend({
             //initialize gamepad support
             gf.gamepad.init();
 
-            /****************************************************************************
-             * Add some debug elements
-             ****************************************************************************/
             //fps counter
             if(gf.debug.showFps) {
                 gf.debug._fpsCounter = new gf.debug.FpsCounter();
@@ -566,17 +759,22 @@ gf.Clock = Class.extend({
 
             return this;
         },
-        /*onWindowResize: function() {
-            var w = gf.utils.getStyle(gf.game._cont, 'width'),
-                h = gf.utils.getStyle(gf.game._cont, 'height');
-
-            gf.game._renderer.setSize(w, h);
-            gf.game._camera.aspect = w / h;
-            gf.game._camera.updateProjectionMatrix();
-        },*/
+        /**
+         * Gets the next object id for an object
+         *
+         * @method getNextObjectId
+         * @private
+         */
         getNextObjectId: function() {
             return gf.game._nextId++;
         },
+        /**
+         * Adds an object to the current stage
+         *
+         * @method addObject
+         * @param obj {Sprite} The sprite to the stage
+         * @return {game} Returns itself for chainability
+         */
         addObject: function(obj) {
             if(!obj) return this;
 
@@ -588,6 +786,13 @@ gf.Clock = Class.extend({
 
             return this;
         },
+        /**
+         * Removes a sprite from the stage
+         *
+         * @method removeObject
+         * @param obj {Sprite} The sprite to the stage
+         * @return {game} Returns itself for chainability
+         */
         removeObject: function(obj) {
             if(!obj) return;
 
@@ -595,7 +800,7 @@ gf.Clock = Class.extend({
             delete gf.game.objects[obj.id];
             gf.game.numObjects--;
 
-            if(obj.removeFromScene) obj.removeFromScene(gf.game._scene);
+            gf.game._stage.removeChild(obj);
 
             if(obj.type == gf.types.ENTITY.PLAYER)
                 gf.game.player = null;
@@ -607,7 +812,6 @@ gf.Clock = Class.extend({
                 if(gf.resources[world]) world = gf.resources[world].data;
                 else {
                     throw 'World not found in resources!';
-                    return;
                 }
             }
 
@@ -620,37 +824,54 @@ gf.Clock = Class.extend({
 
             return this;
         },
+        /**
+         * Begins the render loop
+         *
+         * @method render
+         * @return {game} Returns itself for chainability
+         */
         render: function() {
             gf.game._clock.start();
             gf.game._tick();
 
             return this;
         },
-        //Check if passed entity collides with any others
-        checkCollisions: function(obj) {
+        /**
+         * Check if passed entity collides with any others
+         *
+         * @method checkCollisions
+         * @param obj {Entity} The sprite to the stage
+         * @return {Array} Returns an array of colliders
+         */
+        checkCollisions: function(ent) {
             var colliders = [];
 
-            if(!obj.isCollidable) return colliders;
+            if(!ent.isCollidable) return colliders;
 
             for(var id in gf.game.objects) {
                 var o = gf.game.objects[id];
 
                 //check if this object collides with any others
-                if(o.inViewport && o.isVisible && o.isCollidable && o.isEntity && (o != obj)) {
-                    var collisionVector = o.checkCollision(obj);
+                if(o.visible && o.collidable && o.entity && (o != ent)) {
+                    var collisionVector = o.checkCollision(ent);
                     if(collisionVector.x !== 0 || collisionVector.y !== 0) {
                         colliders.push({
                             entity: o,
                             vector: collisionVector
-                        });
-                        o.onCollision(obj);
+                        });                        o.onCollision(ent);
                     }
                 }
             }
 
             return colliders;
         },
-        //lock the camera on an entity
+        /**
+         * locks the camera on an entity
+         *
+         * @method cameraTrack
+         * @param ent {Entity} The sprite to the stage
+         * @return {game} Returns itself for chainability
+         */
         cameraTrack: function(ent) {
             if(ent.isEntity) {
                 if(this._trackedEntMoveHandle) {
@@ -684,6 +905,12 @@ gf.Clock = Class.extend({
 
             return this;
         },
+        /**
+         * The looping render tick
+         *
+         * @method _tick
+         * @private
+         */
         _tick: function() {
             //start render loop
             requestAnimationFrame(gf.game._tick);
