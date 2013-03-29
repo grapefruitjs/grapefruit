@@ -10,14 +10,14 @@
 /****************************************************************************
  * Global GrapeFruit Object
  ****************************************************************************/
-var gf = {};
+window.gf = window.gf || {};
 
-gf.event = window.pubsub;
+gf.PIXI = PIXI;
 
 /****************************************************************************
  * GrapeFruit Version
  ****************************************************************************/
-gf.version = '0.0.1';
+gf.version = '0.0.2';
 
 /****************************************************************************
  * GrapeFruit Type Constants
@@ -449,8 +449,8 @@ gf.Clock = Class.extend({
         MAX_Z: 500,
 
         //raw PIXI objects that will control rendering
-        _scene: new PIXI.Stage(),
-        _clock: new PIXI.Clock(false),
+        _stage: new PIXI.Stage(),
+        _clock: new gf.Clock(false),
         _renderer: null,
         //_camera: null,
 
@@ -577,17 +577,13 @@ gf.Clock = Class.extend({
             return gf.game._nextId++;
         },
         addObject: function(obj) {
-            if(!obj) return;
+            if(!obj) return this;
 
             if(!obj.id) obj.id = gf.game.getNextObjectId();
             if(!gf.game.objects[obj.id]) gf.game.numObjects++;
 
             gf.game.objects[obj.id] = obj;
-
-            if(obj.addToScene) obj.addToScene(gf.game._scene);
-
-            if(obj.type == gf.types.ENTITY.PLAYER)
-                gf.game.player = obj;
+            gf.game._stage.addChild(obj);
 
             return this;
         },
@@ -603,22 +599,8 @@ gf.Clock = Class.extend({
             if(obj.type == gf.types.ENTITY.PLAYER)
                 gf.game.player = null;
 
-            //deallocate resources for this entity
-            //gf.game._dealloc(obj._geom, obj._materials);
-            //gf.game._dealloc(obj._hitboxGeom, obj._hitboxMaterial);
-
             return this;
         },
-        /*_dealloc: function(geom, mats) {
-            if(mats) {
-                if(mats instanceof Array) {
-                    mats.forEach(function(mat) { mat.dispose(); });
-                }
-                else mats.dispose();
-            }
-
-            if(geom) geom.dispose();
-        },*/
         loadWorld: function(world) {
             if(typeof world == 'string'){
                 if(gf.resources[world]) world = gf.resources[world].data;
