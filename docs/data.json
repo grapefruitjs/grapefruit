@@ -45,13 +45,60 @@
         },
         "src\\core.js": {
             "name": "src\\core.js",
-            "modules": {},
-            "classes": {},
+            "modules": {
+                "gf": 1
+            },
+            "classes": {
+                "types": 1,
+                "support": 1,
+                "Clock": 1,
+                "game": 1
+            },
             "fors": {},
             "namespaces": {}
         }
     },
-    "modules": {},
+    "modules": {
+        "gf": {
+            "name": "gf",
+            "submodules": {},
+            "classes": {
+                "Sprite": 1,
+                "types": 1,
+                "support": 1,
+                "Clock": 1,
+                "game": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "main",
+            "file": "src\\core.js",
+            "line": 587,
+            "description": "The base grapefruit object",
+            "extends": "PIXI.MovieClip",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "pos",
+                    "description": "The starting position of the sprite",
+                    "type": "Array|Vector|Point"
+                },
+                {
+                    "name": "settings",
+                    "description": "Settings to override the defauls, acceptable values\n         are size {Vector}, name {String}, animations {Object}",
+                    "type": "Object"
+                }
+            ],
+            "example": [
+                "\n     var spr = new gf.Sprite([10, 1], { name: 'MySprite' });"
+            ],
+            "itemtype": "main",
+            "type": "String",
+            "return": {
+                "description": "returns a number representing how far off a version is.\n     \n     will return a negative value if the first version is behind the second,\n     the negative number will show how many versions behind it is on largest version\n     point.\n     That is: '1.0' compared with '1.1' will yield -1\n     and    : '1.2.3' compared with '1.2.1' will yield -2\n     \n     0 is returned if the versions match, and a positive number is returned if\n     the first version is larger than the second."
+            }
+        }
+    },
     "classes": {
         "Sprite": {
             "name": "Sprite",
@@ -61,26 +108,67 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
+            "module": "gf",
+            "namespace": "",
             "file": "src\\entity\\Sprite.js",
             "line": 3,
-            "description": "The base Sprite class. This class is the base for all images on the screen",
-            "extends": "PIXI.MovieClip",
-            "is_constructor": 1,
-            "params": [
-                {
-                    "name": "pos",
-                    "description": "The starting position of the sprite",
-                    "type": "Array|gf.Vector|gf.Point"
-                },
-                {
-                    "name": "settings",
-                    "description": "Settings to override the defauls, acceptable values\n         are size {gf.Vector}, name {String}, animations {Object}",
-                    "type": "Object"
-                }
-            ],
-            "example": [
-                "\n     var spr = new gf.Sprite([10, 1], { name: 'MySprite' });"
-            ]
+            "description": "The base Sprite class. This class is the base for all images on the screen"
+        },
+        "types": {
+            "name": "types",
+            "shortname": "types",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\core.js",
+            "line": 31,
+            "description": "Constant types for easy use in code"
+        },
+        "support": {
+            "name": "support",
+            "shortname": "support",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\core.js",
+            "line": 287,
+            "description": "Feature detection so we cans witch between renderers, play audio correctly, and other things."
+        },
+        "Clock": {
+            "name": "Clock",
+            "shortname": "Clock",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\core.js",
+            "line": 493,
+            "description": "High performance clock, from mrdoob's Three.js\nhttps://github.com/mrdoob/three.js/blob/master/src/core/Clock.js"
+        },
+        "game": {
+            "name": "game",
+            "shortname": "game",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\core.js",
+            "line": 587,
+            "description": "Main game object, controls the entire instance of the game"
         }
     },
     "classitems": [
@@ -110,27 +198,29 @@
         },
         {
             "file": "src\\entity\\Sprite.js",
-            "line": 16,
+            "line": 17,
             "description": "The size of the sprite",
             "itemtype": "property",
             "name": "size",
             "type": "gf.Vector",
             "default": "new gf.Vector(0, 0);",
-            "class": "Sprite"
+            "class": "Sprite",
+            "module": "gf"
         },
         {
             "file": "src\\entity\\Sprite.js",
-            "line": 25,
+            "line": 26,
             "description": "The name of this sprite",
             "itemtype": "property",
             "name": "name",
             "type": "String",
             "default": "''",
-            "class": "Sprite"
+            "class": "Sprite",
+            "module": "gf"
         },
         {
             "file": "src\\entity\\Sprite.js",
-            "line": 56,
+            "line": 57,
             "description": "Defines a new animation on the Sprite",
             "itemtype": "method",
             "name": "addAnimation",
@@ -143,21 +233,22 @@
                 {
                     "name": "frames",
                     "description": "The frames of the animation, you can pass one gf.Texture\n     as a frame, or an Array of gf.Texture's",
-                    "type": "gf.Texture|Array"
+                    "type": "Texture|Array"
                 }
             ],
             "return": {
                 "description": "Returns itself for chainability",
-                "type": "gf.Sprite"
+                "type": "Sprite"
             },
             "example": [
                 "\n     spr.addAnimation('walk-left', new gf.Texture())\n         .addAnimation('walk-right', [new gf.Texture(), new gf.Texture()]);"
             ],
-            "class": "Sprite"
+            "class": "Sprite",
+            "module": "gf"
         },
         {
             "file": "src\\entity\\Sprite.js",
-            "line": 87,
+            "line": 88,
             "description": "Sets the active animation of the sprite, and starts the animation at index 0",
             "itemtype": "method",
             "name": "setActiveAnimation",
@@ -175,43 +266,45 @@
             ],
             "return": {
                 "description": "Returns itself for chainability",
-                "type": "gf.Sprite"
+                "type": "Sprite"
             },
             "example": [
                 "\n     spr.addAnimation('me', new gf.Texture())\n         .setActiveAnimation('me');"
             ],
-            "class": "Sprite"
+            "class": "Sprite",
+            "module": "gf"
         },
         {
             "file": "src\\entity\\Sprite.js",
-            "line": 110,
+            "line": 111,
             "description": "Convenience method for setting the position of the Sprite.",
             "itemtype": "method",
             "name": "setPosition",
             "params": [
                 {
                     "name": "x",
-                    "description": "X coord to put the sprite at.\n      If an Array, gf.Vector, or gf.Point is passed then the y parameter is ignored",
-                    "type": "int|Array|gf.Vector|gf.Point"
+                    "description": "X coord to put the sprite at.\n      If an Array, Vector, or Point is passed then the y parameter is ignored",
+                    "type": "Number|Array|Vector|Point"
                 },
                 {
                     "name": "y",
                     "description": "Y coord to put the sprite at",
-                    "type": "Int"
+                    "type": "Number"
                 }
             ],
             "return": {
                 "description": "Returns itself for chainability",
-                "type": "gf.Sprite"
+                "type": "Sprite"
             },
             "example": [
                 "\n     spr.setPosition(1, 1)\n         .setPosition([5, 5])\n         .setPosition(new gf.Point(10, 10))\n         .setPosition(new gf.Vector(20, 20));"
             ],
-            "class": "Sprite"
+            "class": "Sprite",
+            "module": "gf"
         },
         {
             "file": "src\\entity\\Sprite.js",
-            "line": 139,
+            "line": 140,
             "description": "Checks if the name is the active animation",
             "itemtype": "method",
             "name": "isActiveAnimation",
@@ -224,124 +317,552 @@
             ],
             "return": {
                 "description": "true if the animation is active, false otherwise.",
-                "type": "Bool"
+                "type": "Boolean"
             },
             "example": [
                 "\n     spr.addAnimation('walk-left', new gf.Texture())\n         .isActiveAnimation('walk-left'); //false\n\n     spr.setActiveAnimation('walk-left')\n         .isActiveAnimation('walk-left'); //true"
             ],
-            "class": "Sprite"
+            "class": "Sprite",
+            "module": "gf"
         },
         {
             "file": "src\\entity\\Sprite.js",
-            "line": 155,
+            "line": 156,
             "description": "Frame update stub",
             "itemtype": "method",
             "name": "update",
             "access": "private",
             "tagname": "",
-            "class": "Sprite"
+            "class": "Sprite",
+            "module": "gf"
         },
         {
             "file": "src\\loader\\loader.js",
             "line": 9,
             "description": "Resource format:\n           {\n               name: String,   //key name\n               type: String,   //image, json, xml, texture, world\n               src: String     //url\n           }\nCallbacks format:\n           {\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n\n           }",
-            "class": ""
+            "class": "types",
+            "module": "gf"
         },
         {
             "file": "src\\loader\\loader.js",
             "line": 56,
             "description": "Resources format:\n           [\n               {\n                   name: String,   //key name\n                   type: String,   //image, json, xml, texture, world\n                   src: String     //url\n               },\n               ...\n           ]\nCallbacks format:\n           {\n               start: function(resource),              //when loading of a resource starts\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n               complete: function(resources),          //all resources have completed loading\n           }",
-            "class": ""
+            "class": "types",
+            "module": "gf"
         },
         {
             "file": "src\\utils\\vector.js",
             "line": 1,
             "description": "Based on Vector2 from three.js\nthanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js",
-            "class": ""
+            "class": "types",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
             "line": 1,
             "license": "GrapeFruit Game Engine\nCopyright (c) 2012, Chad Engler\n\nGrapeFruit is licensed under the MIT License.\nhttp://www.opensource.org/licenses/mit-license.php",
-            "class": ""
+            "class": "types",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 10,
-            "description": "Global GrapeFruit Object",
-            "class": ""
+            "line": 38,
+            "description": "Entity types",
+            "itemtype": "property",
+            "name": "ENTITY",
+            "type": "Object",
+            "class": "types",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 18,
-            "description": "GrapeFruit Version",
-            "class": ""
+            "line": 51,
+            "description": "Layer types",
+            "itemtype": "property",
+            "name": "LAYER",
+            "type": "Object",
+            "class": "types",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 23,
-            "description": "GrapeFruit Type Constants",
-            "class": ""
+            "line": 61,
+            "description": "Tile collision types",
+            "itemtype": "property",
+            "name": "COLLISION",
+            "type": "Object",
+            "class": "types",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 230,
-            "description": "GrapeFruit Browser Support Sniffing",
-            "class": ""
+            "line": 75,
+            "description": "Event definitions",
+            "itemtype": "property",
+            "name": "EVENT",
+            "type": "Object",
+            "deprecated": true,
+            "class": "types",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 288,
-            "description": "GrapeFruit Version Checking",
-            "class": ""
+            "line": 90,
+            "description": "Resource types",
+            "itemtype": "property",
+            "name": "RESOURCE",
+            "type": "Object",
+            "deprecated": true,
+            "class": "types",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 108,
+            "description": "Bindable keycodes",
+            "itemtype": "property",
+            "name": "KEY",
+            "type": "Object",
+            "class": "types",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 193,
+            "description": "Bindable Mouse Events",
+            "itemtype": "property",
+            "name": "MOUSE",
+            "type": "Object",
+            "class": "types",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 209,
+            "description": "Bindable Touch Events",
+            "itemtype": "property",
+            "name": "TOUCH",
+            "type": "Object",
+            "class": "types",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 225,
+            "description": "Bindable Gamepad Buttons",
+            "itemtype": "property",
+            "name": "GP_BUTTONS",
+            "type": "Object",
+            "class": "types",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 261,
+            "description": "Bindable Gamepad Axes",
+            "itemtype": "property",
+            "name": "GP_AXES",
+            "type": "Object",
+            "class": "types",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 294,
+            "description": "The current user agent string",
+            "itemtype": "property",
+            "name": "ua",
+            "type": "String",
+            "class": "support",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 302,
+            "description": "Whether or not canvas is supported",
+            "itemtype": "property",
+            "name": "canvas",
+            "type": "bool",
+            "class": "support",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 310,
+            "description": "Whether or not webgl is supported",
+            "itemtype": "property",
+            "name": "webgl",
+            "type": "bool",
+            "class": "support",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
             "line": 318,
-            "description": "Javascript Inheritance Helper (use functional mixins instead?)",
-            "class": ""
+            "description": "Whether or not web workers are supported",
+            "itemtype": "property",
+            "name": "workers",
+            "type": "bool",
+            "class": "support",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 385,
-            "description": "High performance clock (thanks mrdoob): https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js",
-            "class": ""
+            "line": 326,
+            "description": "Whether or not the filesystem API is supported",
+            "itemtype": "property",
+            "name": "fileapi",
+            "type": "bool",
+            "class": "support",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 437,
-            "description": "Main game object",
-            "class": ""
+            "line": 334,
+            "description": "Whether or not the audio elements are supported, and if so which types",
+            "itemtype": "property",
+            "name": "audio",
+            "type": "Object",
+            "class": "support",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 475,
-            "description": "Choose a render method (WebGL or Canvas)",
-            "class": ""
+            "line": 348,
+            "description": "Whether or not local storage is supported",
+            "itemtype": "property",
+            "name": "localStorage",
+            "type": "bool",
+            "class": "support",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 507,
-            "description": "Setup game container",
-            "class": ""
+            "line": 356,
+            "description": "Whether or not touch is supported",
+            "itemtype": "property",
+            "name": "touch",
+            "type": "bool",
+            "class": "support",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 364,
+            "description": "Whether or not the gamepad API is supported",
+            "itemtype": "property",
+            "name": "gamepad",
+            "type": "bool",
+            "class": "support",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
             "line": 517,
-            "description": "Initialize the camera and lighting",
-            "class": ""
+            "description": "Starts the timer",
+            "itemtype": "method",
+            "name": "start",
+            "example": [
+                "\n     clock.start();"
+            ],
+            "class": "Clock",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 533,
-            "description": "Initialize the various game components",
-            "class": ""
+            "line": 532,
+            "description": "Stops the timer",
+            "itemtype": "method",
+            "name": "stop",
+            "example": [
+                "\n     clock.stop();"
+            ],
+            "class": "Clock",
+            "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 548,
-            "description": "Add some debug elements",
-            "class": ""
+            "line": 543,
+            "description": "Gets the total time that the timer has been running",
+            "itemtype": "method",
+            "name": "getElapsedTime",
+            "return": {
+                "description": "Total ellapsed time in ms",
+                "type": "Number"
+            },
+            "example": [
+                "\n     clock.getElapsedTime();"
+            ],
+            "class": "Clock",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 556,
+            "description": "Gets the difference in time since getDelta() was called last",
+            "itemtype": "method",
+            "name": "getDelta",
+            "return": {
+                "description": "Ellapsed time since last call in seconds",
+                "type": "Number"
+            },
+            "example": [
+                "\n     clock.getDelta();"
+            ],
+            "class": "Clock",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 594,
+            "description": "List of all objects on the stage by id",
+            "itemtype": "property",
+            "name": "objects",
+            "type": "{Object}",
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 602,
+            "description": "Number of objects added to the stage",
+            "itemtype": "property",
+            "name": "numObjects",
+            "type": "{Number}",
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 610,
+            "description": "Maximum Z value",
+            "itemtype": "property",
+            "name": "MAX_Z",
+            "type": "{Number}",
+            "default": "500",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 621,
+            "description": "Raw PIXI.stage instance",
+            "itemtype": "property",
+            "name": "_stage",
+            "type": "{PIXI.Stage}",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 631,
+            "description": "Raw gf.Clock instance for internal timing",
+            "itemtype": "property",
+            "name": "_clock",
+            "type": "{gf.Clock}",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 641,
+            "description": "Raw rendering engine",
+            "itemtype": "property",
+            "name": "_renderer",
+            "type": "{PIXI.WebGLRenderer|PIXI.CanvasRenderer}",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 651,
+            "description": "Internal ID counter for object IDs",
+            "itemtype": "property",
+            "name": "_nextId",
+            "type": "{Number}",
+            "access": "private",
+            "tagname": "",
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 660,
+            "description": "The domElement that we are rendering into (the container)",
+            "itemtype": "property",
+            "name": "_cont",
+            "type": "{DOMELement}",
+            "access": "private",
+            "tagname": "",
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 669,
+            "description": "Tracker to see if the game has been initialized yet",
+            "itemtype": "property",
+            "name": "_cont",
+            "type": "{Boolean}",
+            "access": "private",
+            "tagname": "",
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 678,
+            "description": "Initializes a new game instance, only one allowed",
+            "itemtype": "method",
+            "name": "init",
+            "params": [
+                {
+                    "name": "contId",
+                    "description": "The container for the new canvas we will create for the game",
+                    "type": "String"
+                },
+                {
+                    "name": "opts",
+                    "description": "Options such as gravity, friction, and renderMethod",
+                    "type": "Object"
+                }
+            ],
+            "example": [
+                " gf.game.init('myDiv', { renderMethod: 'webgl' });"
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Game"
+            },
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 762,
+            "description": "Gets the next object id for an object",
+            "itemtype": "method",
+            "name": "getNextObjectId",
+            "access": "private",
+            "tagname": "",
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 771,
+            "description": "Adds an object to the current stage",
+            "itemtype": "method",
+            "name": "addObject",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The sprite to the stage",
+                    "type": "Sprite"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Game"
+            },
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 789,
+            "description": "Removes a sprite from the stage",
+            "itemtype": "method",
+            "name": "removeObject",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The sprite to the stage",
+                    "type": "Sprite"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Game"
+            },
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 827,
+            "description": "Begins the render loop",
+            "itemtype": "method",
+            "name": "render",
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Game"
+            },
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 839,
+            "description": "Check if passed entity collides with any others",
+            "itemtype": "method",
+            "name": "checkCollisions",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The sprite to the stage",
+                    "type": "Entity"
+                }
+            ],
+            "return": {
+                "description": "Returns an array of colliders",
+                "type": "Array"
+            },
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 868,
+            "description": "locks the camera on an entity",
+            "itemtype": "method",
+            "name": "cameraTrack",
+            "params": [
+                {
+                    "name": "ent",
+                    "description": "The sprite to the stage",
+                    "type": "Entity"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Game"
+            },
+            "class": "game",
+            "module": "gf"
+        },
+        {
+            "file": "src\\core.js",
+            "line": 908,
+            "description": "The looping render tick",
+            "itemtype": "method",
+            "name": "_tick",
+            "access": "private",
+            "tagname": "",
+            "class": "game",
+            "module": "gf"
         }
     ],
     "warnings": [
@@ -380,58 +901,6 @@
         {
             "message": "Missing item type",
             "line": " src\\core.js:1"
-        },
-        {
-            "message": "Missing item type\nGlobal GrapeFruit Object",
-            "line": " src\\core.js:10"
-        },
-        {
-            "message": "Missing item type\nGrapeFruit Version",
-            "line": " src\\core.js:18"
-        },
-        {
-            "message": "Missing item type\nGrapeFruit Type Constants",
-            "line": " src\\core.js:23"
-        },
-        {
-            "message": "Missing item type\nGrapeFruit Browser Support Sniffing",
-            "line": " src\\core.js:230"
-        },
-        {
-            "message": "Missing item type\nGrapeFruit Version Checking",
-            "line": " src\\core.js:288"
-        },
-        {
-            "message": "Missing item type\nJavascript Inheritance Helper (use functional mixins instead?)",
-            "line": " src\\core.js:318"
-        },
-        {
-            "message": "Missing item type\nHigh performance clock (thanks mrdoob): https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js",
-            "line": " src\\core.js:385"
-        },
-        {
-            "message": "Missing item type\nMain game object",
-            "line": " src\\core.js:437"
-        },
-        {
-            "message": "Missing item type\nChoose a render method (WebGL or Canvas)",
-            "line": " src\\core.js:475"
-        },
-        {
-            "message": "Missing item type\nSetup game container",
-            "line": " src\\core.js:507"
-        },
-        {
-            "message": "Missing item type\nInitialize the camera and lighting",
-            "line": " src\\core.js:517"
-        },
-        {
-            "message": "Missing item type\nInitialize the various game components",
-            "line": " src\\core.js:533"
-        },
-        {
-            "message": "Missing item type\nAdd some debug elements",
-            "line": " src\\core.js:548"
         }
     ]
 }

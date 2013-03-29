@@ -1,9 +1,21 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
-        "Sprite"
+        "Clock",
+        "Sprite",
+        "game",
+        "support",
+        "types"
     ],
-    "modules": [],
-    "allModules": []
+    "modules": [
+        "gf"
+    ],
+    "allModules": [
+        {
+            "displayName": "gf",
+            "name": "gf",
+            "description": "The base grapefruit object"
+        }
+    ]
 } };
 });

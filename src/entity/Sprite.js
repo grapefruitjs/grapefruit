@@ -3,12 +3,13 @@
         /**
          * The base Sprite class. This class is the base for all images on the screen
          *
+         * @module gf
          * @class Sprite
          * @extends PIXI.MovieClip
          * @constructor
-         * @param pos {Array|gf.Vector|gf.Point} The starting position of the sprite
+         * @param pos {Array|Vector|Point} The starting position of the sprite
          * @param settings {Object} Settings to override the defauls, acceptable values
-         *          are size {gf.Vector}, name {String}, animations {Object}
+         *          are size {Vector}, name {String}, animations {Object}
          * @example
          *      var spr = new gf.Sprite([10, 1], { name: 'MySprite' });
          */
@@ -58,9 +59,9 @@
          *
          * @method addAnimation
          * @param name {String} The name of the animation, any string you want to name it
-         * @param frames {gf.Texture|Array} The frames of the animation, you can pass one gf.Texture
+         * @param frames {Texture|Array} The frames of the animation, you can pass one gf.Texture
          *      as a frame, or an Array of gf.Texture's
-         * @return {gf.Sprite} Returns itself for chainability
+         * @return {Sprite} Returns itself for chainability
          * @example
          *      spr.addAnimation('walk-left', new gf.Texture())
          *          .addAnimation('walk-right', [new gf.Texture(), new gf.Texture()]);
@@ -90,7 +91,7 @@
          * @method setActiveAnimation
          * @param name {String} The name of the animation to play (defined with addAnimation());
          * @param cb {Function} Callback when the animation completes, NOT YET IMPLEMENTED
-         * @return {gf.Sprite} Returns itself for chainability
+         * @return {Sprite} Returns itself for chainability
          * @example
          *      spr.addAnimation('me', new gf.Texture())
          *          .setActiveAnimation('me');
@@ -111,10 +112,10 @@
          * Convenience method for setting the position of the Sprite.
          *
          * @method setPosition
-         * @param x {int|Array|gf.Vector|gf.Point} X coord to put the sprite at.
-         *       If an Array, gf.Vector, or gf.Point is passed then the y parameter is ignored
-         * @param y {int} Y coord to put the sprite at
-         * @return {gf.Sprite} Returns itself for chainability
+         * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
+         *       If an Array, Vector, or Point is passed then the y parameter is ignored
+         * @param y {Number} Y coord to put the sprite at
+         * @return {Sprite} Returns itself for chainability
          * @example
          *      spr.setPosition(1, 1)
          *          .setPosition([5, 5])
@@ -141,7 +142,7 @@
          *
          * @method isActiveAnimation
          * @param name {String} The name of the animation to check if it is currently active
-         * @return {bool} true if the animation is active, false otherwise.
+         * @return {Boolean} true if the animation is active, false otherwise.
          * @example
          *      spr.addAnimation('walk-left', new gf.Texture())
          *          .isActiveAnimation('walk-left'); //false
