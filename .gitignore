@@ -1,10 +1,12 @@
 #sublime text 2 files
 *.sublime-*
+*.*~*.TMP
 
 #temp files
 .DS_Store
 Thumbs.db
 Desktop.ini
+npm-debug.log
 
 #vim swap files
 *.sw*
