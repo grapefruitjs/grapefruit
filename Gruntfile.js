@@ -6,6 +6,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-contrib-yuidoc');
 
     //explicity set source files because order is important
     var srcFiles = [
@@ -61,6 +62,8 @@ module.exports = function(grunt) {
         },
         files: {
             vendor: '<%= dirs.vendor %>/**/*js',
+            srcBlob: '<%= dirs.src %>/**/*.js',
+            testBlob: '<%= dirs.test %>/unit/**/*.js',
             intro: '<%= dirs.src %>/intro.js',
             outro: '<%= dirs.src %>/outro.js',
             build: '<%= dirs.build %>/<%= pkg.name %>.js',
@@ -86,6 +89,9 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
+            beforeconcat: ['<%= files.srcBlob %>'],
+            afterconcat: ['<%= files.build %>'],
+            test: ['<%= files.testBlob %>'],
             options: {
                 /* Enforcement options */
                 bitwise: false,     //allow bitwise operators
@@ -102,7 +108,7 @@ module.exports = function(grunt) {
                 plusplus: false,    //you can use unary increment and decrement operators
                 quotmark: true,     //quotes must be consistent
                 unused: true,       //warn about declared but not used variables
-                strict: true,       //require functions to be able to run in strict-mode
+                strict: false,      //do not require functions to be able to run in strict-mode
                 trailing: true,     //help prevent weird whitespace errors in multi-line strings using \ 
                 maxlen: 200,        //no line should be longer than 120 characters
 
@@ -118,7 +124,11 @@ module.exports = function(grunt) {
                 globals: {
                     requirejs: false,
                     require: false,
-                    define: false
+                    define: false,
+                    gf: false,
+                    QUnit: false,
+                    Q: false,
+                    $: false
                 }
             }
         },
@@ -143,6 +153,18 @@ module.exports = function(grunt) {
                     urls: ['http://localhost:' + (grunt.option('port-test') || 9002) + '/test/index.html']
                 }
             }
+        },
+        yuidoc: {
+            compile: {
+                name: '<%= pkg.name %>',
+                description: '<%= pkg.description %>',
+                version: '<%= pkg.version %>',
+                url: '<%= pkg.homepage %>',
+                options: {
+                    paths: '<%= dirs.srcBlob %>',
+                    outdir: '<%= dirs.docs %>'
+                }
+            }
         }
     });
 
@@ -150,4 +172,5 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['concat', 'uglify']);
     grunt.registerTask('build', ['concat', 'uglify']);
     grunt.registerTask('test', ['concat', 'connect:qunit', 'qunit']);
+    grunt.registerTask('docs', ['yuidoc']);
 };
