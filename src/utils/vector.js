@@ -96,7 +96,7 @@
             }
 
             if(this.y > v.y) {
-                this.y v.y;
+                this.y = v.y;
             }
 
             return this;
@@ -145,7 +145,7 @@
             return this.divideScalar(this.length());
         },
         distanceTo: function(v) {
-            return Math.sqrt this.distanceToSquared(v));
+            return Math.sqrt(this.distanceToSquared(v));
         },
         distanceToSquared: function(v) {
             var dx = this.x - v.x, dy = this.y - v.y;
