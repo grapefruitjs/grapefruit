@@ -4,6 +4,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-qunit');
 
     //explicity set source files because order is important
     var srcFiles = [
@@ -85,7 +87,61 @@ module.exports = function(grunt) {
         },
         jshint: {
             options: {
-                browser: true
+                /* Enforcement options */
+                bitwise: false,     //allow bitwise operators
+                camelcase: true,    //must use camelCase or UPPER_CASE
+                curly: false,       //one line conditionals w/o braces are allowed
+                eqeqeq: true,       //must use === if possible
+                forin: true,        //forin loops much check hasOwnProperty
+                immed: true,        //self-calling functions must be wrapped in parens
+                latedef: true,      //can't use a variable until it is defined
+                newcap: true,       //ctor names must be Captialized
+                noarg: true,        //arguments.caller/callee are deprecated, disallow
+                noempty: true,      //warn about empty blocks
+                nonew: true,        //no using `new Constructor();` without saving the value (no using only side-effects)
+                plusplus: false,    //you can use unary increment and decrement operators
+                quotmark: true,     //quotes must be consistent
+                unused: true,       //warn about declared but not used variables
+                strict: true,       //require functions to be able to run in strict-mode
+                trailing: true,     //help prevent weird whitespace errors in multi-line strings using \ 
+                maxlen: 200,        //no line should be longer than 120 characters
+
+                /* Environments */
+                browser: true,      //this runs in a browser :)
+                devel: false,       //warn about using console.log and the like
+                jquery: false,      //no jquery used here
+                node: false,        //no node support...YET! :)
+                worker: true,       //web-workers are used
+
+                /* Globals */
+                undef: true,
+                globals: {
+                    requirejs: false,
+                    require: false,
+                    define: false
+                }
+            }
+        },
+        connect: {
+            qunit: {
+                options: {
+                    port: grunt.option('port-test') | 9002,
+                    base: './'
+                }
+            },
+            test: {
+                options: {
+                    port: grunt.option('port-test') | 9002,
+                    base: './',
+                    keepalive: true
+                }
+            }
+        },
+        qunit: {
+            all: {
+                options: {
+                    urls: ['http://localhost:' + (grunt.option('port-test') || 9002) + '/test/index.html']
+                }
             }
         }
     });
@@ -93,4 +149,5 @@ module.exports = function(grunt) {
     //Load tasks
     grunt.registerTask('default', ['concat', 'uglify']);
     grunt.registerTask('build', ['concat', 'uglify']);
+    grunt.registerTask('test', ['concat', 'connect:qunit', 'qunit']);
 };

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GrapeFruit Test Suite</title>
+
+        <link rel="stylesheet" href="/test/lib/qunit.css" />
+        
+        <!-- QUnit includes -->
+        <script src="/test/lib/qunit.js"></script>
+        <script>
+            window.Q = QUnit; //alias QUnit
+            Q.config.autostart = false;
+        </script>
+    </head>
+    <body>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/build/gf.js"></script>
+        <script type="text/javascript" src="/test/lib/require.js" data-main="testsuite"></script>
+    </body>
+</html>
