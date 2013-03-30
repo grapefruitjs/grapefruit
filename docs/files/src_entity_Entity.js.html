@@ -43,6 +43,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
             
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
@@ -108,66 +110,152 @@
     &#x2F;&#x2F;      - checkSlope
     &#x2F;&#x2F;      - updateMovement (slopes&#x2F;breakable tiles)
     gf.Entity = gf.Sprite.extend({
-        &#x2F;&#x2F;initializes a new entity with the start position (pos)
-        &#x2F;&#x2F;and properties (settings). Many of these properties can
-        &#x2F;&#x2F;be specified in Tiled.
+        &#x2F;**
+         * The base Entity class. This class is the base for all entities interacting on the stage
+         *
+         * @module gf
+         * @class Entity
+         * @extends Sprite
+         * @constructor
+         * @param pos {Array|Vector|Point} The starting position of the entity
+         * @param settings {Object} Settings to override the defauls, acceptable values
+         *          are size {Vector}, name {String}, animations {Object}
+         * @example
+         *      var ent = new gf.Entity([10, 1], { name: &#x27;MyEntity&#x27; });
+         *&#x2F;
         init: function(pos, settings) {
-            &#x2F;****************************************************************************
-             * Properties that are defined in the &#x60;settings&#x60; object,
-             * these can be specified in the properties of the object layer
-             * in Tiled, and overriden on a per-object basis
-             ****************************************************************************&#x2F;
+            &#x2F;**
+             * The type of the entity
+             *
+             * @property type
+             * @type String
+             * @default &#x27;neutral&#x27;
+             *&#x2F;
             this.type = gf.types.ENTITY.NEUTRAL;
 
-            &#x2F;&#x2F;can collide with other entities
+            &#x2F;**
+             * Can it collide with other entities
+             *
+             * @property collidable
+             * @type Boolean
+             * @default true
+             *&#x2F;
             this.collidable = true;
 
-            &#x2F;&#x2F;can collide with the map when moving
+            &#x2F;**
+             * Can collide with the map when moving
+             *
+             * @property mapCollidable
+             * @type Boolean
+             * @default true
+             *&#x2F;
             this.mapCollidable = true;
 
-            &#x2F;&#x2F;is an entity
+            &#x2F;**
+             * Is an entity
+             *
+             * @property mapCollidable
+             * @type Boolean
+             * @default true
+             * @readOnly
+             *&#x2F;
             this.entity = true;
 
-            &#x2F;&#x2F;you can still set these in Tiled by using &quot;x|y&quot; notation
-            &#x2F;&#x2F;velocity of the entity (units per tick)
+            &#x2F;**
+             * The velocity of the entity. You can set these in Tiled by using &quot;x|y&quot; notation
+             * velocity of the entity (units per tick)
+             *
+             * @property velocity
+             * @type Vector
+             * @default new gf.Vector(0, 0)
+             *&#x2F;
             this.velocity = new gf.Vector(0, 0);
 
-            &#x2F;&#x2F;max velocity to cap the entity at (units per tick)
+            &#x2F;**
+             * Max velocity to cap the entity at (units per tick)
+             *
+             * @property maxVelocity
+             * @type Vector
+             * @default new gf.Vector(15, 15)
+             *&#x2F;
             this.maxVelocity = new gf.Vector(15, 15);
 
-            &#x2F;&#x2F;acceleration of the entity when moving (units per second)
+            &#x2F;**
+             * Acceleration of the entity (units per second)
+             *
+             * @property accel
+             * @type Vector
+             * @default new gf.Vector(250, 250)
+             *&#x2F;
             this.accel = new gf.Vector(250, 250);
 
-            &#x2F;&#x2F;size of the hitbox
-            this.hitSize = new gf.Vector(0, 0);
-
-            &#x2F;&#x2F;offset from the center to have the hitbox
-            this.hitOffset = new gf.Vector(0, 0);
-
-            &#x2F;&#x2F;friction to apply to this entities movement
+            &#x2F;**
+             * Friction to apply to this entity
+             *
+             * @property friction
+             * @type Vector
+             * @default 0
+             *&#x2F;
             this.friction = settings.friction || gf.game.friction;
 
-            &#x2F;&#x2F;gravity to apply to this entities movement
+            &#x2F;**
+             * Gravity to apply to this entity
+             *
+             * @property gravity
+             * @type Vector
+             * @default 0.98 (earth&#x27;s gravity)
+             *&#x2F;
             this.gravity = settings.gravity || gf.game.gravity;
 
-            &#x2F;&#x2F;entity alive
+            &#x2F;**
+             * Whether or not the entity is &quot;alive&quot;, advisory only
+             *
+             * @property alive
+             * @type Boolean
+             * @default true
+             *&#x2F;
             this.alive = true;
 
-            &#x2F;&#x2F;entity falling (read only)
+            &#x2F;**
+             * Whether the entity is falling (read only)
+             *
+             * @property falling
+             * @type Boolean
+             * @default false
+             * @readOnly
+             *&#x2F;
             this.falling = false;
 
-            &#x2F;&#x2F;entity jumping (read only)
+            &#x2F;**
+             * Whether the entity is jumping (read only)
+             *
+             * @property jumping
+             * @type Boolean
+             * @default false
+             * @readOnly
+             *&#x2F;
             this.jumping = false;
 
-            &#x2F;&#x2F;entity on a ladder (read only)
+            &#x2F;**
+             * Whether the entity is on a ladder tile (read only)
+             *
+             * @property onladder
+             * @type Boolean
+             * @default false
+             * @readOnly
+             *&#x2F;
             this.onladder = false;
 
-            &#x2F;****************************************************************************
-             * Call base constructor
-             ****************************************************************************&#x2F;
+            &#x2F;&#x2F;call base constructor
             this._super(pos, settings);
         },
-        &#x2F;&#x2F;calculates distance between this object and another
+        &#x2F;**
+         * Calculates distance between this object and another
+         *
+         * @method distanceTo
+         * @param obj {Entity}
+         * @return {Number} Distance between this entity and another
+         *&#x2F;
         distanceTo: function(obj) {
             if(!obj || !obj.position)
                 return -1;
@@ -177,7 +265,13 @@
 
             return Math.sqrt(dx*dx + dy*dy);
         },
-        &#x2F;&#x2F;computes the velocity taking into account gravity, friction, etc
+        &#x2F;**
+         * Computes the velocity taking into account gravity, friction, etc
+         *
+         * @method computeVelocity
+         * @param vel {Vector} The Vector to apply the changes to
+         * @return {Vector} The modified vector
+         *&#x2F;
         computeVelocity: function(vel) {
             &#x2F;&#x2F;apply gravity
             if(this.gravity) {
@@ -196,13 +290,30 @@
             if(vel.x) vel.x = gf.utils.clamp(vel.x, -this.maxVelocity.x, this.maxVelocity.x);
             if(vel.y) vel.y = gf.utils.clamp(vel.y, -this.maxVelocity.y, this.maxVelocity.y);
 
-            return this;
+            return vel;
         },
-        &#x2F;&#x2F;from http:&#x2F;&#x2F;gamedev.stackexchange.com&#x2F;questions&#x2F;586&#x2F;what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
+        &#x2F;**
+         * Checks if this entity intersects with the passed object
+         * from http:&#x2F;&#x2F;gamedev.stackexchange.com&#x2F;questions&#x2F;586&#x2F;what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
+         *
+         * @method intersects
+         * @param obj {Entity} The Entity to check if this intersects with
+         * @return {Boolean}
+         *&#x2F;
         intersects: function(obj)  {
             return (Math.abs(this.position.x - obj.position.x) * 2 &lt; (this.size.x + obj.size.x)) &amp;&amp; 
                     (Math.abs(this.position.y - obj.position.y) * 2 &lt; (this.size.y + obj.size.y));
         },
+        &#x2F;**
+         * Checks if this entity collides with the passed Entity, a penetration vector is calculated.
+         * This method is called from gf.game.checkCollisions(ent); That method will use this to check
+         * for any collisions between that entity and all the others on the stage.
+         * from http:&#x2F;&#x2F;gamedev.stackexchange.com&#x2F;questions&#x2F;586&#x2F;what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
+         *
+         * @method checkCollision
+         * @param obj {Entity} The Entity to check if this entity collides with
+         * @return {Vector}
+         *&#x2F;
         checkCollision: function(obj) {
             &#x2F;&#x2F;response vector
             var p = new gf.Vector(0, 0);
@@ -220,6 +331,13 @@
 
             return p;
         },
+        &#x2F;**
+         * Calculate the velocity of the entity, and then apply it. This is different than moveEntity
+         * because it checks for map collisions, and applies gravity and friction with computeVelocity
+         *
+         * @method updateMovement
+         * @return {Array} Returns the map colliders that the entity is interacting with
+         *&#x2F;
         updateMovement: function() {
             if(this.velocity.x === 0 &amp;&amp; this.velocity.y === 0)
                 return;
@@ -269,6 +387,13 @@
 
             return colliders;
         },
+        &#x2F;**
+         * Moves the entity to a new position using the velocity.
+         *
+         * @method moveEntity
+         * @param vel {Vector} The optional velocity to move the entity. 
+         * @return {Entity} Returns itself for chainability
+         *&#x2F;
         moveEntity: function(vel) {
             &#x2F;&#x2F;param will override the entities current velocity
             vel = vel || this.velocity;
@@ -285,26 +410,41 @@
 
             return this;
         },
-        &#x2F;&#x2F;On Collision Event
-        &#x2F;&#x2F; called when this object is collided into by another, by default if something collides with
-        &#x2F;&#x2F; a collectable entity we remove the collectable
-        &#x2F;&#x2F;vec - Collision Vector (gf.Vector)
-        &#x2F;&#x2F;obj - Colliding object (gf.Entity)
+        &#x2F;**
+         * On Collision Event
+         *      called when this object is collided into by another, by default if something collides with
+         *      a collectable entity we remove the collectable
+         *
+         * @method moveEntity
+         * @param vel {Vector} Collision Vector
+         * @param obj {Entity} Colliding object
+         * @return {Entity} Returns itself for chainability
+         *&#x2F;
         onCollision: function(vec, obj) {
             if(this.collidable &amp;&amp; this.type == gf.types.ENTIY.COLLECTABLE)
                 gf.game.removeObject(this);
 
             return this;
         },
-        &#x2F;&#x2F;On Move Event
-        &#x2F;&#x2F; called when this entity moves
-        &#x2F;&#x2F;vel - Velocity the entity moved (gf.Vector)
+        &#x2F;**
+         * On Move Event
+         *      called when this entity moves
+         *
+         * @method moveEntity
+         * @param vel {Vector} Velocity the entity moved
+         * @return {Entity} Returns itself for chainability
+         *&#x2F;
         onMove: function(vel) {
             return this;
         },
-        &#x2F;&#x2F;On Break Tile Event
-        &#x2F;&#x2F; called when a tile is broken
-        &#x2F;&#x2F;tile - the tile that is broken
+        &#x2F;**
+         * On Break Tile Event
+         *      called when a tile is broken
+         *
+         * @method moveEntity
+         * @param tile {Unkown} the tile that is broken
+         * @return {Entity} Returns itself for chainability
+         *&#x2F;
         onBreakTile: function(tile) {
             return this;
         }

@@ -16,7 +16,9 @@
         "src\\entity\\Entity.js": {
             "name": "src\\entity\\Entity.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "Entity": 1
+            },
             "fors": {},
             "namespaces": {}
         },
@@ -63,6 +65,7 @@
             "name": "gf",
             "submodules": {},
             "classes": {
+                "Entity": 1,
                 "Sprite": 1,
                 "types": 1,
                 "support": 1,
@@ -75,12 +78,12 @@
             "file": "src\\core.js",
             "line": 587,
             "description": "The base grapefruit object",
-            "extends": "PIXI.MovieClip",
+            "extends": "Sprite",
             "is_constructor": 1,
             "params": [
                 {
                     "name": "pos",
-                    "description": "The starting position of the sprite",
+                    "description": "The starting position of the entity",
                     "type": "Array|Vector|Point"
                 },
                 {
@@ -90,7 +93,7 @@
                 }
             ],
             "example": [
-                "\n     var spr = new gf.Sprite([10, 1], { name: 'MySprite' });"
+                "\n     var ent = new gf.Entity([10, 1], { name: 'MyEntity' });"
             ],
             "itemtype": "main",
             "type": "String",
@@ -100,6 +103,20 @@
         }
     },
     "classes": {
+        "Entity": {
+            "name": "Entity",
+            "shortname": "Entity",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\entity\\Entity.js",
+            "line": 13,
+            "description": "The base Entity class. This class is the base for all entities interacting on the stage"
+        },
         "Sprite": {
             "name": "Sprite",
             "shortname": "Sprite",
@@ -176,25 +193,338 @@
             "file": "src\\debug\\debug.js",
             "line": 40,
             "description": "DebugInfo box that displays live-updaing debug info",
-            "class": "Sprite"
+            "class": "Entity"
         },
         {
             "file": "src\\debug\\debug.js",
             "line": 141,
             "description": "mrdoob's stats.js (stats.js r10 - http://github.com/mrdoob/stats.js)",
-            "class": "Sprite"
+            "class": "Entity"
         },
         {
             "file": "src\\entity\\Entity.js",
-            "line": 17,
-            "description": "Properties that are defined in the `settings` object,\nthese can be specified in the properties of the object layer\nin Tiled, and overriden on a per-object basis",
-            "class": "Sprite"
+            "line": 27,
+            "description": "The type of the entity",
+            "itemtype": "property",
+            "name": "type",
+            "type": "String",
+            "default": "'neutral'",
+            "class": "Entity",
+            "module": "gf"
         },
         {
             "file": "src\\entity\\Entity.js",
-            "line": 67,
-            "description": "Call base constructor",
-            "class": "Sprite"
+            "line": 36,
+            "description": "Can it collide with other entities",
+            "itemtype": "property",
+            "name": "collidable",
+            "type": "Boolean",
+            "default": "true",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 45,
+            "description": "Can collide with the map when moving",
+            "itemtype": "property",
+            "name": "mapCollidable",
+            "type": "Boolean",
+            "default": "true",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 54,
+            "description": "Is an entity",
+            "itemtype": "property",
+            "name": "mapCollidable",
+            "type": "Boolean",
+            "default": "true",
+            "readonly": "",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 64,
+            "description": "The velocity of the entity. You can set these in Tiled by using \"x|y\" notation\nvelocity of the entity (units per tick)",
+            "itemtype": "property",
+            "name": "velocity",
+            "type": "Vector",
+            "default": "new gf.Vector(0, 0)",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 74,
+            "description": "Max velocity to cap the entity at (units per tick)",
+            "itemtype": "property",
+            "name": "maxVelocity",
+            "type": "Vector",
+            "default": "new gf.Vector(15, 15)",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 83,
+            "description": "Acceleration of the entity (units per second)",
+            "itemtype": "property",
+            "name": "accel",
+            "type": "Vector",
+            "default": "new gf.Vector(250, 250)",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 92,
+            "description": "Friction to apply to this entity",
+            "itemtype": "property",
+            "name": "friction",
+            "type": "Vector",
+            "default": "0",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 101,
+            "description": "Gravity to apply to this entity",
+            "itemtype": "property",
+            "name": "gravity",
+            "type": "Vector",
+            "default": "0.98 (earth's gravity)",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 110,
+            "description": "Whether or not the entity is \"alive\", advisory only",
+            "itemtype": "property",
+            "name": "alive",
+            "type": "Boolean",
+            "default": "true",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 119,
+            "description": "Whether the entity is falling (read only)",
+            "itemtype": "property",
+            "name": "falling",
+            "type": "Boolean",
+            "default": "false",
+            "readonly": "",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 129,
+            "description": "Whether the entity is jumping (read only)",
+            "itemtype": "property",
+            "name": "jumping",
+            "type": "Boolean",
+            "default": "false",
+            "readonly": "",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 139,
+            "description": "Whether the entity is on a ladder tile (read only)",
+            "itemtype": "property",
+            "name": "onladder",
+            "type": "Boolean",
+            "default": "false",
+            "readonly": "",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 152,
+            "description": "Calculates distance between this object and another",
+            "itemtype": "method",
+            "name": "distanceTo",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "",
+                    "type": "Entity"
+                }
+            ],
+            "return": {
+                "description": "Distance between this entity and another",
+                "type": "Number"
+            },
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 168,
+            "description": "Computes the velocity taking into account gravity, friction, etc",
+            "itemtype": "method",
+            "name": "computeVelocity",
+            "params": [
+                {
+                    "name": "vel",
+                    "description": "The Vector to apply the changes to",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "The modified vector",
+                "type": "Vector"
+            },
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 195,
+            "description": "Checks if this entity intersects with the passed object\nfrom http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection",
+            "itemtype": "method",
+            "name": "intersects",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The Entity to check if this intersects with",
+                    "type": "Entity"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 207,
+            "description": "Checks if this entity collides with the passed Entity, a penetration vector is calculated.\nThis method is called from gf.game.checkCollisions(ent); That method will use this to check\nfor any collisions between that entity and all the others on the stage.\nfrom http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection",
+            "itemtype": "method",
+            "name": "checkCollision",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The Entity to check if this entity collides with",
+                    "type": "Entity"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Vector"
+            },
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 234,
+            "description": "Calculate the velocity of the entity, and then apply it. This is different than moveEntity\nbecause it checks for map collisions, and applies gravity and friction with computeVelocity",
+            "itemtype": "method",
+            "name": "updateMovement",
+            "return": {
+                "description": "Returns the map colliders that the entity is interacting with",
+                "type": "Array"
+            },
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 290,
+            "description": "Moves the entity to a new position using the velocity.",
+            "itemtype": "method",
+            "name": "moveEntity",
+            "params": [
+                {
+                    "name": "vel",
+                    "description": "The optional velocity to move the entity.",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Entity"
+            },
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 313,
+            "description": "On Collision Event\n     called when this object is collided into by another, by default if something collides with\n     a collectable entity we remove the collectable",
+            "itemtype": "method",
+            "name": "moveEntity",
+            "params": [
+                {
+                    "name": "vel",
+                    "description": "Collision Vector",
+                    "type": "Vector"
+                },
+                {
+                    "name": "obj",
+                    "description": "Colliding object",
+                    "type": "Entity"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Entity"
+            },
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 329,
+            "description": "On Move Event\n     called when this entity moves",
+            "itemtype": "method",
+            "name": "moveEntity",
+            "params": [
+                {
+                    "name": "vel",
+                    "description": "Velocity the entity moved",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Entity"
+            },
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 340,
+            "description": "On Break Tile Event\n     called when a tile is broken",
+            "itemtype": "method",
+            "name": "moveEntity",
+            "params": [
+                {
+                    "name": "tile",
+                    "description": "the tile that is broken",
+                    "type": "Unkown"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Entity"
+            },
+            "class": "Entity",
+            "module": "gf"
         },
         {
             "file": "src\\entity\\Sprite.js",
@@ -877,14 +1207,6 @@
         {
             "message": "Missing item type\nmrdoob's stats.js (stats.js r10 - http://github.com/mrdoob/stats.js)",
             "line": " src\\debug\\debug.js:141"
-        },
-        {
-            "message": "Missing item type\nProperties that are defined in the `settings` object,\nthese can be specified in the properties of the object layer\nin Tiled, and overriden on a per-object basis",
-            "line": " src\\entity\\Entity.js:17"
-        },
-        {
-            "message": "Missing item type\nCall base constructor",
-            "line": " src\\entity\\Entity.js:67"
         },
         {
             "message": "Missing item type\nResource format:\n           {\n               name: String,   //key name\n               type: String,   //image, json, xml, texture, world\n               src: String     //url\n           }\nCallbacks format:\n           {\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n\n           }",

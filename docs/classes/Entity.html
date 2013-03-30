@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>game - gf</title>
+    <title>Entity - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -94,7 +94,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>game Class</h1>
+                        <h1>Entity Class</h1>
 <div class="box meta">
     
 
@@ -102,7 +102,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l587"><code>src\core.js:587</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l13"><code>src\entity\Entity.js:13</code></a>
         </div>
     
 
@@ -118,7 +118,7 @@
 
 
 <div class="box intro">
-    <p>Main game object, controls the entire instance of the game</p>
+    <p>The base Entity class. This class is the base for all entities interacting on the stage</p>
 </div>
 
 
@@ -147,57 +147,64 @@
 
                     <ul class="index-list methods">
                         
-                            <li class="index-item method private">
-                                <a href="#method__tick">_tick</a>
+                            <li class="index-item method">
+                                <a href="#method_checkCollision">checkCollision</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_addObject">addObject</a>
+                                <a href="#method_computeVelocity">computeVelocity</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_cameraTrack">cameraTrack</a>
+                                <a href="#method_distanceTo">distanceTo</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_checkCollisions">checkCollisions</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_getNextObjectId">getNextObjectId</a>
+                                <a href="#method_intersects">intersects</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_init">init</a>
+                                <a href="#method_moveEntity">moveEntity</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_removeObject">removeObject</a>
+                                <a href="#method_moveEntity">moveEntity</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_render">render</a>
+                                <a href="#method_moveEntity">moveEntity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_moveEntity">moveEntity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_updateMovement">updateMovement</a>
 
                                 
                                 
@@ -213,64 +220,92 @@
 
                     <ul class="index-list properties">
                         
-                            <li class="index-item property private">
-                                <a href="#property__clock">_clock</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property__cont">_cont</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property__cont">_cont</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property__nextId">_nextId</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property__renderer">_renderer</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property__stage">_stage</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property_MAX_Z">MAX_Z</a>
+                            <li class="index-item property">
+                                <a href="#property_accel">accel</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_numObjects">numObjects</a>
+                                <a href="#property_alive">alive</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_objects">objects</a>
+                                <a href="#property_collidable">collidable</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_falling">falling</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_friction">friction</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_gravity">gravity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_jumping">jumping</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_mapCollidable">mapCollidable</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_mapCollidable">mapCollidable</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_maxVelocity">maxVelocity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_onladder">onladder</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_type">type</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_velocity">velocity</a>
 
                                 
                                 
@@ -290,64 +325,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method__tick" class="method item private">
-    <h3 class="name"><code>_tick</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l908"><code>src\core.js:908</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The looping render tick</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_addObject" class="method item">
-    <h3 class="name"><code>addObject</code></h3>
+                    <div id="method_checkCollision" class="method item">
+    <h3 class="name"><code>checkCollision</code></h3>
 
     
         <div class="args">
@@ -365,7 +344,7 @@
 
     
         <span class="returns-inline">
-            <span class="type">Game</span>
+            <span class="type">Vector</span>
         </span>
     
 
@@ -392,7 +371,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l771"><code>src\core.js:771</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l207"><code>src\entity\Entity.js:207</code></a>
         
         </p>
 
@@ -403,7 +382,10 @@
     </div>
 
     <div class="description">
-        <p>Adds an object to the current stage</p>
+        <p>Checks if this entity collides with the passed Entity, a penetration vector is calculated.
+This method is called from gf.game.checkCollisions(ent); That method will use this to check
+for any collisions between that entity and all the others on the stage.
+from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection</p>
     </div>
 
     
@@ -415,13 +397,13 @@
                 <li class="param">
                     
                         <code class="param-name">obj</code>
-                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The sprite to the stage</p>
+                        <p>The Entity to check if this entity collides with</p>
                     </div>
 
                     
@@ -438,9 +420,8 @@
             <div class="returns-description">
                 
                     
-                        <span class="type">Game</span>:
+                        <span class="type">Vector</span>:
                     
-                    Returns itself for chainability
                 
             </div>
         </div>
@@ -450,8 +431,8 @@
 </div>
 
                 
-                    <div id="method_cameraTrack" class="method item">
-    <h3 class="name"><code>cameraTrack</code></h3>
+                    <div id="method_computeVelocity" class="method item">
+    <h3 class="name"><code>computeVelocity</code></h3>
 
     
         <div class="args">
@@ -459,7 +440,7 @@
             
                 <li class="arg">
                     
-                        <code>ent</code>
+                        <code>vel</code>
                     
                 </li>
             
@@ -469,7 +450,7 @@
 
     
         <span class="returns-inline">
-            <span class="type">Game</span>
+            <span class="type">Vector</span>
         </span>
     
 
@@ -496,7 +477,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l868"><code>src\core.js:868</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l168"><code>src\entity\Entity.js:168</code></a>
         
         </p>
 
@@ -507,7 +488,7 @@
     </div>
 
     <div class="description">
-        <p>locks the camera on an entity</p>
+        <p>Computes the velocity taking into account gravity, friction, etc</p>
     </div>
 
     
@@ -518,14 +499,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">ent</code>
-                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
+                        <code class="param-name">vel</code>
+                        <span class="type">Vector</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The sprite to the stage</p>
+                        <p>The Vector to apply the changes to</p>
                     </div>
 
                     
@@ -542,9 +523,9 @@
             <div class="returns-description">
                 
                     
-                        <span class="type">Game</span>:
+                        <span class="type">Vector</span>:
                     
-                    Returns itself for chainability
+                    The modified vector
                 
             </div>
         </div>
@@ -554,8 +535,8 @@
 </div>
 
                 
-                    <div id="method_checkCollisions" class="method item">
-    <h3 class="name"><code>checkCollisions</code></h3>
+                    <div id="method_distanceTo" class="method item">
+    <h3 class="name"><code>distanceTo</code></h3>
 
     
         <div class="args">
@@ -569,6 +550,645 @@
             
             </ul><span class="paren">)</span>
         </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Number</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l152"><code>src\entity\Entity.js:152</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Calculates distance between this object and another</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">obj</code>
+                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Number</span>:
+                    
+                    Distance between this entity and another
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_intersects" class="method item">
+    <h3 class="name"><code>intersects</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>obj</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l195"><code>src\entity\Entity.js:195</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Checks if this entity intersects with the passed object
+from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">obj</code>
+                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The Entity to check if this intersects with</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_moveEntity" class="method item">
+    <h3 class="name"><code>moveEntity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>vel</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l290"><code>src\entity\Entity.js:290</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Moves the entity to a new position using the velocity.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">vel</code>
+                        <span class="type">Vector</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The optional velocity to move the entity.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>:
+                    
+                    Returns itself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_moveEntity" class="method item">
+    <h3 class="name"><code>moveEntity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>vel</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>obj</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l313"><code>src\entity\Entity.js:313</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>On Collision Event
+     called when this object is collided into by another, by default if something collides with
+     a collectable entity we remove the collectable</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">vel</code>
+                        <span class="type">Vector</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Collision Vector</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">obj</code>
+                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Colliding object</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>:
+                    
+                    Returns itself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_moveEntity" class="method item">
+    <h3 class="name"><code>moveEntity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>vel</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l329"><code>src\entity\Entity.js:329</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>On Move Event
+     called when this entity moves</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">vel</code>
+                        <span class="type">Vector</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Velocity the entity moved</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>:
+                    
+                    Returns itself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_moveEntity" class="method item">
+    <h3 class="name"><code>moveEntity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>tile</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l340"><code>src\entity\Entity.js:340</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>On Break Tile Event
+     called when a tile is broken</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">tile</code>
+                        <span class="type">Unkown</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the tile that is broken</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>:
+                    
+                    Returns itself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_updateMovement" class="method item">
+    <h3 class="name"><code>updateMovement</code></h3>
+
+    
+        <span class="paren">()</span>
     
 
     
@@ -600,7 +1220,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l839"><code>src\core.js:839</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l234"><code>src\entity\Entity.js:234</code></a>
         
         </p>
 
@@ -611,32 +1231,10 @@
     </div>
 
     <div class="description">
-        <p>Check if passed entity collides with any others</p>
+        <p>Calculate the velocity of the entity, and then apply it. This is different than moveEntity
+because it checks for map collisions, and applies gravity and friction with computeVelocity</p>
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">obj</code>
-                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The sprite to the stage</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -648,371 +1246,7 @@
                     
                         <span class="type">Array</span>:
                     
-                    Returns an array of colliders
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_getNextObjectId" class="method item private">
-    <h3 class="name"><code>getNextObjectId</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l762"><code>src\core.js:762</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Gets the next object id for an object</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_init" class="method item">
-    <h3 class="name"><code>init</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>contId</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>opts</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Game</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l678"><code>src\core.js:678</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Initializes a new game instance, only one allowed</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">contId</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The container for the new canvas we will create for the game</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">opts</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Options such as gravity, friction, and renderMethod</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Game</span>:
-                    
-                    Returns itself for chainability
-                
-            </div>
-        </div>
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <p>gf.game.init('myDiv', { renderMethod: 'webgl' });</p>
-            </div>
-        </div>
-    
-</div>
-
-                
-                    <div id="method_removeObject" class="method item">
-    <h3 class="name"><code>removeObject</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>obj</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Game</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l789"><code>src\core.js:789</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Removes a sprite from the stage</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">obj</code>
-                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The sprite to the stage</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Game</span>:
-                    
-                    Returns itself for chainability
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_render" class="method item">
-    <h3 class="name"><code>render</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Game</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l827"><code>src\core.js:827</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Begins the render loop</p>
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Game</span>:
-                    
-                    Returns itself for chainability
+                    Returns the map colliders that the entity is interacting with
                 
             </div>
         </div>
@@ -1030,60 +1264,12 @@
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property__clock" class="property item private">
-    <h3 class="name"><code>_clock</code></h3>
-    <span class="type">gf.Clock</span>
+                    <div id="property_accel" class="property item">
+    <h3 class="name"><code>accel</code></h3>
+    <span class="type">Vector</span>
 
     
 
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l631"><code>src\core.js:631</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Raw gf.Clock instance for internal timing</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property__cont" class="property item private">
-    <h3 class="name"><code>_cont</code></h3>
-    <span class="type">DOMELement</span>
-
-    
-
-    
-        <span class="flag private">private</span>
     
 
     
@@ -1101,7 +1287,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l660"><code>src\core.js:660</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l83"><code>src\entity\Entity.js:83</code></a>
         
         </p>
 
@@ -1111,9 +1297,11 @@
     </div>
 
     <div class="description">
-        <p>The domElement that we are rendering into (the container)</p>
+        <p>Acceleration of the entity (units per second)</p>
     </div>
 
+    
+        <p><strong>Default:</strong> new gf.Vector(250, 250)</p>
     
 
     
@@ -1122,15 +1310,13 @@
 </div>
 
                 
-                    <div id="property__cont" class="property item private">
-    <h3 class="name"><code>_cont</code></h3>
+                    <div id="property_alive" class="property item">
+    <h3 class="name"><code>alive</code></h3>
     <span class="type">Boolean</span>
 
     
 
     
-        <span class="flag private">private</span>
-    
 
     
 
@@ -1147,7 +1333,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l669"><code>src\core.js:669</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l110"><code>src\entity\Entity.js:110</code></a>
         
         </p>
 
@@ -1157,9 +1343,11 @@
     </div>
 
     <div class="description">
-        <p>Tracker to see if the game has been initialized yet</p>
+        <p>Whether or not the entity is "alive", advisory only</p>
     </div>
 
+    
+        <p><strong>Default:</strong> true</p>
     
 
     
@@ -1168,14 +1356,12 @@
 </div>
 
                 
-                    <div id="property__nextId" class="property item private">
-    <h3 class="name"><code>_nextId</code></h3>
-    <span class="type">Number</span>
+                    <div id="property_collidable" class="property item">
+    <h3 class="name"><code>collidable</code></h3>
+    <span class="type">Boolean</span>
 
     
 
-    
-        <span class="flag private">private</span>
     
 
     
@@ -1193,7 +1379,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l651"><code>src\core.js:651</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l36"><code>src\entity\Entity.js:36</code></a>
         
         </p>
 
@@ -1203,9 +1389,11 @@
     </div>
 
     <div class="description">
-        <p>Internal ID counter for object IDs</p>
+        <p>Can it collide with other entities</p>
     </div>
 
+    
+        <p><strong>Default:</strong> true</p>
     
 
     
@@ -1214,14 +1402,12 @@
 </div>
 
                 
-                    <div id="property__renderer" class="property item private">
-    <h3 class="name"><code>_renderer</code></h3>
-    <span class="type">PIXI.WebGLRenderer | PIXI.CanvasRenderer</span>
+                    <div id="property_falling" class="property item">
+    <h3 class="name"><code>falling</code></h3>
+    <span class="type">Boolean</span>
 
     
 
-    
-        <span class="flag private">private</span>
     
 
     
@@ -1239,7 +1425,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l641"><code>src\core.js:641</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l119"><code>src\entity\Entity.js:119</code></a>
         
         </p>
 
@@ -1249,9 +1435,11 @@
     </div>
 
     <div class="description">
-        <p>Raw rendering engine</p>
+        <p>Whether the entity is falling (read only)</p>
     </div>
 
+    
+        <p><strong>Default:</strong> false</p>
     
 
     
@@ -1260,14 +1448,12 @@
 </div>
 
                 
-                    <div id="property__stage" class="property item private">
-    <h3 class="name"><code>_stage</code></h3>
-    <span class="type">PIXI.Stage</span>
+                    <div id="property_friction" class="property item">
+    <h3 class="name"><code>friction</code></h3>
+    <span class="type">Vector</span>
 
     
 
-    
-        <span class="flag private">private</span>
     
 
     
@@ -1285,7 +1471,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l621"><code>src\core.js:621</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l92"><code>src\entity\Entity.js:92</code></a>
         
         </p>
 
@@ -1295,9 +1481,11 @@
     </div>
 
     <div class="description">
-        <p>Raw PIXI.stage instance</p>
+        <p>Friction to apply to this entity</p>
     </div>
 
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -1306,14 +1494,12 @@
 </div>
 
                 
-                    <div id="property_MAX_Z" class="property item private">
-    <h3 class="name"><code>MAX_Z</code></h3>
-    <span class="type">Number</span>
+                    <div id="property_gravity" class="property item">
+    <h3 class="name"><code>gravity</code></h3>
+    <span class="type">Vector</span>
 
     
 
-    
-        <span class="flag private">private</span>
     
 
     
@@ -1331,7 +1517,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l610"><code>src\core.js:610</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l101"><code>src\entity\Entity.js:101</code></a>
         
         </p>
 
@@ -1341,11 +1527,11 @@
     </div>
 
     <div class="description">
-        <p>Maximum Z value</p>
+        <p>Gravity to apply to this entity</p>
     </div>
 
     
-        <p><strong>Default:</strong> 500</p>
+        <p><strong>Default:</strong> 0.98 (earth&#x27;s gravity)</p>
     
 
     
@@ -1354,9 +1540,9 @@
 </div>
 
                 
-                    <div id="property_numObjects" class="property item">
-    <h3 class="name"><code>numObjects</code></h3>
-    <span class="type">Number</span>
+                    <div id="property_jumping" class="property item">
+    <h3 class="name"><code>jumping</code></h3>
+    <span class="type">Boolean</span>
 
     
 
@@ -1377,7 +1563,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l602"><code>src\core.js:602</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l129"><code>src\entity\Entity.js:129</code></a>
         
         </p>
 
@@ -1387,9 +1573,11 @@
     </div>
 
     <div class="description">
-        <p>Number of objects added to the stage</p>
+        <p>Whether the entity is jumping (read only)</p>
     </div>
 
+    
+        <p><strong>Default:</strong> false</p>
     
 
     
@@ -1398,9 +1586,9 @@
 </div>
 
                 
-                    <div id="property_objects" class="property item">
-    <h3 class="name"><code>objects</code></h3>
-    <span class="type">Object</span>
+                    <div id="property_mapCollidable" class="property item">
+    <h3 class="name"><code>mapCollidable</code></h3>
+    <span class="type">Boolean</span>
 
     
 
@@ -1421,7 +1609,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l594"><code>src\core.js:594</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l45"><code>src\entity\Entity.js:45</code></a>
         
         </p>
 
@@ -1431,9 +1619,242 @@
     </div>
 
     <div class="description">
-        <p>List of all objects on the stage by id</p>
+        <p>Can collide with the map when moving</p>
     </div>
 
+    
+        <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_mapCollidable" class="property item">
+    <h3 class="name"><code>mapCollidable</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l54"><code>src\entity\Entity.js:54</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Is an entity</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_maxVelocity" class="property item">
+    <h3 class="name"><code>maxVelocity</code></h3>
+    <span class="type">Vector</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l74"><code>src\entity\Entity.js:74</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Max velocity to cap the entity at (units per tick)</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> new gf.Vector(15, 15)</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_onladder" class="property item">
+    <h3 class="name"><code>onladder</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l139"><code>src\entity\Entity.js:139</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Whether the entity is on a ladder tile (read only)</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_type" class="property item">
+    <h3 class="name"><code>type</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l27"><code>src\entity\Entity.js:27</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The type of the entity</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;neutral&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_velocity" class="property item">
+    <h3 class="name"><code>velocity</code></h3>
+    <span class="type">Vector</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l64"><code>src\entity\Entity.js:64</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The velocity of the entity. You can set these in Tiled by using "x|y" notation
+velocity of the entity (units per tick)</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> new gf.Vector(0, 0)</p>
     
 
     
