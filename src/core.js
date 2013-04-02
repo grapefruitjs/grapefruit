@@ -5,6 +5,27 @@
 * GrapeFruit is licensed under the MIT License.
 * http://www.opensource.org/licenses/mit-license.php
 *
+* Known Limiting Features:
+*   - Canvas
+*       - IE 9+
+*       - FF 2+
+*       - Chrome 4+
+*       - Safari 3.1+
+*       - Opera 9+
+*
+*   - WebGL
+*       - IE 11+
+*       - FF 4+
+*       - Chrome 8+
+*       - Safari 6+
+*       - Opera 12+
+*
+*   - Object.create
+*       - IE 9+
+*       - FF 4+
+*       - Chrome 7+
+*       - Safari 5+
+*       - Opera 12+
 */
 
 /**
@@ -397,7 +418,7 @@ if(gf.support.audio.play) {
  * @method checkVersion
  * @param first {String} The first version
  * @param second {String} The second version
- * @return
+ * @return {Number}
  *      returns a number representing how far off a version is.
  *      
  *      will return a negative value if the first version is behind the second,
@@ -426,94 +447,54 @@ gf.checkVersion = function(first, second) {
     return result ? result : a.length - b.length;
 };
 
-/* Simple JavaScript Inheritance
- * By John Resig http://ejohn.org/
- * MIT Licensed.
+/**
+ * Inherits the prototype of a parent object.
+ * from: https://github.com/isaacs/inherits/blob/master/inherits.js
+ *
+ * @module gf
+ * @method inherits
+ * @param child {Object} The Child to inherit the prototype
+ * @param parent {Object} The Parent to inherit from
+ * @param proto {Object} The prototype
  */
-// Inspired by base2 and Prototype
-var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
-    
-// The base Class implementation (does nothing)
-Class = function() {};
-
-// Create a new Class that inherits from this class
-Class.extend = function(prop) {
-    var _super = this.prototype;
-    
-    // Instantiate a base class (but only create the instance,
-    // don't run the init constructor)
-    initializing = true;
-    var prototype = new this();
-    initializing = false;
-    
-    // Copy the properties over onto the new prototype
-    for (var name in prop) {
-        // Check if we're overwriting an existing function
-        prototype[name] = typeof prop[name] == "function" &&
-            typeof _super[name] == "function" && fnTest.test(prop[name]) ?
-            (function(name, fn){
-                return function() {
-                    var tmp = this._super;
-                   
-                    // Add a new ._super() method that is the same method
-                    // but on the super-class
-                    this._super = _super[name];
-                   
-                    // The method only need to be bound temporarily, so we
-                    // remove it when we're done executing
-                    var ret = fn.apply(this, arguments);
-                    this._super = tmp;
-                   
-                    return ret;
-                };
-            })(name, prop[name]) :
-            prop[name];
-    }
-    
-    // The dummy class constructor
-    Class = function () {
-        // All construction is actually done in the init method
-        if ( !initializing && this.init )
-            this.init.apply(this, arguments);
-    }
-    
-    // Populate our constructed prototype object
-    Class.prototype = prototype;
-    
-    // Enforce the constructor to be what we expect
-    Class.constructor = Class;
-    
-    // And make this class extendable
-    Class.extend = arguments.callee;
-    
-    return Class;
+gf.inherits = function(c, p, proto) {
+  proto = proto || {}
+  var e = {}
+  ;[c.prototype, proto].forEach(function (s) {
+    Object.getOwnPropertyNames(s).forEach(function (k) {
+      e[k] = Object.getOwnPropertyDescriptor(s, k)
+    })
+  })
+  c.prototype = Object.create(p.prototype, e)
+  c.super = p
 };
 
-gf.Clock = Class.extend({
-    /**
-     * High performance clock, from mrdoob's Three.js
-     * https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js 
-     *
-     * @module gf
-     * @class Clock
-     * @constructor
-     * @param autoStart {Boolean} Automatically start the counter or not
-     * @example
-     *      var clock = new gf.Clock(false);
-     *      //... some code ...
-     *      clock.start();
-     *      //... some long code ...
-     *      var delta = clock.getDelta();
-     */
-    init: function(autoStart) {
-        this.autoStart = (autoStart !== undefined) ? autoStart : true;
+/**
+ * High performance clock, from mrdoob's Three.js
+ * https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js 
+ *
+ * @module gf
+ * @class Clock
+ * @constructor
+ * @param autoStart {Boolean} Automatically start the counter or not
+ * @example
+ *      var clock = new gf.Clock(false);
+ *      //... some code ...
+ *      clock.start();
+ *      //... some long code ...
+ *      var delta = clock.getDelta();
+ */
+gf.Clock = function(autoStart) {
+    this.autoStart = (autoStart !== undefined) ? autoStart : true;
 
-        this.startTime = 0;
-        this.oldTime = 0;
-        this.elapsedTime = 0;
+    this.startTime = 0;
+    this.oldTime = 0;
+    this.elapsedTime = 0;
 
-        this.running = false;
-    },
+    this.running = false;
+};
+
+gf.inherits(gf.Clock, Object, {
     /**
      * Starts the timer
      *
@@ -583,364 +564,362 @@ gf.Clock = Class.extend({
     }
 });
 
-(function() {
+/**
+ * Main game object, controls the entire instance of the game
+ *
+ * @module gf
+ * @class game
+ */
+gf.game = {
     /**
-     * Main game object, controls the entire instance of the game
+     * List of all objects on the stage by id
      *
-     * @module gf
-     * @class game
+     * @property objects
+     * @type {Object}
      */
-    gf.game = {
-        /**
-         * List of all objects on the stage by id
-         *
-         * @property objects
-         * @type {Object}
-         */
-        objects: {},
+    objects: {},
 
-        /**
-         * Number of objects added to the stage
-         *
-         * @property numObjects
-         * @type {Number}
-         */
-        numObjects: 0,
+    /**
+     * Number of objects added to the stage
+     *
+     * @property numObjects
+     * @type {Number}
+     */
+    numObjects: 0,
 
-        /**
-         * Maximum Z value
-         *
-         * @property MAX_Z
-         * @type {Number}
-         * @default 500
-         * @private
-         * @readOnly
-         */
-        MAX_Z: 500,
+    /**
+     * Maximum Z value
+     *
+     * @property MAX_Z
+     * @type {Number}
+     * @default 500
+     * @private
+     * @readOnly
+     */
+    MAX_Z: 500,
 
-        /**
-         * Raw PIXI.stage instance
-         *
-         * @property _stage
-         * @type {PIXI.Stage}
-         * @private
-         * @readOnly
-         */
-        _stage: new PIXI.Stage(),
+    /**
+     * Raw PIXI.stage instance
+     *
+     * @property _stage
+     * @type {PIXI.Stage}
+     * @private
+     * @readOnly
+     */
+    _stage: new PIXI.Stage(),
 
-        /**
-         * Raw gf.Clock instance for internal timing
-         *
-         * @property _clock
-         * @type {gf.Clock}
-         * @private
-         * @readOnly
-         */
-        _clock: new gf.Clock(false),
+    /**
+     * Raw gf.Clock instance for internal timing
+     *
+     * @property _clock
+     * @type {gf.Clock}
+     * @private
+     * @readOnly
+     */
+    _clock: new gf.Clock(false),
 
-        /**
-         * Raw rendering engine
-         *
-         * @property _renderer
-         * @type {PIXI.WebGLRenderer|PIXI.CanvasRenderer}
-         * @private
-         * @readOnly
-         */
-        _renderer: null,
+    /**
+     * Raw rendering engine
+     *
+     * @property _renderer
+     * @type {PIXI.WebGLRenderer|PIXI.CanvasRenderer}
+     * @private
+     * @readOnly
+     */
+    _renderer: null,
 
-        /**
-         * Internal ID counter for object IDs
-         *
-         * @property _nextId
-         * @type {Number}
-         * @private
-         */
-        _nextId: Date.now(),
+    /**
+     * Internal ID counter for object IDs
+     *
+     * @property _nextId
+     * @type {Number}
+     * @private
+     */
+    _nextId: Date.now(),
 
-        /**
-         * The domElement that we are rendering into (the container)
-         *
-         * @property _cont
-         * @type {DOMELement}
-         * @private
-         */
-        _cont: null,
+    /**
+     * The domElement that we are rendering into (the container)
+     *
+     * @property _cont
+     * @type {DOMELement}
+     * @private
+     */
+    _cont: null,
 
-        /**
-         * Tracker to see if the game has been initialized yet
-         *
-         * @property _cont
-         * @type {Boolean}
-         * @private
-         */
-        _initialized: false,
+    /**
+     * Tracker to see if the game has been initialized yet
+     *
+     * @property _cont
+     * @type {Boolean}
+     * @private
+     */
+    _initialized: false,
 
-        /**
-         * Initializes a new game instance, only one allowed
-         *
-         * @method init
-         * @param contId {String} The container for the new canvas we will create for the game
-         * @param opts {Object} Options such as gravity, friction, and renderMethod
-         * @example gf.game.init('myDiv', { renderMethod: 'webgl' });
-         * @return {game} Returns itself for chainability
-         */
-        init: function(contId, opts) {
-            if(gf.controls._initialized) return;
+    /**
+     * Initializes a new game instance, only one allowed
+     *
+     * @method init
+     * @param contId {String} The container for the new canvas we will create for the game
+     * @param opts {Object} Options such as gravity, friction, and renderMethod
+     * @example gf.game.init('myDiv', { renderMethod: 'webgl' });
+     * @return {game} Returns itself for chainability
+     */
+    init: function(contId, opts) {
+        if(gf.controls._initialized) return;
 
-            opts = opts || {};
+        opts = opts || {};
 
-            gf.game.gravity = (opts.gravity !== undefined ? opts.gravity : 0.98);
-            gf.game.friction = gf.utils.ensureVector(opts.friction);
+        gf.game.gravity = (opts.gravity !== undefined ? opts.gravity : 0.98);
+        gf.game.friction = gf.utils.ensureVector(opts.friction);
 
-            //if they speciy a method, check if it is available
-            if(opts.renderMethod) {
-                if(!gf.support[renderMethod]) {
-                    throw 'Render method ' + renderMethod + ' is not supported by this browser!';
-                    return;
-                }
+        //if they speciy a method, check if it is available
+        if(opts.renderMethod) {
+            if(!gf.support[renderMethod]) {
+                throw 'Render method ' + renderMethod + ' is not supported by this browser!';
+                return;
             }
-            //if they don't specify a method, guess the best to use
-            else {
-                if(gf.support.webgl) renderMethod = 'webgl';
-                else if(gf.support.canvas) renderMethod = 'canvas';
-                else {
-                    throw 'Neither WebGL nor Canvas is supported by this browser!';
-                    return;
-                }
-            }
-
-            var w = opts.width || gf.utils.getStyle(gf.game._cont, 'width'),
-                h = opts.height || gf.utils.getStyle(gf.game._cont, 'height');
-
-            //initialize the correct renderer
-            if(renderMethod == 'webgl') {
-                gf.game._renderer = new PIXI.WebGLRenderer(w, h);
-            } else if(renderMethod == 'canvas') {
-                gf.game._renderer = new PIXI.CanvasRenderer(w, h);
-            }
-
-            //save rendering method string
-            gf.game._renderMethod = renderMethod;
-
-            //cache the container object
-            gf.game._cont = document.getElementById(contId);
-
-            //initialize the renderer
-            gf.game._renderer.view.style['z-index'] = opts.zIndex || 5;
-            gf.game._cont.appendChild(gf.game._renderer.view);
-
-            //initialize the controls
-            gf.controls.init();
-
-            //initialize the audio player
-            gf.audio.init();
-
-            //initialize the GUI (HUD, menus, etc)
-            gf.gui.init();
-
-            //initialize gamepad support
-            gf.gamepad.init();
-
-            //fps counter
-            if(gf.debug.showFps) {
-                gf.debug._fpsCounter = new gf.debug.FpsCounter();
-                gf.utils.each(gf.debug.fpsStyle, function(k, v) { gf.debug._fpsCounter.domElement.style[k] = v; });
-                document.body.appendChild(gf.debug._fpsCounter.domElement);
-            }
-
-            //debug info
-            if(gf.debug.showInfo) {
-                gf.debug._info = new gf.debug.Info();
-                gf.utils.each(gf.debug.infoStyle, function(k, v) { gf.debug._info.domElement.style[k] = v; });
-                document.body.appendChild(gf.debug._info.domElement);
-            }
-
-            gf.game._initialized = true;
-
-            return this;
-        },
-        /**
-         * Gets the next object id for an object
-         *
-         * @method getNextObjectId
-         * @private
-         */
-        getNextObjectId: function() {
-            return gf.game._nextId++;
-        },
-        /**
-         * Adds an object to the current stage
-         *
-         * @method addObject
-         * @param obj {Sprite} The sprite to the stage
-         * @return {game} Returns itself for chainability
-         */
-        addObject: function(obj) {
-            if(!obj) return this;
-
-            if(!obj.id) obj.id = gf.game.getNextObjectId();
-            if(!gf.game.objects[obj.id]) gf.game.numObjects++;
-
-            gf.game.objects[obj.id] = obj;
-            gf.game._stage.addChild(obj);
-
-            return this;
-        },
-        /**
-         * Removes a sprite from the stage
-         *
-         * @method removeObject
-         * @param obj {Sprite} The sprite to the stage
-         * @return {game} Returns itself for chainability
-         */
-        removeObject: function(obj) {
-            if(!obj) return;
-
-            //remove object from our list
-            delete gf.game.objects[obj.id];
-            gf.game.numObjects--;
-
-            gf.game._stage.removeChild(obj);
-
-            if(obj.type == gf.types.ENTITY.PLAYER)
-                gf.game.player = null;
-
-            return this;
-        },
-        loadWorld: function(world) {
-            if(typeof world == 'string'){
-                if(gf.resources[world]) world = gf.resources[world].data;
-                else {
-                    throw 'World not found in resources!';
-                }
-            }
-
-            gf.game.world = new gf.TiledMap(world);
-            gf.game.addObject(gf.game.world);
-
-            if(gf.game.world.properties.music) {
-                gf.audio.play(gf.game.world.properties.music, { loop: gf.game.world.properties.music_loop === 'true' });
-            }
-
-            return this;
-        },
-        /**
-         * Begins the render loop
-         *
-         * @method render
-         * @return {game} Returns itself for chainability
-         */
-        render: function() {
-            gf.game._clock.start();
-            gf.game._tick();
-
-            return this;
-        },
-        /**
-         * Check if passed entity collides with any others
-         *
-         * @method checkCollisions
-         * @param obj {Entity} The sprite to the stage
-         * @return {Array} Returns an array of colliders
-         */
-        checkCollisions: function(ent) {
-            var colliders = [];
-
-            if(!ent.isCollidable) return colliders;
-
-            for(var id in gf.game.objects) {
-                var o = gf.game.objects[id];
-
-                //check if this object collides with any others
-                if(o.visible && o.collidable && o.entity && (o != ent)) {
-                    var collisionVector = o.checkCollision(ent);
-                    if(collisionVector.x !== 0 || collisionVector.y !== 0) {
-                        colliders.push({
-                            entity: o,
-                            vector: collisionVector
-                        });                        o.onCollision(ent);
-                    }
-                }
-            }
-
-            return colliders;
-        },
-        /**
-         * locks the camera on an entity
-         *
-         * @method cameraTrack
-         * @param ent {Entity} The sprite to the stage
-         * @return {game} Returns itself for chainability
-         */
-        cameraTrack: function(ent) {
-            if(ent.isEntity) {
-                if(this._trackedEntMoveHandle) {
-                    gf.event.unsubscribe(this._trackedEntMoveHandle);
-                }
-
-                //gf.game._camera.position.x = ent._mesh.position.x;
-                //gf.game._camera.position.y = ent._mesh.position.y;
-                this._trackedEntMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.id, function(velocity) {
-                    //gf.game._camera.translateX(velocity.x);
-                    //gf.game._camera.translateY(velocity.y);
-
-                    //If this gets heavy, then just remove it
-                    //update if each object is within the viewport
-
-                    //update matrices
-                    //gf.game._camera.updateMatrix(); // make sure camera's local matrix is updated
-                    //gf.game._camera.updateMatrixWorld(); // make sure camera's world matrix is updated
-                    //gf.game._camera.matrixWorldInverse.getInverse( camera.matrixWorld );
-                    /*var frustum = new THREE.Frustum();
-                    frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
-                    gf.utils.each(gf.game.objects, function(id, o) {
-                        if(o.isEntity && o._mesh && o._mesh.geometry) {
-                            //o._mesh.updateMatrix(); // make sure plane's local matrix is updated
-                            //o._mesh.updateMatrixWorld(); // make sure plane's world matrix is updated
-                            o.inViewport = frustum.contains(o._mesh);
-                        }
-                    });*/
-                });
-            }
-
-            return this;
-        },
-        /**
-         * The looping render tick
-         *
-         * @method _tick
-         * @private
-         */
-        _tick: function() {
-            //start render loop
-            requestAnimationFrame(gf.game._tick);
-
-            //get clock delta
-            gf.game._delta = gf.game._clock.getDelta();
-
-            //update fps box
-            if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
-
-            //update debug info
-            if(gf.debug._info) gf.debug._info.update();
-
-            //update the HUD
-            if(gf.HUD.initialized) gf.HUD.update();
-
-            //update the gamepad poller
-            gf.gamepad.update();
-
-            //update each object
-            for(var id in gf.game.objects) {
-                var o = gf.game.objects[id];
-
-                if(o.inViewport && o.isVisible && o.update) {
-                    o.update();
-                }
-            }
-
-            //render scene
-            gf.game._renderer.render(gf.game._scene/*, gf.game._camera*/);
         }
-    };
-})();
+        //if they don't specify a method, guess the best to use
+        else {
+            if(gf.support.webgl) renderMethod = 'webgl';
+            else if(gf.support.canvas) renderMethod = 'canvas';
+            else {
+                throw 'Neither WebGL nor Canvas is supported by this browser!';
+                return;
+            }
+        }
+
+        var w = opts.width || gf.utils.getStyle(gf.game._cont, 'width'),
+            h = opts.height || gf.utils.getStyle(gf.game._cont, 'height');
+
+        //initialize the correct renderer
+        if(renderMethod == 'webgl') {
+            gf.game._renderer = new PIXI.WebGLRenderer(w, h);
+        } else if(renderMethod == 'canvas') {
+            gf.game._renderer = new PIXI.CanvasRenderer(w, h);
+        }
+
+        //save rendering method string
+        gf.game._renderMethod = renderMethod;
+
+        //cache the container object
+        gf.game._cont = document.getElementById(contId);
+
+        //initialize the renderer
+        gf.game._renderer.view.style['z-index'] = opts.zIndex || 5;
+        gf.game._cont.appendChild(gf.game._renderer.view);
+
+        //initialize the controls
+        gf.controls.init();
+
+        //initialize the audio player
+        gf.audio.init();
+
+        //initialize the GUI (HUD, menus, etc)
+        gf.gui.init();
+
+        //initialize gamepad support
+        gf.gamepad.init();
+
+        //fps counter
+        if(gf.debug.showFps) {
+            gf.debug._fpsCounter = new gf.debug.FpsCounter();
+            gf.utils.each(gf.debug.fpsStyle, function(k, v) { gf.debug._fpsCounter.domElement.style[k] = v; });
+            document.body.appendChild(gf.debug._fpsCounter.domElement);
+        }
+
+        //debug info
+        if(gf.debug.showInfo) {
+            gf.debug._info = new gf.debug.Info();
+            gf.utils.each(gf.debug.infoStyle, function(k, v) { gf.debug._info.domElement.style[k] = v; });
+            document.body.appendChild(gf.debug._info.domElement);
+        }
+
+        gf.game._initialized = true;
+
+        return this;
+    },
+    /**
+     * Gets the next object id for an object
+     *
+     * @method getNextObjectId
+     * @private
+     */
+    getNextObjectId: function() {
+        return gf.game._nextId++;
+    },
+    /**
+     * Adds an object to the current stage
+     *
+     * @method addObject
+     * @param obj {Sprite} The sprite to the stage
+     * @return {game} Returns itself for chainability
+     */
+    addObject: function(obj) {
+        if(!obj) return this;
+
+        if(!obj.id) obj.id = gf.game.getNextObjectId();
+        if(!gf.game.objects[obj.id]) gf.game.numObjects++;
+
+        gf.game.objects[obj.id] = obj;
+        gf.game._stage.addChild(obj);
+
+        return this;
+    },
+    /**
+     * Removes a sprite from the stage
+     *
+     * @method removeObject
+     * @param obj {Sprite} The sprite to the stage
+     * @return {game} Returns itself for chainability
+     */
+    removeObject: function(obj) {
+        if(!obj) return;
+
+        //remove object from our list
+        delete gf.game.objects[obj.id];
+        gf.game.numObjects--;
+
+        gf.game._stage.removeChild(obj);
+
+        if(obj.type == gf.types.ENTITY.PLAYER)
+            gf.game.player = null;
+
+        return this;
+    },
+    loadWorld: function(world) {
+        if(typeof world == 'string'){
+            if(gf.resources[world]) world = gf.resources[world].data;
+            else {
+                throw 'World not found in resources!';
+            }
+        }
+
+        gf.game.world = new gf.TiledMap(world);
+        gf.game.addObject(gf.game.world);
+
+        if(gf.game.world.properties.music) {
+            gf.audio.play(gf.game.world.properties.music, { loop: gf.game.world.properties.music_loop === 'true' });
+        }
+
+        return this;
+    },
+    /**
+     * Begins the render loop
+     *
+     * @method render
+     * @return {game} Returns itself for chainability
+     */
+    render: function() {
+        gf.game._clock.start();
+        gf.game._tick();
+
+        return this;
+    },
+    /**
+     * Check if passed entity collides with any others
+     *
+     * @method checkCollisions
+     * @param obj {Entity} The sprite to the stage
+     * @return {Array} Returns an array of colliders
+     */
+    checkCollisions: function(ent) {
+        var colliders = [];
+
+        if(!ent.isCollidable) return colliders;
+
+        for(var id in gf.game.objects) {
+            var o = gf.game.objects[id];
+
+            //check if this object collides with any others
+            if(o.visible && o.collidable && o.entity && (o != ent)) {
+                var collisionVector = o.checkCollision(ent);
+                if(collisionVector.x !== 0 || collisionVector.y !== 0) {
+                    colliders.push({
+                        entity: o,
+                        vector: collisionVector
+                    });                        o.onCollision(ent);
+                }
+            }
+        }
+
+        return colliders;
+    },
+    /**
+     * locks the camera on an entity
+     *
+     * @method cameraTrack
+     * @param ent {Entity} The sprite to the stage
+     * @return {game} Returns itself for chainability
+     */
+    cameraTrack: function(ent) {
+        if(ent.isEntity) {
+            if(this._trackedEntMoveHandle) {
+                gf.event.unsubscribe(this._trackedEntMoveHandle);
+            }
+
+            //gf.game._camera.position.x = ent._mesh.position.x;
+            //gf.game._camera.position.y = ent._mesh.position.y;
+            this._trackedEntMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.id, function(velocity) {
+                //gf.game._camera.translateX(velocity.x);
+                //gf.game._camera.translateY(velocity.y);
+
+                //If this gets heavy, then just remove it
+                //update if each object is within the viewport
+
+                //update matrices
+                //gf.game._camera.updateMatrix(); // make sure camera's local matrix is updated
+                //gf.game._camera.updateMatrixWorld(); // make sure camera's world matrix is updated
+                //gf.game._camera.matrixWorldInverse.getInverse( camera.matrixWorld );
+                /*var frustum = new THREE.Frustum();
+                frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
+                gf.utils.each(gf.game.objects, function(id, o) {
+                    if(o.isEntity && o._mesh && o._mesh.geometry) {
+                        //o._mesh.updateMatrix(); // make sure plane's local matrix is updated
+                        //o._mesh.updateMatrixWorld(); // make sure plane's world matrix is updated
+                        o.inViewport = frustum.contains(o._mesh);
+                    }
+                });*/
+            });
+        }
+
+        return this;
+    },
+    /**
+     * The looping render tick
+     *
+     * @method _tick
+     * @private
+     */
+    _tick: function() {
+        //start render loop
+        requestAnimationFrame(gf.game._tick);
+
+        //get clock delta
+        gf.game._delta = gf.game._clock.getDelta();
+
+        //update fps box
+        if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
+
+        //update debug info
+        if(gf.debug._info) gf.debug._info.update();
+
+        //update the HUD
+        if(gf.HUD.initialized) gf.HUD.update();
+
+        //update the gamepad poller
+        gf.gamepad.update();
+
+        //update each object
+        for(var id in gf.game.objects) {
+            var o = gf.game.objects[id];
+
+            if(o.inViewport && o.isVisible && o.update) {
+                o.update();
+            }
+        }
+
+        //render scene
+        gf.game._renderer.render(gf.game._scene/*, gf.game._camera*/);
+    }
+};

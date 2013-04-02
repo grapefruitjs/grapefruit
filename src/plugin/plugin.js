@@ -1,10 +1,7 @@
 //Great ideas taken from: https://github.com/obiot/melonJS/blob/master/src/plugin/plugin.js
 (function() {
     gf.plugin = {
-        Base: Class.extend({
-            gfVersion: undefined,
-            init: function() {}
-        }),
+        Base: function() {},
         //patch a core function
         //For example, to patch the gf.game.update function:
         //
@@ -42,7 +39,7 @@
         //register a plugin
         //For example, to register a new plugin:
         //
-        //gf.plugin.register(MyPluginClass, 'myPluginName');
+        //gf.plugin.register(MyPluginObject, 'myPluginName');
         //
         //var plg = new gf.plugin.myPluginName();
         // //OR
@@ -64,4 +61,6 @@
             gf.plugin[name] = plugin;
         }
     };
+
+    gf.plugin.Base.prototype.gfVersion = null;
 })();

@@ -227,43 +227,6 @@
             }
             return object;
         },
-        project: {
-            _projector: new THREE.Projector(),
-            positionToViewport: function(position) {
-                var vector = gf.utils.project._projector.projectVector(position, gf.game._camera),
-                    hWidth = gf.game._domElement.width / 2,
-                    hHeight = gf.game._domElement.height / 2;
-
-                return new gf.Vector(
-                    Math.round(vector.x * hWidth + hWidth),
-                    Math.round(-vector.y * hHeight + hHeight)
-                );
-            },
-            positionToScreen: function(position) {
-                var pos = gf.utils.project.positionToViewport(position),
-                    offset = gf.utils.getOffset(gf.game._domElement);
-
-                pos.x += offset.left;
-                pos.y += offset.top;
-
-                return pos;
-            },
-            screenToPosition: function(pos) {
-                var vector = new THREE.Vector3(
-                        (pos.x * 2) - 1,
-                        (-pos.y * 2) + 1,
-                        0.5
-                    );
-
-                gf.utils.project._projector.unprojectVector(vector, gf.game._camera);
-
-                var dir = vector.sub(gf.game._camera.position).normalize(),
-                    ray = new THREE.Ray(gf.game._camera.position, dir),
-                    distance = - gf.game._camera.position.z / dir.z;
-
-                return gf.game._camera.position.clone().add(dir.multiplyScalar(distance));
-            }
-        },
         b64: {
             // private property
             _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",

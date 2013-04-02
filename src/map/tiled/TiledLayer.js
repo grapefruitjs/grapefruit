@@ -100,115 +100,116 @@
     ].join('\n');
 
     //Each tilemap layer is just a Plane object with the map drawn on it
-    gf.TiledLayer = gf.Layer.extend({
-        init: function(layer, tileSize, tilesetMaps) {
-            this._super(layer);
+    gf.TiledLayer = function(layer, tileSize, tilesetMaps) {
+        gf.Layer.call(this, layer);
 
-            //set options
-            this.data = layer.data;
-            this.dataBuffer = new ArrayBuffer(layer.data.length * 3);
-            this.data8 = new Uint8Array(this.dataBuffer);
-            this.tileSize = tileSize;
+        //set options
+        this.data = layer.data;
+        this.dataBuffer = new ArrayBuffer(layer.data.length * 3);
+        this.data8 = new Uint8Array(this.dataBuffer);
+        this.tileSize = tileSize;
 
-            this.repeat = false;
-            this.filtered = false;
+        this.repeat = false;
+        this.filtered = false;
 
-            this.tilesetMaps = tilesetMaps;
+        this.tilesetMaps = tilesetMaps;
 
-            //pack our layer data array into an 8-bit uint array
-            for (var i = 0, y = 0, il = layer.data.length; i < il; ++i, y += 3) {
-                var value = layer.data[i];
+        //pack our layer data array into an 8-bit uint array
+        for (var i = 0, y = 0, il = layer.data.length; i < il; ++i, y += 3) {
+            var value = layer.data[i];
 
-                //this.data[y + 0] = (value & 0xff000000) >> 24;
-                this.data8[y + 0] = (value & 0x00ff0000) >> 16;
-                this.data8[y + 1] = (value & 0x0000ff00) >> 8;
-                this.data8[y + 2] = (value & 0x000000ff);
-            }
+            //this.data[y + 0] = (value & 0xff000000) >> 24;
+            this.data8[y + 0] = (value & 0x00ff0000) >> 16;
+            this.data8[y + 1] = (value & 0x0000ff00) >> 8;
+            this.data8[y + 2] = (value & 0x000000ff);
+        }
 
-            this.dataTex = new THREE.DataTexture(
-                                this.data8,
-                                this.size.x, //width
-                                this.size.y, //height
-                                THREE.RGBFormat, //format
-                                THREE.UnsignedByteType, //type
-                                THREE.UVMapping, //mapping
-                                THREE.ClampToEdgeWrapping, //wrapS
-                                THREE.ClampToEdgeWrapping, //wrapT
-                                THREE.NearestFilter, //magFilter
-                                THREE.NearestMipMapNearestFilter //minFilter
-                            );
-            this.dataTex.needsUpdate = true;
+        this.dataTex = new THREE.DataTexture(
+                            this.data8,
+                            this.size.x, //width
+                            this.size.y, //height
+                            THREE.RGBFormat, //format
+                            THREE.UnsignedByteType, //type
+                            THREE.UVMapping, //mapping
+                            THREE.ClampToEdgeWrapping, //wrapS
+                            THREE.ClampToEdgeWrapping, //wrapT
+                            THREE.NearestFilter, //magFilter
+                            THREE.NearestMipMapNearestFilter //minFilter
+                        );
+        this.dataTex.needsUpdate = true;
 
-            //setup shader uniforms
-            //
-            //Types:
-            // i - integer
-            // f - float
-            // c - color
-            // t - Texture
-            // tv - array of Textures
-            // m4 - Matrix4
-            // m4v - array of Matrix4s
-            // iv - array of integers with 3 x N size
-            // iv1 - array of integers
-            // fv - array of floats with 3 x N size
-            // fv1 - array of floats
-            // v2 - Vector2
-            // v3 - Vector3
-            // v4 - Vector4
-            // v2v - array of Vector2s
-            // v3v - array of Vector3s
-            // v4v - array of Vector4s
-            this._uniforms = {
-                mapSize:            { type: 'v2', value: new gf.Vector(this.size.x * this.tileSize.x, this.size.y * this.tileSize.y) },
-                inverseLayerSize:   { type: 'v2', value: new gf.Vector(1 / this.size.x, 1 / this.size.y) },
+        //setup shader uniforms
+        //
+        //Types:
+        // i - integer
+        // f - float
+        // c - color
+        // t - Texture
+        // tv - array of Textures
+        // m4 - Matrix4
+        // m4v - array of Matrix4s
+        // iv - array of integers with 3 x N size
+        // iv1 - array of integers
+        // fv - array of floats with 3 x N size
+        // fv1 - array of floats
+        // v2 - Vector2
+        // v3 - Vector3
+        // v4 - Vector4
+        // v2v - array of Vector2s
+        // v3v - array of Vector3s
+        // v4v - array of Vector4s
+        this._uniforms = {
+            mapSize:            { type: 'v2', value: new gf.Vector(this.size.x * this.tileSize.x, this.size.y * this.tileSize.y) },
+            inverseLayerSize:   { type: 'v2', value: new gf.Vector(1 / this.size.x, 1 / this.size.y) },
 
-                tileSize:           { type: 'v2', value: this.tileSize },
-                inverseTileSize:    { type: 'v2', value: new gf.Vector(1 / this.tileSize.x, 1 / this.tileSize.y) },
+            tileSize:           { type: 'v2', value: this.tileSize },
+            inverseTileSize:    { type: 'v2', value: new gf.Vector(1 / this.tileSize.x, 1 / this.tileSize.y) },
 
-                tileIds:            { type: 't', value: this.dataTex },
-                repeatTiles:        { type: 'i', value: this.repeat ? 1 : 0 },
-                opacity:            { type: 'f', value: this.opacity },
-                bias:               { type: 'f', value: 0.002 },
-                inverseScale:       { type: 'f', value: 1 / this.scale },
+            tileIds:            { type: 't', value: this.dataTex },
+            repeatTiles:        { type: 'i', value: this.repeat ? 1 : 0 },
+            opacity:            { type: 'f', value: this.opacity },
+            bias:               { type: 'f', value: 0.002 },
+            inverseScale:       { type: 'f', value: 1 / this.scale },
 
-                //tileset maps
-                textures:           { type: 'tv', value: this.tilesetMaps.textures },
-                firstgids:          { type: 'fv1', value: this.tilesetMaps.firstgids },
-                lastgids:           { type: 'fv1', value: this.tilesetMaps.lastgids },
-                //sizes:              { type: 'v2v', value: this.tilesetMaps.sizes },
-                inverseSizes:       { type: 'v2v', value: this.tilesetMaps.inverseSizes },
-                numTiles:           { type: 'v2v', value: this.tilesetMaps.numTiles }
+            //tileset maps
+            textures:           { type: 'tv', value: this.tilesetMaps.textures },
+            firstgids:          { type: 'fv1', value: this.tilesetMaps.firstgids },
+            lastgids:           { type: 'fv1', value: this.tilesetMaps.lastgids },
+            //sizes:              { type: 'v2v', value: this.tilesetMaps.sizes },
+            inverseSizes:       { type: 'v2v', value: this.tilesetMaps.inverseSizes },
+            numTiles:           { type: 'v2v', value: this.tilesetMaps.numTiles }
 
-                //firstGid:           { type: 'f', value: this.tileset.firstgid },
-                //tilesets:           { type: 't', value: this.tilesets.texture },
-                //numTiles:           { type: 'v2', value: new gf.Vector(this.tileset.texture.image.width / this.tileSize.x, this.tileset.texture.image.height / this.tileSize.y) },
-                //inverseTilesetSize: { type: 'v2', value: new gf.Vector(1 / this.tileset.texture.image.width, 1 / this.tileset.texture.image.height) },
-            };
+            //firstGid:           { type: 'f', value: this.tileset.firstgid },
+            //tilesets:           { type: 't', value: this.tilesets.texture },
+            //numTiles:           { type: 'v2', value: new gf.Vector(this.tileset.texture.image.width / this.tileSize.x, this.tileset.texture.image.height / this.tileSize.y) },
+            //inverseTilesetSize: { type: 'v2', value: new gf.Vector(1 / this.tileset.texture.image.width, 1 / this.tileset.texture.image.height) },
+        };
 
-            if(gf.debug.accessTiledUniforms)
-                gf.debug.tiledUniforms.push(this._uniforms);
+        if(gf.debug.accessTiledUniforms)
+            gf.debug.tiledUniforms.push(this._uniforms);
 
-            this.vShader = vShader;
-            this.fShader = '#define NUM_TILESETS ' + this.tilesetMaps.textures.length + '\n' + fShader;
+        this.vShader = vShader;
+        this.fShader = '#define NUM_TILESETS ' + this.tilesetMaps.textures.length + '\n' + fShader;
 
-            //create the shader material
-            this._material = new THREE.ShaderMaterial({
-                uniforms: this._uniforms,
-                vertexShader: this.vShader,
-                fragmentShader: this.fShader,
-                transparent: (this.opacity !== 1) //if the opacity isn't 1.0, then this needs to be transparent
-            });
+        //create the shader material
+        this._material = new THREE.ShaderMaterial({
+            uniforms: this._uniforms,
+            vertexShader: this.vShader,
+            fragmentShader: this.fShader,
+            transparent: (this.opacity !== 1) //if the opacity isn't 1.0, then this needs to be transparent
+        });
 
-            this._plane = new THREE.PlaneGeometry(
-                this.size.x * this.tileSize.x * this.scale,
-                this.size.y * this.tileSize.y * this.scale
-            );
+        this._plane = new THREE.PlaneGeometry(
+            this.size.x * this.tileSize.x * this.scale,
+            this.size.y * this.tileSize.y * this.scale
+        );
 
-            this._mesh = new THREE.Mesh(this._plane, this._material);
-            this._mesh.visible = this.visible;
-            this._mesh.position.z = this.zIndex;
-        },
+        this._mesh = new THREE.Mesh(this._plane, this._material);
+        this._mesh.visible = this.visible;
+        this._mesh.position.z = this.zIndex;
+    };
+
+    gf.inherits(gf.TiledLayer, gf.Layer, {
         //get ID of tile at specified location
         getTileId: function(x, y, realCoords) {
             pos = x instanceof gf.Vector ? x.clone() : new gf.Vector(x, y);
