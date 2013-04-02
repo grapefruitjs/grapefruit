@@ -10,7 +10,7 @@
      */
     gf.entityPool = {
         /**
-         * Adds an entity Class to the pool
+         * Adds an entity Object to the pool
          *
          * @method add
          * @param name {String} The user-defined name of the Entity to add
