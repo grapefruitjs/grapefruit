@@ -239,7 +239,7 @@ gf.types = {
         START: 'touchstart',
         END: 'touchend',
         TAP: 'tap',
-        DBLTAP: 'dbltap',
+        DBLTAP: 'dbltap'
         //RCLICK: undefined,
         //CONTEXTMENU: undefined
     },
@@ -271,7 +271,7 @@ gf.types = {
         var name = '';
 
         gf.utils.each(gf.types.GP_BUTTONS, function(k, v) {
-            if(v == i) {
+            if(v === i) {
                 name = k;
                 return false; //break
             }
@@ -295,7 +295,7 @@ gf.types = {
         var name = '';
 
         gf.utils.each(gf.types.GP_AXES, function(k, v) {
-            if(v == i) {
+            if(v === i) {
                 name = k;
                 return false; //break
             }
@@ -363,7 +363,7 @@ gf.support = {
         m4a: false,
         mp3: false,
         ogg: false,
-        wav: false,
+        wav: false
     },
 
     /**
@@ -388,7 +388,7 @@ gf.support = {
      * @property gamepad
      * @type bool
      */
-    gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') != -1)
+    gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') !== -1)
 };
 
 //additional audio support checks
@@ -420,13 +420,13 @@ if(gf.support.audio.play) {
  * @param second {String} The second version
  * @return {Number}
  *      returns a number representing how far off a version is.
- *      
+ *
  *      will return a negative value if the first version is behind the second,
  *      the negative number will show how many versions behind it is on largest version
  *      point.
  *      That is: '1.0' compared with '1.1' will yield -1
  *      and    : '1.2.3' compared with '1.2.1' will yield -2
- *      
+ *
  *      0 is returned if the versions match, and a positive number is returned if
  *      the first version is larger than the second.
  */
@@ -439,9 +439,8 @@ gf.checkVersion = function(first, second) {
         result = 0;
 
     for(var i = 0; i < len; ++i) {
-        if(result = +a[i] - +b[i]) {
-            break;
-        }
+        result = +a[i] - +b[i];
+        if(result) break;
     }
 
     return result ? result : a.length - b.length;
@@ -458,20 +457,20 @@ gf.checkVersion = function(first, second) {
  * @param proto {Object} The prototype
  */
 gf.inherits = function(c, p, proto) {
-  proto = proto || {}
-  var e = {}
-  ;[c.prototype, proto].forEach(function (s) {
+  proto = proto || {};
+  var e = {};
+  [c.prototype, proto].forEach(function (s) {
     Object.getOwnPropertyNames(s).forEach(function (k) {
-      e[k] = Object.getOwnPropertyDescriptor(s, k)
-    })
-  })
-  c.prototype = Object.create(p.prototype, e)
-  c.super = p
+      e[k] = Object.getOwnPropertyDescriptor(s, k);
+    });
+  });
+  c.prototype = Object.create(p.prototype, e);
+  c['super'] = p;
 };
 
 /**
  * High performance clock, from mrdoob's Three.js
- * https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js 
+ * https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js
  *
  * @module gf
  * @class Clock
@@ -503,9 +502,8 @@ gf.inherits(gf.Clock, Object, {
      *      clock.start();
      */
     start: function() {
-        this.startTime = window.performance !== undefined && window.performance.now !== undefined
-                            ? window.performance.now()
-                            : Date.now();
+        this.startTime = window.performance !== undefined && window.performance.now !== undefined ?
+                            window.performance.now() : Date.now();
 
         this.oldTime = this.startTime;
         this.running = true;
@@ -550,9 +548,8 @@ gf.inherits(gf.Clock, Object, {
         }
 
         if(this.running) {
-            var newTime = window.performance !== undefined && window.performance.now !== undefined
-                            ? window.performance.now()
-                            : Date.now();
+            var newTime = window.performance !== undefined && window.performance.now !== undefined ?
+                                window.performance.now() : Date.now();
 
             diff = 0.001 * (newTime - this.oldTime);
             this.oldTime = newTime;
@@ -672,11 +669,11 @@ gf.game = {
         gf.game.gravity = (opts.gravity !== undefined ? opts.gravity : 0.98);
         gf.game.friction = gf.utils.ensureVector(opts.friction);
 
+        var renderMethod = opts.renderMethod;
         //if they speciy a method, check if it is available
-        if(opts.renderMethod) {
+        if(renderMethod) {
             if(!gf.support[renderMethod]) {
                 throw 'Render method ' + renderMethod + ' is not supported by this browser!';
-                return;
             }
         }
         //if they don't specify a method, guess the best to use
@@ -685,7 +682,6 @@ gf.game = {
             else if(gf.support.canvas) renderMethod = 'canvas';
             else {
                 throw 'Neither WebGL nor Canvas is supported by this browser!';
-                return;
             }
         }
 
@@ -693,9 +689,9 @@ gf.game = {
             h = opts.height || gf.utils.getStyle(gf.game._cont, 'height');
 
         //initialize the correct renderer
-        if(renderMethod == 'webgl') {
+        if(renderMethod === 'webgl') {
             gf.game._renderer = new PIXI.WebGLRenderer(w, h);
-        } else if(renderMethod == 'canvas') {
+        } else if(renderMethod === 'canvas') {
             gf.game._renderer = new PIXI.CanvasRenderer(w, h);
         }
 
@@ -782,13 +778,13 @@ gf.game = {
 
         gf.game._stage.removeChild(obj);
 
-        if(obj.type == gf.types.ENTITY.PLAYER)
+        if(obj.type === gf.types.ENTITY.PLAYER)
             gf.game.player = null;
 
         return this;
     },
     loadWorld: function(world) {
-        if(typeof world == 'string'){
+        if(typeof world === 'string'){
             if(gf.resources[world]) world = gf.resources[world].data;
             else {
                 throw 'World not found in resources!';
@@ -832,13 +828,14 @@ gf.game = {
             var o = gf.game.objects[id];
 
             //check if this object collides with any others
-            if(o.visible && o.collidable && o.entity && (o != ent)) {
+            if(o.visible && o.collidable && o.entity && (o !== ent)) {
                 var collisionVector = o.checkCollision(ent);
                 if(collisionVector.x !== 0 || collisionVector.y !== 0) {
                     colliders.push({
                         entity: o,
                         vector: collisionVector
-                    });                        o.onCollision(ent);
+                    });
+                    o.onCollision(ent);
                 }
             }
         }
@@ -860,7 +857,7 @@ gf.game = {
 
             //gf.game._camera.position.x = ent._mesh.position.x;
             //gf.game._camera.position.y = ent._mesh.position.y;
-            this._trackedEntMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.id, function(velocity) {
+            /*this._trackedEntMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.id, function(velocity) {
                 //gf.game._camera.translateX(velocity.x);
                 //gf.game._camera.translateY(velocity.y);
 
@@ -871,7 +868,7 @@ gf.game = {
                 //gf.game._camera.updateMatrix(); // make sure camera's local matrix is updated
                 //gf.game._camera.updateMatrixWorld(); // make sure camera's world matrix is updated
                 //gf.game._camera.matrixWorldInverse.getInverse( camera.matrixWorld );
-                /*var frustum = new THREE.Frustum();
+                var frustum = new THREE.Frustum();
                 frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
                 gf.utils.each(gf.game.objects, function(id, o) {
                     if(o.isEntity && o._mesh && o._mesh.geometry) {
@@ -879,8 +876,8 @@ gf.game = {
                         //o._mesh.updateMatrixWorld(); // make sure plane's world matrix is updated
                         o.inViewport = frustum.contains(o._mesh);
                     }
-                });*/
-            });
+                });
+            });*/
         }
 
         return this;
@@ -893,7 +890,7 @@ gf.game = {
      */
     _tick: function() {
         //start render loop
-        requestAnimationFrame(gf.game._tick);
+        window.requestAnimationFrame(gf.game._tick);
 
         //get clock delta
         gf.game._delta = gf.game._clock.getDelta();

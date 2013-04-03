@@ -34,7 +34,7 @@
     var fShader = [
         //"precision highp float;",
 
-        'varying vec2 pixelCoord;',         
+        'varying vec2 pixelCoord;',
         'varying vec2 texCoord;',
 
         //'uniform vec2 mapSize;',
@@ -212,7 +212,7 @@
     gf.inherits(gf.TiledLayer, gf.Layer, {
         //get ID of tile at specified location
         getTileId: function(x, y, realCoords) {
-            pos = x instanceof gf.Vector ? x.clone() : new gf.Vector(x, y);
+            var pos = x instanceof gf.Vector ? x.clone() : new gf.Vector(x, y);
             //if not realCoords, they are world coords; and must be converted
             if(!realCoords) {
                 //do some division to make position be in "tiles from center" instead of "units from center"

@@ -53,8 +53,8 @@
         },
         onGamepadDisconnect: function(event) {
             //remove the gamepad from our list
-            for(var i = 0, il = pads.length; i < il; ++i) {
-                if(gf.gamepad.pads[i].index == event.gamepad.index) {
+            for(var i = 0, il = gf.gamepad.pads.length; i < il; ++i) {
+                if(gf.gamepad.pads[i].index === event.gamepad.index) {
                     gf.gamepad.pads.splice(i, 1);
                     break;
                 }
@@ -98,7 +98,7 @@
                 //don't do anything if the current timestamp is the same as the previous one
                 //(meaning the state has not changed). This is a chrome-only feature right now,
                 //so first we have to check if it is empty as well
-                if(pad.timestamp && (pad.timestamp == gf.gamepad.prevTimestamps[i]))
+                if(pad.timestamp && (pad.timestamp === gf.gamepad.prevTimestamps[i]))
                     continue;
 
                 gf.gamepad.prevTimestamps[i] = pad.timestamp;
@@ -122,9 +122,9 @@
                         //call each callback
                         var cbs = gf.controls.gpButton.callbacks[gf.controls.gpButton.binds[b]];
                         if(cbs) {
-                            for(var i = 0, il = cbs.length; i < il; ++i) {
-                                if(cbs[i].code === b)
-                                    cbs[i].fn(gf.controls.gpButton.binds[b], pressed);
+                            for(var s = 0, sl = cbs.length; s < sl; ++s) {
+                                if(cbs[s].code === b)
+                                    cbs[s].fn(gf.controls.gpButton.binds[b], pressed);
                             }
                         }
                         gf.controls.gpButton.status[gf.controls.gpButton.binds[b]] = pressed;
@@ -132,13 +132,15 @@
                 }
 
                 for(var a = 0, al = pad.axes.length; a < al; ++a) {
-                    gf.utils.each(['true', 'false'], function(i, v) {
-                        if(!gf.controls.gpStick.binds[a + v]) return;
+                    var vs = ['true', 'false'];
+                    for(var vsi = 0, vsil = vs.length; vsi < vsil; ++vsi) {
+                        var v = vs[vsi];
+                        if(!gf.controls.gpStick.binds[a + v]) continue;
 
-                        var moved = v == 'true' ? (pad.axes[a] < -gf.gamepad.AXIS_THRESHOLD) : (pad.axes[a] > gf.gamepad.AXIS_THRESHOLD);
+                        var moved = v === 'true' ? (pad.axes[a] < -gf.gamepad.AXIS_THRESHOLD) : (pad.axes[a] > gf.gamepad.AXIS_THRESHOLD);
 
                         if(!gf.controls.gpStick.axes[a + v])
-                            gf.controls.gpStick.axes[a + v] = { moved: false, code: a, negative: v == 'true' };
+                            gf.controls.gpStick.axes[a + v] = { moved: false, code: a, negative: v === 'true' };
 
                         gf.controls.gpStick.axes[a + v].val = pad.axes[a];
 
@@ -146,16 +148,16 @@
                         if(gf.controls.gpStick.axes[a + v].moved !== moved) {
                             gf.controls.gpStick.axes[a + v].moved = moved;
                             //call each callback
-                            var cbs = gf.controls.gpStick.callbacks[gf.controls.gpStick.binds[a + v]];
-                            if(cbs) {
-                                for(var i = 0, il = cbs.length; i < il; ++i) {
-                                    if(cbs[i].code === a)
-                                        cbs[i].fn(gf.controls.gpStick.binds[a + v], pad.axes[a]);
+                            var cbs2 = gf.controls.gpStick.callbacks[gf.controls.gpStick.binds[a + v]];
+                            if(cbs2) {
+                                for(var s2 = 0, sl2 = cbs2.length; s2 < sl2; ++s2) {
+                                    if(cbs2[s2].code === a)
+                                        cbs2[s2].fn(gf.controls.gpStick.binds[a + v], pad.axes[a]);
                                 }
                             }
                             gf.controls.gpStick.status[gf.controls.gpStick.binds[a + v]] = moved;
                         }
-                    });
+                    }
                 }
             }
         },

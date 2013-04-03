@@ -32,8 +32,8 @@ gf.TiledTileset = function(settings) {
         if(v.normal && !(v.normal instanceof gf.Vector))
             v.normal = gf.utils.ensureVector(v.normal);
 
-        if(v.isCollidable == 'true') v.isCollidable = true;
-        if(v.isBreakable == 'true') v.isBreakable = true;
+        if(v.isCollidable === 'true') v.isCollidable = true;
+        if(v.isBreakable === 'true') v.isBreakable = true;
     });
 };
 

@@ -16,7 +16,7 @@
                 obj = obj.prototype;
             }
 
-            if(typeof prototy[name] == 'function' && typeof fn == 'function') {
+            if(typeof obj[name] === 'function' && typeof fn === 'function') {
                 var _super = obj[name];
 
                 obj[name] = (function(name, fn) {
@@ -29,11 +29,11 @@
                         this._super = tmp;
                        
                         return ret;
-                    }
+                    };
                 })(name, fn);
             }
             else {
-                console.error(name + ' is not a function in the passed object.');
+                throw (name + ' is not a function in the passed object.');
             }
         },
         //register a plugin
@@ -47,8 +47,7 @@
         register: function(plugin, name) {
             //ensure we don't overrite a name
             if(gf.plugin[name]) {
-                console.error('plugin ' + name + ' already registered, skipping.');
-                return;
+                throw 'plugin ' + name + ' already registered, skipping.';
             }
 
             if(plugin.prototype.gfVersion === undefined) {

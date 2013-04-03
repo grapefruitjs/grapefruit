@@ -75,16 +75,6 @@
         loadResources: function(resources, cb) {
             var done = 0, handles = [];
 
-            for(var r = 0, rl = resources.length; r < rl; ++r) {
-                gf.event.publish(gf.types.EVENT.LOADER_START, resources[r]);
-
-                handles.push({
-                    load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + resources[r].name, loadDone.bind(null, r, null)),
-                    error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + resources[r].name, loadDone.bind(null, r))
-                });
-                gf.loader.load(resources[r]);
-            }
-
             function loadDone(r, err, resource) {
                 done++;
 
@@ -102,6 +92,16 @@
                     gf.event.publish(gf.types.EVENT.LOADER_COMPLETE, resources);
                     if(cb) cb(null, resources);
                 }
+            }
+
+            for(var r = 0, rl = resources.length; r < rl; ++r) {
+                gf.event.publish(gf.types.EVENT.LOADER_START, resources[r]);
+
+                handles.push({
+                    load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + resources[r].name, loadDone.bind(null, r, null)),
+                    error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + resources[r].name, loadDone.bind(null, r))
+                });
+                gf.loader.load(resources[r]);
             }
 
             return this;
@@ -135,8 +135,6 @@
                         var pct = (e.loaded / e.total) * 100;
 
                         if(progress) progress(pct);
-                    } else {
-                        //console.warn('Content Length not reported!');
                     }
                 }
             });
@@ -211,12 +209,13 @@
             var sound = resource.data = new Audio(resource.src);
             sound.preload = 'auto';
 
-            sound.addEventListener('canplaythrough', function(e) {
-                this.removeEventListener('canplaythrough', arguments.callee, false);
+            function loaded() {
+                this.removeEventListener('canplaythrough', loaded, false);
                 gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, resource);
-            }, false);
+            }
+            sound.addEventListener('canplaythrough', loaded, false);
 
-            sound.addEventListener('error', function(e) {
+            sound.addEventListener('error', function() {
                 gf.event.publish(gf.types.EVENT.LOADER_ERROR + '.' + resource.name, 'Error loading the audio file!', resource);
             }, false);
 
@@ -248,36 +247,59 @@
 
                 var done = 0, max = 0, lhandles = [], thandles = [];
 
+                var loadLayer = function(layer, obj, o) {
+                    addRes();
+                    var name = layer.name + '_' + obj.name + '_texture';
+                    lhandles.push({
+                        load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + name, function(rsrc) {
+                            obj.properties.texture = rsrc.data;
+                            resDone(o, true, null, rsrc);
+                        }),
+                        error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + name, function(err, rsrc) {
+                            obj.properties.texture = null;
+                            obj.properties._error = err;
+                            resDone(o, true, err, rsrc);
+                        })
+                    });
+                    gf.loader.load({
+                        name: layer.name + '_' + obj.name + '_texture',
+                        type: 'texture',
+                        src: obj.properties.spritesheet
+                    });
+                };
+
+                var loadTilesetTexture = function(set, s) {
+                    addRes();
+                    var name = set.name + '_texture';
+                    thandles.push({
+                        load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + name, function(rsrc) {
+                            set.texture = rsrc.data;
+                            resDone(s, false, null, rsrc);
+                        }),
+                        error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + name, function(err, rsrc) {
+                            set.texture = null;
+                            set._error = err;
+                            resDone(s, false, err, rsrc);
+                        })
+                    });
+                    gf.loader.load({
+                        name: name,
+                        type: 'texture',
+                        src: resource.texturePath + set.image
+                    });
+                };
+
                 //loop through each layer and load the sprites (objectgroup types)
                 for(var i = 0, il = resource.data.layers.length; i < il; ++i) {
                     var layer = resource.data.layers[i];
-                    if(layer.type != gf.types.LAYER.OBJECT_GROUP) continue;
+                    if(layer.type !== gf.types.LAYER.OBJECT_GROUP) continue;
 
                     //loop through each object, and load the textures
                     for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
                         var obj = layer.objects[o];
                         if(!obj.properties.spritesheet) continue;
 
-                        (function(layer, obj, o) {
-                            addRes();
-                            var name = layer.name + '_' + obj.name + '_texture';
-                            lhandles.push({
-                                load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + name, function(rsrc) {
-                                    obj.properties.texture = rsrc.data;
-                                    resDone(o, true, null, rsrc);
-                                }),
-                                error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + name, function(err, rsrc) {
-                                    obj.properties.texture = null;
-                                    obj.properties._error = err;
-                                    resDone(o, true, err, rsrc);
-                                })
-                            });
-                            gf.loader.load({
-                                name: layer.name + '_' + obj.name + '_texture',
-                                type: 'texture',
-                                src: obj.properties.spritesheet
-                            });
-                        })(layer, obj, o);
+                        loadLayer(layer, obj, o);
                     }
                 }
 
@@ -286,33 +308,14 @@
                     var set = resource.data.tilesets[s];
                     if(!set.image) continue;
 
-                    (function(set, s) {
-                        addRes();
-                        var name = set.name + '_texture';
-                        thandles.push({
-                            load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + '.' + name, function(rsrc) {
-                                set.texture = rsrc.data;
-                                resDone(s, false, null, rsrc);
-                            }),
-                            error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + '.' + name, function(err, rsrc) {
-                                set.texture = null;
-                                set._error = err;
-                                resDone(s, false, err, rsrc);
-                            })
-                        });
-                        gf.loader.load({
-                            name: name,
-                            type: 'texture',
-                            src: resource.texturePath + set.image
-                        });
-                    })(set, s);
+                    loadTilesetTexture(set, s);
                 }
 
                 if(max === 0) gf.event.publish(gf.types.EVENT.LOADER_LOAD + '.' + resource.name, resource);
 
                 //for counting downloading resources, and tracking when all are done
                 function addRes() { max++; }
-                function resDone(i, layer, err, rsrc) {
+                function resDone(i, layer /*, err, rsrc*/) {
                     done++;
 
                     if(layer) {

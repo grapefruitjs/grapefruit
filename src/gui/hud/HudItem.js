@@ -6,14 +6,14 @@ gf.HudItem = function(x, y, settings) {
     this.visible = true;
 
     //value of the item
-    this.value = typeof settings.value == 'string' ? '' : 0;
+    this.value = typeof settings.value === 'string' ? '' : 0;
 
     this.name = '';
 
     //use the passed settings object ot override the default values above
     gf.utils.setValues(this, settings);
 
-    this.default = this.value;
+    this['default'] = this.value;
 
     //create the base div of this element
     this._createElement(x, y);
@@ -27,7 +27,7 @@ gf.HudItem = function(x, y, settings) {
 
 gf.inherits(gf.HudItem, Object, {
     reset: function() {
-        this.set(this.default);
+        this.set(this['default']);
         return this;
     },
     setValue: function(val) {
@@ -45,9 +45,9 @@ gf.inherits(gf.HudItem, Object, {
         return this;
     },
     //virtual events
-    onClick: function(e) {},
-    onDragStart: function(e) {},
-    onDragEnd: function(e) {},
+    onClick: function() {},
+    onDragStart: function() {},
+    onDragEnd: function() {},
     onMouseDown: function(e) {
         if(!this.draggable) return;
 

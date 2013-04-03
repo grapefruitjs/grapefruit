@@ -202,7 +202,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * @return {Boolean}
      */
     intersects: function(obj)  {
-        return (Math.abs(this.position.x - obj.position.x) * 2 < (this.size.x + obj.size.x)) && 
+        return (Math.abs(this.position.x - obj.position.x) * 2 < (this.size.x + obj.size.x)) &&
                 (Math.abs(this.position.y - obj.position.y) * 2 < (this.size.y + obj.size.y));
     },
     /**
@@ -255,10 +255,10 @@ gf.inherits(gf.Entity, gf.Sprite, {
                 tile = collider.tile,
                 axis = collider.axis;
 
-            this.onladder = (tile.type == gf.types.COLLISION.LADDER ? true : this.onladder);
+            this.onladder = (tile.type === gf.types.COLLISION.LADDER ? true : this.onladder);
 
             //if a solid tile
-            if(tile.type == gf.types.COLLISION.SOLID) {
+            if(tile.type === gf.types.COLLISION.SOLID) {
                 //if it is a slope, apply the normal
                 if(tile.normal && (!this.velocity.x || !this.velocity.y)) {
                     var badMovement = tile.normal.clone().multiplyScalar(this.velocity.dot(tile.normal)),
@@ -292,7 +292,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * Moves the entity to a new position using the velocity.
      *
      * @method moveEntity
-     * @param vel {Vector} The optional velocity to move the entity. 
+     * @param vel {Vector} The optional velocity to move the entity.
      * @return {Entity} Returns itself for chainability
      */
     moveEntity: function(vel) {
@@ -316,13 +316,13 @@ gf.inherits(gf.Entity, gf.Sprite, {
      *      called when this object is collided into by another, by default if something collides with
      *      a collectable entity we remove the collectable
      *
-     * @method moveEntity
+     * @method onCollision
      * @param vel {Vector} Collision Vector
      * @param obj {Entity} Colliding object
      * @return {Entity} Returns itself for chainability
      */
-    onCollision: function(vec, obj) {
-        if(this.collidable && this.type == gf.types.ENTIY.COLLECTABLE)
+    onCollision: function() {
+        if(this.collidable && this.type === gf.types.ENTIY.COLLECTABLE)
             gf.game.removeObject(this);
 
         return this;
@@ -331,22 +331,22 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * On Move Event
      *      called when this entity moves
      *
-     * @method moveEntity
+     * @method onMove
      * @param vel {Vector} Velocity the entity moved
      * @return {Entity} Returns itself for chainability
      */
-    onMove: function(vel) {
+    onMove: function() {
         return this;
     },
     /**
      * On Break Tile Event
      *      called when a tile is broken
      *
-     * @method moveEntity
+     * @method onBreakTile
      * @param tile {Unkown} the tile that is broken
      * @return {Entity} Returns itself for chainability
      */
-    onBreakTile: function(tile) {
+    onBreakTile: function() {
         return this;
     }
 });

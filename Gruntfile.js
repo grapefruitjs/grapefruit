@@ -88,16 +88,15 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            beforeconcat: ['<%= files.srcBlob %>'],
-            afterconcat: ['<%= files.build %>'],
+            beforeconcat: srcFiles.filter(function(e) { return e.indexOf('debug.js') === -1; }),
             test: ['<%= files.testBlob %>'],
             options: {
                 /* Enforcement options */
                 bitwise: false,     //allow bitwise operators
-                camelcase: true,    //must use camelCase or UPPER_CASE
+                camelcase: false,   //must use camelCase or UPPER_CASE
                 curly: false,       //one line conditionals w/o braces are allowed
                 eqeqeq: true,       //must use === if possible
-                forin: true,        //forin loops much check hasOwnProperty
+                forin: false,       //forin loops much check hasOwnProperty
                 immed: true,        //self-calling functions must be wrapped in parens
                 latedef: true,      //can't use a variable until it is defined
                 newcap: true,       //ctor names must be Captialized
@@ -124,10 +123,12 @@ module.exports = function(grunt) {
                     requirejs: false,
                     require: false,
                     define: false,
+                    PIXI: false,
                     gf: false,
                     QUnit: false,
                     Q: false,
-                    $: false
+                    $: false,
+                    THREE: false
                 }
             }
         },
@@ -168,8 +169,8 @@ module.exports = function(grunt) {
     });
 
     //Load tasks
-    grunt.registerTask('default', ['concat', 'uglify']);
-    grunt.registerTask('build', ['concat', 'uglify']);
+    grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+    grunt.registerTask('build', ['jshint', 'concat', 'uglify']);
     grunt.registerTask('test', ['concat', 'connect:qunit', 'qunit']);
     grunt.registerTask('docs', ['yuidoc']);
 };

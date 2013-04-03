@@ -197,7 +197,7 @@
             return true;
         },
         onMouseWheel: function(e) {
-            if(e.target == gf.game._renderer.domElement) {
+            if(e.target === gf.game._renderer.domElement) {
                 if(gf.controls.dispatchMouseEvent(e)) return gf.controls.preventDefault(e);
             }
 
@@ -306,6 +306,6 @@
             }
 
             return gf.controls;
-        },
+        }
     };
 })();

@@ -113,7 +113,7 @@ gf.inherits(gf.Vector, Object, {
         return this;
     },
     clamp: function(min, max) {
-        // This function assumes min < max, if this assumption 
+        // This function assumes min < max, if this assumption
         //isn't true it will not operate correctly
         if(this.x < min.x) {
             this.x = min.x;
