@@ -760,6 +760,8 @@ gf.game = {
         gf.game.objects[obj.id] = obj;
         gf.game._stage.addChild(obj);
 
+        if(obj.onAddedToStage) obj.onAddedToStage();
+
         return this;
     },
     /**
