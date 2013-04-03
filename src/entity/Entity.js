@@ -95,7 +95,7 @@ gf.Entity = function(pos, settings) {
      * @type Vector
      * @default 0
      */
-    this.friction = settings.friction || gf.game.friction;
+    this.friction = gf.game.friction || 0;
 
     /**
      * Gravity to apply to this entity
@@ -104,7 +104,7 @@ gf.Entity = function(pos, settings) {
      * @type Vector
      * @default 0.98 (earth's gravity)
      */
-    this.gravity = settings.gravity || gf.game.gravity;
+    this.gravity = gf.game.gravity || 0.98;
 
     /**
      * Whether or not the entity is "alive", advisory only
@@ -145,7 +145,7 @@ gf.Entity = function(pos, settings) {
      */
     this.onladder = false;
 
-    //call base constructor
+    //call base ctor
     gf.Sprite.call(this, pos, settings);
 };
 
