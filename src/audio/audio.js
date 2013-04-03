@@ -11,7 +11,8 @@
         var chans = playing[id];
 
         //find an open channel
-        for(var i = 0, clip; clip = chans[i++];) {
+        for(var i = 0, il = chans.length; i < il; ++i) {
+            var clip = chans[i++];
             if(clip.ended || !clip.currentTime) {
                 clip.currentTime = resetTime;
                 return clip;
@@ -39,16 +40,15 @@
         },
         play: function(id, opts, cb) {
             if(!gf.resources[id]) {
-                console.warn('Tried to play unloaded audio: %s', id);
-                return false;
+                throw 'Tried to play unloaded audio: ' + id;
             }
 
-            if(typeof opts == 'function') {
+            if(typeof opts === 'function') {
                 cb = opts;
                 opts = null;
             }
 
-            if(typeof id == 'object') {
+            if(typeof id === 'object') {
                 opts = id;
                 id = opts.id;
             }
@@ -57,7 +57,7 @@
 
             opts.id = id;
             opts.loop = opts.loop || settings.loop;
-            opts.volume = opts.volume || settings.volume
+            opts.volume = opts.volume || settings.volume;
 
             //resume a paused channel
             if(opts.channel !== undefined && playing[id]) {
@@ -79,17 +79,18 @@
             opts.channel = sound.channel;
 
             if(!opts.loop) {
-                sound.addEventListener('ended', function(e) {
-                    sound.removeEventListener('ended', arguments.callee, false);
+                var ended = function() {
+                    sound.removeEventListener('ended', ended, false);
                     gf.audio.stop(opts);
                     if(cb) cb();
-                }, false);
+                };
+                sound.addEventListener('ended', ended, false);
             }
 
             return opts;
         },
         stop: function(id, channel) {
-            if(typeof id == 'object') {
+            if(typeof id === 'object') {
                 channel = id.channel;
                 id = id.id;
             }
@@ -102,7 +103,7 @@
             playing[id][channel].ended = true;
         },
         pause: function(id, channel) {
-            if(typeof id == 'object') {
+            if(typeof id === 'object') {
                 channel = id.channel;
                 id = id.id;
             }

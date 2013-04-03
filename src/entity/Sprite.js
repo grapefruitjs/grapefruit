@@ -67,15 +67,10 @@ gf.inherits(gf.Sprite, PIXI.MovieClip, {
      *          .addAnimation('walk-right', [new gf.Texture(), new gf.Texture()]);
      */
     addAnimation: function(name, frames) {
-        settings = settings || {};
-
-        if(settings instanceof Array)
-            settings = { textures: settings };
-
         if(frames instanceof gf.Texture)
-            frames = [settings];
+            frames = [frames];
 
-        if(!settings.textures)
+        if(!frames)
             throw 'No textures passed to addAnimation()';
 
         this.anim[name] = {
@@ -86,7 +81,7 @@ gf.inherits(gf.Sprite, PIXI.MovieClip, {
         return this;
     },
     /**
-     * Sets the active animation of the sprite, and starts the animation at index 0 
+     * Sets the active animation of the sprite, and starts the animation at index 0
      *
      * @method setActiveAnimation
      * @param name {String} The name of the animation to play (defined with addAnimation());
@@ -100,8 +95,9 @@ gf.inherits(gf.Sprite, PIXI.MovieClip, {
         if(this.anim[name]) {
             this.currentAnim = name;
             this.textures = this.anim[name].textures;
-            //TODO: Callback
             this.gotoAndPlay(0);
+            //TODO: Callback
+            setTimeout(cb, 0);
         } else {
             throw 'Unknown animation ' + name;
         }

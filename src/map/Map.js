@@ -17,13 +17,13 @@ gf.inherits(gf.Map, Object, {
         return this;
     },
     getLayer: function(id) {
-        if(typeof id == 'number')
+        if(typeof id === 'number')
             return this.layers[id];
 
-        if(typeof id == 'string') {
-            var lyr = null, self = this;
+        if(typeof id === 'string') {
+            var lyr = null;
             this.eachLayer(function(layer) {
-                if(layer.name == id) {
+                if(layer.name === id) {
                     lyr = layer;
                     return false;
                 }
@@ -40,7 +40,7 @@ gf.inherits(gf.Map, Object, {
 
         //incase they add layers first, then add the map to the scene
         this.eachLayer(function(layer) {
-            if(!layer.scene || layer.scene != scene)
+            if(!layer.scene || layer.scene !== scene)
                 layer.addToScene(scene);
         });
 

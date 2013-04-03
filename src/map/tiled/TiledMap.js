@@ -24,7 +24,7 @@ gf.TiledMap = function(map) {
     //and maximum extent of the map
     this.extent = {
         x: {
-            min: ~~(this.scaledSize.x / 2) - this.scaledSize.x, 
+            min: ~~(this.scaledSize.x / 2) - this.scaledSize.x,
             max: this.scaledSize.x - ~~(this.scaledSize.x / 2)
         },
         y: {
@@ -62,7 +62,7 @@ gf.TiledMap = function(map) {
         //we have to create some arrays with each index corresponding
         //to the values of each element.
         //
-        //Basically instead of 
+        //Basically instead of
         //struct Tileset { gid, ... }
         //uniform Tileset tilesets[];
         //
@@ -83,9 +83,9 @@ gf.TiledMap = function(map) {
     }
 
     for(var i = 0, il = map.layers.length; i < il; ++i) {
-        if(map.layers[i].type == gf.types.LAYER.TILE_LAYER)
+        if(map.layers[i].type === gf.types.LAYER.TILE_LAYER)
             this.addLayer(map.layers[i]);
-        else if(map.layers[i].type == gf.types.LAYER.OBJECT_GROUP) {
+        else if(map.layers[i].type === gf.types.LAYER.OBJECT_GROUP) {
             var grp = this.addObjectGroup(map.layers[i]);
 
             //auto spawn the player object group
@@ -175,10 +175,9 @@ gf.inherits(gf.TiledMap, gf.Map, {
     },
 
     _checkHalfBlock: function(half, x, y) {
-        tx = Math.floor(x / this.tileSize.x) * this.tileSize.x;
-        ty = Math.floor(y / this.tileSize.y) * this.tileSize.y;
-
-        var midX = tx + ((this.tileSize.x) / 2),
+        var tx = Math.floor(x / this.tileSize.x) * this.tileSize.x,
+            ty = Math.floor(y / this.tileSize.y) * this.tileSize.y,
+            midX = tx + ((this.tileSize.x) / 2),
             endX = tx + (this.tileSize.x),
             midY = ty - ((this.tileSize.y) / 2),
             endY = ty - (this.tileSize.y);
@@ -213,7 +212,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
     },
     //find the index of a zone based on different inputs
     findZoneIndex: function(z) {
-        if(typeof z == 'number') return z;
+        if(typeof z === 'number') return z;
         var check, index = null;
 
         //if z is a vector, make it an array
@@ -221,11 +220,11 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
         //if z is an Array we use it as a point to find which zone that point is in
         if(z instanceof Array) {
-            check = function(zone) { return util.pointInPoly(zone.vertices, z); };
+            check = function(zone) { return gf.utils.pointInPoly(zone.vertices, z); };
         }
         //if z is a string, find the zone that has that name
-        else if(typeof z == 'string') {
-            check = function(zone) { return zone.name == z; };
+        else if(typeof z === 'string') {
+            check = function(zone) { return zone.name === z; };
         }
 
         if(check) {
@@ -241,14 +240,14 @@ gf.inherits(gf.TiledMap, gf.Map, {
     },
     //converts the vertex units of zones into world coordinates
     upgradeVertexUnits: function(zone) {
-        if(zone.vertexUnits === types.UNIT.OFFSETS) return;
+        if(zone.vertexUnits === gf.types.UNIT.OFFSETS) return;
 
         //Convert the vertices from pixels to offsets if necessary
         //pixel offsets are from the topleft of the tilemap, but offset units are from the center of the screen
         for (var i = 0, il = zone.vertices.length; i < il; ++i) {
             this.upgradeCoord(zone.vertices[i]);
         }
-        zone.vertexUnits = types.UNIT.OFFSETS;
+        zone.vertexUnits = gf.types.UNIT.OFFSETS;
 
         return this;
     },

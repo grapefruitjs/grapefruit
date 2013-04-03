@@ -2,11 +2,11 @@
     gf.utils = {
         applyFriction: function(vel, friction) {
             return (
-                        vel + friction < 0 ? 
-                        vel + (friction * gf.game._delta) : 
+                        vel + friction < 0 ?
+                        vel + (friction * gf.game._delta) :
                         (
-                            vel - friction > 0 ? 
-                            vel - (friction * gf.game._delta) : 
+                            vel - friction > 0 ?
+                            vel - (friction * gf.game._delta) :
                             0
                         )
                     );
@@ -17,7 +17,7 @@
                 return vec;
 
             var a = vec;
-            if(typeof vec == 'string')
+            if(typeof vec === 'string')
                 a = vec.split(gf.utils._arrayDelim);
 
             if(a instanceof Array) {
@@ -79,7 +79,7 @@
                 var newVal = values[key];
 
                 if(newVal === undefined) {
-                    console.warn('Object parameter "' + key + '" is undefined.');
+                    //console.warn('Object parameter "' + key + '" is undefined.');
                     continue;
                 }
                 if(key in obj) {
@@ -93,8 +93,8 @@
 
                         if(!isNaN(n))
                             obj[key] = n;
-                        else
-                            console.warn('Object parameter "' + key + '" evaluated to NaN, using default. Value passed: ' + newVal);
+                        /*else
+                            console.warn('Object parameter "' + key + '" evaluated to NaN, using default. Value passed: ' + newVal);*/
 
                     } else if(curVal instanceof THREE.Color && typeof newVal === 'number') {
                         curVal.setHex(newVal);
@@ -104,13 +104,14 @@
                         var a = newVal.split(gf.utils._arrayDelim, 2);
                         curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
                     } else if(curVal instanceof THREE.Vector3 && typeof newVal === 'string') {
-                        var a = newVal.split(gf.utils._arrayDelim, 3);
-                        curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0, parseInt(a[2], 10) || 0);
+                        var v = newVal.split(gf.utils._arrayDelim, 3);
+                        curVal.set(parseInt(v[0], 10) || 0, parseInt(v[1], 10) || 0, parseInt(v[2], 10) || 0);
                     } else if(curVal instanceof Array && typeof newVal === 'string') {
                         obj[key] = newVal.split(gf.utils._arrayDelim);
-                        gf.utils.each(obj[key], function(i, val) {
+                        for(var i = 0, il = obj[key].length; i < il; ++i) {
+                            var val = obj[key][i];
                             if(!isNaN(val)) obj[key][i] = parseInt(val, 10);
-                        });
+                        }
                     } else {
                         obj[key] = newVal;
                     }
@@ -127,14 +128,14 @@
             if(!gf.utils.isPowerOfTwo(n) || n === 0) return undefined;
 
             var p = 0;
-            while (n >>= 1) ++p;
+            while (!!(n >>= 1)) ++p;
             return p;
         },
         getPosition: function(o) {
             var l = o.offsetLeft,
                 t = o.offsetTop;
 
-            while(o = o.offsetParent) {
+            while(!!(o = o.offsetParent)) {
                 l += o.offsetLeft;
                 t += o.offsetTop;
             }
@@ -161,7 +162,8 @@
         //Some things stolen from jQuery
         getOffset: function(elem) {
             var doc = elem && elem.ownerDocument,
-                docElem = doc.documentElement;
+                docElem = doc.documentElement,
+                box;
 
             try {
                 box = elem.getBoundingClientRect();
@@ -195,7 +197,7 @@
         each: function(object, callback, args) {
             var name, i = 0,
                 length = object.length,
-                isObj = length === undefined || typeof object == 'function';
+                isObj = length === undefined || typeof object === 'function';
             if (args) {
                 if (isObj) {
                     for (name in object) {
@@ -229,11 +231,11 @@
         },
         b64: {
             // private property
-            _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+            _keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
 
             // public method for encoding
             encode: (window.btoa !== undefined) ? function() { return window.btoa.apply(window, arguments); } : function (input) {
-                var output = "";
+                var output = '';
                 var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
                 var i = 0;
 
@@ -267,12 +269,12 @@
 
             // public method for decoding
             decode: (window.atob !== undefined) ? function() { return window.atob.apply(window, arguments); } : function (input) {
-                var output = "";
+                var output = '';
                 var chr1, chr2, chr3;
                 var enc1, enc2, enc3, enc4;
                 var i = 0;
 
-                input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+                input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
 
                 while (i < input.length) {
 
@@ -287,10 +289,10 @@
 
                     output = output + String.fromCharCode(chr1);
 
-                    if (enc3 != 64) {
+                    if (enc3 !== 64) {
                         output = output + String.fromCharCode(chr2);
                     }
-                    if (enc4 != 64) {
+                    if (enc4 !== 64) {
                         output = output + String.fromCharCode(chr3);
                     }
 
@@ -304,8 +306,8 @@
 
             // private method for UTF-8 encoding
             _utf8_encode : function (string) {
-                string = string.replace(/\r\n/g,"\n");
-                var utftext = "";
+                string = string.replace(/\r\n/g,'\n');
+                var utftext = '';
 
                 for (var n = 0; n < string.length; n++) {
 
@@ -331,9 +333,10 @@
 
             // private method for UTF-8 decoding
             _utf8_decode : function (utftext) {
-                var string = "";
+                var string = '';
                 var i = 0;
-                var c = c1 = c2 = 0;
+                var c, c1, c2, c3;
+                c = c1 = c2 = c3 = 0;
 
                 while ( i < utftext.length ) {
 
