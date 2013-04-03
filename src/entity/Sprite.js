@@ -30,20 +30,31 @@ gf.Sprite = function(pos, settings) {
      */
     this.name = '';
 
-    //defined sprite animations
+    /**
+     * The defined animations for this Sprite, this maps the names to the childIndexes
+     *
+     * @property anim
+     * @private
+     * @readOnly
+     * @type Object
+     */
     this.anim = {};
 
-    //currently active animation
+    /**
+     * The currently active animation
+     *
+     * @property currentAnim
+     * @private
+     * @readOnly
+     * @type Object
+     */
     this.currentAnim = null;
 
-    //call base class
-    PIXI.MovieClip.call(this, settings.textures || settings.frames);
+    //call base ctor
+    PIXI.DisplayObjectContainer.call(this);
 
     //mixin user's settings
     gf.utils.setValues(this, settings);
-
-    //set the initial position
-    this.setPosition(pos);
 
     //add the animations passed to ctor
     if(settings.animations) {
@@ -53,7 +64,7 @@ gf.Sprite = function(pos, settings) {
     }
 };
 
-gf.inherits(gf.Sprite, PIXI.MovieClip, {
+gf.inherits(gf.Sprite, PIXI.DisplayObjectContainer, {
     /**
      * Defines a new animation on the Sprite
      *
@@ -73,10 +84,14 @@ gf.inherits(gf.Sprite, PIXI.MovieClip, {
         if(!frames)
             throw 'No textures passed to addAnimation()';
 
-        this.anim[name] = {
-            name: name,
-            textures: frames
-        };
+        var clip = new PIXI.MovieClip(frames);
+        clip.stop();
+        clip.visible = false;
+        clip.name = name;
+
+        this.addChild(clip);
+
+        this.anim[name] = clip.childIndex;
 
         return this;
     },
@@ -92,10 +107,15 @@ gf.inherits(gf.Sprite, PIXI.MovieClip, {
      *          .setActiveAnimation('me');
      */
     setActiveAnimation: function(name, cb) {
-        if(this.anim[name]) {
-            this.currentAnim = name;
-            this.textures = this.anim[name].textures;
-            this.gotoAndPlay(0);
+        if(this.anim[name] !== undefined) {
+            if(this.currentAnim) {
+                this.currentAnim.stop();
+                this.currentAnim.visible = false;
+            }
+
+            this.currentAnim = this.children[this.anim[name]];
+            this.currentAnim.visible = true;
+            this.currentAnim.gotoAndPlay(0);
             //TODO: Callback
             setTimeout(cb, 0);
         } else {
@@ -147,15 +167,6 @@ gf.inherits(gf.Sprite, PIXI.MovieClip, {
      *          .isActiveAnimation('walk-left'); //true
      */
     isActiveAnimation: function(name) {
-        return this.currentAnim === name;
-    },
-    /**
-     * Frame update stub
-     *
-     * @method update
-     * @private
-     */
-    update: function() {
-        return this;
+        return this.currentAnim.name === name;
     }
 });
