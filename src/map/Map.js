@@ -2,7 +2,7 @@
  * Base Map implementation, provides common functions for all Map types
  *
  * @module gf
- * @class audio
+ * @class Map
  */
 gf.Map = function(settings) {
     /**
