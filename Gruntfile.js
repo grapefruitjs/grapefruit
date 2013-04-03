@@ -31,9 +31,7 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/map/tiled/TiledTileset.js',
         '<%= dirs.src %>/map/tiled/TiledObjectGroup.js',
         '<%= dirs.src %>/plugin/plugin.js'
-    ]
-
-    var banner = [
+    ], banner = [
         '/**',
         ' * @license',
         ' * <%= pkg.longName %> - v<%= pkg.version %>',
@@ -135,13 +133,13 @@ module.exports = function(grunt) {
         connect: {
             qunit: {
                 options: {
-                    port: grunt.option('port-test') | 9002,
+                    port: grunt.option('port-test') || 9002,
                     base: './'
                 }
             },
             test: {
                 options: {
-                    port: grunt.option('port-test') | 9002,
+                    port: grunt.option('port-test') || 9002,
                     base: './',
                     keepalive: true
                 }
