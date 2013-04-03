@@ -1,3 +1,4 @@
+//see: https://github.com/GoodBoyDigital/pixi.js/issues/48
 (function() {
     //Shaders
     var vShader = [
