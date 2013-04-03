@@ -29,15 +29,37 @@
         return chans[chans.length - 1];
     }
 
+    /**
+     * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
+     *
+     * @module gf
+     * @class audio
+     */
     gf.audio = {
         //have we initialized the audio already?
         _initialized: false,
 
+        /**
+         * Initializes the audio component
+         *
+         * @method init
+         * @private
+         */
         init: function() {
             if(gf.audio._initialized) return;
 
             gf.audio._initialized = true;
         },
+        /**
+         * Plays a loaded audio clip
+         *
+         * @method play
+         * @param id {String|Object} The id of the sound clip to play. You can also pass the object returned from a previous play
+         * @param options {Object} The options object you can pass properties like "loop," "volume," "channel"
+         * @param callback {Function} The callback to call after the sound finishes playing
+         * @return {Object} The object returned can be passed to any audio function in the
+         *      first parameter to control that audio clip
+         */
         play: function(id, opts, cb) {
             if(!gf.resources[id]) {
                 throw 'Tried to play unloaded audio: ' + id;
@@ -89,6 +111,13 @@
 
             return opts;
         },
+        /**
+         * Stops a playing audio clip
+         *
+         * @method stop
+         * @param id {String|Object} The id of the sound clip to stop. You can also pass the object returned from a previous play
+         * @param channel {Number} The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)
+         */
         stop: function(id, channel) {
             if(typeof id === 'object') {
                 channel = id.channel;
@@ -102,6 +131,13 @@
             playing[id][channel].currentTime = resetTime;
             playing[id][channel].ended = true;
         },
+        /**
+         * Pauses a playing audio clip
+         *
+         * @method stop
+         * @param id {String|Object} The id of the sound clip to pause. You can also pass the object returned from a previous play
+         * @param channel {Number} The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)
+         */
         pause: function(id, channel) {
             if(typeof id === 'object') {
                 channel = id.channel;
@@ -113,6 +149,11 @@
 
             playing[id][channel].pause();
         },
+        /**
+         * Plays all currently paused or stopped audio clips (only ones that have previously been started with gf.play)
+         *
+         * @method playAll
+         */
         playAll: function() {
             for(var sid in playing) {
                 var chans = playing[sid];
@@ -121,6 +162,11 @@
                     gf.audio.play({ id: sid, channel: i });
             }
         },
+        /**
+         * Stops all currently paused or playing audio clips
+         *
+         * @method stopAll
+         */
         stopAll: function() {
             for(var sid in playing) {
                 var chans = playing[sid];
@@ -129,6 +175,11 @@
                     gf.audio.stop(sid, i);
             }
         },
+        /**
+         * Pauses all currently playing audio clips
+         *
+         * @method pauseAll
+         */
         pauseAll: function() {
             for(var sid in playing) {
                 var chans = playing[sid];
