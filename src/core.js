@@ -36,7 +36,20 @@
  */
 window.gf = window.gf || {};
 
+/**
+ * Point object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Point.html">PIXI.Point</a>
+ *
+ * @module gf
+ * @class Point
+ */
 gf.Point = PIXI.Point;
+
+/**
+ * Texture object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
+ *
+ * @module gf
+ * @class Point
+ */
 gf.Texture = PIXI.Texture;
 
 
