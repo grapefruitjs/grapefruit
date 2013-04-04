@@ -1,27 +1,60 @@
-//Tiled map, expects a Tiled TMX file loaded by the gf.loader as the argument.
-//The loader knows to load all textures and other resources when loading a world TMX
-//file, and this expets that to already be done.
+/**
+ * Tiled map, expects a Tiled TMX file loaded by the gf.loader as the argument.
+ * The loader knows to load all textures and other resources when loading a world TMX
+ * file, and this expets that to already be done.
+ *
+ * @module gf
+ * @class Tiled Map
+ */
 gf.TiledMap = function(map) {
-    /*if(!gf.support.webgl) {
-        throw 'TiledMap is only supported using WebGL rendering.';
-    }*/
-
     gf.Map.call(this, map);
 
-    //tile size
+    /**
+     * The tile size
+     *
+     * @property tileSize
+     * @type Vector
+     * @default new gf.Vector(0, 0)
+     */
     this.tileSize = new gf.Vector(map.tilewidth, map.tileheight);
 
-    //user-defined properties
+    /**
+     * The user-defined properties
+     *
+     * @property properties
+     * @type Object
+     * @default {}
+     */
     this.properties = map.properties || {};
+
+    /**
+     * The scale of the map
+     *
+     * @property scale
+     * @type Number
+     * @default 1
+     */
     this.scale = this.properties.scale || 1;
 
-    //scaled size (size * tileSize * scale)
+    /**
+     * The scaled size (size * tileSize * scale)
+     *
+     * @property scaledSize
+     * @type Vector
+     */
     this.scaledSize = new gf.Vector(
         this.size.x * this.tileSize.x * this.scale,
         this.size.y * this.tileSize.y * this.scale
     );
-    //assuming 0,0 is in the middle of the map, calculate the minimum
-    //and maximum extent of the map
+
+    /**
+     * The maximum extent of the map (largest x and y the map has)
+     * assuming 0,0 is in the middle of the map, calculate the minimum
+     * and maximum extent of the map
+     *
+     * @property extent
+     * @type Object
+     */
     this.extent = {
         x: {
             min: ~~(this.scaledSize.x / 2) - this.scaledSize.x,
@@ -33,94 +66,69 @@ gf.TiledMap = function(map) {
         }
     };
 
-    //tilesets
+    /**
+     * The tilesets used by this map
+     *
+     * @property tilesets
+     * @type Array
+     */
     this.tilesets = [];
 
-    //object groups
-    this.objectGroups = [];
+    for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
+        this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
+    }
 
-    //the layer for collisions
+    /**
+     * The layer for collisions
+     *
+     * @property collisionLayer
+     * @type Array
+     */
     this.collisionLayer = [];
+
+    /**
+     * The tileset for the collision layer
+     *
+     * @property collisionTileset
+     * @type TiledTileset
+     */
     this.collisionTileset = null;
 
-    //version
+    /**
+     * The version of this map
+     *
+     * @property version
+     * @type String
+     */
     this.version = map.version;
 
-    //create the tileset objects
-    this.tilesetMaps = {
-        textures: [],
-        firstgids: [],
-        lastgids: [],
-        sizes: [],
-        inverseSizes: [],
-        numTiles: []
-    };
-    for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
-        var ts = new gf.TiledTileset(map.tilesets[t]);
-
-        //Since Three.js doesn't support passing structs into a shader
-        //we have to create some arrays with each index corresponding
-        //to the values of each element.
-        //
-        //Basically instead of
-        //struct Tileset { gid, ... }
-        //uniform Tileset tilesets[];
-        //
-        //We do:
-        //uniform int gids[];
-        //uniform sampler2D textures[];
-        this.tilesetMaps.textures.push(ts.texture);
-        this.tilesetMaps.firstgids.push(ts.firstgid);
-        this.tilesetMaps.lastgids.push(ts.lastgid);
-        this.tilesetMaps.sizes.push(ts.size);
-        this.tilesetMaps.inverseSizes.push(new gf.Vector(1 / ts.size.x, 1 / ts.size.y));
-        this.tilesetMaps.numTiles.push(ts.numTiles);
-        this.tilesets.push(ts);
-
-        if(ts.name.toLowerCase().indexOf('collider') === 0) {
-            this.collisionTileset = ts;
-        }
-    }
-
-    for(var i = 0, il = map.layers.length; i < il; ++i) {
-        if(map.layers[i].type === gf.types.LAYER.TILE_LAYER)
-            this.addLayer(map.layers[i]);
-        else if(map.layers[i].type === gf.types.LAYER.OBJECT_GROUP) {
-            var grp = this.addObjectGroup(map.layers[i]);
-
-            //auto spawn the player object group
-            if(grp.name === 'player' && !grp.properties.manual)
-                grp.spawn();
-        }
-    }
+    this.createLayers();
 };
 
 gf.inherits(gf.TiledMap, gf.Map, {
     //add a new layer to this tilemap
-    addLayer: function(layer) {
-        layer.scale = this.scale;
-        layer.zIndex = this.layers.length;
-        var tilemapLayer = new gf.TiledLayer(layer, this.tileSize, this.tilesetMaps);
-        this.layers.push(tilemapLayer);
+    createLayers: function(layer) {
+        for(var i = 0, il = map.layers.length; i < il; ++i) {
+            var lyr;
 
-        if(tilemapLayer.name.toLowerCase().indexOf('collision') === 0) {
-            this.collisionLayer = tilemapLayer;
-            if(!gf.debug.showMapColliders) tilemapLayer.hide();
+            if(map.layers[i].type === gf.types.LAYER.TILE_LAYER) {
+                lyr = new gf.TiledLayer(map.layers[i], this.tileSize, this.tilesets);
+                lyr.scale = this.scale;
+
+                if(lyr.name.toLowerCase().indexOf('collision') === 0) {
+                    this.collisionLayer = lyr;
+                    if(!gf.debug.showMapColliders) lyr.hide();
+                }
+            } else if(map.layers[i].type === gf.types.LAYER.OBJECT_GROUP) {
+                lyr = new gf.TiledObjectGroup(map.layers[i], this);
+
+                //auto spawn the player object group
+                if(lyr.name === 'player' && !lyr.properties.manual)
+                    lyr.spawn();
+            }
+
+            this.addChild(lyr);
         }
-
-        //incase they add the map to the scene first, then add layers
-        if(this.scene)
-            tilemapLayer.addToScene(this.scene);
-
-        return tilemapLayer;
-    },
-    //add a new object group to this tilemap
-    addObjectGroup: function(group) {
-        group.zIndex = this.objectGroups.length + 1;
-        var objgroup = new gf.TiledObjectGroup(group, this);
-        this.objectGroups.push(objgroup);
-
-        return objgroup;
     },
     //if object is moved by pv get the tile it would be at
     checkCollision: function(mesh, sz, pv) {
@@ -197,79 +205,5 @@ gf.inherits(gf.TiledMap, gf.Map, {
         }
 
         return false;
-    },
-
-    /////////////////////////
-    // REMOVE BELOW??
-    /////////////////////////
-
-    //load a new zone as the player enters it
-    loadZone: function(zone) {
-        //set the new zone
-        this.zone = this.findZoneIndex(zone);
-
-        return this;
-    },
-    //find the index of a zone based on different inputs
-    findZoneIndex: function(z) {
-        if(typeof z === 'number') return z;
-        var check, index = null;
-
-        //if z is a vector, make it an array
-        if(z instanceof gf.Vector) z = [z.x, z.y];
-
-        //if z is an Array we use it as a point to find which zone that point is in
-        if(z instanceof Array) {
-            check = function(zone) { return gf.utils.pointInPoly(zone.vertices, z); };
-        }
-        //if z is a string, find the zone that has that name
-        else if(typeof z === 'string') {
-            check = function(zone) { return zone.name === z; };
-        }
-
-        if(check) {
-            this.eachZone(function(zone, i) {
-                if(check(zone)) {
-                    index = i;
-                    return false;
-                }
-            });
-        }
-
-        return index;
-    },
-    //converts the vertex units of zones into world coordinates
-    upgradeVertexUnits: function(zone) {
-        if(zone.vertexUnits === gf.types.UNIT.OFFSETS) return;
-
-        //Convert the vertices from pixels to offsets if necessary
-        //pixel offsets are from the topleft of the tilemap, but offset units are from the center of the screen
-        for (var i = 0, il = zone.vertices.length; i < il; ++i) {
-            this.upgradeCoord(zone.vertices[i]);
-        }
-        zone.vertexUnits = gf.types.UNIT.OFFSETS;
-
-        return this;
-    },
-    //converts a coord from pixel position to world coord
-    upgradeCoord: function(coord) {
-        if(coord instanceof gf.Vector) {
-            coord.x = (coord.x - (this.tilemapSize.x / 2)) * this.tileSize * this.tileScale;
-            coord.y = ((this.tilemapSize.y / 2) - coord.y) * this.tileSize * this.tileScale;
-        } else if(coord instanceof Array) {
-            coord[0] = (coord[0] - (this.tilemapSize.x / 2)) * this.tileSize * this.tileScale;
-            coord[1] = ((this.tilemapSize.y / 2) - coord[1]) * this.tileSize * this.tileScale;
-        }
-
-        return coord;
-    },
-    //apply an iterator to each zone
-    eachZone: function(fn) {
-        for(var i = 0, il = this.zones.length; i < il; ++i) {
-            if(fn.call(this, this.zones[i], i, this.zones) === false)
-                break;
-        }
-
-        return this;
     }
 });
