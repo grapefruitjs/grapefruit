@@ -57,7 +57,7 @@
         init: function() {
             if(gf.controls._initialized) return;
 
-            gf.controls.mouse.offset = gf.utils.getOffset(gf.game._renderer.domElement);
+            gf.controls.mouse.offset = gf.utils.getOffset(gf.game._renderer.view);
 
             document.addEventListener('keydown', gf.controls.onKeyDown, false);
             document.addEventListener('keyup', gf.controls.onKeyUp, false);
