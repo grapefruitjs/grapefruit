@@ -19,9 +19,7 @@ define(function() {
 
     Q.test('#ensureVector', function() {
         var v2s = gf.utils.ensureVector('10|5'),
-            v2a = gf.utils.ensureVector([10,5]),
-            v3s = gf.utils.ensureVector('5|10|5'),
-            v3a = gf.utils.ensureVector([5,10,5]);
+            v2a = gf.utils.ensureVector([10,5]);
 
         Q.ok(v2s instanceof gf.Vector, 'String converts to a Vector2');
         Q.ok(v2a instanceof gf.Vector, 'Array converts to a Vector2');

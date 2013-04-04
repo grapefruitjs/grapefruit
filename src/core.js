@@ -659,7 +659,7 @@ gf.game = {
     /**
      * Tracker to see if the game has been initialized yet
      *
-     * @property _cont
+     * @property _initialized
      * @type {Boolean}
      * @private
      */
@@ -698,6 +698,9 @@ gf.game = {
             }
         }
 
+        //cache the container object
+        gf.game._cont = document.getElementById(contId);
+
         var w = opts.width || gf.utils.getStyle(gf.game._cont, 'width'),
             h = opts.height || gf.utils.getStyle(gf.game._cont, 'height');
 
@@ -710,9 +713,6 @@ gf.game = {
 
         //save rendering method string
         gf.game._renderMethod = renderMethod;
-
-        //cache the container object
-        gf.game._cont = document.getElementById(contId);
 
         //initialize the renderer
         gf.game._renderer.view.style['z-index'] = opts.zIndex || 5;
