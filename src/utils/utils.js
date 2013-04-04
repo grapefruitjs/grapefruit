@@ -45,28 +45,28 @@
             sets.abort = sets.abort || gf.utils.noop;
             sets.complete = sets.complete || gf.utils.noop;
 
-            //start the XHR request
-            var xhr = new XMLHttpRequest();
+            var xhr = new AjaxRequest();
 
-            xhr.addEventListener('progress', sets.progress.bind(xhr), false);
-            xhr.addEventListener('error', sets.error.bind(xhr), false);
-            xhr.addEventListener('abort', sets.abort.bind(xhr), false);
-            xhr.addEventListener('loadend', sets.complete.bind(xhr), false);
-            xhr.addEventListener('load', function() {
-                var res = xhr.response,
-                    err = null;
+            xhr.onreadystatechange = function() {
+                if(xhr.readyState === 4) {
+                    var res = xhr.responseText,
+                        err = null;
 
-                if(sets.dataType === 'json' && typeof res === 'string') {
-                    try { res = JSON.parse(res); }
-                    catch(e) { err = e; }
+                    if(sets.dataType === 'json') {
+                        try { res = JSON.parse(res); }
+                        catch(e) { err = e; }
+                    }
+
+                    if(xhr.status !== 200)
+                        err = 'Non-200 status code returned: ' + xhr.status;
+
+                    if(err) {
+                        if(sets.error) sets.error.call(xhr, err);
+                    } else {
+                        if(sets.load) sets.load.call(xhr, res);
+                    }
                 }
-
-                if(err) {
-                    if(sets.error) sets.error.call(xhr, err);
-                } else {
-                    if(sets.load) sets.load.call(xhr, res);
-                }
-            }, false);
+            };
 
             xhr.open(sets.method, sets.url, true);
             xhr.send();
@@ -188,6 +188,41 @@
                 top: top,
                 left: left
             };
+        },
+        each: function(object, callback, args) {
+            var name, i = 0,
+                length = object.length,
+                isObj = length === undefined || typeof object === 'function';
+            if (args) {
+                if (isObj) {
+                    for (name in object) {
+                        if (callback.apply(object[name], args) === false) {
+                            break;
+                        }
+                    }
+                } else {
+                    for (; i < length;) {
+                        if (callback.apply(object[i++], args) === false) {
+                            break;
+                        }
+                    }
+                }
+            } else {
+                if (isObj) {
+                    for (name in object) {
+                        if (callback.call(object[name], name, object[name]) === false) {
+                            break;
+                        }
+                    }
+                } else {
+                    for (; i < length;) {
+                        if (callback.call(object[i], i, object[i++]) === false) {
+                            break;
+                        }
+                    }
+                }
+            }
+            return object;
         },
         b64: {
             // private property
