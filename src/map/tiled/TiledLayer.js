@@ -1,11 +1,18 @@
 /**
- * The TiledLayer is 
+ * The TiledLayer is the visual tiled layer that actually displays on the screen
+ *
+ * This class will be created by the TiledMap, there shouldn't be a reason to
+ * create an instance on your own.
  *
  * @module gf
  * @class Tiled Map
+ * @extends Layer
+ * @constructor
+ * @param layer {Object} All the settings for the layer
+ * @param tileSize {Vector} The size of a tile
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
-gf.TiledLayer = function(layer, tileSize, tilesets) {
+gf.TiledLayer = function(layer, tileSize) {
     gf.Layer.call(this, layer);
 
     /**
@@ -20,55 +27,67 @@ gf.TiledLayer = function(layer, tileSize, tilesets) {
      * The square size of the tiles in the layer
      *
      * @property tileSize
-     * @type Number
+     * @type Vector
      */
     this.tileSize = tileSize;
+
+    //translate some tiled properties to our inherited properties
+    this.position.x = settings.x;
+    this.position.y = settings.y;
+    this.alpha = settings.opacity;
 
     this.renderTiles();
 };
 
 gf.inherits(gf.TiledLayer, gf.Layer, {
+    /**
+     * Creates all the tile sprites needed to display the layer
+     *
+     * @method renderTiles
+     */
     renderTiles: function() {
         for(var i = 0, il = this.tiles.length; i < il; ++i) {
             var tile = this.tiles[i],
-                spr = this.getTileset(tile).createTileSprite(tile),
+                spr = this.parent.getTileset(tile).createTileSprite(tile),
                 y = ~~(i / this.size.x),
                 x = (id - (y * this.size.x));
 
             spr.position.x = x * this.tileSize.x;
             spr.position.y = y * this.tileSize.y;
+            //spr.scale = this.scale;
+            //spr.rotation = this.rotation;
+            //spr.alpha = this.alpha;
             this.addChild(spr);
         }
     },
-    getTileset: function(tileId) {
-        for(var i = 0, il = this.tilesets.length; i < il; ++i)
-            if(tileId >= this.tilesets[i].firstgid && tiledId <= this.tilesets[i].lastgid)
-                return this.tilesets[i];
+    /**
+     * Transforms an x,y coord into the index of a tile in the tiles array
+     *
+     * @method getTileIndex
+     * @param x {Number|Vector} The x coord to transform, if a vector is passed it's x/y is used and the y param is ignored
+     * @param y {Number} The y coord to transform
+     * @return {Number}
+     */
+    getTileIndex: function(x, y) {
+        var x = x instanceof gf.Vector ? x.x : x,
+            y = x instanceof gf.Vector ? x.y : y;
+
+        //convert the position from units to tiles
+        x = ~~(x / this.tileSize.x);
+        y = ~~(y / this.tileSize.y);
+
+        //calculate index of this tile
+        return (x + (y * this.size.x));
     },
-    //get ID of tile at specified location
-    getTileId: function(x, y, realCoords) {
-        var pos = x instanceof gf.Vector ? x.clone() : new gf.Vector(x, y);
-        //if not realCoords, they are world coords; and must be converted
-        if(!realCoords) {
-            //do some division to make position be in "tiles from center" instead of "units from center"
-            pos.divideScalar(this.scale);
-            pos.x = pos.x / this.tileSize.x;
-            pos.y = pos.y / this.tileSize.y;
-
-            //inverse the Y so the next add will actually subtract from Y
-            pos.y = -pos.y;
-
-            //pos is now the offset from the center, to make it from the top left
-            //we add half the size of the tilemap to x (and sub from y since we inverted)
-            pos.add(this.hSize);
-
-            pos.x = ~~pos.x; //floor
-            pos.y = ~~pos.y;
-        }
-
-        //calculate index
-        var idx = Math.floor(pos.x + (pos.y * (this.size.x)));
-
-        return this.data[idx];
+    /**
+     * Transforms an x,y coord into the TiledTileset tile id
+     *
+     * @method getTileId
+     * @param x {Number|Vector} The x coord to transform, if a vector is passed it's x/y is used and the y param is ignored
+     * @param y {Number} The y coord to transform
+     * @return {Number}
+     */
+    getTileId: function(x, y) {
+        return this.tiles[this.getTileIndex(x, y)];
     }
 });

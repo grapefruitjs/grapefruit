@@ -4,7 +4,10 @@
  * file, and this expets that to already be done.
  *
  * @module gf
- * @class Tiled Map
+ * @class TiledMap
+ * @extends Map
+ * @constructor
+ * @param map {Object} All the settings for the map
  */
 gf.TiledMap = function(map) {
     gf.Map.call(this, map);
@@ -106,30 +109,60 @@ gf.TiledMap = function(map) {
 };
 
 gf.inherits(gf.TiledMap, gf.Map, {
-    //add a new layer to this tilemap
-    createLayers: function(layer) {
+    /**
+     * Goes through each layer in the settings and creates each TiledLayer and TiledObjectGroup
+     *
+     * @method createLayers
+     */
+    createLayers: function() {
         for(var i = 0, il = map.layers.length; i < il; ++i) {
             var lyr;
 
-            if(map.layers[i].type === gf.types.LAYER.TILE_LAYER) {
-                lyr = new gf.TiledLayer(map.layers[i], this.tileSize, this.tilesets);
-                lyr.scale = this.scale;
+            switch(map.layers[i].type) {
+                case gf.types.LAYER.TILE_LAYER:
+                    lyr = new gf.TiledLayer(map.layers[i], this.tileSize, this.tilesets);
+                    lyr.scale = this.scale;
 
-                if(lyr.name.toLowerCase().indexOf('collision') === 0) {
-                    this.collisionLayer = lyr;
-                    if(!gf.debug.showMapColliders) lyr.hide();
-                }
-            } else if(map.layers[i].type === gf.types.LAYER.OBJECT_GROUP) {
-                lyr = new gf.TiledObjectGroup(map.layers[i], this);
+                    if(lyr.name.toLowerCase().indexOf('collision') === 0) {
+                        this.collisionLayer = lyr;
 
-                //auto spawn the player object group
-                if(lyr.name === 'player' && !lyr.properties.manual)
-                    lyr.spawn();
+                        if(!gf.debug.showMapColliders)
+                            lyr.visible = false;
+                    }
+                    break;
+
+                case gf.types.LAYER.OBJECT_GROUP:
+                    lyr = new gf.TiledObjectGroup(map.layers[i], this);
+
+                    //auto spawn the player object group
+                    if(lyr.name === 'player' && !lyr.properties.manual)
+                        lyr.spawn();
             }
 
             this.addChild(lyr);
         }
     },
+    /**
+     * Gets the tileset that an ID is associated with
+     *
+     * @method getTileset
+     * @param tileId {Number} The id of the tile to find the tileset for
+     * @return {TiledTileset}
+     */
+    getTileset: function(tileId) {
+        for(var i = 0, il = this.tilesets.length; i < il; ++i)
+            if(tileId >= this.tilesets[i].firstgid && tiledId <= this.tilesets[i].lastgid)
+                return this.tilesets[i];
+    },
+    /**
+     * Checks an entities collision with the collision layer of this map
+     * TODO: Fix this for new PIXI stuff
+     *
+     * @method checkCollision
+     * @param mesh {Entity} The entity to check
+     * @param sz {Vector} The size of the entity
+     * @param pv {Vector} The potential movement vector
+     */
     //if object is moved by pv get the tile it would be at
     checkCollision: function(mesh, sz, pv) {
         if(!this.collisionLayer || !this.collisionTileset) return [];
@@ -181,7 +214,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
         return res;
     },
-
+    //WIP
     _checkHalfBlock: function(half, x, y) {
         var tx = Math.floor(x / this.tileSize.x) * this.tileSize.x,
             ty = Math.floor(y / this.tileSize.y) * this.tileSize.y,

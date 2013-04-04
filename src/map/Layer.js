@@ -3,8 +3,11 @@
  *
  * @module gf
  * @class Layer
+ * @extends DisplayObjectContainer
+ * @constructor
+ * @param layer {Object} All the settings for the layer
  */
-gf.Layer = function(settings) {
+gf.Layer = function(layer) {
     /**
      * The name of the layer
      *
@@ -21,22 +24,13 @@ gf.Layer = function(settings) {
      * @type Vector
      * @default new gf.Vector(1, 1)
      */
-    this.size = new gf.Vector(settings.width || 0, settings.height || 0);
-
-    /**
-     * Texture of the layer
-     *
-     * @property texture
-     * @type Texture
-     * @default null
-     */
-    this.texture = null;
+    this.size = new gf.Vector(layer.width || 0, layer.height || 0);
 
     //call base ctor
     PIXI.DisplayObjectContainer.call(this);
 
     //mixin user's settings
-    gf.utils.setValues(this, settings);
+    gf.utils.setValues(this, layer);
 
     /**
      * Half of the size of the layer

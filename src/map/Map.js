@@ -3,8 +3,11 @@
  *
  * @module gf
  * @class Map
+ * @extends DisplayObjectContainer
+ * @constructor
+ * @param map {Object} All the settings for the map
  */
-gf.Map = function(settings) {
+gf.Map = function(map) {
     /**
      * The size of the map
      *
@@ -12,13 +15,13 @@ gf.Map = function(settings) {
      * @type Vector
      * @default new gf.Vector(0, 0)
      */
-    this.size = new gf.Vector(settings.width, settings.height);
+    this.size = new gf.Vector(map.width, map.height);
 
     //call base ctor
     PIXI.DisplayObjectContainer.call(this);
 
     //mixin user's settings
-    gf.utils.setValues(this, settings);
+    gf.utils.setValues(this, map);
 };
 
 gf.inherits(gf.Map, PIXI.DisplayObjectContainer, {
