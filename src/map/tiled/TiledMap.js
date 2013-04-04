@@ -105,43 +105,36 @@ gf.TiledMap = function(map) {
      */
     this.version = map.version;
 
-    this.createLayers();
+    //create the layers
+    for(var i = 0, il = map.layers.length; i < il; ++i) {
+        var lyr;
+
+        switch(map.layers[i].type) {
+            case gf.types.LAYER.TILE_LAYER:
+                lyr = new gf.TiledLayer(map.layers[i], this.tileSize, this.tilesets);
+                lyr.scale = this.scale;
+
+                if(lyr.name.toLowerCase().indexOf('collision') === 0) {
+                    this.collisionLayer = lyr;
+
+                    if(!gf.debug.showMapColliders)
+                        lyr.visible = false;
+                }
+                break;
+
+            case gf.types.LAYER.OBJECT_GROUP:
+                lyr = new gf.TiledObjectGroup(map.layers[i], this);
+
+                //auto spawn the player object group
+                if(lyr.name === 'player' && !lyr.properties.manual)
+                    lyr.spawn();
+        }
+
+        this.addChild(lyr);
+    }
 };
 
 gf.inherits(gf.TiledMap, gf.Map, {
-    /**
-     * Goes through each layer in the settings and creates each TiledLayer and TiledObjectGroup
-     *
-     * @method createLayers
-     */
-    createLayers: function() {
-        for(var i = 0, il = map.layers.length; i < il; ++i) {
-            var lyr;
-
-            switch(map.layers[i].type) {
-                case gf.types.LAYER.TILE_LAYER:
-                    lyr = new gf.TiledLayer(map.layers[i], this.tileSize, this.tilesets);
-                    lyr.scale = this.scale;
-
-                    if(lyr.name.toLowerCase().indexOf('collision') === 0) {
-                        this.collisionLayer = lyr;
-
-                        if(!gf.debug.showMapColliders)
-                            lyr.visible = false;
-                    }
-                    break;
-
-                case gf.types.LAYER.OBJECT_GROUP:
-                    lyr = new gf.TiledObjectGroup(map.layers[i], this);
-
-                    //auto spawn the player object group
-                    if(lyr.name === 'player' && !lyr.properties.manual)
-                        lyr.spawn();
-            }
-
-            this.addChild(lyr);
-        }
-    },
     /**
      * Gets the tileset that an ID is associated with
      *
@@ -151,7 +144,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
      */
     getTileset: function(tileId) {
         for(var i = 0, il = this.tilesets.length; i < il; ++i)
-            if(tileId >= this.tilesets[i].firstgid && tiledId <= this.tilesets[i].lastgid)
+            if(tileId >= this.tilesets[i].firstgid && tileId <= this.tilesets[i].lastgid)
                 return this.tilesets[i];
     },
     /**
