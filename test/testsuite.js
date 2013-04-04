@@ -11,7 +11,6 @@ define(function(require) {
         'debug/debug',
         'entity/Entity',
         'entity/entityPool',
-        'entity/SceneObject',
         'entity/Sprite',
         'gui/gui',
         'gui/hud',
