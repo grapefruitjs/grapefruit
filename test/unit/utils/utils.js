@@ -2,7 +2,15 @@ define(function() {
     Q.module('Utils');
 
     Q.test('#applyFriction', function() {
-        Q.skip('Need Tests');
+        gf.game._delta = 0.002;
+
+        Q.equal(gf.utils.applyFriction(100, 0), 100, 'No friction doesn\'t change the velocity');
+
+        Q.equal(gf.utils.applyFriction(100, 10), 99.98);
+
+        Q.equal(gf.utils.applyFriction(100, 99), 99.802);
+
+        Q.equal(gf.utils.applyFriction(100, 100), 0);
     });
 
     Q.test('#_arrayDelim', function() {
@@ -15,23 +23,13 @@ define(function() {
             v3s = gf.utils.ensureVector('5|10|5'),
             v3a = gf.utils.ensureVector([5,10,5]);
 
-        Q.ok(v2s instanceof gf.THREE.Vector2, 'String converts to a Vector2');
-        Q.ok(v2a instanceof gf.THREE.Vector2, 'Array converts to a Vector2');
+        Q.ok(v2s instanceof gf.Vector, 'String converts to a Vector2');
+        Q.ok(v2a instanceof gf.Vector, 'Array converts to a Vector2');
 
         Q.strictEqual(v2s.x, 10, 'String (V2) has X set correctly');
         Q.strictEqual(v2s.y, 5, 'String (V2) has Y set correctly');
         Q.strictEqual(v2a.x, 10, 'Array (V2) has Y set correctly');
         Q.strictEqual(v2a.y, 5, 'Array (V2) has Y set correctly');
-
-        Q.ok(v3s instanceof gf.THREE.Vector3, 'String converts to a Vector3');
-        Q.ok(v3a instanceof gf.THREE.Vector3, 'String converts to a Vector3');
-
-        Q.strictEqual(v3s.x, 5, 'String (V3) has X set correctly');
-        Q.strictEqual(v3s.y, 10, 'String (V3) has Y set correctly');
-        Q.strictEqual(v3s.z, 5, 'String (V3) has Z set correctly');
-        Q.strictEqual(v3a.x, 5, 'Array (V3) has X set correctly');
-        Q.strictEqual(v3a.y, 10, 'Array (V3) has Y set correctly');
-        Q.strictEqual(v3a.z, 5, 'Array (V3) has Z set correctly');
     });
 
     Q.test('#numToHexColor', function() {
@@ -45,7 +43,7 @@ define(function() {
     });
 
     Q.test('#noop', function() {
-        Q.equal(gf.utils.noop(), undefined);
+        Q.equal(gf.utils.noop.toString(), function() {}.toString());
     });
 
     Q.test('#ajax', function() {
@@ -75,13 +73,13 @@ define(function() {
         // Vector2s
         Q.deepEqual(
             gf.utils.setValues({ vec2: new gf.Vector(10, 10) }, { vec2: '2|5' }),
-            { vec2: new gf.THREE.Vector2(2, 5) },
+            { vec2: new gf.Vector(2, 5) },
             'Strings convert to vector2s'
         );
 
         Q.deepEqual(
             gf.utils.setValues({ vec2: new gf.Vector(10, 10) }, { vec2: [2, 5] }),
-            { vec2: new gf.THREE.Vector2(2, 5) },
+            { vec2: new gf.Vector(2, 5) },
             'Arrays convert to vector2s'
         );
 
@@ -148,7 +146,7 @@ define(function() {
     });
 
     Q.test('#getPosition', function() {
-        Q.skip('TODO: Sometimes this can fail because jQuery values are not rounded off...');
+        Q.skip('DOM stuff should be removed');
 
         Q.deepEqual(
             gf.utils.getPosition(document.getElementById('qunit-header')),
@@ -182,6 +180,8 @@ define(function() {
     });
 
     Q.test('#getStyle', function() {
+        Q.skip('DOM stuff should be removed');
+
         Q.skipIf(!window.getComputedStyle, 'No getComputedStyle support in this browser, need a fallback...', function() {
             Q.deepEqual(
                 gf.utils.getStyle(document.getElementById('qunit-header'), 'margin-top'),
@@ -204,23 +204,11 @@ define(function() {
     });
 
     Q.test('#setStyle', function() {
-        Q.skip('Need Tests');
+        Q.skip('DOM stuff should be removed');
     });
 
     Q.test('#getOffset', function() {
-        Q.skip('Need Tests');
-    });
-
-    Q.test('#each', function() {
-        var obj = { one: 1, two: 2, count: 3 },
-            ocount = 0;
-        gf.utils.each(obj, function() { ocount++; });
-        Q.strictEqual(ocount, obj.count, 'Loops over every object property');
-
-        var arr = [0, 1, 2, 3],
-            acount = 0;
-        gf.utils.each(arr, function() { acount++; });
-        Q.strictEqual(acount, arr.length, 'Loops over every array element');
+        Q.skip('DOM stuff should be removed');
     });
 
     Q.test('#b64.encode', function() {
@@ -245,13 +233,5 @@ define(function() {
         Q.strictEqual(gf.utils.b64.decode(str2[1]), str2[0], 'Decodes utf8 weird strings');
         Q.strictEqual(gf.utils.b64.decode(str3[1]), str3[0], 'Decodes faceroll strings');
         Q.strictEqual(gf.utils.b64.decode(str4[1]), str4[0], 'Decodes uuid strings');
-    });
-
-    Q.test('#b64._utf8_encode', function() {
-        Q.skip('Need Tests');
-    });
-
-    Q.test('#b64._utf8_decode', function() {
-        Q.skip('Need Tests');
     });
 });
