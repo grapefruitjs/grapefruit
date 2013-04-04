@@ -32,9 +32,9 @@ gf.TiledLayer = function(layer, tileSize) {
     this.tileSize = tileSize;
 
     //translate some tiled properties to our inherited properties
-    this.position.x = settings.x;
-    this.position.y = settings.y;
-    this.alpha = settings.opacity;
+    this.position.x = layer.x;
+    this.position.y = layer.y;
+    this.alpha = layer.opacity;
 
     this.renderTiles();
 };
@@ -50,7 +50,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             var tile = this.tiles[i],
                 spr = this.parent.getTileset(tile).createTileSprite(tile),
                 y = ~~(i / this.size.x),
-                x = (id - (y * this.size.x));
+                x = (i - (y * this.size.x));
 
             spr.position.x = x * this.tileSize.x;
             spr.position.y = y * this.tileSize.y;
@@ -69,8 +69,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Number}
      */
     getTileIndex: function(x, y) {
-        var x = x instanceof gf.Vector ? x.x : x,
-            y = x instanceof gf.Vector ? x.y : y;
+        x = x instanceof gf.Vector ? x.x : x;
+        y = x instanceof gf.Vector ? x.y : y;
 
         //convert the position from units to tiles
         x = ~~(x / this.tileSize.x);

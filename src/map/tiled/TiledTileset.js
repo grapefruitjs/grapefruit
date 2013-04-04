@@ -12,7 +12,8 @@ gf.TiledTileset = function(settings) {
     //first build the baseTexture
     var image = new Image();
     image.src = settings.image;
-    baseTexture = new PIXI.BaseTexture(image);
+
+    var baseTexture = new PIXI.BaseTexture(image);
     PIXI.BaseTextureCache[settings.image] = baseTexture;
 
     //initialize the base Texture class
@@ -103,6 +104,8 @@ gf.TiledTileset = function(settings) {
 
     //massage normal
     for(var i = 0, il = this.tileproperties.length; i < il; ++i) {
+        var v = this.tileproperties[i];
+
         if(v.normal) v.normal = gf.utils.ensureVector(v.normal);
 
         if(v.isCollidable === 'true') v.isCollidable = true;
@@ -153,12 +156,12 @@ gf.inherits(gf.TiledTileset, PIXI.Texture, {
 
         //convert the tileId to x,y coords of the tile in the Texture
         var y = ~~(tileId / this.size.x),
-            x = (id - (y * this.size.x));
+            x = (tileId - (y * this.size.x));
 
         return new PIXI.Sprite(
             new PIXI.Texture(
                 this.baseTexture,
-                new Rectangle(
+                new PIXI.Rectangle(
                     x * this.tileSize.x, //offset of x
                     y * this.tileSize.y, //offset of y
                     this.tileSize.x, //size
