@@ -108,6 +108,9 @@ module.exports = function(grunt) {
                 trailing: true,     //help prevent weird whitespace errors in multi-line strings using \ 
                 maxlen: 200,        //no line should be longer than 120 characters
 
+                /* Relaxing Options */
+                boss: true,        //do not warn about the use of assignments in cases where comparisons are expected
+
                 /* Environments */
                 browser: true,      //this runs in a browser :)
                 devel: false,       //warn about using console.log and the like
