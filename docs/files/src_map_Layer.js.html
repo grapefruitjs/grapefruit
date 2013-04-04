@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\utils\Vector.js - gf</title>
+    <title>src\map\Layer.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -106,189 +106,61 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\utils\Vector.js</h1>
+                        <h1 class="file-heading">File: src\map\Layer.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 &#x2F;**
- * Based on Vector2 from three.js
- * thanks mrdoob: https:&#x2F;&#x2F;github.com&#x2F;mrdoob&#x2F;three.js&#x2F;blob&#x2F;master&#x2F;src&#x2F;math&#x2F;Vector2.js
- **&#x2F;
-gf.Vector = function(x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
+ * Base Layer implementation, provides common functions for all Layer types
+ *
+ * @module gf
+ * @class Layer
+ *&#x2F;
+gf.Layer = function(settings) {
+    &#x2F;**
+     * The name of the layer
+     *
+     * @property name
+     * @type String
+     * @default &#x27;&#x27;
+     *&#x2F;
+    this.name = &#x27;&#x27;;
+
+    &#x2F;**
+     * The size of the layer
+     *
+     * @property size
+     * @type Vector
+     * @default new gf.Vector(1, 1)
+     *&#x2F;
+    this.size = new gf.Vector(settings.width || 0, settings.height || 0);
+
+    &#x2F;**
+     * Texture of the layer
+     *
+     * @property texture
+     * @type Texture
+     * @default null
+     *&#x2F;
+    this.texture = null;
+
+    &#x2F;&#x2F;call base ctor
+    PIXI.DisplayObjectContainer.call(this);
+
+    &#x2F;&#x2F;mixin user&#x27;s settings
+    gf.utils.setValues(this, settings);
+
+    &#x2F;**
+     * Half of the size of the layer
+     *
+     * @property hSize
+     * @type Vector
+     * @private
+     *&#x2F;
+    this.hSize = this.size.clone().divideScalar(2);
 };
 
-gf.inherits(gf.Vector, Object, {
-    set: function(x, y) {
-        this.x = x;
-        this.y = y;
-
-        return this;
-    },
-    setX: function(x) {
-        this.x = x;
-
-        return this;
-    },
-    setY: function(y) {
-        this.y = y;
-
-        return this;
-    },
-    setComponent: function(index, value) {
-        switch(index) {
-            case 0: this.x = value; break;
-            case 1: this.y = value; break;
-            default: throw new Error(&#x27;index is out of range: &#x27; + index);
-        }
-    },
-    getComponent: function(index) {
-        switch(index) {
-            case 0: return this.x;
-            case 1: return this.y;
-            default: throw new Error(&#x27;index is out of range: &#x27; + index);
-        }
-    },
-    copy: function(v) {
-        this.x = v.x;
-        this.y = v.y;
-
-        return this;
-    },
-    add: function(v) {
-        this.x += v.x;
-        this.y += v.y;
-
-        return this;
-    },
-    addVectors: function(a, b) {
-        this.x = a.x + b.x;
-        this.y = a.y + b.y;
-
-        return this;
-    },
-    addScalar: function(s) {
-        this.x += s;
-        this.y += s;
-
-        return this;
-    },
-    sub: function(v) {
-        this.x -= v.x;
-        this.y -= v.y;
-
-        return this;
-    },
-    subVectors: function(a, b) {
-        this.x = a.x - b.x;
-        this.y = a.y - b.y;
-
-        return this;
-    },
-    multiplyScalar: function(s) {
-        this.x *= s;
-        this.y *= s;
-
-        return this;
-    },
-    divideScalar: function(s) {
-        if(s !== 0) {
-            this.x &#x2F;= s;
-            this.y &#x2F;= s;
-        } else {
-            this.set(0, 0);
-        }
-
-        return this;
-    },
-    min: function(v) {
-        if(this.x &gt; v.x) {
-            this.x = v.x;
-        }
-
-        if(this.y &gt; v.y) {
-            this.y = v.y;
-        }
-
-        return this;
-    },
-    max: function(v) {
-        if(this.x &lt; v.x) {
-            this.x = v.x;
-        }
-
-        if(this.y &lt; v.y) {
-            this.y = v.y;
-        }
-
-        return this;
-    },
-    clamp: function(min, max) {
-        &#x2F;&#x2F; This function assumes min &lt; max, if this assumption
-        &#x2F;&#x2F;isn&#x27;t true it will not operate correctly
-        if(this.x &lt; min.x) {
-            this.x = min.x;
-        } else if(this.x &gt; max.x) {
-            this.x = max.x;
-        }
-
-        if(this.y &lt; min.y) {
-            this.y = min.y;
-        } else if(this.y &gt; max.y) {
-            this.y = max.y;
-        }
-
-        return this;
-    },
-    negate: function() {
-        return this.multiplyScalar(-1);
-    },
-    dot: function(v) {
-        return this.x * v.x + this.y * v.y;
-    },
-    lengthSq: function() {
-        return this.x * this.x + this.y * this.y;
-    },
-    length: function() {
-        return Math.sqrt(this.x * this.x + this.y * this.y);
-    },
-    normalize: function() {
-        return this.divideScalar(this.length());
-    },
-    distanceTo: function(v) {
-        return Math.sqrt(this.distanceToSquared(v));
-    },
-    distanceToSquared: function(v) {
-        var dx = this.x - v.x, dy = this.y - v.y;
-        return dx * dx + dy * dy;
-    },
-    setLength: function(l) {
-        var oldLength = this.length();
-
-        if(oldLength !== 0 &amp;&amp; l !== oldLength) {
-            this.multiplyScalar(l &#x2F; oldLength);
-        }
-
-        return this;
-    },
-    lerp: function(v, alpha) {
-        this.x += (v.x - this.x) * alpha;
-        this.y += (v.y - this.y) * alpha;
-
-        return this;
-    },
-    equals: function(v) {
-        return ((v.x === this.x) &amp;&amp; (v.y === this.y));
-    },
-    toArray: function () {
-        return [this.x, this.y];
-    },
-    clone: function () {
-        return new gf.Vector(this.x, this.y);
-    }
-});
-
+gf.inherits(gf.Layer, PIXI.DisplayObjectContainer);
     </pre>
 </div>
 

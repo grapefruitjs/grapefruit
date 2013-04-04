@@ -3,7 +3,13 @@ YUI.add("yuidoc-meta", function(Y) {
     "classes": [
         "Clock",
         "Entity",
+        "Layer",
+        "Map",
+        "Point",
         "Sprite",
+        "Tiled Map",
+        "audio",
+        "entityPool",
         "game",
         "support",
         "types"

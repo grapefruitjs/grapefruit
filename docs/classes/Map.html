@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Clock - gf</title>
+    <title>Map - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -106,7 +106,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Clock Class</h1>
+                        <h1>Map Class</h1>
 <div class="box meta">
     
 
@@ -114,7 +114,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l484"><code>src\core.js:484</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_map_Map.js.html#l1"><code>src\map\Map.js:1</code></a>
         </div>
     
 
@@ -130,8 +130,7 @@
 
 
 <div class="box intro">
-    <p>High performance clock, from mrdoob's Three.js
-https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js</p>
+    <p>Base Map implementation, provides common functions for all Map types</p>
 </div>
 
 
@@ -143,6 +142,8 @@ https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js</p>
         
             <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
+        
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
         
         
@@ -159,28 +160,24 @@ https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js</p>
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_getDelta">getDelta</a>
+                                <a href="#method_getLayer">getLayer</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_getElapsedTime">getElapsedTime</a>
+                    </ul>
+                </div>
+            
 
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_start">start</a>
+            
+                <div class="index-section properties">
+                    <h3>Properties</h3>
 
-                                
-                                
-                            </li>
+                    <ul class="index-list properties">
                         
-                            <li class="index-item method">
-                                <a href="#method_stop">stop</a>
+                            <li class="index-item property">
+                                <a href="#property_size">size</a>
 
                                 
                                 
@@ -193,8 +190,6 @@ https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js</p>
             
 
             
-
-            
         </div>
 
         
@@ -202,16 +197,26 @@ https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js</p>
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_getDelta" class="method item">
-    <h3 class="name"><code>getDelta</code></h3>
+                    <div id="method_getLayer" class="method item">
+    <h3 class="name"><code>getLayer</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>id</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
         <span class="returns-inline">
-            <span class="type">Number</span>
+            <span class="type"><a href="..\classes\Layer.html" class="crosslink">Layer</a></span>
         </span>
     
 
@@ -238,7 +243,7 @@ https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l548"><code>src\core.js:548</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_Map.js.html#l25"><code>src\map\Map.js:25</code></a>
         
         </p>
 
@@ -249,9 +254,32 @@ https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js</p>
     </div>
 
     <div class="description">
-        <p>Gets the difference in time since getDelta() was called last</p>
+        <p>Gets a layer based on the layer's id or name</p>
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type">Number | String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The layer's number id or string name.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -261,43 +289,29 @@ https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">Number</span>:
+                        <span class="type"><a href="..\classes\Layer.html" class="crosslink">Layer</a></span>:
                     
-                    Ellapsed time since last call in seconds
+                    Returns the found layer, or null if not found
                 
             </div>
         </div>
     
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> clock.getDelta();
-</code></pre>
-            </div>
-        </div>
     
 </div>
 
                 
-                    <div id="method_getElapsedTime" class="method item">
-    <h3 class="name"><code>getElapsedTime</code></h3>
+            </div>
+        
 
-    
-        <span class="paren">()</span>
-    
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
 
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
+                
+                    <div id="property_size" class="property item">
+    <h3 class="name"><code>size</code></h3>
+    <span class="type">Vector</span>
 
     
 
@@ -318,10 +332,9 @@ https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l535"><code>src\core.js:535</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_Map.js.html#l8"><code>src\map\Map.js:8</code></a>
         
         </p>
-
 
         
 
@@ -329,168 +342,20 @@ https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js</p>
     </div>
 
     <div class="description">
-        <p>Gets the total time that the timer has been running</p>
+        <p>The size of the map</p>
     </div>
 
     
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    Total ellapsed time in ms
-                
-            </div>
-        </div>
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> clock.getElapsedTime();
-</code></pre>
-            </div>
-        </div>
-    
-</div>
-
-                
-                    <div id="method_start" class="method item">
-    <h3 class="name"><code>start</code></h3>
-
-    
-        <span class="paren">()</span>
+        <p><strong>Default:</strong> new gf.Vector(0, 0)</p>
     
 
     
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l510"><code>src\core.js:510</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Starts the timer</p>
-    </div>
-
-    
-
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> clock.start();
-</code></pre>
-            </div>
-        </div>
-    
-</div>
-
-                
-                    <div id="method_stop" class="method item">
-    <h3 class="name"><code>stop</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l524"><code>src\core.js:524</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stops the timer</p>
-    </div>
-
-    
-
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> clock.stop();
-</code></pre>
-            </div>
-        </div>
     
 </div>
 
                 
             </div>
-        
-
         
 
         

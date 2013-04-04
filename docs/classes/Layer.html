@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>types - gf</title>
+    <title>Layer - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -106,7 +106,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>types Class</h1>
+                        <h1>Layer Class</h1>
 <div class="box meta">
     
 
@@ -114,7 +114,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l65"><code>src\core.js:65</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_map_Layer.js.html#l1"><code>src\map\Layer.js:1</code></a>
         </div>
     
 
@@ -130,7 +130,7 @@
 
 
 <div class="box intro">
-    <p>Constant types for easy use in code</p>
+    <p>Base Layer implementation, provides common functions for all Layer types</p>
 </div>
 
 
@@ -159,75 +159,29 @@
 
                     <ul class="index-list properties">
                         
-                            <li class="index-item property">
-                                <a href="#property_COLLISION">COLLISION</a>
+                            <li class="index-item property private">
+                                <a href="#property_hSize">hSize</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_ENTITY">ENTITY</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property deprecated">
-                                <a href="#property_EVENT">EVENT</a>
-
-                                
-                                
-                                    <span class="flag deprecated">deprecated</span>
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_GP_AXES">GP_AXES</a>
+                                <a href="#property_name">name</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_GP_BUTTONS">GP_BUTTONS</a>
+                                <a href="#property_size">size</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_KEY">KEY</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_LAYER">LAYER</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_MOUSE">MOUSE</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property deprecated">
-                                <a href="#property_RESOURCE">RESOURCE</a>
-
-                                
-                                
-                                    <span class="flag deprecated">deprecated</span>
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_TOUCH">TOUCH</a>
+                                <a href="#property_texture">texture</a>
 
                                 
                                 
@@ -249,12 +203,14 @@
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_COLLISION" class="property item">
-    <h3 class="name"><code>COLLISION</code></h3>
-    <span class="type">Object</span>
+                    <div id="property_hSize" class="property item private">
+    <h3 class="name"><code>hSize</code></h3>
+    <span class="type">Vector</span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -272,7 +228,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l95"><code>src\core.js:95</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_Layer.js.html#l41"><code>src\map\Layer.js:41</code></a>
         
         </p>
 
@@ -282,7 +238,7 @@
     </div>
 
     <div class="description">
-        <p>Tile collision types</p>
+        <p>Half of the size of the layer</p>
     </div>
 
     
@@ -293,9 +249,9 @@
 </div>
 
                 
-                    <div id="property_ENTITY" class="property item">
-    <h3 class="name"><code>ENTITY</code></h3>
-    <span class="type">Object</span>
+                    <div id="property_name" class="property item">
+    <h3 class="name"><code>name</code></h3>
+    <span class="type">String</span>
 
     
 
@@ -316,7 +272,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l72"><code>src\core.js:72</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_Layer.js.html#l8"><code>src\map\Layer.js:8</code></a>
         
         </p>
 
@@ -326,9 +282,11 @@
     </div>
 
     <div class="description">
-        <p>Entity types</p>
+        <p>The name of the layer</p>
     </div>
 
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
     
 
     
@@ -337,12 +295,10 @@
 </div>
 
                 
-                    <div id="property_EVENT" class="property item deprecated">
-    <h3 class="name"><code>EVENT</code></h3>
-    <span class="type">Object</span>
+                    <div id="property_size" class="property item">
+    <h3 class="name"><code>size</code></h3>
+    <span class="type">Vector</span>
 
-    
-        <span class="flag deprecated">deprecated</span>
     
 
     
@@ -362,7 +318,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l109"><code>src\core.js:109</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_Layer.js.html#l17"><code>src\map\Layer.js:17</code></a>
         
         </p>
 
@@ -372,9 +328,11 @@
     </div>
 
     <div class="description">
-        <p>Event definitions</p>
+        <p>The size of the layer</p>
     </div>
 
+    
+        <p><strong>Default:</strong> new gf.Vector(1, 1)</p>
     
 
     
@@ -383,9 +341,9 @@
 </div>
 
                 
-                    <div id="property_GP_AXES" class="property item">
-    <h3 class="name"><code>GP_AXES</code></h3>
-    <span class="type">Object</span>
+                    <div id="property_texture" class="property item">
+    <h3 class="name"><code>texture</code></h3>
+    <span class="type">Texture</span>
 
     
 
@@ -406,7 +364,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l295"><code>src\core.js:295</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_Layer.js.html#l26"><code>src\map\Layer.js:26</code></a>
         
         </p>
 
@@ -416,275 +374,11 @@
     </div>
 
     <div class="description">
-        <p>Bindable Gamepad Axes</p>
+        <p>Texture of the layer</p>
     </div>
 
     
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_GP_BUTTONS" class="property item">
-    <h3 class="name"><code>GP_BUTTONS</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l259"><code>src\core.js:259</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Bindable Gamepad Buttons</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_KEY" class="property item">
-    <h3 class="name"><code>KEY</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l142"><code>src\core.js:142</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Bindable keycodes</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_LAYER" class="property item">
-    <h3 class="name"><code>LAYER</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l85"><code>src\core.js:85</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Layer types</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_MOUSE" class="property item">
-    <h3 class="name"><code>MOUSE</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l227"><code>src\core.js:227</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Bindable Mouse Events</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_RESOURCE" class="property item deprecated">
-    <h3 class="name"><code>RESOURCE</code></h3>
-    <span class="type">Object</span>
-
-    
-        <span class="flag deprecated">deprecated</span>
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l124"><code>src\core.js:124</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Resource types</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_TOUCH" class="property item">
-    <h3 class="name"><code>TOUCH</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l243"><code>src\core.js:243</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Bindable Touch Events</p>
-    </div>
-
+        <p><strong>Default:</strong> null</p>
     
 
     

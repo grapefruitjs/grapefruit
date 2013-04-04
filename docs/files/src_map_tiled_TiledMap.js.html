@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\map\tiled\TiledMap.js - gf</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title="gf"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.0.2</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+            
+                <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
+            
+                <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
+            
+                <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
+            
+                <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/Point.html">Point</a></li>
+            
+                <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
+            
+                <li><a href="..&#x2F;classes/types.html">types</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src\map\tiled\TiledMap.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;**
+ * Tiled map, expects a Tiled TMX file loaded by the gf.loader as the argument.
+ * The loader knows to load all textures and other resources when loading a world TMX
+ * file, and this expets that to already be done.
+ *
+ * @module gf
+ * @class Tiled Map
+ *&#x2F;
+gf.TiledMap = function(map) {
+    gf.Map.call(this, map);
+
+    &#x2F;**
+     * The tile size
+     *
+     * @property tileSize
+     * @type Vector
+     * @default new gf.Vector(0, 0)
+     *&#x2F;
+    this.tileSize = new gf.Vector(map.tilewidth, map.tileheight);
+
+    &#x2F;**
+     * The user-defined properties
+     *
+     * @property properties
+     * @type Object
+     * @default {}
+     *&#x2F;
+    this.properties = map.properties || {};
+
+    &#x2F;**
+     * The scale of the map
+     *
+     * @property scale
+     * @type Number
+     * @default 1
+     *&#x2F;
+    this.scale = this.properties.scale || 1;
+
+    &#x2F;**
+     * The scaled size (size * tileSize * scale)
+     *
+     * @property scaledSize
+     * @type Vector
+     *&#x2F;
+    this.scaledSize = new gf.Vector(
+        this.size.x * this.tileSize.x * this.scale,
+        this.size.y * this.tileSize.y * this.scale
+    );
+
+    &#x2F;**
+     * The maximum extent of the map (largest x and y the map has)
+     * assuming 0,0 is in the middle of the map, calculate the minimum
+     * and maximum extent of the map
+     *
+     * @property extent
+     * @type Object
+     *&#x2F;
+    this.extent = {
+        x: {
+            min: ~~(this.scaledSize.x &#x2F; 2) - this.scaledSize.x,
+            max: this.scaledSize.x - ~~(this.scaledSize.x &#x2F; 2)
+        },
+        y: {
+            min: ~~(this.scaledSize.y &#x2F; 2) - this.scaledSize.y,
+            max: this.scaledSize.y - ~~(this.scaledSize.y &#x2F; 2)
+        }
+    };
+
+    &#x2F;**
+     * The tilesets used by this map
+     *
+     * @property tilesets
+     * @type Array
+     *&#x2F;
+    this.tilesets = [];
+
+    for(var t = 0, tl = map.tilesets.length; t &lt; tl; ++t) {
+        this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
+    }
+
+    &#x2F;**
+     * The layer for collisions
+     *
+     * @property collisionLayer
+     * @type Array
+     *&#x2F;
+    this.collisionLayer = [];
+
+    &#x2F;**
+     * The tileset for the collision layer
+     *
+     * @property collisionTileset
+     * @type TiledTileset
+     *&#x2F;
+    this.collisionTileset = null;
+
+    &#x2F;**
+     * The version of this map
+     *
+     * @property version
+     * @type String
+     *&#x2F;
+    this.version = map.version;
+
+    this.createLayers();
+};
+
+gf.inherits(gf.TiledMap, gf.Map, {
+    &#x2F;&#x2F;add a new layer to this tilemap
+    createLayers: function(layer) {
+        for(var i = 0, il = map.layers.length; i &lt; il; ++i) {
+            var lyr;
+
+            if(map.layers[i].type === gf.types.LAYER.TILE_LAYER) {
+                lyr = new gf.TiledLayer(map.layers[i], this.tileSize, this.tilesets);
+                lyr.scale = this.scale;
+
+                if(lyr.name.toLowerCase().indexOf(&#x27;collision&#x27;) === 0) {
+                    this.collisionLayer = lyr;
+                    if(!gf.debug.showMapColliders) lyr.hide();
+                }
+            } else if(map.layers[i].type === gf.types.LAYER.OBJECT_GROUP) {
+                lyr = new gf.TiledObjectGroup(map.layers[i], this);
+
+                &#x2F;&#x2F;auto spawn the player object group
+                if(lyr.name === &#x27;player&#x27; &amp;&amp; !lyr.properties.manual)
+                    lyr.spawn();
+            }
+
+            this.addChild(lyr);
+        }
+    },
+    &#x2F;&#x2F;if object is moved by pv get the tile it would be at
+    checkCollision: function(mesh, sz, pv) {
+        if(!this.collisionLayer || !this.collisionTileset) return [];
+
+        var pos = new gf.Vector(mesh.position.x, mesh.position.y),
+            size = sz.clone().divideScalar(2),
+            left = pos.x - size.x,
+            right = pos.x + size.x,
+            top = pos.y + size.y,
+            bottom = pos.y - size.y,
+            x = (pv.x &lt; 0) ? Math.floor(left + pv.x) : Math.ceil(right + pv.x),
+            y = (pv.y &lt; 0) ? Math.floor(bottom + pv.y) : Math.ceil(top + pv.y),
+            res = [],
+            tile = null;
+
+        &#x2F;&#x2F;check X movement
+        if(x &lt;= this.extent.x.min || x &gt;= this.extent.x.max) {
+            res.push({ axis: &#x27;x&#x27;, tile: { type: gf.types.COLLISION.SOLID } });
+        } else if(pv.x) {
+            &#x2F;&#x2F;x, bottom corner
+            tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.floor(bottom)));
+            if(tile &amp;&amp; tile.isCollidable &amp;&amp; (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
+                res.push({ axis: &#x27;x&#x27;, tile: tile });
+            } else {
+                &#x2F;&#x2F;x, top corner
+                tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.ceil(top)));
+                if(tile &amp;&amp; tile.isCollidable &amp;&amp; (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
+                    res.push({ axis: &#x27;x&#x27;, tile: tile });
+                }
+            }
+        }
+
+        &#x2F;&#x2F;check Y movement
+        if(y &lt;= this.extent.y.min || y &gt;= this.extent.y.max) {
+            res.push({ axis: &#x27;y&#x27;, tile: { type: gf.types.COLLISION.SOLID } });
+        } else if(pv.y) {
+            &#x2F;&#x2F;y, left corner
+            tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x &lt; 0) ? Math.floor(left) : Math.ceil(right), y));
+            if(tile &amp;&amp; tile.isCollidable &amp;&amp; (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
+                res.push({ axis: &#x27;y&#x27;, tile: tile });
+            } else {
+                &#x2F;&#x2F;y, right corner
+                tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x &lt; 0) ? Math.ceil(right) : Math.floor(left), y));
+                if(tile &amp;&amp; tile.isCollidable &amp;&amp; (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
+                    res.push({ axis: &#x27;y&#x27;, tile: tile });
+                }
+            }
+        }
+
+        return res;
+    },
+
+    _checkHalfBlock: function(half, x, y) {
+        var tx = Math.floor(x &#x2F; this.tileSize.x) * this.tileSize.x,
+            ty = Math.floor(y &#x2F; this.tileSize.y) * this.tileSize.y,
+            midX = tx + ((this.tileSize.x) &#x2F; 2),
+            endX = tx + (this.tileSize.x),
+            midY = ty - ((this.tileSize.y) &#x2F; 2),
+            endY = ty - (this.tileSize.y);
+
+        switch(half) {
+            case gf.types.HALF.LEFT:
+                return (x &gt; tx &amp;&amp; x &lt; midX);
+
+            case gf.types.HALF.RIGHT:
+                return (x &gt; midX &amp;&amp; x &lt; endX);
+
+            case gf.types.HALF.TOP:
+                return (y &gt; midY &amp;&amp; y &lt; ty);
+
+            case gf.types.HALF.BOTTOM:
+                return (y &gt; endY &amp;&amp; y &lt; midY);
+        }
+
+        return false;
+    }
+});
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

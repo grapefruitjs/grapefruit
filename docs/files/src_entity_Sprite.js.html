@@ -41,15 +41,27 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+            
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
+                <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
+            
+                <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
             
@@ -98,172 +110,178 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-(function() {
-    gf.Sprite = Class.extend.call(PIXI.MovieClip, {
-        &#x2F;**
-         * The base Sprite class. This class is the base for all images on the screen
-         *
-         * @module gf
-         * @class Sprite
-         * @extends PIXI.MovieClip
-         * @constructor
-         * @param pos {Array|Vector|Point} The starting position of the sprite
-         * @param settings {Object} Settings to override the defauls, acceptable values
-         *          are size {Vector}, name {String}, animations {Object}
-         * @example
-         *      var spr = new gf.Sprite([10, 1], { name: &#x27;MySprite&#x27; });
-         *&#x2F;
-        init: function(pos, settings) {
-            &#x2F;**
-             * The size of the sprite
-             *
-             * @property size
-             * @type gf.Vector
-             * @default new gf.Vector(0, 0);
-             *&#x2F;
-            this.size = new gf.Vector(0, 0);
+&#x2F;**
+ * The base Sprite class. This class is the base for all images on the screen
+ *
+ * @module gf
+ * @class Sprite
+ * @extends PIXI.MovieClip
+ * @constructor
+ * @param pos {Array|Vector|Point} The starting position of the sprite
+ * @param settings {Object} Settings to override the defauls, acceptable values
+ *          are size {Vector}, name {String}, animations {Object}
+ * @example
+ *      var spr = new gf.Sprite([10, 1], { name: &#x27;MySprite&#x27; });
+ *&#x2F;
+gf.Sprite = function(pos, settings) {
+    &#x2F;**
+     * The size of the sprite
+     *
+     * @property size
+     * @type gf.Vector
+     * @default new gf.Vector(0, 0);
+     *&#x2F;
+    this.size = new gf.Vector(0, 0);
 
-            &#x2F;**
-             * The name of this sprite
-             *
-             * @property name
-             * @type String
-             * @default &#x27;&#x27;
-             *&#x2F;
-            this.name = &#x27;&#x27;;
+    &#x2F;**
+     * The name of this sprite
+     *
+     * @property name
+     * @type String
+     * @default &#x27;&#x27;
+     *&#x2F;
+    this.name = &#x27;&#x27;;
 
-            &#x2F;&#x2F;defined sprite animations
-            this.anim = {};
+    &#x2F;**
+     * The defined animations for this Sprite, this maps the names to the childIndexes
+     *
+     * @property anim
+     * @private
+     * @readOnly
+     * @type Object
+     *&#x2F;
+    this.anim = {};
 
-            &#x2F;&#x2F;currently active animation
-            this.currentAnim = null;
+    &#x2F;**
+     * The currently active animation
+     *
+     * @property currentAnim
+     * @private
+     * @readOnly
+     * @type Object
+     *&#x2F;
+    this.currentAnim = null;
 
-            &#x2F;&#x2F;call base class
-            PIXI.MovieClip.call(this);
+    &#x2F;&#x2F;call base ctor
+    PIXI.DisplayObjectContainer.call(this);
 
-            &#x2F;&#x2F;mixin user&#x27;s settings
-            gf.utils.setValues(this, settings);
+    &#x2F;&#x2F;mixin user&#x27;s settings
+    gf.utils.setValues(this, settings);
 
-            &#x2F;&#x2F;set the initial position
-            this.setPosition(pos);
-
-            &#x2F;&#x2F;add the animations passed to ctor
-            if(settings.animations) {
-                for(var name in settings.animations) {
-                    this.addAnimation(name, settings.animations[name]);
-                }
-            }
-        },
-        &#x2F;**
-         * Defines a new animation on the Sprite
-         *
-         * @method addAnimation
-         * @param name {String} The name of the animation, any string you want to name it
-         * @param frames {Texture|Array} The frames of the animation, you can pass one gf.Texture
-         *      as a frame, or an Array of gf.Texture&#x27;s
-         * @return {Sprite} Returns itself for chainability
-         * @example
-         *      spr.addAnimation(&#x27;walk-left&#x27;, new gf.Texture())
-         *          .addAnimation(&#x27;walk-right&#x27;, [new gf.Texture(), new gf.Texture()]);
-         *&#x2F;
-        addAnimation: function(name, frames) {
-            settings = settings || {};
-
-            if(settings instanceof Array)
-                settings = { textures: settings };
-
-            if(frames instanceof gf.Texture)
-                frames = [settings];
-
-            if(!settings.textures)
-                throw &#x27;No textures passed to addAnimation()&#x27;;
-
-            this.anim[name] = {
-                name: name,
-                textures: frames
-            };
-
-            return this;
-        },
-        &#x2F;**
-         * Sets the active animation of the sprite, and starts the animation at index 0 
-         *
-         * @method setActiveAnimation
-         * @param name {String} The name of the animation to play (defined with addAnimation());
-         * @param cb {Function} Callback when the animation completes, NOT YET IMPLEMENTED
-         * @return {Sprite} Returns itself for chainability
-         * @example
-         *      spr.addAnimation(&#x27;me&#x27;, new gf.Texture())
-         *          .setActiveAnimation(&#x27;me&#x27;);
-         *&#x2F;
-        setActiveAnimation: function(name, cb) {
-            if(this.anim[name]) {
-                this.currentAnim = name;
-                this.textures = this.anim[name].textures;
-                &#x2F;&#x2F;TODO: Callback
-                this.gotoAndPlay(0);
-            } else {
-                throw &#x27;Unknown animation &#x27; + name;
-            }
-
-            return this;
-        },
-        &#x2F;**
-         * Convenience method for setting the position of the Sprite.
-         *
-         * @method setPosition
-         * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
-         *       If an Array, Vector, or Point is passed then the y parameter is ignored
-         * @param y {Number} Y coord to put the sprite at
-         * @return {Sprite} Returns itself for chainability
-         * @example
-         *      spr.setPosition(1, 1)
-         *          .setPosition([5, 5])
-         *          .setPosition(new gf.Point(10, 10))
-         *          .setPosition(new gf.Vector(20, 20));
-         *&#x2F;
-        setPosition: function(x, y) {
-            if(x instanceof gf.Vector || x instanceof gf.Point) {
-                this.position.x = x.x;
-                this.position.y = x.y;
-            }
-            else if(x instanceof Array) {
-                this.position.x = x[0];
-                this.position.y = x[1];
-            } else {
-                this.position.x = x;
-                this.position.y = y;
-            }
-
-            return this;
-        },
-        &#x2F;**
-         * Checks if the name is the active animation
-         *
-         * @method isActiveAnimation
-         * @param name {String} The name of the animation to check if it is currently active
-         * @return {Boolean} true if the animation is active, false otherwise.
-         * @example
-         *      spr.addAnimation(&#x27;walk-left&#x27;, new gf.Texture())
-         *          .isActiveAnimation(&#x27;walk-left&#x27;); &#x2F;&#x2F;false
-         *
-         *      spr.setActiveAnimation(&#x27;walk-left&#x27;)
-         *          .isActiveAnimation(&#x27;walk-left&#x27;); &#x2F;&#x2F;true
-         *&#x2F;
-        isActiveAnimation: function(name) {
-            return this.currentAnim === name;
-        },
-        &#x2F;**
-         * Frame update stub
-         *
-         * @method update
-         * @private
-         *&#x2F;
-        update: function() {
-            return this;
+    &#x2F;&#x2F;add the animations passed to ctor
+    if(settings.animations) {
+        for(var name in settings.animations) {
+            this.addAnimation(name, settings.animations[name]);
         }
-    });
-})();
+    }
+};
+
+gf.inherits(gf.Sprite, PIXI.DisplayObjectContainer, {
+    &#x2F;**
+     * Defines a new animation on the Sprite
+     *
+     * @method addAnimation
+     * @param name {String} The name of the animation, any string you want to name it
+     * @param frames {Texture|Array} The frames of the animation, you can pass one gf.Texture
+     *      as a frame, or an Array of gf.Texture&#x27;s
+     * @return {Sprite} Returns itself for chainability
+     * @example
+     *      spr.addAnimation(&#x27;walk-left&#x27;, new gf.Texture())
+     *          .addAnimation(&#x27;walk-right&#x27;, [new gf.Texture(), new gf.Texture()]);
+     *&#x2F;
+    addAnimation: function(name, frames) {
+        if(frames instanceof gf.Texture)
+            frames = [frames];
+
+        if(!frames)
+            throw &#x27;No textures passed to addAnimation()&#x27;;
+
+        var clip = new PIXI.MovieClip(frames);
+        clip.stop();
+        clip.visible = false;
+        clip.name = name;
+
+        this.addChild(clip);
+
+        this.anim[name] = clip.childIndex;
+
+        return this;
+    },
+    &#x2F;**
+     * Sets the active animation of the sprite, and starts the animation at index 0
+     *
+     * @method setActiveAnimation
+     * @param name {String} The name of the animation to play (defined with addAnimation());
+     * @param cb {Function} Callback when the animation completes, NOT YET IMPLEMENTED
+     * @return {Sprite} Returns itself for chainability
+     * @example
+     *      spr.addAnimation(&#x27;me&#x27;, new gf.Texture())
+     *          .setActiveAnimation(&#x27;me&#x27;);
+     *&#x2F;
+    setActiveAnimation: function(name, cb) {
+        if(this.anim[name] !== undefined) {
+            if(this.currentAnim) {
+                this.currentAnim.stop();
+                this.currentAnim.visible = false;
+            }
+
+            this.currentAnim = this.children[this.anim[name]];
+            this.currentAnim.visible = true;
+            this.currentAnim.gotoAndPlay(0);
+            &#x2F;&#x2F;TODO: Callback
+            setTimeout(cb, 0);
+        } else {
+            throw &#x27;Unknown animation &#x27; + name;
+        }
+
+        return this;
+    },
+    &#x2F;**
+     * Convenience method for setting the position of the Sprite.
+     *
+     * @method setPosition
+     * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
+     *       If an Array, Vector, or Point is passed then the y parameter is ignored
+     * @param y {Number} Y coord to put the sprite at
+     * @return {Sprite} Returns itself for chainability
+     * @example
+     *      spr.setPosition(1, 1)
+     *          .setPosition([5, 5])
+     *          .setPosition(new gf.Point(10, 10))
+     *          .setPosition(new gf.Vector(20, 20));
+     *&#x2F;
+    setPosition: function(x, y) {
+        if(x instanceof gf.Vector || x instanceof gf.Point) {
+            this.position.x = x.x;
+            this.position.y = x.y;
+        }
+        else if(x instanceof Array) {
+            this.position.x = x[0];
+            this.position.y = x[1];
+        } else {
+            this.position.x = x;
+            this.position.y = y;
+        }
+
+        return this;
+    },
+    &#x2F;**
+     * Checks if the name is the active animation
+     *
+     * @method isActiveAnimation
+     * @param name {String} The name of the animation to check if it is currently active
+     * @return {Boolean} true if the animation is active, false otherwise.
+     * @example
+     *      spr.addAnimation(&#x27;walk-left&#x27;, new gf.Texture())
+     *          .isActiveAnimation(&#x27;walk-left&#x27;); &#x2F;&#x2F;false
+     *
+     *      spr.setActiveAnimation(&#x27;walk-left&#x27;)
+     *          .isActiveAnimation(&#x27;walk-left&#x27;); &#x2F;&#x2F;true
+     *&#x2F;
+    isActiveAnimation: function(name) {
+        return this.currentAnim.name === name;
+    }
+});
     </pre>
 </div>
 

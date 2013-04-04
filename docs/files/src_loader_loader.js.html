@@ -41,15 +41,27 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+            
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
+                <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
+            
+                <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
             
@@ -175,16 +187,6 @@
         loadResources: function(resources, cb) {
             var done = 0, handles = [];
 
-            for(var r = 0, rl = resources.length; r &lt; rl; ++r) {
-                gf.event.publish(gf.types.EVENT.LOADER_START, resources[r]);
-
-                handles.push({
-                    load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resources[r].name, loadDone.bind(null, r, null)),
-                    error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resources[r].name, loadDone.bind(null, r))
-                });
-                gf.loader.load(resources[r]);
-            }
-
             function loadDone(r, err, resource) {
                 done++;
 
@@ -202,6 +204,16 @@
                     gf.event.publish(gf.types.EVENT.LOADER_COMPLETE, resources);
                     if(cb) cb(null, resources);
                 }
+            }
+
+            for(var r = 0, rl = resources.length; r &lt; rl; ++r) {
+                gf.event.publish(gf.types.EVENT.LOADER_START, resources[r]);
+
+                handles.push({
+                    load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resources[r].name, loadDone.bind(null, r, null)),
+                    error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resources[r].name, loadDone.bind(null, r))
+                });
+                gf.loader.load(resources[r]);
             }
 
             return this;
@@ -235,8 +247,6 @@
                         var pct = (e.loaded &#x2F; e.total) * 100;
 
                         if(progress) progress(pct);
-                    } else {
-                        &#x2F;&#x2F;console.warn(&#x27;Content Length not reported!&#x27;);
                     }
                 }
             });
@@ -311,12 +321,13 @@
             var sound = resource.data = new Audio(resource.src);
             sound.preload = &#x27;auto&#x27;;
 
-            sound.addEventListener(&#x27;canplaythrough&#x27;, function(e) {
-                this.removeEventListener(&#x27;canplaythrough&#x27;, arguments.callee, false);
+            function loaded() {
+                this.removeEventListener(&#x27;canplaythrough&#x27;, loaded, false);
                 gf.event.publish(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, resource);
-            }, false);
+            }
+            sound.addEventListener(&#x27;canplaythrough&#x27;, loaded, false);
 
-            sound.addEventListener(&#x27;error&#x27;, function(e) {
+            sound.addEventListener(&#x27;error&#x27;, function() {
                 gf.event.publish(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resource.name, &#x27;Error loading the audio file!&#x27;, resource);
             }, false);
 
@@ -348,36 +359,59 @@
 
                 var done = 0, max = 0, lhandles = [], thandles = [];
 
+                var loadLayer = function(layer, obj, o) {
+                    addRes();
+                    var name = layer.name + &#x27;_&#x27; + obj.name + &#x27;_texture&#x27;;
+                    lhandles.push({
+                        load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + name, function(rsrc) {
+                            obj.properties.texture = rsrc.data;
+                            resDone(o, true, null, rsrc);
+                        }),
+                        error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + name, function(err, rsrc) {
+                            obj.properties.texture = null;
+                            obj.properties._error = err;
+                            resDone(o, true, err, rsrc);
+                        })
+                    });
+                    gf.loader.load({
+                        name: layer.name + &#x27;_&#x27; + obj.name + &#x27;_texture&#x27;,
+                        type: &#x27;texture&#x27;,
+                        src: obj.properties.spritesheet
+                    });
+                };
+
+                var loadTilesetTexture = function(set, s) {
+                    addRes();
+                    var name = set.name + &#x27;_texture&#x27;;
+                    thandles.push({
+                        load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + name, function(rsrc) {
+                            set.texture = rsrc.data;
+                            resDone(s, false, null, rsrc);
+                        }),
+                        error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + name, function(err, rsrc) {
+                            set.texture = null;
+                            set._error = err;
+                            resDone(s, false, err, rsrc);
+                        })
+                    });
+                    gf.loader.load({
+                        name: name,
+                        type: &#x27;texture&#x27;,
+                        src: resource.texturePath + set.image
+                    });
+                };
+
                 &#x2F;&#x2F;loop through each layer and load the sprites (objectgroup types)
                 for(var i = 0, il = resource.data.layers.length; i &lt; il; ++i) {
                     var layer = resource.data.layers[i];
-                    if(layer.type != gf.types.LAYER.OBJECT_GROUP) continue;
+                    if(layer.type !== gf.types.LAYER.OBJECT_GROUP) continue;
 
                     &#x2F;&#x2F;loop through each object, and load the textures
                     for(var o = 0, ol = layer.objects.length; o &lt; ol; ++o) {
                         var obj = layer.objects[o];
                         if(!obj.properties.spritesheet) continue;
 
-                        (function(layer, obj, o) {
-                            addRes();
-                            var name = layer.name + &#x27;_&#x27; + obj.name + &#x27;_texture&#x27;;
-                            lhandles.push({
-                                load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + name, function(rsrc) {
-                                    obj.properties.texture = rsrc.data;
-                                    resDone(o, true, null, rsrc);
-                                }),
-                                error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + name, function(err, rsrc) {
-                                    obj.properties.texture = null;
-                                    obj.properties._error = err;
-                                    resDone(o, true, err, rsrc);
-                                })
-                            });
-                            gf.loader.load({
-                                name: layer.name + &#x27;_&#x27; + obj.name + &#x27;_texture&#x27;,
-                                type: &#x27;texture&#x27;,
-                                src: obj.properties.spritesheet
-                            });
-                        })(layer, obj, o);
+                        loadLayer(layer, obj, o);
                     }
                 }
 
@@ -386,33 +420,14 @@
                     var set = resource.data.tilesets[s];
                     if(!set.image) continue;
 
-                    (function(set, s) {
-                        addRes();
-                        var name = set.name + &#x27;_texture&#x27;;
-                        thandles.push({
-                            load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + name, function(rsrc) {
-                                set.texture = rsrc.data;
-                                resDone(s, false, null, rsrc);
-                            }),
-                            error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + name, function(err, rsrc) {
-                                set.texture = null;
-                                set._error = err;
-                                resDone(s, false, err, rsrc);
-                            })
-                        });
-                        gf.loader.load({
-                            name: name,
-                            type: &#x27;texture&#x27;,
-                            src: resource.texturePath + set.image
-                        });
-                    })(set, s);
+                    loadTilesetTexture(set, s);
                 }
 
                 if(max === 0) gf.event.publish(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, resource);
 
                 &#x2F;&#x2F;for counting downloading resources, and tracking when all are done
                 function addRes() { max++; }
-                function resDone(i, layer, err, rsrc) {
+                function resDone(i, layer &#x2F;*, err, rsrc*&#x2F;) {
                     done++;
 
                     if(layer) {

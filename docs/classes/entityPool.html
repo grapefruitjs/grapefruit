@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Sprite - gf</title>
+    <title>entityPool - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -106,7 +106,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Sprite Class</h1>
+                        <h1>entityPool Class</h1>
 <div class="box meta">
     
 
@@ -114,7 +114,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_entity_Sprite.js.html#l1"><code>src\entity\Sprite.js:1</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l4"><code>src\entity\entityPool.js:4</code></a>
         </div>
     
 
@@ -130,7 +130,8 @@
 
 
 <div class="box intro">
-    <p>The base Sprite class. This class is the base for all images on the screen</p>
+    <p>Holds a pool of different Entities that can be created, makes it very
+easy to quickly create different registered entities</p>
 </div>
 
 
@@ -142,8 +143,6 @@
         
             <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
-        
-            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
         
         
@@ -160,28 +159,21 @@
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_addAnimation">addAnimation</a>
+                                <a href="#method_add">add</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_isActiveAnimation">isActiveAnimation</a>
+                                <a href="#method_add">add</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_setActiveAnimation">setActiveAnimation</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_setPosition">setPosition</a>
+                                <a href="#method_add">add</a>
 
                                 
                                 
@@ -191,42 +183,6 @@
                 </div>
             
 
-            
-                <div class="index-section properties">
-                    <h3>Properties</h3>
-
-                    <ul class="index-list properties">
-                        
-                            <li class="index-item property private">
-                                <a href="#property_anim">anim</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property_currentAnim">currentAnim</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_name">name</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_size">size</a>
-
-                                
-                                
-                            </li>
-                        
-                    </ul>
-                </div>
             
 
             
@@ -239,8 +195,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_addAnimation" class="method item">
-    <h3 class="name"><code>addAnimation</code></h3>
+                    <div id="method_add" class="method item">
+    <h3 class="name"><code>add</code></h3>
 
     
         <div class="args">
@@ -254,7 +210,7 @@
             
                 <li class="arg">
                     
-                        <code>frames</code>
+                        <code>obj</code>
                     
                 </li>
             
@@ -264,7 +220,7 @@
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+            <span class="type">Object</span>
         </span>
     
 
@@ -291,7 +247,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_Sprite.js.html#l68"><code>src\entity\Sprite.js:68</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l12"><code>src\entity\entityPool.js:12</code></a>
         
         </p>
 
@@ -302,7 +258,7 @@
     </div>
 
     <div class="description">
-        <p>Defines a new animation on the Sprite</p>
+        <p>Adds an entity Object to the pool</p>
     </div>
 
     
@@ -320,7 +276,7 @@
                     
 
                     <div class="param-description">
-                        <p>The name of the animation, any string you want to name it</p>
+                        <p>The user-defined name of the Entity to add</p>
                     </div>
 
                     
@@ -328,15 +284,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">frames</code>
-                        <span class="type">Texture | Array</span>
+                        <code class="param-name">obj</code>
+                        <span class="type">Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The frames of the animation, you can pass one gf.Texture
-     as a frame, or an Array of gf.Texture's</p>
+                        <p>The Entity or decendant to add to the pool</p>
                     </div>
 
                     
@@ -353,9 +308,9 @@
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                        <span class="type">Object</span>:
                     
-                    Returns itself for chainability
+                    Returns the passed object
                 
             </div>
         </div>
@@ -366,8 +321,24 @@
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code> spr.addAnimation('walk-left', new gf.Texture())
-     .addAnimation('walk-right', [new gf.Texture(), new gf.Texture()]);
+                <pre class="code prettyprint"><code> //create a new ckass to be instantiated
+ var Bug = gf.entityPool.add('bug', gf.Entity.extend({
+     //ctor function
+     init: function(pos, settings) {
+         //call the base ctor
+         this._super(pos, settings);
+
+         this.color = 'red';
+     },
+     beBug: function() {
+         console.log("I'm a bug");
+     }
+ }));
+
+ //then later in your game code
+ var mybug = gf.entityPool.create('bug', {
+     pos: [10, 10]
+ });
 </code></pre>
             </div>
         </div>
@@ -375,8 +346,8 @@
 </div>
 
                 
-                    <div id="method_isActiveAnimation" class="method item">
-    <h3 class="name"><code>isActiveAnimation</code></h3>
+                    <div id="method_add" class="method item">
+    <h3 class="name"><code>add</code></h3>
 
     
         <div class="args">
@@ -421,7 +392,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_Sprite.js.html#l156"><code>src\entity\Sprite.js:156</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l42"><code>src\entity\entityPool.js:42</code></a>
         
         </p>
 
@@ -432,7 +403,7 @@
     </div>
 
     <div class="description">
-        <p>Checks if the name is the active animation</p>
+        <p>Checks if the entity exists in the pool</p>
     </div>
 
     
@@ -450,7 +421,7 @@
                     
 
                     <div class="param-description">
-                        <p>The name of the animation to check if it is currently active</p>
+                        <p>The user-defined name of the Entity to check if is in the pool</p>
                     </div>
 
                     
@@ -469,31 +440,18 @@
                     
                         <span class="type">Boolean</span>:
                     
-                    true if the animation is active, false otherwise.
+                    Returns the passed object
                 
             </div>
         </div>
     
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> spr.addAnimation('walk-left', new gf.Texture())
-     .isActiveAnimation('walk-left'); //false
-
- spr.setActiveAnimation('walk-left')
-     .isActiveAnimation('walk-left'); //true
-</code></pre>
-            </div>
-        </div>
     
 </div>
 
                 
-                    <div id="method_setActiveAnimation" class="method item">
-    <h3 class="name"><code>setActiveAnimation</code></h3>
+                    <div id="method_add" class="method item">
+    <h3 class="name"><code>add</code></h3>
 
     
         <div class="args">
@@ -507,7 +465,7 @@
             
                 <li class="arg">
                     
-                        <code>cb</code>
+                        <code>props</code>
                     
                 </li>
             
@@ -517,7 +475,7 @@
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+            <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
         </span>
     
 
@@ -544,7 +502,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_Sprite.js.html#l98"><code>src\entity\Sprite.js:98</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l52"><code>src\entity\entityPool.js:52</code></a>
         
         </p>
 
@@ -555,7 +513,7 @@
     </div>
 
     <div class="description">
-        <p>Sets the active animation of the sprite, and starts the animation at index 0</p>
+        <p>Creates a new entity from the pool</p>
     </div>
 
     
@@ -573,7 +531,7 @@
                     
 
                     <div class="param-description">
-                        <p>The name of the animation to play (defined with addAnimation());</p>
+                        <p>The user-defined name of the Entity to check if is in the pool</p>
                     </div>
 
                     
@@ -581,14 +539,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">cb</code>
-                        <span class="type">Function</span>
+                        <code class="param-name">props</code>
+                        <span class="type">Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Callback when the animation completes, NOT YET IMPLEMENTED</p>
+                        <p>The properties that would normally be passed as the "settings" of the Entity</p>
                     </div>
 
                     
@@ -605,9 +563,9 @@
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>:
                     
-                    Returns itself for chainability
+                    Returns a new instance of the object from the pool
                 
             </div>
         </div>
@@ -618,146 +576,24 @@
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code> spr.addAnimation('me', new gf.Texture())
-     .setActiveAnimation('me');
-</code></pre>
-            </div>
-        </div>
-    
-</div>
+                <pre class="code prettyprint"><code> //create a new ckass to be instantiated
+ var Bug = gf.entityPool.add('bug', gf.Entity.extend({
+     //ctor function
+     init: function(pos, settings) {
+         //call the base ctor
+         this._super(pos, settings);
 
-                
-                    <div id="method_setPosition" class="method item">
-    <h3 class="name"><code>setPosition</code></h3>
+         this.color = 'red';
+     },
+     beBug: function() {
+         console.log("I'm a bug");
+     }
+ }));
 
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>x</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>y</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_entity_Sprite.js.html#l127"><code>src\entity\Sprite.js:127</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Convenience method for setting the position of the Sprite.</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">x</code>
-                        <span class="type">Number | Array | Vector | <a href="..\classes\Point.html" class="crosslink">Point</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>X coord to put the sprite at.
-      If an Array, Vector, or Point is passed then the y parameter is ignored</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">y</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Y coord to put the sprite at</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
-                    
-                    Returns itself for chainability
-                
-            </div>
-        </div>
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> spr.setPosition(1, 1)
-     .setPosition([5, 5])
-     .setPosition(new gf.Point(10, 10))
-     .setPosition(new gf.Vector(20, 20));
+ //then later in your game code
+ var mybug = gf.entityPool.create('bug', {
+     pos: [10, 10]
+ });
 </code></pre>
             </div>
         </div>
@@ -768,196 +604,6 @@
             </div>
         
 
-        
-            <div id="properties" class="api-class-tabpanel">
-                <h2 class="off-left">Properties</h2>
-
-                
-                    <div id="property_anim" class="property item private">
-    <h3 class="name"><code>anim</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_entity_Sprite.js.html#l33"><code>src\entity\Sprite.js:33</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The defined animations for this Sprite, this maps the names to the childIndexes</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_currentAnim" class="property item private">
-    <h3 class="name"><code>currentAnim</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_entity_Sprite.js.html#l43"><code>src\entity\Sprite.js:43</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The currently active animation</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_name" class="property item">
-    <h3 class="name"><code>name</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_entity_Sprite.js.html#l24"><code>src\entity\Sprite.js:24</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The name of this sprite</p>
-    </div>
-
-    
-        <p><strong>Default:</strong> &#x27;&#x27;</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_size" class="property item">
-    <h3 class="name"><code>size</code></h3>
-    <span class="type">gf.Vector</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_entity_Sprite.js.html#l15"><code>src\entity\Sprite.js:15</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The size of the sprite</p>
-    </div>
-
-    
-        <p><strong>Default:</strong> new gf.Vector(0, 0);</p>
-    
-
-    
-
-    
-</div>
-
-                
-            </div>
         
 
         

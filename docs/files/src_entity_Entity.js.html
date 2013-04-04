@@ -41,15 +41,27 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+            
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
+                <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
+            
+                <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
             
@@ -98,358 +110,358 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-(function() {
-    &#x2F;&#x2F;Features TODO:
-    &#x2F;&#x2F; * Methods (https:&#x2F;&#x2F;github.com&#x2F;obiot&#x2F;melonJS&#x2F;blob&#x2F;master&#x2F;src&#x2F;entity&#x2F;entity.js)
-    &#x2F;&#x2F;      - flipX
-    &#x2F;&#x2F;      - flipY
-    &#x2F;&#x2F;      - doWalk
-    &#x2F;&#x2F;      - doClimb
-    &#x2F;&#x2F;      - doJump
-    &#x2F;&#x2F;      - forceJump
-    &#x2F;&#x2F;      - checkSlope
-    &#x2F;&#x2F;      - updateMovement (slopes&#x2F;breakable tiles)
-    gf.Entity = gf.Sprite.extend({
-        &#x2F;**
-         * The base Entity class. This class is the base for all entities interacting on the stage
-         *
-         * @module gf
-         * @class Entity
-         * @extends Sprite
-         * @constructor
-         * @param pos {Array|Vector|Point} The starting position of the entity
-         * @param settings {Object} Settings to override the defauls, acceptable values
-         *          are size {Vector}, name {String}, animations {Object}
-         * @example
-         *      var ent = new gf.Entity([10, 1], { name: &#x27;MyEntity&#x27; });
-         *&#x2F;
-        init: function(pos, settings) {
-            &#x2F;**
-             * The type of the entity
-             *
-             * @property type
-             * @type String
-             * @default &#x27;neutral&#x27;
-             *&#x2F;
-            this.type = gf.types.ENTITY.NEUTRAL;
+&#x2F;&#x2F;Features TODO:
+&#x2F;&#x2F; * Methods (https:&#x2F;&#x2F;github.com&#x2F;obiot&#x2F;melonJS&#x2F;blob&#x2F;master&#x2F;src&#x2F;entity&#x2F;entity.js)
+&#x2F;&#x2F;      - flipX
+&#x2F;&#x2F;      - flipY
+&#x2F;&#x2F;      - doWalk
+&#x2F;&#x2F;      - doClimb
+&#x2F;&#x2F;      - doJump
+&#x2F;&#x2F;      - forceJump
+&#x2F;&#x2F;      - checkSlope
+&#x2F;&#x2F;      - updateMovement (slopes&#x2F;breakable tiles)
 
-            &#x2F;**
-             * Can it collide with other entities
-             *
-             * @property collidable
-             * @type Boolean
-             * @default true
-             *&#x2F;
-            this.collidable = true;
+&#x2F;**
+ * The base Entity class. This class is the base for all entities interacting on the stage
+ *
+ * @module gf
+ * @class Entity
+ * @extends Sprite
+ * @constructor
+ * @param pos {Array|Vector|Point} The starting position of the entity
+ * @param settings {Object} Settings to override the defauls, acceptable values
+ *          are size {Vector}, name {String}, animations {Object}
+ * @example
+ *      var ent = new gf.Entity([10, 1], { name: &#x27;MyEntity&#x27; });
+ *&#x2F;
+gf.Entity = function(pos, settings) {
+    &#x2F;**
+     * The type of the entity
+     *
+     * @property type
+     * @type String
+     * @default &#x27;neutral&#x27;
+     *&#x2F;
+    this.type = gf.types.ENTITY.NEUTRAL;
 
-            &#x2F;**
-             * Can collide with the map when moving
-             *
-             * @property mapCollidable
-             * @type Boolean
-             * @default true
-             *&#x2F;
-            this.mapCollidable = true;
+    &#x2F;**
+     * Can it collide with other entities
+     *
+     * @property collidable
+     * @type Boolean
+     * @default true
+     *&#x2F;
+    this.collidable = true;
 
-            &#x2F;**
-             * Is an entity
-             *
-             * @property mapCollidable
-             * @type Boolean
-             * @default true
-             * @readOnly
-             *&#x2F;
-            this.entity = true;
+    &#x2F;**
+     * Can collide with the map when moving
+     *
+     * @property mapCollidable
+     * @type Boolean
+     * @default true
+     *&#x2F;
+    this.mapCollidable = true;
 
-            &#x2F;**
-             * The velocity of the entity. You can set these in Tiled by using &quot;x|y&quot; notation
-             * velocity of the entity (units per tick)
-             *
-             * @property velocity
-             * @type Vector
-             * @default new gf.Vector(0, 0)
-             *&#x2F;
-            this.velocity = new gf.Vector(0, 0);
+    &#x2F;**
+     * Is an entity
+     *
+     * @property mapCollidable
+     * @type Boolean
+     * @default true
+     * @readOnly
+     *&#x2F;
+    this.entity = true;
 
-            &#x2F;**
-             * Max velocity to cap the entity at (units per tick)
-             *
-             * @property maxVelocity
-             * @type Vector
-             * @default new gf.Vector(15, 15)
-             *&#x2F;
-            this.maxVelocity = new gf.Vector(15, 15);
+    &#x2F;**
+     * The velocity of the entity. You can set these in Tiled by using &quot;x|y&quot; notation
+     * velocity of the entity (units per tick)
+     *
+     * @property velocity
+     * @type Vector
+     * @default new gf.Vector(0, 0)
+     *&#x2F;
+    this.velocity = new gf.Vector(0, 0);
 
-            &#x2F;**
-             * Acceleration of the entity (units per second)
-             *
-             * @property accel
-             * @type Vector
-             * @default new gf.Vector(250, 250)
-             *&#x2F;
-            this.accel = new gf.Vector(250, 250);
+    &#x2F;**
+     * Max velocity to cap the entity at (units per tick)
+     *
+     * @property maxVelocity
+     * @type Vector
+     * @default new gf.Vector(15, 15)
+     *&#x2F;
+    this.maxVelocity = new gf.Vector(15, 15);
 
-            &#x2F;**
-             * Friction to apply to this entity
-             *
-             * @property friction
-             * @type Vector
-             * @default 0
-             *&#x2F;
-            this.friction = settings.friction || gf.game.friction;
+    &#x2F;**
+     * Acceleration of the entity (units per second)
+     *
+     * @property accel
+     * @type Vector
+     * @default new gf.Vector(250, 250)
+     *&#x2F;
+    this.accel = new gf.Vector(250, 250);
 
-            &#x2F;**
-             * Gravity to apply to this entity
-             *
-             * @property gravity
-             * @type Vector
-             * @default 0.98 (earth&#x27;s gravity)
-             *&#x2F;
-            this.gravity = settings.gravity || gf.game.gravity;
+    &#x2F;**
+     * Friction to apply to this entity
+     *
+     * @property friction
+     * @type Vector
+     * @default 0
+     *&#x2F;
+    this.friction = gf.game.friction || 0;
 
-            &#x2F;**
-             * Whether or not the entity is &quot;alive&quot;, advisory only
-             *
-             * @property alive
-             * @type Boolean
-             * @default true
-             *&#x2F;
-            this.alive = true;
+    &#x2F;**
+     * Gravity to apply to this entity
+     *
+     * @property gravity
+     * @type Vector
+     * @default 0.98 (earth&#x27;s gravity)
+     *&#x2F;
+    this.gravity = gf.game.gravity || 0.98;
 
-            &#x2F;**
-             * Whether the entity is falling (read only)
-             *
-             * @property falling
-             * @type Boolean
-             * @default false
-             * @readOnly
-             *&#x2F;
-            this.falling = false;
+    &#x2F;**
+     * Whether or not the entity is &quot;alive&quot;, advisory only
+     *
+     * @property alive
+     * @type Boolean
+     * @default true
+     *&#x2F;
+    this.alive = true;
 
-            &#x2F;**
-             * Whether the entity is jumping (read only)
-             *
-             * @property jumping
-             * @type Boolean
-             * @default false
-             * @readOnly
-             *&#x2F;
-            this.jumping = false;
+    &#x2F;**
+     * Whether the entity is falling (read only)
+     *
+     * @property falling
+     * @type Boolean
+     * @default false
+     * @readOnly
+     *&#x2F;
+    this.falling = false;
 
-            &#x2F;**
-             * Whether the entity is on a ladder tile (read only)
-             *
-             * @property onladder
-             * @type Boolean
-             * @default false
-             * @readOnly
-             *&#x2F;
-            this.onladder = false;
+    &#x2F;**
+     * Whether the entity is jumping (read only)
+     *
+     * @property jumping
+     * @type Boolean
+     * @default false
+     * @readOnly
+     *&#x2F;
+    this.jumping = false;
 
-            &#x2F;&#x2F;call base constructor
-            this._super(pos, settings);
-        },
-        &#x2F;**
-         * Calculates distance between this object and another
-         *
-         * @method distanceTo
-         * @param obj {Entity}
-         * @return {Number} Distance between this entity and another
-         *&#x2F;
-        distanceTo: function(obj) {
-            if(!obj || !obj.position)
-                return -1;
+    &#x2F;**
+     * Whether the entity is on a ladder tile (read only)
+     *
+     * @property onladder
+     * @type Boolean
+     * @default false
+     * @readOnly
+     *&#x2F;
+    this.onladder = false;
 
+    &#x2F;&#x2F;call base ctor
+    gf.Sprite.call(this, pos, settings);
+};
+
+gf.inherits(gf.Entity, gf.Sprite, {
+    &#x2F;**
+     * Calculates distance between this object and another
+     *
+     * @method distanceTo
+     * @param obj {Entity}
+     * @return {Number} Distance between this entity and another
+     *&#x2F;
+    distanceTo: function(obj) {
+        if(!obj || !obj.position)
+            return -1;
+
+        var dx = this.position.x - obj.position.x,
+            dy = this.position.y - obj.position.y;
+
+        return Math.sqrt(dx*dx + dy*dy);
+    },
+    &#x2F;**
+     * Computes the velocity taking into account gravity, friction, etc
+     *
+     * @method computeVelocity
+     * @param vel {Vector} The Vector to apply the changes to
+     * @return {Vector} The modified vector
+     *&#x2F;
+    computeVelocity: function(vel) {
+        &#x2F;&#x2F;apply gravity
+        if(this.gravity) {
+            vel.y -= !this.onladder ? (this.gravity * gf.game._delta) : 0;
+
+            &#x2F;&#x2F;check if falling&#x2F;jumping
+            this.falling = (vel.y &lt; 0);
+            this.jumping = this.falling ? false : this.jumping;
+        }
+
+        &#x2F;&#x2F;apply friction
+        if(this.friction.x) vel.x = gf.utils.applyFriction(vel.x, this.friction.x);
+        if(this.friction.y) vel.y = gf.utils.applyFriction(vel.y, this.friction.y);
+
+        &#x2F;&#x2F;cap velocity
+        if(vel.x) vel.x = gf.utils.clamp(vel.x, -this.maxVelocity.x, this.maxVelocity.x);
+        if(vel.y) vel.y = gf.utils.clamp(vel.y, -this.maxVelocity.y, this.maxVelocity.y);
+
+        return vel;
+    },
+    &#x2F;**
+     * Checks if this entity intersects with the passed object
+     * from http:&#x2F;&#x2F;gamedev.stackexchange.com&#x2F;questions&#x2F;586&#x2F;what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
+     *
+     * @method intersects
+     * @param obj {Entity} The Entity to check if this intersects with
+     * @return {Boolean}
+     *&#x2F;
+    intersects: function(obj)  {
+        return (Math.abs(this.position.x - obj.position.x) * 2 &lt; (this.size.x + obj.size.x)) &amp;&amp;
+                (Math.abs(this.position.y - obj.position.y) * 2 &lt; (this.size.y + obj.size.y));
+    },
+    &#x2F;**
+     * Checks if this entity collides with the passed Entity, a penetration vector is calculated.
+     * This method is called from gf.game.checkCollisions(ent); That method will use this to check
+     * for any collisions between that entity and all the others on the stage.
+     * from http:&#x2F;&#x2F;gamedev.stackexchange.com&#x2F;questions&#x2F;586&#x2F;what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
+     *
+     * @method checkCollision
+     * @param obj {Entity} The Entity to check if this entity collides with
+     * @return {Vector}
+     *&#x2F;
+    checkCollision: function(obj) {
+        &#x2F;&#x2F;response vector
+        var p = new gf.Vector(0, 0);
+
+        &#x2F;&#x2F;check if hitboxes intersect
+        if(this.intersects(obj)) {
+            &#x2F;&#x2F;compute delta between this &amp; entity
             var dx = this.position.x - obj.position.x,
                 dy = this.position.y - obj.position.y;
 
-            return Math.sqrt(dx*dx + dy*dy);
-        },
-        &#x2F;**
-         * Computes the velocity taking into account gravity, friction, etc
-         *
-         * @method computeVelocity
-         * @param vel {Vector} The Vector to apply the changes to
-         * @return {Vector} The modified vector
-         *&#x2F;
-        computeVelocity: function(vel) {
-            &#x2F;&#x2F;apply gravity
-            if(this.gravity) {
-                vel.y -= !this.onladder ? (this.gravity * gf.game._delta) : 0;
+            &#x2F;&#x2F;compute penetration depth for both axis
+            p.x = dx &#x2F; 2;
+            p.y = dy &#x2F; 2;
+        }
 
-                &#x2F;&#x2F;check if falling&#x2F;jumping
-                this.falling = (vel.y &lt; 0);
-                this.jumping = this.falling ? false : this.jumping;
-            }
+        return p;
+    },
+    &#x2F;**
+     * Calculate the velocity of the entity, and then apply it. This is different than moveEntity
+     * because it checks for map collisions, and applies gravity and friction with computeVelocity
+     *
+     * @method updateMovement
+     * @return {Array} Returns the map colliders that the entity is interacting with
+     *&#x2F;
+    updateMovement: function() {
+        if(this.velocity.x === 0 &amp;&amp; this.velocity.y === 0)
+            return;
 
-            &#x2F;&#x2F;apply friction
-            if(this.friction.x) vel.x = gf.utils.applyFriction(vel.x, this.friction.x);
-            if(this.friction.y) vel.y = gf.utils.applyFriction(vel.y, this.friction.y);
+        &#x2F;&#x2F;get the world colliders
+        var colliders = (gf.game.world === undefined || !this.mapCollidable) ? [] : gf.game.world.checkCollision(this);
 
-            &#x2F;&#x2F;cap velocity
-            if(vel.x) vel.x = gf.utils.clamp(vel.x, -this.maxVelocity.x, this.maxVelocity.x);
-            if(vel.y) vel.y = gf.utils.clamp(vel.y, -this.maxVelocity.y, this.maxVelocity.y);
+        &#x2F;&#x2F;update flags
+        this.onladder = false;
 
-            return vel;
-        },
-        &#x2F;**
-         * Checks if this entity intersects with the passed object
-         * from http:&#x2F;&#x2F;gamedev.stackexchange.com&#x2F;questions&#x2F;586&#x2F;what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
-         *
-         * @method intersects
-         * @param obj {Entity} The Entity to check if this intersects with
-         * @return {Boolean}
-         *&#x2F;
-        intersects: function(obj)  {
-            return (Math.abs(this.position.x - obj.position.x) * 2 &lt; (this.size.x + obj.size.x)) &amp;&amp; 
-                    (Math.abs(this.position.y - obj.position.y) * 2 &lt; (this.size.y + obj.size.y));
-        },
-        &#x2F;**
-         * Checks if this entity collides with the passed Entity, a penetration vector is calculated.
-         * This method is called from gf.game.checkCollisions(ent); That method will use this to check
-         * for any collisions between that entity and all the others on the stage.
-         * from http:&#x2F;&#x2F;gamedev.stackexchange.com&#x2F;questions&#x2F;586&#x2F;what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
-         *
-         * @method checkCollision
-         * @param obj {Entity} The Entity to check if this entity collides with
-         * @return {Vector}
-         *&#x2F;
-        checkCollision: function(obj) {
-            &#x2F;&#x2F;response vector
-            var p = new gf.Vector(0, 0);
+        &#x2F;&#x2F;collisions
+        for(var i = 0, il = colliders.length; i &lt; il; ++i) {
+            var collider = colliders[i],
+                tile = collider.tile,
+                axis = collider.axis;
 
-            &#x2F;&#x2F;check if hitboxes intersect
-            if(this.intersects(obj)) {
-                &#x2F;&#x2F;compute delta between this &amp; entity
-                var dx = this.position.x - obj.position.x,
-                    dy = this.position.y - obj.position.y;
+            this.onladder = (tile.type === gf.types.COLLISION.LADDER ? true : this.onladder);
 
-                &#x2F;&#x2F;compute penetration depth for both axis
-                p.x = dx &#x2F; 2;
-                p.y = dy &#x2F; 2;
-            }
+            &#x2F;&#x2F;if a solid tile
+            if(tile.type === gf.types.COLLISION.SOLID) {
+                &#x2F;&#x2F;if it is a slope, apply the normal
+                if(tile.normal &amp;&amp; (!this.velocity.x || !this.velocity.y)) {
+                    var badMovement = tile.normal.clone().multiplyScalar(this.velocity.dot(tile.normal)),
+                        newMovement = this.velocity.clone().sub(badMovement);
 
-            return p;
-        },
-        &#x2F;**
-         * Calculate the velocity of the entity, and then apply it. This is different than moveEntity
-         * because it checks for map collisions, and applies gravity and friction with computeVelocity
-         *
-         * @method updateMovement
-         * @return {Array} Returns the map colliders that the entity is interacting with
-         *&#x2F;
-        updateMovement: function() {
-            if(this.velocity.x === 0 &amp;&amp; this.velocity.y === 0)
-                return;
-
-            &#x2F;&#x2F;get the world colliders
-            var colliders = (gf.game.world === undefined || !this.mapCollidable) ? [] : gf.game.world.checkCollision(this);
-
-            &#x2F;&#x2F;update flags
-            this.onladder = false;
-
-            &#x2F;&#x2F;collisions
-            for(var i = 0, il = colliders.length; i &lt; il; ++i) {
-                var collider = colliders[i],
-                    tile = collider.tile,
-                    axis = collider.axis;
-
-                this.onladder = (tile.type == gf.types.COLLISION.LADDER ? true : this.onladder);
-
-                &#x2F;&#x2F;if a solid tile
-                if(tile.type == gf.types.COLLISION.SOLID) {
-                    &#x2F;&#x2F;if it is a slope, apply the normal
-                    if(tile.normal &amp;&amp; (!this.velocity.x || !this.velocity.y)) {
-                        var badMovement = tile.normal.clone().multiplyScalar(this.velocity.dot(tile.normal)),
-                            newMovement = this.velocity.clone().sub(badMovement);
-
-                        this.velocity.add(newMovement);
-                        return false;
-                    }
-                    &#x2F;&#x2F;otherwise just stop movement
-                    else {
-                        this.velocity[axis] = 0;
-                    }
+                    this.velocity.add(newMovement);
+                    return false;
+                }
+                &#x2F;&#x2F;otherwise just stop movement
+                else {
+                    this.velocity[axis] = 0;
                 }
             }
-
-            &#x2F;&#x2F;TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
-
-            &#x2F;&#x2F;apply gravity, friction, etc to this velocity
-            this.computeVelocity(this.velocity);
-
-            &#x2F;&#x2F;do the actual entity movement
-            this.moveEntity();
-
-            &#x2F;&#x2F;for debug output if it is enabled
-            gf.debug._playerColliders = colliders;
-            gf.debug._playerColliders.dirty = true;
-
-            return colliders;
-        },
-        &#x2F;**
-         * Moves the entity to a new position using the velocity.
-         *
-         * @method moveEntity
-         * @param vel {Vector} The optional velocity to move the entity. 
-         * @return {Entity} Returns itself for chainability
-         *&#x2F;
-        moveEntity: function(vel) {
-            &#x2F;&#x2F;param will override the entities current velocity
-            vel = vel || this.velocity;
-
-            if(vel.x === 0 &amp;&amp; vel.y === 0)
-                return;
-
-            &#x2F;&#x2F;update the entity position
-            this.position.x += vel.x;
-            this.position.y += vel.y;
-
-            &#x2F;&#x2F;onMove event
-            this.onMove(vel);
-
-            return this;
-        },
-        &#x2F;**
-         * On Collision Event
-         *      called when this object is collided into by another, by default if something collides with
-         *      a collectable entity we remove the collectable
-         *
-         * @method moveEntity
-         * @param vel {Vector} Collision Vector
-         * @param obj {Entity} Colliding object
-         * @return {Entity} Returns itself for chainability
-         *&#x2F;
-        onCollision: function(vec, obj) {
-            if(this.collidable &amp;&amp; this.type == gf.types.ENTIY.COLLECTABLE)
-                gf.game.removeObject(this);
-
-            return this;
-        },
-        &#x2F;**
-         * On Move Event
-         *      called when this entity moves
-         *
-         * @method moveEntity
-         * @param vel {Vector} Velocity the entity moved
-         * @return {Entity} Returns itself for chainability
-         *&#x2F;
-        onMove: function(vel) {
-            return this;
-        },
-        &#x2F;**
-         * On Break Tile Event
-         *      called when a tile is broken
-         *
-         * @method moveEntity
-         * @param tile {Unkown} the tile that is broken
-         * @return {Entity} Returns itself for chainability
-         *&#x2F;
-        onBreakTile: function(tile) {
-            return this;
         }
-    });
-})();
+
+        &#x2F;&#x2F;TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
+
+        &#x2F;&#x2F;apply gravity, friction, etc to this velocity
+        this.computeVelocity(this.velocity);
+
+        &#x2F;&#x2F;do the actual entity movement
+        this.moveEntity();
+
+        &#x2F;&#x2F;for debug output if it is enabled
+        gf.debug._playerColliders = colliders;
+        gf.debug._playerColliders.dirty = true;
+
+        return colliders;
+    },
+    &#x2F;**
+     * Moves the entity to a new position using the velocity.
+     *
+     * @method moveEntity
+     * @param vel {Vector} The optional velocity to move the entity.
+     * @return {Entity} Returns itself for chainability
+     *&#x2F;
+    moveEntity: function(vel) {
+        &#x2F;&#x2F;param will override the entities current velocity
+        vel = vel || this.velocity;
+
+        if(vel.x === 0 &amp;&amp; vel.y === 0)
+            return;
+
+        &#x2F;&#x2F;update the entity position
+        this.position.x += vel.x;
+        this.position.y += vel.y;
+
+        &#x2F;&#x2F;onMove event
+        this.onMove(vel);
+
+        return this;
+    },
+    &#x2F;**
+     * On Collision Event
+     *      called when this object is collided into by another, by default if something collides with
+     *      a collectable entity we remove the collectable
+     *
+     * @method onCollision
+     * @param vel {Vector} Collision Vector
+     * @param obj {Entity} Colliding object
+     * @return {Entity} Returns itself for chainability
+     *&#x2F;
+    onCollision: function() {
+        if(this.collidable &amp;&amp; this.type === gf.types.ENTIY.COLLECTABLE)
+            gf.game.removeObject(this);
+
+        return this;
+    },
+    &#x2F;**
+     * On Move Event
+     *      called when this entity moves
+     *
+     * @method onMove
+     * @param vel {Vector} Velocity the entity moved
+     * @return {Entity} Returns itself for chainability
+     *&#x2F;
+    onMove: function() {
+        return this;
+    },
+    &#x2F;**
+     * On Break Tile Event
+     *      called when a tile is broken
+     *
+     * @method onBreakTile
+     * @param tile {Unkown} the tile that is broken
+     * @return {Entity} Returns itself for chainability
+     *&#x2F;
+    onBreakTile: function() {
+        return this;
+    }
+});
     </pre>
 </div>
 

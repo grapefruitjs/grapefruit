@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\utils\Vector.js - gf</title>
+    <title>src\map\tiled\TiledLayer.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -106,186 +106,82 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\utils\Vector.js</h1>
+                        <h1 class="file-heading">File: src\map\tiled\TiledLayer.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 &#x2F;**
- * Based on Vector2 from three.js
- * thanks mrdoob: https:&#x2F;&#x2F;github.com&#x2F;mrdoob&#x2F;three.js&#x2F;blob&#x2F;master&#x2F;src&#x2F;math&#x2F;Vector2.js
- **&#x2F;
-gf.Vector = function(x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
+ * The TiledLayer is 
+ *
+ * @module gf
+ * @class Tiled Map
+ *&#x2F;
+&#x2F;&#x2F;see: https:&#x2F;&#x2F;github.com&#x2F;GoodBoyDigital&#x2F;pixi.js&#x2F;issues&#x2F;48
+gf.TiledLayer = function(layer, tileSize, tilesets) {
+    gf.Layer.call(this, layer);
+
+    &#x2F;**
+     * The tile IDs of the tilemap
+     *
+     * @property name
+     * @type Uint32Array
+     *&#x2F;
+    this.tiles = new Uint32Array(layer.data);
+
+    &#x2F;**
+     * The square size of the tiles in the layer
+     *
+     * @property tileSize
+     * @type Number
+     *&#x2F;
+    this.tileSize = tileSize;
+
+    this.renderTiles();
 };
 
-gf.inherits(gf.Vector, Object, {
-    set: function(x, y) {
-        this.x = x;
-        this.y = y;
+gf.inherits(gf.TiledLayer, gf.Layer, {
+    renderTiles: function() {
+        for(var i = 0, il = this.tiles.length; i &lt; il; ++i) {
+            var tile = this.tiles[i],
+                spr = this.getTileset(tile).createTileSprite(tile),
+                y = ~~(i &#x2F; this.size.x),
+                x = (id - (y * this.size.x));
 
-        return this;
-    },
-    setX: function(x) {
-        this.x = x;
-
-        return this;
-    },
-    setY: function(y) {
-        this.y = y;
-
-        return this;
-    },
-    setComponent: function(index, value) {
-        switch(index) {
-            case 0: this.x = value; break;
-            case 1: this.y = value; break;
-            default: throw new Error(&#x27;index is out of range: &#x27; + index);
+            spr.position.x = x * this.tileSize.x;
+            spr.position.y = y * this.tileSize.y;
+            this.addChild(spr);
         }
     },
-    getComponent: function(index) {
-        switch(index) {
-            case 0: return this.x;
-            case 1: return this.y;
-            default: throw new Error(&#x27;index is out of range: &#x27; + index);
-        }
+    getTileset: function(tileId) {
+        for(var i = 0, il = this.tilesets.length; i &lt; il; ++i)
+            if(tileId &gt;= this.tilesets[i].firstgid &amp;&amp; tiledId &lt;= this.tilesets[i].lastgid)
+                return this.tilesets[i];
     },
-    copy: function(v) {
-        this.x = v.x;
-        this.y = v.y;
+    &#x2F;&#x2F;get ID of tile at specified location
+    getTileId: function(x, y, realCoords) {
+        var pos = x instanceof gf.Vector ? x.clone() : new gf.Vector(x, y);
+        &#x2F;&#x2F;if not realCoords, they are world coords; and must be converted
+        if(!realCoords) {
+            &#x2F;&#x2F;do some division to make position be in &quot;tiles from center&quot; instead of &quot;units from center&quot;
+            pos.divideScalar(this.scale);
+            pos.x = pos.x &#x2F; this.tileSize.x;
+            pos.y = pos.y &#x2F; this.tileSize.y;
 
-        return this;
-    },
-    add: function(v) {
-        this.x += v.x;
-        this.y += v.y;
+            &#x2F;&#x2F;inverse the Y so the next add will actually subtract from Y
+            pos.y = -pos.y;
 
-        return this;
-    },
-    addVectors: function(a, b) {
-        this.x = a.x + b.x;
-        this.y = a.y + b.y;
+            &#x2F;&#x2F;pos is now the offset from the center, to make it from the top left
+            &#x2F;&#x2F;we add half the size of the tilemap to x (and sub from y since we inverted)
+            pos.add(this.hSize);
 
-        return this;
-    },
-    addScalar: function(s) {
-        this.x += s;
-        this.y += s;
-
-        return this;
-    },
-    sub: function(v) {
-        this.x -= v.x;
-        this.y -= v.y;
-
-        return this;
-    },
-    subVectors: function(a, b) {
-        this.x = a.x - b.x;
-        this.y = a.y - b.y;
-
-        return this;
-    },
-    multiplyScalar: function(s) {
-        this.x *= s;
-        this.y *= s;
-
-        return this;
-    },
-    divideScalar: function(s) {
-        if(s !== 0) {
-            this.x &#x2F;= s;
-            this.y &#x2F;= s;
-        } else {
-            this.set(0, 0);
+            pos.x = ~~pos.x; &#x2F;&#x2F;floor
+            pos.y = ~~pos.y;
         }
 
-        return this;
-    },
-    min: function(v) {
-        if(this.x &gt; v.x) {
-            this.x = v.x;
-        }
+        &#x2F;&#x2F;calculate index
+        var idx = Math.floor(pos.x + (pos.y * (this.size.x)));
 
-        if(this.y &gt; v.y) {
-            this.y = v.y;
-        }
-
-        return this;
-    },
-    max: function(v) {
-        if(this.x &lt; v.x) {
-            this.x = v.x;
-        }
-
-        if(this.y &lt; v.y) {
-            this.y = v.y;
-        }
-
-        return this;
-    },
-    clamp: function(min, max) {
-        &#x2F;&#x2F; This function assumes min &lt; max, if this assumption
-        &#x2F;&#x2F;isn&#x27;t true it will not operate correctly
-        if(this.x &lt; min.x) {
-            this.x = min.x;
-        } else if(this.x &gt; max.x) {
-            this.x = max.x;
-        }
-
-        if(this.y &lt; min.y) {
-            this.y = min.y;
-        } else if(this.y &gt; max.y) {
-            this.y = max.y;
-        }
-
-        return this;
-    },
-    negate: function() {
-        return this.multiplyScalar(-1);
-    },
-    dot: function(v) {
-        return this.x * v.x + this.y * v.y;
-    },
-    lengthSq: function() {
-        return this.x * this.x + this.y * this.y;
-    },
-    length: function() {
-        return Math.sqrt(this.x * this.x + this.y * this.y);
-    },
-    normalize: function() {
-        return this.divideScalar(this.length());
-    },
-    distanceTo: function(v) {
-        return Math.sqrt(this.distanceToSquared(v));
-    },
-    distanceToSquared: function(v) {
-        var dx = this.x - v.x, dy = this.y - v.y;
-        return dx * dx + dy * dy;
-    },
-    setLength: function(l) {
-        var oldLength = this.length();
-
-        if(oldLength !== 0 &amp;&amp; l !== oldLength) {
-            this.multiplyScalar(l &#x2F; oldLength);
-        }
-
-        return this;
-    },
-    lerp: function(v, alpha) {
-        this.x += (v.x - this.x) * alpha;
-        this.y += (v.y - this.y) * alpha;
-
-        return this;
-    },
-    equals: function(v) {
-        return ((v.x === this.x) &amp;&amp; (v.y === this.y));
-    },
-    toArray: function () {
-        return [this.x, this.y];
-    },
-    clone: function () {
-        return new gf.Vector(this.x, this.y);
+        return this.data[idx];
     }
 });
 
