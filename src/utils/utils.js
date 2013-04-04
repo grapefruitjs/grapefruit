@@ -96,16 +96,11 @@
                         /*else
                             console.warn('Object parameter "' + key + '" evaluated to NaN, using default. Value passed: ' + newVal);*/
 
-                    } else if(curVal instanceof THREE.Color && typeof newVal === 'number') {
-                        curVal.setHex(newVal);
                     } else if(curVal instanceof gf.Vector && newVal instanceof Array) {
                         curVal.set(parseInt(newVal[0], 10) || 0, parseInt(newVal[1], 10) || 0);
                     } else if(curVal instanceof gf.Vector && typeof newVal === 'string') {
                         var a = newVal.split(gf.utils._arrayDelim, 2);
                         curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
-                    } else if(curVal instanceof THREE.Vector3 && typeof newVal === 'string') {
-                        var v = newVal.split(gf.utils._arrayDelim, 3);
-                        curVal.set(parseInt(v[0], 10) || 0, parseInt(v[1], 10) || 0, parseInt(v[2], 10) || 0);
                     } else if(curVal instanceof Array && typeof newVal === 'string') {
                         obj[key] = newVal.split(gf.utils._arrayDelim);
                         for(var i = 0, il = obj[key].length; i < il; ++i) {
@@ -193,41 +188,6 @@
                 top: top,
                 left: left
             };
-        },
-        each: function(object, callback, args) {
-            var name, i = 0,
-                length = object.length,
-                isObj = length === undefined || typeof object === 'function';
-            if (args) {
-                if (isObj) {
-                    for (name in object) {
-                        if (callback.apply(object[name], args) === false) {
-                            break;
-                        }
-                    }
-                } else {
-                    for (; i < length;) {
-                        if (callback.apply(object[i++], args) === false) {
-                            break;
-                        }
-                    }
-                }
-            } else {
-                if (isObj) {
-                    for (name in object) {
-                        if (callback.call(object[name], name, object[name]) === false) {
-                            break;
-                        }
-                    }
-                } else {
-                    for (; i < length;) {
-                        if (callback.call(object[i], i, object[i++]) === false) {
-                            break;
-                        }
-                    }
-                }
-            }
-            return object;
         },
         b64: {
             // private property
