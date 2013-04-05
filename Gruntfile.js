@@ -121,15 +121,17 @@ module.exports = function(grunt) {
                 /* Globals */
                 undef: true,
                 globals: {
+                    /* For tests */
                     requirejs: false,
                     require: false,
                     define: false,
-                    PIXI: false,
-                    gf: false,
                     QUnit: false,
                     Q: false,
                     $: false,
-                    THREE: false
+                    gf: false,
+
+                    /* For the library */
+                    PIXI: false
                 }
             }
         },
