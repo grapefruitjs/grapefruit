@@ -61,7 +61,7 @@
          *      first parameter to control that audio clip
          */
         play: function(id, opts, cb) {
-            if(!gf.resources[id]) {
+            if(!gf.assetCache[id]) {
                 throw 'Tried to play unloaded audio: ' + id;
             }
 
@@ -89,7 +89,7 @@
 
             //we haven't played this sound yet, create a new channel list
             if(!playing[id]) {
-                playing[id] = [gf.resources[id].data];
+                playing[id] = [gf.assetCache[id]];
                 playing[id][0].channel = 0;
             }
 

@@ -800,9 +800,9 @@ gf.game = {
     },
     loadWorld: function(world) {
         if(typeof world === 'string'){
-            if(gf.resources[world]) world = gf.resources[world].data;
+            if(gf.assetCache[world]) world = gf.assetCache[world];
             else {
-                throw 'World not found in resources!';
+                throw 'World not found in assetCache!';
             }
         }
 

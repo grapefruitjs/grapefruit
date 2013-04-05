@@ -9,15 +9,13 @@
  * @param settings {Object} All the settings for the tileset
  */
 gf.TiledTileset = function(settings) {
-    //first build the baseTexture
-    var image = new Image();
-    image.src = settings.image;
-
-    var baseTexture = new PIXI.BaseTexture(image);
-    PIXI.BaseTextureCache[settings.image] = baseTexture;
+    if(!gf.assetCache[settings.name + '_texture']) {
+        var loader = new gf.AssetLoader();
+        loader.loadTexture(settings.name + '_texture', settings.image);
+    }
 
     //initialize the base Texture class
-    PIXI.Texture.call(this, baseTexture);
+    PIXI.Texture.call(this, gf.assetCache[settings.name + '_texture'].baseTexture);
 
     /**
      * The size of the tileset

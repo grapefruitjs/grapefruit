@@ -45,12 +45,13 @@ gf.inherits(gf.TiledObjectGroup, Object, {
             props.zIndex = this.zIndex;
             props.opacity = this.opacity;
             props.visible = this.visible;
+            pros.position = [o.x, o.y];
             //convert tiled x,y coords into world coords
             //tiled does x,y from top left. We do x,y from center
-            props.position = [
+            /*props.position = [
                 (o.x * this.map.scale) - (this.map.scaledSize.x / 2),
                 -((o.y * this.map.scale) - (this.map.scaledSize.y / 2))
-            ];
+            ];*/
 
             //spawn from entity pool
             this.ents.push(gf.entityPool.create(props.name, props));
