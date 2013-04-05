@@ -3,7 +3,7 @@
  * There can be multiple Tilesets in a map
  *
  * @module gf
- * @class Tiled Map
+ * @class TiledTileset
  * @extends Texture
  * @constructor
  * @param settings {Object} All the settings for the tileset

@@ -5,7 +5,7 @@
  * create an instance on your own.
  *
  * @module gf
- * @class Tiled Map
+ * @class TiledLayer
  * @extends Layer
  * @constructor
  * @param layer {Object} All the settings for the layer
