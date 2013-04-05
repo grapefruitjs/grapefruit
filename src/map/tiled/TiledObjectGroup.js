@@ -1,39 +1,44 @@
-gf.TiledObjectGroup = function(group, map) {
-    //objects in this group
+/**
+ * Tiled object group is a special layer that contains entities
+ *
+ * @module gf
+ * @class TiledObjectGroup
+ * @extends Layer
+ * @constructor
+ * @param group {Object} All the settings for the layer
+ */
+ gf.TiledObjectGroup = function(group) {
+    gf.Layer.call(this, group);
+
+    /**
+     * The user-defined properties of this group. Usually defined in the TiledEditor
+     *
+     * @property properties
+     * @type Object
+     */
+    this.properties = group.properties || {};
+
+    /**
+     * The objects in this group that can be spawned
+     *
+     * @property objects
+     * @type Array
+     */
     this.objects = group.objects;
 
-    //spawned enitites
-    this.ents = [];
-
-    //map reference
-    this.map = map;
-
-    //tilesets in the map
-    this.tilesets = map.tilesets;
-
-    //name
-    this.name = group.name;
-
-    //size
-    this.size = new gf.Vector(group.width, group.height);
-
-    //position
-    this.position = new gf.Vector(group.x * this.map.scale, group.y * this.map.scale);
-
-    //visible
-    this.visible = group.visible;
-
-    //opacity
-    this.opacity = group.opacity;
-
-    //zIndex
-    this.zIndex = group.zIndex;
-
-    //user-defined properties
-    this.properties = group.properties || {};
+    //translate some tiled properties to our inherited properties
+    this.position.x = group.x;
+    this.position.y = group.y;
+    this.alpha = group.opacity;
 };
 
-gf.inherits(gf.TiledObjectGroup, Object, {
+gf.inherits(gf.TiledObjectGroup, gf.Layer, {
+    /**
+     * Spawns all the entities associated with this layer, and properly sets their attributes
+     *
+     * @method spawn
+     * @return {TiledObjectGroup} Returns itself for chainability
+     */
     spawn: function() {
         for(var i = 0, il = this.objects.length; i < il; ++i) {
             var o = this.objects[i],
@@ -54,22 +59,22 @@ gf.inherits(gf.TiledObjectGroup, Object, {
             ];*/
 
             //spawn from entity pool
-            this.ents.push(gf.entityPool.create(props.name, props));
-
-            //add the new entity to the game
-            gf.game.addObject(this.ents[i]);
+            this.addChild(gf.entityPool.create(props.name, props));
         }
 
         return this;
     },
+    /**
+     * Despawns all the entities associated with this layer
+     *
+     * @method despawn
+     * @return {TiledObjectGroup} Returns itself for chainability
+     */
     despawn: function() {
         //remove each entity from the game
-        for(var i = 0, il = this.ents.length; i < il; ++i) {
-            gf.game.removeObject(this.ents[i]);
+        for(var i = this.children.length; i > -1; --i) {
+            this.removeChild(this.children[i]);
         }
-
-        //empty the ents array
-        this.ents.length = 0;
 
         return this;
     }
