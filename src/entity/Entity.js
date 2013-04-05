@@ -184,14 +184,33 @@ gf.inherits(gf.Entity, gf.Sprite, {
         }
 
         //apply friction
-        if(this.friction.x) vel.x = gf.utils.applyFriction(vel.x, this.friction.x);
-        if(this.friction.y) vel.y = gf.utils.applyFriction(vel.y, this.friction.y);
+        if(this.friction.x) vel.x = this.applyFriction(vel.x, this.friction.x);
+        if(this.friction.y) vel.y = this.applyFriction(vel.y, this.friction.y);
 
         //cap velocity
         if(vel.x) vel.x = gf.utils.clamp(vel.x, -this.maxVelocity.x, this.maxVelocity.x);
         if(vel.y) vel.y = gf.utils.clamp(vel.y, -this.maxVelocity.y, this.maxVelocity.y);
 
         return vel;
+    },
+    /**
+     * Applies friction to a velocity, usually the current velocity
+     *
+     * @method applyFriction
+     * @param vel {Number} The velocity to apply the friction to
+     * @param friction {Number} The friction factor to apply
+     * @return {Object} The modified velocity, with friction applied
+     */
+    applyFriction: function(vel, friction) {
+        return (
+                    vel + friction < 0 ?
+                    vel + (friction * (gf.game._delta || 0)) :
+                    (
+                        vel - friction > 0 ?
+                        vel - (friction * (gf.game._delta || 0)) :
+                        0
+                    )
+                );
     },
     /**
      * Checks if this entity intersects with the passed object
