@@ -111,7 +111,7 @@ gf.TiledMap = function(map) {
 
         switch(map.layers[i].type) {
             case gf.types.LAYER.TILE_LAYER:
-                lyr = new gf.TiledLayer(map.layers[i], this.tileSize, this.tilesets);
+                lyr = new gf.TiledLayer(map.layers[i]);
                 lyr.scale = this.scale;
 
                 if(lyr.name.toLowerCase().indexOf('collision') === 0) {
@@ -123,7 +123,7 @@ gf.TiledMap = function(map) {
                 break;
 
             case gf.types.LAYER.OBJECT_GROUP:
-                lyr = new gf.TiledObjectGroup(map.layers[i], this);
+                lyr = new gf.TiledObjectGroup(map.layers[i]);
 
                 //auto spawn the player object group
                 if(lyr.name === 'player' && !lyr.properties.manual)

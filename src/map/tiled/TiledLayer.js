@@ -9,10 +9,9 @@
  * @extends Layer
  * @constructor
  * @param layer {Object} All the settings for the layer
- * @param tileSize {Vector} The size of a tile
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
-gf.TiledLayer = function(layer, tileSize) {
+gf.TiledLayer = function(layer) {
     gf.Layer.call(this, layer);
 
     /**
@@ -22,14 +21,6 @@ gf.TiledLayer = function(layer, tileSize) {
      * @type Uint32Array
      */
     this.tiles = new Uint32Array(layer.data);
-
-    /**
-     * The square size of the tiles in the layer
-     *
-     * @property tileSize
-     * @type Vector
-     */
-    this.tileSize = tileSize;
 
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
@@ -52,8 +43,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 y = ~~(i / this.size.x),
                 x = (i - (y * this.size.x));
 
-            spr.position.x = x * this.tileSize.x;
-            spr.position.y = y * this.tileSize.y;
+            spr.position.x = x * this.parent.tileSize.x;
+            spr.position.y = y * this.parent.tileSize.y;
             //spr.scale = this.scale;
             //spr.rotation = this.rotation;
             //spr.alpha = this.alpha;
@@ -73,8 +64,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         y = x instanceof gf.Vector ? x.y : y;
 
         //convert the position from units to tiles
-        x = ~~(x / this.tileSize.x);
-        y = ~~(y / this.tileSize.y);
+        x = ~~(x / this.parent.tileSize.x);
+        y = ~~(y / this.parent.tileSize.y);
 
         //calculate index of this tile
         return (x + (y * this.size.x));
