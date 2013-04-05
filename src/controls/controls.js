@@ -65,17 +65,18 @@
             //bind all the mouse/touch events
             if(gf.support.touch) {
                 gf.game._cont.addEventListener('touchmove', gf.controls.onMouseMove, false);
-                gf.utils.each(gf.types.TOUCH, function(k, v) {
-                    if(v === 'touchmove') return;
-                    gf.game._cont.addEventListener(v, gf.controls.onTouch, false);
-                });
+                for(var k in gf.types.TOUCH) {
+                    if(gf.types.TOUCH[k] === 'touchmove') return;
+                    gf.game._cont.addEventListener(gf.types.TOUCH[k], gf.controls.onTouch, false);
+                }
             } else {
                 gf.game._cont.addEventListener('mousemove', gf.controls.onMouseMove, false);
                 document.addEventListener('mousewheel', gf.controls.onMouseWheel, false);
-                gf.utils.each(gf.types.MOUSE, function(k, v) {
-                    if(v === 'mousemove' || v === 'mousewheel') return;
+                for(var k in gf.types.MOUSE) {
+                    var v = gf.types.MOUSE[k];
+                    if(v === 'mousemove'|| v === 'mousewheel') return;
                     gf.game._cont.addEventListener(v, gf.controls.onMouse, false);
-                });
+                }
             }
 
             gf.controls._initialized = true;

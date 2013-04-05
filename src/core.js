@@ -281,16 +281,13 @@ gf.types = {
         PAD_RIGHT: 15
     },
     getGpButtonName: function(i) {
-        var name = '';
-
-        gf.utils.each(gf.types.GP_BUTTONS, function(k, v) {
-            if(v === i) {
-                name = k;
-                return false; //break
+        for(var k in gf.types.GP_BUTTONS) {
+            if(gf.types.GP_BUTTONS[k] === i) {
+                return k;
             }
-        });
+        }
 
-        return name;
+        return '';
     },
     /**
      * Bindable Gamepad Axes
@@ -305,16 +302,13 @@ gf.types = {
         RIGHT_ANALOGUE_VERT: 3
     },
     getGpAxisName: function(i) {
-        var name = '';
-
-        gf.utils.each(gf.types.GP_AXES, function(k, v) {
-            if(v === i) {
-                name = k;
-                return false; //break
+        for(var k in gf.types.GP_AXES) {
+            if(gf.types.GP_AXES[k] === i) {
+                return k;
             }
-        });
+        }
 
-        return name;
+        return '';
     }
 };
 
@@ -733,14 +727,18 @@ gf.game = {
         //fps counter
         if(gf.debug.showFps) {
             gf.debug._fpsCounter = new gf.debug.FpsCounter();
-            gf.utils.each(gf.debug.fpsStyle, function(k, v) { gf.debug._fpsCounter.domElement.style[k] = v; });
+            for(var s in gf.debug.fpsStyle) {
+                gf.debug._info.domElement.style[s] = gf.debug.fpsStyle[s];
+            }
             document.body.appendChild(gf.debug._fpsCounter.domElement);
         }
 
         //debug info
         if(gf.debug.showInfo) {
             gf.debug._info = new gf.debug.Info();
-            gf.utils.each(gf.debug.infoStyle, function(k, v) { gf.debug._info.domElement.style[k] = v; });
+            for(var s in gf.debug.infoStyle) {
+                gf.debug._info.domElement.style[s] = gf.debug.infoStyle[s];
+            }
             document.body.appendChild(gf.debug._info.domElement);
         }
 
