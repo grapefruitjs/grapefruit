@@ -8,7 +8,7 @@ gf.AssetLoader = function(resources) {
     * @type Array
     */
     this.resources = resources;
-    this.loadCount = resources.length;
+    this.loadCount = 0;
     this.assets = {};
 
     this.exts = {
@@ -40,14 +40,17 @@ gf.inherits(gf.AssetLoader, Object, {
         }
     },
     loadTexture: function(name, url) {
+        this.loadCount++;
+
         var self = this,
             texture = PIXI.Texture.fromImage(url);
+
+        this._storeAsset(name, texture);
 
         if(!texture.hasLoaded) {
             texture.baseTexture.on('loaded', function() {
                 self.onAssetLoaded(null, 'texture', texture);
             });
-            this.assets[name] = texture;
         } else {
             self.onAssetLoaded(null, 'texture', texture);
         }
@@ -55,10 +58,14 @@ gf.inherits(gf.AssetLoader, Object, {
         return texture;
     },
     loadAudio: function(name, url) {
+        this.loadCount++;
+
         var self = this,
             audio = new Audio(url);
 
         audio.preload = 'auto';
+
+        this._storeAsset(name, audio);
 
         audio.addEventListener('canplaythrough', function() {
             self.onAssetLoaded(null, 'audio', audio);
@@ -69,7 +76,6 @@ gf.inherits(gf.AssetLoader, Object, {
         }, false);
 
         audio.load();
-        this.assets[name] = audio;
 
         return audio;
     },
@@ -84,6 +90,8 @@ gf.inherits(gf.AssetLoader, Object, {
             load: function(data) {
                 //check some properties to see if this is a TiledMap Object
                 if(data.orientation && data.layers && data.tilesets && data.version) {
+                    self._storeAsset(name, data);
+
                     //TODO: How to tell if all these are loaded (how to count them?)
                     //loop through each layer and load the sprites (objectgroup types)
                     for(var i = 0, il = data.layers.length; i < il; ++i) {
@@ -95,7 +103,6 @@ gf.inherits(gf.AssetLoader, Object, {
                             var obj = layer.objects[o];
                             if(!obj.properties.spritesheet) continue;
 
-                            this.loadCount++;
                             self.loadTexture(layer.name + '_' + obj.name + '_texture', obj.properties.spritesheet);
                         }
                     }
@@ -105,12 +112,13 @@ gf.inherits(gf.AssetLoader, Object, {
                         var set = data.tilesets[s];
                         if(!set.image) continue;
 
-                        this.loadCount++;
                         self.loadTexture(set.name + '_texture', baseUrl + set.image);
                     }
                 }
                 //this is a sprite sheet (published from TexturePacker)
                 else if(data.frames && data.meta) {
+                    this.loadCount++;
+
                     var textureUrl = baseUrl + data.meta.image,
                         texture =  PIXI.Texture.fromImage(textureUrl).baseTexture,
                         frames = data.frames,
@@ -129,7 +137,7 @@ gf.inherits(gf.AssetLoader, Object, {
                         assets.push(PIXI.TextureCache[f]);
                     }
 
-                    self.assets[name] = assets;
+                    self._storeAsset(name, assets);
 
                     if(texture.hasLoaded) {
                         self.onAssetLoaded(null, 'spritesheet', assets);
@@ -160,5 +168,9 @@ gf.inherits(gf.AssetLoader, Object, {
             this.dispatchEvent({ type: 'complete' });
             if(this.onComplete) this.onComplete();
         }
+    },
+    _storeAsset: function(name, asset) {
+        this.assets[name] = asset;
+        gf.assetCache[name] = asset;
     }
 });
