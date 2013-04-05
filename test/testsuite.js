@@ -15,7 +15,7 @@ define(function(require) {
         'gui/gui',
         'gui/hud',
         'gui/hud/HudItem',
-        'loader/loader',
+        'loader/AssetLoader',
         'map/Map',
         'map/Layer',
         'map/tiled/TiledLayer',
