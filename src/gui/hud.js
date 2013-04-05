@@ -66,20 +66,20 @@
             return this;
         },
         resetAll: function() {
-            gf.utils.each(this.items, function(name, item) {
-                item.reset();
-            });
+            for(var n in this.items) {
+                this.items[n].reset();
+            }
 
             return this;
         },
         update: function() {
             if(!this.dirty) return;
 
-            gf.utils.each(this.items, function(name, item) {
-                if(item.visible) {
-                    item.update();
+            for(var n in this.items) {
+                if(this.items[n].visible) {
+                    this.items[n].update();
                 }
-            });
+            }
 
             this.dirty = false;
         },
