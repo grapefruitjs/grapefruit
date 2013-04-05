@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>entityPool - gf</title>
+    <title>utils - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -116,7 +116,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>entityPool Class</h1>
+                        <h1>utils Class</h1>
 <div class="box meta">
     
 
@@ -124,7 +124,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l4"><code>src\entity\entityPool.js:4</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l1"><code>src\utils\utils.js:1</code></a>
         </div>
     
 
@@ -140,8 +140,8 @@
 
 
 <div class="box intro">
-    <p>Holds a pool of different Entities that can be created, makes it very
-easy to quickly create different registered entities</p>
+    <p>This object represents a tileset used by a TiledMap.
+There can be multiple Tilesets in a map</p>
 </div>
 
 
@@ -169,21 +169,42 @@ easy to quickly create different registered entities</p>
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_add">add</a>
+                                <a href="#method_ajax">ajax</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_add">add</a>
+                                <a href="#method_AjaxRequest">AjaxRequest</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_add">add</a>
+                                <a href="#method_clamp">clamp</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_ensureVector">ensureVector</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_noop">noop</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setValues">setValues</a>
 
                                 
                                 
@@ -205,8 +226,8 @@ easy to quickly create different registered entities</p>
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
+                    <div id="method_ajax" class="method item">
+    <h3 class="name"><code>ajax</code></h3>
 
     
         <div class="args">
@@ -214,13 +235,492 @@ easy to quickly create different registered entities</p>
             
                 <li class="arg">
                     
-                        <code>name</code>
+                        <code>settings</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">AjaxRequest</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l42"><code>src\utils\utils.js:42</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Performs an ajax request, and manages the callbacks passed in</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">settings</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The settings of the ajax request, similar to jQuery's ajax function</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">AjaxRequest</span>:
+                    
+                    An XHR object
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_AjaxRequest" class="method item">
+    <h3 class="name"><code>AjaxRequest</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">ActiveXObject | XMLHttpRequest</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l90"><code>src\utils\utils.js:90</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Wraps XMLHttpRequest in a cross-browser way.</p>
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">ActiveXObject | XMLHttpRequest</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_clamp" class="method item">
+    <h3 class="name"><code>clamp</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>num</code>
                     
                 </li>
             
                 <li class="arg">
                     
+                        <code>min</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>max</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Number</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l182"><code>src\utils\utils.js:182</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Clamps a number between two values.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">num</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The number to clamp</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">min</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The minimum value the number is allowed to be</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">max</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The maximum value the number is allowed to be</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Number</span>:
+                    
+                    The clamped value
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_ensureVector" class="method item">
+    <h3 class="name"><code>ensureVector</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>vec</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l10"><code>src\utils\utils.js:10</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Ensures that some input is a vector, converts strings and arrays into vector objects</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">vec</code>
+                        <span class="type">Array | String | <a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The object to ensure becomes a vector</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>:
+                    
+                    The vector created with the passed values, if the values can't be made
+     into a Vector, then a new Vector with 0,0 is returned
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_noop" class="method item">
+    <h3 class="name"><code>noop</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l36"><code>src\utils\utils.js:36</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>An empty function that performs no action</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setValues" class="method item">
+    <h3 class="name"><code>setValues</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
                         <code>obj</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>values</code>
                     
                 </li>
             
@@ -257,7 +757,7 @@ easy to quickly create different registered entities</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l12"><code>src\entity\entityPool.js:12</code></a>
+        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l120"><code>src\utils\utils.js:120</code></a>
         
         </p>
 
@@ -268,7 +768,10 @@ easy to quickly create different registered entities</p>
     </div>
 
     <div class="description">
-        <p>Adds an entity Object to the pool</p>
+        <p>This will take values and override the passed obj's properties with those values.
+The difference from a normal object extend is that this will try to massage the passed
+value into the same type as the object's property. Also if the key for the value is not
+in the original object, it is not copied.</p>
     </div>
 
     
@@ -279,21 +782,6 @@ easy to quickly create different registered entities</p>
             
                 <li class="param">
                     
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The user-defined name of the Entity to add</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
                         <code class="param-name">obj</code>
                         <span class="type">Object</span>
                     
@@ -301,7 +789,22 @@ easy to quickly create different registered entities</p>
                     
 
                     <div class="param-description">
-                        <p>The Entity or decendant to add to the pool</p>
+                        <p>The object to extend the values into</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">values</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The values to put into the object</p>
                     </div>
 
                     
@@ -320,7 +823,7 @@ easy to quickly create different registered entities</p>
                     
                         <span class="type">Object</span>:
                     
-                    Returns the passed object
+                    returns the updated object
                 
             </div>
         </div>
@@ -331,279 +834,11 @@ easy to quickly create different registered entities</p>
             <h4>Example:</h4>
 
             <div class="example-content">
-                <pre class="code prettyprint"><code> //create a new ckass to be instantiated
- var Bug = gf.entityPool.add('bug', gf.Entity.extend({
-     //ctor function
-     init: function(pos, settings) {
-         //call the base ctor
-         this._super(pos, settings);
-
-         this.color = 'red';
-     },
-     beBug: function() {
-         console.log("I'm a bug");
-     }
- }));
-
- //then later in your game code
- var mybug = gf.entityPool.create('bug', {
-     pos: [10, 10]
- });
-</code></pre>
-            </div>
-        </div>
-    
-</div>
-
-                
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>name</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Boolean</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l42"><code>src\entity\entityPool.js:42</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Checks if the entity exists in the pool</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The user-defined name of the Entity to check if is in the pool</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Boolean</span>:
-                    
-                    Returns the passed object
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>name</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>props</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l52"><code>src\entity\entityPool.js:52</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Creates a new entity from the pool</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The user-defined name of the Entity to check if is in the pool</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">props</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The properties that would normally be passed as the "settings" of the Entity</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>:
-                    
-                    Returns a new instance of the object from the pool
-                
-            </div>
-        </div>
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> //create a new ckass to be instantiated
- var Bug = gf.entityPool.add('bug', gf.Entity.extend({
-     //ctor function
-     init: function(pos, settings) {
-         //call the base ctor
-         this._super(pos, settings);
-
-         this.color = 'red';
-     },
-     beBug: function() {
-         console.log("I'm a bug");
-     }
- }));
-
- //then later in your game code
- var mybug = gf.entityPool.create('bug', {
-     pos: [10, 10]
- });
+                <pre class="code prettyprint"><code> var obj = { vec: new gf.Vector(), arr: [] },
+     vals = { vec: '2|5', arr: '5|10|11' };
+ gf.setValues(obj, vals);
+ //now obj is:
+ // { vec: gf.Vector(2, 5), arr: [5, 10, 11] }
 </code></pre>
             </div>
         </div>

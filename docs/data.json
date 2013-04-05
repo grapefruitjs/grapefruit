@@ -59,14 +59,27 @@
         "src\\map\\tiled\\TiledLayer.js": {
             "name": "src\\map\\tiled\\TiledLayer.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "TiledLayer": 1
+            },
             "fors": {},
             "namespaces": {}
         },
         "src\\map\\tiled\\TiledMap.js": {
             "name": "src\\map\\tiled\\TiledMap.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "TiledMap": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\map\\tiled\\TiledObjectGroup.js": {
+            "name": "src\\map\\tiled\\TiledObjectGroup.js",
+            "modules": {},
+            "classes": {
+                "TiledObjectGroup": 1
+            },
             "fors": {},
             "namespaces": {}
         },
@@ -74,7 +87,7 @@
             "name": "src\\map\\tiled\\TiledTileset.js",
             "modules": {},
             "classes": {
-                "Tiled Map": 1
+                "TiledTileset": 1
             },
             "fors": {},
             "namespaces": {}
@@ -100,7 +113,18 @@
         "src\\utils\\Vector.js": {
             "name": "src\\utils\\Vector.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "Vector": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\utils\\utils.js": {
+            "name": "src\\utils\\utils.js",
+            "modules": {},
+            "classes": {
+                "utils": 1
+            },
             "fors": {},
             "namespaces": {}
         },
@@ -129,9 +153,14 @@
                 "Entity": 1,
                 "Sprite": 1,
                 "entityPool": 1,
-                "Tiled Map": 1,
+                "TiledLayer": 1,
+                "TiledMap": 1,
+                "TiledObjectGroup": 1,
+                "TiledTileset": 1,
                 "Layer": 1,
                 "Map": 1,
+                "Vector": 1,
+                "utils": 1,
                 "Point": 1,
                 "types": 1,
                 "support": 1,
@@ -142,7 +171,7 @@
             "namespaces": {},
             "tag": "main",
             "file": "src\\core.js",
-            "line": 577,
+            "line": 571,
             "description": "The base grapefruit object",
             "extends": "Sprite",
             "is_constructor": 1,
@@ -226,9 +255,51 @@
             "line": 4,
             "description": "Holds a pool of different Entities that can be created, makes it very\neasy to quickly create different registered entities"
         },
-        "Tiled Map": {
-            "name": "Tiled Map",
-            "shortname": "Tiled Map",
+        "TiledLayer": {
+            "name": "TiledLayer",
+            "shortname": "TiledLayer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\map\\tiled\\TiledLayer.js",
+            "line": 1,
+            "description": "The TiledLayer is the visual tiled layer that actually displays on the screen\n\nThis class will be created by the TiledMap, there shouldn't be a reason to\ncreate an instance on your own."
+        },
+        "TiledMap": {
+            "name": "TiledMap",
+            "shortname": "TiledMap",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\map\\tiled\\TiledMap.js",
+            "line": 1,
+            "description": "Tiled map, expects a Tiled TMX file loaded by the gf.loader as the argument.\nThe loader knows to load all textures and other resources when loading a world TMX\nfile, and this expets that to already be done."
+        },
+        "TiledObjectGroup": {
+            "name": "TiledObjectGroup",
+            "shortname": "TiledObjectGroup",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "line": 1,
+            "description": "Tiled object group is a special layer that contains entities"
+        },
+        "TiledTileset": {
+            "name": "TiledTileset",
+            "shortname": "TiledTileset",
             "classitems": [],
             "plugins": [],
             "extensions": [],
@@ -267,6 +338,34 @@
             "file": "src\\map\\Map.js",
             "line": 1,
             "description": "Base Map implementation, provides common functions for all Map types"
+        },
+        "Vector": {
+            "name": "Vector",
+            "shortname": "Vector",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\utils\\Vector.js",
+            "line": 1,
+            "description": "A 2d Vector implementation stolen directly from mrdoob's THREE.js\nthanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js"
+        },
+        "utils": {
+            "name": "utils",
+            "shortname": "utils",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\utils\\utils.js",
+            "line": 1,
+            "description": "This object represents a tileset used by a TiledMap.\nThere can be multiple Tilesets in a map"
         },
         "Point": {
             "name": "Point",
@@ -307,7 +406,7 @@
             "module": "gf",
             "namespace": "",
             "file": "src\\core.js",
-            "line": 321,
+            "line": 315,
             "description": "Feature detection so we cans witch between renderers, play audio correctly, and other things."
         },
         "Clock": {
@@ -321,7 +420,7 @@
             "module": "gf",
             "namespace": "",
             "file": "src\\core.js",
-            "line": 484,
+            "line": 478,
             "description": "High performance clock, from mrdoob's Three.js\nhttps://github.com/mrdoob/three.js/blob/master/src/core/Clock.js"
         },
         "game": {
@@ -335,7 +434,7 @@
             "module": "gf",
             "namespace": "",
             "file": "src\\core.js",
-            "line": 577,
+            "line": 571,
             "description": "Main game object, controls the entire instance of the game"
         }
     },
@@ -654,6 +753,31 @@
         {
             "file": "src\\entity\\Entity.js",
             "line": 196,
+            "description": "Applies friction to a velocity, usually the current velocity",
+            "itemtype": "method",
+            "name": "applyFriction",
+            "params": [
+                {
+                    "name": "vel",
+                    "description": "The velocity to apply the friction to",
+                    "type": "Number"
+                },
+                {
+                    "name": "friction",
+                    "description": "The friction factor to apply",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "The modified velocity, with friction applied",
+                "type": "Object"
+            },
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 215,
             "description": "Checks if this entity intersects with the passed object\nfrom http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection",
             "itemtype": "method",
             "name": "intersects",
@@ -673,7 +797,7 @@
         },
         {
             "file": "src\\entity\\Entity.js",
-            "line": 208,
+            "line": 227,
             "description": "Checks if this entity collides with the passed Entity, a penetration vector is calculated.\nThis method is called from gf.game.checkCollisions(ent); That method will use this to check\nfor any collisions between that entity and all the others on the stage.\nfrom http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection",
             "itemtype": "method",
             "name": "checkCollision",
@@ -693,7 +817,7 @@
         },
         {
             "file": "src\\entity\\Entity.js",
-            "line": 235,
+            "line": 254,
             "description": "Calculate the velocity of the entity, and then apply it. This is different than moveEntity\nbecause it checks for map collisions, and applies gravity and friction with computeVelocity",
             "itemtype": "method",
             "name": "updateMovement",
@@ -706,7 +830,7 @@
         },
         {
             "file": "src\\entity\\Entity.js",
-            "line": 291,
+            "line": 310,
             "description": "Moves the entity to a new position using the velocity.",
             "itemtype": "method",
             "name": "moveEntity",
@@ -726,7 +850,7 @@
         },
         {
             "file": "src\\entity\\Entity.js",
-            "line": 314,
+            "line": 333,
             "description": "On Collision Event\n     called when this object is collided into by another, by default if something collides with\n     a collectable entity we remove the collectable",
             "itemtype": "method",
             "name": "onCollision",
@@ -751,7 +875,7 @@
         },
         {
             "file": "src\\entity\\Entity.js",
-            "line": 330,
+            "line": 349,
             "description": "On Move Event\n     called when this entity moves",
             "itemtype": "method",
             "name": "onMove",
@@ -771,7 +895,7 @@
         },
         {
             "file": "src\\entity\\Entity.js",
-            "line": 341,
+            "line": 360,
             "description": "On Break Tile Event\n     called when a tile is broken",
             "itemtype": "method",
             "name": "onBreakTile",
@@ -1022,134 +1146,411 @@
         },
         {
             "file": "src\\loader\\loader.js",
-            "line": 9,
-            "description": "Resource format:\n           {\n               name: String,   //key name\n               type: String,   //image, json, xml, texture, world\n               src: String     //url\n           }\nCallbacks format:\n           {\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n\n           }",
-            "class": "Tiled Map",
-            "module": "gf"
-        },
-        {
-            "file": "src\\loader\\loader.js",
-            "line": 56,
-            "description": "Resources format:\n           [\n               {\n                   name: String,   //key name\n                   type: String,   //image, json, xml, texture, world\n                   src: String     //url\n               },\n               ...\n           ]\nCallbacks format:\n           {\n               start: function(resource),              //when loading of a resource starts\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n               complete: function(resources),          //all resources have completed loading\n           }",
-            "class": "Tiled Map",
+            "line": 5,
+            "description": "The array of asset URLs that are going to be loaded",
+            "itemtype": "property",
+            "name": "assetURLs",
+            "type": "Array",
+            "class": "TiledLayer",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledLayer.js",
-            "line": 11,
+            "line": 17,
             "description": "The tile IDs of the tilemap",
             "itemtype": "property",
             "name": "name",
             "type": "Uint32Array",
-            "class": "Tiled Map",
+            "class": "TiledLayer",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledLayer.js",
-            "line": 19,
-            "description": "The square size of the tiles in the layer",
-            "itemtype": "property",
-            "name": "tileSize",
-            "type": "Number",
-            "class": "Tiled Map",
+            "line": 34,
+            "description": "Creates all the tile sprites needed to display the layer",
+            "itemtype": "method",
+            "name": "renderTiles",
+            "class": "TiledLayer",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledLayer.js",
+            "line": 54,
+            "description": "Transforms an x,y coord into the index of a tile in the tiles array",
+            "itemtype": "method",
+            "name": "getTileIndex",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "The x coord to transform, if a vector is passed it's x/y is used and the y param is ignored",
+                    "type": "Number|Vector"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coord to transform",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "TiledLayer",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledLayer.js",
+            "line": 73,
+            "description": "Transforms an x,y coord into the TiledTileset tile id",
+            "itemtype": "method",
+            "name": "getTileId",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "The x coord to transform, if a vector is passed it's x/y is used and the y param is ignored",
+                    "type": "Number|Vector"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coord to transform",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "TiledLayer",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 12,
+            "line": 15,
             "description": "The tile size",
             "itemtype": "property",
             "name": "tileSize",
             "type": "Vector",
             "default": "new gf.Vector(0, 0)",
-            "class": "Tiled Map",
+            "class": "TiledMap",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 21,
+            "line": 24,
             "description": "The user-defined properties",
             "itemtype": "property",
             "name": "properties",
             "type": "Object",
             "default": "{}",
-            "class": "Tiled Map",
+            "class": "TiledMap",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 30,
+            "line": 33,
             "description": "The scale of the map",
             "itemtype": "property",
             "name": "scale",
             "type": "Number",
             "default": "1",
-            "class": "Tiled Map",
+            "class": "TiledMap",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 39,
+            "line": 42,
             "description": "The scaled size (size * tileSize * scale)",
             "itemtype": "property",
             "name": "scaledSize",
             "type": "Vector",
-            "class": "Tiled Map",
+            "class": "TiledMap",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 50,
+            "line": 53,
             "description": "The maximum extent of the map (largest x and y the map has)\nassuming 0,0 is in the middle of the map, calculate the minimum\nand maximum extent of the map",
             "itemtype": "property",
             "name": "extent",
             "type": "Object",
-            "class": "Tiled Map",
+            "class": "TiledMap",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 69,
+            "line": 72,
             "description": "The tilesets used by this map",
             "itemtype": "property",
             "name": "tilesets",
             "type": "Array",
-            "class": "Tiled Map",
+            "class": "TiledMap",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 81,
+            "line": 84,
             "description": "The layer for collisions",
             "itemtype": "property",
             "name": "collisionLayer",
             "type": "Array",
-            "class": "Tiled Map",
+            "class": "TiledMap",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 89,
+            "line": 92,
             "description": "The tileset for the collision layer",
             "itemtype": "property",
             "name": "collisionTileset",
             "type": "TiledTileset",
-            "class": "Tiled Map",
+            "class": "TiledMap",
             "module": "gf"
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 97,
+            "line": 100,
             "description": "The version of this map",
             "itemtype": "property",
             "name": "version",
             "type": "String",
-            "class": "Tiled Map",
+            "class": "TiledMap",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledMap.js",
+            "line": 138,
+            "description": "Gets the tileset that an ID is associated with",
+            "itemtype": "method",
+            "name": "getTileset",
+            "params": [
+                {
+                    "name": "tileId",
+                    "description": "The id of the tile to find the tileset for",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "TiledTileset"
+            },
+            "class": "TiledMap",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledMap.js",
+            "line": 150,
+            "description": "Checks an entities collision with the collision layer of this map\nTODO: Fix this for new PIXI stuff",
+            "itemtype": "method",
+            "name": "checkCollision",
+            "params": [
+                {
+                    "name": "mesh",
+                    "description": "The entity to check",
+                    "type": "Entity"
+                },
+                {
+                    "name": "sz",
+                    "description": "The size of the entity",
+                    "type": "Vector"
+                },
+                {
+                    "name": "pv",
+                    "description": "The potential movement vector",
+                    "type": "Vector"
+                }
+            ],
+            "class": "TiledMap",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "line": 13,
+            "description": "The user-defined properties of this group. Usually defined in the TiledEditor",
+            "itemtype": "property",
+            "name": "properties",
+            "type": "Object",
+            "class": "TiledObjectGroup",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "line": 21,
+            "description": "The objects in this group that can be spawned",
+            "itemtype": "property",
+            "name": "objects",
+            "type": "Array",
+            "class": "TiledObjectGroup",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "line": 36,
+            "description": "Spawns all the entities associated with this layer, and properly sets their attributes",
+            "itemtype": "method",
+            "name": "spawn",
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "TiledObjectGroup"
+            },
+            "class": "TiledObjectGroup",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "line": 67,
+            "description": "Despawns all the entities associated with this layer",
+            "itemtype": "method",
+            "name": "despawn",
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "TiledObjectGroup"
+            },
+            "class": "TiledObjectGroup",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 20,
+            "description": "The size of the tileset",
+            "itemtype": "property",
+            "name": "size",
+            "type": "Vector",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 28,
+            "description": "The size of a tile in the tileset",
+            "itemtype": "property",
+            "name": "tileSize",
+            "type": "Vector",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 36,
+            "description": "The name of the tileset",
+            "itemtype": "property",
+            "name": "name",
+            "type": "String",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 44,
+            "description": "The margin around a tile in the tileset",
+            "itemtype": "property",
+            "name": "margin",
+            "type": "Number",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 52,
+            "description": "The spacing around a tile in the tileset",
+            "itemtype": "property",
+            "name": "spacing",
+            "type": "Number",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 60,
+            "description": "The number of tiles calculated based on size, margin, and spacing",
+            "itemtype": "property",
+            "name": "numTiles",
+            "type": "Vector",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 71,
+            "description": "The first tileId in the tileset",
+            "itemtype": "property",
+            "name": "firstgid",
+            "type": "Number",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 79,
+            "description": "The last tileId in the tileset",
+            "itemtype": "property",
+            "name": "lastgid",
+            "type": "Number",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 87,
+            "description": "The properties of the tileset",
+            "itemtype": "property",
+            "name": "properties",
+            "type": "Object",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 95,
+            "description": "The properties of the tiles in the tileset (like collision stuff)",
+            "itemtype": "property",
+            "name": "tileproperties",
+            "type": "Object",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 115,
+            "description": "Gets the tile properties for a tile based on it's ID",
+            "itemtype": "method",
+            "name": "getTileProperties",
+            "params": [
+                {
+                    "name": "tileId",
+                    "description": "The id of the tile to get the properties for",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "The properties of the tile",
+                "type": "Object"
+            },
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 140,
+            "description": "Creates the sprite for a tile (used by the TiledLayer to render tiles)",
+            "itemtype": "method",
+            "name": "createTileSprite",
+            "params": [
+                {
+                    "name": "tileId",
+                    "description": "The id of the tile to get the properties for",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "The sprite to display",
+                "type": "PIXI.Sprite"
+            },
+            "class": "TiledTileset",
             "module": "gf"
         },
         {
             "file": "src\\map\\Layer.js",
-            "line": 8,
+            "line": 11,
             "description": "The name of the layer",
             "itemtype": "property",
             "name": "name",
@@ -1160,7 +1561,7 @@
         },
         {
             "file": "src\\map\\Layer.js",
-            "line": 17,
+            "line": 20,
             "description": "The size of the layer",
             "itemtype": "property",
             "name": "size",
@@ -1171,18 +1572,7 @@
         },
         {
             "file": "src\\map\\Layer.js",
-            "line": 26,
-            "description": "Texture of the layer",
-            "itemtype": "property",
-            "name": "texture",
-            "type": "Texture",
-            "default": "null",
-            "class": "Layer",
-            "module": "gf"
-        },
-        {
-            "file": "src\\map\\Layer.js",
-            "line": 41,
+            "line": 35,
             "description": "Half of the size of the layer",
             "itemtype": "property",
             "name": "hSize",
@@ -1194,7 +1584,7 @@
         },
         {
             "file": "src\\map\\Map.js",
-            "line": 8,
+            "line": 11,
             "description": "The size of the map",
             "itemtype": "property",
             "name": "size",
@@ -1205,7 +1595,7 @@
         },
         {
             "file": "src\\map\\Map.js",
-            "line": 25,
+            "line": 28,
             "description": "Gets a layer based on the layer's id or name",
             "itemtype": "method",
             "name": "getLayer",
@@ -1225,9 +1615,670 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 1,
-            "description": "Based on Vector2 from three.js\nthanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js",
-            "class": "Point",
+            "line": 17,
+            "description": "Sets the value of the vector",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "The x component of the vector",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y component of the vector",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 31,
+            "description": "Sets the X value of the vector",
+            "itemtype": "method",
+            "name": "setX",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "The x component of the vector",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 43,
+            "description": "Sets the Y value of the vector",
+            "itemtype": "method",
+            "name": "setY",
+            "params": [
+                {
+                    "name": "y",
+                    "description": "The y component of the vector",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 55,
+            "description": "Sets a component value of the vector",
+            "itemtype": "method",
+            "name": "setComponent",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "The index of the component to set (0 = x, 1 = y)",
+                    "type": "Number"
+                },
+                {
+                    "name": "value",
+                    "description": "The value to set the component to",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 72,
+            "description": "Gets a component value of the vector",
+            "itemtype": "method",
+            "name": "getComponent",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "The index of the component to set (0 = x, 1 = y)",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns the component value",
+                "type": "Number"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 86,
+            "description": "Copies the passed vector's components to this vector",
+            "itemtype": "method",
+            "name": "copy",
+            "params": [
+                {
+                    "name": "vector",
+                    "description": "The vector to copy the values from",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 99,
+            "description": "Adds a vector to this one",
+            "itemtype": "method",
+            "name": "add",
+            "params": [
+                {
+                    "name": "vector",
+                    "description": "The vector to add to this one",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 112,
+            "description": "Adds two vectors to each other and stores the result in this vector",
+            "itemtype": "method",
+            "name": "addVectors",
+            "params": [
+                {
+                    "name": "vector1",
+                    "description": "",
+                    "type": "Vector"
+                },
+                {
+                    "name": "vector2",
+                    "description": "",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 126,
+            "description": "Adds a scalar value to the x and y components of this vector",
+            "itemtype": "method",
+            "name": "addScalar",
+            "params": [
+                {
+                    "name": "scalar",
+                    "description": "The scalar value to add",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 139,
+            "description": "Subtracts a vector from this one",
+            "itemtype": "method",
+            "name": "sub",
+            "params": [
+                {
+                    "name": "vector",
+                    "description": "The vector to subtract from this one",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 152,
+            "description": "Subtracts two vectors from each other and stores the result in this vector",
+            "itemtype": "method",
+            "name": "subVectors",
+            "params": [
+                {
+                    "name": "vector1",
+                    "description": "",
+                    "type": "Vector"
+                },
+                {
+                    "name": "vector2",
+                    "description": "",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 166,
+            "description": "Multiplies the x and y components of this vector by a scalar value",
+            "itemtype": "method",
+            "name": "multiplyScalar",
+            "params": [
+                {
+                    "name": "scalar",
+                    "description": "The value to multiply by",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 179,
+            "description": "Divides the x and y components of this vector by a scalar value",
+            "itemtype": "method",
+            "name": "divideScalar",
+            "params": [
+                {
+                    "name": "scalar",
+                    "description": "The value to divide by",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 196,
+            "description": "Sets this vector components to the minimum value when compared to the passed vector's components",
+            "itemtype": "method",
+            "name": "min",
+            "params": [
+                {
+                    "name": "vector",
+                    "description": "The vector to compare to",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 214,
+            "description": "Sets this vector components to the maximum value when compared to the passed vector's components",
+            "itemtype": "method",
+            "name": "max",
+            "params": [
+                {
+                    "name": "vector",
+                    "description": "The vector to compare to",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 232,
+            "description": "Clamps the vectors components to be between min and max",
+            "itemtype": "method",
+            "name": "max",
+            "params": [
+                {
+                    "name": "min",
+                    "description": "The minimum value a component can be",
+                    "type": "Number"
+                },
+                {
+                    "name": "max",
+                    "description": "The maximum value a component can be",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 257,
+            "description": "Negates this vector (multiplies by -1)",
+            "itemtype": "method",
+            "name": "negate",
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 266,
+            "description": "Performs the dot product between this vector and the passed one and returns the result",
+            "itemtype": "method",
+            "name": "dot",
+            "params": [
+                {
+                    "name": "vector",
+                    "description": "",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns the dot product",
+                "type": "Number"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 276,
+            "description": "Calculates the square length of the vector",
+            "itemtype": "method",
+            "name": "lengthSq",
+            "return": {
+                "description": "Returns the square length of the vector",
+                "type": "Number"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 285,
+            "description": "Calculates the length of the vector",
+            "itemtype": "method",
+            "name": "length",
+            "return": {
+                "description": "Returns the length of the vector",
+                "type": "Number"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 294,
+            "description": "Normalizes this vector (divides by its length)",
+            "itemtype": "method",
+            "name": "normalize",
+            "return": {
+                "description": "Returns the normalized vector",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 303,
+            "description": "Calculates the distance to the passed vector",
+            "itemtype": "method",
+            "name": "distanceTo",
+            "params": [
+                {
+                    "name": "vector",
+                    "description": "",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "The distance",
+                "type": "Number"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 313,
+            "description": "Calculates the square distance to the passed vector",
+            "itemtype": "method",
+            "name": "distanceToSquared",
+            "params": [
+                {
+                    "name": "vector",
+                    "description": "",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "The square distance",
+                "type": "Number"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 324,
+            "description": "Sets the length of the vector",
+            "itemtype": "method",
+            "name": "setLength",
+            "params": [
+                {
+                    "name": "length",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 340,
+            "description": "Performs a linear interpolation between this vector and the passed vector",
+            "itemtype": "method",
+            "name": "lerp",
+            "params": [
+                {
+                    "name": "vector",
+                    "description": "",
+                    "type": "Vector"
+                },
+                {
+                    "name": "alpha",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 354,
+            "description": "Checks if this vector is equal to another",
+            "itemtype": "method",
+            "name": "equals",
+            "params": [
+                {
+                    "name": "vector",
+                    "description": "The vector to compare with",
+                    "type": "Vector"
+                }
+            ],
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 364,
+            "description": "Returns an array with the components of this vector as the elements",
+            "itemtype": "method",
+            "name": "toArray",
+            "return": {
+                "description": "Returns an array of [x,y] form",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 373,
+            "description": "Creates a new instance of Vector, with the same components as this vector",
+            "itemtype": "method",
+            "name": "clone",
+            "return": {
+                "description": "Returns a new Vector with the same values",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\utils.js",
+            "line": 10,
+            "description": "Ensures that some input is a vector, converts strings and arrays into vector objects",
+            "itemtype": "method",
+            "name": "ensureVector",
+            "params": [
+                {
+                    "name": "vec",
+                    "description": "The object to ensure becomes a vector",
+                    "type": "Array|String|Vector"
+                }
+            ],
+            "return": {
+                "description": "The vector created with the passed values, if the values can't be made\n     into a Vector, then a new Vector with 0,0 is returned",
+                "type": "Vector"
+            },
+            "class": "utils",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\utils.js",
+            "line": 36,
+            "description": "An empty function that performs no action",
+            "itemtype": "method",
+            "name": "noop",
+            "class": "utils",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\utils.js",
+            "line": 42,
+            "description": "Performs an ajax request, and manages the callbacks passed in",
+            "itemtype": "method",
+            "name": "ajax",
+            "params": [
+                {
+                    "name": "settings",
+                    "description": "The settings of the ajax request, similar to jQuery's ajax function",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "An XHR object",
+                "type": "AjaxRequest"
+            },
+            "class": "utils",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\utils.js",
+            "line": 90,
+            "description": "Wraps XMLHttpRequest in a cross-browser way.",
+            "itemtype": "method",
+            "name": "AjaxRequest",
+            "return": {
+                "description": "",
+                "type": "ActiveXObject|XMLHttpRequest"
+            },
+            "class": "utils",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\utils.js",
+            "line": 120,
+            "description": "This will take values and override the passed obj's properties with those values.\nThe difference from a normal object extend is that this will try to massage the passed\nvalue into the same type as the object's property. Also if the key for the value is not\nin the original object, it is not copied.",
+            "itemtype": "method",
+            "name": "setValues",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The object to extend the values into",
+                    "type": "Object"
+                },
+                {
+                    "name": "values",
+                    "description": "The values to put into the object",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "returns the updated object",
+                "type": "Object"
+            },
+            "example": [
+                "\n     var obj = { vec: new gf.Vector(), arr: [] },\n         vals = { vec: '2|5', arr: '5|10|11' };\n     gf.setValues(obj, vals);\n     //now obj is:\n     // { vec: gf.Vector(2, 5), arr: [5, 10, 11] }\n     "
+            ],
+            "class": "utils",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\utils.js",
+            "line": 182,
+            "description": "Clamps a number between two values.",
+            "itemtype": "method",
+            "name": "clamp",
+            "params": [
+                {
+                    "name": "num",
+                    "description": "The number to clamp",
+                    "type": "Number"
+                },
+                {
+                    "name": "min",
+                    "description": "The minimum value the number is allowed to be",
+                    "type": "Number"
+                },
+                {
+                    "name": "max",
+                    "description": "The maximum value the number is allowed to be",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "The clamped value",
+                "type": "Number"
+            },
+            "class": "utils",
             "module": "gf"
         },
         {
@@ -1331,7 +2382,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 295,
+            "line": 292,
             "description": "Bindable Gamepad Axes",
             "itemtype": "property",
             "name": "GP_AXES",
@@ -1341,7 +2392,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 328,
+            "line": 322,
             "description": "The current user agent string",
             "itemtype": "property",
             "name": "ua",
@@ -1351,7 +2402,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 336,
+            "line": 330,
             "description": "Whether or not canvas is supported",
             "itemtype": "property",
             "name": "canvas",
@@ -1361,7 +2412,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 344,
+            "line": 338,
             "description": "Whether or not webgl is supported",
             "itemtype": "property",
             "name": "webgl",
@@ -1371,7 +2422,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 352,
+            "line": 346,
             "description": "Whether or not web workers are supported",
             "itemtype": "property",
             "name": "workers",
@@ -1381,7 +2432,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 360,
+            "line": 354,
             "description": "Whether or not the filesystem API is supported",
             "itemtype": "property",
             "name": "fileapi",
@@ -1391,7 +2442,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 368,
+            "line": 362,
             "description": "Whether or not the audio elements are supported, and if so which types",
             "itemtype": "property",
             "name": "audio",
@@ -1401,7 +2452,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 382,
+            "line": 376,
             "description": "Whether or not local storage is supported",
             "itemtype": "property",
             "name": "localStorage",
@@ -1411,7 +2462,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 390,
+            "line": 384,
             "description": "Whether or not touch is supported",
             "itemtype": "property",
             "name": "touch",
@@ -1421,7 +2472,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 398,
+            "line": 392,
             "description": "Whether or not the gamepad API is supported",
             "itemtype": "property",
             "name": "gamepad",
@@ -1431,7 +2482,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 510,
+            "line": 504,
             "description": "Starts the timer",
             "itemtype": "method",
             "name": "start",
@@ -1443,7 +2494,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 524,
+            "line": 518,
             "description": "Stops the timer",
             "itemtype": "method",
             "name": "stop",
@@ -1455,7 +2506,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 535,
+            "line": 529,
             "description": "Gets the total time that the timer has been running",
             "itemtype": "method",
             "name": "getElapsedTime",
@@ -1471,7 +2522,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 548,
+            "line": 542,
             "description": "Gets the difference in time since getDelta() was called last",
             "itemtype": "method",
             "name": "getDelta",
@@ -1487,7 +2538,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 584,
+            "line": 578,
             "description": "List of all objects on the stage by id",
             "itemtype": "property",
             "name": "objects",
@@ -1497,7 +2548,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 592,
+            "line": 586,
             "description": "Number of objects added to the stage",
             "itemtype": "property",
             "name": "numObjects",
@@ -1507,7 +2558,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 600,
+            "line": 594,
             "description": "Maximum Z value",
             "itemtype": "property",
             "name": "MAX_Z",
@@ -1521,7 +2572,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 611,
+            "line": 605,
             "description": "Raw PIXI.stage instance",
             "itemtype": "property",
             "name": "_stage",
@@ -1534,7 +2585,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 621,
+            "line": 615,
             "description": "Raw gf.Clock instance for internal timing",
             "itemtype": "property",
             "name": "_clock",
@@ -1547,7 +2598,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 631,
+            "line": 625,
             "description": "Raw rendering engine",
             "itemtype": "property",
             "name": "_renderer",
@@ -1560,7 +2611,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 641,
+            "line": 635,
             "description": "Internal ID counter for object IDs",
             "itemtype": "property",
             "name": "_nextId",
@@ -1572,7 +2623,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 650,
+            "line": 644,
             "description": "The domElement that we are rendering into (the container)",
             "itemtype": "property",
             "name": "_cont",
@@ -1584,10 +2635,10 @@
         },
         {
             "file": "src\\core.js",
-            "line": 659,
+            "line": 653,
             "description": "Tracker to see if the game has been initialized yet",
             "itemtype": "property",
-            "name": "_cont",
+            "name": "_initialized",
             "type": "{Boolean}",
             "access": "private",
             "tagname": "",
@@ -1596,7 +2647,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 668,
+            "line": 662,
             "description": "Initializes a new game instance, only one allowed",
             "itemtype": "method",
             "name": "init",
@@ -1624,7 +2675,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 751,
+            "line": 749,
             "description": "Gets the next object id for an object",
             "itemtype": "method",
             "name": "getNextObjectId",
@@ -1635,7 +2686,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 760,
+            "line": 758,
             "description": "Adds an object to the current stage",
             "itemtype": "method",
             "name": "addObject",
@@ -1655,7 +2706,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 780,
+            "line": 778,
             "description": "Removes a sprite from the stage",
             "itemtype": "method",
             "name": "removeObject",
@@ -1675,7 +2726,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 818,
+            "line": 816,
             "description": "Begins the render loop",
             "itemtype": "method",
             "name": "render",
@@ -1688,7 +2739,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 830,
+            "line": 828,
             "description": "Check if passed entity collides with any others",
             "itemtype": "method",
             "name": "checkCollisions",
@@ -1708,7 +2759,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 860,
+            "line": 858,
             "description": "locks the camera on an entity",
             "itemtype": "method",
             "name": "cameraTrack",
@@ -1728,7 +2779,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 900,
+            "line": 898,
             "description": "The looping render tick",
             "itemtype": "method",
             "name": "_tick",
@@ -1750,18 +2801,6 @@
         {
             "message": "Missing item type\nmrdoob's stats.js (stats.js r10 - http://github.com/mrdoob/stats.js)",
             "line": " src\\debug\\debug.js:141"
-        },
-        {
-            "message": "Missing item type\nResource format:\n           {\n               name: String,   //key name\n               type: String,   //image, json, xml, texture, world\n               src: String     //url\n           }\nCallbacks format:\n           {\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n\n           }",
-            "line": " src\\loader\\loader.js:9"
-        },
-        {
-            "message": "Missing item type\nResources format:\n           [\n               {\n                   name: String,   //key name\n                   type: String,   //image, json, xml, texture, world\n                   src: String     //url\n               },\n               ...\n           ]\nCallbacks format:\n           {\n               start: function(resource),              //when loading of a resource starts\n               error: function(error, resource),       //an error occured when loading a resource\n               progress: function(percent, resource),  //progress of a resource loading\n               load: function(resource),               //a resource has loaded\n               complete: function(resources),          //all resources have completed loading\n           }",
-            "line": " src\\loader\\loader.js:56"
-        },
-        {
-            "message": "Missing item type\nBased on Vector2 from three.js\nthanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js",
-            "line": " src\\utils\\Vector.js:1"
         },
         {
             "message": "Missing item type",

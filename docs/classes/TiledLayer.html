@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>entityPool - gf</title>
+    <title>TiledLayer - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -116,7 +116,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>entityPool Class</h1>
+                        <h1>TiledLayer Class</h1>
 <div class="box meta">
     
 
@@ -124,7 +124,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l4"><code>src\entity\entityPool.js:4</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l1"><code>src\map\tiled\TiledLayer.js:1</code></a>
         </div>
     
 
@@ -140,8 +140,10 @@
 
 
 <div class="box intro">
-    <p>Holds a pool of different Entities that can be created, makes it very
-easy to quickly create different registered entities</p>
+    <p>The TiledLayer is the visual tiled layer that actually displays on the screen</p>
+
+<p>This class will be created by the TiledMap, there shouldn't be a reason to
+create an instance on your own.</p>
 </div>
 
 
@@ -153,6 +155,8 @@ easy to quickly create different registered entities</p>
         
             <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
+        
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
         
         
@@ -169,21 +173,45 @@ easy to quickly create different registered entities</p>
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_add">add</a>
+                                <a href="#method_getTileId">getTileId</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_add">add</a>
+                                <a href="#method_getTileIndex">getTileIndex</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_add">add</a>
+                                <a href="#method_renderTiles">renderTiles</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                        
+                            <li class="index-item property">
+                                <a href="#property_assetURLs">assetURLs</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_name">name</a>
 
                                 
                                 
@@ -196,8 +224,6 @@ easy to quickly create different registered entities</p>
             
 
             
-
-            
         </div>
 
         
@@ -205,8 +231,8 @@ easy to quickly create different registered entities</p>
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
+                    <div id="method_getTileId" class="method item">
+    <h3 class="name"><code>getTileId</code></h3>
 
     
         <div class="args">
@@ -214,13 +240,13 @@ easy to quickly create different registered entities</p>
             
                 <li class="arg">
                     
-                        <code>name</code>
+                        <code>x</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>obj</code>
+                        <code>y</code>
                     
                 </li>
             
@@ -230,7 +256,7 @@ easy to quickly create different registered entities</p>
 
     
         <span class="returns-inline">
-            <span class="type">Object</span>
+            <span class="type">Number</span>
         </span>
     
 
@@ -257,7 +283,7 @@ easy to quickly create different registered entities</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l12"><code>src\entity\entityPool.js:12</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l73"><code>src\map\tiled\TiledLayer.js:73</code></a>
         
         </p>
 
@@ -268,7 +294,7 @@ easy to quickly create different registered entities</p>
     </div>
 
     <div class="description">
-        <p>Adds an entity Object to the pool</p>
+        <p>Transforms an x,y coord into the TiledTileset tile id</p>
     </div>
 
     
@@ -279,14 +305,14 @@ easy to quickly create different registered entities</p>
             
                 <li class="param">
                     
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
+                        <code class="param-name">x</code>
+                        <span class="type">Number | <a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The user-defined name of the Entity to add</p>
+                        <p>The x coord to transform, if a vector is passed it's x/y is used and the y param is ignored</p>
                     </div>
 
                     
@@ -294,14 +320,14 @@ easy to quickly create different registered entities</p>
             
                 <li class="param">
                     
-                        <code class="param-name">obj</code>
-                        <span class="type">Object</span>
+                        <code class="param-name">y</code>
+                        <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The Entity or decendant to add to the pool</p>
+                        <p>The y coord to transform</p>
                     </div>
 
                     
@@ -318,46 +344,19 @@ easy to quickly create different registered entities</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">Object</span>:
+                        <span class="type">Number</span>:
                     
-                    Returns the passed object
                 
             </div>
         </div>
     
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> //create a new ckass to be instantiated
- var Bug = gf.entityPool.add('bug', gf.Entity.extend({
-     //ctor function
-     init: function(pos, settings) {
-         //call the base ctor
-         this._super(pos, settings);
-
-         this.color = 'red';
-     },
-     beBug: function() {
-         console.log("I'm a bug");
-     }
- }));
-
- //then later in your game code
- var mybug = gf.entityPool.create('bug', {
-     pos: [10, 10]
- });
-</code></pre>
-            </div>
-        </div>
     
 </div>
 
                 
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
+                    <div id="method_getTileIndex" class="method item">
+    <h3 class="name"><code>getTileIndex</code></h3>
 
     
         <div class="args">
@@ -365,7 +364,13 @@ easy to quickly create different registered entities</p>
             
                 <li class="arg">
                     
-                        <code>name</code>
+                        <code>x</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>y</code>
                     
                 </li>
             
@@ -375,7 +380,7 @@ easy to quickly create different registered entities</p>
 
     
         <span class="returns-inline">
-            <span class="type">Boolean</span>
+            <span class="type">Number</span>
         </span>
     
 
@@ -402,7 +407,7 @@ easy to quickly create different registered entities</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l42"><code>src\entity\entityPool.js:42</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l54"><code>src\map\tiled\TiledLayer.js:54</code></a>
         
         </p>
 
@@ -413,7 +418,7 @@ easy to quickly create different registered entities</p>
     </div>
 
     <div class="description">
-        <p>Checks if the entity exists in the pool</p>
+        <p>Transforms an x,y coord into the index of a tile in the tiles array</p>
     </div>
 
     
@@ -424,14 +429,29 @@ easy to quickly create different registered entities</p>
             
                 <li class="param">
                     
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
+                        <code class="param-name">x</code>
+                        <span class="type">Number | <a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The user-defined name of the Entity to check if is in the pool</p>
+                        <p>The x coord to transform, if a vector is passed it's x/y is used and the y param is ignored</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">y</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The y coord to transform</p>
                     </div>
 
                     
@@ -448,9 +468,8 @@ easy to quickly create different registered entities</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">Boolean</span>:
+                        <span class="type">Number</span>:
                     
-                    Returns the passed object
                 
             </div>
         </div>
@@ -460,33 +479,13 @@ easy to quickly create different registered entities</p>
 </div>
 
                 
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
+                    <div id="method_renderTiles" class="method item">
+    <h3 class="name"><code>renderTiles</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>name</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>props</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
-        </span>
     
 
     
@@ -512,7 +511,7 @@ easy to quickly create different registered entities</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l52"><code>src\entity\entityPool.js:52</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l34"><code>src\map\tiled\TiledLayer.js:34</code></a>
         
         </p>
 
@@ -523,90 +522,13 @@ easy to quickly create different registered entities</p>
     </div>
 
     <div class="description">
-        <p>Creates a new entity from the pool</p>
+        <p>Creates all the tile sprites needed to display the layer</p>
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The user-defined name of the Entity to check if is in the pool</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">props</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The properties that would normally be passed as the "settings" of the Entity</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
 
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>:
-                    
-                    Returns a new instance of the object from the pool
-                
-            </div>
-        </div>
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> //create a new ckass to be instantiated
- var Bug = gf.entityPool.add('bug', gf.Entity.extend({
-     //ctor function
-     init: function(pos, settings) {
-         //call the base ctor
-         this._super(pos, settings);
-
-         this.color = 'red';
-     },
-     beBug: function() {
-         console.log("I'm a bug");
-     }
- }));
-
- //then later in your game code
- var mybug = gf.entityPool.create('bug', {
-     pos: [10, 10]
- });
-</code></pre>
-            </div>
-        </div>
     
 </div>
 
@@ -614,6 +536,100 @@ easy to quickly create different registered entities</p>
             </div>
         
 
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_assetURLs" class="property item">
+    <h3 class="name"><code>assetURLs</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_loader_loader.js.html#l5"><code>src\loader\loader.js:5</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The array of asset URLs that are going to be loaded</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_name" class="property item">
+    <h3 class="name"><code>name</code></h3>
+    <span class="type">Uint32Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l17"><code>src\map\tiled\TiledLayer.js:17</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The tile IDs of the tilemap</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
         
 
         

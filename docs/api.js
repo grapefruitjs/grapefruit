@@ -7,12 +7,17 @@ YUI.add("yuidoc-meta", function(Y) {
         "Map",
         "Point",
         "Sprite",
-        "Tiled Map",
+        "TiledLayer",
+        "TiledMap",
+        "TiledObjectGroup",
+        "TiledTileset",
+        "Vector",
         "audio",
         "entityPool",
         "game",
         "support",
-        "types"
+        "types",
+        "utils"
     ],
     "modules": [
         "gf"

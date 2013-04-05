@@ -61,9 +61,19 @@
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
             
-                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
+                <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledMap.html">TiledMap</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledObjectGroup.html">TiledObjectGroup</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
+            
+                <li><a href="..&#x2F;classes/utils.html">utils</a></li>
+            
+                <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
             
             </ul>
 
@@ -115,38 +125,107 @@
  * There can be multiple Tilesets in a map
  *
  * @module gf
- * @class Tiled Map
+ * @class TiledTileset
+ * @extends Texture
+ * @constructor
+ * @param settings {Object} All the settings for the tileset
  *&#x2F;
 gf.TiledTileset = function(settings) {
-    &#x2F;&#x2F;first build the baseTexture
-    var image = new Image();
-    image.src = settings.image;
-    baseTexture = new PIXI.BaseTexture(image);
-    PIXI.BaseTextureCache[settings.image] = baseTexture;
+    if(!gf.assetCache[settings.name + &#x27;_texture&#x27;]) {
+        var loader = new gf.AssetLoader();
+        loader.loadTexture(settings.name + &#x27;_texture&#x27;, settings.image);
+    }
 
     &#x2F;&#x2F;initialize the base Texture class
-    PIXI.Texture.call(this, baseTexture);
+    PIXI.Texture.call(this, gf.assetCache[settings.name + &#x27;_texture&#x27;].baseTexture);
 
+    &#x2F;**
+     * The size of the tileset
+     *
+     * @property size
+     * @type Vector
+     *&#x2F;
     this.size = new gf.Vector(settings.imagewidth, settings.imageheight);
+
+    &#x2F;**
+     * The size of a tile in the tileset
+     *
+     * @property tileSize
+     * @type Vector
+     *&#x2F;
     this.tileSize = new gf.Vector(settings.tilewidth, settings.tileheight);
 
+    &#x2F;**
+     * The name of the tileset
+     *
+     * @property name
+     * @type String
+     *&#x2F;
     this.name = settings.name;
+
+    &#x2F;**
+     * The margin around a tile in the tileset
+     *
+     * @property margin
+     * @type Number
+     *&#x2F;
     this.margin = settings.margin;
+
+    &#x2F;**
+     * The spacing around a tile in the tileset
+     *
+     * @property spacing
+     * @type Number
+     *&#x2F;
     this.spacing = settings.spacing;
 
+    &#x2F;**
+     * The number of tiles calculated based on size, margin, and spacing
+     *
+     * @property numTiles
+     * @type Vector
+     *&#x2F;
     this.numTiles = new gf.Vector(
         ~~((this.baseTexture.source.width - this.margin) &#x2F; (this.tileSize.x + this.spacing)),
         ~~((this.baseTexture.source.height - this.margin) &#x2F; (this.tileSize.y + this.spacing))
     );
 
+    &#x2F;**
+     * The first tileId in the tileset
+     *
+     * @property firstgid
+     * @type Number
+     *&#x2F;
     this.firstgid = settings.firstgid;
+
+    &#x2F;**
+     * The last tileId in the tileset
+     *
+     * @property lastgid
+     * @type Number
+     *&#x2F;
     this.lastgid = this.firstgid + (((this.numTiles.x * this.numTiles.y) - 1) || 0);
 
+    &#x2F;**
+     * The properties of the tileset
+     *
+     * @property properties
+     * @type Object
+     *&#x2F;
     this.properties = settings.properties || {};
+
+    &#x2F;**
+     * The properties of the tiles in the tileset (like collision stuff)
+     *
+     * @property tileproperties
+     * @type Object
+     *&#x2F;
     this.tileproperties = settings.tileproperties || {};
 
     &#x2F;&#x2F;massage normal
     for(var i = 0, il = this.tileproperties.length; i &lt; il; ++i) {
+        var v = this.tileproperties[i];
+
         if(v.normal) v.normal = gf.utils.ensureVector(v.normal);
 
         if(v.isCollidable === &#x27;true&#x27;) v.isCollidable = true;
@@ -155,6 +234,13 @@ gf.TiledTileset = function(settings) {
 };
 
 gf.inherits(gf.TiledTileset, PIXI.Texture, {
+    &#x2F;**
+     * Gets the tile properties for a tile based on it&#x27;s ID
+     *
+     * @method getTileProperties
+     * @param tileId {Number} The id of the tile to get the properties for
+     * @return {Object} The properties of the tile
+     *&#x2F;
     getTileProperties: function(tileId) {
         if(tileId === undefined) return null;
 
@@ -173,6 +259,13 @@ gf.inherits(gf.TiledTileset, PIXI.Texture, {
                     type: gf.types.COLLISION.NONE
                 };
     },
+    &#x2F;**
+     * Creates the sprite for a tile (used by the TiledLayer to render tiles)
+     *
+     * @method createTileSprite
+     * @param tileId {Number} The id of the tile to get the properties for
+     * @return {PIXI.Sprite} The sprite to display
+     *&#x2F;
     createTileSprite: function(tileId) {
         if(tileId === undefined) return null;
 
@@ -183,12 +276,12 @@ gf.inherits(gf.TiledTileset, PIXI.Texture, {
 
         &#x2F;&#x2F;convert the tileId to x,y coords of the tile in the Texture
         var y = ~~(tileId &#x2F; this.size.x),
-            x = (id - (y * this.size.x));
+            x = (tileId - (y * this.size.x));
 
         return new PIXI.Sprite(
             new PIXI.Texture(
                 this.baseTexture,
-                new Rectangle(
+                new PIXI.Rectangle(
                     x * this.tileSize.x, &#x2F;&#x2F;offset of x
                     y * this.tileSize.y, &#x2F;&#x2F;offset of y
                     this.tileSize.x, &#x2F;&#x2F;size

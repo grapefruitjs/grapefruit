@@ -61,9 +61,19 @@
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
             
-                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
+                <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledMap.html">TiledMap</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledObjectGroup.html">TiledObjectGroup</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
+            
+                <li><a href="..&#x2F;classes/utils.html">utils</a></li>
+            
+                <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
             
             </ul>
 
@@ -116,7 +126,10 @@
  * file, and this expets that to already be done.
  *
  * @module gf
- * @class Tiled Map
+ * @class TiledMap
+ * @extends Map
+ * @constructor
+ * @param map {Object} All the settings for the map
  *&#x2F;
 gf.TiledMap = function(map) {
     gf.Map.call(this, map);
@@ -214,34 +227,57 @@ gf.TiledMap = function(map) {
      *&#x2F;
     this.version = map.version;
 
-    this.createLayers();
-};
+    &#x2F;&#x2F;create the layers
+    for(var i = 0, il = map.layers.length; i &lt; il; ++i) {
+        var lyr;
 
-gf.inherits(gf.TiledMap, gf.Map, {
-    &#x2F;&#x2F;add a new layer to this tilemap
-    createLayers: function(layer) {
-        for(var i = 0, il = map.layers.length; i &lt; il; ++i) {
-            var lyr;
-
-            if(map.layers[i].type === gf.types.LAYER.TILE_LAYER) {
-                lyr = new gf.TiledLayer(map.layers[i], this.tileSize, this.tilesets);
+        switch(map.layers[i].type) {
+            case gf.types.LAYER.TILE_LAYER:
+                lyr = new gf.TiledLayer(map.layers[i]);
                 lyr.scale = this.scale;
 
                 if(lyr.name.toLowerCase().indexOf(&#x27;collision&#x27;) === 0) {
                     this.collisionLayer = lyr;
-                    if(!gf.debug.showMapColliders) lyr.hide();
+
+                    if(!gf.debug.showMapColliders)
+                        lyr.visible = false;
                 }
-            } else if(map.layers[i].type === gf.types.LAYER.OBJECT_GROUP) {
-                lyr = new gf.TiledObjectGroup(map.layers[i], this);
+                break;
+
+            case gf.types.LAYER.OBJECT_GROUP:
+                lyr = new gf.TiledObjectGroup(map.layers[i]);
 
                 &#x2F;&#x2F;auto spawn the player object group
                 if(lyr.name === &#x27;player&#x27; &amp;&amp; !lyr.properties.manual)
                     lyr.spawn();
-            }
-
-            this.addChild(lyr);
         }
+
+        this.addChild(lyr);
+    }
+};
+
+gf.inherits(gf.TiledMap, gf.Map, {
+    &#x2F;**
+     * Gets the tileset that an ID is associated with
+     *
+     * @method getTileset
+     * @param tileId {Number} The id of the tile to find the tileset for
+     * @return {TiledTileset}
+     *&#x2F;
+    getTileset: function(tileId) {
+        for(var i = 0, il = this.tilesets.length; i &lt; il; ++i)
+            if(tileId &gt;= this.tilesets[i].firstgid &amp;&amp; tileId &lt;= this.tilesets[i].lastgid)
+                return this.tilesets[i];
     },
+    &#x2F;**
+     * Checks an entities collision with the collision layer of this map
+     * TODO: Fix this for new PIXI stuff
+     *
+     * @method checkCollision
+     * @param mesh {Entity} The entity to check
+     * @param sz {Vector} The size of the entity
+     * @param pv {Vector} The potential movement vector
+     *&#x2F;
     &#x2F;&#x2F;if object is moved by pv get the tile it would be at
     checkCollision: function(mesh, sz, pv) {
         if(!this.collisionLayer || !this.collisionTileset) return [];
@@ -293,7 +329,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
         return res;
     },
-
+    &#x2F;&#x2F;WIP
     _checkHalfBlock: function(half, x, y) {
         var tx = Math.floor(x &#x2F; this.tileSize.x) * this.tileSize.x,
             ty = Math.floor(y &#x2F; this.tileSize.y) * this.tileSize.y,

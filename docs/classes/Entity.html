@@ -61,9 +61,19 @@
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
             
-                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
+                <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledMap.html">TiledMap</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledObjectGroup.html">TiledObjectGroup</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
+            
+                <li><a href="..&#x2F;classes/utils.html">utils</a></li>
+            
+                <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
             
             </ul>
 
@@ -158,6 +168,13 @@
                     <h3>Methods</h3>
 
                     <ul class="index-list methods">
+                        
+                            <li class="index-item method">
+                                <a href="#method_applyFriction">applyFriction</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item method">
                                 <a href="#method_checkCollision">checkCollision</a>
@@ -337,8 +354,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_checkCollision" class="method item">
-    <h3 class="name"><code>checkCollision</code></h3>
+                    <div id="method_applyFriction" class="method item">
+    <h3 class="name"><code>applyFriction</code></h3>
 
     
         <div class="args">
@@ -346,7 +363,13 @@
             
                 <li class="arg">
                     
-                        <code>obj</code>
+                        <code>vel</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>friction</code>
                     
                 </li>
             
@@ -356,7 +379,7 @@
 
     
         <span class="returns-inline">
-            <span class="type">Vector</span>
+            <span class="type">Object</span>
         </span>
     
 
@@ -383,7 +406,126 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l208"><code>src\entity\Entity.js:208</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l196"><code>src\entity\Entity.js:196</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Applies friction to a velocity, usually the current velocity</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">vel</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The velocity to apply the friction to</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">friction</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The friction factor to apply</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Object</span>:
+                    
+                    The modified velocity, with friction applied
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_checkCollision" class="method item">
+    <h3 class="name"><code>checkCollision</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>obj</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l227"><code>src\entity\Entity.js:227</code></a>
         
         </p>
 
@@ -432,7 +574,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             <div class="returns-description">
                 
                     
-                        <span class="type">Vector</span>:
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>:
                     
                 
             </div>
@@ -462,7 +604,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
 
     
         <span class="returns-inline">
-            <span class="type">Vector</span>
+            <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
         </span>
     
 
@@ -512,7 +654,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
                 <li class="param">
                     
                         <code class="param-name">vel</code>
-                        <span class="type">Vector</span>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
                     
 
                     
@@ -535,7 +677,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             <div class="returns-description">
                 
                     
-                        <span class="type">Vector</span>:
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>:
                     
                     The modified vector
                 
@@ -697,7 +839,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l196"><code>src\entity\Entity.js:196</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l215"><code>src\entity\Entity.js:215</code></a>
         
         </p>
 
@@ -801,7 +943,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l291"><code>src\entity\Entity.js:291</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l310"><code>src\entity\Entity.js:310</code></a>
         
         </p>
 
@@ -824,7 +966,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
                 <li class="param">
                     
                         <code class="param-name">vel</code>
-                        <span class="type">Vector</span>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
                     
 
                     
@@ -905,7 +1047,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l341"><code>src\entity\Entity.js:341</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l360"><code>src\entity\Entity.js:360</code></a>
         
         </p>
 
@@ -1016,7 +1158,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l314"><code>src\entity\Entity.js:314</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l333"><code>src\entity\Entity.js:333</code></a>
         
         </p>
 
@@ -1041,7 +1183,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
                 <li class="param">
                     
                         <code class="param-name">vel</code>
-                        <span class="type">Vector</span>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
                     
 
                     
@@ -1137,7 +1279,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l330"><code>src\entity\Entity.js:330</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l349"><code>src\entity\Entity.js:349</code></a>
         
         </p>
 
@@ -1161,7 +1303,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
                 <li class="param">
                     
                         <code class="param-name">vel</code>
-                        <span class="type">Vector</span>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
                     
 
                     
@@ -1232,7 +1374,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l235"><code>src\entity\Entity.js:235</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_Entity.js.html#l254"><code>src\entity\Entity.js:254</code></a>
         
         </p>
 
@@ -1278,7 +1420,7 @@ because it checks for map collisions, and applies gravity and friction with comp
                 
                     <div id="property_accel" class="property item">
     <h3 class="name"><code>accel</code></h3>
-    <span class="type">Vector</span>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
 
     
 
@@ -1462,7 +1604,7 @@ because it checks for map collisions, and applies gravity and friction with comp
                 
                     <div id="property_friction" class="property item">
     <h3 class="name"><code>friction</code></h3>
-    <span class="type">Vector</span>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
 
     
 
@@ -1508,7 +1650,7 @@ because it checks for map collisions, and applies gravity and friction with comp
                 
                     <div id="property_gravity" class="property item">
     <h3 class="name"><code>gravity</code></h3>
-    <span class="type">Vector</span>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
 
     
 
@@ -1692,7 +1834,7 @@ because it checks for map collisions, and applies gravity and friction with comp
                 
                     <div id="property_maxVelocity" class="property item">
     <h3 class="name"><code>maxVelocity</code></h3>
-    <span class="type">Vector</span>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
 
     
 
@@ -1830,7 +1972,7 @@ because it checks for map collisions, and applies gravity and friction with comp
                 
                     <div id="property_velocity" class="property item">
     <h3 class="name"><code>velocity</code></h3>
-    <span class="type">Vector</span>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
 
     
 

@@ -61,9 +61,19 @@
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
             
-                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
+                <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledMap.html">TiledMap</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledObjectGroup.html">TiledObjectGroup</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
+            
+                <li><a href="..&#x2F;classes/utils.html">utils</a></li>
+            
+                <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
             
             </ul>
 
@@ -296,14 +306,33 @@ gf.inherits(gf.Entity, gf.Sprite, {
         }
 
         &#x2F;&#x2F;apply friction
-        if(this.friction.x) vel.x = gf.utils.applyFriction(vel.x, this.friction.x);
-        if(this.friction.y) vel.y = gf.utils.applyFriction(vel.y, this.friction.y);
+        if(this.friction.x) vel.x = this.applyFriction(vel.x, this.friction.x);
+        if(this.friction.y) vel.y = this.applyFriction(vel.y, this.friction.y);
 
         &#x2F;&#x2F;cap velocity
         if(vel.x) vel.x = gf.utils.clamp(vel.x, -this.maxVelocity.x, this.maxVelocity.x);
         if(vel.y) vel.y = gf.utils.clamp(vel.y, -this.maxVelocity.y, this.maxVelocity.y);
 
         return vel;
+    },
+    &#x2F;**
+     * Applies friction to a velocity, usually the current velocity
+     *
+     * @method applyFriction
+     * @param vel {Number} The velocity to apply the friction to
+     * @param friction {Number} The friction factor to apply
+     * @return {Object} The modified velocity, with friction applied
+     *&#x2F;
+    applyFriction: function(vel, friction) {
+        return (
+                    vel + friction &lt; 0 ?
+                    vel + (friction * (gf.game._delta || 0)) :
+                    (
+                        vel - friction &gt; 0 ?
+                        vel - (friction * (gf.game._delta || 0)) :
+                        0
+                    )
+                );
     },
     &#x2F;**
      * Checks if this entity intersects with the passed object

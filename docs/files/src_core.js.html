@@ -61,9 +61,19 @@
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
             
-                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
+                <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledMap.html">TiledMap</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledObjectGroup.html">TiledObjectGroup</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
+            
+                <li><a href="..&#x2F;classes/utils.html">utils</a></li>
+            
+                <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
             
             </ul>
 
@@ -393,16 +403,13 @@ gf.types = {
         PAD_RIGHT: 15
     },
     getGpButtonName: function(i) {
-        var name = &#x27;&#x27;;
-
-        gf.utils.each(gf.types.GP_BUTTONS, function(k, v) {
-            if(v === i) {
-                name = k;
-                return false; &#x2F;&#x2F;break
+        for(var k in gf.types.GP_BUTTONS) {
+            if(gf.types.GP_BUTTONS[k] === i) {
+                return k;
             }
-        });
+        }
 
-        return name;
+        return &#x27;&#x27;;
     },
     &#x2F;**
      * Bindable Gamepad Axes
@@ -417,16 +424,13 @@ gf.types = {
         RIGHT_ANALOGUE_VERT: 3
     },
     getGpAxisName: function(i) {
-        var name = &#x27;&#x27;;
-
-        gf.utils.each(gf.types.GP_AXES, function(k, v) {
-            if(v === i) {
-                name = k;
-                return false; &#x2F;&#x2F;break
+        for(var k in gf.types.GP_AXES) {
+            if(gf.types.GP_AXES[k] === i) {
+                return k;
             }
-        });
+        }
 
-        return name;
+        return &#x27;&#x27;;
     }
 };
 
@@ -771,7 +775,7 @@ gf.game = {
     &#x2F;**
      * Tracker to see if the game has been initialized yet
      *
-     * @property _cont
+     * @property _initialized
      * @type {Boolean}
      * @private
      *&#x2F;
@@ -810,6 +814,9 @@ gf.game = {
             }
         }
 
+        &#x2F;&#x2F;cache the container object
+        gf.game._cont = document.getElementById(contId);
+
         var w = opts.width || gf.utils.getStyle(gf.game._cont, &#x27;width&#x27;),
             h = opts.height || gf.utils.getStyle(gf.game._cont, &#x27;height&#x27;);
 
@@ -822,9 +829,6 @@ gf.game = {
 
         &#x2F;&#x2F;save rendering method string
         gf.game._renderMethod = renderMethod;
-
-        &#x2F;&#x2F;cache the container object
-        gf.game._cont = document.getElementById(contId);
 
         &#x2F;&#x2F;initialize the renderer
         gf.game._renderer.view.style[&#x27;z-index&#x27;] = opts.zIndex || 5;
@@ -845,14 +849,18 @@ gf.game = {
         &#x2F;&#x2F;fps counter
         if(gf.debug.showFps) {
             gf.debug._fpsCounter = new gf.debug.FpsCounter();
-            gf.utils.each(gf.debug.fpsStyle, function(k, v) { gf.debug._fpsCounter.domElement.style[k] = v; });
+            for(var s in gf.debug.fpsStyle) {
+                gf.debug._info.domElement.style[s] = gf.debug.fpsStyle[s];
+            }
             document.body.appendChild(gf.debug._fpsCounter.domElement);
         }
 
         &#x2F;&#x2F;debug info
         if(gf.debug.showInfo) {
             gf.debug._info = new gf.debug.Info();
-            gf.utils.each(gf.debug.infoStyle, function(k, v) { gf.debug._info.domElement.style[k] = v; });
+            for(var s2 in gf.debug.infoStyle) {
+                gf.debug._info.domElement.style[s2] = gf.debug.infoStyle[s2];
+            }
             document.body.appendChild(gf.debug._info.domElement);
         }
 
@@ -912,9 +920,9 @@ gf.game = {
     },
     loadWorld: function(world) {
         if(typeof world === &#x27;string&#x27;){
-            if(gf.resources[world]) world = gf.resources[world].data;
+            if(gf.assetCache[world]) world = gf.assetCache[world];
             else {
-                throw &#x27;World not found in resources!&#x27;;
+                throw &#x27;World not found in assetCache!&#x27;;
             }
         }
 

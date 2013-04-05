@@ -61,9 +61,19 @@
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
             
-                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
+                <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledMap.html">TiledMap</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledObjectGroup.html">TiledObjectGroup</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
+            
+                <li><a href="..&#x2F;classes/utils.html">utils</a></li>
+            
+                <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
             
             </ul>
 
@@ -115,8 +125,11 @@
  *
  * @module gf
  * @class Map
+ * @extends DisplayObjectContainer
+ * @constructor
+ * @param map {Object} All the settings for the map
  *&#x2F;
-gf.Map = function(settings) {
+gf.Map = function(map) {
     &#x2F;**
      * The size of the map
      *
@@ -124,13 +137,13 @@ gf.Map = function(settings) {
      * @type Vector
      * @default new gf.Vector(0, 0)
      *&#x2F;
-    this.size = new gf.Vector(settings.width, settings.height);
+    this.size = new gf.Vector(map.width, map.height);
 
     &#x2F;&#x2F;call base ctor
     PIXI.DisplayObjectContainer.call(this);
 
     &#x2F;&#x2F;mixin user&#x27;s settings
-    gf.utils.setValues(this, settings);
+    gf.utils.setValues(this, map);
 };
 
 gf.inherits(gf.Map, PIXI.DisplayObjectContainer, {

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Tiled Map - gf</title>
+    <title>TiledTileset - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -61,9 +61,19 @@
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
             
-                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
+                <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledMap.html">TiledMap</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledObjectGroup.html">TiledObjectGroup</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
+            
+                <li><a href="..&#x2F;classes/utils.html">utils</a></li>
+            
+                <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
             
             </ul>
 
@@ -106,7 +116,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Tiled Map Class</h1>
+                        <h1>TiledTileset Class</h1>
 <div class="box meta">
     
 
@@ -141,6 +151,8 @@ There can be multiple Tilesets in a map</p>
         <li class="api-class-tab index"><a href="#index">Index</a></li>
 
         
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+        
         
             <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
@@ -153,6 +165,28 @@ There can be multiple Tilesets in a map</p>
             <h2 class="off-left">Item Index</h2>
 
             
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods">
+                        
+                            <li class="index-item method">
+                                <a href="#method_createTileSprite">createTileSprite</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getTileProperties">getTileProperties</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
 
             
                 <div class="index-section properties">
@@ -161,21 +195,21 @@ There can be multiple Tilesets in a map</p>
                     <ul class="index-list properties">
                         
                             <li class="index-item property">
-                                <a href="#property_collisionLayer">collisionLayer</a>
+                                <a href="#property_firstgid">firstgid</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_collisionTileset">collisionTileset</a>
+                                <a href="#property_lastgid">lastgid</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_extent">extent</a>
+                                <a href="#property_margin">margin</a>
 
                                 
                                 
@@ -189,6 +223,13 @@ There can be multiple Tilesets in a map</p>
                             </li>
                         
                             <li class="index-item property">
+                                <a href="#property_numTiles">numTiles</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_properties">properties</a>
 
                                 
@@ -196,28 +237,21 @@ There can be multiple Tilesets in a map</p>
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_scale">scale</a>
+                                <a href="#property_size">size</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_scaledSize">scaledSize</a>
+                                <a href="#property_spacing">spacing</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_tilesets">tilesets</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_tileSize">tileSize</a>
+                                <a href="#property_tileproperties">tileproperties</a>
 
                                 
                                 
@@ -225,13 +259,6 @@ There can be multiple Tilesets in a map</p>
                         
                             <li class="index-item property">
                                 <a href="#property_tileSize">tileSize</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_version">version</a>
 
                                 
                                 
@@ -247,15 +274,229 @@ There can be multiple Tilesets in a map</p>
         </div>
 
         
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_createTileSprite" class="method item">
+    <h3 class="name"><code>createTileSprite</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>tileId</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">PIXI.Sprite</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l140"><code>src\map\tiled\TiledTileset.js:140</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Creates the sprite for a tile (used by the TiledLayer to render tiles)</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">tileId</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The id of the tile to get the properties for</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">PIXI.Sprite</span>:
+                    
+                    The sprite to display
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getTileProperties" class="method item">
+    <h3 class="name"><code>getTileProperties</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>tileId</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Object</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l115"><code>src\map\tiled\TiledTileset.js:115</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Gets the tile properties for a tile based on it's ID</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">tileId</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The id of the tile to get the properties for</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Object</span>:
+                    
+                    The properties of the tile
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+            </div>
+        
 
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_collisionLayer" class="property item">
-    <h3 class="name"><code>collisionLayer</code></h3>
-    <span class="type">Array</span>
+                    <div id="property_firstgid" class="property item">
+    <h3 class="name"><code>firstgid</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -276,7 +517,7 @@ There can be multiple Tilesets in a map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l81"><code>src\map\tiled\TiledMap.js:81</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l71"><code>src\map\tiled\TiledTileset.js:71</code></a>
         
         </p>
 
@@ -286,7 +527,7 @@ There can be multiple Tilesets in a map</p>
     </div>
 
     <div class="description">
-        <p>The layer for collisions</p>
+        <p>The first tileId in the tileset</p>
     </div>
 
     
@@ -297,9 +538,9 @@ There can be multiple Tilesets in a map</p>
 </div>
 
                 
-                    <div id="property_collisionTileset" class="property item">
-    <h3 class="name"><code>collisionTileset</code></h3>
-    <span class="type">TiledTileset</span>
+                    <div id="property_lastgid" class="property item">
+    <h3 class="name"><code>lastgid</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -320,7 +561,7 @@ There can be multiple Tilesets in a map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l89"><code>src\map\tiled\TiledMap.js:89</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l79"><code>src\map\tiled\TiledTileset.js:79</code></a>
         
         </p>
 
@@ -330,7 +571,7 @@ There can be multiple Tilesets in a map</p>
     </div>
 
     <div class="description">
-        <p>The tileset for the collision layer</p>
+        <p>The last tileId in the tileset</p>
     </div>
 
     
@@ -341,9 +582,9 @@ There can be multiple Tilesets in a map</p>
 </div>
 
                 
-                    <div id="property_extent" class="property item">
-    <h3 class="name"><code>extent</code></h3>
-    <span class="type">Object</span>
+                    <div id="property_margin" class="property item">
+    <h3 class="name"><code>margin</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -364,7 +605,7 @@ There can be multiple Tilesets in a map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l50"><code>src\map\tiled\TiledMap.js:50</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l44"><code>src\map\tiled\TiledTileset.js:44</code></a>
         
         </p>
 
@@ -374,9 +615,7 @@ There can be multiple Tilesets in a map</p>
     </div>
 
     <div class="description">
-        <p>The maximum extent of the map (largest x and y the map has)
-assuming 0,0 is in the middle of the map, calculate the minimum
-and maximum extent of the map</p>
+        <p>The margin around a tile in the tileset</p>
     </div>
 
     
@@ -389,7 +628,7 @@ and maximum extent of the map</p>
                 
                     <div id="property_name" class="property item">
     <h3 class="name"><code>name</code></h3>
-    <span class="type">Uint32Array</span>
+    <span class="type">String</span>
 
     
 
@@ -410,7 +649,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l11"><code>src\map\tiled\TiledLayer.js:11</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l36"><code>src\map\tiled\TiledTileset.js:36</code></a>
         
         </p>
 
@@ -420,7 +659,51 @@ and maximum extent of the map</p>
     </div>
 
     <div class="description">
-        <p>The tile IDs of the tilemap</p>
+        <p>The name of the tileset</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_numTiles" class="property item">
+    <h3 class="name"><code>numTiles</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l60"><code>src\map\tiled\TiledTileset.js:60</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The number of tiles calculated based on size, margin, and spacing</p>
     </div>
 
     
@@ -454,7 +737,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l21"><code>src\map\tiled\TiledMap.js:21</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l87"><code>src\map\tiled\TiledTileset.js:87</code></a>
         
         </p>
 
@@ -464,11 +747,9 @@ and maximum extent of the map</p>
     </div>
 
     <div class="description">
-        <p>The user-defined properties</p>
+        <p>The properties of the tileset</p>
     </div>
 
-    
-        <p><strong>Default:</strong> {}</p>
     
 
     
@@ -477,8 +758,52 @@ and maximum extent of the map</p>
 </div>
 
                 
-                    <div id="property_scale" class="property item">
-    <h3 class="name"><code>scale</code></h3>
+                    <div id="property_size" class="property item">
+    <h3 class="name"><code>size</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l20"><code>src\map\tiled\TiledTileset.js:20</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The size of the tileset</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_spacing" class="property item">
+    <h3 class="name"><code>spacing</code></h3>
     <span class="type">Number</span>
 
     
@@ -500,7 +825,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l30"><code>src\map\tiled\TiledMap.js:30</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l52"><code>src\map\tiled\TiledTileset.js:52</code></a>
         
         </p>
 
@@ -510,11 +835,9 @@ and maximum extent of the map</p>
     </div>
 
     <div class="description">
-        <p>The scale of the map</p>
+        <p>The spacing around a tile in the tileset</p>
     </div>
 
-    
-        <p><strong>Default:</strong> 1</p>
     
 
     
@@ -523,9 +846,9 @@ and maximum extent of the map</p>
 </div>
 
                 
-                    <div id="property_scaledSize" class="property item">
-    <h3 class="name"><code>scaledSize</code></h3>
-    <span class="type">Vector</span>
+                    <div id="property_tileproperties" class="property item">
+    <h3 class="name"><code>tileproperties</code></h3>
+    <span class="type">Object</span>
 
     
 
@@ -546,7 +869,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l39"><code>src\map\tiled\TiledMap.js:39</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l95"><code>src\map\tiled\TiledTileset.js:95</code></a>
         
         </p>
 
@@ -556,51 +879,7 @@ and maximum extent of the map</p>
     </div>
 
     <div class="description">
-        <p>The scaled size (size * tileSize * scale)</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_tilesets" class="property item">
-    <h3 class="name"><code>tilesets</code></h3>
-    <span class="type">Array</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l69"><code>src\map\tiled\TiledMap.js:69</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The tilesets used by this map</p>
+        <p>The properties of the tiles in the tileset (like collision stuff)</p>
     </div>
 
     
@@ -613,7 +892,7 @@ and maximum extent of the map</p>
                 
                     <div id="property_tileSize" class="property item">
     <h3 class="name"><code>tileSize</code></h3>
-    <span class="type">Number</span>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
 
     
 
@@ -634,7 +913,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l19"><code>src\map\tiled\TiledLayer.js:19</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledTileset.js.html#l28"><code>src\map\tiled\TiledTileset.js:28</code></a>
         
         </p>
 
@@ -644,97 +923,7 @@ and maximum extent of the map</p>
     </div>
 
     <div class="description">
-        <p>The square size of the tiles in the layer</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_tileSize" class="property item">
-    <h3 class="name"><code>tileSize</code></h3>
-    <span class="type">Vector</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l12"><code>src\map\tiled\TiledMap.js:12</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The tile size</p>
-    </div>
-
-    
-        <p><strong>Default:</strong> new gf.Vector(0, 0)</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_version" class="property item">
-    <h3 class="name"><code>version</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l97"><code>src\map\tiled\TiledMap.js:97</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The version of this map</p>
+        <p>The size of a tile in the tileset</p>
     </div>
 
     

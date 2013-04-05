@@ -61,9 +61,19 @@
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
             
-                <li><a href="..&#x2F;classes/Tiled Map.html">Tiled Map</a></li>
+                <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledMap.html">TiledMap</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledObjectGroup.html">TiledObjectGroup</a></li>
+            
+                <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
                 <li><a href="..&#x2F;classes/types.html">types</a></li>
+            
+                <li><a href="..&#x2F;classes/utils.html">utils</a></li>
+            
+                <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
             
             </ul>
 
@@ -110,355 +120,183 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-(function() {
-    &#x2F;&#x2F;TODO: Retries?
+gf.AssetLoader = function(resources) {
+    &#x2F;&#x2F;mixin the Event Target methods
+    PIXI.EventTarget.call(this);
 
-    &#x2F;&#x2F;simple memory cache
-    var _cache = {};
+    &#x2F;**
+    * The array of asset URLs that are going to be loaded
+    * @property assetURLs
+    * @type Array
+    *&#x2F;
+    this.resources = resources;
+    this.loadCount = 0;
+    this.assets = {};
 
-    gf.resources = {};
-    gf.loader = {
-        &#x2F;**
-         * Resource format:
-            {
-                name: String,   &#x2F;&#x2F;key name
-                type: String,   &#x2F;&#x2F;image, json, xml, texture, world
-                src: String     &#x2F;&#x2F;url
+    this.exts = {
+        imgs: [&#x27;jpeg&#x27;, &#x27;jpg&#x27;, &#x27;png&#x27;, &#x27;gif&#x27;],
+        sound: [&#x27;mp3&#x27;, &#x27;ogg&#x27;, &#x27;wma&#x27;, &#x27;wav&#x27;],
+        data: [&#x27;json&#x27;]
+    };
+};
+
+gf.inherits(gf.AssetLoader, Object, {
+    load: function() {
+        for(var i = 0, il = this.resources.length; i &lt; il; ++i) {
+            var name = typeof this.resources[i] === &#x27;string&#x27; ? this.resources[i] : this.resources[i].name,
+                url = typeof this.resources[i] === &#x27;string&#x27; ? this.resources[i] : this.resources[i].src,
+                ext = url.split(&#x27;.&#x27;).pop().toLowerCase();
+
+            &#x2F;&#x2F;load a texture
+            if(this.exts.imgs.indexOf(ext) !== -1) {
+                this.loadTexture(name, url);
             }
-         * Callbacks format:
-            {
-                error: function(error, resource),       &#x2F;&#x2F;an error occured when loading a resource
-                progress: function(percent, resource),  &#x2F;&#x2F;progress of a resource loading
-                load: function(resource),               &#x2F;&#x2F;a resource has loaded
-
+            &#x2F;&#x2F;load a sound clip
+            else if(this.exts.sound.indexOf(ext) !== -1) {
+                this.loadSound(name, url);
             }
-         *&#x2F;
-        load: function(resource, cb) {
-            &#x2F;&#x2F;do this so we can just call load, without having to type the long one
-            if(resource instanceof Array) {
-                gf.loader.loadResources.apply(gf.loader, arguments);
-                return;
+            &#x2F;&#x2F;load a data file (world, spritesheet, etc)
+            else if(this.exts.data.indexOf(ext) !== -1) {
+                this.loadData(name, url);
             }
+        }
+    },
+    loadTexture: function(name, url) {
+        this.loadCount++;
 
-            var cached = gf.loader._getCached(resource);
+        var self = this,
+            texture = PIXI.Texture.fromImage(url);
 
-            if(cached) {
-                gf.resources[resource.name] = resource;
-                gf.event.publish(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, cached);
-                if(cb) cb(null, cached);
+        this._storeAsset(name, texture);
 
-                return cached;
-            }
-
-            if(gf.loader._loaders[resource.type] &amp;&amp; gf.loader._loaders[resource.type].load) {
-                gf.loader._setCache(resource);
-                gf.resources[resource.name] = resource;
-                gf.loader._loaders[resource.type].load(resource);
-                if(cb) {
-                    gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, cb.bind(null, null));
-                    gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resource.name, cb);
-                }
-            } else {
-                &#x2F;&#x2F;at this point we have no loader for this type
-                throw new Error(&#x27;Unknown resource type: &#x27; + resource.type + &#x27; for res&#x27;);
-            }
-
-            return this;
-        },
-        &#x2F;**
-         * Resources format:
-            [
-                {
-                    name: String,   &#x2F;&#x2F;key name
-                    type: String,   &#x2F;&#x2F;image, json, xml, texture, world
-                    src: String     &#x2F;&#x2F;url
-                },
-                ...
-            ]
-         * Callbacks format:
-            {
-                start: function(resource),              &#x2F;&#x2F;when loading of a resource starts
-                error: function(error, resource),       &#x2F;&#x2F;an error occured when loading a resource
-                progress: function(percent, resource),  &#x2F;&#x2F;progress of a resource loading
-                load: function(resource),               &#x2F;&#x2F;a resource has loaded
-                complete: function(resources),          &#x2F;&#x2F;all resources have completed loading
-            }
-         *&#x2F;
-        loadResources: function(resources, cb) {
-            var done = 0, handles = [];
-
-            function loadDone(r, err, resource) {
-                done++;
-
-                if(err)
-                    gf.event.publish(gf.types.EVENT.LOADER_ERROR, err, resource);
-                else
-                    gf.event.publish(gf.types.EVENT.LOADER_LOAD, resource);
-
-                gf.event.unsubscribe(handles[r].load);
-                gf.event.unsubscribe(handles[r].error);
-
-                handles[r] = null;
-
-                if(done &gt;= resources.length) {
-                    gf.event.publish(gf.types.EVENT.LOADER_COMPLETE, resources);
-                    if(cb) cb(null, resources);
-                }
-            }
-
-            for(var r = 0, rl = resources.length; r &lt; rl; ++r) {
-                gf.event.publish(gf.types.EVENT.LOADER_START, resources[r]);
-
-                handles.push({
-                    load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resources[r].name, loadDone.bind(null, r, null)),
-                    error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resources[r].name, loadDone.bind(null, r))
-                });
-                gf.loader.load(resources[r]);
-            }
-
-            return this;
-        },
-        &#x2F;&#x2F;Privates for loaders only, not public use
-        _loaders: {},
-        _getCacheKey: function(resource) {
-            return gf.utils.b64.encode(resource.src + &#x27;_!_&#x27; + resource.type);
-        },
-        _getCached: function(resource) {
-            return _cache[gf.loader._getCacheKey(resource)];
-        },
-        _setCache: function(resource) {
-            return _cache[gf.loader._getCacheKey(resource)] = resource;
-        },
-        _get: function(url, dataType, progress, cb) {
-            gf.utils.ajax({
-                url: url,
-                dataType: dataType,
-                type: &#x27;GET&#x27;,
-                error: function(errorThrown) {
-                    if(cb) cb(errorThrown || this.statusText);
-                },
-                load: function(data) {
-                    _cache[url] = data;
-
-                    if(cb) cb(null, data);
-                },
-                progress: function(e) {
-                    if(e.lengthComputable) {
-                        var pct = (e.loaded &#x2F; e.total) * 100;
-
-                        if(progress) progress(pct);
-                    }
-                }
+        if(!texture.hasLoaded) {
+            texture.baseTexture.on(&#x27;loaded&#x27;, function() {
+                self.onAssetLoaded(null, &#x27;texture&#x27;, texture);
             });
+        } else {
+            self.onAssetLoaded(null, &#x27;texture&#x27;, texture);
         }
-    };
 
-    &#x2F;&#x2F;Image loader
-    gf.loader._loaders.image = {
-        load: function(resource) {
-            resource.data = new Image();
-            resource.data.addEventListener(&#x27;load&#x27;, function() {
-                gf.event.publish(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, resource);
-            }, false);
-            resource.data.src = resource.src;
-        }
-    };
+        return texture;
+    },
+    loadAudio: function(name, url) {
+        this.loadCount++;
 
-    &#x2F;&#x2F;JSON and XML loaders
-    gf.loader._loaders.json = gf.loader._loaders.xml = {
-        load: function(resource) {
-            gf.loader._get(
-                resource.src,
-                resource.type,
-                function(pct) { &#x2F;&#x2F;progress
-                    gf.event.publish(gf.types.EVENT.LOADER_PROGRESS + &#x27;.&#x27; + resource.name, pct, resource);
-                },
-                function(err, data) {
-                    if(err) {
-                        gf.event.publish(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resource.name, err, resource);
-                        return;
+        var self = this,
+            audio = new Audio(url);
+
+        audio.preload = &#x27;auto&#x27;;
+
+        this._storeAsset(name, audio);
+
+        audio.addEventListener(&#x27;canplaythrough&#x27;, function() {
+            self.onAssetLoaded(null, &#x27;audio&#x27;, audio);
+        }, false);
+
+        audio.addEventListener(&#x27;error&#x27;, function() {
+            self.onAssetLoaded(new Error(&#x27;Failed to load audio &quot;&#x27; + name + &#x27;&quot; at url: &#x27; + url), &#x27;audio&#x27;);
+        }, false);
+
+        audio.load();
+
+        return audio;
+    },
+    loadData: function(name, url) {
+        var self = this,
+            baseUrl = url.replace(&#x2F;[^\&#x2F;]*$&#x2F;, &#x27;&#x27;);
+
+        gf.utils.ajax({
+            method: &#x27;GET&#x27;,
+            url: url,
+            dataType: &#x27;json&#x27;,
+            load: function(data) {
+                &#x2F;&#x2F;check some properties to see if this is a TiledMap Object
+                if(data.orientation &amp;&amp; data.layers &amp;&amp; data.tilesets &amp;&amp; data.version) {
+                    self._storeAsset(name, data);
+
+                    &#x2F;&#x2F;TODO: How to tell if all these are loaded (how to count them?)
+                    &#x2F;&#x2F;loop through each layer and load the sprites (objectgroup types)
+                    for(var i = 0, il = data.layers.length; i &lt; il; ++i) {
+                        var layer = data.layers[i];
+                        if(layer.type !== gf.types.LAYER.OBJECT_GROUP) continue;
+
+                        &#x2F;&#x2F;loop through each object, and load the textures
+                        for(var o = 0, ol = layer.objects.length; o &lt; ol; ++o) {
+                            var obj = layer.objects[o];
+                            if(!obj.properties.spritesheet) continue;
+
+                            self.loadTexture(layer.name + &#x27;_&#x27; + obj.name + &#x27;_texture&#x27;, obj.properties.spritesheet);
+                        }
                     }
 
-                    resource.data = data;
-                    gf.event.publish(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, resource);
-                }
-            );
-        }
-    };
+                    &#x2F;&#x2F;loop through each tileset and load the texture
+                    for(var s = 0, sl = data.tilesets.length; s &lt; sl; ++s) {
+                        var set = data.tilesets[s];
+                        if(!set.image) continue;
 
-    &#x2F;&#x2F;Texture loader
-    gf.loader._loaders.texture = gf.loader._loaders.sprite = {
-        load: function(resource) {
-            var tloader = new THREE.TextureLoader();
-                    
-            tloader.addEventListener(&#x27;error&#x27;, function(err) {
-                gf.event.publish(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resource.name, err, resource);
-            });
-
-            tloader.addEventListener(&#x27;load&#x27;, function(evt) {
-                resource.data = evt.content;
-                gf.event.publish(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, resource);
-            });
-
-            tloader.load(resource.src);
-        }
-    };
-
-    &#x2F;&#x2F;Audio loader
-    gf.loader._loaders.audio = gf.loader._loaders.sound = gf.loader._loaders.music = {
-        load: function(resource) {
-            if(!gf.support.audio.play) {
-                gf.event.publish(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resource.name, &#x27;This browser does not support HTML5 Audio!&#x27;, resource);
-                return false;
-            }
-
-            var ext = resource.src.substr(resource.src.lastIndexOf(&#x27;.&#x27;) + 1);
-            if(!gf.support.audio[ext]) {
-                gf.event.publish(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resource.name, &#x27;This browser does not support playing &#x27; + ext + &#x27; audio files!&#x27;, resource);
-                return false;
-            }
-
-            var sound = resource.data = new Audio(resource.src);
-            sound.preload = &#x27;auto&#x27;;
-
-            function loaded() {
-                this.removeEventListener(&#x27;canplaythrough&#x27;, loaded, false);
-                gf.event.publish(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, resource);
-            }
-            sound.addEventListener(&#x27;canplaythrough&#x27;, loaded, false);
-
-            sound.addEventListener(&#x27;error&#x27;, function() {
-                gf.event.publish(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resource.name, &#x27;Error loading the audio file!&#x27;, resource);
-            }, false);
-
-            sound.load();
-        }
-    };
-
-    &#x2F;&#x2F;World loader, loads a world JSON file and all of its resources listed within
-    gf.loader._loaders.world = {
-        load: function(resource) {
-            if(!resource.texturePath)
-                resource.texturePath = resource.src.substr(0, resource.src.lastIndexOf(&#x27;&#x2F;&#x27;) + 1);
-
-            &#x2F;&#x2F;set the type to json, and load it first
-            resource._oldName = resource.name;
-            resource.name = resource.name + &#x27;_json&#x27;;
-            resource.type = &#x27;json&#x27;;
-
-            var handles = {};
-
-            handles.load = gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, function() {
-                &#x2F;&#x2F;gf.event.unsubscribe(handles.load);
-                &#x2F;&#x2F;gf.event.unsubscribe(handles.progress);
-                &#x2F;&#x2F;gf.event.unsubscribe(handles.error);
-
-                &#x2F;&#x2F;set the resource back to world
-                resource.name = resource._oldName;
-                resource.type = &#x27;world&#x27;;
-
-                var done = 0, max = 0, lhandles = [], thandles = [];
-
-                var loadLayer = function(layer, obj, o) {
-                    addRes();
-                    var name = layer.name + &#x27;_&#x27; + obj.name + &#x27;_texture&#x27;;
-                    lhandles.push({
-                        load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + name, function(rsrc) {
-                            obj.properties.texture = rsrc.data;
-                            resDone(o, true, null, rsrc);
-                        }),
-                        error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + name, function(err, rsrc) {
-                            obj.properties.texture = null;
-                            obj.properties._error = err;
-                            resDone(o, true, err, rsrc);
-                        })
-                    });
-                    gf.loader.load({
-                        name: layer.name + &#x27;_&#x27; + obj.name + &#x27;_texture&#x27;,
-                        type: &#x27;texture&#x27;,
-                        src: obj.properties.spritesheet
-                    });
-                };
-
-                var loadTilesetTexture = function(set, s) {
-                    addRes();
-                    var name = set.name + &#x27;_texture&#x27;;
-                    thandles.push({
-                        load: gf.event.subscribe(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + name, function(rsrc) {
-                            set.texture = rsrc.data;
-                            resDone(s, false, null, rsrc);
-                        }),
-                        error: gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + name, function(err, rsrc) {
-                            set.texture = null;
-                            set._error = err;
-                            resDone(s, false, err, rsrc);
-                        })
-                    });
-                    gf.loader.load({
-                        name: name,
-                        type: &#x27;texture&#x27;,
-                        src: resource.texturePath + set.image
-                    });
-                };
-
-                &#x2F;&#x2F;loop through each layer and load the sprites (objectgroup types)
-                for(var i = 0, il = resource.data.layers.length; i &lt; il; ++i) {
-                    var layer = resource.data.layers[i];
-                    if(layer.type !== gf.types.LAYER.OBJECT_GROUP) continue;
-
-                    &#x2F;&#x2F;loop through each object, and load the textures
-                    for(var o = 0, ol = layer.objects.length; o &lt; ol; ++o) {
-                        var obj = layer.objects[o];
-                        if(!obj.properties.spritesheet) continue;
-
-                        loadLayer(layer, obj, o);
+                        self.loadTexture(set.name + &#x27;_texture&#x27;, baseUrl + set.image);
                     }
                 }
+                &#x2F;&#x2F;this is a sprite sheet (published from TexturePacker)
+                else if(data.frames &amp;&amp; data.meta) {
+                    this.loadCount++;
 
-                &#x2F;&#x2F;loop through each tileset and load the texture
-                for(var s = 0, sl = resource.data.tilesets.length; s &lt; sl; ++s) {
-                    var set = resource.data.tilesets[s];
-                    if(!set.image) continue;
+                    var textureUrl = baseUrl + data.meta.image,
+                        texture =  PIXI.Texture.fromImage(textureUrl).baseTexture,
+                        frames = data.frames,
+                        assets = [];
 
-                    loadTilesetTexture(set, s);
-                }
+                    for(var f in frames) {
+                        var rect = frames[f].frame;
 
-                if(max === 0) gf.event.publish(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, resource);
+                        PIXI.TextureCache[f] = new PIXI.Texture(texture, { x: rect.x, y: rect.y, width: rect.w, height: rect.h });
 
-                &#x2F;&#x2F;for counting downloading resources, and tracking when all are done
-                function addRes() { max++; }
-                function resDone(i, layer &#x2F;*, err, rsrc*&#x2F;) {
-                    done++;
+                        if(frames[f].trimmed) {
+                            PIXI.TextureCache[f].realSize = frames[f].spriteSourceSize;
+                            PIXI.TextureCache[f].trim.x = 0;
+                        }
 
-                    if(layer) {
-                        gf.event.unsubscribe(lhandles[i].load);
-                        gf.event.unsubscribe(lhandles[i].error);
-                    } else {
-                        gf.event.unsubscribe(thandles[i].load);
-                        gf.event.unsubscribe(thandles[i].error);
+                        assets.push(PIXI.TextureCache[f]);
                     }
 
-                    if(done &gt;= max)
-                        gf.event.publish(gf.types.EVENT.LOADER_LOAD + &#x27;.&#x27; + resource.name, resource);
+                    self._storeAsset(name, assets);
+
+                    if(texture.hasLoaded) {
+                        self.onAssetLoaded(null, &#x27;spritesheet&#x27;, assets);
+                    }
+                    else {
+                        texture.addEventListener(&#x27;loaded&#x27;, function() {
+                            self.onAssetLoaded(null, &#x27;spritesheet&#x27;, assets);
+                        });
+                    }
                 }
-            });
+            },
+            error: function(err) {
+                self.onAssetLoaded(err);
+            }
+        });
+    },
+    onAssetLoaded: function(err, type, asset) {
+        &#x2F;&#x2F;texture (image)
+        &#x2F;&#x2F;audio
+        &#x2F;&#x2F;spritesheet (json sheet)
+        &#x2F;&#x2F;world (TiledEditor Json data)
+        this.loadCount--;
 
-            handles.error = gf.event.subscribe(gf.types.EVENT.LOADER_ERROR + &#x27;.&#x27; + resource.name, function(err, resource) {
-                &#x2F;&#x2F;gf.event.unsubscribe(handles.load);
-                &#x2F;&#x2F;gf.event.unsubscribe(handles.progress);
-                &#x2F;&#x2F;gf.event.unsubscribe(handles.error);
+        this.emit({ type: &#x27;progress&#x27;, error: err, kind: type, asset: asset });
+        if(this.onProgress) this.onProgress(err, type, asset);
 
-                gf.event.publish(gf.types.EVENT.LOADER_PROGRESS + &#x27;.&#x27; + resource._oldName, err, resource);
-            });
-
-            handles.progress = gf.event.subscribe(gf.types.EVENT.LOADER_PROGRESS + &#x27;.&#x27; + resource.name, function(pct, resource) {
-                gf.event.publish(gf.types.EVENT.LOADER_PROGRESS + &#x27;.&#x27; + resource._oldName, pct, resource);
-            });
-
-            gf.loader.load(resource);
+        if(this.loadCount === 0) {
+            this.dispatchEvent({ type: &#x27;complete&#x27; });
+            if(this.onComplete) this.onComplete();
         }
-    };
-})();
+    },
+    _storeAsset: function(name, asset) {
+        this.assets[name] = asset;
+        gf.assetCache[name] = asset;
+    }
+});
+
     </pre>
 </div>
 
