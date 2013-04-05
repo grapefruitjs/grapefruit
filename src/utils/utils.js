@@ -45,7 +45,7 @@
             sets.abort = sets.abort || gf.utils.noop;
             sets.complete = sets.complete || gf.utils.noop;
 
-            var xhr = new AjaxRequest();
+            var xhr = new gf.utils.AjaxRequest();
 
             xhr.onreadystatechange = function() {
                 if(xhr.readyState === 4) {
@@ -71,6 +71,30 @@
             xhr.open(sets.method, sets.url, true);
             xhr.send();
         },
+        //from pixi.js
+        AjaxRequest: function() {
+            //activeX versions to check for in IE
+            var activexmodes = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP'];
+
+            //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
+            if(window.ActiveXObject) {
+                for(var i=0; i<activexmodes.length; i++) {
+                    try {
+                        return new window.ActiveXObject(activexmodes[i]);
+                    }
+                    catch(e) {
+                        //suppress error
+                    }
+                }
+            }
+            // if Mozilla, Safari etc
+            else if(window.XMLHttpRequest) {
+                return new XMLHttpRequest();
+            }
+            else {
+                return false;
+            }
+        },
         //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
         setValues: function(obj, values) {
             if(!values) return;
@@ -79,7 +103,7 @@
                 var newVal = values[key];
 
                 if(newVal === undefined) {
-                    //console.warn('Object parameter "' + key + '" is undefined.');
+                    //console.warn('Object parameter '' + key + '' is undefined.');
                     continue;
                 }
                 if(key in obj) {
@@ -94,7 +118,7 @@
                         if(!isNaN(n))
                             obj[key] = n;
                         /*else
-                            console.warn('Object parameter "' + key + '" evaluated to NaN, using default. Value passed: ' + newVal);*/
+                            console.warn('Object parameter '' + key + '' evaluated to NaN, using default. Value passed: ' + newVal);*/
 
                     } else if(curVal instanceof gf.Vector && newVal instanceof Array) {
                         curVal.set(parseInt(newVal[0], 10) || 0, parseInt(newVal[1], 10) || 0);
