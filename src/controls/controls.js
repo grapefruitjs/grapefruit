@@ -72,8 +72,8 @@
             } else {
                 gf.game._cont.addEventListener('mousemove', gf.controls.onMouseMove, false);
                 document.addEventListener('mousewheel', gf.controls.onMouseWheel, false);
-                for(var k in gf.types.MOUSE) {
-                    var v = gf.types.MOUSE[k];
+                for(var k2 in gf.types.MOUSE) {
+                    var v = gf.types.MOUSE[k2];
                     if(v === 'mousemove'|| v === 'mousewheel') return;
                     gf.game._cont.addEventListener(v, gf.controls.onMouse, false);
                 }

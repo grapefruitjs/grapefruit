@@ -50,7 +50,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             props.zIndex = this.zIndex;
             props.opacity = this.opacity;
             props.visible = this.visible;
-            pros.position = [o.x, o.y];
+            props.position = [o.x, o.y];
             //convert tiled x,y coords into world coords
             //tiled does x,y from top left. We do x,y from center
             /*props.position = [

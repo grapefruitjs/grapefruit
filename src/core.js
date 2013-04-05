@@ -736,8 +736,8 @@ gf.game = {
         //debug info
         if(gf.debug.showInfo) {
             gf.debug._info = new gf.debug.Info();
-            for(var s in gf.debug.infoStyle) {
-                gf.debug._info.domElement.style[s] = gf.debug.infoStyle[s];
+            for(var s2 in gf.debug.infoStyle) {
+                gf.debug._info.domElement.style[s2] = gf.debug.infoStyle[s2];
             }
             document.body.appendChild(gf.debug._info.domElement);
         }
