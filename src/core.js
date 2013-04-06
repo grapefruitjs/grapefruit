@@ -585,22 +585,6 @@ gf.inherits(gf.Clock, Object, {
  */
 gf.game = {
     /**
-     * List of all objects on the stage by id
-     *
-     * @property objects
-     * @type {Object}
-     */
-    objects: {},
-
-    /**
-     * Number of objects added to the stage
-     *
-     * @property numObjects
-     * @type {Number}
-     */
-    numObjects: 0,
-
-    /**
      * Maximum Z value
      *
      * @property MAX_Z
@@ -770,15 +754,6 @@ gf.game = {
         gf.game._renderer.resize(w, h);
     },
     /**
-     * Gets the next object id for an object
-     *
-     * @method getNextObjectId
-     * @private
-     */
-    getNextObjectId: function() {
-        return gf.game._nextId++;
-    },
-    /**
      * Adds an object to the current stage
      *
      * @method addObject
@@ -786,15 +761,12 @@ gf.game = {
      * @return {game} Returns itself for chainability
      */
     addObject: function(obj) {
-        if(!obj) return this;
+        if(obj) {
+            gf.game._stage.addChild(obj);
 
-        if(!obj.id) obj.id = gf.game.getNextObjectId();
-        if(!gf.game.objects[obj.id]) gf.game.numObjects++;
-
-        gf.game.objects[obj.id] = obj;
-        gf.game._stage.addChild(obj);
-
-        if(obj.onAddedToStage) obj.onAddedToStage();
+            if(obj.onAddedToStage)
+                obj.onAddedToStage(gf.game._stage);
+        }
 
         return this;
     },
@@ -806,16 +778,12 @@ gf.game = {
      * @return {game} Returns itself for chainability
      */
     removeObject: function(obj) {
-        if(!obj) return;
+        if(obj) {
+            gf.game._stage.removeChild(obj);
 
-        //remove object from our list
-        delete gf.game.objects[obj.id];
-        gf.game.numObjects--;
-
-        gf.game._stage.removeChild(obj);
-
-        if(obj.type === gf.types.ENTITY.PLAYER)
-            gf.game.player = null;
+            if(obj.onRemovedFromStage)
+                obj.onRemovedFromStage(gf.game._stage);
+        }
 
         return this;
     },
@@ -860,8 +828,8 @@ gf.game = {
 
         if(!ent.isCollidable) return colliders;
 
-        for(var id in gf.game.objects) {
-            var o = gf.game.objects[id];
+        for(var i = 0, il = gf.game._stage.children; i < il; ++i) {
+            var o = gf.game._stage.children[i];
 
             //check if this object collides with any others
             if(o.visible && o.collidable && o.entity && (o !== ent)) {
@@ -886,34 +854,10 @@ gf.game = {
      * @return {game} Returns itself for chainability
      */
     cameraTrack: function(ent) {
-        if(ent.isEntity) {
-            if(this._trackedEntMoveHandle) {
-                gf.event.unsubscribe(this._trackedEntMoveHandle);
-            }
-
-            //gf.game._camera.position.x = ent._mesh.position.x;
-            //gf.game._camera.position.y = ent._mesh.position.y;
-            /*this._trackedEntMoveHandle = gf.event.subscribe(gf.types.EVENT.ENTITY_MOVE + '.' + ent.id, function(velocity) {
-                //gf.game._camera.translateX(velocity.x);
-                //gf.game._camera.translateY(velocity.y);
-
-                //If this gets heavy, then just remove it
-                //update if each object is within the viewport
-
-                //update matrices
-                //gf.game._camera.updateMatrix(); // make sure camera's local matrix is updated
-                //gf.game._camera.updateMatrixWorld(); // make sure camera's world matrix is updated
-                //gf.game._camera.matrixWorldInverse.getInverse( camera.matrixWorld );
-                var frustum = new THREE.Frustum();
-                frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(gf.game._camera.projectionMatrix, gf.game._camera.matrixWorldInverse));
-                gf.utils.each(gf.game.objects, function(id, o) {
-                    if(o.isEntity && o._mesh && o._mesh.geometry) {
-                        //o._mesh.updateMatrix(); // make sure plane's local matrix is updated
-                        //o._mesh.updateMatrixWorld(); // make sure plane's world matrix is updated
-                        o.inViewport = frustum.contains(o._mesh);
-                    }
-                });
-            });*/
+        if(ent.entity) {
+            return this;
+            //TODO
+            //see: https://github.com/GoodBoyDigital/pixi.js/issues/48#issuecomment-15962276
         }
 
         return this;
@@ -944,12 +888,11 @@ gf.game = {
         gf.gamepad.update();
 
         //update each object
-        for(var id in gf.game.objects) {
-            var o = gf.game.objects[id];
+        for(var i = 0, il = gf.game._stage.children; i < il; ++i) {
+            var o = gf.game._stage.children[i];
 
-            if(o.inViewport && o.isVisible && o.update) {
+            if(o.visible && o.update)
                 o.update();
-            }
         }
 
         //render scene
