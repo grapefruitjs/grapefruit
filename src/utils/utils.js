@@ -149,7 +149,7 @@
             if(key in obj) {
                 var curVal = obj[key];
 
-                //type massaging
+                //massage strings into numbers
                 if(typeof curVal === 'number' && typeof newVal === 'string') {
                     var n;
                     if(newVal.indexOf('0x') === 0) n = parseInt(newVal, 16);
@@ -160,12 +160,30 @@
                     /*else
                         console.warn('Object parameter '' + key + '' evaluated to NaN, using default. Value passed: ' + newVal);*/
 
-                } else if(curVal instanceof gf.Vector && newVal instanceof Array) {
-                    curVal.set(parseInt(newVal[0], 10) || 0, parseInt(newVal[1], 10) || 0);
+                }
+                //massage vectors
+                else if(curVal instanceof gf.Vector && newVal instanceof Array) {
+                    curVal.set(parseInt(newVal[0], 10) || 0, parseInt(newVal[1], 10) || parseInt(newVal[0], 10) || 0);
                 } else if(curVal instanceof gf.Vector && typeof newVal === 'string') {
                     var a = newVal.split(gf.utils._arrayDelim, 2);
-                    curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
-                } else if(curVal instanceof Array && typeof newVal === 'string') {
+                    curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || parseInt(a[0], 10) || 0);
+                } else if(curVal instanceof gf.Vector && typeof newVal === 'number') {
+                    curVal.set(newVal, newVal);
+                }
+                //massage points
+                else if(curVal instanceof gf.Point && newVal instanceof Array) {
+                    curVal.x = parseInt(newVal[0], 10) || 0;
+                    curVal.y = parseInt(newVal[1], 10) || parseInt(newVal[0], 10) || 0;
+                } else if(curVal instanceof gf.Point && typeof newVal === 'string') {
+                    var a2 = newVal.split(gf.utils._arrayDelim, 2);
+                    curVal.x = parseInt(a2[0], 10) || 0;
+                    curVal.y = parseInt(a2[1], 10) || parseInt(a2[0], 10) || 0;
+                } else if(curVal instanceof gf.Point && typeof newVal === 'number') {
+                    curVal.x = newVal;
+                    curVal.y = newVal;
+                }
+                //massage arrays
+                else if(curVal instanceof Array && typeof newVal === 'string') {
                     obj[key] = newVal.split(gf.utils._arrayDelim);
                     for(var i = 0, il = obj[key].length; i < il; ++i) {
                         var val = obj[key][i];
