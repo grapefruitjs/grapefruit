@@ -47,7 +47,7 @@ gf.inherits(gf.AssetLoader, Object, {
 
         this._storeAsset(name, texture);
 
-        if(!texture.hasLoaded) {
+        if(!texture.baseTexture.hasLoaded) {
             texture.baseTexture.on('loaded', function() {
                 self.onAssetLoaded(null, 'texture', texture);
             });
@@ -80,6 +80,8 @@ gf.inherits(gf.AssetLoader, Object, {
         return audio;
     },
     loadData: function(name, url) {
+        this.loadCount++;
+
         var self = this,
             baseUrl = url.replace(/[^\/]*$/, '');
 
@@ -114,11 +116,11 @@ gf.inherits(gf.AssetLoader, Object, {
 
                         self.loadTexture(set.name + '_texture', baseUrl + set.image);
                     }
+
+                    self.onAssetLoaded(null, 'world', data);
                 }
                 //this is a sprite sheet (published from TexturePacker)
                 else if(data.frames && data.meta) {
-                    this.loadCount++;
-
                     var textureUrl = baseUrl + data.meta.image,
                         texture =  PIXI.Texture.fromImage(textureUrl).baseTexture,
                         frames = data.frames,
@@ -161,7 +163,7 @@ gf.inherits(gf.AssetLoader, Object, {
         //world (TiledEditor Json data)
         this.loadCount--;
 
-        this.emit({ type: 'progress', error: err, kind: type, asset: asset });
+        this.emit({ type: 'progress', error: err, assetType: type, asset: asset });
         if(this.onProgress) this.onProgress(err, type, asset);
 
         if(this.loadCount === 0) {
