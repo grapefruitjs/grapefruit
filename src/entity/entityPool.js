@@ -58,22 +58,20 @@
          * @return {Entity} Returns a new instance of the object from the pool
          * @example
          *      //create a new ckass to be instantiated
-         *      var Bug = gf.entityPool.add('bug', gf.Entity.extend({
-         *          //ctor function
-         *          init: function(pos, settings) {
-         *              //call the base ctor
-         *              this._super(pos, settings);
+         *      var Bug = function(pos, settings) {
+         *          gf.Entity.call(this, pos, settings);
+         *          this.color = 'red';
+         *      };
          *
-         *              this.color = 'red';
-         *          },
+         *      gf.inherits(Bug, gf.Entity, {
          *          beBug: function() {
          *              console.log("I'm a bug");
          *          }
-         *      }));
+         *      });
          *
          *      //then later in your game code
          *      var mybug = gf.entityPool.create('bug', {
-         *          pos: [10, 10]
+         *          pos: [10, 10] //pos, and/or position properties get sent as the first param to the ctor
          *      });
          */
         create: function(name, props) {
