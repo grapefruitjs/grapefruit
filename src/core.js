@@ -63,6 +63,15 @@ gf.Texture = PIXI.Texture;
 gf.version = '0.0.2';
 
 /**
+ * The cached assets loaded by any loader
+ *
+ * @module gf
+ * @property assetCache
+ * @type Object
+ */
+gf.assetCache = {};
+
+/**
  * Constant types for easy use in code
  *
  * @module gf
@@ -669,7 +678,7 @@ gf.game = {
      * @return {game} Returns itself for chainability
      */
     init: function(contId, opts) {
-        if(gf.controls._initialized) return;
+        if(gf.game._initialized) return;
 
         opts = opts || {};
 
@@ -745,6 +754,20 @@ gf.game = {
         gf.game._initialized = true;
 
         return this;
+    },
+    /**
+     * Allows you to resize the game area
+     *
+     * @method resize
+     * @param width {Number} Width to resize to
+     * @param height {Number} Height to resize to
+     */
+    resize: function(w, h) {
+        if(!gf.game._initialized) return;
+
+        gf.game._renderer.view.style.width = w;
+        gf.game._renderer.view.style.height = h;
+        gf.game._renderer.resize(w, h);
     },
     /**
      * Gets the next object id for an object
@@ -903,7 +926,7 @@ gf.game = {
      */
     _tick: function() {
         //start render loop
-        window.requestAnimationFrame(gf.game._tick);
+        window.requestAnimFrame(gf.game._tick);
 
         //get clock delta
         gf.game._delta = gf.game._clock.getDelta();
@@ -930,6 +953,6 @@ gf.game = {
         }
 
         //render scene
-        gf.game._renderer.render(gf.game._scene/*, gf.game._camera*/);
+        gf.game._renderer.render(gf.game._stage);
     }
 };
