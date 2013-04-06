@@ -31,7 +31,7 @@ gf.inherits(gf.AssetLoader, Object, {
             }
             //load a sound clip
             else if(this.exts.sound.indexOf(ext) !== -1) {
-                this.loadSound(name, url);
+                this.loadAudio(name, url);
             }
             //load a data file (world, spritesheet, etc)
             else if(this.exts.data.indexOf(ext) !== -1) {
