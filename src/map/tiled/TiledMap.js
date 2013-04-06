@@ -12,6 +12,9 @@
 gf.TiledMap = function(map) {
     gf.Map.call(this, map);
 
+    this.scale.x = parseInt(map.properties.scale, 10) || 1;
+    this.scale.y = parseInt(map.properties.scale, 10) || 1;
+
     /**
      * The tile size
      *
@@ -31,15 +34,6 @@ gf.TiledMap = function(map) {
     this.properties = map.properties || {};
 
     /**
-     * The scale of the map
-     *
-     * @property scale
-     * @type Number
-     * @default 1
-     */
-    this.scale = this.properties.scale || 1;
-
-    /**
      * The scaled size (size * tileSize * scale)
      *
      * @property scaledSize
@@ -49,6 +43,14 @@ gf.TiledMap = function(map) {
         this.size.x * this.tileSize.x * this.scale,
         this.size.y * this.tileSize.y * this.scale
     );
+
+    /**
+     * The orientation of the map, currently only 'orthogonal' is supported
+     *
+     * @property orientation
+     * @type String
+     */
+    this.orientation = map.orientation;
 
     /**
      * The maximum extent of the map (largest x and y the map has)
@@ -112,7 +114,10 @@ gf.TiledMap = function(map) {
         switch(map.layers[i].type) {
             case gf.types.LAYER.TILE_LAYER:
                 lyr = new gf.TiledLayer(map.layers[i]);
-                lyr.scale = this.scale;
+                this.addChild(lyr);
+
+                //lyr.scale = this.scale;
+                lyr.renderTiles();
 
                 if(lyr.name.toLowerCase().indexOf('collision') === 0) {
                     this.collisionLayer = lyr;
@@ -124,13 +129,12 @@ gf.TiledMap = function(map) {
 
             case gf.types.LAYER.OBJECT_GROUP:
                 lyr = new gf.TiledObjectGroup(map.layers[i]);
+                this.addChild(lyr);
 
                 //auto spawn the player object group
                 if(lyr.name === 'player' && !lyr.properties.manual)
                     lyr.spawn();
         }
-
-        this.addChild(lyr);
     }
 };
 
@@ -143,9 +147,12 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @return {TiledTileset}
      */
     getTileset: function(tileId) {
-        for(var i = 0, il = this.tilesets.length; i < il; ++i)
-            if(tileId >= this.tilesets[i].firstgid && tileId <= this.tilesets[i].lastgid)
-                return this.tilesets[i];
+        if(tileId === 0)
+            return this.tilesets[0];
+        else
+            for(var i = 0, il = this.tilesets.length; i < il; ++i)
+                if(tileId >= this.tilesets[i].firstgid && tileId <= this.tilesets[i].lastgid)
+                    return this.tilesets[i];
     },
     /**
      * Checks an entities collision with the collision layer of this map

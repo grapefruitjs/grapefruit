@@ -147,14 +147,28 @@ gf.inherits(gf.TiledTileset, PIXI.Texture, {
     createTileSprite: function(tileId) {
         if(tileId === undefined) return null;
 
+        //special case for empty tile sprite
+        if(tileId === 0) {
+            var spr = new PIXI.Sprite(
+                new PIXI.Texture(
+                    this.baseTexture,
+                    new PIXI.Rectangle(0, 0, this.tileSize.x, this.tileSize.y)
+                )
+            );
+            spr.alpha = 0;
+
+            return spr;
+        }
+
+        //get the internal ID of the tile in this set (0 indexed)
         tileId = tileId - this.firstgid;
 
         //if less than 0, then this id isn't in this tileset
         if(tileId < 0) return null;
 
         //convert the tileId to x,y coords of the tile in the Texture
-        var y = ~~(tileId / this.size.x),
-            x = (tileId - (y * this.size.x));
+        var y = ~~(tileId / this.numTiles.x),
+            x = (tileId - (y * this.numTiles.x));
 
         return new PIXI.Sprite(
             new PIXI.Texture(

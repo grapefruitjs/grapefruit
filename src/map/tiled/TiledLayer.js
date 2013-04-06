@@ -26,8 +26,6 @@ gf.TiledLayer = function(layer) {
     this.position.x = layer.x;
     this.position.y = layer.y;
     this.alpha = layer.opacity;
-
-    this.renderTiles();
 };
 
 gf.inherits(gf.TiledLayer, gf.Layer, {
