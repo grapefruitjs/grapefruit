@@ -27,7 +27,7 @@ gf.Layer = function(layer) {
     this.size = new gf.Vector(layer.width || 0, layer.height || 0);
 
     //call base ctor
-    PIXI.DisplayObjectContainer.call(this);
+    gf.DisplayObject.call(this);
 
     //mixin user's settings
     gf.utils.setValues(this, layer);
@@ -42,4 +42,4 @@ gf.Layer = function(layer) {
     this.hSize = this.size.clone().divideScalar(2);
 };
 
-gf.inherits(gf.Layer, PIXI.DisplayObjectContainer);
+gf.inherits(gf.Layer, gf.DisplayObject);
