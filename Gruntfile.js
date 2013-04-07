@@ -11,6 +11,7 @@ module.exports = function(grunt) {
     //explicity set source files because order is important
     var srcFiles = [
         '<%= dirs.src %>/core.js',
+        '<%= dirs.src %>/DisplayObject.js',
         '<%= dirs.src %>/utils/utils.js',
         '<%= dirs.src %>/utils/Vector.js',
         '<%= dirs.src %>/audio/audio.js',
