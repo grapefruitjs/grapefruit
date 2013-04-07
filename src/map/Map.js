@@ -18,13 +18,13 @@ gf.Map = function(map) {
     this.size = new gf.Vector(map.width, map.height);
 
     //call base ctor
-    PIXI.DisplayObjectContainer.call(this);
+    gf.DisplayObject.call(this);
 
     //mixin user's settings
     gf.utils.setValues(this, map);
 };
 
-gf.inherits(gf.Map, PIXI.DisplayObjectContainer, {
+gf.inherits(gf.Map, gf.DisplayObject, {
     /**
      * Gets a layer based on the layer's id or name
      *
