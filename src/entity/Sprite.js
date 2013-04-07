@@ -78,12 +78,34 @@ gf.inherits(gf.Sprite, PIXI.DisplayObjectContainer, {
      *          .addAnimation('walk-right', [new gf.Texture(), new gf.Texture()]);
      */
     addAnimation: function(name, frames) {
-        if(frames instanceof gf.Texture)
-            frames = [frames];
-
         if(!frames)
             throw 'No textures passed to addAnimation()';
 
+        //ensure all the items in the array are textures
+        if(frames instanceof Array) {
+            for(var i = 0, il = frames.length; i < il; ++i) {
+                if(typeof frames[i] === 'string') {
+                    if(!PIXI.TextureCache[frames[i]])
+                        throw 'Texture ' + frames[i] + ' is not in cache, please load it first';
+
+                    frames[i] = PIXI.TextureCache[frames[i]];
+                }
+            }
+        }
+
+        //if there is a single texture passed, then put it in an array
+        if(frames instanceof gf.Texture)
+            frames = [frames];
+
+        //if a string is passed, get it from the texture cache
+        if(typeof frames === 'string') {
+            if(!PIXI.TextureCache[frames])
+                throw 'Texture ' + frames + ' is not in cache, please load it first';
+
+            frames = [PIXI.TextureCache[frames]];
+        }
+
+        //create a movie clip from the textures
         var clip = new PIXI.MovieClip(frames);
         clip.stop();
         clip.visible = false;
@@ -117,7 +139,7 @@ gf.inherits(gf.Sprite, PIXI.DisplayObjectContainer, {
             this.currentAnim.visible = true;
             this.currentAnim.gotoAndPlay(0);
             //TODO: Callback
-            setTimeout(cb, 0);
+            if(cb) setTimeout(cb, 1);
         } else {
             throw 'Unknown animation ' + name;
         }
