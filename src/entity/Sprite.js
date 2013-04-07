@@ -77,7 +77,7 @@ gf.inherits(gf.Sprite, PIXI.DisplayObjectContainer, {
      *      spr.addAnimation('walk-left', new gf.Texture())
      *          .addAnimation('walk-right', [new gf.Texture(), new gf.Texture()]);
      */
-    addAnimation: function(name, frames) {
+    addAnimation: function(name, frames, speed) {
         if(!frames)
             throw 'No textures passed to addAnimation()';
 
@@ -110,6 +110,8 @@ gf.inherits(gf.Sprite, PIXI.DisplayObjectContainer, {
         clip.stop();
         clip.visible = false;
         clip.name = name;
+
+        if(speed) clip.animationSpeed = speed;
 
         this.addChild(clip);
 
