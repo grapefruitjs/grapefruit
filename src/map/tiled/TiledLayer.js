@@ -22,6 +22,14 @@ gf.TiledLayer = function(layer) {
      */
     this.tiles = new Uint32Array(layer.data);
 
+    /**
+     * The sprite pool for rendering tiles
+     *
+     * @property tilePool
+     * @type Array
+     */
+    this.spritePool = [];
+
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
     this.position.y = layer.y;
@@ -34,20 +42,45 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      *
      * @method renderTiles
      */
-    renderTiles: function() {
-        for(var i = 0, il = this.tiles.length; i < il; ++i) {
-            var tile = this.tiles[i],
-                spr = this.parent.getTileset(tile).createTileSprite(tile),
-                y = ~~(i / this.size.x),
-                x = (i - (y * this.size.x));
+    renderTiles: function(startX, startY, numX, numY) {
+        for(var x = startX; x < numX; ++x) {
+            for(var y = startY; y < numY; ++y) {
+                var id = (x + (y * this.size.x)),
+                    tile = this.tiles[id],
+                    set = this.parent.getTileset(tile);
 
-            spr.position.x = x * this.parent.tileSize.x;
-            spr.position.y = y * this.parent.tileSize.y;
-            //spr.scale = this.scale;
-            //spr.rotation = this.rotation;
-            //spr.alpha = this.alpha;
-            this.addChild(spr);
+                if(!set) continue;
+
+                var spr = this.getTileSprite(tile, set);
+
+                spr.position.x = x * this.parent.tileSize.x;
+                spr.position.y = y * this.parent.tileSize.y;
+                //spr.scale = this.scale;
+                //spr.rotation = this.rotation;
+                //spr.alpha = this.alpha;
+                this.addChild(spr);
+            }
         }
+    },
+    /**
+     * Creates the sprite for a tile utilizing a pool for the sprites
+     *
+     * @method getTileSprite
+     * @param tileId {Number} The id of the tile to get a sprite for
+     * @param TiledTileset {tileset} The tileset to get the texture from
+     * @return {PIXI.Sprite} The sprite to display
+     */
+    getTileSprite: function(id, tileset) {
+        return this.spritePool.pop() || new PIXI.Sprite(tileset.getTileTexture(id));
+    },
+    /**
+     * Frees a sprite back into the pool
+     *
+     * @method freeTileSprite
+     * @param sprite {PIXI.Sprite} The sprite to release to the pool
+     */
+    freeTileSprite: function(spr) {
+        this.spritePool.push(spr);
     },
     /**
      * Transforms an x,y coord into the index of a tile in the tiles array

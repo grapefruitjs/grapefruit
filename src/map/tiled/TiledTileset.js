@@ -100,7 +100,7 @@ gf.TiledTileset = function(settings) {
      */
     this.tileproperties = settings.tileproperties || {};
 
-    //massage normal
+    //massage tile properties
     for(var i = 0, il = this.tileproperties.length; i < il; ++i) {
         var v = this.tileproperties[i];
 
@@ -108,6 +108,33 @@ gf.TiledTileset = function(settings) {
 
         if(v.isCollidable === 'true') v.isCollidable = true;
         if(v.isBreakable === 'true') v.isBreakable = true;
+    }
+
+    /**
+     * The texture instances for each tile in the set
+     *
+     * @property textures
+     * @type Array
+     */
+    this.textures = [];
+
+    //generate tile textures
+    for(var t = 0, tl = this.lastgid - this.firstgid; t < tl; ++t) {
+        //convert the tileId to x,y coords of the tile in the Texture
+        var y = ~~(t / this.numTiles.x),
+            x = (t - (y * this.numTiles.x));
+
+        this.textures.push(
+            new PIXI.Texture(
+                this.baseTexture,
+                new PIXI.Rectangle(
+                    x * this.tileSize.x,
+                    y * this.tileSize.y,
+                    this.tileSize.x,
+                    this.tileSize.y
+                )
+            )
+        );
     }
 };
 
@@ -138,27 +165,14 @@ gf.inherits(gf.TiledTileset, PIXI.Texture, {
                 };
     },
     /**
-     * Creates the sprite for a tile (used by the TiledLayer to render tiles)
+     * Gets the tile texture for a tile based on it's ID
      *
-     * @method createTileSprite
-     * @param tileId {Number} The id of the tile to get the properties for
-     * @return {PIXI.Sprite} The sprite to display
+     * @method getTileTexture
+     * @param tileId {Number} The id of the tile to get the texture for
+     * @return {PIXI.Texture} The texture for the tile
      */
-    createTileSprite: function(tileId) {
+    getTileTexture: function(tileId) {
         if(tileId === undefined) return null;
-
-        //special case for empty tile sprite
-        if(tileId === 0) {
-            var spr = new PIXI.Sprite(
-                new PIXI.Texture(
-                    this.baseTexture,
-                    new PIXI.Rectangle(0, 0, this.tileSize.x, this.tileSize.y)
-                )
-            );
-            spr.alpha = 0;
-
-            return spr;
-        }
 
         //get the internal ID of the tile in this set (0 indexed)
         tileId = tileId - this.firstgid;
@@ -166,20 +180,6 @@ gf.inherits(gf.TiledTileset, PIXI.Texture, {
         //if less than 0, then this id isn't in this tileset
         if(tileId < 0) return null;
 
-        //convert the tileId to x,y coords of the tile in the Texture
-        var y = ~~(tileId / this.numTiles.x),
-            x = (tileId - (y * this.numTiles.x));
-
-        return new PIXI.Sprite(
-            new PIXI.Texture(
-                this.baseTexture,
-                new PIXI.Rectangle(
-                    x * this.tileSize.x, //offset of x
-                    y * this.tileSize.y, //offset of y
-                    this.tileSize.x, //size
-                    this.tileSize.y
-                )
-            )
-        );
+        return this.textures[tileId];
     }
 });

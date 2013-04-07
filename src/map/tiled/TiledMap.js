@@ -108,6 +108,9 @@ gf.TiledMap = function(map) {
     this.version = map.version;
 
     //create the layers
+    var numX = gf.game._renderer.view.width / this.tileSize.x,
+        numY = gf.game._renderer.view.height / this.tileSize.y;
+
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr;
 
@@ -117,7 +120,7 @@ gf.TiledMap = function(map) {
                 this.addChild(lyr);
 
                 //lyr.scale = this.scale;
-                lyr.renderTiles();
+                lyr.renderTiles(this.position.x, this.position.y, numX, numY);
 
                 if(lyr.name.toLowerCase().indexOf('collision') === 0) {
                     this.collisionLayer = lyr;
@@ -147,12 +150,9 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @return {TiledTileset}
      */
     getTileset: function(tileId) {
-        if(tileId === 0)
-            return this.tilesets[0];
-        else
-            for(var i = 0, il = this.tilesets.length; i < il; ++i)
-                if(tileId >= this.tilesets[i].firstgid && tileId <= this.tilesets[i].lastgid)
-                    return this.tilesets[i];
+        for(var i = 0, il = this.tilesets.length; i < il; ++i)
+            if(tileId >= this.tilesets[i].firstgid && tileId <= this.tilesets[i].lastgid)
+                return this.tilesets[i];
     },
     /**
      * Checks an entities collision with the collision layer of this map
@@ -213,6 +213,19 @@ gf.inherits(gf.TiledMap, gf.Map, {
         }
 
         return res;
+    },
+    resize: function() {
+        var numX = gf.game._renderer.view.width / this.tileSize.x,
+            numY = gf.game._renderer.view.height / this.tileSize.y;
+
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o instanceof gf.TiledLayer && o.visible) {
+                o.removeAllChildren();
+                o.renderTiles(this.position.x, this.position.y, numX, numY);
+            }
+        }
     },
     //WIP
     _checkHalfBlock: function(half, x, y) {
