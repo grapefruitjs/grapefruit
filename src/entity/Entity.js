@@ -104,7 +104,7 @@ gf.Entity = function(pos, settings) {
      * @type Vector
      * @default 0.98 (earth's gravity)
      */
-    this.gravity = gf.game.gravity || 0.98;
+    this.gravity = gf.game.gravity !== undefined ? gf.game.gravity : 0.98;
 
     /**
      * Whether or not the entity is "alive", advisory only
@@ -329,6 +329,16 @@ gf.inherits(gf.Entity, gf.Sprite, {
         this.onMove(vel);
 
         return this;
+    },
+    /**
+     * Overrides base update to do some calculations. Called internally on each frame
+     *
+     * @method update
+     */
+    update: function() {
+        gf.Sprite.prototype.update.call(this);
+
+        this.updateMovement();
     },
     /**
      * On Collision Event

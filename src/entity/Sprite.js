@@ -51,7 +51,7 @@ gf.Sprite = function(pos, settings) {
     this.currentAnim = null;
 
     //call base ctor
-    PIXI.DisplayObjectContainer.call(this);
+    gf.DisplayObject.call(this);
 
     //mixin user's settings
     gf.utils.setValues(this, settings);
@@ -64,7 +64,7 @@ gf.Sprite = function(pos, settings) {
     }
 };
 
-gf.inherits(gf.Sprite, PIXI.DisplayObjectContainer, {
+gf.inherits(gf.Sprite, gf.DisplayObject, {
     /**
      * Defines a new animation on the Sprite
      *
