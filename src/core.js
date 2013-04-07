@@ -721,13 +721,13 @@ gf.game = {
         if(gf.debug.showFps) {
             gf.debug._fpsCounter = new gf.debug.FpsCounter();
             for(var s in gf.debug.fpsStyle) {
-                gf.debug._info.domElement.style[s] = gf.debug.fpsStyle[s];
+                gf.debug._fpsCounter.domElement.style[s] = gf.debug.fpsStyle[s];
             }
             document.body.appendChild(gf.debug._fpsCounter.domElement);
         }
 
         //debug info
-        if(gf.debug.showInfo) {
+        if(gf.debug._info) {
             gf.debug._info = new gf.debug.Info();
             for(var s2 in gf.debug.infoStyle) {
                 gf.debug._info.domElement.style[s2] = gf.debug.infoStyle[s2];
@@ -752,6 +752,13 @@ gf.game = {
         gf.game._renderer.view.style.width = w;
         gf.game._renderer.view.style.height = h;
         gf.game._renderer.resize(w, h);
+
+        for(var i = 0, il = gf.game._stage.children.length; i < il; ++i) {
+            var o = gf.game._stage.children[i];
+
+            if(o.visible && o.resize)
+                o.resize();
+        }
     },
     /**
      * Adds an object to the current stage
@@ -888,7 +895,7 @@ gf.game = {
         gf.gamepad.update();
 
         //update each object
-        for(var i = 0, il = gf.game._stage.children; i < il; ++i) {
+        for(var i = 0, il = gf.game._stage.children.length; i < il; ++i) {
             var o = gf.game._stage.children[i];
 
             if(o.visible && o.update)
