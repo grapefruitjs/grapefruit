@@ -259,19 +259,6 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
         return this;
     },
     /**
-     * Sets whether or not this sprite is interactive (can be clicked)
-     *
-     * @method setInteractive
-     * @param interactive {Boolean}
-     */
-    setInteractive: function(interactive) {
-        this.interactive = interactive;
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            if(this.children[i].setInteractive)
-                this.children[i].setInteractive(interactive);
-        }
-    },
-    /**
      * Checks if the name is the active animation
      *
      * @method isActiveAnimation
@@ -286,5 +273,49 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
      */
     isActiveAnimation: function(name) {
         return this.currentAnim.name === name;
+    },
+    /**
+     * Sets whether or not this sprite is interactive (can be clicked)
+     *
+     * @method setInteractive
+     * @param interactive {Boolean}
+     */
+    setInteractive: function(interactive) {
+        this.interactive = interactive;
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            if(this.children[i].setInteractive)
+                this.children[i].setInteractive(interactive);
+        }
     }
 });
+
+//Add some PIXI.MovieClip functions that just call that
+// function for the currently playing animation
+['stop', 'play', 'gotoAndStop', 'gotoAndPlay'].forEach(function(fn) {
+    gf.Sprite.prototype[fn] = function() {
+        if(this.currentAnim && this.currentAnim[fn])
+            this.currentAnim[fn].apply(this.currentAnim, arguments);
+    };
+});
+
+/**
+ * Stops the currently active animation
+ * @method stop
+ */
+
+/**
+ * Plays the currently active animation
+ * @method play
+ */
+
+/**
+ * Stops the currently active animation and goes to a specific frame
+ * @method gotoAndStop
+ * @param frameNumber {Number} frame index to stop at
+ */
+
+/**
+ * Goes to a specific frame and begins playing the currently active animation
+ * @method gotoAndPlay
+ * @param frameNumber {Number} frame index to start at
+ */
