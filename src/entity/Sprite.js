@@ -51,8 +51,9 @@ gf.Sprite = function(pos, settings) {
     this.currentAnim = null;
 
     /**
-     * Whether or not this Sprite is interactive. Please use setInteractive
-     * instead of setting this manually.
+     * Whether or not this Sprite is interactive. Please either pass this in with the
+     * ctor or use setInteractive to change it later. Changing this property directly
+     * on-the-fly will yield unexpected results.
      *
      * @property interactive
      * @type Boolean
