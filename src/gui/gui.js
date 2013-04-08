@@ -1,12 +1,24 @@
-(function() {
-    gf.gui = {
-        //have we initialized the gui already?
-        _initialized: false,
+/**
+ * The base Gui that holds GuiItems to be presented as a Gui
+ *
+ * @module gf
+ * @class Gui
+ * @extends DisplayObject
+ * @constructor
+ * @param pos {Array|Vector|Point} The starting position of the sprite
+ * @param settings {Object} Settings to override the defauls
+ */
+gf.Gui = function(pos, settings) {
+    /**
+     * The name of the Gui
+     *
+     * @property name
+     * @type String
+     * @default ''
+     */
+    this.name = '';
 
-        init: function() {
-            if(gf.gui._initialized) return;
+    gf.DisplayObject.call(this);
+};
 
-            gf.gui._initialized = true;
-        }
-    };
-})();
+gf.inherits(gf.GuiItem, gf.DisplayObject);

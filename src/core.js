@@ -715,9 +715,6 @@ gf.game = {
         //initialize the controls
         gf.controls.init();
 
-        //initialize the GUI (HUD, menus, etc)
-        gf.gui.init();
-
         //initialize gamepad support
         gf.gamepad.init();
 
