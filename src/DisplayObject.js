@@ -23,31 +23,31 @@ gf.DisplayObject = function() {
      * @property position
      * @type Point
      */
-    
+
     /**
      * The scale factor of the object.
      * @property scale
      * @type Point
      */
-    
+
     /**
      * The rotation of the object in radians.
      * @property rotation
      * @type Number
      */
-    
+
     /**
      * The opacity of the object.
      * @property alpha
      * @type Number
      */
-    
+
     /**
      * The visibility of the object.
      * @property visible
      * @type Boolean
      */
-    
+
     /**
      * [read-only] The display object that contains this display object.
      * @property parent
