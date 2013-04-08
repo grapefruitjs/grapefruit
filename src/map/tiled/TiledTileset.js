@@ -15,7 +15,7 @@ gf.TiledTileset = function(settings) {
     }
 
     //initialize the base Texture class
-    PIXI.Texture.call(this, gf.assetCache[settings.name + '_texture'].baseTexture);
+    gf.Texture.call(this, gf.assetCache[settings.name + '_texture'].baseTexture);
 
     /**
      * The size of the tileset
@@ -125,7 +125,7 @@ gf.TiledTileset = function(settings) {
             x = (t - (y * this.numTiles.x));
 
         this.textures.push(
-            new PIXI.Texture(
+            new gf.Texture(
                 this.baseTexture,
                 new PIXI.Rectangle(
                     x * this.tileSize.x,
@@ -138,7 +138,7 @@ gf.TiledTileset = function(settings) {
     }
 };
 
-gf.inherits(gf.TiledTileset, PIXI.Texture, {
+gf.inherits(gf.TiledTileset, gf.Texture, {
     /**
      * Gets the tile properties for a tile based on it's ID
      *
@@ -169,7 +169,7 @@ gf.inherits(gf.TiledTileset, PIXI.Texture, {
      *
      * @method getTileTexture
      * @param tileId {Number} The id of the tile to get the texture for
-     * @return {PIXI.Texture} The texture for the tile
+     * @return {Texture} The texture for the tile
      */
     getTileTexture: function(tileId) {
         if(tileId === undefined) return null;
