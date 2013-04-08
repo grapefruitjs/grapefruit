@@ -50,6 +50,15 @@ gf.Sprite = function(pos, settings) {
      */
     this.currentAnim = null;
 
+    /**
+     * Whether or not this Sprite is interactive. Please use setInteractive
+     * instead of setting this manually.
+     *
+     * @property interactive
+     * @type Boolean
+     */
+    this.interactive = false;
+
     //call base ctor
     gf.DisplayObject.call(this);
 
@@ -62,6 +71,74 @@ gf.Sprite = function(pos, settings) {
             this.addAnimation(name, settings.animations[name]);
         }
     }
+
+    //if a texture is passed, make this just display the texture
+    if(settings.texture) {
+        var spr = new PIXI.Sprite(settings.texture);
+        if(settings.interactive) spr.setInteractive(true);
+        this.addChild(spr);
+        this.anim['default'] = spr;
+    }
+
+    //copied from http://www.goodboydigital.com/pixijs/docs/files/src_pixi_Sprite.js.html
+
+    /*
+    * MOUSE Callbacks
+    */
+    /**
+    * A callback that is used when the users clicks on the sprite with thier mouse
+    * @method click
+    * @param interactionData {InteractionData}
+    */
+
+    /**
+    * A callback that is used when the user clicks the mouse down over the sprite
+    * @method mousedown
+    * @param interactionData {InteractionData}
+    */
+
+    /**
+    * A callback that is used when the user releases the mouse that was over the sprite
+    * for this callback to be fired the mouse must have been pressed down over the sprite
+    * @method mouseup
+    * @param interactionData {InteractionData}
+    */
+
+    /**
+    * A callback that is used when the users mouse rolls over the sprite
+    * @method mouseover
+    * @param interactionData {InteractionData}
+    */
+
+    /**
+    * A callback that is used when the users mouse leaves the sprite
+    * @method mouseout
+    * @param interactionData {InteractionData}
+    */
+
+    /*
+    * TOUCH Callbacks
+    */
+
+    /**
+    * A callback that is used when the users taps on the sprite with thier finger
+    * basically a touch version of click
+    * @method tap
+    * @param interactionData {InteractionData}
+    */
+
+    /**
+    * A callback that is used when the user touch's over the sprite
+    * @method touchstart
+    * @param interactionData {InteractionData}
+    */
+
+    /**
+    * A callback that is used when the user releases the touch that was over the sprite
+    * for this callback to be fired. The touch must have started over the sprite
+    * @method touchend
+    * @param interactionData {InteractionData}
+    */
 };
 
 gf.inherits(gf.Sprite, gf.DisplayObject, {
@@ -111,7 +188,11 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
         clip.visible = false;
         clip.name = name;
 
-        if(speed) clip.animationSpeed = speed;
+        if(this.interactive)
+            clip.setInteractive(this.interactive);
+
+        if(speed)
+            clip.animationSpeed = speed;
 
         this.addChild(clip);
 
@@ -176,6 +257,19 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
         }
 
         return this;
+    },
+    /**
+     * Sets whether or not this sprite is interactive (can be clicked)
+     *
+     * @method setInteractive
+     * @param interactive {Boolean}
+     */
+    setInteractive: function(interactive) {
+        this.interactive = interactive;
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            if(this.children[i].setInteractive)
+                this.children[i].setInteractive(interactive);
+        }
     },
     /**
      * Checks if the name is the active animation
