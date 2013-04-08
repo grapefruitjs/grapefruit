@@ -6,8 +6,7 @@
  * @extends DisplayObject
  * @constructor
  * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls, acceptable values
- *          are size {Vector}, name {String}, animations {Object}
+ * @param settings {Object} Settings to override the defauls
  * @example
  *      var spr = new gf.Sprite([10, 1], { name: 'MySprite' });
  */
