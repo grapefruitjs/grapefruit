@@ -6,7 +6,7 @@
  * @class entityPool
  */
 gf.entityPool = {
-    _objects = {},
+    _objects: {},
     /**
      * Adds an entity Object to the pool
      *
