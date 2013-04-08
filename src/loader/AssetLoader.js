@@ -1,6 +1,6 @@
 gf.AssetLoader = function(resources) {
     //mixin the Event Target methods
-    PIXI.EventTarget.call(this);
+    gf.EventTarget.call(this);
 
     /**
     * The array of asset URLs that are going to be loaded
