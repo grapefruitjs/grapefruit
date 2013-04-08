@@ -3,7 +3,7 @@
  *
  * @module gf
  * @class Layer
- * @extends DisplayObjectContainer
+ * @extends DisplayObject
  * @constructor
  * @param layer {Object} All the settings for the layer
  */

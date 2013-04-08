@@ -3,7 +3,7 @@
  *
  * @module gf
  * @class Map
- * @extends DisplayObjectContainer
+ * @extends DisplayObject
  * @constructor
  * @param map {Object} All the settings for the map
  */
