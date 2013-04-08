@@ -3,7 +3,7 @@
  *
  * @module gf
  * @class Sprite
- * @extends PIXI.MovieClip
+ * @extends DisplayObject
  * @constructor
  * @param pos {Array|Vector|Point} The starting position of the sprite
  * @param settings {Object} Settings to override the defauls, acceptable values
