@@ -51,7 +51,13 @@
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
             
+                <li><a href="..&#x2F;classes/EventTarget.html">EventTarget</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
+            
+                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -64,6 +70,8 @@
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Texture.html">Texture</a></li>
             
                 <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
             
@@ -124,94 +132,92 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-(function() {
-    var entObjects = {};
-
+&#x2F;**
+ * Holds a pool of different Entities that can be created, makes it very
+ * easy to quickly create different registered entities
+ *
+ * @module gf
+ * @class entityPool
+ *&#x2F;
+gf.entityPool = {
+    _objects: {},
     &#x2F;**
-     * Holds a pool of different Entities that can be created, makes it very
-     * easy to quickly create different registered entities
+     * Adds an entity Object to the pool
      *
-     * @module gf
-     * @class entityPool
+     * @method add
+     * @param name {String} The user-defined name of the Entity to add
+     * @param obj {Object} The Entity or decendant to add to the pool
+     * @return {Object} Returns the passed object
+     * @example
+     *      &#x2F;&#x2F;create a new ckass to be instantiated
+     *      var Bug = gf.entityPool.add(&#x27;bug&#x27;, gf.Entity.extend({
+     *          &#x2F;&#x2F;ctor function
+     *          init: function(pos, settings) {
+     *              &#x2F;&#x2F;call the base ctor
+     *              this._super(pos, settings);
+     *
+     *              this.color = &#x27;red&#x27;;
+     *          },
+     *          beBug: function() {
+     *              console.log(&quot;I&#x27;m a bug&quot;);
+     *          }
+     *      }));
+     *
+     *      &#x2F;&#x2F;then later in your game code
+     *      var mybug = gf.entityPool.create(&#x27;bug&#x27;, {
+     *          pos: [10, 10]
+     *      });
      *&#x2F;
-    gf.entityPool = {
-        &#x2F;**
-         * Adds an entity Object to the pool
-         *
-         * @method add
-         * @param name {String} The user-defined name of the Entity to add
-         * @param obj {Object} The Entity or decendant to add to the pool
-         * @return {Object} Returns the passed object
-         * @example
-         *      &#x2F;&#x2F;create a new ckass to be instantiated
-         *      var Bug = gf.entityPool.add(&#x27;bug&#x27;, gf.Entity.extend({
-         *          &#x2F;&#x2F;ctor function
-         *          init: function(pos, settings) {
-         *              &#x2F;&#x2F;call the base ctor
-         *              this._super(pos, settings);
-         *
-         *              this.color = &#x27;red&#x27;;
-         *          },
-         *          beBug: function() {
-         *              console.log(&quot;I&#x27;m a bug&quot;);
-         *          }
-         *      }));
-         *
-         *      &#x2F;&#x2F;then later in your game code
-         *      var mybug = gf.entityPool.create(&#x27;bug&#x27;, {
-         *          pos: [10, 10]
-         *      });
-         *&#x2F;
-        add: function(name, obj) {
-            return entObjects[name] = obj;
-        },
-        &#x2F;**
-         * Checks if the entity exists in the pool
-         *
-         * @method add
-         * @param name {String} The user-defined name of the Entity to check if is in the pool
-         * @return {Boolean} Returns the passed object
-         *&#x2F;
-        has: function(name) {
-            return !!entObjects[name];
-        },
-        &#x2F;**
-         * Creates a new entity from the pool
-         *
-         * @method add
-         * @param name {String} The user-defined name of the Entity to check if is in the pool
-         * @param props {Object} The properties that would normally be passed as the &quot;settings&quot; of the Entity
-         * @return {Entity} Returns a new instance of the object from the pool
-         * @example
-         *      &#x2F;&#x2F;create a new ckass to be instantiated
-         *      var Bug = function(pos, settings) {
-         *          gf.Entity.call(this, pos, settings);
-         *          this.color = &#x27;red&#x27;;
-         *      };
-         *
-         *      gf.inherits(Bug, gf.Entity, {
-         *          beBug: function() {
-         *              console.log(&quot;I&#x27;m a bug&quot;);
-         *          }
-         *      });
-         *
-         *      &#x2F;&#x2F;then later in your game code
-         *      var mybug = gf.entityPool.create(&#x27;bug&#x27;, {
-         *          pos: [10, 10] &#x2F;&#x2F;pos, and&#x2F;or position properties get sent as the first param to the ctor
-         *      });
-         *&#x2F;
-        create: function(name, props) {
-            &#x2F;&#x2F;if the name is in our pool, create it
-            if(name &amp;&amp; gf.entityPool.has(name)) {
-                return new entObjects[name](props.pos || props.position || [props.x, props.y], props);
-            }
-            &#x2F;&#x2F;otherwise create a general Entity
-            else {
-                return new gf.Entity(props.pos || props.position || [props.x, props.y], props);
-            }
+    add: function(name, obj) {
+        return gf.entityPool._objects[name] = obj;
+    },
+    &#x2F;**
+     * Checks if the entity exists in the pool
+     *
+     * @method has
+     * @param name {String} The user-defined name of the Entity to check if is in the pool
+     * @return {Boolean} Returns the passed object
+     *&#x2F;
+    has: function(name) {
+        return !!gf.entityPool._objects[name];
+    },
+    &#x2F;**
+     * Creates a new entity from the pool
+     *
+     * @method create
+     * @param name {String} The user-defined name of the Entity to check if is in the pool
+     * @param props {Object} The properties that would normally be passed as the &quot;settings&quot; of the Entity
+     * @return {Entity} Returns a new instance of the object from the pool
+     * @example
+     *      &#x2F;&#x2F;create a new ckass to be instantiated
+     *      var Bug = function(pos, settings) {
+     *          gf.Entity.call(this, pos, settings);
+     *          this.color = &#x27;red&#x27;;
+     *      };
+     *
+     *      gf.inherits(Bug, gf.Entity, {
+     *          beBug: function() {
+     *              console.log(&quot;I&#x27;m a bug&quot;);
+     *          }
+     *      });
+     *
+     *      &#x2F;&#x2F;then later in your game code
+     *      var mybug = gf.entityPool.create(&#x27;bug&#x27;, {
+     *          pos: [10, 10] &#x2F;&#x2F;pos, and&#x2F;or position properties get sent as the first param to the ctor
+     *      });
+     *&#x2F;
+    create: function(name, props) {
+        &#x2F;&#x2F;if the name is in our pool, create it
+        if(name &amp;&amp; gf.entityPool.has(name)) {
+            return new gf.entityPool._objects[name](props.pos || props.position || [props.x, props.y], props);
         }
-    };
-})();
+        &#x2F;&#x2F;otherwise create a general Entity
+        else {
+            return new gf.Entity(props.pos || props.position || [props.x, props.y], props);
+        }
+    }
+};
+
     </pre>
 </div>
 

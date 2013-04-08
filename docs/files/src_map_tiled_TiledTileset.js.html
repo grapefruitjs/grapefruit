@@ -51,7 +51,13 @@
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
             
+                <li><a href="..&#x2F;classes/EventTarget.html">EventTarget</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
+            
+                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -64,6 +70,8 @@
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Texture.html">Texture</a></li>
             
                 <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
             
@@ -141,7 +149,7 @@ gf.TiledTileset = function(settings) {
     }
 
     &#x2F;&#x2F;initialize the base Texture class
-    PIXI.Texture.call(this, gf.assetCache[settings.name + &#x27;_texture&#x27;].baseTexture);
+    gf.Texture.call(this, gf.assetCache[settings.name + &#x27;_texture&#x27;].baseTexture);
 
     &#x2F;**
      * The size of the tileset
@@ -251,7 +259,7 @@ gf.TiledTileset = function(settings) {
             x = (t - (y * this.numTiles.x));
 
         this.textures.push(
-            new PIXI.Texture(
+            new gf.Texture(
                 this.baseTexture,
                 new PIXI.Rectangle(
                     x * this.tileSize.x,
@@ -264,7 +272,7 @@ gf.TiledTileset = function(settings) {
     }
 };
 
-gf.inherits(gf.TiledTileset, PIXI.Texture, {
+gf.inherits(gf.TiledTileset, gf.Texture, {
     &#x2F;**
      * Gets the tile properties for a tile based on it&#x27;s ID
      *
@@ -295,7 +303,7 @@ gf.inherits(gf.TiledTileset, PIXI.Texture, {
      *
      * @method getTileTexture
      * @param tileId {Number} The id of the tile to get the texture for
-     * @return {PIXI.Texture} The texture for the tile
+     * @return {Texture} The texture for the tile
      *&#x2F;
     getTileTexture: function(tileId) {
         if(tileId === undefined) return null;

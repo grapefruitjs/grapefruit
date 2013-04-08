@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\map\tiled\TiledLayer.js - gf</title>
+    <title>GuiElement - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -128,127 +128,66 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\map\tiled\TiledLayer.js</h1>
+                        <h1>GuiElement Class</h1>
+<div class="box meta">
+    
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-&#x2F;**
- * The TiledLayer is the visual tiled layer that actually displays on the screen
- *
- * This class will be created by the TiledMap, there shouldn&#x27;t be a reason to
- * create an instance on your own.
- *
- * @module gf
- * @class TiledLayer
- * @extends Layer
- * @constructor
- * @param layer {Object} All the settings for the layer
- *&#x2F;
-&#x2F;&#x2F;see: https:&#x2F;&#x2F;github.com&#x2F;GoodBoyDigital&#x2F;pixi.js&#x2F;issues&#x2F;48
-gf.TiledLayer = function(layer) {
-    gf.Layer.call(this, layer);
+    
 
-    &#x2F;**
-     * The tile IDs of the tilemap
-     *
-     * @property name
-     * @type Uint32Array
-     *&#x2F;
-    this.tiles = new Uint32Array(layer.data);
+    
+        <div class="foundat">
+            Defined in: <a href="..&#x2F;files&#x2F;src_gui_GuiItem.js.html#l1"><code>src\gui\GuiItem.js:1</code></a>
+        </div>
+    
 
-    &#x2F;**
-     * The sprite pool for rendering tiles
-     *
-     * @property tilePool
-     * @type Array
-     *&#x2F;
-    this.spritePool = [];
+    
+        
+            Module: <a href="../modules/gf.html">gf</a>
+        
+    
 
-    &#x2F;&#x2F;translate some tiled properties to our inherited properties
-    this.position.x = layer.x;
-    this.position.y = layer.y;
-    this.alpha = layer.opacity;
-};
+    
+</div>
 
-gf.inherits(gf.TiledLayer, gf.Layer, {
-    &#x2F;**
-     * Creates all the tile sprites needed to display the layer
-     *
-     * @method renderTiles
-     *&#x2F;
-    renderTiles: function(startX, startY, numX, numY) {
-        for(var x = startX; x &lt; numX; ++x) {
-            for(var y = startY; y &lt; numY; ++y) {
-                var id = (x + (y * this.size.x)),
-                    tile = this.tiles[id],
-                    set = this.parent.getTileset(tile);
 
-                if(!set) continue;
 
-                var spr = this.getTileSprite(tile, set);
+<div class="box intro">
+    <p>The base GuiItem that represents an element of a gui on the screen.</p>
+</div>
 
-                spr.position.x = x * this.parent.tileSize.x;
-                spr.position.y = y * this.parent.tileSize.y;
-                &#x2F;&#x2F;spr.scale = this.scale;
-                &#x2F;&#x2F;spr.rotation = this.rotation;
-                &#x2F;&#x2F;spr.alpha = this.alpha;
-                this.addChild(spr);
-            }
-        }
-    },
-    &#x2F;**
-     * Creates the sprite for a tile utilizing a pool for the sprites
-     *
-     * @method getTileSprite
-     * @param tileId {Number} The id of the tile to get a sprite for
-     * @param TiledTileset {tileset} The tileset to get the texture from
-     * @return {PIXI.Sprite} The sprite to display
-     *&#x2F;
-    getTileSprite: function(id, tileset) {
-        return this.spritePool.pop() || new PIXI.Sprite(tileset.getTileTexture(id));
-    },
-    &#x2F;**
-     * Frees a sprite back into the pool
-     *
-     * @method freeTileSprite
-     * @param sprite {PIXI.Sprite} The sprite to release to the pool
-     *&#x2F;
-    freeTileSprite: function(spr) {
-        this.spritePool.push(spr);
-    },
-    &#x2F;**
-     * Transforms an x,y coord into the index of a tile in the tiles array
-     *
-     * @method getTileIndex
-     * @param x {Number|Vector} The x coord to transform, if a vector is passed it&#x27;s x&#x2F;y is used and the y param is ignored
-     * @param y {Number} The y coord to transform
-     * @return {Number}
-     *&#x2F;
-    getTileIndex: function(x, y) {
-        x = x instanceof gf.Vector ? x.x : x;
-        y = x instanceof gf.Vector ? x.y : y;
 
-        &#x2F;&#x2F;convert the position from units to tiles
-        x = ~~(x &#x2F; this.parent.tileSize.x);
-        y = ~~(y &#x2F; this.parent.tileSize.y);
 
-        &#x2F;&#x2F;calculate index of this tile
-        return (x + (y * this.size.x));
-    },
-    &#x2F;**
-     * Transforms an x,y coord into the TiledTileset tile id
-     *
-     * @method getTileId
-     * @param x {Number|Vector} The x coord to transform, if a vector is passed it&#x27;s x&#x2F;y is used and the y param is ignored
-     * @param y {Number} The y coord to transform
-     * @return {Number}
-     *&#x2F;
-    getTileId: function(x, y) {
-        return this.tiles[this.getTileIndex(x, y)];
-    }
-});
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-    </pre>
+        
+        
+        
+        
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+            
+
+            
+
+            
+
+            
+        </div>
+
+        
+
+        
+
+        
+
+        
+    </div>
 </div>
 
                     </div>

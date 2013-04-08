@@ -51,7 +51,13 @@
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
             
+                <li><a href="..&#x2F;classes/EventTarget.html">EventTarget</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
+            
+                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -64,6 +70,8 @@
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Texture.html">Texture</a></li>
             
                 <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
             
@@ -128,7 +136,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l4"><code>src\entity\entityPool.js:4</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l1"><code>src\entity\entityPool.js:1</code></a>
         </div>
     
 
@@ -180,14 +188,14 @@ easy to quickly create different registered entities</p>
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_add">add</a>
+                                <a href="#method_create">create</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_add">add</a>
+                                <a href="#method_has">has</a>
 
                                 
                                 
@@ -261,7 +269,7 @@ easy to quickly create different registered entities</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l12"><code>src\entity\entityPool.js:12</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l10"><code>src\entity\entityPool.js:10</code></a>
         
         </p>
 
@@ -360,112 +368,8 @@ easy to quickly create different registered entities</p>
 </div>
 
                 
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>name</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Boolean</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l42"><code>src\entity\entityPool.js:42</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Checks if the entity exists in the pool</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The user-defined name of the Entity to check if is in the pool</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Boolean</span>:
-                    
-                    Returns the passed object
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_add" class="method item">
-    <h3 class="name"><code>add</code></h3>
+                    <div id="method_create" class="method item">
+    <h3 class="name"><code>create</code></h3>
 
     
         <div class="args">
@@ -516,7 +420,7 @@ easy to quickly create different registered entities</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l52"><code>src\entity\entityPool.js:52</code></a>
+        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l50"><code>src\entity\entityPool.js:50</code></a>
         
         </p>
 
@@ -609,6 +513,110 @@ easy to quickly create different registered entities</p>
 </code></pre>
             </div>
         </div>
+    
+</div>
+
+                
+                    <div id="method_has" class="method item">
+    <h3 class="name"><code>has</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_entity_entityPool.js.html#l40"><code>src\entity\entityPool.js:40</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Checks if the entity exists in the pool</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The user-defined name of the Entity to check if is in the pool</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns the passed object
+                
+            </div>
+        </div>
+    
+
     
 </div>
 

@@ -51,7 +51,13 @@
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
             
+                <li><a href="..&#x2F;classes/EventTarget.html">EventTarget</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
+            
+                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -64,6 +70,8 @@
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Texture.html">Texture</a></li>
             
                 <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
             
@@ -126,7 +134,7 @@
     <pre class="code prettyprint linenums">
 gf.AssetLoader = function(resources) {
     &#x2F;&#x2F;mixin the Event Target methods
-    PIXI.EventTarget.call(this);
+    gf.EventTarget.call(this);
 
     &#x2F;**
     * The array of asset URLs that are going to be loaded
@@ -169,7 +177,7 @@ gf.inherits(gf.AssetLoader, Object, {
         this.loadCount++;
 
         var self = this,
-            texture = PIXI.Texture.fromImage(url);
+            texture = gf.Texture.fromImage(url);
 
         this._storeAsset(name, texture);
 
@@ -248,14 +256,14 @@ gf.inherits(gf.AssetLoader, Object, {
                 &#x2F;&#x2F;this is a sprite sheet (published from TexturePacker)
                 else if(data.frames &amp;&amp; data.meta) {
                     var textureUrl = baseUrl + data.meta.image,
-                        texture =  PIXI.Texture.fromImage(textureUrl).baseTexture,
+                        texture =  gf.Texture.fromImage(textureUrl).baseTexture,
                         frames = data.frames,
                         assets = [];
 
                     for(var f in frames) {
                         var rect = frames[f].frame;
 
-                        PIXI.TextureCache[f] = new PIXI.Texture(texture, { x: rect.x, y: rect.y, width: rect.w, height: rect.h });
+                        PIXI.TextureCache[f] = new gf.Texture(texture, { x: rect.x, y: rect.y, width: rect.w, height: rect.h });
 
                         if(frames[f].trimmed) {
                             PIXI.TextureCache[f].realSize = frames[f].spriteSourceSize;

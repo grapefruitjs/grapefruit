@@ -51,7 +51,13 @@
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
             
+                <li><a href="..&#x2F;classes/EventTarget.html">EventTarget</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
+            
+                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -64,6 +70,8 @@
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Texture.html">Texture</a></li>
             
                 <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
             
@@ -134,6 +142,70 @@
  *&#x2F;
 gf.DisplayObject = function() {
     PIXI.DisplayObjectContainer.call(this);
+
+    &#x2F;&#x2F;Add these properties in so that all objects can see them in the docs
+    &#x2F;&#x2F;these properties are inherited from PIXI.DisplayObjectContainer
+    &#x2F;&#x2F;most of these blocks are copied straight from PIXI source
+
+    &#x2F;**
+     * [read-only] The of children of this object.
+     * @property children {Array}
+     *&#x2F;
+
+    &#x2F;**
+     * The coordinate of the object relative to the local coordinates of the parent.
+     * @property position
+     * @type Point
+     *&#x2F;
+
+    &#x2F;**
+     * The scale factor of the object.
+     * @property scale
+     * @type Point
+     *&#x2F;
+
+    &#x2F;**
+     * The rotation of the object in radians.
+     * @property rotation
+     * @type Number
+     *&#x2F;
+
+    &#x2F;**
+     * The opacity of the object.
+     * @property alpha
+     * @type Number
+     *&#x2F;
+
+    &#x2F;**
+     * The visibility of the object.
+     * @property visible
+     * @type Boolean
+     *&#x2F;
+
+    &#x2F;**
+     * [read-only] The display object that contains this display object.
+     * @property parent
+     * @type DisplayObject
+     *&#x2F;
+
+    &#x2F;**
+     * Adds a child to the object.
+     * @method addChild
+     * @param child {DisplayObject}
+     *&#x2F;
+
+    &#x2F;**
+     * Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown
+     * @method addChildAt
+     * @param child {DisplayObject}
+     * @param index {Number}
+     *&#x2F;
+
+    &#x2F;**
+     * Removes a child from the object.
+     * @method removeChild
+     * @param child {DisplayObject}
+     *&#x2F;
 };
 
 gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {

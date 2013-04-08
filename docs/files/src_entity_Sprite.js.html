@@ -51,7 +51,13 @@
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
             
+                <li><a href="..&#x2F;classes/EventTarget.html">EventTarget</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
+            
+                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -64,6 +70,8 @@
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Texture.html">Texture</a></li>
             
                 <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
             
@@ -129,11 +137,10 @@
  *
  * @module gf
  * @class Sprite
- * @extends PIXI.MovieClip
+ * @extends DisplayObject
  * @constructor
  * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls, acceptable values
- *          are size {Vector}, name {String}, animations {Object}
+ * @param settings {Object} Settings to override the defauls
  * @example
  *      var spr = new gf.Sprite([10, 1], { name: &#x27;MySprite&#x27; });
  *&#x2F;
@@ -176,6 +183,16 @@ gf.Sprite = function(pos, settings) {
      *&#x2F;
     this.currentAnim = null;
 
+    &#x2F;**
+     * Whether or not this Sprite is interactive. Please either pass this in with the
+     * ctor or use setInteractive to change it later. Changing this property directly
+     * on-the-fly will yield unexpected results.
+     *
+     * @property interactive
+     * @type Boolean
+     *&#x2F;
+    this.interactive = false;
+
     &#x2F;&#x2F;call base ctor
     gf.DisplayObject.call(this);
 
@@ -188,6 +205,74 @@ gf.Sprite = function(pos, settings) {
             this.addAnimation(name, settings.animations[name]);
         }
     }
+
+    &#x2F;&#x2F;if a texture is passed, make this just display the texture
+    if(settings.texture) {
+        var spr = new PIXI.Sprite(settings.texture);
+        if(settings.interactive) spr.setInteractive(true);
+        this.addChild(spr);
+        this.anim[&#x27;default&#x27;] = spr;
+    }
+
+    &#x2F;&#x2F;copied from http:&#x2F;&#x2F;www.goodboydigital.com&#x2F;pixijs&#x2F;docs&#x2F;files&#x2F;src_pixi_Sprite.js.html
+
+    &#x2F;*
+    * MOUSE Callbacks
+    *&#x2F;
+    &#x2F;**
+    * A callback that is used when the users clicks on the sprite with thier mouse
+    * @method click
+    * @param interactionData {InteractionData}
+    *&#x2F;
+
+    &#x2F;**
+    * A callback that is used when the user clicks the mouse down over the sprite
+    * @method mousedown
+    * @param interactionData {InteractionData}
+    *&#x2F;
+
+    &#x2F;**
+    * A callback that is used when the user releases the mouse that was over the sprite
+    * for this callback to be fired the mouse must have been pressed down over the sprite
+    * @method mouseup
+    * @param interactionData {InteractionData}
+    *&#x2F;
+
+    &#x2F;**
+    * A callback that is used when the users mouse rolls over the sprite
+    * @method mouseover
+    * @param interactionData {InteractionData}
+    *&#x2F;
+
+    &#x2F;**
+    * A callback that is used when the users mouse leaves the sprite
+    * @method mouseout
+    * @param interactionData {InteractionData}
+    *&#x2F;
+
+    &#x2F;*
+    * TOUCH Callbacks
+    *&#x2F;
+
+    &#x2F;**
+    * A callback that is used when the users taps on the sprite with thier finger
+    * basically a touch version of click
+    * @method tap
+    * @param interactionData {InteractionData}
+    *&#x2F;
+
+    &#x2F;**
+    * A callback that is used when the user touch&#x27;s over the sprite
+    * @method touchstart
+    * @param interactionData {InteractionData}
+    *&#x2F;
+
+    &#x2F;**
+    * A callback that is used when the user releases the touch that was over the sprite
+    * for this callback to be fired. The touch must have started over the sprite
+    * @method touchend
+    * @param interactionData {InteractionData}
+    *&#x2F;
 };
 
 gf.inherits(gf.Sprite, gf.DisplayObject, {
@@ -237,7 +322,11 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
         clip.visible = false;
         clip.name = name;
 
-        if(speed) clip.animationSpeed = speed;
+        if(this.interactive)
+            clip.setInteractive(this.interactive);
+
+        if(speed)
+            clip.animationSpeed = speed;
 
         this.addChild(clip);
 
@@ -318,8 +407,52 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
      *&#x2F;
     isActiveAnimation: function(name) {
         return this.currentAnim.name === name;
+    },
+    &#x2F;**
+     * Sets whether or not this sprite is interactive (can be clicked)
+     *
+     * @method setInteractive
+     * @param interactive {Boolean}
+     *&#x2F;
+    setInteractive: function(interactive) {
+        this.interactive = interactive;
+        for(var i = 0, il = this.children.length; i &lt; il; ++i) {
+            if(this.children[i].setInteractive)
+                this.children[i].setInteractive(interactive);
+        }
     }
 });
+
+&#x2F;&#x2F;Add some PIXI.MovieClip functions that just call that
+&#x2F;&#x2F; function for the currently playing animation
+[&#x27;stop&#x27;, &#x27;play&#x27;, &#x27;gotoAndStop&#x27;, &#x27;gotoAndPlay&#x27;].forEach(function(fn) {
+    gf.Sprite.prototype[fn] = function() {
+        if(this.currentAnim &amp;&amp; this.currentAnim[fn])
+            this.currentAnim[fn].apply(this.currentAnim, arguments);
+    };
+});
+
+&#x2F;**
+ * Stops the currently active animation
+ * @method stop
+ *&#x2F;
+
+&#x2F;**
+ * Plays the currently active animation
+ * @method play
+ *&#x2F;
+
+&#x2F;**
+ * Stops the currently active animation and goes to a specific frame
+ * @method gotoAndStop
+ * @param frameNumber {Number} frame index to stop at
+ *&#x2F;
+
+&#x2F;**
+ * Goes to a specific frame and begins playing the currently active animation
+ * @method gotoAndPlay
+ * @param frameNumber {Number} frame index to start at
+ *&#x2F;
     </pre>
 </div>
 

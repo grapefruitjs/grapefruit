@@ -51,7 +51,13 @@
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
             
+                <li><a href="..&#x2F;classes/EventTarget.html">EventTarget</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
+            
+                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -64,6 +70,8 @@
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
+            
+                <li><a href="..&#x2F;classes/Texture.html">Texture</a></li>
             
                 <li><a href="..&#x2F;classes/TiledLayer.html">TiledLayer</a></li>
             
@@ -174,10 +182,17 @@ gf.Point = PIXI.Point;
  * Texture object, please see &lt;a href=&quot;http:&#x2F;&#x2F;www.goodboydigital.com&#x2F;pixijs&#x2F;docs&#x2F;classes&#x2F;Texture.html&quot;&gt;PIXI.Texture&lt;&#x2F;a&gt;
  *
  * @module gf
- * @class Point
+ * @class Texture
  *&#x2F;
 gf.Texture = PIXI.Texture;
 
+&#x2F;**
+ * EventTarget mixin, please see &lt;a href=&quot;http:&#x2F;&#x2F;www.goodboydigital.com&#x2F;pixijs&#x2F;docs&#x2F;classes&#x2F;EventTarget.html&quot;&gt;PIXI.EventTarget&lt;&#x2F;a&gt;
+ *
+ * @module gf
+ * @class EventTarget
+ *&#x2F;
+gf.EventTarget = PIXI.EventTarget;
 
 &#x2F;**
  * The current grapefruit version
@@ -833,12 +848,6 @@ gf.game = {
 
         &#x2F;&#x2F;initialize the controls
         gf.controls.init();
-
-        &#x2F;&#x2F;initialize the audio player
-        gf.audio.init();
-
-        &#x2F;&#x2F;initialize the GUI (HUD, menus, etc)
-        gf.gui.init();
 
         &#x2F;&#x2F;initialize gamepad support
         gf.gamepad.init();
