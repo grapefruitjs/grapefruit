@@ -48,7 +48,7 @@ gf.Point = PIXI.Point;
  * Texture object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
  *
  * @module gf
- * @class Point
+ * @class Texture
  */
 gf.Texture = PIXI.Texture;
 

@@ -43,7 +43,7 @@ gf.inherits(gf.AssetLoader, Object, {
         this.loadCount++;
 
         var self = this,
-            texture = PIXI.Texture.fromImage(url);
+            texture = gf.Texture.fromImage(url);
 
         this._storeAsset(name, texture);
 
@@ -122,14 +122,14 @@ gf.inherits(gf.AssetLoader, Object, {
                 //this is a sprite sheet (published from TexturePacker)
                 else if(data.frames && data.meta) {
                     var textureUrl = baseUrl + data.meta.image,
-                        texture =  PIXI.Texture.fromImage(textureUrl).baseTexture,
+                        texture =  gf.Texture.fromImage(textureUrl).baseTexture,
                         frames = data.frames,
                         assets = [];
 
                     for(var f in frames) {
                         var rect = frames[f].frame;
 
-                        PIXI.TextureCache[f] = new PIXI.Texture(texture, { x: rect.x, y: rect.y, width: rect.w, height: rect.h });
+                        PIXI.TextureCache[f] = new gf.Texture(texture, { x: rect.x, y: rect.y, width: rect.w, height: rect.h });
 
                         if(frames[f].trimmed) {
                             PIXI.TextureCache[f].realSize = frames[f].spriteSourceSize;
