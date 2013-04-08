@@ -36,20 +36,6 @@
      * @class audio
      */
     gf.audio = {
-        //have we initialized the audio already?
-        _initialized: false,
-
-        /**
-         * Initializes the audio component
-         *
-         * @method init
-         * @private
-         */
-        init: function() {
-            if(gf.audio._initialized) return;
-
-            gf.audio._initialized = true;
-        },
         /**
          * Plays a loaded audio clip
          *
