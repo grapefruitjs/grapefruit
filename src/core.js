@@ -52,6 +52,13 @@ gf.Point = PIXI.Point;
  */
 gf.Texture = PIXI.Texture;
 
+/**
+ * EventTarget mixin, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/EventTarget.html">PIXI.EventTarget</a>
+ *
+ * @module gf
+ * @class EventTarget
+ */
+gf.EventTarget = PIXI.EventTarget;
 
 /**
  * The current grapefruit version
