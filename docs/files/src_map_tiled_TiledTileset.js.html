@@ -45,6 +45,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
+            
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
                 <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/plugin.html">plugin</a></li>
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
@@ -222,7 +226,7 @@ gf.TiledTileset = function(settings) {
      *&#x2F;
     this.tileproperties = settings.tileproperties || {};
 
-    &#x2F;&#x2F;massage normal
+    &#x2F;&#x2F;massage tile properties
     for(var i = 0, il = this.tileproperties.length; i &lt; il; ++i) {
         var v = this.tileproperties[i];
 
@@ -230,6 +234,33 @@ gf.TiledTileset = function(settings) {
 
         if(v.isCollidable === &#x27;true&#x27;) v.isCollidable = true;
         if(v.isBreakable === &#x27;true&#x27;) v.isBreakable = true;
+    }
+
+    &#x2F;**
+     * The texture instances for each tile in the set
+     *
+     * @property textures
+     * @type Array
+     *&#x2F;
+    this.textures = [];
+
+    &#x2F;&#x2F;generate tile textures
+    for(var t = 0, tl = this.lastgid - this.firstgid; t &lt; tl; ++t) {
+        &#x2F;&#x2F;convert the tileId to x,y coords of the tile in the Texture
+        var y = ~~(t &#x2F; this.numTiles.x),
+            x = (t - (y * this.numTiles.x));
+
+        this.textures.push(
+            new PIXI.Texture(
+                this.baseTexture,
+                new PIXI.Rectangle(
+                    x * this.tileSize.x,
+                    y * this.tileSize.y,
+                    this.tileSize.x,
+                    this.tileSize.y
+                )
+            )
+        );
     }
 };
 
@@ -260,35 +291,22 @@ gf.inherits(gf.TiledTileset, PIXI.Texture, {
                 };
     },
     &#x2F;**
-     * Creates the sprite for a tile (used by the TiledLayer to render tiles)
+     * Gets the tile texture for a tile based on it&#x27;s ID
      *
-     * @method createTileSprite
-     * @param tileId {Number} The id of the tile to get the properties for
-     * @return {PIXI.Sprite} The sprite to display
+     * @method getTileTexture
+     * @param tileId {Number} The id of the tile to get the texture for
+     * @return {PIXI.Texture} The texture for the tile
      *&#x2F;
-    createTileSprite: function(tileId) {
+    getTileTexture: function(tileId) {
         if(tileId === undefined) return null;
 
+        &#x2F;&#x2F;get the internal ID of the tile in this set (0 indexed)
         tileId = tileId - this.firstgid;
 
         &#x2F;&#x2F;if less than 0, then this id isn&#x27;t in this tileset
         if(tileId &lt; 0) return null;
 
-        &#x2F;&#x2F;convert the tileId to x,y coords of the tile in the Texture
-        var y = ~~(tileId &#x2F; this.size.x),
-            x = (tileId - (y * this.size.x));
-
-        return new PIXI.Sprite(
-            new PIXI.Texture(
-                this.baseTexture,
-                new PIXI.Rectangle(
-                    x * this.tileSize.x, &#x2F;&#x2F;offset of x
-                    y * this.tileSize.y, &#x2F;&#x2F;offset of y
-                    this.tileSize.x, &#x2F;&#x2F;size
-                    this.tileSize.y
-                )
-            )
-        );
+        return this.textures[tileId];
     }
 });
 

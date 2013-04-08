@@ -2,6 +2,7 @@ YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
         "Clock",
+        "DisplayObject",
         "Entity",
         "Layer",
         "Map",
@@ -15,6 +16,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "audio",
         "entityPool",
         "game",
+        "plugin",
         "support",
         "types",
         "utils"

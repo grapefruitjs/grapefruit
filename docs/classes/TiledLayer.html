@@ -45,6 +45,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
+            
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
                 <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/plugin.html">plugin</a></li>
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
@@ -173,6 +177,13 @@ create an instance on your own.</p>
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
+                                <a href="#method_freeTileSprite">freeTileSprite</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_getTileId">getTileId</a>
 
                                 
@@ -181,6 +192,13 @@ create an instance on your own.</p>
                         
                             <li class="index-item method">
                                 <a href="#method_getTileIndex">getTileIndex</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getTileSprite">getTileSprite</a>
 
                                 
                                 
@@ -217,6 +235,13 @@ create an instance on your own.</p>
                                 
                             </li>
                         
+                            <li class="index-item property">
+                                <a href="#property_tilePool">tilePool</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -229,6 +254,93 @@ create an instance on your own.</p>
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_freeTileSprite" class="method item">
+    <h3 class="name"><code>freeTileSprite</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>sprite</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l76"><code>src\map\tiled\TiledLayer.js:76</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Frees a sprite back into the pool</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">sprite</code>
+                        <span class="type">PIXI.Sprite</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite to release to the pool</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="method_getTileId" class="method item">
@@ -283,7 +395,7 @@ create an instance on your own.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l73"><code>src\map\tiled\TiledLayer.js:73</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l104"><code>src\map\tiled\TiledLayer.js:104</code></a>
         
         </p>
 
@@ -407,7 +519,7 @@ create an instance on your own.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l54"><code>src\map\tiled\TiledLayer.js:54</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l85"><code>src\map\tiled\TiledLayer.js:85</code></a>
         
         </p>
 
@@ -479,6 +591,131 @@ create an instance on your own.</p>
 </div>
 
                 
+                    <div id="method_getTileSprite" class="method item">
+    <h3 class="name"><code>getTileSprite</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>tileId</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>TiledTileset</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">PIXI.Sprite</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l65"><code>src\map\tiled\TiledLayer.js:65</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Creates the sprite for a tile utilizing a pool for the sprites</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">tileId</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The id of the tile to get a sprite for</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">TiledTileset</code>
+                        <span class="type">Tileset</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The tileset to get the texture from</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">PIXI.Sprite</span>:
+                    
+                    The sprite to display
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_renderTiles" class="method item">
     <h3 class="name"><code>renderTiles</code></h3>
 
@@ -511,7 +748,7 @@ create an instance on your own.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l34"><code>src\map\tiled\TiledLayer.js:34</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l40"><code>src\map\tiled\TiledLayer.js:40</code></a>
         
         </p>
 
@@ -564,7 +801,7 @@ create an instance on your own.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_loader_loader.js.html#l5"><code>src\loader\loader.js:5</code></a>
+        <a href="..&#x2F;files&#x2F;src_loader_AssetLoader.js.html#l5"><code>src\loader\AssetLoader.js:5</code></a>
         
         </p>
 
@@ -619,6 +856,50 @@ create an instance on your own.</p>
 
     <div class="description">
         <p>The tile IDs of the tilemap</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_tilePool" class="property item">
+    <h3 class="name"><code>tilePool</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l25"><code>src\map\tiled\TiledLayer.js:25</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The sprite pool for rendering tiles</p>
     </div>
 
     

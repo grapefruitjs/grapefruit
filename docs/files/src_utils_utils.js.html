@@ -45,6 +45,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
+            
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
                 <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/plugin.html">plugin</a></li>
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
@@ -271,7 +275,7 @@
             if(key in obj) {
                 var curVal = obj[key];
 
-                &#x2F;&#x2F;type massaging
+                &#x2F;&#x2F;massage strings into numbers
                 if(typeof curVal === &#x27;number&#x27; &amp;&amp; typeof newVal === &#x27;string&#x27;) {
                     var n;
                     if(newVal.indexOf(&#x27;0x&#x27;) === 0) n = parseInt(newVal, 16);
@@ -282,12 +286,30 @@
                     &#x2F;*else
                         console.warn(&#x27;Object parameter &#x27;&#x27; + key + &#x27;&#x27; evaluated to NaN, using default. Value passed: &#x27; + newVal);*&#x2F;
 
-                } else if(curVal instanceof gf.Vector &amp;&amp; newVal instanceof Array) {
-                    curVal.set(parseInt(newVal[0], 10) || 0, parseInt(newVal[1], 10) || 0);
+                }
+                &#x2F;&#x2F;massage vectors
+                else if(curVal instanceof gf.Vector &amp;&amp; newVal instanceof Array) {
+                    curVal.set(parseInt(newVal[0], 10) || 0, parseInt(newVal[1], 10) || parseInt(newVal[0], 10) || 0);
                 } else if(curVal instanceof gf.Vector &amp;&amp; typeof newVal === &#x27;string&#x27;) {
                     var a = newVal.split(gf.utils._arrayDelim, 2);
-                    curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
-                } else if(curVal instanceof Array &amp;&amp; typeof newVal === &#x27;string&#x27;) {
+                    curVal.set(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || parseInt(a[0], 10) || 0);
+                } else if(curVal instanceof gf.Vector &amp;&amp; typeof newVal === &#x27;number&#x27;) {
+                    curVal.set(newVal, newVal);
+                }
+                &#x2F;&#x2F;massage points
+                else if(curVal instanceof gf.Point &amp;&amp; newVal instanceof Array) {
+                    curVal.x = parseInt(newVal[0], 10) || 0;
+                    curVal.y = parseInt(newVal[1], 10) || parseInt(newVal[0], 10) || 0;
+                } else if(curVal instanceof gf.Point &amp;&amp; typeof newVal === &#x27;string&#x27;) {
+                    var a2 = newVal.split(gf.utils._arrayDelim, 2);
+                    curVal.x = parseInt(a2[0], 10) || 0;
+                    curVal.y = parseInt(a2[1], 10) || parseInt(a2[0], 10) || 0;
+                } else if(curVal instanceof gf.Point &amp;&amp; typeof newVal === &#x27;number&#x27;) {
+                    curVal.x = newVal;
+                    curVal.y = newVal;
+                }
+                &#x2F;&#x2F;massage arrays
+                else if(curVal instanceof Array &amp;&amp; typeof newVal === &#x27;string&#x27;) {
                     obj[key] = newVal.split(gf.utils._arrayDelim);
                     for(var i = 0, il = obj[key].length; i &lt; il; ++i) {
                         var val = obj[key][i];

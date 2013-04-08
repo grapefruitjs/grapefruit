@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\entity\entityPool.js - gf</title>
+    <title>src\DisplayObject.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -120,98 +120,49 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\entity\entityPool.js</h1>
+                        <h1 class="file-heading">File: src\DisplayObject.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-(function() {
-    var entObjects = {};
+&#x2F;**
+ * The base display object, that anything being put on the screen inherits from
+ *
+ * @module gf
+ * @class DisplayObject
+ * @extends PIXI.DisplayObjectContainer
+ * @constructor
+ *&#x2F;
+gf.DisplayObject = function() {
+    PIXI.DisplayObjectContainer.call(this);
+};
 
-    &#x2F;**
-     * Holds a pool of different Entities that can be created, makes it very
-     * easy to quickly create different registered entities
-     *
-     * @module gf
-     * @class entityPool
-     *&#x2F;
-    gf.entityPool = {
-        &#x2F;**
-         * Adds an entity Object to the pool
-         *
-         * @method add
-         * @param name {String} The user-defined name of the Entity to add
-         * @param obj {Object} The Entity or decendant to add to the pool
-         * @return {Object} Returns the passed object
-         * @example
-         *      &#x2F;&#x2F;create a new ckass to be instantiated
-         *      var Bug = gf.entityPool.add(&#x27;bug&#x27;, gf.Entity.extend({
-         *          &#x2F;&#x2F;ctor function
-         *          init: function(pos, settings) {
-         *              &#x2F;&#x2F;call the base ctor
-         *              this._super(pos, settings);
-         *
-         *              this.color = &#x27;red&#x27;;
-         *          },
-         *          beBug: function() {
-         *              console.log(&quot;I&#x27;m a bug&quot;);
-         *          }
-         *      }));
-         *
-         *      &#x2F;&#x2F;then later in your game code
-         *      var mybug = gf.entityPool.create(&#x27;bug&#x27;, {
-         *          pos: [10, 10]
-         *      });
-         *&#x2F;
-        add: function(name, obj) {
-            return entObjects[name] = obj;
-        },
-        &#x2F;**
-         * Checks if the entity exists in the pool
-         *
-         * @method add
-         * @param name {String} The user-defined name of the Entity to check if is in the pool
-         * @return {Boolean} Returns the passed object
-         *&#x2F;
-        has: function(name) {
-            return !!entObjects[name];
-        },
-        &#x2F;**
-         * Creates a new entity from the pool
-         *
-         * @method add
-         * @param name {String} The user-defined name of the Entity to check if is in the pool
-         * @param props {Object} The properties that would normally be passed as the &quot;settings&quot; of the Entity
-         * @return {Entity} Returns a new instance of the object from the pool
-         * @example
-         *      &#x2F;&#x2F;create a new ckass to be instantiated
-         *      var Bug = function(pos, settings) {
-         *          gf.Entity.call(this, pos, settings);
-         *          this.color = &#x27;red&#x27;;
-         *      };
-         *
-         *      gf.inherits(Bug, gf.Entity, {
-         *          beBug: function() {
-         *              console.log(&quot;I&#x27;m a bug&quot;);
-         *          }
-         *      });
-         *
-         *      &#x2F;&#x2F;then later in your game code
-         *      var mybug = gf.entityPool.create(&#x27;bug&#x27;, {
-         *          pos: [10, 10] &#x2F;&#x2F;pos, and&#x2F;or position properties get sent as the first param to the ctor
-         *      });
-         *&#x2F;
-        create: function(name, props) {
-            &#x2F;&#x2F;if the name is in our pool, create it
-            if(name &amp;&amp; gf.entityPool.has(name)) {
-                return new entObjects[name](props.pos || props.position || [props.x, props.y], props);
-            }
-            &#x2F;&#x2F;otherwise create a general Entity
-            else {
-                return new gf.Entity(props.pos || props.position || [props.x, props.y], props);
-            }
+gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
+    update: function() {
+        for(var i = 0, il = this.children.length; i &lt; il; ++i) {
+            var o = this.children[i];
+
+            if(o.visible &amp;&amp; o.update)
+                o.update();
         }
-    };
-})();
+    },
+    resize: function() {
+        for(var i = 0, il = this.children.length; i &lt; il; ++i) {
+            var o = this.children[i];
+
+            if(o.visible &amp;&amp; o.resize)
+                o.resize();
+        }
+    },
+    removeAllChildren: function() {
+        &#x2F;&#x2F;remove each from the stage
+        for(var i = 0, il = this.children.length; i &lt; il; ++i) {
+            if(this.stage) this.stage.__removeChild(this.children[i]);
+        }
+
+        &#x2F;&#x2F;clear the list and let the GC clean up
+        this.children = [];
+    }
+});
     </pre>
 </div>
 

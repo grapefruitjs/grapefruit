@@ -45,6 +45,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
+            
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
                 <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/plugin.html">plugin</a></li>
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
@@ -124,7 +128,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l571"><code>src\core.js:571</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l580"><code>src\core.js:580</code></a>
         </div>
     
 
@@ -197,13 +201,6 @@
                                 
                             </li>
                         
-                            <li class="index-item method private">
-                                <a href="#method_getNextObjectId">getNextObjectId</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item method">
                                 <a href="#method_init">init</a>
 
@@ -220,6 +217,13 @@
                         
                             <li class="index-item method">
                                 <a href="#method_render">render</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_resize">resize</a>
 
                                 
                                 
@@ -284,20 +288,6 @@
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_numObjects">numObjects</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_objects">objects</a>
-
-                                
-                                
-                            </li>
-                        
                     </ul>
                 </div>
             
@@ -346,7 +336,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l898"><code>src\core.js:898</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l872"><code>src\core.js:872</code></a>
         
         </p>
 
@@ -414,7 +404,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l758"><code>src\core.js:758</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l763"><code>src\core.js:763</code></a>
         
         </p>
 
@@ -518,7 +508,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l858"><code>src\core.js:858</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l856"><code>src\core.js:856</code></a>
         
         </p>
 
@@ -622,7 +612,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l828"><code>src\core.js:828</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l826"><code>src\core.js:826</code></a>
         
         </p>
 
@@ -674,62 +664,6 @@
                 
             </div>
         </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_getNextObjectId" class="method item private">
-    <h3 class="name"><code>getNextObjectId</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l749"><code>src\core.js:749</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Gets the next object id for an object</p>
-    </div>
-
-    
-
     
 
     
@@ -788,7 +722,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l662"><code>src\core.js:662</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l655"><code>src\core.js:655</code></a>
         
         </p>
 
@@ -915,7 +849,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l778"><code>src\core.js:778</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l780"><code>src\core.js:780</code></a>
         
         </p>
 
@@ -1009,7 +943,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l816"><code>src\core.js:816</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l814"><code>src\core.js:814</code></a>
         
         </p>
 
@@ -1038,6 +972,114 @@
                 
             </div>
         </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_resize" class="method item">
+    <h3 class="name"><code>resize</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>width</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>height</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l742"><code>src\core.js:742</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Allows you to resize the game area</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">width</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Width to resize to</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">height</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Height to resize to</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
     
 
     
@@ -1077,7 +1119,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l615"><code>src\core.js:615</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l608"><code>src\core.js:608</code></a>
         
         </p>
 
@@ -1123,7 +1165,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l644"><code>src\core.js:644</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l637"><code>src\core.js:637</code></a>
         
         </p>
 
@@ -1169,7 +1211,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l653"><code>src\core.js:653</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l646"><code>src\core.js:646</code></a>
         
         </p>
 
@@ -1215,7 +1257,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l635"><code>src\core.js:635</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l628"><code>src\core.js:628</code></a>
         
         </p>
 
@@ -1261,7 +1303,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l625"><code>src\core.js:625</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l618"><code>src\core.js:618</code></a>
         
         </p>
 
@@ -1307,7 +1349,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l605"><code>src\core.js:605</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l598"><code>src\core.js:598</code></a>
         
         </p>
 
@@ -1353,7 +1395,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l594"><code>src\core.js:594</code></a>
+        <a href="..&#x2F;files&#x2F;src_core.js.html#l587"><code>src\core.js:587</code></a>
         
         </p>
 
@@ -1368,94 +1410,6 @@
 
     
         <p><strong>Default:</strong> 500</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_numObjects" class="property item">
-    <h3 class="name"><code>numObjects</code></h3>
-    <span class="type">Number</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l586"><code>src\core.js:586</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Number of objects added to the stage</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_objects" class="property item">
-    <h3 class="name"><code>objects</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l578"><code>src\core.js:578</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>List of all objects on the stage by id</p>
-    </div>
-
     
 
     

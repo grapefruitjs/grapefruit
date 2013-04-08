@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>audio - gf</title>
+    <title>plugin - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -120,7 +120,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>audio Class</h1>
+                        <h1>plugin Class</h1>
 <div class="box meta">
     
 
@@ -128,7 +128,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l32"><code>src\audio\audio.js:32</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_plugin_plugin.js.html#l2"><code>src\plugin\plugin.js:2</code></a>
         </div>
     
 
@@ -144,7 +144,8 @@
 
 
 <div class="box intro">
-    <p>Grapefruit Audio API, provides an easy interface to use HTML5 Audio</p>
+    <p>Namespace for all plugins, it also provides methods for patching
+core functions, and registering plugins.</p>
 </div>
 
 
@@ -171,50 +172,15 @@
 
                     <ul class="index-list methods">
                         
-                            <li class="index-item method private">
-                                <a href="#method_init">init</a>
+                            <li class="index-item method">
+                                <a href="#method_patch">patch</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_pauseAll">pauseAll</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_play">play</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_playAll">playAll</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_stop">stop</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_stop">stop</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_stopAll">stopAll</a>
+                                <a href="#method_register">register</a>
 
                                 
                                 
@@ -236,118 +202,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_init" class="method item private">
-    <h3 class="name"><code>init</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l42"><code>src\audio\audio.js:42</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Initializes the audio component</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_pauseAll" class="method item">
-    <h3 class="name"><code>pauseAll</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l178"><code>src\audio\audio.js:178</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Pauses all currently playing audio clips</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_play" class="method item">
-    <h3 class="name"><code>play</code></h3>
+                    <div id="method_patch" class="method item">
+    <h3 class="name"><code>patch</code></h3>
 
     
         <div class="args">
@@ -355,19 +211,19 @@
             
                 <li class="arg">
                     
-                        <code>id</code>
+                        <code>obj</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>options</code>
+                        <code>name</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>callback</code>
+                        <code>fn</code>
                     
                 </li>
             
@@ -376,10 +232,6 @@
     
 
     
-        <span class="returns-inline">
-            <span class="type">Object</span>
-        </span>
-    
 
     
 
@@ -404,7 +256,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l53"><code>src\audio\audio.js:53</code></a>
+        <a href="..&#x2F;files&#x2F;src_plugin_plugin.js.html#l11"><code>src\plugin\plugin.js:11</code></a>
         
         </p>
 
@@ -415,7 +267,8 @@
     </div>
 
     <div class="description">
-        <p>Plays a loaded audio clip</p>
+        <p>Patches a core function with a new one. The function you override with has a special property
+called <code>this._super</code> which is a reference to the function you are overriding.</p>
     </div>
 
     
@@ -426,29 +279,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">id</code>
-                        <span class="type">String | Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The id of the sound clip to play. You can also pass the object returned from a previous play</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">options</code>
+                        <code class="param-name">obj</code>
                         <span class="type">Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The options object you can pass properties like "loop," "volume," "channel"</p>
+                        <p>The object with the method to override</p>
                     </div>
 
                     
@@ -456,14 +294,29 @@
             
                 <li class="param">
                     
-                        <code class="param-name">callback</code>
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the method to override</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">fn</code>
                         <span class="type">Function</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The callback to call after the sound finishes playing</p>
+                        <p>The function to override with</p>
                     </div>
 
                     
@@ -474,81 +327,29 @@
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
 
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Object</span>:
-                    
-                    The object returned can be passed to any audio function in the
-     first parameter to control that audio clip
-                
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code> //For example, to patch the gf.Sprite.prototype.isActiveAnimation function:
+
+ gf.plugin.patch(gf.Sprite, 'isActiveAnimation', function() {
+     //display a console message
+     console.log('checking animation!');
+     //call the original function
+     this._super();
+ });
+</code></pre>
             </div>
         </div>
     
-
-    
 </div>
 
                 
-                    <div id="method_playAll" class="method item">
-    <h3 class="name"><code>playAll</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l152"><code>src\audio\audio.js:152</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Plays all currently paused or stopped audio clips (only ones that have previously been started with gf.play)</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_stop" class="method item">
-    <h3 class="name"><code>stop</code></h3>
+                    <div id="method_register" class="method item">
+    <h3 class="name"><code>register</code></h3>
 
     
         <div class="args">
@@ -556,13 +357,13 @@
             
                 <li class="arg">
                     
-                        <code>id</code>
+                        <code>plugin</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>channel</code>
+                        <code>name</code>
                     
                 </li>
             
@@ -595,7 +396,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l114"><code>src\audio\audio.js:114</code></a>
+        <a href="..&#x2F;files&#x2F;src_plugin_plugin.js.html#l54"><code>src\plugin\plugin.js:54</code></a>
         
         </p>
 
@@ -606,7 +407,7 @@
     </div>
 
     <div class="description">
-        <p>Stops a playing audio clip</p>
+        <p>Registers a plugin into the gf.plugin namespace.</p>
     </div>
 
     
@@ -617,14 +418,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">id</code>
-                        <span class="type">String | Object</span>
+                        <code class="param-name">plugin</code>
+                        <span class="type">Object</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The id of the sound clip to stop. You can also pass the object returned from a previous play</p>
+                        <p>The object to place in the namespace</p>
                     </div>
 
                     
@@ -632,14 +433,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">channel</code>
-                        <span class="type">Number</span>
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)</p>
+                        <p>The name of the plugin to use as the key</p>
                     </div>
 
                     
@@ -652,167 +453,18 @@
     
 
     
-</div>
+        <div class="example">
+            <h4>Example:</h4>
 
-                
-                    <div id="method_stop" class="method item">
-    <h3 class="name"><code>stop</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>id</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>channel</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
+            <div class="example-content">
+                <pre class="code prettyprint"><code> //For example, to register a new plugin:
+ gf.plugin.register(MyPluginObject, 'myPluginName');
+ var plg = new gf.plugin.myPluginName();
+ //OR
+ gf.plugin.myPluginName.someFunction();
+</code></pre>
+            </div>
         </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l134"><code>src\audio\audio.js:134</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Pauses a playing audio clip</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">id</code>
-                        <span class="type">String | Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The id of the sound clip to pause. You can also pass the object returned from a previous play</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">channel</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_stopAll" class="method item">
-    <h3 class="name"><code>stopAll</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l165"><code>src\audio\audio.js:165</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stops all currently paused or playing audio clips</p>
-    </div>
-
-    
-
-    
-
     
 </div>
 

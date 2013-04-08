@@ -45,6 +45,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
+            
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
                 <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/plugin.html">plugin</a></li>
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
@@ -587,22 +591,20 @@ easy to quickly create different registered entities</p>
 
             <div class="example-content">
                 <pre class="code prettyprint"><code> //create a new ckass to be instantiated
- var Bug = gf.entityPool.add('bug', gf.Entity.extend({
-     //ctor function
-     init: function(pos, settings) {
-         //call the base ctor
-         this._super(pos, settings);
+ var Bug = function(pos, settings) {
+     gf.Entity.call(this, pos, settings);
+     this.color = 'red';
+ };
 
-         this.color = 'red';
-     },
+ gf.inherits(Bug, gf.Entity, {
      beBug: function() {
          console.log("I'm a bug");
      }
- }));
+ });
 
  //then later in your game code
  var mybug = gf.entityPool.create('bug', {
-     pos: [10, 10]
+     pos: [10, 10] //pos, and/or position properties get sent as the first param to the ctor
  });
 </code></pre>
             </div>

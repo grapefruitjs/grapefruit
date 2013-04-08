@@ -45,6 +45,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
+            
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
                 <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/plugin.html">plugin</a></li>
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
@@ -144,12 +148,18 @@ gf.TiledLayer = function(layer) {
      *&#x2F;
     this.tiles = new Uint32Array(layer.data);
 
+    &#x2F;**
+     * The sprite pool for rendering tiles
+     *
+     * @property tilePool
+     * @type Array
+     *&#x2F;
+    this.spritePool = [];
+
     &#x2F;&#x2F;translate some tiled properties to our inherited properties
     this.position.x = layer.x;
     this.position.y = layer.y;
     this.alpha = layer.opacity;
-
-    this.renderTiles();
 };
 
 gf.inherits(gf.TiledLayer, gf.Layer, {
@@ -158,20 +168,45 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      *
      * @method renderTiles
      *&#x2F;
-    renderTiles: function() {
-        for(var i = 0, il = this.tiles.length; i &lt; il; ++i) {
-            var tile = this.tiles[i],
-                spr = this.parent.getTileset(tile).createTileSprite(tile),
-                y = ~~(i &#x2F; this.size.x),
-                x = (i - (y * this.size.x));
+    renderTiles: function(startX, startY, numX, numY) {
+        for(var x = startX; x &lt; numX; ++x) {
+            for(var y = startY; y &lt; numY; ++y) {
+                var id = (x + (y * this.size.x)),
+                    tile = this.tiles[id],
+                    set = this.parent.getTileset(tile);
 
-            spr.position.x = x * this.parent.tileSize.x;
-            spr.position.y = y * this.parent.tileSize.y;
-            &#x2F;&#x2F;spr.scale = this.scale;
-            &#x2F;&#x2F;spr.rotation = this.rotation;
-            &#x2F;&#x2F;spr.alpha = this.alpha;
-            this.addChild(spr);
+                if(!set) continue;
+
+                var spr = this.getTileSprite(tile, set);
+
+                spr.position.x = x * this.parent.tileSize.x;
+                spr.position.y = y * this.parent.tileSize.y;
+                &#x2F;&#x2F;spr.scale = this.scale;
+                &#x2F;&#x2F;spr.rotation = this.rotation;
+                &#x2F;&#x2F;spr.alpha = this.alpha;
+                this.addChild(spr);
+            }
         }
+    },
+    &#x2F;**
+     * Creates the sprite for a tile utilizing a pool for the sprites
+     *
+     * @method getTileSprite
+     * @param tileId {Number} The id of the tile to get a sprite for
+     * @param TiledTileset {tileset} The tileset to get the texture from
+     * @return {PIXI.Sprite} The sprite to display
+     *&#x2F;
+    getTileSprite: function(id, tileset) {
+        return this.spritePool.pop() || new PIXI.Sprite(tileset.getTileTexture(id));
+    },
+    &#x2F;**
+     * Frees a sprite back into the pool
+     *
+     * @method freeTileSprite
+     * @param sprite {PIXI.Sprite} The sprite to release to the pool
+     *&#x2F;
+    freeTileSprite: function(spr) {
+        this.spritePool.push(spr);
     },
     &#x2F;**
      * Transforms an x,y coord into the index of a tile in the tiles array

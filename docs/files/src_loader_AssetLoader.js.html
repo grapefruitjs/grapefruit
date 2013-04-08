@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\loader\loader.js - gf</title>
+    <title>src\loader\AssetLoader.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -45,6 +45,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
+            
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
                 <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/plugin.html">plugin</a></li>
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
@@ -116,7 +120,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\loader\loader.js</h1>
+                        <h1 class="file-heading">File: src\loader\AssetLoader.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -153,7 +157,7 @@ gf.inherits(gf.AssetLoader, Object, {
             }
             &#x2F;&#x2F;load a sound clip
             else if(this.exts.sound.indexOf(ext) !== -1) {
-                this.loadSound(name, url);
+                this.loadAudio(name, url);
             }
             &#x2F;&#x2F;load a data file (world, spritesheet, etc)
             else if(this.exts.data.indexOf(ext) !== -1) {
@@ -169,7 +173,7 @@ gf.inherits(gf.AssetLoader, Object, {
 
         this._storeAsset(name, texture);
 
-        if(!texture.hasLoaded) {
+        if(!texture.baseTexture.hasLoaded) {
             texture.baseTexture.on(&#x27;loaded&#x27;, function() {
                 self.onAssetLoaded(null, &#x27;texture&#x27;, texture);
             });
@@ -202,6 +206,8 @@ gf.inherits(gf.AssetLoader, Object, {
         return audio;
     },
     loadData: function(name, url) {
+        this.loadCount++;
+
         var self = this,
             baseUrl = url.replace(&#x2F;[^\&#x2F;]*$&#x2F;, &#x27;&#x27;);
 
@@ -236,11 +242,11 @@ gf.inherits(gf.AssetLoader, Object, {
 
                         self.loadTexture(set.name + &#x27;_texture&#x27;, baseUrl + set.image);
                     }
+
+                    self.onAssetLoaded(null, &#x27;world&#x27;, data);
                 }
                 &#x2F;&#x2F;this is a sprite sheet (published from TexturePacker)
                 else if(data.frames &amp;&amp; data.meta) {
-                    this.loadCount++;
-
                     var textureUrl = baseUrl + data.meta.image,
                         texture =  PIXI.Texture.fromImage(textureUrl).baseTexture,
                         frames = data.frames,
@@ -283,7 +289,7 @@ gf.inherits(gf.AssetLoader, Object, {
         &#x2F;&#x2F;world (TiledEditor Json data)
         this.loadCount--;
 
-        this.emit({ type: &#x27;progress&#x27;, error: err, kind: type, asset: asset });
+        this.emit({ type: &#x27;progress&#x27;, error: err, assetType: type, asset: asset });
         if(this.onProgress) this.onProgress(err, type, asset);
 
         if(this.loadCount === 0) {

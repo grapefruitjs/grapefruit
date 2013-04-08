@@ -49,8 +49,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "src\\loader\\loader.js": {
-            "name": "src\\loader\\loader.js",
+        "src\\loader\\AssetLoader.js": {
+            "name": "src\\loader\\AssetLoader.js",
             "modules": {},
             "classes": {},
             "fors": {},
@@ -110,6 +110,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "src\\plugin\\plugin.js": {
+            "name": "src\\plugin\\plugin.js",
+            "modules": {},
+            "classes": {
+                "plugin": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "src\\utils\\Vector.js": {
             "name": "src\\utils\\Vector.js",
             "modules": {},
@@ -124,6 +133,15 @@
             "modules": {},
             "classes": {
                 "utils": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\DisplayObject.js": {
+            "name": "src\\DisplayObject.js",
+            "modules": {},
+            "classes": {
+                "DisplayObject": 1
             },
             "fors": {},
             "namespaces": {}
@@ -159,8 +177,10 @@
                 "TiledTileset": 1,
                 "Layer": 1,
                 "Map": 1,
+                "plugin": 1,
                 "Vector": 1,
                 "utils": 1,
+                "DisplayObject": 1,
                 "Point": 1,
                 "types": 1,
                 "support": 1,
@@ -171,7 +191,7 @@
             "namespaces": {},
             "tag": "main",
             "file": "src\\core.js",
-            "line": 571,
+            "line": 580,
             "description": "The base grapefruit object",
             "extends": "Sprite",
             "is_constructor": 1,
@@ -339,6 +359,20 @@
             "line": 1,
             "description": "Base Map implementation, provides common functions for all Map types"
         },
+        "plugin": {
+            "name": "plugin",
+            "shortname": "plugin",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\plugin\\plugin.js",
+            "line": 2,
+            "description": "Namespace for all plugins, it also provides methods for patching\ncore functions, and registering plugins."
+        },
         "Vector": {
             "name": "Vector",
             "shortname": "Vector",
@@ -367,6 +401,20 @@
             "line": 1,
             "description": "This object represents a tileset used by a TiledMap.\nThere can be multiple Tilesets in a map"
         },
+        "DisplayObject": {
+            "name": "DisplayObject",
+            "shortname": "DisplayObject",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\DisplayObject.js",
+            "line": 1,
+            "description": "The base display object, that anything being put on the screen inherits from"
+        },
         "Point": {
             "name": "Point",
             "shortname": "Point",
@@ -392,7 +440,7 @@
             "module": "gf",
             "namespace": "",
             "file": "src\\core.js",
-            "line": 65,
+            "line": 74,
             "description": "Constant types for easy use in code"
         },
         "support": {
@@ -406,7 +454,7 @@
             "module": "gf",
             "namespace": "",
             "file": "src\\core.js",
-            "line": 315,
+            "line": 324,
             "description": "Feature detection so we cans witch between renderers, play audio correctly, and other things."
         },
         "Clock": {
@@ -420,7 +468,7 @@
             "module": "gf",
             "namespace": "",
             "file": "src\\core.js",
-            "line": 478,
+            "line": 487,
             "description": "High performance clock, from mrdoob's Three.js\nhttps://github.com/mrdoob/three.js/blob/master/src/core/Clock.js"
         },
         "game": {
@@ -434,7 +482,7 @@
             "module": "gf",
             "namespace": "",
             "file": "src\\core.js",
-            "line": 571,
+            "line": 580,
             "description": "Main game object, controls the entire instance of the game"
         }
     },
@@ -851,6 +899,15 @@
         {
             "file": "src\\entity\\Entity.js",
             "line": 333,
+            "description": "Overrides base update to do some calculations. Called internally on each frame",
+            "itemtype": "method",
+            "name": "update",
+            "class": "Entity",
+            "module": "gf"
+        },
+        {
+            "file": "src\\entity\\Entity.js",
+            "line": 343,
             "description": "On Collision Event\n     called when this object is collided into by another, by default if something collides with\n     a collectable entity we remove the collectable",
             "itemtype": "method",
             "name": "onCollision",
@@ -875,7 +932,7 @@
         },
         {
             "file": "src\\entity\\Entity.js",
-            "line": 349,
+            "line": 359,
             "description": "On Move Event\n     called when this entity moves",
             "itemtype": "method",
             "name": "onMove",
@@ -895,7 +952,7 @@
         },
         {
             "file": "src\\entity\\Entity.js",
-            "line": 360,
+            "line": 370,
             "description": "On Break Tile Event\n     called when a tile is broken",
             "itemtype": "method",
             "name": "onBreakTile",
@@ -991,7 +1048,7 @@
         },
         {
             "file": "src\\entity\\Sprite.js",
-            "line": 98,
+            "line": 122,
             "description": "Sets the active animation of the sprite, and starts the animation at index 0",
             "itemtype": "method",
             "name": "setActiveAnimation",
@@ -1019,7 +1076,7 @@
         },
         {
             "file": "src\\entity\\Sprite.js",
-            "line": 127,
+            "line": 151,
             "description": "Convenience method for setting the position of the Sprite.",
             "itemtype": "method",
             "name": "setPosition",
@@ -1047,7 +1104,7 @@
         },
         {
             "file": "src\\entity\\Sprite.js",
-            "line": 156,
+            "line": 180,
             "description": "Checks if the name is the active animation",
             "itemtype": "method",
             "name": "isActiveAnimation",
@@ -1139,13 +1196,13 @@
                 "type": "Entity"
             },
             "example": [
-                "\n     //create a new ckass to be instantiated\n     var Bug = gf.entityPool.add('bug', gf.Entity.extend({\n         //ctor function\n         init: function(pos, settings) {\n             //call the base ctor\n             this._super(pos, settings);\n\n             this.color = 'red';\n         },\n         beBug: function() {\n             console.log(\"I'm a bug\");\n         }\n     }));\n\n     //then later in your game code\n     var mybug = gf.entityPool.create('bug', {\n         pos: [10, 10]\n     });"
+                "\n     //create a new ckass to be instantiated\n     var Bug = function(pos, settings) {\n         gf.Entity.call(this, pos, settings);\n         this.color = 'red';\n     };\n\n     gf.inherits(Bug, gf.Entity, {\n         beBug: function() {\n             console.log(\"I'm a bug\");\n         }\n     });\n\n     //then later in your game code\n     var mybug = gf.entityPool.create('bug', {\n         pos: [10, 10] //pos, and/or position properties get sent as the first param to the ctor\n     });"
             ],
             "class": "entityPool",
             "module": "gf"
         },
         {
-            "file": "src\\loader\\loader.js",
+            "file": "src\\loader\\AssetLoader.js",
             "line": 5,
             "description": "The array of asset URLs that are going to be loaded",
             "itemtype": "property",
@@ -1166,7 +1223,17 @@
         },
         {
             "file": "src\\map\\tiled\\TiledLayer.js",
-            "line": 34,
+            "line": 25,
+            "description": "The sprite pool for rendering tiles",
+            "itemtype": "property",
+            "name": "tilePool",
+            "type": "Array",
+            "class": "TiledLayer",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledLayer.js",
+            "line": 40,
             "description": "Creates all the tile sprites needed to display the layer",
             "itemtype": "method",
             "name": "renderTiles",
@@ -1175,7 +1242,48 @@
         },
         {
             "file": "src\\map\\tiled\\TiledLayer.js",
-            "line": 54,
+            "line": 65,
+            "description": "Creates the sprite for a tile utilizing a pool for the sprites",
+            "itemtype": "method",
+            "name": "getTileSprite",
+            "params": [
+                {
+                    "name": "tileId",
+                    "description": "The id of the tile to get a sprite for",
+                    "type": "Number"
+                },
+                {
+                    "name": "TiledTileset",
+                    "description": "The tileset to get the texture from",
+                    "type": "Tileset"
+                }
+            ],
+            "return": {
+                "description": "The sprite to display",
+                "type": "PIXI.Sprite"
+            },
+            "class": "TiledLayer",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledLayer.js",
+            "line": 76,
+            "description": "Frees a sprite back into the pool",
+            "itemtype": "method",
+            "name": "freeTileSprite",
+            "params": [
+                {
+                    "name": "sprite",
+                    "description": "The sprite to release to the pool",
+                    "type": "PIXI.Sprite"
+                }
+            ],
+            "class": "TiledLayer",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledLayer.js",
+            "line": 85,
             "description": "Transforms an x,y coord into the index of a tile in the tiles array",
             "itemtype": "method",
             "name": "getTileIndex",
@@ -1200,7 +1308,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledLayer.js",
-            "line": 73,
+            "line": 104,
             "description": "Transforms an x,y coord into the TiledTileset tile id",
             "itemtype": "method",
             "name": "getTileId",
@@ -1225,7 +1333,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 15,
+            "line": 18,
             "description": "The tile size",
             "itemtype": "property",
             "name": "tileSize",
@@ -1236,7 +1344,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 24,
+            "line": 27,
             "description": "The user-defined properties",
             "itemtype": "property",
             "name": "properties",
@@ -1247,18 +1355,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 33,
-            "description": "The scale of the map",
-            "itemtype": "property",
-            "name": "scale",
-            "type": "Number",
-            "default": "1",
-            "class": "TiledMap",
-            "module": "gf"
-        },
-        {
-            "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 42,
+            "line": 36,
             "description": "The scaled size (size * tileSize * scale)",
             "itemtype": "property",
             "name": "scaledSize",
@@ -1268,7 +1365,17 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 53,
+            "line": 47,
+            "description": "The orientation of the map, currently only 'orthogonal' is supported",
+            "itemtype": "property",
+            "name": "orientation",
+            "type": "String",
+            "class": "TiledMap",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledMap.js",
+            "line": 55,
             "description": "The maximum extent of the map (largest x and y the map has)\nassuming 0,0 is in the middle of the map, calculate the minimum\nand maximum extent of the map",
             "itemtype": "property",
             "name": "extent",
@@ -1278,7 +1385,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 72,
+            "line": 74,
             "description": "The tilesets used by this map",
             "itemtype": "property",
             "name": "tilesets",
@@ -1288,7 +1395,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 84,
+            "line": 86,
             "description": "The layer for collisions",
             "itemtype": "property",
             "name": "collisionLayer",
@@ -1298,7 +1405,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 92,
+            "line": 94,
             "description": "The tileset for the collision layer",
             "itemtype": "property",
             "name": "collisionTileset",
@@ -1308,7 +1415,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 100,
+            "line": 102,
             "description": "The version of this map",
             "itemtype": "property",
             "name": "version",
@@ -1318,7 +1425,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 138,
+            "line": 145,
             "description": "Gets the tileset that an ID is associated with",
             "itemtype": "method",
             "name": "getTileset",
@@ -1338,7 +1445,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 150,
+            "line": 157,
             "description": "Checks an entities collision with the collision layer of this map\nTODO: Fix this for new PIXI stuff",
             "itemtype": "method",
             "name": "checkCollision",
@@ -1510,7 +1617,17 @@
         },
         {
             "file": "src\\map\\tiled\\TiledTileset.js",
-            "line": 115,
+            "line": 113,
+            "description": "The texture instances for each tile in the set",
+            "itemtype": "property",
+            "name": "textures",
+            "type": "Array",
+            "class": "TiledTileset",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledTileset.js",
+            "line": 142,
             "description": "Gets the tile properties for a tile based on it's ID",
             "itemtype": "method",
             "name": "getTileProperties",
@@ -1530,20 +1647,20 @@
         },
         {
             "file": "src\\map\\tiled\\TiledTileset.js",
-            "line": 140,
-            "description": "Creates the sprite for a tile (used by the TiledLayer to render tiles)",
+            "line": 167,
+            "description": "Gets the tile texture for a tile based on it's ID",
             "itemtype": "method",
-            "name": "createTileSprite",
+            "name": "getTileTexture",
             "params": [
                 {
                     "name": "tileId",
-                    "description": "The id of the tile to get the properties for",
+                    "description": "The id of the tile to get the texture for",
                     "type": "Number"
                 }
             ],
             "return": {
-                "description": "The sprite to display",
-                "type": "PIXI.Sprite"
+                "description": "The texture for the tile",
+                "type": "PIXI.Texture"
             },
             "class": "TiledTileset",
             "module": "gf"
@@ -1611,6 +1728,59 @@
                 "type": "Layer"
             },
             "class": "Map",
+            "module": "gf"
+        },
+        {
+            "file": "src\\plugin\\plugin.js",
+            "line": 11,
+            "description": "Patches a core function with a new one. The function you override with has a special property\ncalled `this._super` which is a reference to the function you are overriding.",
+            "itemtype": "method",
+            "name": "patch",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The object with the method to override",
+                    "type": "Object"
+                },
+                {
+                    "name": "name",
+                    "description": "The name of the method to override",
+                    "type": "String"
+                },
+                {
+                    "name": "fn",
+                    "description": "The function to override with",
+                    "type": "Function"
+                }
+            ],
+            "example": [
+                "\n     //For example, to patch the gf.Sprite.prototype.isActiveAnimation function:\n\n     gf.plugin.patch(gf.Sprite, 'isActiveAnimation', function() {\n         //display a console message\n         console.log('checking animation!');\n         //call the original function\n         this._super();\n     });"
+            ],
+            "class": "plugin",
+            "module": "gf"
+        },
+        {
+            "file": "src\\plugin\\plugin.js",
+            "line": 54,
+            "description": "Registers a plugin into the gf.plugin namespace.",
+            "itemtype": "method",
+            "name": "register",
+            "params": [
+                {
+                    "name": "plugin",
+                    "description": "The object to place in the namespace",
+                    "type": "Object"
+                },
+                {
+                    "name": "name",
+                    "description": "The name of the plugin to use as the key",
+                    "type": "String"
+                }
+            ],
+            "example": [
+                "\n     //For example, to register a new plugin:\n     gf.plugin.register(MyPluginObject, 'myPluginName');\n     var plg = new gf.plugin.myPluginName();\n     //OR\n     gf.plugin.myPluginName.someFunction();"
+            ],
+            "class": "plugin",
             "module": "gf"
         },
         {
@@ -2253,7 +2423,7 @@
         },
         {
             "file": "src\\utils\\utils.js",
-            "line": 182,
+            "line": 200,
             "description": "Clamps a number between two values.",
             "itemtype": "method",
             "name": "clamp",
@@ -2290,7 +2460,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 72,
+            "line": 81,
             "description": "Entity types",
             "itemtype": "property",
             "name": "ENTITY",
@@ -2300,7 +2470,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 85,
+            "line": 94,
             "description": "Layer types",
             "itemtype": "property",
             "name": "LAYER",
@@ -2310,7 +2480,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 95,
+            "line": 104,
             "description": "Tile collision types",
             "itemtype": "property",
             "name": "COLLISION",
@@ -2320,7 +2490,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 109,
+            "line": 118,
             "description": "Event definitions",
             "itemtype": "property",
             "name": "EVENT",
@@ -2331,7 +2501,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 124,
+            "line": 133,
             "description": "Resource types",
             "itemtype": "property",
             "name": "RESOURCE",
@@ -2342,7 +2512,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 142,
+            "line": 151,
             "description": "Bindable keycodes",
             "itemtype": "property",
             "name": "KEY",
@@ -2352,7 +2522,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 227,
+            "line": 236,
             "description": "Bindable Mouse Events",
             "itemtype": "property",
             "name": "MOUSE",
@@ -2362,7 +2532,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 243,
+            "line": 252,
             "description": "Bindable Touch Events",
             "itemtype": "property",
             "name": "TOUCH",
@@ -2372,7 +2542,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 259,
+            "line": 268,
             "description": "Bindable Gamepad Buttons",
             "itemtype": "property",
             "name": "GP_BUTTONS",
@@ -2382,7 +2552,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 292,
+            "line": 301,
             "description": "Bindable Gamepad Axes",
             "itemtype": "property",
             "name": "GP_AXES",
@@ -2392,7 +2562,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 322,
+            "line": 331,
             "description": "The current user agent string",
             "itemtype": "property",
             "name": "ua",
@@ -2402,7 +2572,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 330,
+            "line": 339,
             "description": "Whether or not canvas is supported",
             "itemtype": "property",
             "name": "canvas",
@@ -2412,7 +2582,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 338,
+            "line": 347,
             "description": "Whether or not webgl is supported",
             "itemtype": "property",
             "name": "webgl",
@@ -2422,7 +2592,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 346,
+            "line": 355,
             "description": "Whether or not web workers are supported",
             "itemtype": "property",
             "name": "workers",
@@ -2432,7 +2602,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 354,
+            "line": 363,
             "description": "Whether or not the filesystem API is supported",
             "itemtype": "property",
             "name": "fileapi",
@@ -2442,7 +2612,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 362,
+            "line": 371,
             "description": "Whether or not the audio elements are supported, and if so which types",
             "itemtype": "property",
             "name": "audio",
@@ -2452,7 +2622,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 376,
+            "line": 385,
             "description": "Whether or not local storage is supported",
             "itemtype": "property",
             "name": "localStorage",
@@ -2462,7 +2632,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 384,
+            "line": 393,
             "description": "Whether or not touch is supported",
             "itemtype": "property",
             "name": "touch",
@@ -2472,7 +2642,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 392,
+            "line": 401,
             "description": "Whether or not the gamepad API is supported",
             "itemtype": "property",
             "name": "gamepad",
@@ -2482,7 +2652,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 504,
+            "line": 513,
             "description": "Starts the timer",
             "itemtype": "method",
             "name": "start",
@@ -2494,7 +2664,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 518,
+            "line": 527,
             "description": "Stops the timer",
             "itemtype": "method",
             "name": "stop",
@@ -2506,7 +2676,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 529,
+            "line": 538,
             "description": "Gets the total time that the timer has been running",
             "itemtype": "method",
             "name": "getElapsedTime",
@@ -2522,7 +2692,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 542,
+            "line": 551,
             "description": "Gets the difference in time since getDelta() was called last",
             "itemtype": "method",
             "name": "getDelta",
@@ -2538,27 +2708,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 578,
-            "description": "List of all objects on the stage by id",
-            "itemtype": "property",
-            "name": "objects",
-            "type": "{Object}",
-            "class": "game",
-            "module": "gf"
-        },
-        {
-            "file": "src\\core.js",
-            "line": 586,
-            "description": "Number of objects added to the stage",
-            "itemtype": "property",
-            "name": "numObjects",
-            "type": "{Number}",
-            "class": "game",
-            "module": "gf"
-        },
-        {
-            "file": "src\\core.js",
-            "line": 594,
+            "line": 587,
             "description": "Maximum Z value",
             "itemtype": "property",
             "name": "MAX_Z",
@@ -2572,7 +2722,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 605,
+            "line": 598,
             "description": "Raw PIXI.stage instance",
             "itemtype": "property",
             "name": "_stage",
@@ -2585,7 +2735,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 615,
+            "line": 608,
             "description": "Raw gf.Clock instance for internal timing",
             "itemtype": "property",
             "name": "_clock",
@@ -2598,7 +2748,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 625,
+            "line": 618,
             "description": "Raw rendering engine",
             "itemtype": "property",
             "name": "_renderer",
@@ -2611,7 +2761,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 635,
+            "line": 628,
             "description": "Internal ID counter for object IDs",
             "itemtype": "property",
             "name": "_nextId",
@@ -2623,7 +2773,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 644,
+            "line": 637,
             "description": "The domElement that we are rendering into (the container)",
             "itemtype": "property",
             "name": "_cont",
@@ -2635,7 +2785,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 653,
+            "line": 646,
             "description": "Tracker to see if the game has been initialized yet",
             "itemtype": "property",
             "name": "_initialized",
@@ -2647,7 +2797,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 662,
+            "line": 655,
             "description": "Initializes a new game instance, only one allowed",
             "itemtype": "method",
             "name": "init",
@@ -2675,18 +2825,28 @@
         },
         {
             "file": "src\\core.js",
-            "line": 749,
-            "description": "Gets the next object id for an object",
+            "line": 742,
+            "description": "Allows you to resize the game area",
             "itemtype": "method",
-            "name": "getNextObjectId",
-            "access": "private",
-            "tagname": "",
+            "name": "resize",
+            "params": [
+                {
+                    "name": "width",
+                    "description": "Width to resize to",
+                    "type": "Number"
+                },
+                {
+                    "name": "height",
+                    "description": "Height to resize to",
+                    "type": "Number"
+                }
+            ],
             "class": "game",
             "module": "gf"
         },
         {
             "file": "src\\core.js",
-            "line": 758,
+            "line": 763,
             "description": "Adds an object to the current stage",
             "itemtype": "method",
             "name": "addObject",
@@ -2706,7 +2866,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 778,
+            "line": 780,
             "description": "Removes a sprite from the stage",
             "itemtype": "method",
             "name": "removeObject",
@@ -2726,7 +2886,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 816,
+            "line": 814,
             "description": "Begins the render loop",
             "itemtype": "method",
             "name": "render",
@@ -2739,7 +2899,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 828,
+            "line": 826,
             "description": "Check if passed entity collides with any others",
             "itemtype": "method",
             "name": "checkCollisions",
@@ -2759,7 +2919,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 858,
+            "line": 856,
             "description": "locks the camera on an entity",
             "itemtype": "method",
             "name": "cameraTrack",
@@ -2779,7 +2939,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 898,
+            "line": 872,
             "description": "The looping render tick",
             "itemtype": "method",
             "name": "_tick",

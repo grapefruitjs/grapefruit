@@ -45,6 +45,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
+            
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
                 <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/plugin.html">plugin</a></li>
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
@@ -134,6 +138,9 @@
 gf.TiledMap = function(map) {
     gf.Map.call(this, map);
 
+    this.scale.x = parseInt(map.properties.scale, 10) || 1;
+    this.scale.y = parseInt(map.properties.scale, 10) || 1;
+
     &#x2F;**
      * The tile size
      *
@@ -153,15 +160,6 @@ gf.TiledMap = function(map) {
     this.properties = map.properties || {};
 
     &#x2F;**
-     * The scale of the map
-     *
-     * @property scale
-     * @type Number
-     * @default 1
-     *&#x2F;
-    this.scale = this.properties.scale || 1;
-
-    &#x2F;**
      * The scaled size (size * tileSize * scale)
      *
      * @property scaledSize
@@ -171,6 +169,14 @@ gf.TiledMap = function(map) {
         this.size.x * this.tileSize.x * this.scale,
         this.size.y * this.tileSize.y * this.scale
     );
+
+    &#x2F;**
+     * The orientation of the map, currently only &#x27;orthogonal&#x27; is supported
+     *
+     * @property orientation
+     * @type String
+     *&#x2F;
+    this.orientation = map.orientation;
 
     &#x2F;**
      * The maximum extent of the map (largest x and y the map has)
@@ -228,13 +234,19 @@ gf.TiledMap = function(map) {
     this.version = map.version;
 
     &#x2F;&#x2F;create the layers
+    var numX = gf.game._renderer.view.width &#x2F; this.tileSize.x,
+        numY = gf.game._renderer.view.height &#x2F; this.tileSize.y;
+
     for(var i = 0, il = map.layers.length; i &lt; il; ++i) {
         var lyr;
 
         switch(map.layers[i].type) {
             case gf.types.LAYER.TILE_LAYER:
                 lyr = new gf.TiledLayer(map.layers[i]);
-                lyr.scale = this.scale;
+                this.addChild(lyr);
+
+                &#x2F;&#x2F;lyr.scale = this.scale;
+                lyr.renderTiles(this.position.x, this.position.y, numX, numY);
 
                 if(lyr.name.toLowerCase().indexOf(&#x27;collision&#x27;) === 0) {
                     this.collisionLayer = lyr;
@@ -246,13 +258,12 @@ gf.TiledMap = function(map) {
 
             case gf.types.LAYER.OBJECT_GROUP:
                 lyr = new gf.TiledObjectGroup(map.layers[i]);
+                this.addChild(lyr);
 
                 &#x2F;&#x2F;auto spawn the player object group
                 if(lyr.name === &#x27;player&#x27; &amp;&amp; !lyr.properties.manual)
                     lyr.spawn();
         }
-
-        this.addChild(lyr);
     }
 };
 
@@ -328,6 +339,19 @@ gf.inherits(gf.TiledMap, gf.Map, {
         }
 
         return res;
+    },
+    resize: function() {
+        var numX = gf.game._renderer.view.width &#x2F; this.tileSize.x,
+            numY = gf.game._renderer.view.height &#x2F; this.tileSize.y;
+
+        for(var i = 0, il = this.children.length; i &lt; il; ++i) {
+            var o = this.children[i];
+
+            if(o instanceof gf.TiledLayer &amp;&amp; o.visible) {
+                o.removeAllChildren();
+                o.renderTiles(this.position.x, this.position.y, numX, numY);
+            }
+        }
     },
     &#x2F;&#x2F;WIP
     _checkHalfBlock: function(half, x, y) {

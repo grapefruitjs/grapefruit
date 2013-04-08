@@ -45,6 +45,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
+            
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
                 <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/plugin.html">plugin</a></li>
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
@@ -226,7 +230,7 @@ gf.Entity = function(pos, settings) {
      * @type Vector
      * @default 0.98 (earth&#x27;s gravity)
      *&#x2F;
-    this.gravity = gf.game.gravity || 0.98;
+    this.gravity = gf.game.gravity !== undefined ? gf.game.gravity : 0.98;
 
     &#x2F;**
      * Whether or not the entity is &quot;alive&quot;, advisory only
@@ -451,6 +455,16 @@ gf.inherits(gf.Entity, gf.Sprite, {
         this.onMove(vel);
 
         return this;
+    },
+    &#x2F;**
+     * Overrides base update to do some calculations. Called internally on each frame
+     *
+     * @method update
+     *&#x2F;
+    update: function() {
+        gf.Sprite.prototype.update.call(this);
+
+        this.updateMovement();
     },
     &#x2F;**
      * On Collision Event

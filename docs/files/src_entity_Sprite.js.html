@@ -45,6 +45,8 @@
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
+                <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
+            
                 <li><a href="..&#x2F;classes/Entity.html">Entity</a></li>
             
                 <li><a href="..&#x2F;classes/entityPool.html">entityPool</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
                 <li><a href="..&#x2F;classes/Map.html">Map</a></li>
+            
+                <li><a href="..&#x2F;classes/plugin.html">plugin</a></li>
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
@@ -173,7 +177,7 @@ gf.Sprite = function(pos, settings) {
     this.currentAnim = null;
 
     &#x2F;&#x2F;call base ctor
-    PIXI.DisplayObjectContainer.call(this);
+    gf.DisplayObject.call(this);
 
     &#x2F;&#x2F;mixin user&#x27;s settings
     gf.utils.setValues(this, settings);
@@ -186,7 +190,7 @@ gf.Sprite = function(pos, settings) {
     }
 };
 
-gf.inherits(gf.Sprite, PIXI.DisplayObjectContainer, {
+gf.inherits(gf.Sprite, gf.DisplayObject, {
     &#x2F;**
      * Defines a new animation on the Sprite
      *
@@ -199,17 +203,41 @@ gf.inherits(gf.Sprite, PIXI.DisplayObjectContainer, {
      *      spr.addAnimation(&#x27;walk-left&#x27;, new gf.Texture())
      *          .addAnimation(&#x27;walk-right&#x27;, [new gf.Texture(), new gf.Texture()]);
      *&#x2F;
-    addAnimation: function(name, frames) {
-        if(frames instanceof gf.Texture)
-            frames = [frames];
-
+    addAnimation: function(name, frames, speed) {
         if(!frames)
             throw &#x27;No textures passed to addAnimation()&#x27;;
 
+        &#x2F;&#x2F;ensure all the items in the array are textures
+        if(frames instanceof Array) {
+            for(var i = 0, il = frames.length; i &lt; il; ++i) {
+                if(typeof frames[i] === &#x27;string&#x27;) {
+                    if(!PIXI.TextureCache[frames[i]])
+                        throw &#x27;Texture &#x27; + frames[i] + &#x27; is not in cache, please load it first&#x27;;
+
+                    frames[i] = PIXI.TextureCache[frames[i]];
+                }
+            }
+        }
+
+        &#x2F;&#x2F;if there is a single texture passed, then put it in an array
+        if(frames instanceof gf.Texture)
+            frames = [frames];
+
+        &#x2F;&#x2F;if a string is passed, get it from the texture cache
+        if(typeof frames === &#x27;string&#x27;) {
+            if(!PIXI.TextureCache[frames])
+                throw &#x27;Texture &#x27; + frames + &#x27; is not in cache, please load it first&#x27;;
+
+            frames = [PIXI.TextureCache[frames]];
+        }
+
+        &#x2F;&#x2F;create a movie clip from the textures
         var clip = new PIXI.MovieClip(frames);
         clip.stop();
         clip.visible = false;
         clip.name = name;
+
+        if(speed) clip.animationSpeed = speed;
 
         this.addChild(clip);
 
@@ -239,7 +267,7 @@ gf.inherits(gf.Sprite, PIXI.DisplayObjectContainer, {
             this.currentAnim.visible = true;
             this.currentAnim.gotoAndPlay(0);
             &#x2F;&#x2F;TODO: Callback
-            setTimeout(cb, 0);
+            if(cb) setTimeout(cb, 1);
         } else {
             throw &#x27;Unknown animation &#x27; + name;
         }
