@@ -119,8 +119,8 @@ gf.TiledMap = function(game, map) {
     this.version = map.version;
 
     //create the layers
-    var numX = gf.game._renderer.view.width / this.tileSize.x,
-        numY = gf.game._renderer.view.height / this.tileSize.y;
+    var numX = Math.ceil(this.game.renderer.view.width / this.tileSize.x),
+        numY = Math.ceil(this.game.renderer.view.height / this.tileSize.y);
 
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr;
@@ -131,7 +131,12 @@ gf.TiledMap = function(game, map) {
                 this.addChild(lyr);
 
                 //lyr.scale = this.scale;
-                lyr.renderTiles(this.position.x, this.position.y, numX, numY);
+                lyr.renderTiles(
+                    Math.floor(this.position.x / this.tileSize.x),
+                    Math.floor(this.position.y / this.tileSize.y),
+                    numX,
+                    numY
+                );
 
                 if(lyr.name.toLowerCase().indexOf('collision') === 0) {
                     this.collisionLayer = lyr;
