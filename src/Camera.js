@@ -5,6 +5,8 @@
  * This camera instance is based on
  * <a href="https://github.com/photonstorm/kiwi-lite/blob/master/Kiwi%20Lite/Camera.ts">Kiwi-Lite's Camera</a>.
  *
+ * TODO: Currently fade/flash don't show the colors. How should I actually show them, a PIXI.Sprite?
+ *
  * @module gf
  * @class Camera
  * @extends DisplayObject
@@ -359,20 +361,15 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         //x += (x > 0) ? 0.0000001 : -0.0000001;
         //y += (y > 0) ? 0.0000001 : -0.0000001;
 
-        var dx = (x - this.hSize.x),
-            dy = (y - this.hSize.y);
+        //calculate how much we need to pan
+        var tl = new gf.Point(
+                x - this.hSize.x,
+                y - this.hSize.y
+            ),
+            dx = tl.x - this.game.world.position.x,
+            dy = tl.x - this.game.world.position.y;
 
-        //bound checks
-        if(dx < this._bounds.x || (x + this.hSize.x) > this._bounds.maxX)
-            dx = this.game.world.position.x;
-
-        if(dy < this._bounds.y || (y + this.hSize.y) > this._bounds.maxY)
-            dy = this.game.world.position.y;
-
-        this.game.world.position.x = dx;
-        this.game.world.position.y = dy;
-
-        return this;
+        return this.pan(dx, dy);
     },
     /**
      * Pans the camera around by the x,y amount. Ensures that the camera does
@@ -390,14 +387,16 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         var newX = this.game.world.position.x + dx,
             newY = this.game.world.position.y + dy;
 
-        if(newX < this._bounds.x || newX > this._bounds.maxX)
-            newX = this.game.world.position.x;
+        if(newX < this._bounds.x || (newX + this.size.x) > this._bounds.maxX)
+            dx = 0;
 
-        if(newY < this._bounds.y || newY > this._bounds.maxY)
-            newY = this.game.world.position.y;
+        if(newY < this._bounds.y || (newX + this.size.y) > this._bounds.maxY)
+            dy = 0;
 
-        this.game.world.position.x = dx;
-        this.game.world.position.y = dy;
+        if(dx || dy)
+            this.game.world.pan(dx, dy);
+
+        return this;
     },
     /**
      * Resizes the viewing area, this is called internally by your game instance
