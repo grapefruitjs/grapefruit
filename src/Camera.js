@@ -142,7 +142,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         this._fx.flash.color = color;
         this._fx.flash.duration = duration;
         this._fx.flash.alpha = 1;
-        this._fx.flash.complete = onComplete;
+        this._fx.flash.complete = cb;
 
         return this;
     },
@@ -193,7 +193,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         this._fx.fade.color = color;
         this._fx.fade.duration = duration;
         this._fx.fade.alpha = 0.01;
-        this._fx.fade.complete = onComplete;
+        this._fx.fade.complete = cb;
 
         return this;
     },
@@ -279,7 +279,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @method stopAll
      * @return {Camera} Returns iteself for chainability
      */
-    stopAll: function(type) {
+    stopAll: function() {
         this.stopFlash();
         this.stopFade();
         this.stopShake();
@@ -329,6 +329,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                 );
                 break;
             case gf.Camera.FOLLOW.LOCKON:
+                /* falls through */
             default:
                 this.deadzone = null;
                 break;

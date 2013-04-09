@@ -59,7 +59,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             ];*/
 
             //spawn from entity pool
-            this.addChild(gf.entityPool.create(props.name, props));
+            this.addChild(gf.entityPool.create(this.parent.game, props.name, props));
         }
 
         return this;

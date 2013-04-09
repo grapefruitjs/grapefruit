@@ -16,8 +16,6 @@ gf.InputManager = function(game) {
 
 gf.inherits(gf.InputManager, Object, {
     update: function() {
-        this.mouse.update();
-        this.keyboard.update();
         this.gamepad.update();
     },
     isActionActive: function(action) {

@@ -24,4 +24,4 @@ gf.Gui = function(pos, settings) {
     gf.utils.setValues(this, settings);
 };
 
-gf.inherits(gf.GuiItem, gf.DisplayObject);
+gf.inherits(gf.Gui, gf.DisplayObject);

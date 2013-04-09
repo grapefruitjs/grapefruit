@@ -9,6 +9,9 @@
  * @example gf.game.init('myDiv', { renderMethod: 'webgl' });
  */
 gf.Game = function(contId, settings) {
+    var w = settings.width || gf.utils.getStyle(this.container, 'width'),
+        h = settings.height || gf.utils.getStyle(this.container, 'height');
+
     /**
      * The default gravity to use for the game, defaults to 0.98 (Earth's Gravity)
      *
@@ -62,6 +65,29 @@ gf.Game = function(contId, settings) {
      * @readOnly
      */
     this.renderer = null;
+
+    //if they speciy a method, check if it is available
+    if(settings.renderMethod) {
+        if(!gf.support[settings.renderMethod]) {
+            throw 'Render method ' + settings.renderMethod + ' is not supported by this browser!';
+        }
+        this.renderMethod = settings.renderMethod;
+    }
+    //if they don't specify a method, guess the best to use
+    else {
+        if(gf.support.webgl) this.renderMethod = 'webgl';
+        else if(gf.support.canvas) this.renderMethod = 'canvas';
+        else {
+            throw 'Neither WebGL nor Canvas is supported by this browser!';
+        }
+    }
+
+    //initialize the correct renderer
+    if(this.renderMethod === 'webgl') {
+        this.renderer = new PIXI.WebGLRenderer(w, h);
+    } else if(this.renderMethod === 'canvas') {
+        this.renderer = new PIXI.CanvasRenderer(w, h);
+    }
 
     /**
      * The domElement that we are putting our rendering canvas into (the container)
@@ -120,32 +146,6 @@ gf.Game = function(contId, settings) {
     this.camera = new gf.Camera(this);
 
     this.stage.addChild(this.camera);
-
-    //if they speciy a method, check if it is available
-    if(settings.renderMethod) {
-        if(!gf.support[settings.renderMethod]) {
-            throw 'Render method ' + settings.renderMethod + ' is not supported by this browser!';
-        }
-        this.renderMethod = settings.renderMethod;
-    }
-    //if they don't specify a method, guess the best to use
-    else {
-        if(gf.support.webgl) this.renderMethod = 'webgl';
-        else if(gf.support.canvas) this.renderMethod = 'canvas';
-        else {
-            throw 'Neither WebGL nor Canvas is supported by this browser!';
-        }
-    }
-
-    var w = settings.width || gf.utils.getStyle(this.container, 'width'),
-        h = settings.height || gf.utils.getStyle(this.container, 'height');
-
-    //initialize the correct renderer
-    if(this.renderMethod === 'webgl') {
-        this.renderer = new PIXI.WebGLRenderer(w, h);
-    } else if(this.renderMethod === 'canvas') {
-        this.renderer = new PIXI.CanvasRenderer(w, h);
-    }
 
     this.camera.resize(w, h);
 
@@ -243,8 +243,8 @@ gf.inherits(gf.Game, Object, {
      * @return {Game} Returns itself for chainability
      */
     render: function() {
-        gf.game._clock.start();
-        gf.game._tick();
+        this.clock.start();
+        this._tick();
 
         return this;
     },
@@ -286,7 +286,7 @@ gf.inherits(gf.Game, Object, {
      */
     _tick: function() {
         //start render loop
-        window.requestAnimFrame(this.tick.bind(this));
+        window.requestAnimFrame(this._tick.bind(this));
 
         //get clock delta
         this._delta = this.clock.getDelta();

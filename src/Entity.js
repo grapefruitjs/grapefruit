@@ -22,7 +22,15 @@
  * @example
  *      var ent = new gf.Entity([10, 1], { name: 'MyEntity' });
  */
-gf.Entity = function(pos, settings) {
+gf.Entity = function(game, pos, settings) {
+    /**
+     * The game instance this belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
+
     /**
      * The type of the entity
      *
@@ -95,7 +103,7 @@ gf.Entity = function(pos, settings) {
      * @type Vector
      * @default 0
      */
-    this.friction = gf.game.friction || 0;
+    this.friction = 0;
 
     /**
      * Gravity to apply to this entity
@@ -104,7 +112,7 @@ gf.Entity = function(pos, settings) {
      * @type Vector
      * @default 0.98 (earth's gravity)
      */
-    this.gravity = gf.game.gravity !== undefined ? gf.game.gravity : 0.98;
+    this.gravity = 0;
 
     /**
      * Whether or not the entity is "alive", advisory only

@@ -91,11 +91,25 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             this.addChild(this.sprites[tileX][tileY]);
         }
 
-        return this.sprites[x][y];
+        return this.sprites[tileX][tileY];
     },
+    /**
+     * Moves a tile sprite from one position to another,
+     * creating it if the old position didn't have a sprite
+     *
+     * @method moveTileSprite
+     * @param fromTileX {Number} The x coord of the tile in units of tiles (not pixels) to move from
+     * @param fromTileY {Number} The y coord of the tile in units of tiles (not pixels) to move from
+     * @param toTileX {Number} The x coord of the tile in units of tiles (not pixels) to move to
+     * @param toTileY {Number} The y coord of the tile in units of tiles (not pixels) to move to
+     * @return {PIXI.Sprite} The sprite to display
+     */
     moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
-        var spr = this.getTileSprite(fromTileX, fromTileY),
-            id = (toTileX + (toTileY * this.size.x)),
+        var spr = this.getTileSprite(fromTileX, fromTileY);
+
+        if(!spr) return;
+
+        var id = (toTileX + (toTileY * this.size.x)),
             tile = this.tiles[id],
             set = this.parent.getTileset(tile);
 
@@ -149,7 +163,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      */
     pan: function(dx, dy) {
         this._panDelta.x += dx;
-        this._panDelta.y += dy;1
+        this._panDelta.y += dy;
+
+        var i = 0;
 
         //moved 1 tile right
         if(this._panDelta.x >= this.parent.tileSize.x) {
@@ -191,7 +207,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             for(i = 0; i < this._rendered.numX; ++i) {
                 this.moveTileSprite(
                     this._rendered.x + i, this._rendered.bottom,
-                    this._rendered.x + i, this._rendered.y - 1,
+                    this._rendered.x + i, this._rendered.y - 1
                 );
             }
             this._rendered.y--;
