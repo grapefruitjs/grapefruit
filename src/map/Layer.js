@@ -51,6 +51,6 @@ gf.inherits(gf.Layer, gf.DisplayObject, {
      * @param dy {Number} The y ammount to pan
      * @return {Layer} Returns itself for chainability
      */
-    pan: function(dx, dy) {
+    pan: function() {
     }
 });

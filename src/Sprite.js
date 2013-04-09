@@ -74,10 +74,21 @@ gf.Sprite = function(pos, settings) {
 
     //if a texture is passed, make this just display the texture
     if(settings.texture) {
-        var spr = new PIXI.Sprite(settings.texture);
-        if(settings.interactive) spr.setInteractive(true);
-        this.addChild(spr);
-        this.anim['default'] = spr;
+        if(typeof settings.texture === 'string') {
+            if(gf.assetCache[settings.texture])
+                settings.texture = gf.assetCache[settings.texture];
+            else {
+                var loader = new gf.AssetLoader();
+                settings.texture = loader.loadTexture(settings.texture, settings.texture);
+            }
+        }
+
+        if(settings.texture instanceof gf.Texture) {
+            var spr = new PIXI.Sprite(settings.texture);
+            if(settings.interactive) spr.setInteractive(true);
+            this.addChild(spr);
+            this.anim['default'] = spr;
+        }
     }
 
     //copied from http://www.goodboydigital.com/pixijs/docs/files/src_pixi_Sprite.js.html

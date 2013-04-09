@@ -67,7 +67,7 @@ gf.inherits(gf.Map, gf.DisplayObject, {
             var o = this.children[i];
 
             if(o.visible && o.pan)
-                o.pan(dx, dy);
+                o.pan(x, y);
         }
     }
 });

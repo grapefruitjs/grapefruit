@@ -15,8 +15,10 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/AssetLoader.js',
         '<%= dirs.src %>/AudioPlayer.js',
         '<%= dirs.src %>/DisplayObject.js',
+        '<%= dirs.src %>/Camera.js',
         '<%= dirs.src %>/Sprite.js',
         '<%= dirs.src %>/Entity.js',
+        '<%= dirs.src %>/entityPool.js',
 
         '<%= dirs.src %>/debug/debug.js',
 
