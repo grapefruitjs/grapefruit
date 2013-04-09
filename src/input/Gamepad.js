@@ -113,5 +113,5 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
     unbindStick: function(code, negative, action) {
         this.sticks.unbind(code, negative, action);
         return this;
-    },
+    }
 });
