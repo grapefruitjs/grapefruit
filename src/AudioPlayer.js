@@ -7,8 +7,31 @@
  * @param game {Game} Game instance for this audio player
  */
 gf.AudioPlayer = function(game) {
+    /**
+     * The game instance this belongs to
+     *
+     * @property game
+     * @type Game
+     */
     this.game = game;
+
+    /**
+     * The pool of audio objects to play sounds with
+     *
+     * @property playing
+     * @type Object
+     * @private
+     * @readOnly
+     */
     this.playing = {};
+
+    /**
+     * When stopping or starting a sound, this is the time index to reset to
+     *
+     * @property resetTime
+     * @type number
+     * @default 0
+     */
     this.resetTime = 0;
 };
 
