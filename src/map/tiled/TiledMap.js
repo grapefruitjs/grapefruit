@@ -225,6 +225,12 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
         return res;
     },
+    /**
+     * Notifies the map it needs to resize, re renders the viewport
+     *
+     * @method resize
+     * @private
+     */
     resize: function() {
         var numX = gf.game._renderer.view.width / this.tileSize.x,
             numY = gf.game._renderer.view.height / this.tileSize.y;
