@@ -7,7 +7,7 @@ gf.AssetLoader = function(resources) {
     * @property assetURLs
     * @type Array
     */
-    this.resources = resources;
+    this.resources = resources || [];
     this.loadCount = 0;
     this.assets = {};
 
@@ -19,10 +19,12 @@ gf.AssetLoader = function(resources) {
 };
 
 gf.inherits(gf.AssetLoader, Object, {
-    load: function() {
-        for(var i = 0, il = this.resources.length; i < il; ++i) {
-            var name = typeof this.resources[i] === 'string' ? this.resources[i] : this.resources[i].name,
-                url = typeof this.resources[i] === 'string' ? this.resources[i] : this.resources[i].src,
+    load: function(items) {
+        var resources = items || this.resources;
+
+        for(var i = 0, il = resources.length; i < il; ++i) {
+            var name = typeof resources[i] === 'string' ? resources[i] : resources[i].name,
+                url = typeof resources[i] === 'string' ? resources[i] : resources[i].src,
                 ext = url.split('.').pop().toLowerCase();
 
             //load a texture
