@@ -42,4 +42,15 @@ gf.Layer = function(layer) {
     this.hSize = this.size.clone().divideScalar(2);
 };
 
-gf.inherits(gf.Layer, gf.DisplayObject);
+gf.inherits(gf.Layer, gf.DisplayObject, {
+    /**
+     * Pans the layer around, rendering stuff if necessary
+     *
+     * @method pan
+     * @param dx {Number|Point} The x amount to pan, if a Point is passed the dy param is ignored
+     * @param dy {Number} The y ammount to pan
+     * @return {Layer} Returns itself for chainability
+     */
+    pan: function(dx, dy) {
+    }
+});
