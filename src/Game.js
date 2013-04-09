@@ -110,6 +110,17 @@ gf.Game = function(contId, settings) {
      */
     this.input = new gf.InputManager(this);
 
+    /**
+     * The camera you view the scene through
+     *
+     * @property camera
+     * @type Camera
+     * @readOnly
+     */
+    this.camera = new gf.Camera(this);
+
+    this.stage.addChild(this.camera);
+
     //if they speciy a method, check if it is available
     if(settings.renderMethod) {
         if(!gf.support[settings.renderMethod]) {
@@ -173,10 +184,10 @@ gf.inherits(gf.Game, Object, {
      */
     addObject: function(obj) {
         if(obj) {
-            this.stage.addChild(obj);
-
-            if(obj.onAddedToStage)
-                obj.onAddedToStage(this.stage);
+            if(obj instanceof gf.Gui || obj instanceof gf.Hud)
+                this.camera.addChild(obj);
+            else
+                this.world.addChild(obj);
         }
 
         return this;
@@ -190,10 +201,10 @@ gf.inherits(gf.Game, Object, {
      */
     removeObject: function(obj) {
         if(obj) {
-            this.stage.removeChild(obj);
-
-            if(obj.onRemovedFromStage)
-                obj.onRemovedFromStage(this.stage);
+            if(obj instanceof gf.Gui || obj instanceof gf.Hud)
+                this.camera.removeChild(obj);
+            else
+                this.world.removeChild(obj);
         }
 
         return this;
@@ -299,7 +310,7 @@ gf.inherits(gf.Game, Object, {
 
         this.input.update();
 
-        if(this.hud) this.hud.update();
+        this.camera.update();
 
         //update each object
         for(var i = 0, il = this.stage.children.length; i < il; ++i) {
