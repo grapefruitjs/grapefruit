@@ -11,26 +11,40 @@ module.exports = function(grunt) {
     //explicity set source files because order is important
     var srcFiles = [
         '<%= dirs.src %>/core.js',
+        '<%= dirs.src %>/Game.js',
+        '<%= dirs.src %>/AssetLoader.js',
+        '<%= dirs.src %>/AudioPlayer.js',
         '<%= dirs.src %>/DisplayObject.js',
-        '<%= dirs.src %>/utils/utils.js',
-        '<%= dirs.src %>/utils/Vector.js',
-        '<%= dirs.src %>/audio/audio.js',
-        '<%= dirs.src %>/controls/controls.js',
-        '<%= dirs.src %>/controls/gamepad.js',
+        '<%= dirs.src %>/Sprite.js',
+        '<%= dirs.src %>/Entity.js',
+
         '<%= dirs.src %>/debug/debug.js',
-        '<%= dirs.src %>/entity/Sprite.js',
-        '<%= dirs.src %>/entity/Entity.js',
-        '<%= dirs.src %>/entity/entityPool.js',
-        '<%= dirs.src %>/gui/gui.js',
-        '<%= dirs.src %>/gui/hud.js',
-        '<%= dirs.src %>/gui/hud/HudItem.js',
-        '<%= dirs.src %>/loader/AssetLoader.js',
+
+        '<%= dirs.src %>/utils/utils.js',
+        '<%= dirs.src %>/utils/Clock.js',
+        '<%= dirs.src %>/utils/ObjectPool.js',
+        '<%= dirs.src %>/utils/Vector.js',
+
+        '<%= dirs.src %>/input/InputManager.js',
+        '<%= dirs.src %>/input/Input.js',
+        '<%= dirs.src %>/input/Mouse.js',
+        '<%= dirs.src %>/input/Keyboard.js',
+        '<%= dirs.src %>/input/Gamepad.js',
+        '<%= dirs.src %>/input/GamepadButtons.js',
+        '<%= dirs.src %>/input/GamepadSticks.js',
+
+        '<%= dirs.src %>/gui/Gui.js',
+        '<%= dirs.src %>/gui/GuiItem.js',
+        '<%= dirs.src %>/gui/Hud.js',
+        '<%= dirs.src %>/gui/HudItem.js',
+
         '<%= dirs.src %>/map/Map.js',
         '<%= dirs.src %>/map/Layer.js',
         '<%= dirs.src %>/map/tiled/TiledMap.js',
         '<%= dirs.src %>/map/tiled/TiledLayer.js',
         '<%= dirs.src %>/map/tiled/TiledTileset.js',
         '<%= dirs.src %>/map/tiled/TiledObjectGroup.js',
+
         '<%= dirs.src %>/plugin/plugin.js'
     ], banner = [
         '/**',

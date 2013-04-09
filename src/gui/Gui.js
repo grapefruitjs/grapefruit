@@ -18,7 +18,10 @@ gf.Gui = function(pos, settings) {
      */
     this.name = '';
 
-    gf.DisplayObject.call(this);
+    gf.DisplayObject.call(this, settings);
+
+    //mixin user's settings
+    gf.utils.setValues(this, settings);
 };
 
 gf.inherits(gf.GuiItem, gf.DisplayObject);
