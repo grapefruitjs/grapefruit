@@ -50,5 +50,24 @@ gf.inherits(gf.Map, gf.DisplayObject, {
                     return this.children[i];
 
         return null;
+    },
+    /**
+     * Pans the map around
+     *
+     * @method pan
+     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
+     * @param y {Number} The y ammount to pan
+     * @return {Map} Returns itself for chainability
+     */
+    pan: function(x, y) {
+        x = x instanceof gf.Point ? x.x : (x || 0);
+        y = x instanceof gf.Point ? x.y : (y || 0);
+
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.visible && o.pan)
+                o.pan(dx, dy);
+        }
     }
 });
