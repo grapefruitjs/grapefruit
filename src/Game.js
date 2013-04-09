@@ -147,6 +147,8 @@ gf.Game = function(contId, settings) {
         this.renderer = new PIXI.CanvasRenderer(w, h);
     }
 
+    this.camera.resize(w, h);
+
     //append the renderer view
     //this.renderer.view.style['z-index'] = opts.zIndex || 5;
     this.container.appendChild(this.renderer.view);
@@ -170,7 +172,7 @@ gf.inherits(gf.Game, Object, {
         for(var i = 0, il = this.stage.children.length; i < il; ++i) {
             var o = this.stage.children[i];
 
-            if(o.resize) o.resize();
+            if(o.resize) o.resize(w, h);
         }
 
         return this;
@@ -226,6 +228,7 @@ gf.inherits(gf.Game, Object, {
 
         this.world = new gf.TiledMap(this, world);
         this.addObject(this.world);
+        this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
 
         if(this.world.properties.music) {
             this.audio.play(this.world.properties.music, { loop: this.world.properties.music_loop === 'true' });
@@ -274,23 +277,6 @@ gf.inherits(gf.Game, Object, {
         }
 
         return colliders;
-    },
-    /**
-     * locks the camera on an entity
-     *
-     * @method cameraTrack
-     * @param ent {Entity} The sprite to the stage
-     * @return {Game} Returns itself for chainability
-     */
-    cameraTrack: function(ent) {
-        if(ent.entity) {
-            return this;
-            //TODO
-            //see: https://github.com/GoodBoyDigital/pixi.js/issues/48#issuecomment-15962276
-            //see: https://github.com/photonstorm/kiwi-lite/blob/master/Kiwi%20Lite/Camera.ts
-        }
-
-        return this;
     },
     /**
      * The looping render tick
