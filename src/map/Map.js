@@ -7,7 +7,15 @@
  * @constructor
  * @param map {Object} All the settings for the map
  */
-gf.Map = function(map) {
+gf.Map = function(game, map) {
+    /**
+     * The game instance this belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
+
     /**
      * The size of the map
      *

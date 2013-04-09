@@ -9,8 +9,8 @@
  * @constructor
  * @param map {Object} All the settings for the map
  */
-gf.TiledMap = function(map) {
-    gf.Map.call(this, map);
+gf.TiledMap = function(game, map) {
+    gf.Map.call(this, game, map);
 
     this.scale.x = parseInt(map.properties.scale, 10) || 1;
     this.scale.y = parseInt(map.properties.scale, 10) || 1;

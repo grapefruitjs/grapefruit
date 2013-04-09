@@ -37,6 +37,30 @@
         //show gamepad info in the info box
         showGamepadInfo: false,
 
+        showFpsCounter: function() {
+            gf.debug._fpsCounter = new gf.debug.FpsCounter();
+            for(var s in gf.debug.fpsStyle) {
+                gf.debug._fpsCounter.domElement.style[s] = gf.debug.fpsStyle[s];
+            }
+            document.body.appendChild(gf.debug._fpsCounter.domElement);
+        },
+
+        showDebugInfo: function() {
+            gf.debug._info = new gf.debug.Info();
+            for(var s2 in gf.debug.infoStyle) {
+                gf.debug._info.domElement.style[s2] = gf.debug.infoStyle[s2];
+            }
+            document.body.appendChild(gf.debug._info.domElement);
+        },
+
+        update: function() {
+            //update fps box
+            if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
+
+            //update debug info
+            if(gf.debug._info) gf.debug._info.update();
+        },
+
         /****************************************************************************
          * DebugInfo box that displays live-updaing debug info
          ****************************************************************************/
