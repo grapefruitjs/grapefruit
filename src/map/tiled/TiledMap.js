@@ -34,6 +34,17 @@ gf.TiledMap = function(game, map) {
     this.properties = map.properties || {};
 
     /**
+     * The real size (size * tileSize)
+     *
+     * @property realSize
+     * @type Vector
+     */
+    this.realSize = new gf.Vector(
+        this.size.x * this.tileSize.x,
+        this.size.y * this.tileSize.y
+    );
+
+    /**
      * The scaled size (size * tileSize * scale)
      *
      * @property scaledSize
