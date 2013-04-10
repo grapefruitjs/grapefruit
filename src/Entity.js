@@ -152,8 +152,20 @@ gf.Entity = function(game, pos, settings) {
      */
     this.onladder = false;
 
+    /**
+     * The view position is a whole-number version of position.
+     *
+     * @property viewPosition
+     * @type Point
+     * @readOnly
+     */
+    this.viewPosition = new gf.Point(0, 0);
+
     //call base ctor
     gf.Sprite.call(this, pos, settings);
+
+    this.viewPosition.x = Math.round(this.position.x);
+    this.viewPosition.y = Math.round(this.position.y);
 };
 
 gf.inherits(gf.Entity, gf.Sprite, {
@@ -331,9 +343,33 @@ gf.inherits(gf.Entity, gf.Sprite, {
         //update the entity position
         this.position.x += vel.x;
         this.position.y += vel.y;
+        this.viewPosition.x = Math.round(this.position.x);
+        this.viewPosition.y = Math.round(this.position.y);
 
         //onMove event
         this.onMove(vel);
+
+        return this;
+    },
+    /**
+     * Convenience method for setting the position of an Entity.
+     *
+     * @method setPosition
+     * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
+     *       If an Array, Vector, or Point is passed then the y parameter is ignored
+     * @param y {Number} Y coord to put the sprite at
+     * @return {Entity} Returns itself for chainability
+     * @example
+     *      spr.setPosition(1, 1)
+     *          .setPosition([5, 5])
+     *          .setPosition(new gf.Point(10, 10))
+     *          .setPosition(new gf.Vector(20, 20));
+     */
+    setPosition: function(x, y) {
+        gf.Sprite.prototype.setPosition.call(this, x, y);
+
+        this.viewPosition.x = Math.round(this.position.x);
+        this.viewPosition.y = Math.round(this.position.y);
 
         return this;
     },
