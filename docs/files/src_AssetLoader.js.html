@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\loader\AssetLoader.js - gf</title>
+    <title>src\AssetLoader.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -128,7 +134,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\loader\AssetLoader.js</h1>
+                        <h1 class="file-heading">File: src\AssetLoader.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -141,7 +147,7 @@ gf.AssetLoader = function(resources) {
     * @property assetURLs
     * @type Array
     *&#x2F;
-    this.resources = resources;
+    this.resources = resources || [];
     this.loadCount = 0;
     this.assets = {};
 
@@ -153,10 +159,12 @@ gf.AssetLoader = function(resources) {
 };
 
 gf.inherits(gf.AssetLoader, Object, {
-    load: function() {
-        for(var i = 0, il = this.resources.length; i &lt; il; ++i) {
-            var name = typeof this.resources[i] === &#x27;string&#x27; ? this.resources[i] : this.resources[i].name,
-                url = typeof this.resources[i] === &#x27;string&#x27; ? this.resources[i] : this.resources[i].src,
+    load: function(items) {
+        var resources = items || this.resources;
+
+        for(var i = 0, il = resources.length; i &lt; il; ++i) {
+            var name = typeof resources[i] === &#x27;string&#x27; ? resources[i] : resources[i].name,
+                url = typeof resources[i] === &#x27;string&#x27; ? resources[i] : resources[i].src,
                 ext = url.split(&#x27;.&#x27;).pop().toLowerCase();
 
             &#x2F;&#x2F;load a texture

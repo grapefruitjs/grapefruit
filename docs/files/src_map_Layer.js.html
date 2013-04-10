@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -137,7 +143,7 @@
  *
  * @module gf
  * @class Layer
- * @extends DisplayObjectContainer
+ * @extends DisplayObject
  * @constructor
  * @param layer {Object} All the settings for the layer
  *&#x2F;
@@ -176,7 +182,18 @@ gf.Layer = function(layer) {
     this.hSize = this.size.clone().divideScalar(2);
 };
 
-gf.inherits(gf.Layer, gf.DisplayObject);
+gf.inherits(gf.Layer, gf.DisplayObject, {
+    &#x2F;**
+     * Pans the layer around, rendering stuff if necessary
+     *
+     * @method pan
+     * @param dx {Number|Point} The x amount to pan, if a Point is passed the dy param is ignored
+     * @param dy {Number} The y ammount to pan
+     * @return {Layer} Returns itself for chainability
+     *&#x2F;
+    pan: function() {
+    }
+});
     </pre>
 </div>
 

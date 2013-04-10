@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -136,7 +142,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l587"><code>src\core.js:587</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_entityPool.js.html#l1"><code>src\entityPool.js:1</code></a>
         </div>
     
 
@@ -153,7 +159,11 @@
     <div class="example">
         <h4>Example:</h4>
         <div class="example-content">
-            <pre class="code prettyprint"><code> var ent = new gf.Entity([10, 1], { name: 'MyEntity' });
+            <pre class="code prettyprint"><code> var clock = new gf.Clock(false);
+ //... some code ...
+ clock.start();
+ //... some long code ...
+ var delta = clock.getDelta();
 </code></pre>
         </div>
     </div>
@@ -167,8 +177,14 @@
             <ul class="module-classes">
             
                 <li class="module-class">
-                    <a href="..&#x2F;classes/audio.html">
-                        audio
+                    <a href="..&#x2F;classes/AudoPlayer.html">
+                        AudoPlayer
+                    </a>
+                </li>
+            
+                <li class="module-class">
+                    <a href="..&#x2F;classes/Camera.html">
+                        Camera
                     </a>
                 </li>
             
@@ -215,8 +231,20 @@
                 </li>
             
                 <li class="module-class">
-                    <a href="..&#x2F;classes/GuiElement.html">
-                        GuiElement
+                    <a href="..&#x2F;classes/GuiItem.html">
+                        GuiItem
+                    </a>
+                </li>
+            
+                <li class="module-class">
+                    <a href="..&#x2F;classes/Hud.html">
+                        Hud
+                    </a>
+                </li>
+            
+                <li class="module-class">
+                    <a href="..&#x2F;classes/HudItem.html">
+                        HudItem
                     </a>
                 </li>
             

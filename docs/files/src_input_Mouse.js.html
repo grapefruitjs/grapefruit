@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\plugin\plugin.js - gf</title>
+    <title>src\input\Mouse.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -134,93 +134,166 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\plugin\plugin.js</h1>
+                        <h1 class="file-heading">File: src\input\Mouse.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-&#x2F;&#x2F;Great ideas taken from: https:&#x2F;&#x2F;github.com&#x2F;obiot&#x2F;melonJS&#x2F;blob&#x2F;master&#x2F;src&#x2F;plugin&#x2F;plugin.js
-&#x2F;**
- * Namespace for all plugins, it also provides methods for patching
- * core functions, and registering plugins.
- *
- * @module gf
- * @class plugin
- *&#x2F;
-gf.plugin = {
-    Base: function() {},
+gf.input.Mouse = function(man, game) {
+    gf.input.Input.call(this, man, game);
+
     &#x2F;**
-     * Patches a core function with a new one. The function you override with has a special property
-     * called &#x60;this._super&#x60; which is a reference to the function you are overriding.
+     * The current screen touches
      *
-     * @method patch
-     * @param obj {Object} The object with the method to override
-     * @param name {String} The name of the method to override
-     * @param fn {Function} The function to override with
-     * @example
-     *      &#x2F;&#x2F;For example, to patch the gf.Sprite.prototype.isActiveAnimation function:
-     *
-     *      gf.plugin.patch(gf.Sprite, &#x27;isActiveAnimation&#x27;, function() {
-     *          &#x2F;&#x2F;display a console message
-     *          console.log(&#x27;checking animation!&#x27;);
-     *          &#x2F;&#x2F;call the original function
-     *          this._super();
-     *      });
+     * @property touches
+     * @type Array
+     * @readOnly
      *&#x2F;
-    patch: function(obj, name, fn) {
-        if(obj.prototype !== undefined) {
-            obj = obj.prototype;
-        }
+    this.touches = [{ x: 0, y: 0 }];
 
-        if(typeof obj[name] === &#x27;function&#x27; &amp;&amp; typeof fn === &#x27;function&#x27;) {
-            var _super = obj[name];
-
-            obj[name] = (function(name, fn) {
-                return function() {
-                    var tmp = this._super;
-
-                    this._super = _super;
-
-                    var ret = fn.apply(this, arguments);
-                    this._super = tmp;
-
-                    return ret;
-                };
-            })(name, fn);
-        }
-        else {
-            throw (name + &#x27; is not a function in the passed object.&#x27;);
-        }
-    },
     &#x2F;**
-     * Registers a plugin into the gf.plugin namespace.
+     * The current position of the mouse
      *
-     * @method register
-     * @param plugin {Object} The object to place in the namespace
-     * @param name {String} The name of the plugin to use as the key
-     * @example
-     *      &#x2F;&#x2F;For example, to register a new plugin:
-     *      gf.plugin.register(MyPluginObject, &#x27;myPluginName&#x27;);
-     *      var plg = new gf.plugin.myPluginName();
-     *      &#x2F;&#x2F;OR
-     *      gf.plugin.myPluginName.someFunction();
+     * @property position
+     * @type Point
+     * @readOnly
      *&#x2F;
-    register: function(plugin, name) {
-        &#x2F;&#x2F;ensure we don&#x27;t overrite a name
-        if(gf.plugin[name]) {
-            throw &#x27;plugin &#x27; + name + &#x27; already registered!&#x27;;
-        }
+    this.position = new gf.Point(0, 0);
 
-        if(plugin.prototype.gfVersion === undefined) {
-            throw &#x27;GradeFruitJS: Plugin gfVersion not defined for &#x27; + name;
-        } else if(gf.checkVersion(plugin.prototype.gfVersion) &gt; 0) {
-            throw &#x27;GradeFruitJS: Plugin gfVersion mismatch, expected: &#x27; + plugin.prototype.gfVersion + &#x27;, got: &#x27; + gf.version;
-        }
+    &#x2F;**
+     * The current position of the mouse
+     *
+     * @property position
+     * @type Point
+     * @readOnly
+     *&#x2F;
+    this.offset = gf.utils.getOffset(game.renderer.view);
 
-        &#x2F;&#x2F;store the plugin in the namespace
-        gf.plugin[name] = plugin;
+    &#x2F;&#x2F;bind touch events
+    game.renderer.view.addEventListener(&#x27;touchmove&#x27;, this.onMouseMove.bind(this), false);
+    for(var t in gf.input.Mouse.TOUCH_EVENT) {
+        if(gf.input.Mouse.TOUCH_EVENT[t] === &#x27;touchmove&#x27;) return;
+        game.renderer.view.addEventListener(gf.input.Mouse.TOUCH_EVENT[t], this.onTouch.bind(this), false);
+    }
+
+    &#x2F;&#x2F;Bind mouse events
+    game.renderer.view.addEventListener(&#x27;mousemove&#x27;, this.onMouseMove.bind(this), false);
+    document.addEventListener(&#x27;mousewheel&#x27;, this.onMouseWheel.bind(this), false); &#x2F;&#x2F;needs to be document and check target?
+
+    for(var k in gf.input.Mouse.EVENT) {
+        var v = gf.input.Mouse.EVENT[k];
+        if(v === &#x27;mousemove&#x27;|| v === &#x27;mousewheel&#x27;) return;
+
+        game.renderer.view.addEventListener(v, this.onMouse.bind(this), false);
     }
 };
 
+gf.inherits(gf.input.Mouse, gf.input.Input, {
+    &#x2F;&#x2F;mouse&#x2F;touch move event
+    onMouseMove: function(e) {
+        this.updateCoords(e);
+
+        if(this.dispatchMouseEvent(e))
+            return this.preventDefault(e);
+
+        return true;
+    },
+    &#x2F;&#x2F;generic mouse event (click, down, up, etc)
+    onMouse: function(e) {
+        this.updateCoords(e);
+
+        if(this.dispatchMouseEvent(e))
+            return this.preventDefault(e);
+
+        &#x2F;&#x2F;incase touch event button is undefined
+        var keycode = this.binds[e.button || 0];
+
+        if(keycode) {
+            if(e.type === &#x27;mousedown&#x27; || e.type === &#x27;touchstart&#x27;)
+                return this.manager.keyboard.onKeyDown(e, keycode);
+            else
+                return this.manager.keyboard.onKeyUp(e, keycode);
+        }
+
+        return true;
+    },
+    onMouseWheel: function(e) {
+        if(e.target === this.game.renderer.view)
+            if(this.dispatchMouseEvent(e))
+                return this.preventDefault(e);
+
+        return true;
+    },
+    &#x2F;&#x2F;generic touch event (tap, start, end, etc)
+    onTouch: function(e) {
+        this.updateCoords(e);
+
+        return this.onMouse(e);
+    },
+    &#x2F;&#x2F;update the mouse coords
+    updateCoords: function(e) {
+        this.touches.length = 0;
+
+        var off = this.offset;
+
+        &#x2F;&#x2F;mouse event
+        if(!e.touches) {
+            this.touches.push({
+                x: e.pageX - off.left,
+                y: e.pageY - off.top,
+                id: 0
+            });
+        }
+        &#x2F;&#x2F;touch event
+        else {
+            for(var i = 0, il = e.changedTouches.length; i &lt; il; ++i) {
+                var t = e.changedTouches[i];
+
+                this.touches.push({
+                    x: t.clientX - off.left,
+                    y: t.clientY - off.top
+                });
+            }
+        }
+        this.position.x = this.touches[0].x;
+        this.position.y = this.touches[0].y;
+    },
+    dispatchMouseEvent: function(e) {
+        if(this.binds[e.type]) {
+            &#x2F;&#x2F;track that action is active
+            this.status[this.binds[e.type]] = true;
+
+            &#x2F;&#x2F;for each touch
+            if(this.callbacks[this.binds[e.type]]) {
+                for(var t = 0, tl = this.touches.length; t &lt; tl; ++t) {
+                    this.runCallbacks(e.type, [this.touches[t]]);
+                }
+
+                return this.preventDefault(e);
+            }
+
+            return true;
+        }
+    }
+});
+
+gf.input.Mouse.EVENT = {
+    WHEEL: &#x27;mousewheel&#x27;,
+    MOVE: &#x27;mousemove&#x27;,
+    DOWN: &#x27;mousedown&#x27;,
+    UP: &#x27;mouseup&#x27;,
+    CLICK: &#x27;click&#x27;,
+    DBLCLICK: &#x27;dblclick&#x27;,
+    RCLICK: &#x27;contextmenu&#x27;,
+    CONTEXTMENU: &#x27;contextmenu&#x27;
+};
+
+gf.input.Mouse.TOUCH_EVENT = {
+    MOVE: &#x27;touchmove&#x27;,
+    START: &#x27;touchstart&#x27;,
+    END: &#x27;touchend&#x27;,
+    TAP: &#x27;tap&#x27;,
+    DBLTAP: &#x27;dbltap&#x27;
+};
     </pre>
 </div>
 

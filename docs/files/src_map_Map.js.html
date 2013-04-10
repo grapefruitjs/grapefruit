@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -137,11 +143,19 @@
  *
  * @module gf
  * @class Map
- * @extends DisplayObjectContainer
+ * @extends DisplayObject
  * @constructor
  * @param map {Object} All the settings for the map
  *&#x2F;
-gf.Map = function(map) {
+gf.Map = function(game, map) {
+    &#x2F;**
+     * The game instance this belongs to
+     *
+     * @property game
+     * @type Game
+     *&#x2F;
+    this.game = game;
+
     &#x2F;**
      * The size of the map
      *
@@ -176,6 +190,28 @@ gf.inherits(gf.Map, gf.DisplayObject, {
                     return this.children[i];
 
         return null;
+    },
+    &#x2F;**
+     * Pans the map around
+     *
+     * @method pan
+     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
+     * @param y {Number} The y ammount to pan
+     * @return {Map} Returns itself for chainability
+     *&#x2F;
+    pan: function(x, y) {
+        x = x instanceof gf.Point ? x.x : (x || 0);
+        y = x instanceof gf.Point ? x.y : (y || 0);
+
+        this.position.x += x;
+        this.position.y += y;
+
+        for(var i = 0, il = this.children.length; i &lt; il; ++i) {
+            var o = this.children[i];
+
+            if(o.visible &amp;&amp; o.pan)
+                o.pan(x, y);
+        }
     }
 });
     </pre>

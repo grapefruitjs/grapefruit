@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>plugin - gf</title>
+    <title>HudItem - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -134,7 +134,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>plugin Class</h1>
+                        <h1>HudItem Class</h1>
 <div class="box meta">
     
 
@@ -142,7 +142,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_plugin_plugin.js.html#l2"><code>src\plugin\plugin.js:2</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_gui_HudItem.js.html#l1"><code>src\gui\HudItem.js:1</code></a>
         </div>
     
 
@@ -158,8 +158,7 @@
 
 
 <div class="box intro">
-    <p>Namespace for all plugins, it also provides methods for patching
-core functions, and registering plugins.</p>
+    <p>The base HudItem that represents an element of a hud on the screen.</p>
 </div>
 
 
@@ -171,6 +170,8 @@ core functions, and registering plugins.</p>
         
             <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
+        
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
         
         
@@ -187,14 +188,52 @@ core functions, and registering plugins.</p>
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_patch">patch</a>
+                                <a href="#method_reset">reset</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_register">register</a>
+                                <a href="#method_set">set</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                        
+                            <li class="index-item property">
+                                <a href="#property_draggable">draggable</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_dragging">dragging</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_initialValue">initialValue</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_name">name</a>
 
                                 
                                 
@@ -207,8 +246,6 @@ core functions, and registering plugins.</p>
             
 
             
-
-            
         </div>
 
         
@@ -216,35 +253,17 @@ core functions, and registering plugins.</p>
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_patch" class="method item">
-    <h3 class="name"><code>patch</code></h3>
+                    <div id="method_reset" class="method item">
+    <h3 class="name"><code>reset</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>obj</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>name</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>fn</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\HudItem.html" class="crosslink">HudItem</a></span>
+        </span>
     
 
     
@@ -270,7 +289,7 @@ core functions, and registering plugins.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_plugin_plugin.js.html#l11"><code>src\plugin\plugin.js:11</code></a>
+        <a href="..&#x2F;files&#x2F;src_gui_HudItem.js.html#l53"><code>src\gui\HudItem.js:53</code></a>
         
         </p>
 
@@ -281,110 +300,41 @@ core functions, and registering plugins.</p>
     </div>
 
     <div class="description">
-        <p>Patches a core function with a new one. The function you override with has a special property
-called <code>this._super</code> which is a reference to the function you are overriding.</p>
+        <p>Resets the value to the initialValue</p>
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">obj</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The object with the method to override</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The name of the method to override</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">fn</code>
-                        <span class="type">Function</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The function to override with</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> //For example, to patch the gf.Sprite.prototype.isActiveAnimation function:
-
- gf.plugin.patch(gf.Sprite, 'isActiveAnimation', function() {
-     //display a console message
-     console.log('checking animation!');
-     //call the original function
-     this._super();
- });
-</code></pre>
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\HudItem.html" class="crosslink">HudItem</a></span>:
+                    
+                    Returns itself for chainability
+                
             </div>
         </div>
+    
+
     
 </div>
 
                 
-                    <div id="method_register" class="method item">
-    <h3 class="name"><code>register</code></h3>
+                    <div id="method_set" class="method item">
+    <h3 class="name"><code>set</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>plugin</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>name</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\HudItem.html" class="crosslink">HudItem</a></span>
+        </span>
     
 
     
@@ -410,7 +360,7 @@ called <code>this._super</code> which is a reference to the function you are ove
             
         
         
-        <a href="..&#x2F;files&#x2F;src_plugin_plugin.js.html#l54"><code>src\plugin\plugin.js:54</code></a>
+        <a href="..&#x2F;files&#x2F;src_gui_HudItem.js.html#l62"><code>src\gui\HudItem.js:62</code></a>
         
         </p>
 
@@ -421,64 +371,26 @@ called <code>this._super</code> which is a reference to the function you are ove
     </div>
 
     <div class="description">
-        <p>Registers a plugin into the gf.plugin namespace.</p>
+        <p>Sets the value of the item, and marks it as dirty</p>
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">plugin</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The object to place in the namespace</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The name of the plugin to use as the key</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> //For example, to register a new plugin:
- gf.plugin.register(MyPluginObject, 'myPluginName');
- var plg = new gf.plugin.myPluginName();
- //OR
- gf.plugin.myPluginName.someFunction();
-</code></pre>
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\HudItem.html" class="crosslink">HudItem</a></span>:
+                    
+                    Returns itself for chainability
+                
             </div>
         </div>
+    
+
     
 </div>
 
@@ -486,6 +398,194 @@ called <code>this._super</code> which is a reference to the function you are ove
             </div>
         
 
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_draggable" class="property item">
+    <h3 class="name"><code>draggable</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_gui_HudItem.js.html#l21"><code>src\gui\HudItem.js:21</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets whether or not you can drag the HudItem around</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_dragging" class="property item">
+    <h3 class="name"><code>dragging</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_gui_HudItem.js.html#l30"><code>src\gui\HudItem.js:30</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>[read only] Describes if the current item is being dragged or not</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_initialValue" class="property item">
+    <h3 class="name"><code>initialValue</code></h3>
+    <span class="type">Mixed</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_gui_HudItem.js.html#l43"><code>src\gui\HudItem.js:43</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The initial value of the item to reset to</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_name" class="property item">
+    <h3 class="name"><code>name</code></h3>
+    <span class="type">Mixed</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_gui_HudItem.js.html#l12"><code>src\gui\HudItem.js:12</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The value of the item</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
         
 
         

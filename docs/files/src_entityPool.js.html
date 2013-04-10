@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\plugin\plugin.js - gf</title>
+    <title>src\entityPool.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -134,90 +134,93 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\plugin\plugin.js</h1>
+                        <h1 class="file-heading">File: src\entityPool.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-&#x2F;&#x2F;Great ideas taken from: https:&#x2F;&#x2F;github.com&#x2F;obiot&#x2F;melonJS&#x2F;blob&#x2F;master&#x2F;src&#x2F;plugin&#x2F;plugin.js
 &#x2F;**
- * Namespace for all plugins, it also provides methods for patching
- * core functions, and registering plugins.
+ * Holds a pool of different Entities that can be created, makes it very
+ * easy to quickly create different registered entities
  *
  * @module gf
- * @class plugin
+ * @class entityPool
  *&#x2F;
-gf.plugin = {
-    Base: function() {},
+gf.entityPool = {
+    _objects: {},
     &#x2F;**
-     * Patches a core function with a new one. The function you override with has a special property
-     * called &#x60;this._super&#x60; which is a reference to the function you are overriding.
+     * Adds an entity Object to the pool
      *
-     * @method patch
-     * @param obj {Object} The object with the method to override
-     * @param name {String} The name of the method to override
-     * @param fn {Function} The function to override with
+     * @method add
+     * @param name {String} The user-defined name of the Entity to add
+     * @param obj {Object} The Entity or decendant to add to the pool
+     * @return {Object} Returns the passed object
      * @example
-     *      &#x2F;&#x2F;For example, to patch the gf.Sprite.prototype.isActiveAnimation function:
+     *      &#x2F;&#x2F;create a new ckass to be instantiated
+     *      var Bug = gf.entityPool.add(&#x27;bug&#x27;, gf.Entity.extend({
+     *          &#x2F;&#x2F;ctor function
+     *          init: function(pos, settings) {
+     *              &#x2F;&#x2F;call the base ctor
+     *              this._super(pos, settings);
      *
-     *      gf.plugin.patch(gf.Sprite, &#x27;isActiveAnimation&#x27;, function() {
-     *          &#x2F;&#x2F;display a console message
-     *          console.log(&#x27;checking animation!&#x27;);
-     *          &#x2F;&#x2F;call the original function
-     *          this._super();
+     *              this.color = &#x27;red&#x27;;
+     *          },
+     *          beBug: function() {
+     *              console.log(&quot;I&#x27;m a bug&quot;);
+     *          }
+     *      }));
+     *
+     *      &#x2F;&#x2F;then later in your game code
+     *      var mybug = gf.entityPool.create(&#x27;bug&#x27;, {
+     *          pos: [10, 10]
      *      });
      *&#x2F;
-    patch: function(obj, name, fn) {
-        if(obj.prototype !== undefined) {
-            obj = obj.prototype;
-        }
-
-        if(typeof obj[name] === &#x27;function&#x27; &amp;&amp; typeof fn === &#x27;function&#x27;) {
-            var _super = obj[name];
-
-            obj[name] = (function(name, fn) {
-                return function() {
-                    var tmp = this._super;
-
-                    this._super = _super;
-
-                    var ret = fn.apply(this, arguments);
-                    this._super = tmp;
-
-                    return ret;
-                };
-            })(name, fn);
-        }
-        else {
-            throw (name + &#x27; is not a function in the passed object.&#x27;);
-        }
+    add: function(name, obj) {
+        return gf.entityPool._objects[name] = obj;
     },
     &#x2F;**
-     * Registers a plugin into the gf.plugin namespace.
+     * Checks if the entity exists in the pool
      *
-     * @method register
-     * @param plugin {Object} The object to place in the namespace
-     * @param name {String} The name of the plugin to use as the key
-     * @example
-     *      &#x2F;&#x2F;For example, to register a new plugin:
-     *      gf.plugin.register(MyPluginObject, &#x27;myPluginName&#x27;);
-     *      var plg = new gf.plugin.myPluginName();
-     *      &#x2F;&#x2F;OR
-     *      gf.plugin.myPluginName.someFunction();
+     * @method has
+     * @param name {String} The user-defined name of the Entity to check if is in the pool
+     * @return {Boolean} Returns the passed object
      *&#x2F;
-    register: function(plugin, name) {
-        &#x2F;&#x2F;ensure we don&#x27;t overrite a name
-        if(gf.plugin[name]) {
-            throw &#x27;plugin &#x27; + name + &#x27; already registered!&#x27;;
+    has: function(name) {
+        return !!gf.entityPool._objects[name];
+    },
+    &#x2F;**
+     * Creates a new entity from the pool
+     *
+     * @method create
+     * @param name {String} The user-defined name of the Entity to check if is in the pool
+     * @param props {Object} The properties that would normally be passed as the &quot;settings&quot; of the Entity
+     * @return {Entity} Returns a new instance of the object from the pool
+     * @example
+     *      &#x2F;&#x2F;create a new ckass to be instantiated
+     *      var Bug = function(pos, settings) {
+     *          gf.Entity.call(this, pos, settings);
+     *          this.color = &#x27;red&#x27;;
+     *      };
+     *
+     *      gf.inherits(Bug, gf.Entity, {
+     *          beBug: function() {
+     *              console.log(&quot;I&#x27;m a bug&quot;);
+     *          }
+     *      });
+     *
+     *      &#x2F;&#x2F;then later in your game code
+     *      var mybug = gf.entityPool.create(&#x27;bug&#x27;, {
+     *          pos: [10, 10] &#x2F;&#x2F;pos, and&#x2F;or position properties get sent as the first param to the ctor
+     *      });
+     *&#x2F;
+    create: function(game, name, props) {
+        &#x2F;&#x2F;if the name is in our pool, create it
+        if(name &amp;&amp; gf.entityPool.has(name)) {
+            return new gf.entityPool._objects[name](game, props.pos || props.position || [props.x, props.y], props);
         }
-
-        if(plugin.prototype.gfVersion === undefined) {
-            throw &#x27;GradeFruitJS: Plugin gfVersion not defined for &#x27; + name;
-        } else if(gf.checkVersion(plugin.prototype.gfVersion) &gt; 0) {
-            throw &#x27;GradeFruitJS: Plugin gfVersion mismatch, expected: &#x27; + plugin.prototype.gfVersion + &#x27;, got: &#x27; + gf.version;
+        &#x2F;&#x2F;otherwise create a general Entity
+        else {
+            return new gf.Entity(game, props.pos || props.position || [props.x, props.y], props);
         }
-
-        &#x2F;&#x2F;store the plugin in the namespace
-        gf.plugin[name] = plugin;
     }
 };
 

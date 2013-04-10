@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\audio\audio.js - gf</title>
+    <title>src\AudioPlayer.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -128,27 +134,56 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\audio\audio.js</h1>
+                        <h1 class="file-heading">File: src\AudioPlayer.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-(function() {
-    &#x2F;&#x2F;the list of audio channels
-    var playing = {},
-        resetTime = 0,
-        settings = {
-            loop: false,
-            volume: 1.0
-        };
+&#x2F;**
+ * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
+ *
+ * @module gf
+ * @class AudoPlayer
+ * @constructor
+ * @param game {Game} Game instance for this audio player
+ *&#x2F;
+gf.AudioPlayer = function(game) {
+    &#x2F;**
+     * The game instance this belongs to
+     *
+     * @property game
+     * @type Game
+     *&#x2F;
+    this.game = game;
 
-    function getOpen(id) {
-        var chans = playing[id];
+    &#x2F;**
+     * The pool of audio objects to play sounds with
+     *
+     * @property playing
+     * @type Object
+     * @private
+     * @readOnly
+     *&#x2F;
+    this.playing = {};
+
+    &#x2F;**
+     * When stopping or starting a sound, this is the time index to reset to
+     *
+     * @property resetTime
+     * @type number
+     * @default 0
+     *&#x2F;
+    this.resetTime = 0;
+};
+
+gf.inherits(gf.AudioPlayer, Object, {
+    _getOpen: function(id) {
+        var chans = this.playing[id];
 
         &#x2F;&#x2F;find an open channel
         for(var i = 0, il = chans.length; i &lt; il; ++i) {
             var clip = chans[i++];
             if(clip.ended || !clip.currentTime) {
-                clip.currentTime = resetTime;
+                clip.currentTime = this.resetTime;
                 return clip;
             }
         }
@@ -161,155 +196,147 @@
         chans.push(sound);
 
         return chans[chans.length - 1];
-    }
-
+    },
     &#x2F;**
-     * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
+     * Plays a loaded audio clip
      *
-     * @module gf
-     * @class audio
+     * @method play
+     * @param id {String|Object} The id of the sound clip to play. You can also pass the object returned from a previous play
+     * @param options {Object} The options object you can pass properties like &quot;loop,&quot; &quot;volume,&quot; &quot;channel&quot;
+     * @param callback {Function} The callback to call after the sound finishes playing
+     * @return {Object} The object returned can be passed to any audio function in the
+     *      first parameter to control that audio clip
      *&#x2F;
-    gf.audio = {
-        &#x2F;**
-         * Plays a loaded audio clip
-         *
-         * @method play
-         * @param id {String|Object} The id of the sound clip to play. You can also pass the object returned from a previous play
-         * @param options {Object} The options object you can pass properties like &quot;loop,&quot; &quot;volume,&quot; &quot;channel&quot;
-         * @param callback {Function} The callback to call after the sound finishes playing
-         * @return {Object} The object returned can be passed to any audio function in the
-         *      first parameter to control that audio clip
-         *&#x2F;
-        play: function(id, opts, cb) {
-            if(!gf.assetCache[id]) {
-                throw &#x27;Tried to play unloaded audio: &#x27; + id;
-            }
+    play: function(id, opts, cb) {
+        if(!gf.assetCache[id]) {
+            throw &#x27;Tried to play unloaded audio: &#x27; + id;
+        }
 
-            if(typeof opts === &#x27;function&#x27;) {
-                cb = opts;
-                opts = null;
-            }
+        if(typeof opts === &#x27;function&#x27;) {
+            cb = opts;
+            opts = null;
+        }
 
-            if(typeof id === &#x27;object&#x27;) {
-                opts = id;
-                id = opts.id;
-            }
+        if(typeof id === &#x27;object&#x27;) {
+            opts = id;
+            id = opts.id;
+        }
 
-            opts = opts || {};
+        opts = opts || {};
 
-            opts.id = id;
-            opts.loop = opts.loop || settings.loop;
-            opts.volume = opts.volume || settings.volume;
+        opts.id = id;
+        opts.loop = opts.loop || false;
+        opts.volume = opts.volume || 1;
 
-            &#x2F;&#x2F;resume a paused channel
-            if(opts.channel !== undefined &amp;&amp; playing[id]) {
-                playing[id][opts.channel].play();
-                return opts;
-            }
+        &#x2F;&#x2F;resume a paused channel
+        if(opts.channel !== undefined &amp;&amp; this.playing[id]) {
+            this.playing[id][opts.channel].play();
+            return opts;
+        }
 
-            &#x2F;&#x2F;we haven&#x27;t played this sound yet, create a new channel list
-            if(!playing[id]) {
-                playing[id] = [gf.assetCache[id]];
-                playing[id][0].channel = 0;
-            }
+        &#x2F;&#x2F;we haven&#x27;t played this sound yet, create a new channel list
+        if(!this.playing[id]) {
+            this.playing[id] = [gf.assetCache[id]];
+            this.playing[id][0].channel = 0;
+        }
 
-            var sound = getOpen(id);
-            sound.loop = opts.loop;
-            sound.volume = opts.volume;
-            sound.play();
+        var sound = this._getOpen(id);
+        sound.loop = opts.loop;
+        sound.volume = opts.volume;
+        sound.play();
 
-            opts.channel = sound.channel;
+        opts.channel = sound.channel;
 
-            if(!opts.loop) {
-                var ended = function() {
+        if(!opts.loop) {
+            var self = this,
+                ended = function() {
                     sound.removeEventListener(&#x27;ended&#x27;, ended, false);
-                    gf.audio.stop(opts);
+                    self.stop(opts);
                     if(cb) cb();
                 };
-                sound.addEventListener(&#x27;ended&#x27;, ended, false);
-            }
-
-            return opts;
-        },
-        &#x2F;**
-         * Stops a playing audio clip
-         *
-         * @method stop
-         * @param id {String|Object} The id of the sound clip to stop. You can also pass the object returned from a previous play
-         * @param channel {Number} The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)
-         *&#x2F;
-        stop: function(id, channel) {
-            if(typeof id === &#x27;object&#x27;) {
-                channel = id.channel;
-                id = id.id;
-            }
-
-            if(!playing[id]) return;
-            if(!playing[id][channel]) return;
-
-            playing[id][channel].pause();
-            playing[id][channel].currentTime = resetTime;
-            playing[id][channel].ended = true;
-        },
-        &#x2F;**
-         * Pauses a playing audio clip
-         *
-         * @method stop
-         * @param id {String|Object} The id of the sound clip to pause. You can also pass the object returned from a previous play
-         * @param channel {Number} The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)
-         *&#x2F;
-        pause: function(id, channel) {
-            if(typeof id === &#x27;object&#x27;) {
-                channel = id.channel;
-                id = id.id;
-            }
-
-            if(!playing[id]) return;
-            if(!playing[id][channel]) return;
-
-            playing[id][channel].pause();
-        },
-        &#x2F;**
-         * Plays all currently paused or stopped audio clips (only ones that have previously been started with gf.play)
-         *
-         * @method playAll
-         *&#x2F;
-        playAll: function() {
-            for(var sid in playing) {
-                var chans = playing[sid];
-
-                for(var i = 0, il = chans.length; i &lt; il; ++i)
-                    gf.audio.play({ id: sid, channel: i });
-            }
-        },
-        &#x2F;**
-         * Stops all currently paused or playing audio clips
-         *
-         * @method stopAll
-         *&#x2F;
-        stopAll: function() {
-            for(var sid in playing) {
-                var chans = playing[sid];
-
-                for(var i = 0, il = chans.length; i &lt; il; ++i)
-                    gf.audio.stop(sid, i);
-            }
-        },
-        &#x2F;**
-         * Pauses all currently playing audio clips
-         *
-         * @method pauseAll
-         *&#x2F;
-        pauseAll: function() {
-            for(var sid in playing) {
-                var chans = playing[sid];
-
-                for(var i = 0, il = chans.length; i &lt; il; ++i)
-                    gf.audio.pause(sid, i);
-            }
+            sound.addEventListener(&#x27;ended&#x27;, ended, false);
         }
-    };
-})();
+
+        return opts;
+    },
+    &#x2F;**
+     * Stops a playing audio clip
+     *
+     * @method stop
+     * @param id {String|Object} The id of the sound clip to stop. You can also pass the object returned from a previous play
+     * @param channel {Number} The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)
+     *&#x2F;
+    stop: function(id, channel) {
+        if(typeof id === &#x27;object&#x27;) {
+            channel = id.channel;
+            id = id.id;
+        }
+
+        if(!this.playing[id]) return;
+        if(!this.playing[id][channel]) return;
+
+        this.playing[id][channel].pause();
+        this.playing[id][channel].currentTime = this.resetTime;
+        this.playing[id][channel].ended = true;
+    },
+    &#x2F;**
+     * Pauses a playing audio clip
+     *
+     * @method stop
+     * @param id {String|Object} The id of the sound clip to pause. You can also pass the object returned from a previous play
+     * @param channel {Number} The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)
+     *&#x2F;
+    pause: function(id, channel) {
+        if(typeof id === &#x27;object&#x27;) {
+            channel = id.channel;
+            id = id.id;
+        }
+
+        if(!this.playing[id]) return;
+        if(!this.playing[id][channel]) return;
+
+        this.playing[id][channel].pause();
+    },
+    &#x2F;**
+     * Plays all currently paused or stopped audio clips (only ones that have previously been started with gf.play)
+     *
+     * @method playAll
+     *&#x2F;
+    playAll: function() {
+        for(var sid in this.playing) {
+            var chans = this.playing[sid];
+
+            for(var i = 0, il = chans.length; i &lt; il; ++i)
+                this.play({ id: sid, channel: i });
+        }
+    },
+    &#x2F;**
+     * Stops all currently paused or playing audio clips
+     *
+     * @method stopAll
+     *&#x2F;
+    stopAll: function() {
+        for(var sid in this.playing) {
+            var chans = this.playing[sid];
+
+            for(var i = 0, il = chans.length; i &lt; il; ++i)
+                this.stop(sid, i);
+        }
+    },
+    &#x2F;**
+     * Pauses all currently playing audio clips
+     *
+     * @method pauseAll
+     *&#x2F;
+    pauseAll: function() {
+        for(var sid in this.playing) {
+            var chans = this.playing[sid];
+
+            for(var i = 0, il = chans.length; i &lt; il; ++i)
+                this.pause(sid, i);
+        }
+    }
+});
     </pre>
 </div>
 

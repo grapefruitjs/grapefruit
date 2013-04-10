@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\entity\Entity.js - gf</title>
+    <title>src\Entity.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -128,7 +134,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\entity\Entity.js</h1>
+                        <h1 class="file-heading">File: src\Entity.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -156,7 +162,15 @@
  * @example
  *      var ent = new gf.Entity([10, 1], { name: &#x27;MyEntity&#x27; });
  *&#x2F;
-gf.Entity = function(pos, settings) {
+gf.Entity = function(game, pos, settings) {
+    &#x2F;**
+     * The game instance this belongs to
+     *
+     * @property game
+     * @type Game
+     *&#x2F;
+    this.game = game;
+
     &#x2F;**
      * The type of the entity
      *
@@ -229,7 +243,7 @@ gf.Entity = function(pos, settings) {
      * @type Vector
      * @default 0
      *&#x2F;
-    this.friction = gf.game.friction || 0;
+    this.friction = 0;
 
     &#x2F;**
      * Gravity to apply to this entity
@@ -238,7 +252,7 @@ gf.Entity = function(pos, settings) {
      * @type Vector
      * @default 0.98 (earth&#x27;s gravity)
      *&#x2F;
-    this.gravity = gf.game.gravity !== undefined ? gf.game.gravity : 0.98;
+    this.gravity = 0;
 
     &#x2F;**
      * Whether or not the entity is &quot;alive&quot;, advisory only
@@ -310,7 +324,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
     computeVelocity: function(vel) {
         &#x2F;&#x2F;apply gravity
         if(this.gravity) {
-            vel.y -= !this.onladder ? (this.gravity * gf.game._delta) : 0;
+            vel.y -= !this.onladder ? (this.gravity * this.game._delta) : 0;
 
             &#x2F;&#x2F;check if falling&#x2F;jumping
             this.falling = (vel.y &lt; 0);
@@ -338,10 +352,10 @@ gf.inherits(gf.Entity, gf.Sprite, {
     applyFriction: function(vel, friction) {
         return (
                     vel + friction &lt; 0 ?
-                    vel + (friction * (gf.game._delta || 0)) :
+                    vel + (friction * (this.game._delta || 0)) :
                     (
                         vel - friction &gt; 0 ?
-                        vel - (friction * (gf.game._delta || 0)) :
+                        vel - (friction * (this.game._delta || 0)) :
                         0
                     )
                 );
@@ -397,7 +411,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
             return;
 
         &#x2F;&#x2F;get the world colliders
-        var colliders = (gf.game.world === undefined || !this.mapCollidable) ? [] : gf.game.world.checkCollision(this);
+        var colliders = (this.game.world === undefined || !this.mapCollidable) ? [] : this.game.world.checkCollision(this);
 
         &#x2F;&#x2F;update flags
         this.onladder = false;
@@ -486,7 +500,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      *&#x2F;
     onCollision: function() {
         if(this.collidable &amp;&amp; this.type === gf.types.ENTIY.COLLECTABLE)
-            gf.game.removeObject(this);
+            this.game.removeObject(this);
 
         return this;
     },
@@ -513,6 +527,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
         return this;
     }
 });
+
     </pre>
 </div>
 

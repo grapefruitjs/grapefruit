@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\entity\entityPool.js - gf</title>
+    <title>src\input\Input.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -128,96 +134,130 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\entity\entityPool.js</h1>
+                        <h1 class="file-heading">File: src\input\Input.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-&#x2F;**
- * Holds a pool of different Entities that can be created, makes it very
- * easy to quickly create different registered entities
- *
- * @module gf
- * @class entityPool
- *&#x2F;
-gf.entityPool = {
-    _objects: {},
+gf.input.Input = function(man, game) {
     &#x2F;**
-     * Adds an entity Object to the pool
+     * The game instance this belongs to
      *
-     * @method add
-     * @param name {String} The user-defined name of the Entity to add
-     * @param obj {Object} The Entity or decendant to add to the pool
-     * @return {Object} Returns the passed object
-     * @example
-     *      &#x2F;&#x2F;create a new ckass to be instantiated
-     *      var Bug = gf.entityPool.add(&#x27;bug&#x27;, gf.Entity.extend({
-     *          &#x2F;&#x2F;ctor function
-     *          init: function(pos, settings) {
-     *              &#x2F;&#x2F;call the base ctor
-     *              this._super(pos, settings);
-     *
-     *              this.color = &#x27;red&#x27;;
-     *          },
-     *          beBug: function() {
-     *              console.log(&quot;I&#x27;m a bug&quot;);
-     *          }
-     *      }));
-     *
-     *      &#x2F;&#x2F;then later in your game code
-     *      var mybug = gf.entityPool.create(&#x27;bug&#x27;, {
-     *          pos: [10, 10]
-     *      });
+     * @property game
+     * @type Game
      *&#x2F;
-    add: function(name, obj) {
-        return gf.entityPool._objects[name] = obj;
-    },
+    this.game = game;
+
     &#x2F;**
-     * Checks if the entity exists in the pool
+     * The input manager this belongs to
      *
-     * @method has
-     * @param name {String} The user-defined name of the Entity to check if is in the pool
-     * @return {Boolean} Returns the passed object
+     * @property manager
+     * @type InputManager
      *&#x2F;
-    has: function(name) {
-        return !!gf.entityPool._objects[name];
-    },
+    this.manager = man;
+
     &#x2F;**
-     * Creates a new entity from the pool
+     * The binds that map an action to an input value
      *
-     * @method create
-     * @param name {String} The user-defined name of the Entity to check if is in the pool
-     * @param props {Object} The properties that would normally be passed as the &quot;settings&quot; of the Entity
-     * @return {Entity} Returns a new instance of the object from the pool
-     * @example
-     *      &#x2F;&#x2F;create a new ckass to be instantiated
-     *      var Bug = function(pos, settings) {
-     *          gf.Entity.call(this, pos, settings);
-     *          this.color = &#x27;red&#x27;;
-     *      };
-     *
-     *      gf.inherits(Bug, gf.Entity, {
-     *          beBug: function() {
-     *              console.log(&quot;I&#x27;m a bug&quot;);
-     *          }
-     *      });
-     *
-     *      &#x2F;&#x2F;then later in your game code
-     *      var mybug = gf.entityPool.create(&#x27;bug&#x27;, {
-     *          pos: [10, 10] &#x2F;&#x2F;pos, and&#x2F;or position properties get sent as the first param to the ctor
-     *      });
+     * @property binds
+     * @type Object
+     * @readOnly
      *&#x2F;
-    create: function(name, props) {
-        &#x2F;&#x2F;if the name is in our pool, create it
-        if(name &amp;&amp; gf.entityPool.has(name)) {
-            return new gf.entityPool._objects[name](props.pos || props.position || [props.x, props.y], props);
-        }
-        &#x2F;&#x2F;otherwise create a general Entity
-        else {
-            return new gf.Entity(props.pos || props.position || [props.x, props.y], props);
-        }
-    }
+    this.binds = {};
+
+    &#x2F;**
+     * The callbacks that map from an action
+     *
+     * @property callbacks
+     * @type Object
+     * @readOnly
+     *&#x2F;
+    this.callbacks = {};
+
+    &#x2F;**
+     * The count of how many actions an input value is bound to
+     *
+     * @property callbacks
+     * @type Object
+     * @readOnly
+     *&#x2F;
+    this.bindCount = {};
+
+    &#x2F;**
+     * Tracks the status of each action
+     *
+     * @property status
+     * @type Object
+     * @readOnly
+     *&#x2F;
+    this.status = {};
 };
 
+gf.inherits(gf.input.Input, Object, {
+    _doBind: function(code, action, cb) {
+        this.binds[code] = action;
+        this.status[action] = false;
+
+        if(!this.bindCount[action])
+            this.bindCount[action] = 1;
+        else
+            this.bindCount[action]++;
+
+        if(cb) {
+            if(this.callbacks[action])
+                this.callbacks[action].push({ code: code, cb: cb });
+            else
+                this.callbacks[action] = [{ code: code, cb: cb }];
+        }
+
+        return this;
+    },
+    _doUnbind: function(code, action) {
+        &#x2F;&#x2F;remove the bind (code -&gt; action)
+        delete this.binds[code];
+
+        &#x2F;&#x2F;reduce bind count
+        this.bindCount[action]--;
+
+        &#x2F;&#x2F;if this action isn&#x27;t bound anymore clean it up
+        if(this.bindCount[action] &lt;= 0) {
+            this.bindCount[action] = 0;
+            delete this.status[action];
+            delete this.callbacks[action];
+        }
+
+        return gf.controls;
+    },
+    &#x2F;&#x2F;helper to prevent default stuffs accross different browsers
+    preventDefault: function(e) {
+        if(e.stopPropagation) e.stopPropagation();
+        else e.cancelBubble = true;
+
+        if(e.preventDefault) e.preventDefault();
+        else e.returnValue = false;
+
+        return false;
+    },
+    bind: function(code, action, cb) {
+        return this._doBind(code, action, cb);
+    },
+    unbind: function(code, action) {
+        return this._doUnbind(code, action);
+    },
+    runCallbacks: function(code, args) {
+        args = args || [];
+        args.unshift(this.binds[code]);
+
+        var cbs = this.callbacks[this.binds[code]];
+
+        if(cbs)
+            for(var i = 0, il = cbs.length; i &lt; il; ++i)
+                if(cbs[i].code === code)
+                    cbs[i].cb.apply(this, args);
+    },
+    isActionActive: function(action) {
+        return this.status[action];
+    }
+});
     </pre>
 </div>
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>audio - gf</title>
+    <title>AudoPlayer - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -128,7 +134,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>audio Class</h1>
+                        <h1>AudoPlayer Class</h1>
 <div class="box meta">
     
 
@@ -136,7 +142,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l32"><code>src\audio\audio.js:32</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l1"><code>src\AudioPlayer.js:1</code></a>
         </div>
     
 
@@ -164,6 +170,8 @@
         
             <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
+        
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
         
         
@@ -226,6 +234,42 @@
             
 
             
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                        
+                            <li class="index-item property">
+                                <a href="#property_assetURLs">assetURLs</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_game">game</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_playing">playing</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_resetTime">resetTime</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
 
             
 
@@ -269,7 +313,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l164"><code>src\audio\audio.js:164</code></a>
+        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l186"><code>src\AudioPlayer.js:186</code></a>
         
         </p>
 
@@ -349,7 +393,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l39"><code>src\audio\audio.js:39</code></a>
+        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l60"><code>src\AudioPlayer.js:60</code></a>
         
         </p>
 
@@ -470,7 +514,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l138"><code>src\audio\audio.js:138</code></a>
+        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l160"><code>src\AudioPlayer.js:160</code></a>
         
         </p>
 
@@ -540,7 +584,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l100"><code>src\audio\audio.js:100</code></a>
+        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l122"><code>src\AudioPlayer.js:122</code></a>
         
         </p>
 
@@ -648,7 +692,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l120"><code>src\audio\audio.js:120</code></a>
+        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l142"><code>src\AudioPlayer.js:142</code></a>
         
         </p>
 
@@ -740,7 +784,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_audio_audio.js.html#l151"><code>src\audio\audio.js:151</code></a>
+        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l173"><code>src\AudioPlayer.js:173</code></a>
         
         </p>
 
@@ -765,6 +809,192 @@
             </div>
         
 
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_assetURLs" class="property item">
+    <h3 class="name"><code>assetURLs</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l5"><code>src\AssetLoader.js:5</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The array of asset URLs that are going to be loaded</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_game" class="property item">
+    <h3 class="name"><code>game</code></h3>
+    <span class="type">Game</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l10"><code>src\AudioPlayer.js:10</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The game instance this belongs to</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_playing" class="property item private">
+    <h3 class="name"><code>playing</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l18"><code>src\AudioPlayer.js:18</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The pool of audio objects to play sounds with</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_resetTime" class="property item">
+    <h3 class="name"><code>resetTime</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l28"><code>src\AudioPlayer.js:28</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>When stopping or starting a sound, this is the time index to reset to</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
         
 
         

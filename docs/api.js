@@ -1,12 +1,16 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
+        "AudoPlayer",
+        "Camera",
         "Clock",
         "DisplayObject",
         "Entity",
         "EventTarget",
         "Gui",
-        "GuiElement",
+        "GuiItem",
+        "Hud",
+        "HudItem",
         "Layer",
         "Map",
         "Point",
@@ -17,7 +21,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "TiledObjectGroup",
         "TiledTileset",
         "Vector",
-        "audio",
         "entityPool",
         "game",
         "plugin",

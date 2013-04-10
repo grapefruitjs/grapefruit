@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -136,7 +142,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l587"><code>src\core.js:587</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_Game.js.html#l1"><code>src\Game.js:1</code></a>
         </div>
     
 
@@ -196,13 +202,6 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_cameraTrack">cameraTrack</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
                                 <a href="#method_checkCollisions">checkCollisions</a>
 
                                 
@@ -210,7 +209,7 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_init">init</a>
+                                <a href="#method_loadWorld">loadWorld</a>
 
                                 
                                 
@@ -247,43 +246,57 @@
 
                     <ul class="index-list properties">
                         
-                            <li class="index-item property private">
-                                <a href="#property__clock">_clock</a>
+                            <li class="index-item property">
+                                <a href="#property_audio">audio</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item property private">
-                                <a href="#property__cont">_cont</a>
+                            <li class="index-item property">
+                                <a href="#property_camera">camera</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item property private">
-                                <a href="#property__initialized">_initialized</a>
+                            <li class="index-item property">
+                                <a href="#property_clock">clock</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item property private">
-                                <a href="#property__nextId">_nextId</a>
+                            <li class="index-item property">
+                                <a href="#property_container">container</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item property private">
-                                <a href="#property__renderer">_renderer</a>
+                            <li class="index-item property">
+                                <a href="#property_friction">friction</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item property private">
-                                <a href="#property__stage">_stage</a>
+                            <li class="index-item property">
+                                <a href="#property_gravity">gravity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_input">input</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_loader">loader</a>
 
                                 
                                 
@@ -291,6 +304,27 @@
                         
                             <li class="index-item property private">
                                 <a href="#property_MAX_Z">MAX_Z</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_renderer">renderer</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_renderMethod">renderMethod</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_stage">stage</a>
 
                                 
                                 
@@ -344,7 +378,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l873"><code>src\core.js:873</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l282"><code>src\Game.js:282</code></a>
         
         </p>
 
@@ -412,7 +446,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l764"><code>src\core.js:764</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l179"><code>src\Game.js:179</code></a>
         
         </p>
 
@@ -436,110 +470,6 @@
                     
                         <code class="param-name">obj</code>
                         <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The sprite to the stage</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Game</span>:
-                    
-                    Returns itself for chainability
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_cameraTrack" class="method item">
-    <h3 class="name"><code>cameraTrack</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>ent</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Game</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l857"><code>src\core.js:857</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>locks the camera on an entity</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">ent</code>
-                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
                     
 
                     
@@ -620,7 +550,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l827"><code>src\core.js:827</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l252"><code>src\Game.js:252</code></a>
         
         </p>
 
@@ -678,8 +608,8 @@
 </div>
 
                 
-                    <div id="method_init" class="method item">
-    <h3 class="name"><code>init</code></h3>
+                    <div id="method_loadWorld" class="method item">
+    <h3 class="name"><code>loadWorld</code></h3>
 
     
         <div class="args">
@@ -687,13 +617,7 @@
             
                 <li class="arg">
                     
-                        <code>contId</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>opts</code>
+                        <code>world</code>
                     
                 </li>
             
@@ -730,7 +654,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l662"><code>src\core.js:662</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l215"><code>src\Game.js:215</code></a>
         
         </p>
 
@@ -741,7 +665,7 @@
     </div>
 
     <div class="description">
-        <p>Initializes a new game instance, only one allowed</p>
+        <p>Loads the world map into the game</p>
     </div>
 
     
@@ -752,29 +676,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">contId</code>
-                        <span class="type">String</span>
+                        <code class="param-name">world</code>
+                        <span class="type">String | <a href="..\classes\Map.html" class="crosslink">Map</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The container for the new canvas we will create for the game</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">opts</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Options such as gravity, friction, and renderMethod</p>
+                        <p>The map to load as the current world</p>
                     </div>
 
                     
@@ -799,14 +708,6 @@
         </div>
     
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <p>gf.game.init('myDiv', { renderMethod: 'webgl' });</p>
-            </div>
-        </div>
     
 </div>
 
@@ -857,7 +758,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l781"><code>src\core.js:781</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l198"><code>src\Game.js:198</code></a>
         
         </p>
 
@@ -951,7 +852,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l815"><code>src\core.js:815</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l240"><code>src\Game.js:240</code></a>
         
         </p>
 
@@ -1010,6 +911,10 @@
     
 
     
+        <span class="returns-inline">
+            <span class="type">Game</span>
+        </span>
+    
 
     
 
@@ -1034,7 +939,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l743"><code>src\core.js:743</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l160"><code>src\Game.js:160</code></a>
         
         </p>
 
@@ -1089,6 +994,19 @@
     
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Game</span>:
+                    
+                    Returns itself for chainability
+                
+            </div>
+        </div>
+    
 
     
 </div>
@@ -1102,14 +1020,12 @@
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property__clock" class="property item private">
-    <h3 class="name"><code>_clock</code></h3>
-    <span class="type">gf.Clock</span>
+                    <div id="property_audio" class="property item">
+    <h3 class="name"><code>audio</code></h3>
+    <span class="type">AudioPlayer</span>
 
     
 
-    
-        <span class="flag private">private</span>
     
 
     
@@ -1127,7 +1043,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l615"><code>src\core.js:615</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l120"><code>src\Game.js:120</code></a>
         
         </p>
 
@@ -1137,7 +1053,7 @@
     </div>
 
     <div class="description">
-        <p>Raw gf.Clock instance for internal timing</p>
+        <p>The audio player for this game instance</p>
     </div>
 
     
@@ -1148,14 +1064,144 @@
 </div>
 
                 
-                    <div id="property__cont" class="property item private">
-    <h3 class="name"><code>_cont</code></h3>
+                    <div id="property_camera" class="property item">
+    <h3 class="name"><code>camera</code></h3>
+    <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l138"><code>src\Game.js:138</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The camera you view the scene through</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_clock" class="property item">
+    <h3 class="name"><code>clock</code></h3>
+    <span class="type"><a href="..\classes\Clock.html" class="crosslink">Clock</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l50"><code>src\Game.js:50</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Raw Clock instance for internal timing</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_container" class="property item">
+    <h3 class="name"><code>container</code></h3>
     <span class="type">DOMELement</span>
 
     
 
     
-        <span class="flag private">private</span>
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l91"><code>src\Game.js:91</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The domElement that we are putting our rendering canvas into (the container)</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_friction" class="property item">
+    <h3 class="name"><code>friction</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+
+    
+
     
 
     
@@ -1173,7 +1219,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l644"><code>src\core.js:644</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l23"><code>src\Game.js:23</code></a>
         
         </p>
 
@@ -1183,9 +1229,11 @@
     </div>
 
     <div class="description">
-        <p>The domElement that we are rendering into (the container)</p>
+        <p>The default friction to use for the game, defaults to 0,0</p>
     </div>
 
+    
+        <p><strong>Default:</strong> new gf.Vector(0, 0)</p>
     
 
     
@@ -1194,60 +1242,58 @@
 </div>
 
                 
-                    <div id="property__initialized" class="property item private">
-    <h3 class="name"><code>_initialized</code></h3>
-    <span class="type">Boolean</span>
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l653"><code>src\core.js:653</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Tracker to see if the game has been initialized yet</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property__nextId" class="property item private">
-    <h3 class="name"><code>_nextId</code></h3>
+                    <div id="property_gravity" class="property item">
+    <h3 class="name"><code>gravity</code></h3>
     <span class="type">Number</span>
 
     
 
     
-        <span class="flag private">private</span>
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l14"><code>src\Game.js:14</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The default gravity to use for the game, defaults to 0.98 (Earth's Gravity)</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> 0.98</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_input" class="property item">
+    <h3 class="name"><code>input</code></h3>
+    <span class="type">InputManager</span>
+
+    
+
     
 
     
@@ -1265,7 +1311,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l635"><code>src\core.js:635</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l129"><code>src\Game.js:129</code></a>
         
         </p>
 
@@ -1275,7 +1321,7 @@
     </div>
 
     <div class="description">
-        <p>Internal ID counter for object IDs</p>
+        <p>The input instance for this game</p>
     </div>
 
     
@@ -1286,60 +1332,12 @@
 </div>
 
                 
-                    <div id="property__renderer" class="property item private">
-    <h3 class="name"><code>_renderer</code></h3>
-    <span class="type">PIXI.WebGLRenderer | PIXI.CanvasRenderer</span>
+                    <div id="property_loader" class="property item">
+    <h3 class="name"><code>loader</code></h3>
+    <span class="type">AssetLoader</span>
 
     
 
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l625"><code>src\core.js:625</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Raw rendering engine</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property__stage" class="property item private">
-    <h3 class="name"><code>_stage</code></h3>
-    <span class="type">PIXI.Stage</span>
-
-    
-
-    
-        <span class="flag private">private</span>
     
 
     
@@ -1357,7 +1355,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l605"><code>src\core.js:605</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l111"><code>src\Game.js:111</code></a>
         
         </p>
 
@@ -1367,7 +1365,7 @@
     </div>
 
     <div class="description">
-        <p>Raw PIXI.stage instance</p>
+        <p>The loader for this game instance</p>
     </div>
 
     
@@ -1403,7 +1401,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l594"><code>src\core.js:594</code></a>
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l100"><code>src\Game.js:100</code></a>
         
         </p>
 
@@ -1418,6 +1416,140 @@
 
     
         <p><strong>Default:</strong> 500</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_renderer" class="property item">
+    <h3 class="name"><code>renderer</code></h3>
+    <span class="type">PIXI.WebGLRenderer | PIXI.CanvasRenderer</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l59"><code>src\Game.js:59</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Raw rendering engine</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_renderMethod" class="property item">
+    <h3 class="name"><code>renderMethod</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l32"><code>src\Game.js:32</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The method used to render values to the screen (either webgl, canvas, or css3)</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;webgl&#x27;</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_stage" class="property item">
+    <h3 class="name"><code>stage</code></h3>
+    <span class="type">PIXI.Stage</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Game.js.html#l41"><code>src\Game.js:41</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Raw PIXI.stage instance</p>
+    </div>
+
     
 
     

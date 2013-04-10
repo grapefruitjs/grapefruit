@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\gui\gui.js - gf</title>
+    <title>src\gui\Gui.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -128,7 +134,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\gui\gui.js</h1>
+                        <h1 class="file-heading">File: src\gui\Gui.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -152,10 +158,13 @@ gf.Gui = function(pos, settings) {
      *&#x2F;
     this.name = &#x27;&#x27;;
 
-    gf.DisplayObject.call(this);
+    gf.DisplayObject.call(this, settings);
+
+    &#x2F;&#x2F;mixin user&#x27;s settings
+    gf.utils.setValues(this, settings);
 };
 
-gf.inherits(gf.GuiItem, gf.DisplayObject);
+gf.inherits(gf.Gui, gf.DisplayObject);
 
     </pre>
 </div>

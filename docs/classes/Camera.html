@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Sprite - gf</title>
+    <title>Camera - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -134,7 +134,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Sprite Class</h1>
+                        <h1>Camera Class</h1>
 <div class="box meta">
     
 
@@ -142,7 +142,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l1"><code>src\Sprite.js:1</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_Camera.js.html#l2"><code>src\Camera.js:2</code></a>
         </div>
     
 
@@ -158,7 +158,12 @@
 
 
 <div class="box intro">
-    <p>The base Sprite class. This class is the base for all images on the screen</p>
+    <p>A basic Camera object that provides some effects. It also will contain the HUD and GUI
+to ensure they are using "screen-coords".
+This camera instance is based on
+<a href="https://github.com/photonstorm/kiwi-lite/blob/master/Kiwi%20Lite/Camera.ts">Kiwi-Lite's Camera</a>.</p>
+
+<p>TODO: Currently fade/flash don't show the colors. How should I actually show them, a PIXI.Sprite?</p>
 </div>
 
 
@@ -188,119 +193,98 @@
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_addAnimation">addAnimation</a>
+                                <a href="#method_fade">fade</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_click">click</a>
+                                <a href="#method_flash">flash</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_gotoAndPlay">gotoAndPlay</a>
+                                <a href="#method_focus">focus</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_gotoAndStop">gotoAndStop</a>
+                                <a href="#method_follow">follow</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_isActiveAnimation">isActiveAnimation</a>
+                                <a href="#method_pan">pan</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_resize">resize</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_mousedown">mousedown</a>
+                                <a href="#method_setBounds">setBounds</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_mouseout">mouseout</a>
+                                <a href="#method_shake">shake</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_mouseover">mouseover</a>
+                                <a href="#method_stopAll">stopAll</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_mouseup">mouseup</a>
+                                <a href="#method_stopFade">stopFade</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_play">play</a>
+                                <a href="#method_stopFlash">stopFlash</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_setActiveAnimation">setActiveAnimation</a>
+                                <a href="#method_stopShake">stopShake</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_setInteractive">setInteractive</a>
+                                <a href="#method_unfollow">unfollow</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_setPosition">setPosition</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_stop">stop</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_tap">tap</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_touchend">touchend</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_touchstart">touchstart</a>
+                                <a href="#method_update">update</a>
 
                                 
                                 
@@ -317,28 +301,42 @@
                     <ul class="index-list properties">
                         
                             <li class="index-item property private">
-                                <a href="#property_anim">anim</a>
+                                <a href="#property__deadzone">_deadzone</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property private">
-                                <a href="#property_currentAnim">currentAnim</a>
+                                <a href="#property__fx">_fx</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__target">_target</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_bounds">bounds</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_interactive">interactive</a>
+                                <a href="#property_game">game</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_name">name</a>
+                                <a href="#property_hSize">hSize</a>
 
                                 
                                 
@@ -365,8 +363,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_addAnimation" class="method item">
-    <h3 class="name"><code>addAnimation</code></h3>
+                    <div id="method_fade" class="method item">
+    <h3 class="name"><code>fade</code></h3>
 
     
         <div class="args">
@@ -374,13 +372,19 @@
             
                 <li class="arg">
                     
-                        <code>name</code>
+                        <code>color</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>frames</code>
+                        <code>duration</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>callback</code>
                     
                 </li>
             
@@ -390,7 +394,7 @@
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
         </span>
     
 
@@ -417,7 +421,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l156"><code>src\Sprite.js:156</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l160"><code>src\Camera.js:160</code></a>
         
         </p>
 
@@ -428,7 +432,7 @@
     </div>
 
     <div class="description">
-        <p>Defines a new animation on the Sprite</p>
+        <p>Makes the camera fade into a color</p>
     </div>
 
     
@@ -439,931 +443,29 @@
             
                 <li class="param">
                     
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The name of the animation, any string you want to name it</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">frames</code>
-                        <span class="type"><a href="..\classes\Texture.html" class="crosslink">Texture</a> | Array</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The frames of the animation, you can pass one gf.Texture
-     as a frame, or an Array of gf.Texture's</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
-                    
-                    Returns itself for chainability
-                
-            </div>
-        </div>
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> spr.addAnimation('walk-left', new gf.Texture())
-     .addAnimation('walk-right', [new gf.Texture(), new gf.Texture()]);
-</code></pre>
-            </div>
-        </div>
-    
-</div>
-
-                
-                    <div id="method_click" class="method item">
-    <h3 class="name"><code>click</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>interactionData</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l99"><code>src\Sprite.js:99</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>A callback that is used when the users clicks on the sprite with thier mouse</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">interactionData</code>
-                        <span class="type">InteractionData</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_gotoAndPlay" class="method item">
-    <h3 class="name"><code>gotoAndPlay</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>frameNumber</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l328"><code>src\Sprite.js:328</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Goes to a specific frame and begins playing the currently active animation</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">frameNumber</code>
+                        <code class="param-name">color</code>
                         <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>frame index to start at</p>
+                        <p>The color to fade into</p>
                     </div>
 
                     
                 </li>
             
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_gotoAndStop" class="method item">
-    <h3 class="name"><code>gotoAndStop</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>frameNumber</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l322"><code>src\Sprite.js:322</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stops the currently active animation and goes to a specific frame</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
                 <li class="param">
                     
-                        <code class="param-name">frameNumber</code>
+                        <code class="param-name">duration</code>
                         <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>frame index to stop at</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_isActiveAnimation" class="method item">
-    <h3 class="name"><code>isActiveAnimation</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>name</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Boolean</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l272"><code>src\Sprite.js:272</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Checks if the name is the active animation</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The name of the animation to check if it is currently active</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Boolean</span>:
-                    
-                    true if the animation is active, false otherwise.
-                
-            </div>
-        </div>
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> spr.addAnimation('walk-left', new gf.Texture())
-     .isActiveAnimation('walk-left'); //false
-
- spr.setActiveAnimation('walk-left')
-     .isActiveAnimation('walk-left'); //true
-</code></pre>
-            </div>
-        </div>
-    
-</div>
-
-                
-                    <div id="method_mousedown" class="method item">
-    <h3 class="name"><code>mousedown</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>interactionData</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l105"><code>src\Sprite.js:105</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>A callback that is used when the user clicks the mouse down over the sprite</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">interactionData</code>
-                        <span class="type">InteractionData</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_mouseout" class="method item">
-    <h3 class="name"><code>mouseout</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>interactionData</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l124"><code>src\Sprite.js:124</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>A callback that is used when the users mouse leaves the sprite</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">interactionData</code>
-                        <span class="type">InteractionData</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_mouseover" class="method item">
-    <h3 class="name"><code>mouseover</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>interactionData</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l118"><code>src\Sprite.js:118</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>A callback that is used when the users mouse rolls over the sprite</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">interactionData</code>
-                        <span class="type">InteractionData</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_mouseup" class="method item">
-    <h3 class="name"><code>mouseup</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>interactionData</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l111"><code>src\Sprite.js:111</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>A callback that is used when the user releases the mouse that was over the sprite
-for this callback to be fired the mouse must have been pressed down over the sprite</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">interactionData</code>
-                        <span class="type">InteractionData</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_play" class="method item">
-    <h3 class="name"><code>play</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l317"><code>src\Sprite.js:317</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Plays the currently active animation</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_setActiveAnimation" class="method item">
-    <h3 class="name"><code>setActiveAnimation</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>name</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>cb</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l214"><code>src\Sprite.js:214</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Sets the active animation of the sprite, and starts the animation at index 0</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">name</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The name of the animation to play (defined with addAnimation());</p>
+                        <p>The time in milliseconds to take to fade in</p>
                     </div>
 
                     
@@ -1371,14 +473,14 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
                 <li class="param">
                     
-                        <code class="param-name">cb</code>
+                        <code class="param-name">callback</code>
                         <span class="type">Function</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Callback when the animation completes, NOT YET IMPLEMENTED</p>
+                        <p>The callback to call when the fade has completed</p>
                     </div>
 
                     
@@ -1395,30 +497,20 @@ for this callback to be fired the mouse must have been pressed down over the spr
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
                     
-                    Returns itself for chainability
+                    Returns iteself for chainability
                 
             </div>
         </div>
     
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> spr.addAnimation('me', new gf.Texture())
-     .setActiveAnimation('me');
-</code></pre>
-            </div>
-        </div>
     
 </div>
 
                 
-                    <div id="method_setInteractive" class="method item">
-    <h3 class="name"><code>setInteractive</code></h3>
+                    <div id="method_flash" class="method item">
+    <h3 class="name"><code>flash</code></h3>
 
     
         <div class="args">
@@ -1426,7 +518,19 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
                 <li class="arg">
                     
-                        <code>interactive</code>
+                        <code>color</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>duration</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>callback</code>
                     
                 </li>
             
@@ -1434,6 +538,10 @@ for this callback to be fired the mouse must have been pressed down over the spr
         </div>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
     
 
     
@@ -1459,7 +567,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l288"><code>src\Sprite.js:288</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l109"><code>src\Camera.js:109</code></a>
         
         </p>
 
@@ -1470,7 +578,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
     </div>
 
     <div class="description">
-        <p>Sets whether or not this sprite is interactive (can be clicked)</p>
+        <p>Makes the camera flash with a certain color</p>
     </div>
 
     
@@ -1481,14 +589,44 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
                 <li class="param">
                     
-                        <code class="param-name">interactive</code>
-                        <span class="type">Boolean</span>
+                        <code class="param-name">color</code>
+                        <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                         
+                        <p>The color to flash the screen with</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">duration</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The time in milliseconds to fade away</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">callback</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The callback to call when the flash has completed</p>
                     </div>
 
                     
@@ -1499,13 +637,26 @@ for this callback to be fired the mouse must have been pressed down over the spr
     
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
+    
 
     
 </div>
 
                 
-                    <div id="method_setPosition" class="method item">
-    <h3 class="name"><code>setPosition</code></h3>
+                    <div id="method_focus" class="method item">
+    <h3 class="name"><code>focus</code></h3>
 
     
         <div class="args">
@@ -1529,7 +680,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
         </span>
     
 
@@ -1556,7 +707,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l243"><code>src\Sprite.js:243</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l350"><code>src\Camera.js:350</code></a>
         
         </p>
 
@@ -1567,7 +718,10 @@ for this callback to be fired the mouse must have been pressed down over the spr
     </div>
 
     <div class="description">
-        <p>Convenience method for setting the position of the Sprite.</p>
+        <p>Focuses the camera on an x,y position. Ensures that the camera does
+not go outside the bounds set with setBounds()</p>
+
+<p>TODO: DOESN'T WORK!</p>
     </div>
 
     
@@ -1579,14 +733,13 @@ for this callback to be fired the mouse must have been pressed down over the spr
                 <li class="param">
                     
                         <code class="param-name">x</code>
-                        <span class="type">Number | Array | <a href="..\classes\Vector.html" class="crosslink">Vector</a> | <a href="..\classes\Point.html" class="crosslink">Point</a></span>
+                        <span class="type">Number | <a href="..\classes\Point.html" class="crosslink">Point</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>X coord to put the sprite at.
-      If an Array, Vector, or Point is passed then the y parameter is ignored</p>
+                        <p>The x coord to focus on, if a Point is passed the y param is ignored</p>
                     </div>
 
                     
@@ -1601,7 +754,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
                     
 
                     <div class="param-description">
-                        <p>Y coord to put the sprite at</p>
+                        <p>The y coord to focus on</p>
                     </div>
 
                     
@@ -1618,38 +771,746 @@ for this callback to be fired the mouse must have been pressed down over the spr
             <div class="returns-description">
                 
                     
-                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
                     
-                    Returns itself for chainability
+                    Returns iteself for chainability
                 
             </div>
         </div>
     
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> spr.setPosition(1, 1)
-     .setPosition([5, 5])
-     .setPosition(new gf.Point(10, 10))
-     .setPosition(new gf.Vector(20, 20));
-</code></pre>
-            </div>
-        </div>
     
 </div>
 
                 
-                    <div id="method_stop" class="method item">
-    <h3 class="name"><code>stop</code></h3>
+                    <div id="method_follow" class="method item">
+    <h3 class="name"><code>follow</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>entity</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>style</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l289"><code>src\Camera.js:289</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Follows an entity with the camera, ensuring they are always center view. You can
+pass a follow style to change the area an entity can move around in before we start
+to move with them.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">entity</code>
+                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The entity to follow</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">style</code>
+                        <span class="type">Camera.FOLLOW</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The style of following, defaults to gf.Camera.FOLLOW.LOCKON</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_pan" class="method item">
+    <h3 class="name"><code>pan</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>x</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>y</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l377"><code>src\Camera.js:377</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Pans the camera around by the x,y amount. Ensures that the camera does
+not go outside the bounds set with setBounds()</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">x</code>
+                        <span class="type">Number | <a href="..\classes\Point.html" class="crosslink">Point</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The x amount to pan, if a Point is passed the y param is ignored</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">y</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The y ammount to pan</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_resize" class="method item private">
+    <h3 class="name"><code>resize</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>w</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>h</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l410"><code>src\Camera.js:410</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Resizes the viewing area, this is called internally by your game instance
+when you call mygame.resize(). DO NOT CALL THIS DIRECTLY</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">w</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new width</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">h</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new height</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setBounds" class="method item">
+    <h3 class="name"><code>setBounds</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>x</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>y</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>width</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>height</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l426"><code>src\Camera.js:426</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the bounds the camera is allowed to go. Usually this is the world's
+min and max, and is set for you.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">x</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The minimum x coord (usually 0)</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">y</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The minimum y coord (usually 0)</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">width</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The maximum x coord (usually map width)</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">height</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The maximum y coord (usually map height)</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_shake" class="method item">
+    <h3 class="name"><code>shake</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>intensity</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>duration</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>direction</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>callback</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l211"><code>src\Camera.js:211</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Shakes the camera around a bit, to show it who is boss.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">intensity</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>How hard to shake around</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">duration</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The time in milliseconds to shake for</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">direction</code>
+                        <span class="type">Camera.SHAKE</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The axes to shake the camera in default is gf.Camera.SHAKE.BOTH</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">callback</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The callback to call when the shaking has stopped</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_stopAll" class="method item">
+    <h3 class="name"><code>stopAll</code></h3>
 
     
         <span class="paren">()</span>
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
+    
 
     
 
@@ -1674,7 +1535,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l312"><code>src\Sprite.js:312</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l276"><code>src\Camera.js:276</code></a>
         
         </p>
 
@@ -1685,34 +1546,41 @@ for this callback to be fired the mouse must have been pressed down over the spr
     </div>
 
     <div class="description">
-        <p>Stops the currently active animation</p>
+        <p>Stops all currently running effects (flash, fade, shake)</p>
     </div>
 
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_tap" class="method item">
-    <h3 class="name"><code>tap</code></h3>
+                    <div id="method_stopFade" class="method item">
+    <h3 class="name"><code>stopFade</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>interactionData</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
     
 
     
@@ -1738,7 +1606,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l134"><code>src\Sprite.js:134</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l200"><code>src\Camera.js:200</code></a>
         
         </p>
 
@@ -1749,58 +1617,41 @@ for this callback to be fired the mouse must have been pressed down over the spr
     </div>
 
     <div class="description">
-        <p>A callback that is used when the users taps on the sprite with thier finger
-basically a touch version of click</p>
+        <p>Stops a running fade, instantly hiding it</p>
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">interactionData</code>
-                        <span class="type">InteractionData</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
+        <div class="returns">
+            <h4>Returns:</h4>
 
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_touchend" class="method item">
-    <h3 class="name"><code>touchend</code></h3>
+                    <div id="method_stopFlash" class="method item">
+    <h3 class="name"><code>stopFlash</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>interactionData</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
     
 
     
@@ -1826,7 +1677,7 @@ basically a touch version of click</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l147"><code>src\Sprite.js:147</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l149"><code>src\Camera.js:149</code></a>
         
         </p>
 
@@ -1837,58 +1688,41 @@ basically a touch version of click</p>
     </div>
 
     <div class="description">
-        <p>A callback that is used when the user releases the touch that was over the sprite
-for this callback to be fired. The touch must have started over the sprite</p>
+        <p>Stops a running flash, instantly hiding it</p>
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">interactionData</code>
-                        <span class="type">InteractionData</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
+        <div class="returns">
+            <h4>Returns:</h4>
 
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_touchstart" class="method item">
-    <h3 class="name"><code>touchstart</code></h3>
+                    <div id="method_stopShake" class="method item">
+    <h3 class="name"><code>stopShake</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>interactionData</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
     
 
     
@@ -1914,7 +1748,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l141"><code>src\Sprite.js:141</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l260"><code>src\Camera.js:260</code></a>
         
         </p>
 
@@ -1925,34 +1759,166 @@ for this callback to be fired. The touch must have started over the sprite</p>
     </div>
 
     <div class="description">
-        <p>A callback that is used when the user touch's over the sprite</p>
+        <p>Stops a running shake effect</p>
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">interactionData</code>
-                        <span class="type">InteractionData</span>
-                    
+    
+        <div class="returns">
+            <h4>Returns:</h4>
 
+            <div class="returns-description">
+                
                     
-
-                    <div class="param-description">
-                         
-                    </div>
-
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
                     
-                </li>
-            
-            </ul>
+                    Returns iteself for chainability
+                
+            </div>
         </div>
     
 
+    
+</div>
+
+                
+                    <div id="method_unfollow" class="method item">
+    <h3 class="name"><code>unfollow</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l340"><code>src\Camera.js:340</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stops following any entities</p>
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_update" class="method item">
+    <h3 class="name"><code>update</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l451"><code>src\Camera.js:451</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Called internally every frame. Updates all effects and the follow</p>
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
+                    
+                    Returns iteself for chainability
+                
+            </div>
+        </div>
     
 
     
@@ -1967,8 +1933,55 @@ for this callback to be fired. The touch must have started over the sprite</p>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_anim" class="property item private">
-    <h3 class="name"><code>anim</code></h3>
+                    <div id="property__deadzone" class="property item private">
+    <h3 class="name"><code>_deadzone</code></h3>
+    <span class="type">PIXI.Rectangle</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l36"><code>src\Camera.js:36</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>When following an entity this is the space within the camera that it can move around
+before the camera moves to track it.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__fx" class="property item private">
+    <h3 class="name"><code>_fx</code></h3>
     <span class="type">Object</span>
 
     
@@ -1992,7 +2005,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l32"><code>src\Sprite.js:32</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l75"><code>src\Camera.js:75</code></a>
         
         </p>
 
@@ -2002,7 +2015,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
     </div>
 
     <div class="description">
-        <p>The defined animations for this Sprite, this maps the names to the childIndexes</p>
+        <p>The _fx namespace has all the instance variables for all the fx</p>
     </div>
 
     
@@ -2013,9 +2026,9 @@ for this callback to be fired. The touch must have started over the sprite</p>
 </div>
 
                 
-                    <div id="property_currentAnim" class="property item private">
-    <h3 class="name"><code>currentAnim</code></h3>
-    <span class="type">Object</span>
+                    <div id="property__target" class="property item private">
+    <h3 class="name"><code>_target</code></h3>
+    <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
 
     
 
@@ -2038,7 +2051,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l42"><code>src\Sprite.js:42</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l47"><code>src\Camera.js:47</code></a>
         
         </p>
 
@@ -2048,7 +2061,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
     </div>
 
     <div class="description">
-        <p>The currently active animation</p>
+        <p>The target that the camera will follow</p>
     </div>
 
     
@@ -2059,9 +2072,55 @@ for this callback to be fired. The touch must have started over the sprite</p>
 </div>
 
                 
-                    <div id="property_interactive" class="property item">
-    <h3 class="name"><code>interactive</code></h3>
-    <span class="type">Boolean</span>
+                    <div id="property_bounds" class="property item private">
+    <h3 class="name"><code>bounds</code></h3>
+    <span class="type">PIXI.Rectangle</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l26"><code>src\Camera.js:26</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The bounds of that the camera can move to</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_game" class="property item">
+    <h3 class="name"><code>game</code></h3>
+    <span class="type">Game</span>
 
     
 
@@ -2082,7 +2141,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l52"><code>src\Sprite.js:52</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l18"><code>src\Camera.js:18</code></a>
         
         </p>
 
@@ -2092,9 +2151,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
     </div>
 
     <div class="description">
-        <p>Whether or not this Sprite is interactive. Please either pass this in with the
-ctor or use setInteractive to change it later. Changing this property directly
-on-the-fly will yield unexpected results.</p>
+        <p>The game instance this belongs to</p>
     </div>
 
     
@@ -2105,9 +2162,9 @@ on-the-fly will yield unexpected results.</p>
 </div>
 
                 
-                    <div id="property_name" class="property item">
-    <h3 class="name"><code>name</code></h3>
-    <span class="type">String</span>
+                    <div id="property_hSize" class="property item">
+    <h3 class="name"><code>hSize</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
 
     
 
@@ -2128,7 +2185,7 @@ on-the-fly will yield unexpected results.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l23"><code>src\Sprite.js:23</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l66"><code>src\Camera.js:66</code></a>
         
         </p>
 
@@ -2138,11 +2195,9 @@ on-the-fly will yield unexpected results.</p>
     </div>
 
     <div class="description">
-        <p>The name of this sprite</p>
+        <p>Half of the size of the camera</p>
     </div>
 
-    
-        <p><strong>Default:</strong> &#x27;&#x27;</p>
     
 
     
@@ -2153,7 +2208,7 @@ on-the-fly will yield unexpected results.</p>
                 
                     <div id="property_size" class="property item">
     <h3 class="name"><code>size</code></h3>
-    <span class="type">gf.Vector</span>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
 
     
 
@@ -2174,7 +2229,7 @@ on-the-fly will yield unexpected results.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l14"><code>src\Sprite.js:14</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l57"><code>src\Camera.js:57</code></a>
         
         </p>
 
@@ -2184,11 +2239,9 @@ on-the-fly will yield unexpected results.</p>
     </div>
 
     <div class="description">
-        <p>The size of the sprite</p>
+        <p>The size of the camera</p>
     </div>
 
-    
-        <p><strong>Default:</strong> new gf.Vector(0, 0);</p>
     
 
     

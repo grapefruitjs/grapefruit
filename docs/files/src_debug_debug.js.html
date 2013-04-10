@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -170,6 +176,30 @@
 
         &#x2F;&#x2F;show gamepad info in the info box
         showGamepadInfo: false,
+
+        showFpsCounter: function() {
+            gf.debug._fpsCounter = new gf.debug.FpsCounter();
+            for(var s in gf.debug.fpsStyle) {
+                gf.debug._fpsCounter.domElement.style[s] = gf.debug.fpsStyle[s];
+            }
+            document.body.appendChild(gf.debug._fpsCounter.domElement);
+        },
+
+        showDebugInfo: function() {
+            gf.debug._info = new gf.debug.Info();
+            for(var s2 in gf.debug.infoStyle) {
+                gf.debug._info.domElement.style[s2] = gf.debug.infoStyle[s2];
+            }
+            document.body.appendChild(gf.debug._info.domElement);
+        },
+
+        update: function() {
+            &#x2F;&#x2F;update fps box
+            if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
+
+            &#x2F;&#x2F;update debug info
+            if(gf.debug._info) gf.debug._info.update();
+        },
 
         &#x2F;****************************************************************************
          * DebugInfo box that displays live-updaing debug info

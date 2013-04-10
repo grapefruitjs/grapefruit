@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>GuiElement - gf</title>
+    <title>src\gui\HudItem.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -128,66 +134,116 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>GuiElement Class</h1>
-<div class="box meta">
-    
+                        <h1 class="file-heading">File: src\gui\HudItem.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;**
+ * The base HudItem that represents an element of a hud on the screen.
+ *
+ * @module gf
+ * @class HudItem
+ * @extends GuiItem
+ * @constructor
+ * @param pos {Array|Vector|Point} The starting position of the sprite
+ * @param settings {Object} Settings to override the defauls
+ *&#x2F;
+gf.HudItem = function(pos, settings) {
+    &#x2F;**
+     * The value of the item
+     *
+     * @property name
+     * @type Mixed
+     * @default &#x27;&#x27;
+     *&#x2F;
+    this.value = &#x27;&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_gui_GuiItem.js.html#l1"><code>src\gui\GuiItem.js:1</code></a>
-        </div>
-    
+    &#x2F;**
+     * Sets whether or not you can drag the HudItem around
+     *
+     * @property draggable
+     * @type Boolean
+     * @default false
+     *&#x2F;
+    this.draggable = false;
 
-    
-        
-            Module: <a href="../modules/gf.html">gf</a>
-        
-    
+    &#x2F;**
+     * [read only] Describes if the current item is being dragged or not
+     *
+     * @property dragging
+     * @type Boolean
+     * @default false
+     * @readOnly
+     *&#x2F;
+    this.dragging = false;
 
-    
-</div>
-
-
-
-<div class="box intro">
-    <p>The base GuiItem that represents an element of a gui on the screen.</p>
-</div>
+    gf.GuiItem.call(this, pos, settings);
 
 
+    &#x2F;**
+     * The initial value of the item to reset to
+     *
+     * @property initialValue
+     * @type Mixed
+     *&#x2F;
+    this.initialValue = this.value;
+};
 
-<div id="classdocs" class="tabview">
-    <ul class="api-class-tabs">
-        <li class="api-class-tab index"><a href="#index">Index</a></li>
+gf.inherits(gf.HudItem, gf.GuiItem, {
+    &#x2F;**
+     * Resets the value to the initialValue
+     *
+     * @method reset
+     * @return {HudItem} Returns itself for chainability
+     *&#x2F;
+    reset: function() {
+        return this.set(this.initialValue);
+    },
+    &#x2F;**
+     * Sets the value of the item, and marks it as dirty
+     *
+     * @method set
+     * @return {HudItem} Returns itself for chainability
+     *&#x2F;
+    set: function(val) {
+        this.value = val;
+        this.dirty = true;
+        return this;
+    },
 
-        
-        
-        
-        
-    </ul>
+    onDragStart: function() {},
+    onDragEnd: function() {},
 
-    <div>
-        <div id="index" class="api-class-tabpanel index">
-            <h2 class="off-left">Item Index</h2>
+    click: function() {},
+    mousedown: function(e) {
+        if(!this.draggable) return;
 
-            
+        this.dragging = {
+            x: e.clientX,
+            y: e.clientY
+        };
+        this.onDragStart(e);
+    },
+    mouseup: function(e) {
+        this.dragging = false;
+        this.onDragEnd(e);
+    },
+    mousemove: function(e) {
+        if(!this.draggable || !this.dragging) return;
 
-            
+        var diffX = e.clientX - this.dragging.x,
+            diffY = e.clientY - this.dragging.y,
+            pos = gf.utils.getPosition(this.elm);
 
-            
+        this.dragging.x = e.clientX;
+        this.dragging.y = e.clientY;
 
-            
-        </div>
+        this.elm.style.top = pos.top + diffY;
+        this.elm.style.left = pos.left + diffX;
+    }
+});
 
-        
-
-        
-
-        
-
-        
-    </div>
+    </pre>
 </div>
 
                     </div>

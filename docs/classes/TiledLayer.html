@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -185,13 +191,6 @@ create an instance on your own.</p>
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_freeTileSprite">freeTileSprite</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
                                 <a href="#method_getTileId">getTileId</a>
 
                                 
@@ -207,6 +206,20 @@ create an instance on your own.</p>
                         
                             <li class="index-item method">
                                 <a href="#method_getTileSprite">getTileSprite</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_moveTileSprite">moveTileSprite</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_pan">pan</a>
 
                                 
                                 
@@ -230,7 +243,49 @@ create an instance on your own.</p>
                     <ul class="index-list properties">
                         
                             <li class="index-item property">
-                                <a href="#property_assetURLs">assetURLs</a>
+                                <a href="#property_binds">binds</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_callbacks">callbacks</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_callbacks">callbacks</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_game">game</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_game">game</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_keydown">keydown</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_manager">manager</a>
 
                                 
                                 
@@ -244,7 +299,49 @@ create an instance on your own.</p>
                             </li>
                         
                             <li class="index-item property">
+                                <a href="#property_position">position</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_position">position</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_status">status</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_threshold">threshold</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_threshold">threshold</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_tilePool">tilePool</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_touches">touches</a>
 
                                 
                                 
@@ -262,93 +359,6 @@ create an instance on your own.</p>
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
-
-                
-                    <div id="method_freeTileSprite" class="method item">
-    <h3 class="name"><code>freeTileSprite</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>sprite</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l76"><code>src\map\tiled\TiledLayer.js:76</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Frees a sprite back into the pool</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">sprite</code>
-                        <span class="type">PIXI.Sprite</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The sprite to release to the pool</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
 
                 
                     <div id="method_getTileId" class="method item">
@@ -403,7 +413,7 @@ create an instance on your own.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l104"><code>src\map\tiled\TiledLayer.js:104</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l146"><code>src\map\tiled\TiledLayer.js:146</code></a>
         
         </p>
 
@@ -527,7 +537,7 @@ create an instance on your own.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l85"><code>src\map\tiled\TiledLayer.js:85</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l127"><code>src\map\tiled\TiledLayer.js:127</code></a>
         
         </p>
 
@@ -608,13 +618,13 @@ create an instance on your own.</p>
             
                 <li class="arg">
                     
-                        <code>tileId</code>
+                        <code>tileX</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>TiledTileset</code>
+                        <code>tileY</code>
                     
                 </li>
             
@@ -651,7 +661,7 @@ create an instance on your own.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l65"><code>src\map\tiled\TiledLayer.js:65</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l71"><code>src\map\tiled\TiledLayer.js:71</code></a>
         
         </p>
 
@@ -662,7 +672,7 @@ create an instance on your own.</p>
     </div>
 
     <div class="description">
-        <p>Creates the sprite for a tile utilizing a pool for the sprites</p>
+        <p>Creates the sprite for a tile and caches it in a position</p>
     </div>
 
     
@@ -673,14 +683,14 @@ create an instance on your own.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">tileId</code>
+                        <code class="param-name">tileX</code>
                         <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The id of the tile to get a sprite for</p>
+                        <p>The x coord of the tile in units of tiles (not pixels)</p>
                     </div>
 
                     
@@ -688,14 +698,14 @@ create an instance on your own.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">TiledTileset</code>
-                        <span class="type">Tileset</span>
+                        <code class="param-name">tileY</code>
+                        <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The tileset to get the texture from</p>
+                        <p>The y coord of the tile in units of tiles (not pixels)</p>
                     </div>
 
                     
@@ -715,6 +725,299 @@ create an instance on your own.</p>
                         <span class="type">PIXI.Sprite</span>:
                     
                     The sprite to display
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_moveTileSprite" class="method item">
+    <h3 class="name"><code>moveTileSprite</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>fromTileX</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>fromTileY</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>toTileX</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>toTileY</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">PIXI.Sprite</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l96"><code>src\map\tiled\TiledLayer.js:96</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Moves a tile sprite from one position to another,
+creating it if the old position didn't have a sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">fromTileX</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The x coord of the tile in units of tiles (not pixels) to move from</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">fromTileY</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The y coord of the tile in units of tiles (not pixels) to move from</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">toTileX</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The x coord of the tile in units of tiles (not pixels) to move to</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">toTileY</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The y coord of the tile in units of tiles (not pixels) to move to</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">PIXI.Sprite</span>:
+                    
+                    The sprite to display
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_pan" class="method item">
+    <h3 class="name"><code>pan</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>dx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>dy</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Layer.html" class="crosslink">Layer</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l157"><code>src\map\tiled\TiledLayer.js:157</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Pans the layer around, rendering stuff if necessary</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">dx</code>
+                        <span class="type">Number | <a href="..\classes\Point.html" class="crosslink">Point</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The x amount to pan, if a Point is passed the dy param is ignored</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">dy</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The y ammount to pan</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Layer.html" class="crosslink">Layer</a></span>:
+                    
+                    Returns itself for chainability
                 
             </div>
         </div>
@@ -756,7 +1059,7 @@ create an instance on your own.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l40"><code>src\map\tiled\TiledLayer.js:40</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledLayer.js.html#l43"><code>src\map\tiled\TiledLayer.js:43</code></a>
         
         </p>
 
@@ -786,9 +1089,9 @@ create an instance on your own.</p>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_assetURLs" class="property item">
-    <h3 class="name"><code>assetURLs</code></h3>
-    <span class="type">Array</span>
+                    <div id="property_binds" class="property item">
+    <h3 class="name"><code>binds</code></h3>
+    <span class="type">Object</span>
 
     
 
@@ -809,7 +1112,7 @@ create an instance on your own.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_loader_AssetLoader.js.html#l5"><code>src\loader\AssetLoader.js:5</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l18"><code>src\input\Input.js:18</code></a>
         
         </p>
 
@@ -819,7 +1122,271 @@ create an instance on your own.</p>
     </div>
 
     <div class="description">
-        <p>The array of asset URLs that are going to be loaded</p>
+        <p>The binds that map an action to an input value</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_callbacks" class="property item">
+    <h3 class="name"><code>callbacks</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l36"><code>src\input\Input.js:36</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The count of how many actions an input value is bound to</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_callbacks" class="property item">
+    <h3 class="name"><code>callbacks</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l27"><code>src\input\Input.js:27</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The callbacks that map from an action</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_game" class="property item">
+    <h3 class="name"><code>game</code></h3>
+    <span class="type">Game</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l2"><code>src\input\Input.js:2</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The game instance this belongs to</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_game" class="property item">
+    <h3 class="name"><code>game</code></h3>
+    <span class="type">Game</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_InputManager.js.html#l4"><code>src\input\InputManager.js:4</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The game instance this belongs to</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_keydown" class="property item">
+    <h3 class="name"><code>keydown</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_Keyboard.js.html#l4"><code>src\input\Keyboard.js:4</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Tracks if a key is already down, so we don't repeat</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_manager" class="property item">
+    <h3 class="name"><code>manager</code></h3>
+    <span class="type">InputManager</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l10"><code>src\input\Input.js:10</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The input manager this belongs to</p>
     </div>
 
     
@@ -874,6 +1441,230 @@ create an instance on your own.</p>
 </div>
 
                 
+                    <div id="property_position" class="property item">
+    <h3 class="name"><code>position</code></h3>
+    <span class="type"><a href="..\classes\Point.html" class="crosslink">Point</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_Mouse.js.html#l22"><code>src\input\Mouse.js:22</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The current position of the mouse</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_position" class="property item">
+    <h3 class="name"><code>position</code></h3>
+    <span class="type"><a href="..\classes\Point.html" class="crosslink">Point</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_Mouse.js.html#l13"><code>src\input\Mouse.js:13</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The current position of the mouse</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_status" class="property item">
+    <h3 class="name"><code>status</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l45"><code>src\input\Input.js:45</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Tracks the status of each action</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_threshold" class="property item">
+    <h3 class="name"><code>threshold</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_GamepadSticks.js.html#l4"><code>src\input\GamepadSticks.js:4</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The threshold at which we consider a stick "moved"</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> 0.5</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_threshold" class="property item">
+    <h3 class="name"><code>threshold</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_GamepadButtons.js.html#l4"><code>src\input\GamepadButtons.js:4</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The threshold at which we consider a button "pressed"</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> 0.4</p>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_tilePool" class="property item">
     <h3 class="name"><code>tilePool</code></h3>
     <span class="type">Array</span>
@@ -908,6 +1699,50 @@ create an instance on your own.</p>
 
     <div class="description">
         <p>The sprite pool for rendering tiles</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_touches" class="property item">
+    <h3 class="name"><code>touches</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_Mouse.js.html#l4"><code>src\input\Mouse.js:4</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The current screen touches</p>
     </div>
 
     

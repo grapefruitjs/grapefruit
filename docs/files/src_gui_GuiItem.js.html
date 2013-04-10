@@ -41,7 +41,9 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="..&#x2F;classes/audio.html">audio</a></li>
+                <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
             
@@ -57,7 +59,11 @@
             
                 <li><a href="..&#x2F;classes/Gui.html">Gui</a></li>
             
-                <li><a href="..&#x2F;classes/GuiElement.html">GuiElement</a></li>
+                <li><a href="..&#x2F;classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
+            
+                <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -136,14 +142,21 @@
  * The base GuiItem that represents an element of a gui on the screen.
  *
  * @module gf
- * @class GuiElement
+ * @class GuiItem
  * @extends Sprite
  * @constructor
  * @param pos {Array|Vector|Point} The starting position of the sprite
  * @param settings {Object} Settings to override the defauls
  *&#x2F;
 gf.GuiItem = function(pos, settings) {
-    &#x2F;&#x2F;my properties here
+    &#x2F;**
+     * Whether or not the item needs an update
+     *
+     * @property dirty
+     * @type Boolean
+     * @default true
+     *&#x2F;
+    this.dirty = true;
 
     &#x2F;&#x2F;allow user to pass the sprite texture as &quot;image&quot; to a GuiItem.
     settings.texture = settings.texture || settings.image;
@@ -151,7 +164,14 @@ gf.GuiItem = function(pos, settings) {
 };
 
 gf.inherits(gf.GuiItem, gf.Sprite, {
-
+    &#x2F;**
+     * Overrides base update to do some calculations. Called internally on each frame
+     *
+     * @method update
+     *&#x2F;
+    update: function() {
+        gf.Sprite.prototype.update.call(this);
+    }
 });
 
     </pre>
