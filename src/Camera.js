@@ -351,6 +351,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * Focuses the camera on an x,y position. Ensures that the camera does
      * not go outside the bounds set with setBounds()
      *
+     * TODO: DOESN'T WORK!
+     *
      * @method focus
      * @param x {Number|Point} The x coord to focus on, if a Point is passed the y param is ignored
      * @param y {Number} The y coord to focus on
@@ -367,8 +369,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                 x - this.hSize.x,
                 y - this.hSize.y
             ),
-            dx = tl.x - this.game.world.position.x,
-            dy = tl.x - this.game.world.position.y;
+            dx = x - this.game.world.position.x,
+            dy = y - this.game.world.position.y;
 
         return this.pan(dx, dy);
     },
@@ -385,17 +387,23 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         dx = dx instanceof gf.Point ? dx.x : (dx || 0);
         dy = dx instanceof gf.Point ? dx.y : (dy || 0);
 
-        var newX = this.game.world.position.x + dx,
-            newY = this.game.world.position.y + dy;
+        var newX = this.game.world.position.x - dx,
+            newY = this.game.world.position.y - dy;
 
-        if(newX < this._bounds.x || (newX + this.size.x) > this._bounds.maxX)
-            dx = 0;
+        //move only the difference that puts us at 0
+        if(newX > 0)
+            dx = 0 - Math.abs(this.game.world.position.x);
+        //move only the difference that puts us at max (remember that position is negative)
+        else if(newX < -this._bounds.maxPanX)
+            dx = this._bounds.maxPanX - Math.abs(this.game.world.position.x);
 
-        if(newY < this._bounds.y || (newX + this.size.y) > this._bounds.maxY)
-            dy = 0;
+        if(newY > 0)
+            dy = 0 - Math.abs(this.game.world.position.y);
+        else if(newY < -this._bounds.maxPanY)
+            dy = this._bounds.maxPanY - Math.abs(this.game.world.position.y);
 
         if(dx || dy)
-            this.game.world.pan(dx, dy);
+            this.game.world.pan(-dx, -dy);
 
         return this;
     },
@@ -434,6 +442,9 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
 
         this._bounds.maxX = this._bounds.x + this._bounds.width;
         this._bounds.maxY = this._bounds.y + this._bounds.height;
+
+        this._bounds.maxPanX = width - this.size.x;
+        this._bounds.maxPanY = height - this.size.y;
 
         return this;
     },
