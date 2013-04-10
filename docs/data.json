@@ -972,7 +972,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledLayer.js",
-            "line": 43,
+            "line": 44,
             "description": "Creates all the tile sprites needed to display the layer",
             "itemtype": "method",
             "name": "renderTiles",
@@ -2810,7 +2810,7 @@
         },
         {
             "file": "src\\Camera.js",
-            "line": 377,
+            "line": 375,
             "description": "Pans the camera around by the x,y amount. Ensures that the camera does\nnot go outside the bounds set with setBounds()",
             "itemtype": "method",
             "name": "pan",
@@ -2835,7 +2835,7 @@
         },
         {
             "file": "src\\Camera.js",
-            "line": 410,
+            "line": 408,
             "description": "Resizes the viewing area, this is called internally by your game instance\nwhen you call mygame.resize(). DO NOT CALL THIS DIRECTLY",
             "itemtype": "method",
             "name": "resize",
@@ -2862,7 +2862,7 @@
         },
         {
             "file": "src\\Camera.js",
-            "line": 426,
+            "line": 424,
             "description": "Sets the bounds the camera is allowed to go. Usually this is the world's\nmin and max, and is set for you.",
             "itemtype": "method",
             "name": "setBounds",
@@ -2897,7 +2897,7 @@
         },
         {
             "file": "src\\Camera.js",
-            "line": 451,
+            "line": 449,
             "description": "Called internally every frame. Updates all effects and the follow",
             "itemtype": "method",
             "name": "update",

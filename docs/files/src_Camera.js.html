@@ -505,12 +505,10 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         &#x2F;&#x2F;y += (y &gt; 0) ? 0.0000001 : -0.0000001;
 
         &#x2F;&#x2F;calculate how much we need to pan
-        var tl = new gf.Point(
-                x - this.hSize.x,
-                y - this.hSize.y
-            ),
-            dx = tl.x - this.game.world.position.x,
-            dy = tl.y - this.game.world.position.y;
+        var goToX = x - this.hSize.x,
+            goToY = y - this.hSize.y,
+            dx = goToX + this.game.world.position.x, &#x2F;&#x2F;world pos is negative
+            dy = goToY + this.game.world.position.y;
 
         return this.pan(dx, dy);
     },
@@ -598,14 +596,14 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         &#x2F;&#x2F;follow entity
         if(this._target) {
             if(!this.deadzone) {
-                this.focus(this._target.position.x, this._target.y);
+                this.focus(this._target.position.x, this._target.position.y);
             } else {
                 var moveX, moveY, dx, dy;
                 moveX = moveY = dx = dy = 0;
 
                 &#x2F;&#x2F;check less than
-                dx = this._target.x - this.deadzone.x;
-                dy = this._target.y - this.deadzone.y;
+                dx = this._target.position.x - this.deadzone.x;
+                dy = this._target.position.y - this.deadzone.y;
 
                 if(dx &lt; 0)
                     moveX = dx;
@@ -613,8 +611,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                     moveY = dy;
 
                 &#x2F;&#x2F;check greater than
-                dx = this._target.x - (this.deadzone.x + this.deadzone.width);
-                dy = this._target.y - (this.deadzone.y + this.deadzone.height);
+                dx = this._target.position.x - (this.deadzone.x + this.deadzone.width);
+                dy = this._target.position.y - (this.deadzone.y + this.deadzone.height);
 
                 if(dx &gt; 0)
                     moveX = dx;
