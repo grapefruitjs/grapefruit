@@ -184,7 +184,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
     computeVelocity: function(vel) {
         //apply gravity
         if(this.gravity) {
-            vel.y -= !this.onladder ? (this.gravity * gf.game._delta) : 0;
+            vel.y -= !this.onladder ? (this.gravity * this.game._delta) : 0;
 
             //check if falling/jumping
             this.falling = (vel.y < 0);
@@ -212,10 +212,10 @@ gf.inherits(gf.Entity, gf.Sprite, {
     applyFriction: function(vel, friction) {
         return (
                     vel + friction < 0 ?
-                    vel + (friction * (gf.game._delta || 0)) :
+                    vel + (friction * (this.game._delta || 0)) :
                     (
                         vel - friction > 0 ?
-                        vel - (friction * (gf.game._delta || 0)) :
+                        vel - (friction * (this.game._delta || 0)) :
                         0
                     )
                 );
@@ -271,7 +271,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
             return;
 
         //get the world colliders
-        var colliders = (gf.game.world === undefined || !this.mapCollidable) ? [] : gf.game.world.checkCollision(this);
+        var colliders = (this.game.world === undefined || !this.mapCollidable) ? [] : this.game.world.checkCollision(this);
 
         //update flags
         this.onladder = false;
@@ -360,7 +360,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      */
     onCollision: function() {
         if(this.collidable && this.type === gf.types.ENTIY.COLLECTABLE)
-            gf.game.removeObject(this);
+            this.game.removeObject(this);
 
         return this;
     },

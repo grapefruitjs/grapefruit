@@ -237,8 +237,8 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @private
      */
     resize: function() {
-        var numX = gf.game._renderer.view.width / this.tileSize.x,
-            numY = gf.game._renderer.view.height / this.tileSize.y;
+        var numX = this.game.renderer.view.width / this.tileSize.x,
+            numY = this.game.renderer.view.height / this.tileSize.y;
 
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
