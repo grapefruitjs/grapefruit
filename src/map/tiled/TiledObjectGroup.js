@@ -51,15 +51,10 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             props.opacity = this.opacity;
             props.visible = this.visible;
             props.position = [o.x, o.y];
-            //convert tiled x,y coords into world coords
-            //tiled does x,y from top left. We do x,y from center
-            /*props.position = [
-                (o.x * this.map.scale) - (this.map.scaledSize.x / 2),
-                -((o.y * this.map.scale) - (this.map.scaledSize.y / 2))
-            ];*/
 
             //spawn from entity pool
             this.addChild(gf.entityPool.create(this.parent.game, props.name, props));
+            this.game.players.push(this.children[i]);
         }
 
         return this;
