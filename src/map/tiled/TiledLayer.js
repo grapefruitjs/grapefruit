@@ -113,13 +113,14 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tile = this.tiles[id],
             set = this.parent.getTileset(tile);
 
-        if(set) spr.texture = set.getTileTexture(tile);
+        if(set) spr.setTexture(set.getTileTexture(tile));
         spr.position.x = toTileX * this.parent.tileSize.x;
         spr.position.y = toTileY * this.parent.tileSize.y;
 
         //move the sprite in the pool
-        this.sprites[fromTileX][fromTileY] = null;
+        if(!this.sprites[toTileX]) this.sprites[toTileX] = [];
         this.sprites[toTileX][toTileY] = spr;
+        this.sprites[fromTileX][fromTileY] = null;
 
         return spr;
     },
@@ -165,58 +166,76 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.x += dx;
         this._panDelta.y += dy;
 
-        var i = 0;
-
-        //moved 1 tile right
-        if(this._panDelta.x >= this.parent.tileSize.x) {
-            //free all the far left tiles back to the pool, and render the right tiles
-            for(i = 0; i < this._rendered.numY; ++i) {
-                this.moveTileSprite(
-                    this._rendered.x,       this._rendered.y + i,
-                    this._rendered.right + 1,   this._rendered.y + i
-                );
-            }
-            this._rendered.x++;
-        }
-        //moved 1 tile left
-        else if(this._panDelta.x <= -this.parent.tileSize.x) {
-            //free all the far right tiles back to the pool, and render the left tiles
-            for(i = 0; i < this._rendered.numY; ++i) {
-                this.moveTileSprite(
-                    this._rendered.right, this._rendered.y + i,
-                    this._rendered.x - 1, this._rendered.y + i
-                );
-            }
-            this._rendered.x--;
+        //moved position right, so render left
+        while(this._panDelta.x >= this.parent.tileSize.x) {
+            this._renderLeft();
+            this._panDelta.x -= this.parent.tileSize.x;
         }
 
-        //moved 1 tile down
-        if(this._panDelta.y >= this.parent.tileSize.y) {
-            //free all the far top tiles back to the pool, and render the bottom tiles
-            for(i = 0; i < this._rendered.numX; ++i) {
-                this.moveTileSprite(
-                    this._rendered.x + i, this._rendered.y,
-                    this._rendered.x + i, this._rendered.bottom + 1
-                );
-            }
-            this._rendered.y++;
-        }
-        //moved 1 tile up
-        else if(this._panDelta.y <= -this.parent.tileSize.y) {
-            //free all the far bottom tiles back to the pool, and render the top tiles
-            for(i = 0; i < this._rendered.numX; ++i) {
-                this.moveTileSprite(
-                    this._rendered.x + i, this._rendered.bottom,
-                    this._rendered.x + i, this._rendered.y - 1
-                );
-            }
-            this._rendered.y--;
+        //moved position left, so render right
+        while(this._panDelta.x <= -this.parent.tileSize.x) {
+            this._renderRight();
+            this._panDelta.x += this.parent.tileSize.x;
         }
 
+        //moved position down, so render up
+        while(this._panDelta.y >= this.parent.tileSize.y) {
+            this._renderUp();
+            this._panDelta.y -= this.parent.tileSize.y;
+        }
 
-        this._rendered.left = this._rendered.x;
-        this._rendered.right = this._rendered.x + this._rendered.width;
-        this._rendered.top = this._rendered.y;
-        this._rendered.bottom = this._rendered.y + this._rendered.height;
+        //moved position up, so render down
+        while(this._panDelta.y <= -this.parent.tileSize.y) {
+            this._renderDown();
+            this._panDelta.y += this.parent.tileSize.y;
+        }
+    },
+    _renderLeft: function() {
+        //move all the far right tiles to the left side
+        for(var i = 0; i < this._rendered.height; ++i) {
+            this.moveTileSprite(
+                this._rendered.right, this._rendered.top + i,
+                this._rendered.left, this._rendered.top + i
+            );
+        }
+        this._rendered.x--;
+        this._rendered.left--;
+        this._rendered.right--;
+    },
+    _renderRight: function() {
+        //move all the far left tiles to the right side
+        for(var i = 0; i < this._rendered.height; ++i) {
+            this.moveTileSprite(
+                this._rendered.left, this._rendered.top + i,
+                this._rendered.right, this._rendered.top + i
+            );
+        }
+        this._rendered.x++;
+        this._rendered.left++;
+        this._rendered.right++;
+    },
+    _renderUp: function() {
+        //move all the far bottom tiles to the top side
+        for(var i = 0; i < this._rendered.width; ++i) {
+            this.moveTileSprite(
+                this._rendered.left + i, this._rendered.bottom,
+                this._rendered.left + i, this._rendered.top
+            );
+        }
+        this._rendered.y--;
+        this._rendered.top--;
+        this._rendered.bottom--;
+    },
+    _renderDown: function() {
+        //move all the far top tiles to the bottom side
+        for(var i = 0; i < this._rendered.width; ++i) {
+            this.moveTileSprite(
+                this._rendered.left + i, this._rendered.top,
+                this._rendered.left + i, this._rendered.bottom
+            );
+        }
+        this._rendered.y++;
+        this._rendered.top++;
+        this._rendered.bottom++;
     }
 });

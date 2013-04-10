@@ -63,6 +63,9 @@ gf.inherits(gf.Map, gf.DisplayObject, {
         x = x instanceof gf.Point ? x.x : (x || 0);
         y = x instanceof gf.Point ? x.y : (y || 0);
 
+        this.position.x += x;
+        this.position.y += y;
+
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
