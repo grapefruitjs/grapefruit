@@ -45,7 +45,10 @@ gf.Game = function(contId, settings) {
      * @type PIXI.Stage
      * @readOnly
      */
-    this.stage = new PIXI.Stage();
+    this.stage = new PIXI.Stage(
+        settings.background || 0xff00ff,
+        settings.interactive !== undefined ? settings.interactive : true
+    );
 
     /**
      * Raw Clock instance for internal timing
