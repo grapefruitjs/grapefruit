@@ -38,7 +38,7 @@ gf.Entity = function(game, pos, settings) {
      * @type String
      * @default 'neutral'
      */
-    this.type = gf.types.ENTITY.NEUTRAL;
+    this.type = gf.Entity.TYPE.NEUTRAL;
 
     /**
      * Can it collide with other entities
@@ -282,10 +282,10 @@ gf.inherits(gf.Entity, gf.Sprite, {
                 tile = collider.tile,
                 axis = collider.axis;
 
-            this.onladder = (tile.type === gf.types.COLLISION.LADDER ? true : this.onladder);
+            this.onladder = (tile.type === gf.Layer.COLLISION.LADDER ? true : this.onladder);
 
             //if a solid tile
-            if(tile.type === gf.types.COLLISION.SOLID) {
+            if(tile.type === gf.Layer.COLLISION.SOLID) {
                 //if it is a slope, apply the normal
                 if(tile.normal && (!this.velocity.x || !this.velocity.y)) {
                     var badMovement = tile.normal.clone().multiplyScalar(this.velocity.dot(tile.normal)),
@@ -359,7 +359,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * @return {Entity} Returns itself for chainability
      */
     onCollision: function() {
-        if(this.collidable && this.type === gf.types.ENTIY.COLLECTABLE)
+        if(this.collidable && this.type === gf.Entity.TYPE.COLLECTABLE)
             this.game.removeObject(this);
 
         return this;
@@ -387,3 +387,17 @@ gf.inherits(gf.Entity, gf.Sprite, {
         return this;
     }
 });
+
+/**
+ * Entity types
+ *
+ * @property TYPE
+ * @type Object
+ */
+gf.Entity.TYPE = {
+    PLAYER: 'player',
+    ENEMY: 'enemy',
+    FRIENDLY: 'friendly',
+    NEUTRAL: 'neutral',
+    COLLECTABLE: 'collectable'
+};

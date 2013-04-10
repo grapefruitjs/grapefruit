@@ -153,9 +153,9 @@
 
                                 pads.innerHTML += 'Gamepad: [' + pad.index + '] ' + pad.id + '<br/>';
                                 pads.innerHTML += '&nbsp;&nbsp;&nbsp;Buttons:<br/>' + 
-                                                    pad.buttons.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.types.getGpButtonName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
+                                                    pad.buttons.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.input.getGpButtonName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
                                 pads.innerHTML += '&nbsp;&nbsp;&nbsp;Axes:<br/>' + 
-                                                    pad.axes.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.types.getGpAxisName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
+                                                    pad.axes.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.input.getGpAxisName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
                             }
                         }
                     }

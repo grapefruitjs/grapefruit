@@ -1,5 +1,3 @@
-gf.input = {};
-
 gf.InputManager = function(game) {
     /**
      * The game instance this belongs to
