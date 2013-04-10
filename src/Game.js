@@ -39,6 +39,14 @@ gf.Game = function(contId, settings) {
     this.renderMethod = 'webgl';
 
     /**
+     * The player entities added into the game
+     *
+     * @property players
+     * @type {Array}
+     */
+    this.players = [];
+
+    /**
      * Raw PIXI.stage instance
      *
      * @property stage
