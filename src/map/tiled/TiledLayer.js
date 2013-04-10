@@ -35,6 +35,7 @@ gf.TiledLayer = function(layer) {
     this.position.y = layer.y;
     this.alpha = layer.opacity;
 
+    this._tileBufferSize = 2;
     this._panDelta = new gf.Vector(0, 0);
     this._rendered = new PIXI.Rectangle(0, 0, 0, 0);
 };
@@ -46,12 +47,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @method renderTiles
      */
     renderTiles: function(startX, startY, numX, numY) {
-        //add a 1 tile buffer around the viewport
-        if(startX >= 1) startX -= 1;
-        if(startX + numX < this.size.x) numX += 1;
-
-        if(startY >= 1) startY -= 1;
-        if(startY + numY < this.size.y) numY += 1;
+        //add a tile buffer around the viewport
+        startX -= this._tileBufferSize;
+        numX += this._tileBufferSize * 2;
+        startY -= this._tileBufferSize;
+        numY += this._tileBufferSize * 2;
 
         for(var x = startX; x < numX; ++x) {
             for(var y = startY; y < numY; ++y) {
