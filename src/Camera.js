@@ -369,8 +369,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                 x - this.hSize.x,
                 y - this.hSize.y
             ),
-            dx = x - this.game.world.position.x,
-            dy = y - this.game.world.position.y;
+            dx = tl.x - this.game.world.position.x,
+            dy = tl.y - this.game.world.position.y;
 
         return this.pan(dx, dy);
     },
