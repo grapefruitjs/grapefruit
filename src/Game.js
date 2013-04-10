@@ -6,7 +6,6 @@
  * @constructor
  * @param contId {String} The container for the new canvas we will create for the game
  * @param opts {Object} Options such as gravity, friction, and renderMethod
- * @example gf.game.init('myDiv', { renderMethod: 'webgl' });
  */
 gf.Game = function(contId, settings) {
     var w = settings.width || gf.utils.getStyle(this.container, 'width'),
@@ -188,6 +187,8 @@ gf.inherits(gf.Game, Object, {
         if(obj) {
             if(obj instanceof gf.Gui || obj instanceof gf.Hud)
                 this.camera.addChild(obj);
+            else if(obj instanceof gf.Camera || obj instanceof gf.Map)
+                this.stage.addChild(obj);
             else
                 this.world.addChild(obj);
         }
