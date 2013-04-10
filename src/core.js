@@ -118,6 +118,14 @@ gf.support = {
     workers: !!window.Worker,
 
     /**
+     * Whether or not typed arrays are supported
+     *
+     * @property typedArrays
+     * @type bool
+     */
+    typedArrays: !!('ArrayBuffer' in window),
+
+    /**
      * Whether or not the filesystem API is supported
      *
      * @property fileapi

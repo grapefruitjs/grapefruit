@@ -20,7 +20,7 @@ gf.TiledLayer = function(layer) {
      * @property name
      * @type Uint32Array
      */
-    this.tiles = new Uint32Array(layer.data);
+    this.tiles = gf.support.typedArrays ? new Uint32Array(layer.data) : layer.data;
 
     /**
      * The sprite pool for rendering tiles
