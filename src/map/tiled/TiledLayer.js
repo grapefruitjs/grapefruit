@@ -77,7 +77,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {PIXI.Sprite} The sprite to display
      */
     getTileSprite: function(tileX, tileY) {
-        if(this.sprites[tileX] && this.sprites[tileY])
+        if(this.sprites[tileX] && this.sprites[tileX][tileY])
             return this.sprites[tileX][tileY];
 
         if(!this.sprites[tileX]) this.sprites[tileX] = [];
