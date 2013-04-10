@@ -351,8 +351,6 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * Focuses the camera on an x,y position. Ensures that the camera does
      * not go outside the bounds set with setBounds()
      *
-     * TODO: DOESN'T WORK!
-     *
      * @method focus
      * @param x {Number|Point} The x coord to focus on, if a Point is passed the y param is ignored
      * @param y {Number} The y coord to focus on
