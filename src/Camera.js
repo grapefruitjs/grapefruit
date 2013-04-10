@@ -231,18 +231,18 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         if(typeof duration === 'function') {
             cb = duration;
             direction = gf.Camera.SHAKE.BOTH;
-            duration = 1;
+            duration = null;
         }
 
         if(typeof intensity === 'function') {
             cb = intensity;
             direction = gf.Camera.SHAKE.BOTH;
-            duration = 1;
-            intensity = 1;
+            duration = null;
+            intensity = null;
         }
 
-        intensity = intensity || 1;
-        duration = duration || 1;
+        intensity = intensity || 0.01;
+        duration = duration || 1000;
         direction = direction || gf.Camera.SHAKE.BOTH;
 
         //setup a shake effect
@@ -357,8 +357,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @return {Camera} Returns iteself for chainability
      */
     focus: function(x, y) {
-        x = x instanceof gf.Point ? x.x : (x || 0);
         y = x instanceof gf.Point ? x.y : (y || 0);
+        x = x instanceof gf.Point ? x.x : (x || 0);
         //x += (x > 0) ? 0.0000001 : -0.0000001;
         //y += (y > 0) ? 0.0000001 : -0.0000001;
 
@@ -380,8 +380,10 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @return {Camera} Returns iteself for chainability
      */
     pan: function(dx, dy) {
-        dx = dx instanceof gf.Point ? dx.x : (dx || 0);
         dy = dx instanceof gf.Point ? dx.y : (dy || 0);
+        dx = dx instanceof gf.Point ? dx.x : (dx || 0);
+
+        if(!dx && !dy) return;
 
         var newX = this.game.world.position.x - dx,
             newY = this.game.world.position.y - dy;
