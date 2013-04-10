@@ -26,9 +26,9 @@ gf.TiledLayer = function(layer) {
      * The sprite pool for rendering tiles
      *
      * @property tilePool
-     * @type Array
+     * @type Object
      */
-    this.sprites = [];
+    this.sprites = {};
 
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
@@ -80,7 +80,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(this.sprites[tileX] && this.sprites[tileX][tileY])
             return this.sprites[tileX][tileY];
 
-        if(!this.sprites[tileX]) this.sprites[tileX] = [];
+        if(!this.sprites[tileX]) this.sprites[tileX] = {};
 
         var id = (tileX + (tileY * this.size.x)),
             tile = this.tiles[id],
@@ -118,7 +118,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         spr.position.y = toTileY * this.parent.tileSize.y;
 
         //move the sprite in the pool
-        if(!this.sprites[toTileX]) this.sprites[toTileX] = [];
+        if(!this.sprites[toTileX]) this.sprites[toTileX] = {};
         this.sprites[toTileX][toTileY] = spr;
         this.sprites[fromTileX][fromTileY] = null;
 
