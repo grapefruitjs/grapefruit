@@ -100,7 +100,7 @@ gf.inherits(gf.AssetLoader, Object, {
                     //loop through each layer and load the sprites (objectgroup types)
                     for(var i = 0, il = data.layers.length; i < il; ++i) {
                         var layer = data.layers[i];
-                        if(layer.type !== gf.types.LAYER.OBJECT_GROUP) continue;
+                        if(layer.type !== 'objectgroup') continue;
 
                         //loop through each object, and load the textures
                         for(var o = 0, ol = layer.objects.length; o < ol; ++o) {

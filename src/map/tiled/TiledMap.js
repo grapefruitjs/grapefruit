@@ -126,7 +126,7 @@ gf.TiledMap = function(game, map) {
         var lyr;
 
         switch(map.layers[i].type) {
-            case gf.types.LAYER.TILE_LAYER:
+            case 'tilelayer':
                 lyr = new gf.TiledLayer(map.layers[i]);
                 this.addChild(lyr);
 
@@ -146,7 +146,7 @@ gf.TiledMap = function(game, map) {
                 }
                 break;
 
-            case gf.types.LAYER.OBJECT_GROUP:
+            case 'objectgroup':
                 lyr = new gf.TiledObjectGroup(map.layers[i]);
                 this.addChild(lyr);
 
@@ -196,7 +196,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
         //check X movement
         if(x <= this.extent.x.min || x >= this.extent.x.max) {
-            res.push({ axis: 'x', tile: { type: gf.types.COLLISION.SOLID } });
+            res.push({ axis: 'x', tile: { type: gf.Layer.COLLISION.SOLID } });
         } else if(pv.x) {
             //x, bottom corner
             tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.floor(bottom)));
@@ -213,7 +213,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
         //check Y movement
         if(y <= this.extent.y.min || y >= this.extent.y.max) {
-            res.push({ axis: 'y', tile: { type: gf.types.COLLISION.SOLID } });
+            res.push({ axis: 'y', tile: { type: gf.Layer.COLLISION.SOLID } });
         } else if(pv.y) {
             //y, left corner
             tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x < 0) ? Math.floor(left) : Math.ceil(right), y));

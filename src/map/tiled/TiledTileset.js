@@ -161,7 +161,7 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
                 this.tileproperties[tileId] = {
                     isCollidable: false,
                     isBreakable: false,
-                    type: gf.types.COLLISION.NONE
+                    type: gf.Layer.COLLISION.NONE
                 };
     },
     /**
