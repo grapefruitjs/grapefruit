@@ -1,5 +1,4 @@
 //Features TODO:
-// * Methods (https://github.com/obiot/melonJS/blob/master/src/entity/entity.js)
 //      - flipX
 //      - flipY
 //      - doWalk

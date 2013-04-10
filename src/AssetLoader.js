@@ -96,7 +96,6 @@ gf.inherits(gf.AssetLoader, Object, {
                 if(data.orientation && data.layers && data.tilesets && data.version) {
                     self._storeAsset(name, data);
 
-                    //TODO: How to tell if all these are loaded (how to count them?)
                     //loop through each layer and load the sprites (objectgroup types)
                     for(var i = 0, il = data.layers.length; i < il; ++i) {
                         var layer = data.layers[i];
