@@ -297,6 +297,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @return {Camera} Returns iteself for chainability
      */
     follow: function(ent, style) {
+        if(!(ent instanceof gf.Entity)) return this;
+
         this._target = ent;
 
         switch(style) {
@@ -417,7 +419,10 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      */
     resize: function(w, h) {
         this.size.set(w, h);
-        this.hSize.set(this.size.x / 2, this.size.y / 2);
+        this.hSize.set(
+            Math.round(this.size.x / 2),
+            Math.round(this.size.y / 2)
+        );
 
         return this;
     },
@@ -456,14 +461,14 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         //follow entity
         if(this._target) {
             if(!this.deadzone) {
-                this.focus(this._target.position.x, this._target.position.y);
+                this.focus(this._target.viewPosition.x, this._target.viewPosition.y);
             } else {
                 var moveX, moveY, dx, dy;
                 moveX = moveY = dx = dy = 0;
 
                 //check less than
-                dx = this._target.position.x - this.deadzone.x;
-                dy = this._target.position.y - this.deadzone.y;
+                dx = this._target.viewPosition.x - this.deadzone.x;
+                dy = this._target.viewPosition.y - this.deadzone.y;
 
                 if(dx < 0)
                     moveX = dx;
@@ -471,8 +476,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                     moveY = dy;
 
                 //check greater than
-                dx = this._target.position.x - (this.deadzone.x + this.deadzone.width);
-                dy = this._target.position.y - (this.deadzone.y + this.deadzone.height);
+                dx = this._target.viewPosition.x - (this.deadzone.x + this.deadzone.width);
+                dy = this._target.viewPosition.y - (this.deadzone.y + this.deadzone.height);
 
                 if(dx > 0)
                     moveX = dx;
