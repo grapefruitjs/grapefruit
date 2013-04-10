@@ -237,15 +237,19 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @private
      */
     resize: function() {
-        var numX = this.game.renderer.view.width / this.tileSize.x,
-            numY = this.game.renderer.view.height / this.tileSize.y;
+        var numX = Math.ceil(this.game.renderer.view.width / this.tileSize.x),
+            numY = Math.ceil(this.game.renderer.view.height / this.tileSize.y);
 
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
             if(o instanceof gf.TiledLayer && o.visible) {
-                o.removeAllChildren();
-                o.renderTiles(this.position.x, this.position.y, numX, numY);
+                o.renderTiles(
+                    Math.floor(this.position.x / this.tileSize.x),
+                    Math.floor(this.position.y / this.tileSize.y),
+                    numX,
+                    numY
+                );
             }
         }
     },
