@@ -60,8 +60,8 @@ gf.inherits(gf.Map, gf.DisplayObject, {
      * @return {Map} Returns itself for chainability
      */
     pan: function(x, y) {
-        x = x instanceof gf.Point ? x.x : (x || 0);
         y = x instanceof gf.Point ? x.y : (y || 0);
+        x = x instanceof gf.Point ? x.x : (x || 0);
 
         this.position.x += x;
         this.position.y += y;
