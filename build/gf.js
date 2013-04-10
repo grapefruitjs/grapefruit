@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-04-09
+ * Compiled: 2013-04-10
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -5671,12 +5671,10 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         //y += (y > 0) ? 0.0000001 : -0.0000001;
 
         //calculate how much we need to pan
-        var tl = new gf.Point(
-                x - this.hSize.x,
-                y - this.hSize.y
-            ),
-            dx = tl.x - this.game.world.position.x,
-            dy = tl.y - this.game.world.position.y;
+        var goToX = x - this.hSize.x,
+            goToY = y - this.hSize.y,
+            dx = goToX + this.game.world.position.x, //world pos is negative
+            dy = goToY + this.game.world.position.y;
 
         return this.pan(dx, dy);
     },
@@ -5764,14 +5762,14 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         //follow entity
         if(this._target) {
             if(!this.deadzone) {
-                this.focus(this._target.position.x, this._target.y);
+                this.focus(this._target.position.x, this._target.position.y);
             } else {
                 var moveX, moveY, dx, dy;
                 moveX = moveY = dx = dy = 0;
 
                 //check less than
-                dx = this._target.x - this.deadzone.x;
-                dy = this._target.y - this.deadzone.y;
+                dx = this._target.position.x - this.deadzone.x;
+                dy = this._target.position.y - this.deadzone.y;
 
                 if(dx < 0)
                     moveX = dx;
@@ -5779,8 +5777,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                     moveY = dy;
 
                 //check greater than
-                dx = this._target.x - (this.deadzone.x + this.deadzone.width);
-                dy = this._target.y - (this.deadzone.y + this.deadzone.height);
+                dx = this._target.position.x - (this.deadzone.x + this.deadzone.width);
+                dy = this._target.position.y - (this.deadzone.y + this.deadzone.height);
 
                 if(dx > 0)
                     moveX = dx;
@@ -8799,6 +8797,7 @@ gf.TiledLayer = function(layer) {
     this.position.y = layer.y;
     this.alpha = layer.opacity;
 
+    this._tileBufferSize = 2;
     this._panDelta = new gf.Vector(0, 0);
     this._rendered = new PIXI.Rectangle(0, 0, 0, 0);
 };
@@ -8810,12 +8809,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @method renderTiles
      */
     renderTiles: function(startX, startY, numX, numY) {
-        //add a 1 tile buffer around the viewport
-        if(startX >= 1) startX -= 1;
-        if(startX + numX < this.size.x) numX += 1;
-
-        if(startY >= 1) startY -= 1;
-        if(startY + numY < this.size.y) numY += 1;
+        //add a tile buffer around the viewport
+        startX -= this._tileBufferSize;
+        numX += this._tileBufferSize * 2;
+        startY -= this._tileBufferSize;
+        numY += this._tileBufferSize * 2;
 
         for(var x = startX; x < numX; ++x) {
             for(var y = startY; y < numY; ++y) {
