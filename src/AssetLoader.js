@@ -1,16 +1,57 @@
+/**
+ * The AssetLoader loads and parses different game assets, such as sounds, textures,
+ * TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
+ * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
+ *
+ * @module gf
+ * @class AssetLoader
+ * @constructor
+ * @param resources {Array} Array of resources to load when `.load()` is called
+ * @example
+ *      var loader = new AssetLoader(['/my/texture.png']);
+ *      loader.load();
+ *      //OR
+ *      var loader = new AssetLoader();
+ *      loader.load(['/my/texture.png']);
+ */
 gf.AssetLoader = function(resources) {
     //mixin the Event Target methods
     gf.EventTarget.call(this);
 
     /**
-    * The array of asset URLs that are going to be loaded
-    * @property assetURLs
-    * @type Array
-    */
+     * The array of asset URLs that are going to be loaded
+     *
+     * @property assetURLs
+     * @type Array
+     */
     this.resources = resources || [];
+
+    /**
+     * The count of remaining assets to load
+     *
+     * @property loadCount
+     * @type Number
+     * @readOnly
+     */
     this.loadCount = 0;
+
+    /**
+     * A reference to the assets loaded by this loader. They are also put
+     * in the global gf.assetCache
+     *
+     * @property assets
+     * @type Object
+     */
     this.assets = {};
 
+    /**
+     * A mapping of extensions to types. We assume all images are textures :)
+     *
+     * @property exts
+     * @type Object
+     * @readOnly
+     * @private
+     */
     this.exts = {
         imgs: ['jpeg', 'jpg', 'png', 'gif'],
         sound: ['mp3', 'ogg', 'wma', 'wav'],
@@ -19,6 +60,14 @@ gf.AssetLoader = function(resources) {
 };
 
 gf.inherits(gf.AssetLoader, Object, {
+    /**
+     * Starts the loading festivities. If called without any arguments it will load
+     * the resources passed in at the ctor. If an array of resources is passed it will
+     * load those instead.
+     *
+     * @method load
+     * @param items {Array} Array of resources to load instead of the object's resources
+     */
     load: function(items) {
         var resources = items || this.resources;
 
@@ -41,6 +90,14 @@ gf.inherits(gf.AssetLoader, Object, {
             }
         }
     },
+    /**
+     * Loads a texture image and caches the result
+     *
+     * @method loadTexture
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     * @return {Texture} Returns the texture object, so it can be used even before it is fully loaded
+     */
     loadTexture: function(name, url) {
         this.loadCount++;
 
@@ -59,6 +116,14 @@ gf.inherits(gf.AssetLoader, Object, {
 
         return texture;
     },
+    /**
+     * Loads an audio clip and caches the result
+     *
+     * @method loadAudio
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     * @return {Audio} Returns the audio object, so it can be used even before it is fully loaded
+     */
     loadAudio: function(name, url) {
         this.loadCount++;
 
@@ -81,6 +146,13 @@ gf.inherits(gf.AssetLoader, Object, {
 
         return audio;
     },
+    /**
+     * Loads a data (json) object. This is usually either SpriteSheet or TMX Map
+     *
+     * @method loadData
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     */
     loadData: function(name, url) {
         this.loadCount++;
 
@@ -157,6 +229,15 @@ gf.inherits(gf.AssetLoader, Object, {
             }
         });
     },
+    /**
+     * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
+     *
+     * @method onAssetLoaded
+     * @private
+     * @param err {String} An option error if there was an issue loading that resource
+     * @param type {String} The type of asset loaded (texture, audio, world, or spritesheet)
+     * @param asset {Texture|Audio|Object} The actual asset that was loaded
+     */
     onAssetLoaded: function(err, type, asset) {
         //texture (image)
         //audio
@@ -172,6 +253,14 @@ gf.inherits(gf.AssetLoader, Object, {
             if(this.onComplete) this.onComplete();
         }
     },
+    /**
+     * Stores a reference to an asset into the global and local caches
+     *
+     * @method _storeAsset
+     * @private
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param asset {Texture|Audio|Object} The actual asset that was loaded
+     */
     _storeAsset: function(name, asset) {
         this.assets[name] = asset;
         gf.assetCache[name] = asset;
