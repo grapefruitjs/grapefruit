@@ -88,8 +88,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         if(set) {
             this.sprites[tileX][tileY] = new PIXI.Sprite(set.getTileTexture(tile));
-            this.sprites[tileX][tileY].setInteractive(true);
-            this.sprites[tileX][tileY].click = function() { window.console.log(this); window.spr = this; };
             this.addChild(this.sprites[tileX][tileY]);
         }
 
