@@ -53,6 +53,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         startY -= this._tileBufferSize;
         numY += this._tileBufferSize * 2;
 
+        //render new sprites
         for(var x = startX; x < numX; ++x) {
             for(var y = startY; y < numY; ++y) {
                 this.moveTileSprite(x, y, x, y);
@@ -167,27 +168,27 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.y += dy;
 
         //moved position right, so render left
-        while(this._panDelta.x >= this.parent.tileSize.x) {
+        while(this._panDelta.x >= this.parent.scaledTileSize.x) {
             this._renderLeft();
-            this._panDelta.x -= this.parent.tileSize.x;
+            this._panDelta.x -= this.parent.scaledTileSize.x;
         }
 
         //moved position left, so render right
-        while(this._panDelta.x <= -this.parent.tileSize.x) {
+        while(this._panDelta.x <= -this.parent.scaledTileSize.x) {
             this._renderRight();
-            this._panDelta.x += this.parent.tileSize.x;
+            this._panDelta.x += this.parent.scaledTileSize.x;
         }
 
         //moved position down, so render up
-        while(this._panDelta.y >= this.parent.tileSize.y) {
+        while(this._panDelta.y >= this.parent.scaledTileSize.y) {
             this._renderUp();
-            this._panDelta.y -= this.parent.tileSize.y;
+            this._panDelta.y -= this.parent.scaledTileSize.y;
         }
 
         //moved position up, so render down
-        while(this._panDelta.y <= -this.parent.tileSize.y) {
+        while(this._panDelta.y <= -this.parent.scaledTileSize.y) {
             this._renderDown();
-            this._panDelta.y += this.parent.tileSize.y;
+            this._panDelta.y += this.parent.scaledTileSize.y;
         }
     },
     _renderLeft: function() {
