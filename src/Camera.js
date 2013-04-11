@@ -307,7 +307,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                 var h = this.size.y / 3;
                 this._deadzone = new PIXI.Rectangle(
                     (this.size.x - w) / 2,
-                    (this.size.y - h) / 2 - h * 0.25,
+                    (this.size.y - h) / 2 - (h / 4),
                     w,
                     h
                 );
@@ -333,9 +333,11 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
             case gf.Camera.FOLLOW.LOCKON:
                 /* falls through */
             default:
-                this.deadzone = null;
+                this._deadzone = null;
                 break;
         }
+
+        this.focusEntity(this._target);
 
         return this;
     },
@@ -372,6 +374,12 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
 
         return this.pan(dx, dy);
     },
+    focusEntity: function(ent) {
+        this.focus(
+            ent.viewPosition.x * this.game.world.scale.x,
+            ent.viewPosition.y * this.game.world.scale.y
+        );
+    },
     /**
      * Pans the camera around by the x,y amount. Ensures that the camera does
      * not go outside the bounds set with setBounds()
@@ -392,15 +400,15 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
 
         //move only the difference that puts us at 0
         if(newX > 0)
-            dx = 0 - Math.abs(this.game.world.position.x);
+            dx = 0 + this.game.world.position.x;
         //move only the difference that puts us at max (remember that position is negative)
         else if(newX < -this._bounds.maxPanX)
-            dx = this._bounds.maxPanX - Math.abs(this.game.world.position.x);
+            dx = this._bounds.maxPanX + this.game.world.position.x;
 
         if(newY > 0)
             dy = 0 - Math.abs(this.game.world.position.y);
         else if(newY < -this._bounds.maxPanY)
-            dy = this._bounds.maxPanY - Math.abs(this.game.world.position.y);
+            dy = this._bounds.maxPanY + this.game.world.position.y;
 
         if(dx || dy)
             this.game.world.pan(-dx, -dy);
@@ -460,15 +468,20 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
     update: function() {
         //follow entity
         if(this._target) {
-            if(!this.deadzone) {
-                this.focus(this._target.viewPosition.x, this._target.viewPosition.y);
+            if(!this._deadzone) {
+                this.focusEntity(this._target);
             } else {
-                var moveX, moveY, dx, dy;
+                var moveX, moveY,
+                    dx, dy,
+                    //get the x,y of the sprite on the screen
+                    camX = (this._target.position.x + (this.game.world.position.x / this.game.world.scale.x)) * 2,
+                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * 2;
+
                 moveX = moveY = dx = dy = 0;
 
                 //check less than
-                dx = this._target.viewPosition.x - this.deadzone.x;
-                dy = this._target.viewPosition.y - this.deadzone.y;
+                dx = camX - this._deadzone.x;
+                dy = camY - this._deadzone.y;
 
                 if(dx < 0)
                     moveX = dx;
@@ -476,15 +489,18 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                     moveY = dy;
 
                 //check greater than
-                dx = this._target.viewPosition.x - (this.deadzone.x + this.deadzone.width);
-                dy = this._target.viewPosition.y - (this.deadzone.y + this.deadzone.height);
+                dx = camX - (this._deadzone.x + this._deadzone.width);
+                dy = camY - (this._deadzone.y + this._deadzone.height);
 
                 if(dx > 0)
                     moveX = dx;
                 if(dy > 0)
                     moveY = dy;
 
-                this.pan(moveX, moveY);
+                this.pan(
+                    Math.round(moveX),
+                    Math.round(moveY)
+                );
             }
         }
 

@@ -20,9 +20,22 @@ gf.TiledMap = function(game, map) {
      *
      * @property tileSize
      * @type Vector
-     * @default new gf.Vector(0, 0)
      */
-    this.tileSize = new gf.Vector(map.tilewidth, map.tileheight);
+    this.tileSize = new gf.Vector(
+        map.tilewidth,
+        map.tileheight
+    );
+
+    /**
+     * The scaled tile size
+     *
+     * @property scaledTileSize
+     * @type Vector
+     */
+    this.scaledTileSize = new gf.Vector(
+        map.tilewidth * this.scale.x,
+        map.tileheight * this.scale.y
+    );
 
     /**
      * The user-defined properties
@@ -34,25 +47,14 @@ gf.TiledMap = function(game, map) {
     this.properties = map.properties || {};
 
     /**
-     * The real size (size * tileSize)
+     * The real size (size * scaledTileSize)
      *
      * @property realSize
      * @type Vector
      */
     this.realSize = new gf.Vector(
-        this.size.x * this.tileSize.x,
-        this.size.y * this.tileSize.y
-    );
-
-    /**
-     * The scaled size (size * tileSize * scale)
-     *
-     * @property scaledSize
-     * @type Vector
-     */
-    this.scaledSize = new gf.Vector(
-        this.size.x * this.tileSize.x * this.scale,
-        this.size.y * this.tileSize.y * this.scale
+        this.size.x * this.scaledTileSize.x,
+        this.size.y * this.scaledTileSize.y
     );
 
     /**
@@ -62,25 +64,6 @@ gf.TiledMap = function(game, map) {
      * @type String
      */
     this.orientation = map.orientation;
-
-    /**
-     * The maximum extent of the map (largest x and y the map has)
-     * assuming 0,0 is in the middle of the map, calculate the minimum
-     * and maximum extent of the map
-     *
-     * @property extent
-     * @type Object
-     */
-    this.extent = {
-        x: {
-            min: ~~(this.scaledSize.x / 2) - this.scaledSize.x,
-            max: this.scaledSize.x - ~~(this.scaledSize.x / 2)
-        },
-        y: {
-            min: ~~(this.scaledSize.y / 2) - this.scaledSize.y,
-            max: this.scaledSize.y - ~~(this.scaledSize.y / 2)
-        }
-    };
 
     /**
      * The tilesets used by this map
@@ -119,8 +102,8 @@ gf.TiledMap = function(game, map) {
     this.version = map.version;
 
     //create the layers
-    var numX = Math.ceil(this.game.renderer.view.width / this.tileSize.x),
-        numY = Math.ceil(this.game.renderer.view.height / this.tileSize.y);
+    var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
+        numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
 
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr;
@@ -237,16 +220,16 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @private
      */
     resize: function() {
-        var numX = Math.ceil(this.game.renderer.view.width / this.tileSize.x),
-            numY = Math.ceil(this.game.renderer.view.height / this.tileSize.y);
+        var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
+            numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
 
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
             if(o instanceof gf.TiledLayer && o.visible) {
                 o.renderTiles(
-                    Math.floor(this.position.x / this.tileSize.x),
-                    Math.floor(this.position.y / this.tileSize.y),
+                    Math.floor(this.position.x / this.scaledTileSize.x),
+                    Math.floor(this.position.y / this.scaledTileSize.y),
                     numX,
                     numY
                 );
@@ -255,12 +238,12 @@ gf.inherits(gf.TiledMap, gf.Map, {
     },
     //WIP
     _checkHalfBlock: function(half, x, y) {
-        var tx = Math.floor(x / this.tileSize.x) * this.tileSize.x,
-            ty = Math.floor(y / this.tileSize.y) * this.tileSize.y,
-            midX = tx + ((this.tileSize.x) / 2),
-            endX = tx + (this.tileSize.x),
-            midY = ty - ((this.tileSize.y) / 2),
-            endY = ty - (this.tileSize.y);
+        var tx = Math.floor(x / this.scaledTileSize.x) * this.scaledTileSize.x,
+            ty = Math.floor(y / this.scaledTileSize.y) * this.scaledTileSize.y,
+            midX = tx + ((this.scaledTileSize.x) / 2),
+            endX = tx + (this.scaledTileSize.x),
+            midY = ty - ((this.scaledTileSize.y) / 2),
+            endY = ty - (this.scaledTileSize.y);
 
         switch(half) {
             case gf.types.HALF.LEFT:
