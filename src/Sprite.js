@@ -222,7 +222,7 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
      *      spr.addAnimation('me', new gf.Texture())
      *          .setActiveAnimation('me');
      */
-    setActiveAnimation: function(name, cb) {
+    setActiveAnimation: function(name, loop, cb) {
         if(this.anim[name] !== undefined) {
             if(this.currentAnim) {
                 this.currentAnim.stop();
@@ -231,9 +231,9 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
 
             this.currentAnim = this.children[this.anim[name]];
             this.currentAnim.visible = true;
+            this.currentAnim.loop = loop;
+            this.currentAnim.onComplete = cb;
             this.currentAnim.gotoAndPlay(0);
-            //TODO: Callback
-            if(cb) setTimeout(cb, 1);
         } else {
             throw 'Unknown animation ' + name;
         }
