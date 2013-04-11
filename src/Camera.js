@@ -474,8 +474,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                 var moveX, moveY,
                     dx, dy,
                     //get the x,y of the sprite on the screen
-                    camX = (this._target.position.x + (this.game.world.position.x / this.game.world.scale.x)) * 2,
-                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * 2;
+                    camX = (this._target.position.x + (this.game.world.position.x / this.game.world.scale.x)) * this.game.world.scale.x,
+                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * this.game.world.scale.x;
 
                 moveX = moveY = dx = dy = 0;
 
