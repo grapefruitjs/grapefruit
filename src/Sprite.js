@@ -65,6 +65,9 @@ gf.Sprite = function(pos, settings) {
     //mixin user's settings
     gf.utils.setValues(this, settings);
 
+    this.position.x = pos.x || pos[0] || parseInt(pos, 10) || 0;
+    this.position.y = pos.y || pos[1] || parseInt(pos, 10) || 0;
+
     //add the animations passed to ctor
     if(settings.animations) {
         for(var name in settings.animations) {
