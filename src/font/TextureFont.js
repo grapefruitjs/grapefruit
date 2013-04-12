@@ -34,18 +34,19 @@ gf.inherits(gf.TextureFont, gf.Font, {
         var texture = this.textures[ch + this.ext],
             spr = this.sprites.pop();
 
-        if(!spr)
+        if(!spr) {
             spr = new PIXI.Sprite(texture);
+            this.addChild(spr);
+        }
         else
             spr.setTexture(texture);
 
-        this.addChild(spr);
-
+        spr.visible = true;
         return spr;
     },
     _freeSprite: function(spr) {
         this.sprites.push(spr);
-        this.removeChild(spr);
+        spr.visible = false;
     },
     setText: function(txt) {
         this.text = txt;
