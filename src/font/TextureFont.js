@@ -20,6 +20,8 @@ gf.TextureFont = function(font, settings) {
 
 gf.inherits(gf.TextureFont, gf.Font, {
     _getSprite: function(ch) {
+        if(ch === ' ') ch = '_space';
+
         var texture = this.textures[ch + this.ext],
             spr = this.sprites.pop();
 
