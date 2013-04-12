@@ -29,6 +29,9 @@
                 case 2: return new gf.Vector(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
             }
         }
+        else if(typeof a === 'number') {
+            return new gf.Vector(a, a);
+        }
         else {
             return new gf.Vector();
         }
