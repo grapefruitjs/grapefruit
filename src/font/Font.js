@@ -15,9 +15,12 @@ gf.Font = function(font, settings) {
 
     gf.utils.setValues(this, settings);
 
-    var fontNames = font.split(',');
-    for(var i = 0, il = fontNames.length; i < il; ++i) {
-        fontNames[i] = "'" + fontNames[i] + "'";
+    var fontNames = [];
+    if(typeof font == 'string') {
+        fontNames = font.split(',');
+        for(var i = 0, il = fontNames.length; i < il; ++i) {
+            fontNames[i] = "'" + fontNames[i] + "'";
+        }
     }
 
     if(typeof this.size === 'number')
@@ -25,10 +28,6 @@ gf.Font = function(font, settings) {
 
     this.font = this.size + ' ' + fontNames.join(',');
     this.dirty = true;
-
-    this.canvas = document.createElement('canvas');
-    this.canvas.width = this.canvas.height = 1024;
-    this.ctx = this.canvas.getContext('2d');
 };
 
 gf.inherits(gf.Font, gf.DisplayObject, {
@@ -46,6 +45,12 @@ gf.inherits(gf.Font, gf.DisplayObject, {
     },
     update: function() {
         if(!this.dirty) return;
+
+        if(!this.canvas) {
+            this.canvas = document.createElement('canvas');
+            this.canvas.width = this.canvas.height = 1024;
+            this.ctx = this.canvas.getContext('2d');
+        }
 
         //setup ctx
         this.ctx.font = this.font;

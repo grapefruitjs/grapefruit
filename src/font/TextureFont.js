@@ -1,13 +1,7 @@
 gf.TextureFont = function(font, settings) {
-    this.text = '';
-
-    this.lineWidth = 1;
-
-    this.lineHeight = 1;
-
     this.ext = '';
 
-    gf.DisplayObject.call(this, font, settings);
+    gf.Font.call(this, font, settings);
 
     if(typeof font === 'string') {
         if(gf.assetCache[font])
@@ -19,13 +13,12 @@ gf.TextureFont = function(font, settings) {
 
     if(this.ext && this.ext.charAt(0) !== '.')
         this.ext = '.' + this.ext;
+
+    delete this.bold;
+    delete this.italic;
 };
 
-gf.inherits(gf.TextureFont, gf.DisplayObject, {
-    setText: function(txt) {
-        this.text = txt;
-        this.dirty = true;
-    },
+gf.inherits(gf.TextureFont, gf.Font, {
     _getSprite: function(ch) {
         var texture = this.textures[ch + this.ext],
             spr = this.sprites.pop();
