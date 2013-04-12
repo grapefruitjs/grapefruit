@@ -5,9 +5,13 @@ gf.TextureFont = function(font, settings) {
 
     gf.Font.call(this, font, settings);
 
+    this.size = gf.utils.ensureVector(settings.size);
+
     if(typeof font === 'string') {
         if(gf.assetCache[font])
             font = gf.assetCache[font];
+        else
+            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
     }
 
     this.dirty = true;
@@ -15,6 +19,8 @@ gf.TextureFont = function(font, settings) {
 
     if(this.ext && this.ext.charAt(0) !== '.')
         this.ext = '.' + this.ext;
+
+    this.sprites = [];
 
     delete this.bold;
     delete this.italic;
@@ -25,6 +31,9 @@ gf.inherits(gf.TextureFont, gf.Font, {
         if(this.map[ch])
             ch = this.map[ch];
 
+        if(!this.textures[ch + this.ext])
+            throw 'there is no texture for character "' + ch + '" with extension "' + this.ext + '"';
+
         var texture = this.textures[ch + this.ext],
             spr = this.sprites.pop();
 
@@ -34,6 +43,8 @@ gf.inherits(gf.TextureFont, gf.Font, {
             spr.setTexture(texture);
 
         this.addChild(spr);
+
+        return spr;
     },
     _freeSprite: function(spr) {
         this.sprites.push(spr);
@@ -43,7 +54,7 @@ gf.inherits(gf.TextureFont, gf.Font, {
         if(!this.dirty) return;
 
         //free all sprites
-        for(var c = this.children.length; c > -1; --c)
+        for(var c = this.children.length - 1; c > -1; --c)
             this._freeSprite(this.children[c]);
 
         //add text sprites

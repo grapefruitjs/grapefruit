@@ -16,10 +16,10 @@ gf.Font = function(font, settings) {
     gf.utils.setValues(this, settings);
 
     var fontNames = [];
-    if(typeof font == 'string') {
+    if(typeof font === 'string') {
         fontNames = font.split(',');
         for(var i = 0, il = fontNames.length; i < il; ++i) {
-            fontNames[i] = "'" + fontNames[i] + "'";
+            fontNames[i] = '\'' + fontNames[i] + '\'';
         }
     }
 
@@ -74,7 +74,7 @@ gf.inherits(gf.Font, gf.DisplayObject, {
         this.texture = gf.Texture.fromCanvas(this.canvas);
 
         //and create a sprite for this guy
-        for(var c = this.children.length; c > -1; --c)
+        for(var c = this.children.length - 1; c > -1; --c)
             this.removeChild(this.children[c]);
 
         this.addChild(PIXI.Sprite(this.texture));
