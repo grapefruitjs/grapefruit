@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-04-10
+ * Compiled: 2013-04-12
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -678,6 +678,20 @@ PIXI.MovieClip = function(textures)
 	 * @type Number
 	 */
 	this.animationSpeed = 1;
+
+    /**
+	 * Whether or not the movie clip repeats after playing.
+	 * @property loop
+	 * @type Boolean
+	 */
+    this.loop = true;
+
+    /**
+	 * Function to call when a MovieClip finishes playing
+	 * @property onComplete
+	 * @type Function
+	 */
+    this.onComplete = null;
 	
 	/**
 	 * [read only] indicates if the MovieClip is currently playing
@@ -741,7 +755,18 @@ PIXI.MovieClip.prototype.updateTransform = function()
 	
 	this.currentFrame += this.animationSpeed;
 	var round = (this.currentFrame + 0.5) | 0;
-	this.setTexture(this.textures[round % this.textures.length]);
+    if(this.loop){
+        this.setTexture(this.textures[round % this.textures.length]);
+    }else{
+        if (round>=this.textures.length){
+            this.currentFrame=this.textures.length-1;
+            this.setTexture(this.textures[this.textures.length-1]);
+            this.stop();
+            if(this.onComplete)this.onComplete();
+        }else{
+            this.setTexture(this.textures[round]);
+        }
+    }
 }
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
@@ -4095,256 +4120,6 @@ gf.version = '0.0.2';
 gf.assetCache = {};
 
 /**
- * Constant types for easy use in code
- *
- * @module gf
- * @class types
- */
-gf.types = {
-    /**
-     * Entity types
-     *
-     * @property ENTITY
-     * @type Object
-     */
-    ENTITY: {
-        PLAYER: 'player',
-        ENEMY: 'enemy',
-        FRIENDLY: 'friendly',
-        NEUTRAL: 'neutral',
-        COLLECTABLE: 'collectable'
-    },
-    /**
-     * Layer types
-     *
-     * @property LAYER
-     * @type Object
-     */
-    LAYER: {
-        TILE_LAYER: 'tilelayer',
-        OBJECT_GROUP: 'objectgroup' // each zone is defined as an object group
-    },
-    /**
-     * Tile collision types
-     *
-     * @property COLLISION
-     * @type Object
-     */
-    COLLISION: {
-        NONE: 'none',
-        SOLID: 'solid',
-        CLIFF: 'cliff',
-        LADDER: 'ladder',
-        WATER: 'water',
-        DEEP_WATER: 'deep_water'
-    },
-    /**
-     * Event definitions
-     *
-     * @property EVENT
-     * @type Object
-     * @deprecated
-     */
-    EVENT: {
-        ENTITY_MOVE: 'gf.entity.move',
-        LOADER_START: 'gf.loader.start',
-        LOADER_ERROR: 'gf.loader.error',
-        LOADER_PROGRESS: 'gf.loader.progress',
-        LOADER_LOAD: 'gf.loader.load',
-        LOADER_COMPLETE: 'gf.loader.complete'
-    },
-    /**
-     * Resource types
-     *
-     * @property RESOURCE
-     * @type Object
-     * @deprecated
-     */
-    RESOURCE: {
-        AUDIO: 'audio',
-        SOUND: 'sound',
-        MUSIC: 'music',
-        JSON: 'json',
-        XML: 'xml',
-        WORLD: 'world',
-        TEXTURE: 'texture',
-        SPRITE: 'sprite',
-        IMAGE: 'image'
-    },
-    /**
-     * Bindable keycodes
-     *
-     * @property KEY
-     * @type Object
-     */
-    KEY: {
-        BACKSPACE: 8,
-        TAB: 9,
-        ENTER: 13,
-        SHIFT: 16,
-        CTRL: 17,
-        ALT: 18,
-        PAUSE: 19,
-        ESC: 27,
-        SPACE: 32,
-        PAGE_UP: 33,
-        PAGE_DOWN: 34,
-        END: 35,
-        HOME: 36,
-        LEFT: 37,
-        UP: 38,
-        RIGHT: 39,
-        DOWN: 40,
-        INSERT: 45,
-        DELETE: 46,
-        NUM0: 48,
-        NUM1: 49,
-        NUM2: 50,
-        NUM3: 51,
-        NUM4: 52,
-        NUM5: 53,
-        NUM6: 54,
-        NUM7: 55,
-        NUM8: 56,
-        NUM9: 57,
-        PLUS: 61,
-        A : 65,
-        B : 66,
-        C : 67,
-        D : 68,
-        E : 69,
-        F : 70,
-        G : 71,
-        H : 72,
-        I : 73,
-        J : 74,
-        K : 75,
-        L : 76,
-        M : 77,
-        N : 78,
-        O : 79,
-        P : 80,
-        Q : 81,
-        R : 82,
-        S : 83,
-        T : 84,
-        U : 85,
-        V : 86,
-        W : 87,
-        X : 88,
-        Y : 89,
-        Z : 90,
-        NUMPAD0: 96,
-        NUMPAD1: 97,
-        NUMPAD2: 98,
-        NUMPAD3: 99,
-        NUMPAD4: 100,
-        NUMPAD5: 101,
-        NUMPAD6: 102,
-        NUMPAD7: 103,
-        NUMPAD8: 104,
-        NUMPAD9: 105,
-        NUMPAD_STAR: 106,
-        NUMPAD_PLUS: 107,
-        NUMPAD_MINUS: 109,
-        NUMPAD_DOT: 110,
-        NUMPAD_SLASH: 111,
-        F1: 112,
-        F2: 113,
-        F3: 114,
-        F4: 115,
-        MINUS: 173,
-        TILDE: 192
-    },
-    /**
-     * Bindable Mouse Events
-     *
-     * @property MOUSE
-     * @type Object
-     */
-    MOUSE: {
-        WHEEL: 'mousewheel',
-        MOVE: 'mousemove',
-        DOWN: 'mousedown',
-        UP: 'mouseup',
-        CLICK: 'click',
-        DBLCLICK: 'dblclick',
-        RCLICK: 'contextmenu',
-        CONTEXTMENU: 'contextmenu'
-    },
-    /**
-     * Bindable Touch Events
-     *
-     * @property TOUCH
-     * @type Object
-     */
-    TOUCH: {
-        //WHEEL: undefined,
-        MOVE: 'touchmove',
-        START: 'touchstart',
-        END: 'touchend',
-        TAP: 'tap',
-        DBLTAP: 'dbltap'
-        //RCLICK: undefined,
-        //CONTEXTMENU: undefined
-    },
-    /**
-     * Bindable Gamepad Buttons
-     *
-     * @property GP_BUTTONS
-     * @type Object
-     */
-    GP_BUTTONS: {
-        FACE_1: 0, // Face (main) buttons
-        FACE_2: 1,
-        FACE_3: 2,
-        FACE_4: 3,
-        LEFT_SHOULDER: 4, // Top shoulder buttons
-        RIGHT_SHOULDER: 5,
-        LEFT_TRIGGER: 6, // Bottom shoulder buttons
-        RIGHT_TRIGGER: 7,
-        SELECT: 8,
-        START: 9,
-        LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
-        RIGHT_ANALOGUE_STICK: 11,
-        PAD_TOP: 12, // Directional (discrete) pad
-        PAD_BOTTOM: 13,
-        PAD_LEFT: 14,
-        PAD_RIGHT: 15
-    },
-    getGpButtonName: function(i) {
-        for(var k in gf.types.GP_BUTTONS) {
-            if(gf.types.GP_BUTTONS[k] === i) {
-                return k;
-            }
-        }
-
-        return '';
-    },
-    /**
-     * Bindable Gamepad Axes
-     *
-     * @property GP_AXES
-     * @type Object
-     */
-    GP_AXES: {
-        LEFT_ANALOGUE_HOR: 0,
-        LEFT_ANALOGUE_VERT: 1,
-        RIGHT_ANALOGUE_HOR: 2,
-        RIGHT_ANALOGUE_VERT: 3
-    },
-    getGpAxisName: function(i) {
-        for(var k in gf.types.GP_AXES) {
-            if(gf.types.GP_AXES[k] === i) {
-                return k;
-            }
-        }
-
-        return '';
-    }
-};
-
-/**
  * Feature detection so we cans witch between renderers, play audio correctly, and other things.
  *
  * @module gf
@@ -4382,6 +4157,14 @@ gf.support = {
      * @type bool
      */
     workers: !!window.Worker,
+
+    /**
+     * Whether or not typed arrays are supported
+     *
+     * @property typedArrays
+     * @type bool
+     */
+    typedArrays: !!('ArrayBuffer' in window),
 
     /**
      * Whether or not the filesystem API is supported
@@ -4548,13 +4331,24 @@ gf.Game = function(contId, settings) {
     this.renderMethod = 'webgl';
 
     /**
+     * The player entities added into the game
+     *
+     * @property players
+     * @type {Array}
+     */
+    this.players = [];
+
+    /**
      * Raw PIXI.stage instance
      *
      * @property stage
      * @type PIXI.Stage
      * @readOnly
      */
-    this.stage = new PIXI.Stage();
+    this.stage = new PIXI.Stage(
+        settings.background || 0xff00ff,
+        settings.interactive !== undefined ? settings.interactive : true
+    );
 
     /**
      * Raw Clock instance for internal timing
@@ -4821,19 +4615,60 @@ gf.inherits(gf.Game, Object, {
     }
 });
 
+/**
+ * The AssetLoader loads and parses different game assets, such as sounds, textures,
+ * TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
+ * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
+ *
+ * @module gf
+ * @class AssetLoader
+ * @constructor
+ * @param resources {Array} Array of resources to load when `.load()` is called
+ * @example
+ *      var loader = new AssetLoader(['/my/texture.png']);
+ *      loader.load();
+ *      //OR
+ *      var loader = new AssetLoader();
+ *      loader.load(['/my/texture.png']);
+ */
 gf.AssetLoader = function(resources) {
     //mixin the Event Target methods
     gf.EventTarget.call(this);
 
     /**
-    * The array of asset URLs that are going to be loaded
-    * @property assetURLs
-    * @type Array
-    */
+     * The array of asset URLs that are going to be loaded
+     *
+     * @property assetURLs
+     * @type Array
+     */
     this.resources = resources || [];
+
+    /**
+     * The count of remaining assets to load
+     *
+     * @property loadCount
+     * @type Number
+     * @readOnly
+     */
     this.loadCount = 0;
+
+    /**
+     * A reference to the assets loaded by this loader. They are also put
+     * in the global gf.assetCache
+     *
+     * @property assets
+     * @type Object
+     */
     this.assets = {};
 
+    /**
+     * A mapping of extensions to types. We assume all images are textures :)
+     *
+     * @property exts
+     * @type Object
+     * @readOnly
+     * @private
+     */
     this.exts = {
         imgs: ['jpeg', 'jpg', 'png', 'gif'],
         sound: ['mp3', 'ogg', 'wma', 'wav'],
@@ -4842,6 +4677,14 @@ gf.AssetLoader = function(resources) {
 };
 
 gf.inherits(gf.AssetLoader, Object, {
+    /**
+     * Starts the loading festivities. If called without any arguments it will load
+     * the resources passed in at the ctor. If an array of resources is passed it will
+     * load those instead.
+     *
+     * @method load
+     * @param items {Array} Array of resources to load instead of the object's resources
+     */
     load: function(items) {
         var resources = items || this.resources;
 
@@ -4864,6 +4707,14 @@ gf.inherits(gf.AssetLoader, Object, {
             }
         }
     },
+    /**
+     * Loads a texture image and caches the result
+     *
+     * @method loadTexture
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     * @return {Texture} Returns the texture object, so it can be used even before it is fully loaded
+     */
     loadTexture: function(name, url) {
         this.loadCount++;
 
@@ -4882,6 +4733,14 @@ gf.inherits(gf.AssetLoader, Object, {
 
         return texture;
     },
+    /**
+     * Loads an audio clip and caches the result
+     *
+     * @method loadAudio
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     * @return {Audio} Returns the audio object, so it can be used even before it is fully loaded
+     */
     loadAudio: function(name, url) {
         this.loadCount++;
 
@@ -4904,6 +4763,13 @@ gf.inherits(gf.AssetLoader, Object, {
 
         return audio;
     },
+    /**
+     * Loads a data (json) object. This is usually either SpriteSheet or TMX Map
+     *
+     * @method loadData
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     */
     loadData: function(name, url) {
         this.loadCount++;
 
@@ -4919,11 +4785,10 @@ gf.inherits(gf.AssetLoader, Object, {
                 if(data.orientation && data.layers && data.tilesets && data.version) {
                     self._storeAsset(name, data);
 
-                    //TODO: How to tell if all these are loaded (how to count them?)
                     //loop through each layer and load the sprites (objectgroup types)
                     for(var i = 0, il = data.layers.length; i < il; ++i) {
                         var layer = data.layers[i];
-                        if(layer.type !== gf.types.LAYER.OBJECT_GROUP) continue;
+                        if(layer.type !== 'objectgroup') continue;
 
                         //loop through each object, and load the textures
                         for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
@@ -4981,6 +4846,15 @@ gf.inherits(gf.AssetLoader, Object, {
             }
         });
     },
+    /**
+     * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
+     *
+     * @method onAssetLoaded
+     * @private
+     * @param err {String} An option error if there was an issue loading that resource
+     * @param type {String} The type of asset loaded (texture, audio, world, or spritesheet)
+     * @param asset {Texture|Audio|Object} The actual asset that was loaded
+     */
     onAssetLoaded: function(err, type, asset) {
         //texture (image)
         //audio
@@ -4996,6 +4870,14 @@ gf.inherits(gf.AssetLoader, Object, {
             if(this.onComplete) this.onComplete();
         }
     },
+    /**
+     * Stores a reference to an asset into the global and local caches
+     *
+     * @method _storeAsset
+     * @private
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param asset {Texture|Audio|Object} The actual asset that was loaded
+     */
     _storeAsset: function(name, asset) {
         this.assets[name] = asset;
         gf.assetCache[name] = asset;
@@ -5537,18 +5419,18 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         if(typeof duration === 'function') {
             cb = duration;
             direction = gf.Camera.SHAKE.BOTH;
-            duration = 1;
+            duration = null;
         }
 
         if(typeof intensity === 'function') {
             cb = intensity;
             direction = gf.Camera.SHAKE.BOTH;
-            duration = 1;
-            intensity = 1;
+            duration = null;
+            intensity = null;
         }
 
-        intensity = intensity || 1;
-        duration = duration || 1;
+        intensity = intensity || 0.01;
+        duration = duration || 1000;
         direction = direction || gf.Camera.SHAKE.BOTH;
 
         //setup a shake effect
@@ -5603,6 +5485,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @return {Camera} Returns iteself for chainability
      */
     follow: function(ent, style) {
+        if(!(ent instanceof gf.Entity)) return this;
+
         this._target = ent;
 
         switch(style) {
@@ -5611,7 +5495,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                 var h = this.size.y / 3;
                 this._deadzone = new PIXI.Rectangle(
                     (this.size.x - w) / 2,
-                    (this.size.y - h) / 2 - h * 0.25,
+                    (this.size.y - h) / 2 - (h / 4),
                     w,
                     h
                 );
@@ -5637,9 +5521,11 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
             case gf.Camera.FOLLOW.LOCKON:
                 /* falls through */
             default:
-                this.deadzone = null;
+                this._deadzone = null;
                 break;
         }
+
+        this.focusEntity(this._target);
 
         return this;
     },
@@ -5657,16 +5543,14 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * Focuses the camera on an x,y position. Ensures that the camera does
      * not go outside the bounds set with setBounds()
      *
-     * TODO: DOESN'T WORK!
-     *
      * @method focus
      * @param x {Number|Point} The x coord to focus on, if a Point is passed the y param is ignored
      * @param y {Number} The y coord to focus on
      * @return {Camera} Returns iteself for chainability
      */
     focus: function(x, y) {
-        x = x instanceof gf.Point ? x.x : (x || 0);
         y = x instanceof gf.Point ? x.y : (y || 0);
+        x = x instanceof gf.Point ? x.x : (x || 0);
         //x += (x > 0) ? 0.0000001 : -0.0000001;
         //y += (y > 0) ? 0.0000001 : -0.0000001;
 
@@ -5678,6 +5562,12 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
 
         return this.pan(dx, dy);
     },
+    focusEntity: function(ent) {
+        this.focus(
+            ent.viewPosition.x * this.game.world.scale.x,
+            ent.viewPosition.y * this.game.world.scale.y
+        );
+    },
     /**
      * Pans the camera around by the x,y amount. Ensures that the camera does
      * not go outside the bounds set with setBounds()
@@ -5688,23 +5578,25 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @return {Camera} Returns iteself for chainability
      */
     pan: function(dx, dy) {
-        dx = dx instanceof gf.Point ? dx.x : (dx || 0);
         dy = dx instanceof gf.Point ? dx.y : (dy || 0);
+        dx = dx instanceof gf.Point ? dx.x : (dx || 0);
+
+        if(!dx && !dy) return;
 
         var newX = this.game.world.position.x - dx,
             newY = this.game.world.position.y - dy;
 
         //move only the difference that puts us at 0
         if(newX > 0)
-            dx = 0 - Math.abs(this.game.world.position.x);
+            dx = 0 + this.game.world.position.x;
         //move only the difference that puts us at max (remember that position is negative)
         else if(newX < -this._bounds.maxPanX)
-            dx = this._bounds.maxPanX - Math.abs(this.game.world.position.x);
+            dx = this._bounds.maxPanX + this.game.world.position.x;
 
         if(newY > 0)
             dy = 0 - Math.abs(this.game.world.position.y);
         else if(newY < -this._bounds.maxPanY)
-            dy = this._bounds.maxPanY - Math.abs(this.game.world.position.y);
+            dy = this._bounds.maxPanY + this.game.world.position.y;
 
         if(dx || dy)
             this.game.world.pan(-dx, -dy);
@@ -5723,7 +5615,10 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      */
     resize: function(w, h) {
         this.size.set(w, h);
-        this.hSize.set(this.size.x / 2, this.size.y / 2);
+        this.hSize.set(
+            Math.round(this.size.x / 2),
+            Math.round(this.size.y / 2)
+        );
 
         return this;
     },
@@ -5761,15 +5656,20 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
     update: function() {
         //follow entity
         if(this._target) {
-            if(!this.deadzone) {
-                this.focus(this._target.position.x, this._target.position.y);
+            if(!this._deadzone) {
+                this.focusEntity(this._target);
             } else {
-                var moveX, moveY, dx, dy;
+                var moveX, moveY,
+                    dx, dy,
+                    //get the x,y of the sprite on the screen
+                    camX = (this._target.position.x + (this.game.world.position.x / this.game.world.scale.x)) * this.game.world.scale.x,
+                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * this.game.world.scale.x;
+
                 moveX = moveY = dx = dy = 0;
 
                 //check less than
-                dx = this._target.position.x - this.deadzone.x;
-                dy = this._target.position.y - this.deadzone.y;
+                dx = camX - this._deadzone.x;
+                dy = camY - this._deadzone.y;
 
                 if(dx < 0)
                     moveX = dx;
@@ -5777,15 +5677,18 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                     moveY = dy;
 
                 //check greater than
-                dx = this._target.position.x - (this.deadzone.x + this.deadzone.width);
-                dy = this._target.position.y - (this.deadzone.y + this.deadzone.height);
+                dx = camX - (this._deadzone.x + this._deadzone.width);
+                dy = camY - (this._deadzone.y + this._deadzone.height);
 
                 if(dx > 0)
                     moveX = dx;
                 if(dy > 0)
                     moveY = dy;
 
-                this.pan(moveX, moveY);
+                this.pan(
+                    Math.round(moveX),
+                    Math.round(moveY)
+                );
             }
         }
 
@@ -6079,7 +5982,7 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
      *      spr.addAnimation('me', new gf.Texture())
      *          .setActiveAnimation('me');
      */
-    setActiveAnimation: function(name, cb) {
+    setActiveAnimation: function(name, loop, cb) {
         if(this.anim[name] !== undefined) {
             if(this.currentAnim) {
                 this.currentAnim.stop();
@@ -6088,9 +5991,9 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
 
             this.currentAnim = this.children[this.anim[name]];
             this.currentAnim.visible = true;
+            this.currentAnim.loop = loop;
+            this.currentAnim.onComplete = cb;
             this.currentAnim.gotoAndPlay(0);
-            //TODO: Callback
-            if(cb) setTimeout(cb, 1);
         } else {
             throw 'Unknown animation ' + name;
         }
@@ -6188,7 +6091,6 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
  * @param frameNumber {Number} frame index to start at
  */
 //Features TODO:
-// * Methods (https://github.com/obiot/melonJS/blob/master/src/entity/entity.js)
 //      - flipX
 //      - flipY
 //      - doWalk
@@ -6227,7 +6129,7 @@ gf.Entity = function(game, pos, settings) {
      * @type String
      * @default 'neutral'
      */
-    this.type = gf.types.ENTITY.NEUTRAL;
+    this.type = gf.Entity.TYPE.NEUTRAL;
 
     /**
      * Can it collide with other entities
@@ -6342,8 +6244,20 @@ gf.Entity = function(game, pos, settings) {
      */
     this.onladder = false;
 
+    /**
+     * The view position is a whole-number version of position.
+     *
+     * @property viewPosition
+     * @type Point
+     * @readOnly
+     */
+    this.viewPosition = new gf.Point(0, 0);
+
     //call base ctor
     gf.Sprite.call(this, pos, settings);
+
+    this.viewPosition.x = Math.round(this.position.x);
+    this.viewPosition.y = Math.round(this.position.y);
 };
 
 gf.inherits(gf.Entity, gf.Sprite, {
@@ -6471,10 +6385,10 @@ gf.inherits(gf.Entity, gf.Sprite, {
                 tile = collider.tile,
                 axis = collider.axis;
 
-            this.onladder = (tile.type === gf.types.COLLISION.LADDER ? true : this.onladder);
+            this.onladder = (tile.type === gf.Layer.COLLISION.LADDER ? true : this.onladder);
 
             //if a solid tile
-            if(tile.type === gf.types.COLLISION.SOLID) {
+            if(tile.type === gf.Layer.COLLISION.SOLID) {
                 //if it is a slope, apply the normal
                 if(tile.normal && (!this.velocity.x || !this.velocity.y)) {
                     var badMovement = tile.normal.clone().multiplyScalar(this.velocity.dot(tile.normal)),
@@ -6521,9 +6435,33 @@ gf.inherits(gf.Entity, gf.Sprite, {
         //update the entity position
         this.position.x += vel.x;
         this.position.y += vel.y;
+        this.viewPosition.x = Math.round(this.position.x);
+        this.viewPosition.y = Math.round(this.position.y);
 
         //onMove event
         this.onMove(vel);
+
+        return this;
+    },
+    /**
+     * Convenience method for setting the position of an Entity.
+     *
+     * @method setPosition
+     * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
+     *       If an Array, Vector, or Point is passed then the y parameter is ignored
+     * @param y {Number} Y coord to put the sprite at
+     * @return {Entity} Returns itself for chainability
+     * @example
+     *      spr.setPosition(1, 1)
+     *          .setPosition([5, 5])
+     *          .setPosition(new gf.Point(10, 10))
+     *          .setPosition(new gf.Vector(20, 20));
+     */
+    setPosition: function(x, y) {
+        gf.Sprite.prototype.setPosition.call(this, x, y);
+
+        this.viewPosition.x = Math.round(this.position.x);
+        this.viewPosition.y = Math.round(this.position.y);
 
         return this;
     },
@@ -6548,7 +6486,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * @return {Entity} Returns itself for chainability
      */
     onCollision: function() {
-        if(this.collidable && this.type === gf.types.ENTIY.COLLECTABLE)
+        if(this.collidable && this.type === gf.Entity.TYPE.COLLECTABLE)
             this.game.removeObject(this);
 
         return this;
@@ -6577,6 +6515,19 @@ gf.inherits(gf.Entity, gf.Sprite, {
     }
 });
 
+/**
+ * Entity types
+ *
+ * @property TYPE
+ * @type Object
+ */
+gf.Entity.TYPE = {
+    PLAYER: 'player',
+    ENEMY: 'enemy',
+    FRIENDLY: 'friendly',
+    NEUTRAL: 'neutral',
+    COLLECTABLE: 'collectable'
+};
 /**
  * Holds a pool of different Entities that can be created, makes it very
  * easy to quickly create different registered entities
@@ -6663,180 +6614,135 @@ gf.entityPool = {
     }
 };
 
-(function() {
-    gf.debug = {
-        //show fps counter
-        showFps: false,
-        fpsStyle: {
-            position: 'absolute',
-            top: '0px',
-            left: '0px',
-            'z-index': 10
-        },
+/**
+ * A simple object to show some debug items
+ *
+ * @module gf
+ * @class debug
+ */
+ gf.debug = {
+    /**
+     * The styles applied to the fps box after it is created
+     *
+     * @property fpsStyle
+     */
+    fpsStyle: {
+        position: 'absolute',
+        top: '0px',
+        left: '0px',
+        'z-index': 10
+    },
+    /**
+     * Shows the FPS Counter
+     *
+     * @method showFpsCounter
+     */
+    showFpsCounter: function() {
+        gf.debug._fpsCounter = new gf.debug.FpsCounter();
+        for(var s in gf.debug.fpsStyle) {
+            gf.debug._fpsCounter.domElement.style[s] = gf.debug.fpsStyle[s];
+        }
+        document.body.appendChild(gf.debug._fpsCounter.domElement);
+    },
+    /**
+     * Shows some debug info such as player position and the gamepad state
+     *
+     * @method showDebugInfo
+     * @param game {Game} The game instance to show info for
+     * @param pad {Boolean} Whether or not to show gamepad info (defaults to true)
+     */
+    showDebugInfo: function(game, pad) {
+        gf.debug._info = new gf.debug.Info(game, pad);
+        document.body.appendChild(gf.debug._info.domElement);
+    },
+    /**
+     * Called internally by the Game instance
+     *
+     * @method update
+     * @private
+     */
+    update: function() {
+        //update fps box
+        if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
 
-        //provide detailed debug info such as player position, number of entities,
-        // tiles the player is colliding with.
-        showInfo: false,
-        infoStyle: {
-            position: 'absolute',
-            top: '50px',
-            left: '0px',
-            'z-index': 10,
-            color: '#fff',
-            'font-size': '0.9em'
-        },
+        //update debug info
+        if(gf.debug._info) gf.debug._info.update();
+    },
+    Info: function(game, pad) {
+        this.game = game;
+        this.showGamepad = pad !== undefined ? pad : true;
 
-        //draw hitboxes on entities
-        showHitbox: false,
+        var br = document.createElement('br');
 
-        //draw outline around entities
-        showOutline: false,
+        //container
+        var container = document.createElement('div');
+        container.id = 'gf-debug-info';
+        container.style['position'] = 'absolute';
+        container.style['top'] = '50px';
+        container.style['left'] = '0';
+        container.style['z-index'] = '10';
+        container.style['color'] = '#FFF';
+        container.style['font-size'] = '0.9em';
 
-        //provide access directly to the tiledmap layer shader uniforms
-        accessTiledUniforms: false,
-        tiledUniforms: [],
+        //title
+        var title = document.createElement('h3');
+        title.id = 'gf-debug-info-title';
+        title.textContent = 'Debug Info';
+        title.style.cssText = 'margin:1px;display:block;';
 
-        //draw map collision points
-        showMapColliders: false,
+        container.appendChild(title);
 
-        //show gamepad info in the info box
-        showGamepadInfo: false,
+        //player position
+        var pos = document.createElement('span'),
+            posVal = document.createElement('span');
+        pos.id = 'gf-debug-info-position';
+        posVal.id = 'gf-debug-info-position-value';
+        pos.textContent = 'Player Position: ';
+        posVal.textContent = 'X: 0, Y: 0';
 
-        showFpsCounter: function() {
-            gf.debug._fpsCounter = new gf.debug.FpsCounter();
-            for(var s in gf.debug.fpsStyle) {
-                gf.debug._fpsCounter.domElement.style[s] = gf.debug.fpsStyle[s];
-            }
-            document.body.appendChild(gf.debug._fpsCounter.domElement);
-        },
+        //gamepads
+        var pads = document.createElement('span');
+        pads.id = 'gf-debug-info-gamepads';
 
-        showDebugInfo: function() {
-            gf.debug._info = new gf.debug.Info();
-            for(var s2 in gf.debug.infoStyle) {
-                gf.debug._info.domElement.style[s2] = gf.debug.infoStyle[s2];
-            }
-            document.body.appendChild(gf.debug._info.domElement);
-        },
+        container.appendChild(pads);
 
-        update: function() {
-            //update fps box
-            if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
+        pos.appendChild(posVal);
+        container.appendChild(pos);
+        container.appendChild(br.cloneNode());
 
-            //update debug info
-            if(gf.debug._info) gf.debug._info.update();
-        },
+        this.player = 
 
-        /****************************************************************************
-         * DebugInfo box that displays live-updaing debug info
-         ****************************************************************************/
-        Info: function() {
-            var br = document.createElement('br');
+        this.REVISION = 1;
+        this.domElement = container;
+        this.update = function() {
+            posVal.textContent = this.game.players[0] ?
+                                    'X: ' + this.game.players[0].position.x.toFixed(1) + ', Y: ' + this.game.players[0].position.y.toFixed(1) :
+                                    'none';
 
-            //container
-            var container = document.createElement('div');
-            container.id = 'gf-debug-info';
+            if(this.showGamepad) {
+                pads.innerHTML = '';
+                if(this.game.input.gamepad.pads && this.game.input.gamepad.pads.length) {
+                    for(var i = 0, il = this.game.input.gamepad.pads.length; i < il; ++i) {
+                        var pad = this.game.input.gamepad.pads[i];
 
-            //title
-            var title = document.createElement('h3');
-            title.id = 'gf-debug-info-title';
-            title.textContent = 'Debug Info';
-            title.style.cssText = 'margin:1px;display:block;';
-
-            container.appendChild(title);
-
-            //number of entities
-            var ents = document.createElement('span'),
-                entsVal = document.createElement('span');
-            ents.id = 'gf-debug-info-entities';
-            entsVal.id = 'gf-debug-info-entities-value';
-            ents.textContent = 'Number of Objects: ';
-            entsVal.textContent = '0';
-
-            ents.appendChild(entsVal);
-            container.appendChild(ents);
-            container.appendChild(br.cloneNode());
-
-            //gamepads
-            var pads = document.createElement('span');
-            pads.id = 'gf-debug-info-gamepads';
-
-            container.appendChild(pads);
-
-            //player position
-            var pos = document.createElement('span'),
-                posVal = document.createElement('span');
-            pos.id = 'gf-debug-info-position';
-            posVal.id = 'gf-debug-info-position-value';
-            pos.textContent = 'Player Position: ';
-            posVal.textContent = 'X: 0, Y: 0, Z: 0';
-
-            pos.appendChild(posVal);
-            container.appendChild(pos);
-            container.appendChild(br.cloneNode());
-
-            //colliding tiles
-            var tiles = document.createElement('span'),
-                tilesVal = document.createElement('span');
-            tiles.id = 'gf-debug-info-tiles';
-            tilesVal.id = 'gf-debug-info-tiles-value';
-            tiles.textContent = 'Colliding Tiles: ';
-            tilesVal.textContent = '';
-
-            tiles.appendChild(tilesVal);
-            container.appendChild(tiles);
-            container.appendChild(br.cloneNode());
-
-            return {
-                REVISION: 1,
-                domElement: container,
-                update: function() {
-                    entsVal.textContent = gf.game.numObjects;
-                    posVal.textContent = gf.game.player ?
-                                            'X: ' + gf.game.player._hitboxMesh.position.x.toFixed(1) +
-                                                ', Y: ' + gf.game.player._hitboxMesh.position.y.toFixed(1) +
-                                                ', Z: ' + gf.game.player._hitboxMesh.position.z.toFixed(1) :
-                                            'none';
-
-                    if(gf.debug._playerColliders && gf.debug._playerColliders.dirty) {
-                        gf.debug._playerColliders.dirty = false;
-                        tilesVal.innerHTML = '<br/>';
-                        for(var i = 0, il = gf.debug._playerColliders.length; i < il; ++i) {
-                            tilesVal.innerHTML += '&nbsp;&nbsp;&nbsp;Tile (' + gf.debug._playerColliders[i].axis + '): ' + 
-                                                gf.debug._playerColliders[i].tile.type + 
-                                                ' (' + (!!gf.debug._playerColliders[i].tile.normal ? 
-                                                        gf.debug._playerColliders[i].tile.normal.x + ', ' + gf.debug._playerColliders[i].tile.normal.y :
-                                                        '0, 0')
-                                                    + ')<br/>';
-                        }
-                    }
-
-                    if(gf.debug.showGamepadInfo) {
-                        pads.innerHTML = '';
-                        if(gf.gamepad.pads && gf.gamepad.pads.length) {
-                            for(var i = 0, il = gf.gamepad.pads.length; i < il; ++i) {
-                                var pad = gf.gamepad.pads[i];
-
-                                pads.innerHTML += 'Gamepad: [' + pad.index + '] ' + pad.id + '<br/>';
-                                pads.innerHTML += '&nbsp;&nbsp;&nbsp;Buttons:<br/>' + 
-                                                    pad.buttons.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.types.getGpButtonName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
-                                pads.innerHTML += '&nbsp;&nbsp;&nbsp;Axes:<br/>' + 
-                                                    pad.axes.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.types.getGpAxisName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
-                            }
-                        }
+                        pads.innerHTML += 'Gamepad: [' + pad.index + '] ' + pad.id + '<br/>';
+                        pads.innerHTML += '&nbsp;&nbsp;&nbsp;Buttons:<br/>' + 
+                                            pad.buttons.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.input.getGpButtonName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
+                        pads.innerHTML += '&nbsp;&nbsp;&nbsp;Axes:<br/>' + 
+                                            pad.axes.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.input.getGpAxisName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
                     }
                 }
             }
-        },
-        /****************************************************************************
-         * mrdoob's stats.js (stats.js r10 - http://github.com/mrdoob/stats.js)
-         ****************************************************************************/
-        FpsCounter:function(){var l=Date.now(),m=l,g=0,n=1E3,o=0,h=0,p=1E3,q=0,r=0,s=0,f=document.createElement("div");f.id="gf-stats";f.addEventListener("mousedown",function(b){b.preventDefault();t(++s%2)},!1);f.style.cssText="width:80px;opacity:0.9;cursor:pointer";var a=document.createElement("div");a.id="fps";a.style.cssText="padding:0 0 3px 3px;text-align:left;background-color:#002";f.appendChild(a);var i=document.createElement("div");i.id="fpsText";i.style.cssText="color:#0ff;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px";
-        i.innerHTML="FPS";a.appendChild(i);var c=document.createElement("div");c.id="fpsGraph";c.style.cssText="position:relative;width:74px;height:30px;background-color:#0ff";for(a.appendChild(c);74>c.children.length;){var j=document.createElement("span");j.style.cssText="width:1px;height:30px;float:left;background-color:#113";c.appendChild(j)}var d=document.createElement("div");d.id="ms";d.style.cssText="padding:0 0 3px 3px;text-align:left;background-color:#020;display:none";f.appendChild(d);var k=document.createElement("div");
-        k.id="msText";k.style.cssText="color:#0f0;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px";k.innerHTML="MS";d.appendChild(k);var e=document.createElement("div");e.id="msGraph";e.style.cssText="position:relative;width:74px;height:30px;background-color:#0f0";for(d.appendChild(e);74>e.children.length;)j=document.createElement("span"),j.style.cssText="width:1px;height:30px;float:left;background-color:#131",e.appendChild(j);var t=function(b){s=b;switch(s){case 0:a.style.display=
-        "block";d.style.display="none";break;case 1:a.style.display="none",d.style.display="block"}};return{domElement:f,setMode:t,begin:function(){l=Date.now()},end:function(){var b=Date.now();g=b-l;n=Math.min(n,g);o=Math.max(o,g);k.textContent=g+" MS ("+n+"-"+o+")";var a=Math.min(30,30-30*(g/200));e.appendChild(e.firstChild).style.height=a+"px";r++;b>m+1E3&&(h=Math.round(1E3*r/(b-m)),p=Math.min(p,h),q=Math.max(q,h),i.textContent=h+" FPS ("+p+"-"+q+")",a=Math.min(30,30-30*(h/100)),c.appendChild(c.firstChild).style.height=
-        a+"px",m=b,r=0);return b},update:function(){l=this.end()}}}
-    };
-})();
+        };
+    },
+    //mrdoob's stats.js (stats.js r10 - http://github.com/mrdoob/stats.js)
+    FpsCounter:function(){var l=Date.now(),m=l,g=0,n=1E3,o=0,h=0,p=1E3,q=0,r=0,s=0,f=document.createElement("div");f.id="gf-stats";f.addEventListener("mousedown",function(b){b.preventDefault();t(++s%2)},!1);f.style.cssText="width:80px;opacity:0.9;cursor:pointer";var a=document.createElement("div");a.id="fps";a.style.cssText="padding:0 0 3px 3px;text-align:left;background-color:#002";f.appendChild(a);var i=document.createElement("div");i.id="fpsText";i.style.cssText="color:#0ff;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px";
+    i.innerHTML="FPS";a.appendChild(i);var c=document.createElement("div");c.id="fpsGraph";c.style.cssText="position:relative;width:74px;height:30px;background-color:#0ff";for(a.appendChild(c);74>c.children.length;){var j=document.createElement("span");j.style.cssText="width:1px;height:30px;float:left;background-color:#113";c.appendChild(j)}var d=document.createElement("div");d.id="ms";d.style.cssText="padding:0 0 3px 3px;text-align:left;background-color:#020;display:none";f.appendChild(d);var k=document.createElement("div");
+    k.id="msText";k.style.cssText="color:#0f0;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px";k.innerHTML="MS";d.appendChild(k);var e=document.createElement("div");e.id="msGraph";e.style.cssText="position:relative;width:74px;height:30px;background-color:#0f0";for(d.appendChild(e);74>e.children.length;)j=document.createElement("span"),j.style.cssText="width:1px;height:30px;float:left;background-color:#131",e.appendChild(j);var t=function(b){s=b;switch(s){case 0:a.style.display=
+    "block";d.style.display="none";break;case 1:a.style.display="none",d.style.display="block"}};return{domElement:f,setMode:t,begin:function(){l=Date.now()},end:function(){var b=Date.now();g=b-l;n=Math.min(n,g);o=Math.max(o,g);k.textContent=g+" MS ("+n+"-"+o+")";var a=Math.min(30,30-30*(g/200));e.appendChild(e.firstChild).style.height=a+"px";r++;b>m+1E3&&(h=Math.round(1E3*r/(b-m)),p=Math.min(p,h),q=Math.max(q,h),i.textContent=h+" FPS ("+p+"-"+q+")",a=Math.min(30,30-30*(h/100)),c.appendChild(c.firstChild).style.height=
+    a+"px",m=b,r=0);return b},update:function(){l=this.end()}}}
+};
+
 /**
  * This object represents a tileset used by a TiledMap.
  * There can be multiple Tilesets in a map
@@ -7607,8 +7513,6 @@ gf.inherits(gf.Vector, Object, {
     }
 });
 
-gf.input = {};
-
 gf.InputManager = function(game) {
     /**
      * The game instance this belongs to
@@ -7633,6 +7537,196 @@ gf.inherits(gf.InputManager, Object, {
             this.gamepad.isActionActive(action);
     }
 });
+/**
+ * input submodule
+ *
+ * @module gf
+ * @submodule input
+ */
+gf.input = {
+    /**
+     * Bindable keycodes
+     *
+     * @property KEY
+     * @type Object
+     */
+    KEY: {
+        BACKSPACE: 8,
+        TAB: 9,
+        ENTER: 13,
+        SHIFT: 16,
+        CTRL: 17,
+        ALT: 18,
+        PAUSE: 19,
+        ESC: 27,
+        SPACE: 32,
+        PAGE_UP: 33,
+        PAGE_DOWN: 34,
+        END: 35,
+        HOME: 36,
+        LEFT: 37,
+        UP: 38,
+        RIGHT: 39,
+        DOWN: 40,
+        INSERT: 45,
+        DELETE: 46,
+        NUM0: 48,
+        NUM1: 49,
+        NUM2: 50,
+        NUM3: 51,
+        NUM4: 52,
+        NUM5: 53,
+        NUM6: 54,
+        NUM7: 55,
+        NUM8: 56,
+        NUM9: 57,
+        PLUS: 61,
+        A : 65,
+        B : 66,
+        C : 67,
+        D : 68,
+        E : 69,
+        F : 70,
+        G : 71,
+        H : 72,
+        I : 73,
+        J : 74,
+        K : 75,
+        L : 76,
+        M : 77,
+        N : 78,
+        O : 79,
+        P : 80,
+        Q : 81,
+        R : 82,
+        S : 83,
+        T : 84,
+        U : 85,
+        V : 86,
+        W : 87,
+        X : 88,
+        Y : 89,
+        Z : 90,
+        NUMPAD0: 96,
+        NUMPAD1: 97,
+        NUMPAD2: 98,
+        NUMPAD3: 99,
+        NUMPAD4: 100,
+        NUMPAD5: 101,
+        NUMPAD6: 102,
+        NUMPAD7: 103,
+        NUMPAD8: 104,
+        NUMPAD9: 105,
+        NUMPAD_STAR: 106,
+        NUMPAD_PLUS: 107,
+        NUMPAD_MINUS: 109,
+        NUMPAD_DOT: 110,
+        NUMPAD_SLASH: 111,
+        F1: 112,
+        F2: 113,
+        F3: 114,
+        F4: 115,
+        MINUS: 173,
+        TILDE: 192
+    },
+    /**
+     * Bindable Mouse Events
+     *
+     * @property MOUSE
+     * @type Object
+     */
+    MOUSE: {
+        WHEEL: 'mousewheel',
+        MOVE: 'mousemove',
+        DOWN: 'mousedown',
+        UP: 'mouseup',
+        CLICK: 'click',
+        DBLCLICK: 'dblclick',
+        RCLICK: 'contextmenu',
+        CONTEXTMENU: 'contextmenu'
+    },
+    /**
+     * Bindable Touch Events
+     *
+     * @property TOUCH
+     * @type Object
+     */
+    TOUCH: {
+        //WHEEL: undefined,
+        MOVE: 'touchmove',
+        START: 'touchstart',
+        END: 'touchend',
+        TAP: 'tap',
+        DBLTAP: 'dbltap'
+        //RCLICK: undefined,
+        //CONTEXTMENU: undefined
+    },
+    /**
+     * Bindable Gamepad Buttons
+     *
+     * @property GP_BUTTON
+     * @type Object
+     */
+    GP_BUTTON: {
+        FACE_1: 0, // Face (main) buttons
+        FACE_2: 1,
+        FACE_3: 2,
+        FACE_4: 3,
+        LEFT_SHOULDER: 4, // Top shoulder buttons
+        RIGHT_SHOULDER: 5,
+        LEFT_TRIGGER: 6, // Bottom shoulder buttons
+        RIGHT_TRIGGER: 7,
+        SELECT: 8,
+        START: 9,
+        LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
+        RIGHT_ANALOGUE_STICK: 11,
+        PAD_TOP: 12, // Directional (discrete) pad
+        PAD_BOTTOM: 13,
+        PAD_LEFT: 14,
+        PAD_RIGHT: 15
+    },
+    getGpButtonName: function(i) {
+        for(var k in gf.input.GP_BUTTON) {
+            if(gf.input.GP_BUTTON[k] === i) {
+                return k;
+            }
+        }
+
+        return '';
+    },
+    /**
+     * Bindable Gamepad Axes
+     *
+     * @property GP_AXIS
+     * @type Object
+     */
+    GP_AXIS: {
+        LEFT_ANALOGUE_HOR: 0,
+        LEFT_ANALOGUE_VERT: 1,
+        RIGHT_ANALOGUE_HOR: 2,
+        RIGHT_ANALOGUE_VERT: 3
+    },
+    getGpAxisName: function(i) {
+        for(var k in gf.input.GP_AXIS) {
+            if(gf.input.GP_AXIS[k] === i) {
+                return k;
+            }
+        }
+
+        return '';
+    }
+};
+
+/**
+ * The base Input object, holds common functions and properties between input types
+ *
+ * @module gf
+ * @submodule input
+ * @class Input
+ * @constructor
+ * @param manager {InputManager} The InputManager instance that this Input object is managed by
+ * @param game {Game} The game this camera belongs to
+ */
 gf.input.Input = function(man, game) {
     /**
      * The game instance this belongs to
@@ -8408,8 +8502,8 @@ gf.inherits(gf.Map, gf.DisplayObject, {
      * @return {Map} Returns itself for chainability
      */
     pan: function(x, y) {
-        x = x instanceof gf.Point ? x.x : (x || 0);
         y = x instanceof gf.Point ? x.y : (y || 0);
+        x = x instanceof gf.Point ? x.x : (x || 0);
 
         this.position.x += x;
         this.position.y += y;
@@ -8478,6 +8572,21 @@ gf.inherits(gf.Layer, gf.DisplayObject, {
     pan: function() {
     }
 });
+
+/**
+ * Tile collision types
+ *
+ * @property COLLISION
+ * @type Object
+ */
+gf.Layer.COLLISION = {
+    NONE: 'none',
+    SOLID: 'solid',
+    CLIFF: 'cliff',
+    LADDER: 'ladder',
+    WATER: 'water',
+    DEEP_WATER: 'deep_water'
+};
 /**
  * Tiled map, expects a Tiled TMX file loaded by the gf.loader as the argument.
  * The loader knows to load all textures and other resources when loading a world TMX
@@ -8500,9 +8609,22 @@ gf.TiledMap = function(game, map) {
      *
      * @property tileSize
      * @type Vector
-     * @default new gf.Vector(0, 0)
      */
-    this.tileSize = new gf.Vector(map.tilewidth, map.tileheight);
+    this.tileSize = new gf.Vector(
+        map.tilewidth,
+        map.tileheight
+    );
+
+    /**
+     * The scaled tile size
+     *
+     * @property scaledTileSize
+     * @type Vector
+     */
+    this.scaledTileSize = new gf.Vector(
+        map.tilewidth * this.scale.x,
+        map.tileheight * this.scale.y
+    );
 
     /**
      * The user-defined properties
@@ -8514,25 +8636,14 @@ gf.TiledMap = function(game, map) {
     this.properties = map.properties || {};
 
     /**
-     * The real size (size * tileSize)
+     * The real size (size * scaledTileSize)
      *
      * @property realSize
      * @type Vector
      */
     this.realSize = new gf.Vector(
-        this.size.x * this.tileSize.x,
-        this.size.y * this.tileSize.y
-    );
-
-    /**
-     * The scaled size (size * tileSize * scale)
-     *
-     * @property scaledSize
-     * @type Vector
-     */
-    this.scaledSize = new gf.Vector(
-        this.size.x * this.tileSize.x * this.scale,
-        this.size.y * this.tileSize.y * this.scale
+        this.size.x * this.scaledTileSize.x,
+        this.size.y * this.scaledTileSize.y
     );
 
     /**
@@ -8542,25 +8653,6 @@ gf.TiledMap = function(game, map) {
      * @type String
      */
     this.orientation = map.orientation;
-
-    /**
-     * The maximum extent of the map (largest x and y the map has)
-     * assuming 0,0 is in the middle of the map, calculate the minimum
-     * and maximum extent of the map
-     *
-     * @property extent
-     * @type Object
-     */
-    this.extent = {
-        x: {
-            min: ~~(this.scaledSize.x / 2) - this.scaledSize.x,
-            max: this.scaledSize.x - ~~(this.scaledSize.x / 2)
-        },
-        y: {
-            min: ~~(this.scaledSize.y / 2) - this.scaledSize.y,
-            max: this.scaledSize.y - ~~(this.scaledSize.y / 2)
-        }
-    };
 
     /**
      * The tilesets used by this map
@@ -8599,14 +8691,14 @@ gf.TiledMap = function(game, map) {
     this.version = map.version;
 
     //create the layers
-    var numX = Math.ceil(this.game.renderer.view.width / this.tileSize.x),
-        numY = Math.ceil(this.game.renderer.view.height / this.tileSize.y);
+    var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
+        numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
 
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr;
 
         switch(map.layers[i].type) {
-            case gf.types.LAYER.TILE_LAYER:
+            case 'tilelayer':
                 lyr = new gf.TiledLayer(map.layers[i]);
                 this.addChild(lyr);
 
@@ -8626,7 +8718,7 @@ gf.TiledMap = function(game, map) {
                 }
                 break;
 
-            case gf.types.LAYER.OBJECT_GROUP:
+            case 'objectgroup':
                 lyr = new gf.TiledObjectGroup(map.layers[i]);
                 this.addChild(lyr);
 
@@ -8676,7 +8768,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
         //check X movement
         if(x <= this.extent.x.min || x >= this.extent.x.max) {
-            res.push({ axis: 'x', tile: { type: gf.types.COLLISION.SOLID } });
+            res.push({ axis: 'x', tile: { type: gf.Layer.COLLISION.SOLID } });
         } else if(pv.x) {
             //x, bottom corner
             tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.floor(bottom)));
@@ -8693,7 +8785,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
         //check Y movement
         if(y <= this.extent.y.min || y >= this.extent.y.max) {
-            res.push({ axis: 'y', tile: { type: gf.types.COLLISION.SOLID } });
+            res.push({ axis: 'y', tile: { type: gf.Layer.COLLISION.SOLID } });
         } else if(pv.y) {
             //y, left corner
             tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x < 0) ? Math.floor(left) : Math.ceil(right), y));
@@ -8717,16 +8809,16 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @private
      */
     resize: function() {
-        var numX = Math.ceil(this.game.renderer.view.width / this.tileSize.x),
-            numY = Math.ceil(this.game.renderer.view.height / this.tileSize.y);
+        var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
+            numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
 
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
             if(o instanceof gf.TiledLayer && o.visible) {
                 o.renderTiles(
-                    Math.floor(this.position.x / this.tileSize.x),
-                    Math.floor(this.position.y / this.tileSize.y),
+                    Math.floor(this.position.x / this.scaledTileSize.x),
+                    Math.floor(this.position.y / this.scaledTileSize.y),
                     numX,
                     numY
                 );
@@ -8735,12 +8827,12 @@ gf.inherits(gf.TiledMap, gf.Map, {
     },
     //WIP
     _checkHalfBlock: function(half, x, y) {
-        var tx = Math.floor(x / this.tileSize.x) * this.tileSize.x,
-            ty = Math.floor(y / this.tileSize.y) * this.tileSize.y,
-            midX = tx + ((this.tileSize.x) / 2),
-            endX = tx + (this.tileSize.x),
-            midY = ty - ((this.tileSize.y) / 2),
-            endY = ty - (this.tileSize.y);
+        var tx = Math.floor(x / this.scaledTileSize.x) * this.scaledTileSize.x,
+            ty = Math.floor(y / this.scaledTileSize.y) * this.scaledTileSize.y,
+            midX = tx + ((this.scaledTileSize.x) / 2),
+            endX = tx + (this.scaledTileSize.x),
+            midY = ty - ((this.scaledTileSize.y) / 2),
+            endY = ty - (this.scaledTileSize.y);
 
         switch(half) {
             case gf.types.HALF.LEFT:
@@ -8782,15 +8874,15 @@ gf.TiledLayer = function(layer) {
      * @property name
      * @type Uint32Array
      */
-    this.tiles = new Uint32Array(layer.data);
+    this.tiles = gf.support.typedArrays ? new Uint32Array(layer.data) : layer.data;
 
     /**
      * The sprite pool for rendering tiles
      *
      * @property tilePool
-     * @type Array
+     * @type Object
      */
-    this.sprites = [];
+    this.sprites = {};
 
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
@@ -8815,6 +8907,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         startY -= this._tileBufferSize;
         numY += this._tileBufferSize * 2;
 
+        //render new sprites
         for(var x = startX; x < numX; ++x) {
             for(var y = startY; y < numY; ++y) {
                 this.moveTileSprite(x, y, x, y);
@@ -8842,7 +8935,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(this.sprites[tileX] && this.sprites[tileX][tileY])
             return this.sprites[tileX][tileY];
 
-        if(!this.sprites[tileX]) this.sprites[tileX] = [];
+        if(!this.sprites[tileX]) this.sprites[tileX] = {};
 
         var id = (tileX + (tileY * this.size.x)),
             tile = this.tiles[id],
@@ -8880,7 +8973,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         spr.position.y = toTileY * this.parent.tileSize.y;
 
         //move the sprite in the pool
-        if(!this.sprites[toTileX]) this.sprites[toTileX] = [];
+        if(!this.sprites[toTileX]) this.sprites[toTileX] = {};
         this.sprites[toTileX][toTileY] = spr;
         this.sprites[fromTileX][fromTileY] = null;
 
@@ -8929,27 +9022,27 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.y += dy;
 
         //moved position right, so render left
-        while(this._panDelta.x >= this.parent.tileSize.x) {
+        while(this._panDelta.x >= this.parent.scaledTileSize.x) {
             this._renderLeft();
-            this._panDelta.x -= this.parent.tileSize.x;
+            this._panDelta.x -= this.parent.scaledTileSize.x;
         }
 
         //moved position left, so render right
-        while(this._panDelta.x <= -this.parent.tileSize.x) {
+        while(this._panDelta.x <= -this.parent.scaledTileSize.x) {
             this._renderRight();
-            this._panDelta.x += this.parent.tileSize.x;
+            this._panDelta.x += this.parent.scaledTileSize.x;
         }
 
         //moved position down, so render up
-        while(this._panDelta.y >= this.parent.tileSize.y) {
+        while(this._panDelta.y >= this.parent.scaledTileSize.y) {
             this._renderUp();
-            this._panDelta.y -= this.parent.tileSize.y;
+            this._panDelta.y -= this.parent.scaledTileSize.y;
         }
 
         //moved position up, so render down
-        while(this._panDelta.y <= -this.parent.tileSize.y) {
+        while(this._panDelta.y <= -this.parent.scaledTileSize.y) {
             this._renderDown();
-            this._panDelta.y += this.parent.tileSize.y;
+            this._panDelta.y += this.parent.scaledTileSize.y;
         }
     },
     _renderLeft: function() {
@@ -9165,7 +9258,7 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
                 this.tileproperties[tileId] = {
                     isCollidable: false,
                     isBreakable: false,
-                    type: gf.types.COLLISION.NONE
+                    type: gf.Layer.COLLISION.NONE
                 };
     },
     /**
@@ -9241,15 +9334,10 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             props.opacity = this.opacity;
             props.visible = this.visible;
             props.position = [o.x, o.y];
-            //convert tiled x,y coords into world coords
-            //tiled does x,y from top left. We do x,y from center
-            /*props.position = [
-                (o.x * this.map.scale) - (this.map.scaledSize.x / 2),
-                -((o.y * this.map.scale) - (this.map.scaledSize.y / 2))
-            ];*/
 
             //spawn from entity pool
             this.addChild(gf.entityPool.create(this.parent.game, props.name, props));
+            this.parent.game.players.push(this.children[i]);
         }
 
         return this;
