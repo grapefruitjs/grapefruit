@@ -197,7 +197,7 @@ gf.inherits(gf.AssetLoader, Object, {
                     var textureUrl = baseUrl + data.meta.image,
                         texture =  gf.Texture.fromImage(textureUrl).baseTexture,
                         frames = data.frames,
-                        assets = [];
+                        assets = {};
 
                     for(var f in frames) {
                         var rect = frames[f].frame;
@@ -209,7 +209,7 @@ gf.inherits(gf.AssetLoader, Object, {
                             PIXI.TextureCache[f].trim.x = 0;
                         }
 
-                        assets.push(PIXI.TextureCache[f]);
+                        assets[f] = PIXI.TextureCache[f];
                     }
 
                     self._storeAsset(name, assets);
