@@ -1,6 +1,8 @@
 gf.TextureFont = function(font, settings) {
     this.ext = '';
 
+    this.map = {};
+
     gf.Font.call(this, font, settings);
 
     if(typeof font === 'string') {
@@ -20,7 +22,8 @@ gf.TextureFont = function(font, settings) {
 
 gf.inherits(gf.TextureFont, gf.Font, {
     _getSprite: function(ch) {
-        if(ch === ' ') ch = '_space';
+        if(this.map[ch])
+            ch = this.map[ch];
 
         var texture = this.textures[ch + this.ext],
             spr = this.sprites.pop();
