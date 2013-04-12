@@ -35,6 +35,9 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/input/GamepadButtons.js',
         '<%= dirs.src %>/input/GamepadSticks.js',
 
+        '<%= dirs.src %>/font/Font.js',
+        '<%= dirs.src %>/font/TextureFont.js',
+
         '<%= dirs.src %>/gui/Gui.js',
         '<%= dirs.src %>/gui/GuiItem.js',
         '<%= dirs.src %>/gui/Hud.js',
