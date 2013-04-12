@@ -223,6 +223,11 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
      *          .setActiveAnimation('me');
      */
     setActiveAnimation: function(name, loop, cb) {
+        if(typeof loop === 'function') {
+            cb = loop;
+            loop = false;
+        }
+
         if(this.anim[name] !== undefined) {
             if(this.currentAnim) {
                 this.currentAnim.stop();
