@@ -41,11 +41,15 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/AssetLoader.html">AssetLoader</a></li>
+            
                 <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
             
                 <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/debug.html">debug</a></li>
             
                 <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
             
@@ -64,6 +68,8 @@
                 <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
             
                 <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Input.html">Input</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -87,8 +93,6 @@
             
                 <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
-                <li><a href="..&#x2F;classes/types.html">types</a></li>
-            
                 <li><a href="..&#x2F;classes/utils.html">utils</a></li>
             
                 <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
@@ -98,6 +102,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+                <li><a href="..&#x2F;modules/input.html">input</a></li>
             
             </ul>
         </div>
@@ -138,19 +144,60 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+&#x2F;**
+ * The AssetLoader loads and parses different game assets, such as sounds, textures,
+ * TMX World JSON file (exported from the &lt;a href=&quot;http:&#x2F;&#x2F;mapeditor.org&quot;&gt;Tiled Editor&lt;&#x2F;a&gt;),
+ * and Spritesheet JSON files (published from &lt;a href=&quot;http:&#x2F;&#x2F;www.codeandweb.com&#x2F;texturepacker&quot;&gt;Texture Packer&lt;&#x2F;a&gt;).
+ *
+ * @module gf
+ * @class AssetLoader
+ * @constructor
+ * @param resources {Array} Array of resources to load when &#x60;.load()&#x60; is called
+ * @example
+ *      var loader = new AssetLoader([&#x27;&#x2F;my&#x2F;texture.png&#x27;]);
+ *      loader.load();
+ *      &#x2F;&#x2F;OR
+ *      var loader = new AssetLoader();
+ *      loader.load([&#x27;&#x2F;my&#x2F;texture.png&#x27;]);
+ *&#x2F;
 gf.AssetLoader = function(resources) {
     &#x2F;&#x2F;mixin the Event Target methods
     gf.EventTarget.call(this);
 
     &#x2F;**
-    * The array of asset URLs that are going to be loaded
-    * @property assetURLs
-    * @type Array
-    *&#x2F;
+     * The array of asset URLs that are going to be loaded
+     *
+     * @property assetURLs
+     * @type Array
+     *&#x2F;
     this.resources = resources || [];
+
+    &#x2F;**
+     * The count of remaining assets to load
+     *
+     * @property loadCount
+     * @type Number
+     * @readOnly
+     *&#x2F;
     this.loadCount = 0;
+
+    &#x2F;**
+     * A reference to the assets loaded by this loader. They are also put
+     * in the global gf.assetCache
+     *
+     * @property assets
+     * @type Object
+     *&#x2F;
     this.assets = {};
 
+    &#x2F;**
+     * A mapping of extensions to types. We assume all images are textures :)
+     *
+     * @property exts
+     * @type Object
+     * @readOnly
+     * @private
+     *&#x2F;
     this.exts = {
         imgs: [&#x27;jpeg&#x27;, &#x27;jpg&#x27;, &#x27;png&#x27;, &#x27;gif&#x27;],
         sound: [&#x27;mp3&#x27;, &#x27;ogg&#x27;, &#x27;wma&#x27;, &#x27;wav&#x27;],
@@ -159,6 +206,14 @@ gf.AssetLoader = function(resources) {
 };
 
 gf.inherits(gf.AssetLoader, Object, {
+    &#x2F;**
+     * Starts the loading festivities. If called without any arguments it will load
+     * the resources passed in at the ctor. If an array of resources is passed it will
+     * load those instead.
+     *
+     * @method load
+     * @param items {Array} Array of resources to load instead of the object&#x27;s resources
+     *&#x2F;
     load: function(items) {
         var resources = items || this.resources;
 
@@ -181,6 +236,14 @@ gf.inherits(gf.AssetLoader, Object, {
             }
         }
     },
+    &#x2F;**
+     * Loads a texture image and caches the result
+     *
+     * @method loadTexture
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     * @return {Texture} Returns the texture object, so it can be used even before it is fully loaded
+     *&#x2F;
     loadTexture: function(name, url) {
         this.loadCount++;
 
@@ -199,6 +262,14 @@ gf.inherits(gf.AssetLoader, Object, {
 
         return texture;
     },
+    &#x2F;**
+     * Loads an audio clip and caches the result
+     *
+     * @method loadAudio
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     * @return {Audio} Returns the audio object, so it can be used even before it is fully loaded
+     *&#x2F;
     loadAudio: function(name, url) {
         this.loadCount++;
 
@@ -221,6 +292,13 @@ gf.inherits(gf.AssetLoader, Object, {
 
         return audio;
     },
+    &#x2F;**
+     * Loads a data (json) object. This is usually either SpriteSheet or TMX Map
+     *
+     * @method loadData
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     *&#x2F;
     loadData: function(name, url) {
         this.loadCount++;
 
@@ -236,11 +314,10 @@ gf.inherits(gf.AssetLoader, Object, {
                 if(data.orientation &amp;&amp; data.layers &amp;&amp; data.tilesets &amp;&amp; data.version) {
                     self._storeAsset(name, data);
 
-                    &#x2F;&#x2F;TODO: How to tell if all these are loaded (how to count them?)
                     &#x2F;&#x2F;loop through each layer and load the sprites (objectgroup types)
                     for(var i = 0, il = data.layers.length; i &lt; il; ++i) {
                         var layer = data.layers[i];
-                        if(layer.type !== gf.types.LAYER.OBJECT_GROUP) continue;
+                        if(layer.type !== &#x27;objectgroup&#x27;) continue;
 
                         &#x2F;&#x2F;loop through each object, and load the textures
                         for(var o = 0, ol = layer.objects.length; o &lt; ol; ++o) {
@@ -298,6 +375,15 @@ gf.inherits(gf.AssetLoader, Object, {
             }
         });
     },
+    &#x2F;**
+     * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
+     *
+     * @method onAssetLoaded
+     * @private
+     * @param err {String} An option error if there was an issue loading that resource
+     * @param type {String} The type of asset loaded (texture, audio, world, or spritesheet)
+     * @param asset {Texture|Audio|Object} The actual asset that was loaded
+     *&#x2F;
     onAssetLoaded: function(err, type, asset) {
         &#x2F;&#x2F;texture (image)
         &#x2F;&#x2F;audio
@@ -313,6 +399,14 @@ gf.inherits(gf.AssetLoader, Object, {
             if(this.onComplete) this.onComplete();
         }
     },
+    &#x2F;**
+     * Stores a reference to an asset into the global and local caches
+     *
+     * @method _storeAsset
+     * @private
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param asset {Texture|Audio|Object} The actual asset that was loaded
+     *&#x2F;
     _storeAsset: function(name, asset) {
         this.assets[name] = asset;
         gf.assetCache[name] = asset;

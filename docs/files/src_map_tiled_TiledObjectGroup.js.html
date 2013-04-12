@@ -41,11 +41,15 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/AssetLoader.html">AssetLoader</a></li>
+            
                 <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
             
                 <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/debug.html">debug</a></li>
             
                 <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
             
@@ -64,6 +68,8 @@
                 <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
             
                 <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Input.html">Input</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -87,8 +93,6 @@
             
                 <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
-                <li><a href="..&#x2F;classes/types.html">types</a></li>
-            
                 <li><a href="..&#x2F;classes/utils.html">utils</a></li>
             
                 <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
@@ -98,6 +102,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+                <li><a href="..&#x2F;modules/input.html">input</a></li>
             
             </ul>
         </div>
@@ -191,15 +197,10 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             props.opacity = this.opacity;
             props.visible = this.visible;
             props.position = [o.x, o.y];
-            &#x2F;&#x2F;convert tiled x,y coords into world coords
-            &#x2F;&#x2F;tiled does x,y from top left. We do x,y from center
-            &#x2F;*props.position = [
-                (o.x * this.map.scale) - (this.map.scaledSize.x &#x2F; 2),
-                -((o.y * this.map.scale) - (this.map.scaledSize.y &#x2F; 2))
-            ];*&#x2F;
 
             &#x2F;&#x2F;spawn from entity pool
             this.addChild(gf.entityPool.create(this.parent.game, props.name, props));
+            this.parent.game.players.push(this.children[i]);
         }
 
         return this;

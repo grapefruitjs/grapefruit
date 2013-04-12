@@ -41,11 +41,15 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/AssetLoader.html">AssetLoader</a></li>
+            
                 <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
             
                 <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/debug.html">debug</a></li>
             
                 <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
             
@@ -64,6 +68,8 @@
                 <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
             
                 <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Input.html">Input</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -87,8 +93,6 @@
             
                 <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
-                <li><a href="..&#x2F;classes/types.html">types</a></li>
-            
                 <li><a href="..&#x2F;classes/utils.html">utils</a></li>
             
                 <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
@@ -98,6 +102,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+                <li><a href="..&#x2F;modules/input.html">input</a></li>
             
             </ul>
         </div>
@@ -138,180 +144,135 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-(function() {
-    gf.debug = {
-        &#x2F;&#x2F;show fps counter
-        showFps: false,
-        fpsStyle: {
-            position: &#x27;absolute&#x27;,
-            top: &#x27;0px&#x27;,
-            left: &#x27;0px&#x27;,
-            &#x27;z-index&#x27;: 10
-        },
+&#x2F;**
+ * A simple object to show some debug items
+ *
+ * @module gf
+ * @class debug
+ *&#x2F;
+ gf.debug = {
+    &#x2F;**
+     * The styles applied to the fps box after it is created
+     *
+     * @property fpsStyle
+     *&#x2F;
+    fpsStyle: {
+        position: &#x27;absolute&#x27;,
+        top: &#x27;0px&#x27;,
+        left: &#x27;0px&#x27;,
+        &#x27;z-index&#x27;: 10
+    },
+    &#x2F;**
+     * Shows the FPS Counter
+     *
+     * @method showFpsCounter
+     *&#x2F;
+    showFpsCounter: function() {
+        gf.debug._fpsCounter = new gf.debug.FpsCounter();
+        for(var s in gf.debug.fpsStyle) {
+            gf.debug._fpsCounter.domElement.style[s] = gf.debug.fpsStyle[s];
+        }
+        document.body.appendChild(gf.debug._fpsCounter.domElement);
+    },
+    &#x2F;**
+     * Shows some debug info such as player position and the gamepad state
+     *
+     * @method showDebugInfo
+     * @param game {Game} The game instance to show info for
+     * @param pad {Boolean} Whether or not to show gamepad info (defaults to true)
+     *&#x2F;
+    showDebugInfo: function(game, pad) {
+        gf.debug._info = new gf.debug.Info(game, pad);
+        document.body.appendChild(gf.debug._info.domElement);
+    },
+    &#x2F;**
+     * Called internally by the Game instance
+     *
+     * @method update
+     * @private
+     *&#x2F;
+    update: function() {
+        &#x2F;&#x2F;update fps box
+        if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
 
-        &#x2F;&#x2F;provide detailed debug info such as player position, number of entities,
-        &#x2F;&#x2F; tiles the player is colliding with.
-        showInfo: false,
-        infoStyle: {
-            position: &#x27;absolute&#x27;,
-            top: &#x27;50px&#x27;,
-            left: &#x27;0px&#x27;,
-            &#x27;z-index&#x27;: 10,
-            color: &#x27;#fff&#x27;,
-            &#x27;font-size&#x27;: &#x27;0.9em&#x27;
-        },
+        &#x2F;&#x2F;update debug info
+        if(gf.debug._info) gf.debug._info.update();
+    },
+    Info: function(game, pad) {
+        this.game = game;
+        this.showGamepad = pad !== undefined ? pad : true;
 
-        &#x2F;&#x2F;draw hitboxes on entities
-        showHitbox: false,
+        var br = document.createElement(&#x27;br&#x27;);
 
-        &#x2F;&#x2F;draw outline around entities
-        showOutline: false,
+        &#x2F;&#x2F;container
+        var container = document.createElement(&#x27;div&#x27;);
+        container.id = &#x27;gf-debug-info&#x27;;
+        container.style[&#x27;position&#x27;] = &#x27;absolute&#x27;;
+        container.style[&#x27;top&#x27;] = &#x27;50px&#x27;;
+        container.style[&#x27;left&#x27;] = &#x27;0&#x27;;
+        container.style[&#x27;z-index&#x27;] = &#x27;10&#x27;;
+        container.style[&#x27;color&#x27;] = &#x27;#FFF&#x27;;
+        container.style[&#x27;font-size&#x27;] = &#x27;0.9em&#x27;;
 
-        &#x2F;&#x2F;provide access directly to the tiledmap layer shader uniforms
-        accessTiledUniforms: false,
-        tiledUniforms: [],
+        &#x2F;&#x2F;title
+        var title = document.createElement(&#x27;h3&#x27;);
+        title.id = &#x27;gf-debug-info-title&#x27;;
+        title.textContent = &#x27;Debug Info&#x27;;
+        title.style.cssText = &#x27;margin:1px;display:block;&#x27;;
 
-        &#x2F;&#x2F;draw map collision points
-        showMapColliders: false,
+        container.appendChild(title);
 
-        &#x2F;&#x2F;show gamepad info in the info box
-        showGamepadInfo: false,
+        &#x2F;&#x2F;player position
+        var pos = document.createElement(&#x27;span&#x27;),
+            posVal = document.createElement(&#x27;span&#x27;);
+        pos.id = &#x27;gf-debug-info-position&#x27;;
+        posVal.id = &#x27;gf-debug-info-position-value&#x27;;
+        pos.textContent = &#x27;Player Position: &#x27;;
+        posVal.textContent = &#x27;X: 0, Y: 0&#x27;;
 
-        showFpsCounter: function() {
-            gf.debug._fpsCounter = new gf.debug.FpsCounter();
-            for(var s in gf.debug.fpsStyle) {
-                gf.debug._fpsCounter.domElement.style[s] = gf.debug.fpsStyle[s];
-            }
-            document.body.appendChild(gf.debug._fpsCounter.domElement);
-        },
+        &#x2F;&#x2F;gamepads
+        var pads = document.createElement(&#x27;span&#x27;);
+        pads.id = &#x27;gf-debug-info-gamepads&#x27;;
 
-        showDebugInfo: function() {
-            gf.debug._info = new gf.debug.Info();
-            for(var s2 in gf.debug.infoStyle) {
-                gf.debug._info.domElement.style[s2] = gf.debug.infoStyle[s2];
-            }
-            document.body.appendChild(gf.debug._info.domElement);
-        },
+        container.appendChild(pads);
 
-        update: function() {
-            &#x2F;&#x2F;update fps box
-            if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
+        pos.appendChild(posVal);
+        container.appendChild(pos);
+        container.appendChild(br.cloneNode());
 
-            &#x2F;&#x2F;update debug info
-            if(gf.debug._info) gf.debug._info.update();
-        },
+        this.player = 
 
-        &#x2F;****************************************************************************
-         * DebugInfo box that displays live-updaing debug info
-         ****************************************************************************&#x2F;
-        Info: function() {
-            var br = document.createElement(&#x27;br&#x27;);
+        this.REVISION = 1;
+        this.domElement = container;
+        this.update = function() {
+            posVal.textContent = this.game.players[0] ?
+                                    &#x27;X: &#x27; + this.game.players[0].position.x.toFixed(1) + &#x27;, Y: &#x27; + this.game.players[0].position.y.toFixed(1) :
+                                    &#x27;none&#x27;;
 
-            &#x2F;&#x2F;container
-            var container = document.createElement(&#x27;div&#x27;);
-            container.id = &#x27;gf-debug-info&#x27;;
+            if(this.showGamepad) {
+                pads.innerHTML = &#x27;&#x27;;
+                if(this.game.input.gamepad.pads &amp;&amp; this.game.input.gamepad.pads.length) {
+                    for(var i = 0, il = this.game.input.gamepad.pads.length; i &lt; il; ++i) {
+                        var pad = this.game.input.gamepad.pads[i];
 
-            &#x2F;&#x2F;title
-            var title = document.createElement(&#x27;h3&#x27;);
-            title.id = &#x27;gf-debug-info-title&#x27;;
-            title.textContent = &#x27;Debug Info&#x27;;
-            title.style.cssText = &#x27;margin:1px;display:block;&#x27;;
-
-            container.appendChild(title);
-
-            &#x2F;&#x2F;number of entities
-            var ents = document.createElement(&#x27;span&#x27;),
-                entsVal = document.createElement(&#x27;span&#x27;);
-            ents.id = &#x27;gf-debug-info-entities&#x27;;
-            entsVal.id = &#x27;gf-debug-info-entities-value&#x27;;
-            ents.textContent = &#x27;Number of Objects: &#x27;;
-            entsVal.textContent = &#x27;0&#x27;;
-
-            ents.appendChild(entsVal);
-            container.appendChild(ents);
-            container.appendChild(br.cloneNode());
-
-            &#x2F;&#x2F;gamepads
-            var pads = document.createElement(&#x27;span&#x27;);
-            pads.id = &#x27;gf-debug-info-gamepads&#x27;;
-
-            container.appendChild(pads);
-
-            &#x2F;&#x2F;player position
-            var pos = document.createElement(&#x27;span&#x27;),
-                posVal = document.createElement(&#x27;span&#x27;);
-            pos.id = &#x27;gf-debug-info-position&#x27;;
-            posVal.id = &#x27;gf-debug-info-position-value&#x27;;
-            pos.textContent = &#x27;Player Position: &#x27;;
-            posVal.textContent = &#x27;X: 0, Y: 0, Z: 0&#x27;;
-
-            pos.appendChild(posVal);
-            container.appendChild(pos);
-            container.appendChild(br.cloneNode());
-
-            &#x2F;&#x2F;colliding tiles
-            var tiles = document.createElement(&#x27;span&#x27;),
-                tilesVal = document.createElement(&#x27;span&#x27;);
-            tiles.id = &#x27;gf-debug-info-tiles&#x27;;
-            tilesVal.id = &#x27;gf-debug-info-tiles-value&#x27;;
-            tiles.textContent = &#x27;Colliding Tiles: &#x27;;
-            tilesVal.textContent = &#x27;&#x27;;
-
-            tiles.appendChild(tilesVal);
-            container.appendChild(tiles);
-            container.appendChild(br.cloneNode());
-
-            return {
-                REVISION: 1,
-                domElement: container,
-                update: function() {
-                    entsVal.textContent = gf.game.numObjects;
-                    posVal.textContent = gf.game.player ?
-                                            &#x27;X: &#x27; + gf.game.player._hitboxMesh.position.x.toFixed(1) +
-                                                &#x27;, Y: &#x27; + gf.game.player._hitboxMesh.position.y.toFixed(1) +
-                                                &#x27;, Z: &#x27; + gf.game.player._hitboxMesh.position.z.toFixed(1) :
-                                            &#x27;none&#x27;;
-
-                    if(gf.debug._playerColliders &amp;&amp; gf.debug._playerColliders.dirty) {
-                        gf.debug._playerColliders.dirty = false;
-                        tilesVal.innerHTML = &#x27;&lt;br&#x2F;&gt;&#x27;;
-                        for(var i = 0, il = gf.debug._playerColliders.length; i &lt; il; ++i) {
-                            tilesVal.innerHTML += &#x27;&amp;nbsp;&amp;nbsp;&amp;nbsp;Tile (&#x27; + gf.debug._playerColliders[i].axis + &#x27;): &#x27; + 
-                                                gf.debug._playerColliders[i].tile.type + 
-                                                &#x27; (&#x27; + (!!gf.debug._playerColliders[i].tile.normal ? 
-                                                        gf.debug._playerColliders[i].tile.normal.x + &#x27;, &#x27; + gf.debug._playerColliders[i].tile.normal.y :
-                                                        &#x27;0, 0&#x27;)
-                                                    + &#x27;)&lt;br&#x2F;&gt;&#x27;;
-                        }
-                    }
-
-                    if(gf.debug.showGamepadInfo) {
-                        pads.innerHTML = &#x27;&#x27;;
-                        if(gf.gamepad.pads &amp;&amp; gf.gamepad.pads.length) {
-                            for(var i = 0, il = gf.gamepad.pads.length; i &lt; il; ++i) {
-                                var pad = gf.gamepad.pads[i];
-
-                                pads.innerHTML += &#x27;Gamepad: [&#x27; + pad.index + &#x27;] &#x27; + pad.id + &#x27;&lt;br&#x2F;&gt;&#x27;;
-                                pads.innerHTML += &#x27;&amp;nbsp;&amp;nbsp;&amp;nbsp;Buttons:&lt;br&#x2F;&gt;&#x27; + 
-                                                    pad.buttons.map(function(v, i) { return &#x27;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#x27; + gf.types.getGpButtonName(i) + &#x27;: &#x27; + v.toFixed(2); }).join(&#x27;&lt;br&#x2F;&gt;&#x27;) + &#x27;&lt;br&#x2F;&gt;&#x27;;
-                                pads.innerHTML += &#x27;&amp;nbsp;&amp;nbsp;&amp;nbsp;Axes:&lt;br&#x2F;&gt;&#x27; + 
-                                                    pad.axes.map(function(v, i) { return &#x27;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#x27; + gf.types.getGpAxisName(i) + &#x27;: &#x27; + v.toFixed(2); }).join(&#x27;&lt;br&#x2F;&gt;&#x27;) + &#x27;&lt;br&#x2F;&gt;&#x27;;
-                            }
-                        }
+                        pads.innerHTML += &#x27;Gamepad: [&#x27; + pad.index + &#x27;] &#x27; + pad.id + &#x27;&lt;br&#x2F;&gt;&#x27;;
+                        pads.innerHTML += &#x27;&amp;nbsp;&amp;nbsp;&amp;nbsp;Buttons:&lt;br&#x2F;&gt;&#x27; + 
+                                            pad.buttons.map(function(v, i) { return &#x27;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#x27; + gf.input.getGpButtonName(i) + &#x27;: &#x27; + v.toFixed(2); }).join(&#x27;&lt;br&#x2F;&gt;&#x27;) + &#x27;&lt;br&#x2F;&gt;&#x27;;
+                        pads.innerHTML += &#x27;&amp;nbsp;&amp;nbsp;&amp;nbsp;Axes:&lt;br&#x2F;&gt;&#x27; + 
+                                            pad.axes.map(function(v, i) { return &#x27;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#x27; + gf.input.getGpAxisName(i) + &#x27;: &#x27; + v.toFixed(2); }).join(&#x27;&lt;br&#x2F;&gt;&#x27;) + &#x27;&lt;br&#x2F;&gt;&#x27;;
                     }
                 }
             }
-        },
-        &#x2F;****************************************************************************
-         * mrdoob&#x27;s stats.js (stats.js r10 - http:&#x2F;&#x2F;github.com&#x2F;mrdoob&#x2F;stats.js)
-         ****************************************************************************&#x2F;
-        FpsCounter:function(){var l=Date.now(),m=l,g=0,n=1E3,o=0,h=0,p=1E3,q=0,r=0,s=0,f=document.createElement(&quot;div&quot;);f.id=&quot;gf-stats&quot;;f.addEventListener(&quot;mousedown&quot;,function(b){b.preventDefault();t(++s%2)},!1);f.style.cssText=&quot;width:80px;opacity:0.9;cursor:pointer&quot;;var a=document.createElement(&quot;div&quot;);a.id=&quot;fps&quot;;a.style.cssText=&quot;padding:0 0 3px 3px;text-align:left;background-color:#002&quot;;f.appendChild(a);var i=document.createElement(&quot;div&quot;);i.id=&quot;fpsText&quot;;i.style.cssText=&quot;color:#0ff;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px&quot;;
-        i.innerHTML=&quot;FPS&quot;;a.appendChild(i);var c=document.createElement(&quot;div&quot;);c.id=&quot;fpsGraph&quot;;c.style.cssText=&quot;position:relative;width:74px;height:30px;background-color:#0ff&quot;;for(a.appendChild(c);74&gt;c.children.length;){var j=document.createElement(&quot;span&quot;);j.style.cssText=&quot;width:1px;height:30px;float:left;background-color:#113&quot;;c.appendChild(j)}var d=document.createElement(&quot;div&quot;);d.id=&quot;ms&quot;;d.style.cssText=&quot;padding:0 0 3px 3px;text-align:left;background-color:#020;display:none&quot;;f.appendChild(d);var k=document.createElement(&quot;div&quot;);
-        k.id=&quot;msText&quot;;k.style.cssText=&quot;color:#0f0;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px&quot;;k.innerHTML=&quot;MS&quot;;d.appendChild(k);var e=document.createElement(&quot;div&quot;);e.id=&quot;msGraph&quot;;e.style.cssText=&quot;position:relative;width:74px;height:30px;background-color:#0f0&quot;;for(d.appendChild(e);74&gt;e.children.length;)j=document.createElement(&quot;span&quot;),j.style.cssText=&quot;width:1px;height:30px;float:left;background-color:#131&quot;,e.appendChild(j);var t=function(b){s=b;switch(s){case 0:a.style.display=
-        &quot;block&quot;;d.style.display=&quot;none&quot;;break;case 1:a.style.display=&quot;none&quot;,d.style.display=&quot;block&quot;}};return{domElement:f,setMode:t,begin:function(){l=Date.now()},end:function(){var b=Date.now();g=b-l;n=Math.min(n,g);o=Math.max(o,g);k.textContent=g+&quot; MS (&quot;+n+&quot;-&quot;+o+&quot;)&quot;;var a=Math.min(30,30-30*(g&#x2F;200));e.appendChild(e.firstChild).style.height=a+&quot;px&quot;;r++;b&gt;m+1E3&amp;&amp;(h=Math.round(1E3*r&#x2F;(b-m)),p=Math.min(p,h),q=Math.max(q,h),i.textContent=h+&quot; FPS (&quot;+p+&quot;-&quot;+q+&quot;)&quot;,a=Math.min(30,30-30*(h&#x2F;100)),c.appendChild(c.firstChild).style.height=
-        a+&quot;px&quot;,m=b,r=0);return b},update:function(){l=this.end()}}}
-    };
-})();
+        };
+    },
+    &#x2F;&#x2F;mrdoob&#x27;s stats.js (stats.js r10 - http:&#x2F;&#x2F;github.com&#x2F;mrdoob&#x2F;stats.js)
+    FpsCounter:function(){var l=Date.now(),m=l,g=0,n=1E3,o=0,h=0,p=1E3,q=0,r=0,s=0,f=document.createElement(&quot;div&quot;);f.id=&quot;gf-stats&quot;;f.addEventListener(&quot;mousedown&quot;,function(b){b.preventDefault();t(++s%2)},!1);f.style.cssText=&quot;width:80px;opacity:0.9;cursor:pointer&quot;;var a=document.createElement(&quot;div&quot;);a.id=&quot;fps&quot;;a.style.cssText=&quot;padding:0 0 3px 3px;text-align:left;background-color:#002&quot;;f.appendChild(a);var i=document.createElement(&quot;div&quot;);i.id=&quot;fpsText&quot;;i.style.cssText=&quot;color:#0ff;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px&quot;;
+    i.innerHTML=&quot;FPS&quot;;a.appendChild(i);var c=document.createElement(&quot;div&quot;);c.id=&quot;fpsGraph&quot;;c.style.cssText=&quot;position:relative;width:74px;height:30px;background-color:#0ff&quot;;for(a.appendChild(c);74&gt;c.children.length;){var j=document.createElement(&quot;span&quot;);j.style.cssText=&quot;width:1px;height:30px;float:left;background-color:#113&quot;;c.appendChild(j)}var d=document.createElement(&quot;div&quot;);d.id=&quot;ms&quot;;d.style.cssText=&quot;padding:0 0 3px 3px;text-align:left;background-color:#020;display:none&quot;;f.appendChild(d);var k=document.createElement(&quot;div&quot;);
+    k.id=&quot;msText&quot;;k.style.cssText=&quot;color:#0f0;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px&quot;;k.innerHTML=&quot;MS&quot;;d.appendChild(k);var e=document.createElement(&quot;div&quot;);e.id=&quot;msGraph&quot;;e.style.cssText=&quot;position:relative;width:74px;height:30px;background-color:#0f0&quot;;for(d.appendChild(e);74&gt;e.children.length;)j=document.createElement(&quot;span&quot;),j.style.cssText=&quot;width:1px;height:30px;float:left;background-color:#131&quot;,e.appendChild(j);var t=function(b){s=b;switch(s){case 0:a.style.display=
+    &quot;block&quot;;d.style.display=&quot;none&quot;;break;case 1:a.style.display=&quot;none&quot;,d.style.display=&quot;block&quot;}};return{domElement:f,setMode:t,begin:function(){l=Date.now()},end:function(){var b=Date.now();g=b-l;n=Math.min(n,g);o=Math.max(o,g);k.textContent=g+&quot; MS (&quot;+n+&quot;-&quot;+o+&quot;)&quot;;var a=Math.min(30,30-30*(g&#x2F;200));e.appendChild(e.firstChild).style.height=a+&quot;px&quot;;r++;b&gt;m+1E3&amp;&amp;(h=Math.round(1E3*r&#x2F;(b-m)),p=Math.min(p,h),q=Math.max(q,h),i.textContent=h+&quot; FPS (&quot;+p+&quot;-&quot;+q+&quot;)&quot;,a=Math.min(30,30-30*(h&#x2F;100)),c.appendChild(c.firstChild).style.height=
+    a+&quot;px&quot;,m=b,r=0);return b},update:function(){l=this.end()}}}
+};
+
     </pre>
 </div>
 

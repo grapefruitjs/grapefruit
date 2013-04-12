@@ -41,11 +41,15 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/AssetLoader.html">AssetLoader</a></li>
+            
                 <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
             
                 <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/debug.html">debug</a></li>
             
                 <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
             
@@ -64,6 +68,8 @@
                 <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
             
                 <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Input.html">Input</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -87,8 +93,6 @@
             
                 <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
-                <li><a href="..&#x2F;classes/types.html">types</a></li>
-            
                 <li><a href="..&#x2F;classes/utils.html">utils</a></li>
             
                 <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
@@ -98,6 +102,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+                <li><a href="..&#x2F;modules/input.html">input</a></li>
             
             </ul>
         </div>
@@ -362,7 +368,7 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
      *      spr.addAnimation(&#x27;me&#x27;, new gf.Texture())
      *          .setActiveAnimation(&#x27;me&#x27;);
      *&#x2F;
-    setActiveAnimation: function(name, cb) {
+    setActiveAnimation: function(name, loop, cb) {
         if(this.anim[name] !== undefined) {
             if(this.currentAnim) {
                 this.currentAnim.stop();
@@ -371,9 +377,9 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
 
             this.currentAnim = this.children[this.anim[name]];
             this.currentAnim.visible = true;
+            this.currentAnim.loop = loop;
+            this.currentAnim.onComplete = cb;
             this.currentAnim.gotoAndPlay(0);
-            &#x2F;&#x2F;TODO: Callback
-            if(cb) setTimeout(cb, 1);
         } else {
             throw &#x27;Unknown animation &#x27; + name;
         }

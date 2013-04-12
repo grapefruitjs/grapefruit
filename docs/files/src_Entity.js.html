@@ -41,11 +41,15 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/AssetLoader.html">AssetLoader</a></li>
+            
                 <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
             
                 <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/debug.html">debug</a></li>
             
                 <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
             
@@ -64,6 +68,8 @@
                 <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
             
                 <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Input.html">Input</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -87,8 +93,6 @@
             
                 <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
-                <li><a href="..&#x2F;classes/types.html">types</a></li>
-            
                 <li><a href="..&#x2F;classes/utils.html">utils</a></li>
             
                 <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
@@ -98,6 +102,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+                <li><a href="..&#x2F;modules/input.html">input</a></li>
             
             </ul>
         </div>
@@ -139,7 +145,6 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 &#x2F;&#x2F;Features TODO:
-&#x2F;&#x2F; * Methods (https:&#x2F;&#x2F;github.com&#x2F;obiot&#x2F;melonJS&#x2F;blob&#x2F;master&#x2F;src&#x2F;entity&#x2F;entity.js)
 &#x2F;&#x2F;      - flipX
 &#x2F;&#x2F;      - flipY
 &#x2F;&#x2F;      - doWalk
@@ -178,7 +183,7 @@ gf.Entity = function(game, pos, settings) {
      * @type String
      * @default &#x27;neutral&#x27;
      *&#x2F;
-    this.type = gf.types.ENTITY.NEUTRAL;
+    this.type = gf.Entity.TYPE.NEUTRAL;
 
     &#x2F;**
      * Can it collide with other entities
@@ -293,8 +298,20 @@ gf.Entity = function(game, pos, settings) {
      *&#x2F;
     this.onladder = false;
 
+    &#x2F;**
+     * The view position is a whole-number version of position.
+     *
+     * @property viewPosition
+     * @type Point
+     * @readOnly
+     *&#x2F;
+    this.viewPosition = new gf.Point(0, 0);
+
     &#x2F;&#x2F;call base ctor
     gf.Sprite.call(this, pos, settings);
+
+    this.viewPosition.x = Math.round(this.position.x);
+    this.viewPosition.y = Math.round(this.position.y);
 };
 
 gf.inherits(gf.Entity, gf.Sprite, {
@@ -422,10 +439,10 @@ gf.inherits(gf.Entity, gf.Sprite, {
                 tile = collider.tile,
                 axis = collider.axis;
 
-            this.onladder = (tile.type === gf.types.COLLISION.LADDER ? true : this.onladder);
+            this.onladder = (tile.type === gf.Layer.COLLISION.LADDER ? true : this.onladder);
 
             &#x2F;&#x2F;if a solid tile
-            if(tile.type === gf.types.COLLISION.SOLID) {
+            if(tile.type === gf.Layer.COLLISION.SOLID) {
                 &#x2F;&#x2F;if it is a slope, apply the normal
                 if(tile.normal &amp;&amp; (!this.velocity.x || !this.velocity.y)) {
                     var badMovement = tile.normal.clone().multiplyScalar(this.velocity.dot(tile.normal)),
@@ -472,9 +489,33 @@ gf.inherits(gf.Entity, gf.Sprite, {
         &#x2F;&#x2F;update the entity position
         this.position.x += vel.x;
         this.position.y += vel.y;
+        this.viewPosition.x = Math.round(this.position.x);
+        this.viewPosition.y = Math.round(this.position.y);
 
         &#x2F;&#x2F;onMove event
         this.onMove(vel);
+
+        return this;
+    },
+    &#x2F;**
+     * Convenience method for setting the position of an Entity.
+     *
+     * @method setPosition
+     * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
+     *       If an Array, Vector, or Point is passed then the y parameter is ignored
+     * @param y {Number} Y coord to put the sprite at
+     * @return {Entity} Returns itself for chainability
+     * @example
+     *      spr.setPosition(1, 1)
+     *          .setPosition([5, 5])
+     *          .setPosition(new gf.Point(10, 10))
+     *          .setPosition(new gf.Vector(20, 20));
+     *&#x2F;
+    setPosition: function(x, y) {
+        gf.Sprite.prototype.setPosition.call(this, x, y);
+
+        this.viewPosition.x = Math.round(this.position.x);
+        this.viewPosition.y = Math.round(this.position.y);
 
         return this;
     },
@@ -499,7 +540,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * @return {Entity} Returns itself for chainability
      *&#x2F;
     onCollision: function() {
-        if(this.collidable &amp;&amp; this.type === gf.types.ENTIY.COLLECTABLE)
+        if(this.collidable &amp;&amp; this.type === gf.Entity.TYPE.COLLECTABLE)
             this.game.removeObject(this);
 
         return this;
@@ -528,6 +569,19 @@ gf.inherits(gf.Entity, gf.Sprite, {
     }
 });
 
+&#x2F;**
+ * Entity types
+ *
+ * @property TYPE
+ * @type Object
+ *&#x2F;
+gf.Entity.TYPE = {
+    PLAYER: &#x27;player&#x27;,
+    ENEMY: &#x27;enemy&#x27;,
+    FRIENDLY: &#x27;friendly&#x27;,
+    NEUTRAL: &#x27;neutral&#x27;,
+    COLLECTABLE: &#x27;collectable&#x27;
+};
     </pre>
 </div>
 

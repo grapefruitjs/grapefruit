@@ -1,6 +1,7 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
+        "AssetLoader",
         "AudoPlayer",
         "Camera",
         "Clock",
@@ -11,6 +12,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "GuiItem",
         "Hud",
         "HudItem",
+        "Input",
         "Layer",
         "Map",
         "Point",
@@ -21,21 +23,27 @@ YUI.add("yuidoc-meta", function(Y) {
         "TiledObjectGroup",
         "TiledTileset",
         "Vector",
+        "debug",
         "entityPool",
         "game",
         "plugin",
         "support",
-        "types",
         "utils"
     ],
     "modules": [
-        "gf"
+        "gf",
+        "input"
     ],
     "allModules": [
         {
             "displayName": "gf",
             "name": "gf",
             "description": "The base grapefruit object"
+        },
+        {
+            "displayName": "input",
+            "name": "input",
+            "description": "input submodule"
         }
     ]
 } };

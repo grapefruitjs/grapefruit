@@ -41,11 +41,15 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/AssetLoader.html">AssetLoader</a></li>
+            
                 <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
             
                 <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/debug.html">debug</a></li>
             
                 <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
             
@@ -64,6 +68,8 @@
                 <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
             
                 <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Input.html">Input</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -87,8 +93,6 @@
             
                 <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
-                <li><a href="..&#x2F;classes/types.html">types</a></li>
-            
                 <li><a href="..&#x2F;classes/utils.html">utils</a></li>
             
                 <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
@@ -98,6 +102,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+                <li><a href="..&#x2F;modules/input.html">input</a></li>
             
             </ul>
         </div>
@@ -160,15 +166,15 @@ gf.TiledLayer = function(layer) {
      * @property name
      * @type Uint32Array
      *&#x2F;
-    this.tiles = new Uint32Array(layer.data);
+    this.tiles = gf.support.typedArrays ? new Uint32Array(layer.data) : layer.data;
 
     &#x2F;**
      * The sprite pool for rendering tiles
      *
      * @property tilePool
-     * @type Array
+     * @type Object
      *&#x2F;
-    this.sprites = [];
+    this.sprites = {};
 
     &#x2F;&#x2F;translate some tiled properties to our inherited properties
     this.position.x = layer.x;
@@ -193,6 +199,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         startY -= this._tileBufferSize;
         numY += this._tileBufferSize * 2;
 
+        &#x2F;&#x2F;render new sprites
         for(var x = startX; x &lt; numX; ++x) {
             for(var y = startY; y &lt; numY; ++y) {
                 this.moveTileSprite(x, y, x, y);
@@ -220,7 +227,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(this.sprites[tileX] &amp;&amp; this.sprites[tileX][tileY])
             return this.sprites[tileX][tileY];
 
-        if(!this.sprites[tileX]) this.sprites[tileX] = [];
+        if(!this.sprites[tileX]) this.sprites[tileX] = {};
 
         var id = (tileX + (tileY * this.size.x)),
             tile = this.tiles[id],
@@ -258,7 +265,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         spr.position.y = toTileY * this.parent.tileSize.y;
 
         &#x2F;&#x2F;move the sprite in the pool
-        if(!this.sprites[toTileX]) this.sprites[toTileX] = [];
+        if(!this.sprites[toTileX]) this.sprites[toTileX] = {};
         this.sprites[toTileX][toTileY] = spr;
         this.sprites[fromTileX][fromTileY] = null;
 
@@ -307,27 +314,27 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.y += dy;
 
         &#x2F;&#x2F;moved position right, so render left
-        while(this._panDelta.x &gt;= this.parent.tileSize.x) {
+        while(this._panDelta.x &gt;= this.parent.scaledTileSize.x) {
             this._renderLeft();
-            this._panDelta.x -= this.parent.tileSize.x;
+            this._panDelta.x -= this.parent.scaledTileSize.x;
         }
 
         &#x2F;&#x2F;moved position left, so render right
-        while(this._panDelta.x &lt;= -this.parent.tileSize.x) {
+        while(this._panDelta.x &lt;= -this.parent.scaledTileSize.x) {
             this._renderRight();
-            this._panDelta.x += this.parent.tileSize.x;
+            this._panDelta.x += this.parent.scaledTileSize.x;
         }
 
         &#x2F;&#x2F;moved position down, so render up
-        while(this._panDelta.y &gt;= this.parent.tileSize.y) {
+        while(this._panDelta.y &gt;= this.parent.scaledTileSize.y) {
             this._renderUp();
-            this._panDelta.y -= this.parent.tileSize.y;
+            this._panDelta.y -= this.parent.scaledTileSize.y;
         }
 
         &#x2F;&#x2F;moved position up, so render down
-        while(this._panDelta.y &lt;= -this.parent.tileSize.y) {
+        while(this._panDelta.y &lt;= -this.parent.scaledTileSize.y) {
             this._renderDown();
-            this._panDelta.y += this.parent.tileSize.y;
+            this._panDelta.y += this.parent.scaledTileSize.y;
         }
     },
     _renderLeft: function() {

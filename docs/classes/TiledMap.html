@@ -41,11 +41,15 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/AssetLoader.html">AssetLoader</a></li>
+            
                 <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
             
                 <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/debug.html">debug</a></li>
             
                 <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
             
@@ -64,6 +68,8 @@
                 <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
             
                 <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Input.html">Input</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -87,8 +93,6 @@
             
                 <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
-                <li><a href="..&#x2F;classes/types.html">types</a></li>
-            
                 <li><a href="..&#x2F;classes/utils.html">utils</a></li>
             
                 <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
@@ -98,6 +102,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+                <li><a href="..&#x2F;modules/input.html">input</a></li>
             
             </ul>
         </div>
@@ -235,13 +241,6 @@ file, and this expets that to already be done.</p>
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_extent">extent</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
                                 <a href="#property_orientation">orientation</a>
 
                                 
@@ -263,7 +262,7 @@ file, and this expets that to already be done.</p>
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_scaledSize">scaledSize</a>
+                                <a href="#property_scaledTileSize">scaledTileSize</a>
 
                                 
                                 
@@ -358,7 +357,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l173"><code>src\map\tiled\TiledMap.js:173</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l156"><code>src\map\tiled\TiledMap.js:156</code></a>
         
         </p>
 
@@ -480,7 +479,7 @@ TODO: Fix this for new PIXI stuff</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l161"><code>src\map\tiled\TiledMap.js:161</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l144"><code>src\map\tiled\TiledMap.js:144</code></a>
         
         </p>
 
@@ -571,7 +570,7 @@ TODO: Fix this for new PIXI stuff</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l233"><code>src\map\tiled\TiledMap.js:233</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l216"><code>src\map\tiled\TiledMap.js:216</code></a>
         
         </p>
 
@@ -624,7 +623,7 @@ TODO: Fix this for new PIXI stuff</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l97"><code>src\map\tiled\TiledMap.js:97</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l80"><code>src\map\tiled\TiledMap.js:80</code></a>
         
         </p>
 
@@ -668,7 +667,7 @@ TODO: Fix this for new PIXI stuff</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l105"><code>src\map\tiled\TiledMap.js:105</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l88"><code>src\map\tiled\TiledMap.js:88</code></a>
         
         </p>
 
@@ -679,52 +678,6 @@ TODO: Fix this for new PIXI stuff</p>
 
     <div class="description">
         <p>The tileset for the collision layer</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_extent" class="property item">
-    <h3 class="name"><code>extent</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l66"><code>src\map\tiled\TiledMap.js:66</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The maximum extent of the map (largest x and y the map has)
-assuming 0,0 is in the middle of the map, calculate the minimum
-and maximum extent of the map</p>
     </div>
 
     
@@ -758,7 +711,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l58"><code>src\map\tiled\TiledMap.js:58</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l60"><code>src\map\tiled\TiledMap.js:60</code></a>
         
         </p>
 
@@ -802,7 +755,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l27"><code>src\map\tiled\TiledMap.js:27</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l40"><code>src\map\tiled\TiledMap.js:40</code></a>
         
         </p>
 
@@ -848,7 +801,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l36"><code>src\map\tiled\TiledMap.js:36</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l49"><code>src\map\tiled\TiledMap.js:49</code></a>
         
         </p>
 
@@ -858,7 +811,7 @@ and maximum extent of the map</p>
     </div>
 
     <div class="description">
-        <p>The real size (size * tileSize)</p>
+        <p>The real size (size * scaledTileSize)</p>
     </div>
 
     
@@ -869,8 +822,8 @@ and maximum extent of the map</p>
 </div>
 
                 
-                    <div id="property_scaledSize" class="property item">
-    <h3 class="name"><code>scaledSize</code></h3>
+                    <div id="property_scaledTileSize" class="property item">
+    <h3 class="name"><code>scaledTileSize</code></h3>
     <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
 
     
@@ -892,7 +845,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l47"><code>src\map\tiled\TiledMap.js:47</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l29"><code>src\map\tiled\TiledMap.js:29</code></a>
         
         </p>
 
@@ -902,7 +855,7 @@ and maximum extent of the map</p>
     </div>
 
     <div class="description">
-        <p>The scaled size (size * tileSize * scale)</p>
+        <p>The scaled tile size</p>
     </div>
 
     
@@ -936,7 +889,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l85"><code>src\map\tiled\TiledMap.js:85</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l68"><code>src\map\tiled\TiledMap.js:68</code></a>
         
         </p>
 
@@ -994,8 +947,6 @@ and maximum extent of the map</p>
     </div>
 
     
-        <p><strong>Default:</strong> new gf.Vector(0, 0)</p>
-    
 
     
 
@@ -1026,7 +977,7 @@ and maximum extent of the map</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l113"><code>src\map\tiled\TiledMap.js:113</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l96"><code>src\map\tiled\TiledMap.js:96</code></a>
         
         </p>
 

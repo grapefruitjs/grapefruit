@@ -41,11 +41,15 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/AssetLoader.html">AssetLoader</a></li>
+            
                 <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
             
                 <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/debug.html">debug</a></li>
             
                 <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
             
@@ -64,6 +68,8 @@
                 <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
             
                 <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Input.html">Input</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -87,8 +93,6 @@
             
                 <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
-                <li><a href="..&#x2F;classes/types.html">types</a></li>
-            
                 <li><a href="..&#x2F;classes/utils.html">utils</a></li>
             
                 <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
@@ -98,6 +102,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+                <li><a href="..&#x2F;modules/input.html">input</a></li>
             
             </ul>
         </div>
@@ -371,18 +377,18 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         if(typeof duration === &#x27;function&#x27;) {
             cb = duration;
             direction = gf.Camera.SHAKE.BOTH;
-            duration = 1;
+            duration = null;
         }
 
         if(typeof intensity === &#x27;function&#x27;) {
             cb = intensity;
             direction = gf.Camera.SHAKE.BOTH;
-            duration = 1;
-            intensity = 1;
+            duration = null;
+            intensity = null;
         }
 
-        intensity = intensity || 1;
-        duration = duration || 1;
+        intensity = intensity || 0.01;
+        duration = duration || 1000;
         direction = direction || gf.Camera.SHAKE.BOTH;
 
         &#x2F;&#x2F;setup a shake effect
@@ -437,6 +443,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @return {Camera} Returns iteself for chainability
      *&#x2F;
     follow: function(ent, style) {
+        if(!(ent instanceof gf.Entity)) return this;
+
         this._target = ent;
 
         switch(style) {
@@ -445,7 +453,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                 var h = this.size.y &#x2F; 3;
                 this._deadzone = new PIXI.Rectangle(
                     (this.size.x - w) &#x2F; 2,
-                    (this.size.y - h) &#x2F; 2 - h * 0.25,
+                    (this.size.y - h) &#x2F; 2 - (h &#x2F; 4),
                     w,
                     h
                 );
@@ -471,9 +479,11 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
             case gf.Camera.FOLLOW.LOCKON:
                 &#x2F;* falls through *&#x2F;
             default:
-                this.deadzone = null;
+                this._deadzone = null;
                 break;
         }
+
+        this.focusEntity(this._target);
 
         return this;
     },
@@ -491,16 +501,14 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * Focuses the camera on an x,y position. Ensures that the camera does
      * not go outside the bounds set with setBounds()
      *
-     * TODO: DOESN&#x27;T WORK!
-     *
      * @method focus
      * @param x {Number|Point} The x coord to focus on, if a Point is passed the y param is ignored
      * @param y {Number} The y coord to focus on
      * @return {Camera} Returns iteself for chainability
      *&#x2F;
     focus: function(x, y) {
-        x = x instanceof gf.Point ? x.x : (x || 0);
         y = x instanceof gf.Point ? x.y : (y || 0);
+        x = x instanceof gf.Point ? x.x : (x || 0);
         &#x2F;&#x2F;x += (x &gt; 0) ? 0.0000001 : -0.0000001;
         &#x2F;&#x2F;y += (y &gt; 0) ? 0.0000001 : -0.0000001;
 
@@ -512,6 +520,12 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
 
         return this.pan(dx, dy);
     },
+    focusEntity: function(ent) {
+        this.focus(
+            ent.viewPosition.x * this.game.world.scale.x,
+            ent.viewPosition.y * this.game.world.scale.y
+        );
+    },
     &#x2F;**
      * Pans the camera around by the x,y amount. Ensures that the camera does
      * not go outside the bounds set with setBounds()
@@ -522,23 +536,25 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @return {Camera} Returns iteself for chainability
      *&#x2F;
     pan: function(dx, dy) {
-        dx = dx instanceof gf.Point ? dx.x : (dx || 0);
         dy = dx instanceof gf.Point ? dx.y : (dy || 0);
+        dx = dx instanceof gf.Point ? dx.x : (dx || 0);
+
+        if(!dx &amp;&amp; !dy) return;
 
         var newX = this.game.world.position.x - dx,
             newY = this.game.world.position.y - dy;
 
         &#x2F;&#x2F;move only the difference that puts us at 0
         if(newX &gt; 0)
-            dx = 0 - Math.abs(this.game.world.position.x);
+            dx = 0 + this.game.world.position.x;
         &#x2F;&#x2F;move only the difference that puts us at max (remember that position is negative)
         else if(newX &lt; -this._bounds.maxPanX)
-            dx = this._bounds.maxPanX - Math.abs(this.game.world.position.x);
+            dx = this._bounds.maxPanX + this.game.world.position.x;
 
         if(newY &gt; 0)
             dy = 0 - Math.abs(this.game.world.position.y);
         else if(newY &lt; -this._bounds.maxPanY)
-            dy = this._bounds.maxPanY - Math.abs(this.game.world.position.y);
+            dy = this._bounds.maxPanY + this.game.world.position.y;
 
         if(dx || dy)
             this.game.world.pan(-dx, -dy);
@@ -557,7 +573,10 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      *&#x2F;
     resize: function(w, h) {
         this.size.set(w, h);
-        this.hSize.set(this.size.x &#x2F; 2, this.size.y &#x2F; 2);
+        this.hSize.set(
+            Math.round(this.size.x &#x2F; 2),
+            Math.round(this.size.y &#x2F; 2)
+        );
 
         return this;
     },
@@ -595,15 +614,20 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
     update: function() {
         &#x2F;&#x2F;follow entity
         if(this._target) {
-            if(!this.deadzone) {
-                this.focus(this._target.position.x, this._target.position.y);
+            if(!this._deadzone) {
+                this.focusEntity(this._target);
             } else {
-                var moveX, moveY, dx, dy;
+                var moveX, moveY,
+                    dx, dy,
+                    &#x2F;&#x2F;get the x,y of the sprite on the screen
+                    camX = (this._target.position.x + (this.game.world.position.x &#x2F; this.game.world.scale.x)) * this.game.world.scale.x,
+                    camY = (this._target.position.y + (this.game.world.position.y &#x2F; this.game.world.scale.y)) * this.game.world.scale.x;
+
                 moveX = moveY = dx = dy = 0;
 
                 &#x2F;&#x2F;check less than
-                dx = this._target.position.x - this.deadzone.x;
-                dy = this._target.position.y - this.deadzone.y;
+                dx = camX - this._deadzone.x;
+                dy = camY - this._deadzone.y;
 
                 if(dx &lt; 0)
                     moveX = dx;
@@ -611,15 +635,18 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
                     moveY = dy;
 
                 &#x2F;&#x2F;check greater than
-                dx = this._target.position.x - (this.deadzone.x + this.deadzone.width);
-                dy = this._target.position.y - (this.deadzone.y + this.deadzone.height);
+                dx = camX - (this._deadzone.x + this._deadzone.width);
+                dy = camY - (this._deadzone.y + this._deadzone.height);
 
                 if(dx &gt; 0)
                     moveX = dx;
                 if(dy &gt; 0)
                     moveY = dy;
 
-                this.pan(moveX, moveY);
+                this.pan(
+                    Math.round(moveX),
+                    Math.round(moveY)
+                );
             }
         }
 

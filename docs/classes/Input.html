@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>types - gf</title>
+    <title>Input - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -41,11 +41,15 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/AssetLoader.html">AssetLoader</a></li>
+            
                 <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
             
                 <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/debug.html">debug</a></li>
             
                 <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
             
@@ -64,6 +68,8 @@
                 <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
             
                 <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Input.html">Input</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -87,8 +93,6 @@
             
                 <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
-                <li><a href="..&#x2F;classes/types.html">types</a></li>
-            
                 <li><a href="..&#x2F;classes/utils.html">utils</a></li>
             
                 <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
@@ -98,6 +102,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+                <li><a href="..&#x2F;modules/input.html">input</a></li>
             
             </ul>
         </div>
@@ -134,7 +140,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>types Class</h1>
+                        <h1>Input Class</h1>
 <div class="box meta">
     
 
@@ -142,13 +148,14 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l81"><code>src\core.js:81</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l181"><code>src\input\Input.js:181</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/gf.html">gf</a>
+            Module: <a href="../modules/input.html">input</a><br>
+            Parent Module: <a href="../modules/gf.html">gf</a>
         
     
 
@@ -158,7 +165,7 @@
 
 
 <div class="box intro">
-    <p>Constant types for easy use in code</p>
+    <p>The base Input object, holds common functions and properties between input types</p>
 </div>
 
 
@@ -188,37 +195,42 @@
                     <ul class="index-list properties">
                         
                             <li class="index-item property">
-                                <a href="#property_COLLISION">COLLISION</a>
+                                <a href="#property_binds">binds</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_ENTITY">ENTITY</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property deprecated">
-                                <a href="#property_EVENT">EVENT</a>
-
-                                
-                                
-                                    <span class="flag deprecated">deprecated</span>
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_GP_AXES">GP_AXES</a>
+                                <a href="#property_callbacks">callbacks</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_GP_BUTTONS">GP_BUTTONS</a>
+                                <a href="#property_callbacks">callbacks</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_game">game</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_GP_AXIS">GP_AXIS</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_GP_BUTTON">GP_BUTTON</a>
 
                                 
                                 
@@ -232,7 +244,7 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_LAYER">LAYER</a>
+                                <a href="#property_manager">manager</a>
 
                                 
                                 
@@ -245,12 +257,24 @@
                                 
                             </li>
                         
-                            <li class="index-item property deprecated">
-                                <a href="#property_RESOURCE">RESOURCE</a>
+                            <li class="index-item property">
+                                <a href="#property_status">status</a>
 
                                 
                                 
-                                    <span class="flag deprecated">deprecated</span>
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_threshold">threshold</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_threshold">threshold</a>
+
+                                
                                 
                             </li>
                         
@@ -277,8 +301,8 @@
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_COLLISION" class="property item">
-    <h3 class="name"><code>COLLISION</code></h3>
+                    <div id="property_binds" class="property item">
+    <h3 class="name"><code>binds</code></h3>
     <span class="type">Object</span>
 
     
@@ -300,7 +324,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l111"><code>src\core.js:111</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l208"><code>src\input\Input.js:208</code></a>
         
         </p>
 
@@ -310,7 +334,7 @@
     </div>
 
     <div class="description">
-        <p>Tile collision types</p>
+        <p>The binds that map an action to an input value</p>
     </div>
 
     
@@ -321,8 +345,8 @@
 </div>
 
                 
-                    <div id="property_ENTITY" class="property item">
-    <h3 class="name"><code>ENTITY</code></h3>
+                    <div id="property_callbacks" class="property item">
+    <h3 class="name"><code>callbacks</code></h3>
     <span class="type">Object</span>
 
     
@@ -344,7 +368,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l88"><code>src\core.js:88</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l226"><code>src\input\Input.js:226</code></a>
         
         </p>
 
@@ -354,7 +378,7 @@
     </div>
 
     <div class="description">
-        <p>Entity types</p>
+        <p>The count of how many actions an input value is bound to</p>
     </div>
 
     
@@ -365,12 +389,10 @@
 </div>
 
                 
-                    <div id="property_EVENT" class="property item deprecated">
-    <h3 class="name"><code>EVENT</code></h3>
+                    <div id="property_callbacks" class="property item">
+    <h3 class="name"><code>callbacks</code></h3>
     <span class="type">Object</span>
 
-    
-        <span class="flag deprecated">deprecated</span>
     
 
     
@@ -390,7 +412,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l125"><code>src\core.js:125</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l217"><code>src\input\Input.js:217</code></a>
         
         </p>
 
@@ -400,7 +422,7 @@
     </div>
 
     <div class="description">
-        <p>Event definitions</p>
+        <p>The callbacks that map from an action</p>
     </div>
 
     
@@ -411,8 +433,52 @@
 </div>
 
                 
-                    <div id="property_GP_AXES" class="property item">
-    <h3 class="name"><code>GP_AXES</code></h3>
+                    <div id="property_game" class="property item">
+    <h3 class="name"><code>game</code></h3>
+    <span class="type">Game</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l192"><code>src\input\Input.js:192</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The game instance this belongs to</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_GP_AXIS" class="property item">
+    <h3 class="name"><code>GP_AXIS</code></h3>
     <span class="type">Object</span>
 
     
@@ -434,7 +500,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l308"><code>src\core.js:308</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l158"><code>src\input\Input.js:158</code></a>
         
         </p>
 
@@ -455,8 +521,8 @@
 </div>
 
                 
-                    <div id="property_GP_BUTTONS" class="property item">
-    <h3 class="name"><code>GP_BUTTONS</code></h3>
+                    <div id="property_GP_BUTTON" class="property item">
+    <h3 class="name"><code>GP_BUTTON</code></h3>
     <span class="type">Object</span>
 
     
@@ -478,7 +544,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l275"><code>src\core.js:275</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l125"><code>src\input\Input.js:125</code></a>
         
         </p>
 
@@ -522,7 +588,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l158"><code>src\core.js:158</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l8"><code>src\input\Input.js:8</code></a>
         
         </p>
 
@@ -543,9 +609,9 @@
 </div>
 
                 
-                    <div id="property_LAYER" class="property item">
-    <h3 class="name"><code>LAYER</code></h3>
-    <span class="type">Object</span>
+                    <div id="property_manager" class="property item">
+    <h3 class="name"><code>manager</code></h3>
+    <span class="type">InputManager</span>
 
     
 
@@ -566,7 +632,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l101"><code>src\core.js:101</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l200"><code>src\input\Input.js:200</code></a>
         
         </p>
 
@@ -576,7 +642,7 @@
     </div>
 
     <div class="description">
-        <p>Layer types</p>
+        <p>The input manager this belongs to</p>
     </div>
 
     
@@ -610,7 +676,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l243"><code>src\core.js:243</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l93"><code>src\input\Input.js:93</code></a>
         
         </p>
 
@@ -631,12 +697,10 @@
 </div>
 
                 
-                    <div id="property_RESOURCE" class="property item deprecated">
-    <h3 class="name"><code>RESOURCE</code></h3>
+                    <div id="property_status" class="property item">
+    <h3 class="name"><code>status</code></h3>
     <span class="type">Object</span>
 
-    
-        <span class="flag deprecated">deprecated</span>
     
 
     
@@ -656,7 +720,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l140"><code>src\core.js:140</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l235"><code>src\input\Input.js:235</code></a>
         
         </p>
 
@@ -666,9 +730,105 @@
     </div>
 
     <div class="description">
-        <p>Resource types</p>
+        <p>Tracks the status of each action</p>
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_threshold" class="property item">
+    <h3 class="name"><code>threshold</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                    <p>Provided by the <a href="../modules/gf.html">gf</a> module.</p>
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_GamepadSticks.js.html#l4"><code>src\input\GamepadSticks.js:4</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The threshold at which we consider a stick "moved"</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> 0.5</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_threshold" class="property item">
+    <h3 class="name"><code>threshold</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                    <p>Provided by the <a href="../modules/gf.html">gf</a> module.</p>
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_input_GamepadButtons.js.html#l4"><code>src\input\GamepadButtons.js:4</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The threshold at which we consider a button "pressed"</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> 0.4</p>
     
 
     
@@ -700,7 +860,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l259"><code>src\core.js:259</code></a>
+        <a href="..&#x2F;files&#x2F;src_input_Input.js.html#l109"><code>src\input\Input.js:109</code></a>
         
         </p>
 

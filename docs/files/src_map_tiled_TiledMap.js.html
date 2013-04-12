@@ -41,11 +41,15 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="..&#x2F;classes/AssetLoader.html">AssetLoader</a></li>
+            
                 <li><a href="..&#x2F;classes/AudoPlayer.html">AudoPlayer</a></li>
             
                 <li><a href="..&#x2F;classes/Camera.html">Camera</a></li>
             
                 <li><a href="..&#x2F;classes/Clock.html">Clock</a></li>
+            
+                <li><a href="..&#x2F;classes/debug.html">debug</a></li>
             
                 <li><a href="..&#x2F;classes/DisplayObject.html">DisplayObject</a></li>
             
@@ -64,6 +68,8 @@
                 <li><a href="..&#x2F;classes/Hud.html">Hud</a></li>
             
                 <li><a href="..&#x2F;classes/HudItem.html">HudItem</a></li>
+            
+                <li><a href="..&#x2F;classes/Input.html">Input</a></li>
             
                 <li><a href="..&#x2F;classes/Layer.html">Layer</a></li>
             
@@ -87,8 +93,6 @@
             
                 <li><a href="..&#x2F;classes/TiledTileset.html">TiledTileset</a></li>
             
-                <li><a href="..&#x2F;classes/types.html">types</a></li>
-            
                 <li><a href="..&#x2F;classes/utils.html">utils</a></li>
             
                 <li><a href="..&#x2F;classes/Vector.html">Vector</a></li>
@@ -98,6 +102,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="..&#x2F;modules/gf.html">gf</a></li>
+            
+                <li><a href="..&#x2F;modules/input.html">input</a></li>
             
             </ul>
         </div>
@@ -160,9 +166,22 @@ gf.TiledMap = function(game, map) {
      *
      * @property tileSize
      * @type Vector
-     * @default new gf.Vector(0, 0)
      *&#x2F;
-    this.tileSize = new gf.Vector(map.tilewidth, map.tileheight);
+    this.tileSize = new gf.Vector(
+        map.tilewidth,
+        map.tileheight
+    );
+
+    &#x2F;**
+     * The scaled tile size
+     *
+     * @property scaledTileSize
+     * @type Vector
+     *&#x2F;
+    this.scaledTileSize = new gf.Vector(
+        map.tilewidth * this.scale.x,
+        map.tileheight * this.scale.y
+    );
 
     &#x2F;**
      * The user-defined properties
@@ -174,25 +193,14 @@ gf.TiledMap = function(game, map) {
     this.properties = map.properties || {};
 
     &#x2F;**
-     * The real size (size * tileSize)
+     * The real size (size * scaledTileSize)
      *
      * @property realSize
      * @type Vector
      *&#x2F;
     this.realSize = new gf.Vector(
-        this.size.x * this.tileSize.x,
-        this.size.y * this.tileSize.y
-    );
-
-    &#x2F;**
-     * The scaled size (size * tileSize * scale)
-     *
-     * @property scaledSize
-     * @type Vector
-     *&#x2F;
-    this.scaledSize = new gf.Vector(
-        this.size.x * this.tileSize.x * this.scale,
-        this.size.y * this.tileSize.y * this.scale
+        this.size.x * this.scaledTileSize.x,
+        this.size.y * this.scaledTileSize.y
     );
 
     &#x2F;**
@@ -202,25 +210,6 @@ gf.TiledMap = function(game, map) {
      * @type String
      *&#x2F;
     this.orientation = map.orientation;
-
-    &#x2F;**
-     * The maximum extent of the map (largest x and y the map has)
-     * assuming 0,0 is in the middle of the map, calculate the minimum
-     * and maximum extent of the map
-     *
-     * @property extent
-     * @type Object
-     *&#x2F;
-    this.extent = {
-        x: {
-            min: ~~(this.scaledSize.x &#x2F; 2) - this.scaledSize.x,
-            max: this.scaledSize.x - ~~(this.scaledSize.x &#x2F; 2)
-        },
-        y: {
-            min: ~~(this.scaledSize.y &#x2F; 2) - this.scaledSize.y,
-            max: this.scaledSize.y - ~~(this.scaledSize.y &#x2F; 2)
-        }
-    };
 
     &#x2F;**
      * The tilesets used by this map
@@ -259,14 +248,14 @@ gf.TiledMap = function(game, map) {
     this.version = map.version;
 
     &#x2F;&#x2F;create the layers
-    var numX = Math.ceil(this.game.renderer.view.width &#x2F; this.tileSize.x),
-        numY = Math.ceil(this.game.renderer.view.height &#x2F; this.tileSize.y);
+    var numX = Math.ceil(this.game.renderer.view.width &#x2F; this.scaledTileSize.x),
+        numY = Math.ceil(this.game.renderer.view.height &#x2F; this.scaledTileSize.y);
 
     for(var i = 0, il = map.layers.length; i &lt; il; ++i) {
         var lyr;
 
         switch(map.layers[i].type) {
-            case gf.types.LAYER.TILE_LAYER:
+            case &#x27;tilelayer&#x27;:
                 lyr = new gf.TiledLayer(map.layers[i]);
                 this.addChild(lyr);
 
@@ -286,7 +275,7 @@ gf.TiledMap = function(game, map) {
                 }
                 break;
 
-            case gf.types.LAYER.OBJECT_GROUP:
+            case &#x27;objectgroup&#x27;:
                 lyr = new gf.TiledObjectGroup(map.layers[i]);
                 this.addChild(lyr);
 
@@ -336,7 +325,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
         &#x2F;&#x2F;check X movement
         if(x &lt;= this.extent.x.min || x &gt;= this.extent.x.max) {
-            res.push({ axis: &#x27;x&#x27;, tile: { type: gf.types.COLLISION.SOLID } });
+            res.push({ axis: &#x27;x&#x27;, tile: { type: gf.Layer.COLLISION.SOLID } });
         } else if(pv.x) {
             &#x2F;&#x2F;x, bottom corner
             tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.floor(bottom)));
@@ -353,7 +342,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
         &#x2F;&#x2F;check Y movement
         if(y &lt;= this.extent.y.min || y &gt;= this.extent.y.max) {
-            res.push({ axis: &#x27;y&#x27;, tile: { type: gf.types.COLLISION.SOLID } });
+            res.push({ axis: &#x27;y&#x27;, tile: { type: gf.Layer.COLLISION.SOLID } });
         } else if(pv.y) {
             &#x2F;&#x2F;y, left corner
             tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x &lt; 0) ? Math.floor(left) : Math.ceil(right), y));
@@ -377,16 +366,16 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @private
      *&#x2F;
     resize: function() {
-        var numX = Math.ceil(this.game.renderer.view.width &#x2F; this.tileSize.x),
-            numY = Math.ceil(this.game.renderer.view.height &#x2F; this.tileSize.y);
+        var numX = Math.ceil(this.game.renderer.view.width &#x2F; this.scaledTileSize.x),
+            numY = Math.ceil(this.game.renderer.view.height &#x2F; this.scaledTileSize.y);
 
         for(var i = 0, il = this.children.length; i &lt; il; ++i) {
             var o = this.children[i];
 
             if(o instanceof gf.TiledLayer &amp;&amp; o.visible) {
                 o.renderTiles(
-                    Math.floor(this.position.x &#x2F; this.tileSize.x),
-                    Math.floor(this.position.y &#x2F; this.tileSize.y),
+                    Math.floor(this.position.x &#x2F; this.scaledTileSize.x),
+                    Math.floor(this.position.y &#x2F; this.scaledTileSize.y),
                     numX,
                     numY
                 );
@@ -395,12 +384,12 @@ gf.inherits(gf.TiledMap, gf.Map, {
     },
     &#x2F;&#x2F;WIP
     _checkHalfBlock: function(half, x, y) {
-        var tx = Math.floor(x &#x2F; this.tileSize.x) * this.tileSize.x,
-            ty = Math.floor(y &#x2F; this.tileSize.y) * this.tileSize.y,
-            midX = tx + ((this.tileSize.x) &#x2F; 2),
-            endX = tx + (this.tileSize.x),
-            midY = ty - ((this.tileSize.y) &#x2F; 2),
-            endY = ty - (this.tileSize.y);
+        var tx = Math.floor(x &#x2F; this.scaledTileSize.x) * this.scaledTileSize.x,
+            ty = Math.floor(y &#x2F; this.scaledTileSize.y) * this.scaledTileSize.y,
+            midX = tx + ((this.scaledTileSize.x) &#x2F; 2),
+            endX = tx + (this.scaledTileSize.x),
+            midY = ty - ((this.scaledTileSize.y) &#x2F; 2),
+            endY = ty - (this.scaledTileSize.y);
 
         switch(half) {
             case gf.types.HALF.LEFT:

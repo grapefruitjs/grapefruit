@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>support - gf</title>
+    <title>debug - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -140,7 +140,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>support Class</h1>
+                        <h1>debug Class</h1>
 <div class="box meta">
     
 
@@ -148,7 +148,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l81"><code>src\core.js:81</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_debug_debug.js.html#l1"><code>src\debug\debug.js:1</code></a>
         </div>
     
 
@@ -164,7 +164,7 @@
 
 
 <div class="box intro">
-    <p>Feature detection so we cans witch between renderers, play audio correctly, and other things.</p>
+    <p>A simple object to show some debug items</p>
 </div>
 
 
@@ -173,6 +173,8 @@
     <ul class="api-class-tabs">
         <li class="api-class-tab index"><a href="#index">Index</a></li>
 
+        
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
         
             <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
@@ -186,6 +188,35 @@
             <h2 class="off-left">Item Index</h2>
 
             
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods">
+                        
+                            <li class="index-item method">
+                                <a href="#method_showDebugInfo">showDebugInfo</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_showFpsCounter">showFpsCounter</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_update">update</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
 
             
                 <div class="index-section properties">
@@ -194,70 +225,7 @@
                     <ul class="index-list properties">
                         
                             <li class="index-item property">
-                                <a href="#property_audio">audio</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_canvas">canvas</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_fileapi">fileapi</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_gamepad">gamepad</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_localStorage">localStorage</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_touch">touch</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_typedArrays">typedArrays</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_ua">ua</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_webgl">webgl</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_workers">workers</a>
+                                <a href="#property_fpsStyle">fpsStyle</a>
 
                                 
                                 
@@ -273,15 +241,239 @@
         </div>
 
         
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_showDebugInfo" class="method item">
+    <h3 class="name"><code>showDebugInfo</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>game</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>pad</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_debug_debug.js.html#l31"><code>src\debug\debug.js:31</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Shows some debug info such as player position and the gamepad state</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">game</code>
+                        <span class="type">Game</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The game instance to show info for</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">pad</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Whether or not to show gamepad info (defaults to true)</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_showFpsCounter" class="method item">
+    <h3 class="name"><code>showFpsCounter</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_debug_debug.js.html#l19"><code>src\debug\debug.js:19</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Shows the FPS Counter</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_update" class="method item private">
+    <h3 class="name"><code>update</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_debug_debug.js.html#l42"><code>src\debug\debug.js:42</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Called internally by the Game instance</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
+        
 
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_audio" class="property item">
-    <h3 class="name"><code>audio</code></h3>
-    <span class="type">Object</span>
+                    <div id="property_fpsStyle" class="property item">
+    <h3 class="name"><code>fpsStyle</code></h3>
+    <span class="type">Unknown</span>
 
     
 
@@ -302,7 +494,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l136"><code>src\core.js:136</code></a>
+        <a href="..&#x2F;files&#x2F;src_debug_debug.js.html#l8"><code>src\debug\debug.js:8</code></a>
         
         </p>
 
@@ -312,403 +504,7 @@
     </div>
 
     <div class="description">
-        <p>Whether or not the audio elements are supported, and if so which types</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_canvas" class="property item">
-    <h3 class="name"><code>canvas</code></h3>
-    <span class="type">Bool</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l96"><code>src\core.js:96</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Whether or not canvas is supported</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_fileapi" class="property item">
-    <h3 class="name"><code>fileapi</code></h3>
-    <span class="type">Bool</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l128"><code>src\core.js:128</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Whether or not the filesystem API is supported</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_gamepad" class="property item">
-    <h3 class="name"><code>gamepad</code></h3>
-    <span class="type">Bool</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l166"><code>src\core.js:166</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Whether or not the gamepad API is supported</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_localStorage" class="property item">
-    <h3 class="name"><code>localStorage</code></h3>
-    <span class="type">Bool</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l150"><code>src\core.js:150</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Whether or not local storage is supported</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_touch" class="property item">
-    <h3 class="name"><code>touch</code></h3>
-    <span class="type">Bool</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l158"><code>src\core.js:158</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Whether or not touch is supported</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_typedArrays" class="property item">
-    <h3 class="name"><code>typedArrays</code></h3>
-    <span class="type">Bool</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l120"><code>src\core.js:120</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Whether or not typed arrays are supported</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_ua" class="property item">
-    <h3 class="name"><code>ua</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l88"><code>src\core.js:88</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The current user agent string</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_webgl" class="property item">
-    <h3 class="name"><code>webgl</code></h3>
-    <span class="type">Bool</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l104"><code>src\core.js:104</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Whether or not webgl is supported</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_workers" class="property item">
-    <h3 class="name"><code>workers</code></h3>
-    <span class="type">Bool</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_core.js.html#l112"><code>src\core.js:112</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Whether or not web workers are supported</p>
+        <p>The styles applied to the fps box after it is created</p>
     </div>
 
     

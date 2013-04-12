@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>AudoPlayer - gf</title>
+    <title>AssetLoader - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -140,7 +140,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>AudoPlayer Class</h1>
+                        <h1>AssetLoader Class</h1>
 <div class="box meta">
     
 
@@ -148,7 +148,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l1"><code>src\AudioPlayer.js:1</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l1"><code>src\AssetLoader.js:1</code></a>
         </div>
     
 
@@ -164,7 +164,9 @@
 
 
 <div class="box intro">
-    <p>Grapefruit Audio API, provides an easy interface to use HTML5 Audio</p>
+    <p>The AssetLoader loads and parses different game assets, such as sounds, textures,
+TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
+and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).</p>
 </div>
 
 
@@ -193,43 +195,43 @@
 
                     <ul class="index-list methods">
                         
-                            <li class="index-item method">
-                                <a href="#method_pauseAll">pauseAll</a>
+                            <li class="index-item method private">
+                                <a href="#method__storeAsset">_storeAsset</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_play">play</a>
+                                <a href="#method_load">load</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_playAll">playAll</a>
+                                <a href="#method_loadAudio">loadAudio</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_stop">stop</a>
+                                <a href="#method_loadData">loadData</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_stop">stop</a>
+                                <a href="#method_loadTexture">loadTexture</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_stopAll">stopAll</a>
+                            <li class="index-item method private">
+                                <a href="#method_onAssetLoaded">onAssetLoaded</a>
 
                                 
                                 
@@ -246,21 +248,28 @@
                     <ul class="index-list properties">
                         
                             <li class="index-item property">
-                                <a href="#property_game">game</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property private">
-                                <a href="#property_playing">playing</a>
+                                <a href="#property_assets">assets</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_resetTime">resetTime</a>
+                                <a href="#property_assetURLs">assetURLs</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_exts">exts</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_loadCount">loadCount</a>
 
                                 
                                 
@@ -280,11 +289,131 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_pauseAll" class="method item">
-    <h3 class="name"><code>pauseAll</code></h3>
+                    <div id="method__storeAsset" class="method item private">
+    <h3 class="name"><code>_storeAsset</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>asset</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l256"><code>src\AssetLoader.js:256</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stores a reference to an asset into the global and local caches</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the resource (to use as the key in the cache)</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">asset</code>
+                        <span class="type"><a href="..\classes\Texture.html" class="crosslink">Texture</a> | Audio | Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The actual asset that was loaded</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_load" class="method item">
+    <h3 class="name"><code>load</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>items</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -312,7 +441,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l186"><code>src\AudioPlayer.js:186</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l63"><code>src\AssetLoader.js:63</code></a>
         
         </p>
 
@@ -323,9 +452,34 @@
     </div>
 
     <div class="description">
-        <p>Pauses all currently playing audio clips</p>
+        <p>Starts the loading festivities. If called without any arguments it will load
+the resources passed in at the ctor. If an array of resources is passed it will
+load those instead.</p>
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">items</code>
+                        <span class="type">Array</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Array of resources to load instead of the object's resources</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -334,8 +488,8 @@
 </div>
 
                 
-                    <div id="method_play" class="method item">
-    <h3 class="name"><code>play</code></h3>
+                    <div id="method_loadAudio" class="method item">
+    <h3 class="name"><code>loadAudio</code></h3>
 
     
         <div class="args">
@@ -343,19 +497,13 @@
             
                 <li class="arg">
                     
-                        <code>id</code>
+                        <code>name</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>options</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>callback</code>
+                        <code>url</code>
                     
                 </li>
             
@@ -365,7 +513,7 @@
 
     
         <span class="returns-inline">
-            <span class="type">Object</span>
+            <span class="type">Audio</span>
         </span>
     
 
@@ -392,7 +540,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l60"><code>src\AudioPlayer.js:60</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l119"><code>src\AssetLoader.js:119</code></a>
         
         </p>
 
@@ -403,7 +551,7 @@
     </div>
 
     <div class="description">
-        <p>Plays a loaded audio clip</p>
+        <p>Loads an audio clip and caches the result</p>
     </div>
 
     
@@ -414,14 +562,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">id</code>
-                        <span class="type">String | Object</span>
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The id of the sound clip to play. You can also pass the object returned from a previous play</p>
+                        <p>The name of the resource (to use as the key in the cache)</p>
                     </div>
 
                     
@@ -429,29 +577,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">options</code>
-                        <span class="type">Object</span>
+                        <code class="param-name">url</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The options object you can pass properties like "loop," "volume," "channel"</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">callback</code>
-                        <span class="type">Function</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The callback to call after the sound finishes playing</p>
+                        <p>The URL to load the resource from (cross-domain not supported yet)</p>
                     </div>
 
                     
@@ -468,10 +601,9 @@
             <div class="returns-description">
                 
                     
-                        <span class="type">Object</span>:
+                        <span class="type">Audio</span>:
                     
-                    The object returned can be passed to any audio function in the
-     first parameter to control that audio clip
+                    Returns the audio object, so it can be used even before it is fully loaded
                 
             </div>
         </div>
@@ -481,62 +613,8 @@
 </div>
 
                 
-                    <div id="method_playAll" class="method item">
-    <h3 class="name"><code>playAll</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l160"><code>src\AudioPlayer.js:160</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Plays all currently paused or stopped audio clips (only ones that have previously been started with gf.play)</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_stop" class="method item">
-    <h3 class="name"><code>stop</code></h3>
+                    <div id="method_loadData" class="method item">
+    <h3 class="name"><code>loadData</code></h3>
 
     
         <div class="args">
@@ -544,13 +622,13 @@
             
                 <li class="arg">
                     
-                        <code>id</code>
+                        <code>name</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>channel</code>
+                        <code>url</code>
                     
                 </li>
             
@@ -583,7 +661,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l122"><code>src\AudioPlayer.js:122</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l149"><code>src\AssetLoader.js:149</code></a>
         
         </p>
 
@@ -594,7 +672,7 @@
     </div>
 
     <div class="description">
-        <p>Stops a playing audio clip</p>
+        <p>Loads a data (json) object. This is usually either SpriteSheet or TMX Map</p>
     </div>
 
     
@@ -605,14 +683,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">id</code>
-                        <span class="type">String | Object</span>
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The id of the sound clip to stop. You can also pass the object returned from a previous play</p>
+                        <p>The name of the resource (to use as the key in the cache)</p>
                     </div>
 
                     
@@ -620,14 +698,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">channel</code>
-                        <span class="type">Number</span>
+                        <code class="param-name">url</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)</p>
+                        <p>The URL to load the resource from (cross-domain not supported yet)</p>
                     </div>
 
                     
@@ -643,8 +721,8 @@
 </div>
 
                 
-                    <div id="method_stop" class="method item">
-    <h3 class="name"><code>stop</code></h3>
+                    <div id="method_loadTexture" class="method item">
+    <h3 class="name"><code>loadTexture</code></h3>
 
     
         <div class="args">
@@ -652,13 +730,144 @@
             
                 <li class="arg">
                     
-                        <code>id</code>
+                        <code>name</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>channel</code>
+                        <code>url</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Texture.html" class="crosslink">Texture</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l93"><code>src\AssetLoader.js:93</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Loads a texture image and caches the result</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the resource (to use as the key in the cache)</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">url</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The URL to load the resource from (cross-domain not supported yet)</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Texture.html" class="crosslink">Texture</a></span>:
+                    
+                    Returns the texture object, so it can be used even before it is fully loaded
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_onAssetLoaded" class="method item private">
+    <h3 class="name"><code>onAssetLoaded</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>err</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>asset</code>
                     
                 </li>
             
@@ -671,6 +880,8 @@
     
 
     
+        <span class="flag private">private</span>
+    
 
     
 
@@ -691,7 +902,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l142"><code>src\AudioPlayer.js:142</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l232"><code>src\AssetLoader.js:232</code></a>
         
         </p>
 
@@ -702,7 +913,7 @@
     </div>
 
     <div class="description">
-        <p>Pauses a playing audio clip</p>
+        <p>Called whenever an asset is loaded, to keep track of when to emit complete and progress.</p>
     </div>
 
     
@@ -713,14 +924,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">id</code>
-                        <span class="type">String | Object</span>
+                        <code class="param-name">err</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The id of the sound clip to pause. You can also pass the object returned from a previous play</p>
+                        <p>An option error if there was an issue loading that resource</p>
                     </div>
 
                     
@@ -728,14 +939,29 @@
             
                 <li class="param">
                     
-                        <code class="param-name">channel</code>
-                        <span class="type">Number</span>
+                        <code class="param-name">type</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)</p>
+                        <p>The type of asset loaded (texture, audio, world, or spritesheet)</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">asset</code>
+                        <span class="type"><a href="..\classes\Texture.html" class="crosslink">Texture</a> | Audio | Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The actual asset that was loaded</p>
                     </div>
 
                     
@@ -743,60 +969,6 @@
             
             </ul>
         </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_stopAll" class="method item">
-    <h3 class="name"><code>stopAll</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l173"><code>src\AudioPlayer.js:173</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stops all currently paused or playing audio clips</p>
-    </div>
-
     
 
     
@@ -813,9 +985,9 @@
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_game" class="property item">
-    <h3 class="name"><code>game</code></h3>
-    <span class="type">Game</span>
+                    <div id="property_assets" class="property item">
+    <h3 class="name"><code>assets</code></h3>
+    <span class="type">Object</span>
 
     
 
@@ -836,7 +1008,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l10"><code>src\AudioPlayer.js:10</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l38"><code>src\AssetLoader.js:38</code></a>
         
         </p>
 
@@ -846,7 +1018,8 @@
     </div>
 
     <div class="description">
-        <p>The game instance this belongs to</p>
+        <p>A reference to the assets loaded by this loader. They are also put
+in the global gf.assetCache</p>
     </div>
 
     
@@ -857,8 +1030,52 @@
 </div>
 
                 
-                    <div id="property_playing" class="property item private">
-    <h3 class="name"><code>playing</code></h3>
+                    <div id="property_assetURLs" class="property item">
+    <h3 class="name"><code>assetURLs</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l21"><code>src\AssetLoader.js:21</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The array of asset URLs that are going to be loaded</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_exts" class="property item private">
+    <h3 class="name"><code>exts</code></h3>
     <span class="type">Object</span>
 
     
@@ -882,7 +1099,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l18"><code>src\AudioPlayer.js:18</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l47"><code>src\AssetLoader.js:47</code></a>
         
         </p>
 
@@ -892,7 +1109,7 @@
     </div>
 
     <div class="description">
-        <p>The pool of audio objects to play sounds with</p>
+        <p>A mapping of extensions to types. We assume all images are textures :)</p>
     </div>
 
     
@@ -903,8 +1120,8 @@
 </div>
 
                 
-                    <div id="property_resetTime" class="property item">
-    <h3 class="name"><code>resetTime</code></h3>
+                    <div id="property_loadCount" class="property item">
+    <h3 class="name"><code>loadCount</code></h3>
     <span class="type">Number</span>
 
     
@@ -926,7 +1143,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AudioPlayer.js.html#l28"><code>src\AudioPlayer.js:28</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l29"><code>src\AssetLoader.js:29</code></a>
         
         </p>
 
@@ -936,11 +1153,9 @@
     </div>
 
     <div class="description">
-        <p>When stopping or starting a sound, this is the time index to reset to</p>
+        <p>The count of remaining assets to load</p>
     </div>
 
-    
-        <p><strong>Default:</strong> 0</p>
     
 
     
