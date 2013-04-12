@@ -1,11 +1,11 @@
 gf.TextureFont = function(font, settings) {
     this.ext = '';
 
+    this.size = new gf.Vector();
+
     this.map = {};
 
     gf.Font.call(this, font, settings);
-
-    this.size = gf.utils.ensureVector(settings.size);
 
     if(typeof font === 'string') {
         if(gf.assetCache[font])
@@ -14,16 +14,13 @@ gf.TextureFont = function(font, settings) {
             throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
     }
 
-    this.dirty = true;
     this.textures = font;
 
     if(this.ext && this.ext.charAt(0) !== '.')
         this.ext = '.' + this.ext;
 
     this.sprites = [];
-
-    delete this.bold;
-    delete this.italic;
+    this.dirty = false;
 };
 
 gf.inherits(gf.TextureFont, gf.Font, {
@@ -49,6 +46,10 @@ gf.inherits(gf.TextureFont, gf.Font, {
     _freeSprite: function(spr) {
         this.sprites.push(spr);
         this.removeChild(spr);
+    },
+    setText: function(txt) {
+        this.text = txt;
+        this.dirty = true;
     },
     update: function() {
         if(!this.dirty) return;
