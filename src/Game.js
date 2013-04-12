@@ -155,7 +155,7 @@ gf.Game = function(contId, settings) {
      */
     this.camera = new gf.Camera(this);
 
-    this.stage.addChild(this.camera);
+    this.addObject(this.camera);
 
     this.camera.resize(w, h);
 
@@ -196,10 +196,13 @@ gf.inherits(gf.Game, Object, {
      */
     addObject: function(obj) {
         if(obj) {
-            if(obj instanceof gf.Gui || obj instanceof gf.Hud)
+            //we add the camera in the ctor and the map later when
+            //.loadWorld is called. This way the camera is always the
+            //last child of stage, so it is rendered on top!
+            if(obj instanceof gf.Camera || obj instanceof gf.Map)
+                this.stage.addChildAt(obj, 0);
+            else if(obj instanceof gf.Gui)
                 this.camera.addChild(obj);
-            else if(obj instanceof gf.Camera || obj instanceof gf.Map)
-                this.stage.addChild(obj);
             else
                 this.world.addChild(obj);
         }
