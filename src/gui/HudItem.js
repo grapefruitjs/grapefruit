@@ -37,8 +37,15 @@ gf.HudItem = function(pos, settings) {
      */
     this.dragging = false;
 
-    gf.GuiItem.call(this, pos, settings);
+    /**
+     * The font to use for text
+     *
+     * @property font
+     * @type Font
+     */
+    this.font = null;
 
+    gf.GuiItem.call(this, pos, settings);
 
     /**
      * The initial value of the item to reset to
@@ -47,6 +54,13 @@ gf.HudItem = function(pos, settings) {
      * @type Mixed
      */
     this.initialValue = this.value;
+
+    if(this.font instanceof gf.Font)
+        this.addChild(this.font);
+    else {
+        this.font = new gf.Font();
+        this.addChild(this.font);
+    }
 };
 
 gf.inherits(gf.HudItem, gf.GuiItem, {
@@ -66,8 +80,8 @@ gf.inherits(gf.HudItem, gf.GuiItem, {
      * @return {HudItem} Returns itself for chainability
      */
     set: function(val) {
+        this.font.setText(val);
         this.value = val;
-        this.dirty = true;
         return this;
     },
 
