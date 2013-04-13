@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-04-12
+ * Compiled: 2013-04-13
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -4447,7 +4447,7 @@ gf.Game = function(contId, settings) {
      */
     this.camera = new gf.Camera(this);
 
-    this.stage.addChild(this.camera);
+    this.addObject(this.camera);
 
     this.camera.resize(w, h);
 
@@ -4488,10 +4488,13 @@ gf.inherits(gf.Game, Object, {
      */
     addObject: function(obj) {
         if(obj) {
-            if(obj instanceof gf.Gui || obj instanceof gf.Hud)
+            //we add the camera in the ctor and the map later when
+            //.loadWorld is called. This way the camera is always the
+            //last child of stage, so it is rendered on top!
+            if(obj instanceof gf.Camera || obj instanceof gf.Map)
+                this.stage.addChildAt(obj, 0);
+            else if(obj instanceof gf.Gui)
                 this.camera.addChild(obj);
-            else if(obj instanceof gf.Camera || obj instanceof gf.Map)
-                this.stage.addChild(obj);
             else
                 this.world.addChild(obj);
         }
@@ -4814,7 +4817,7 @@ gf.inherits(gf.AssetLoader, Object, {
                     var textureUrl = baseUrl + data.meta.image,
                         texture =  gf.Texture.fromImage(textureUrl).baseTexture,
                         frames = data.frames,
-                        assets = [];
+                        assets = {};
 
                     for(var f in frames) {
                         var rect = frames[f].frame;
@@ -4826,7 +4829,7 @@ gf.inherits(gf.AssetLoader, Object, {
                             PIXI.TextureCache[f].trim.x = 0;
                         }
 
-                        assets.push(PIXI.TextureCache[f]);
+                        assets[f] = PIXI.TextureCache[f];
                     }
 
                     self._storeAsset(name, assets);
@@ -5654,6 +5657,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @return {Camera} Returns iteself for chainability
      */
     update: function() {
+        gf.DisplayObject.prototype.update.call(this);
+
         //follow entity
         if(this._target) {
             if(!this._deadzone) {
@@ -5825,6 +5830,9 @@ gf.Sprite = function(pos, settings) {
     //mixin user's settings
     gf.utils.setValues(this, settings);
 
+    this.position.x = pos.x || pos[0] || parseInt(pos, 10) || 0;
+    this.position.y = pos.y || pos[1] || parseInt(pos, 10) || 0;
+
     //add the animations passed to ctor
     if(settings.animations) {
         for(var name in settings.animations) {
@@ -5983,6 +5991,11 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
      *          .setActiveAnimation('me');
      */
     setActiveAnimation: function(name, loop, cb) {
+        if(typeof loop === 'function') {
+            cb = loop;
+            loop = false;
+        }
+
         if(this.anim[name] !== undefined) {
             if(this.currentAnim) {
                 this.currentAnim.stop();
@@ -6774,6 +6787,9 @@ gf.entityPool = {
                 case 2: return new gf.Vector(parseInt(a[0], 10) || 0, parseInt(a[1], 10) || 0);
             }
         }
+        else if(typeof a === 'number') {
+            return new gf.Vector(a, a);
+        }
         else {
             return new gf.Vector();
         }
@@ -7115,19 +7131,45 @@ gf.inherits(gf.Clock, Object, {
     }
 });
 
-gf.ObjectPool = function(type) {
+gf.ObjectPool = function(type, parent) {
     this.type = type;
     this.pool = [];
+    this.alloced = [];
+    this.parent = parent;
 };
 
 gf.inherits(gf.ObjectPool, Object, {
     create: function() {
         var o = this.pool.pop();
 
-        return o || new this.type.call(o, arguments);
+        if(!o) {
+            o = this._construct(this.type, arguments);
+            if(this.parent)
+                this.parent.addChild(o);
+        }
+
+        this.alloced.push(o);
+
+        return o;
     },
     free: function(o) {
         this.pool.push(o);
+    },
+    freeAll: function() {
+        for(var i = 0, il = this.alloced.length; i < il; ++i) {
+            this.free(this.alloced[i]);
+        }
+
+        this.alloced.length = 0;
+    },
+    //have to do this hack around to be able to use
+    //apply and new together
+    _construct: function(ctor, args) {
+        function F() {
+            return ctor.apply(this, args);
+        }
+        F.prototype = ctor.prototype;
+        return new F();
     }
 });
 /**
@@ -8255,6 +8297,104 @@ gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
         }
     }
 });
+gf.Font = function(font, settings) {
+    this.align = 'left';
+    this.baseline = 'top';
+    this.lineWidth = 1;
+    this.lineHeight = 1;
+
+    this.text = '';
+
+    gf.DisplayObject.call(this);
+
+    gf.utils.setValues(this, settings);
+};
+
+gf.inherits(gf.Font, gf.DisplayObject, {
+    setText: function(txt) {
+        this.text = txt;
+    }
+});
+gf.TextureFont = function(font, settings) {
+    this.ext = '';
+
+    this.map = {};
+
+    gf.Font.call(this, font, settings);
+
+    if(typeof font === 'string') {
+        if(gf.assetCache[font])
+            font = gf.assetCache[font];
+        else
+            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
+    }
+
+    this.textures = font;
+
+    if(this.ext && this.ext.charAt(0) !== '.')
+        this.ext = '.' + this.ext;
+
+    this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
+    this.dirty = false;
+};
+
+gf.inherits(gf.TextureFont, gf.Font, {
+    _getSprite: function(ch) {
+        if(this.map[ch])
+            ch = this.map[ch];
+
+        if(!this.textures[ch + this.ext])
+            throw 'there is no texture for character "' + ch + '" with extension "' + this.ext + '"';
+
+        var texture = this.textures[ch + this.ext],
+            spr = this.sprites.create(texture);
+
+        spr.setTexture(texture);
+        spr.visible = true;
+
+        return spr;
+    },
+    setText: function(txt) {
+        this.text = txt;
+        this.dirty = true;
+    },
+    update: function() {
+        if(!this.dirty) return;
+
+        //free all sprites
+        this.sprites.freeAll();
+        for(var c = 0, cl = this.children.length; c < cl; ++c)
+            this.children[c].visible = false;
+
+        //add text sprites
+        var strs = this.text.split('\n'),
+            h = 0,
+            x = 0,
+            y = 0;
+
+        for(var i = 0, il = strs.length; i < il; ++i) {
+            var str = strs[i];
+
+            //create the string sprites
+            for(var s = 0, sl = str.length; s < sl; ++s) {
+                var ch = str.charAt(s),
+                    spr = this._getSprite(ch);
+
+                spr.position.x = x;
+                spr.position.y = y;
+
+                x += spr.texture.frame.width * this.lineWidth;
+
+                if(spr.texture.frame.height > h)
+                    h = spr.texture.frame.height;
+            }
+
+            y += h * this.lineHeight;
+        }
+
+        this.dirty = false;
+    }
+});
 /**
  * The base Gui that holds GuiItems to be presented as a Gui
  *
@@ -8374,8 +8514,15 @@ gf.HudItem = function(pos, settings) {
      */
     this.dragging = false;
 
-    gf.GuiItem.call(this, pos, settings);
+    /**
+     * The font to use for text
+     *
+     * @property font
+     * @type Font
+     */
+    this.font = null;
 
+    gf.GuiItem.call(this, pos, settings);
 
     /**
      * The initial value of the item to reset to
@@ -8384,6 +8531,16 @@ gf.HudItem = function(pos, settings) {
      * @type Mixed
      */
     this.initialValue = this.value;
+
+    if(this.font instanceof gf.Font)
+        this.addChild(this.font);
+    else {
+        this.font = new gf.Font();
+        this.addChild(this.font);
+    }
+
+    this.dirty = true;
+    this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
 };
 
 gf.inherits(gf.HudItem, gf.GuiItem, {
@@ -8403,6 +8560,7 @@ gf.inherits(gf.HudItem, gf.GuiItem, {
      * @return {HudItem} Returns itself for chainability
      */
     set: function(val) {
+        this.font.setText(val);
         this.value = val;
         this.dirty = true;
         return this;
