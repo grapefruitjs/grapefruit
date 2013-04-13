@@ -612,6 +612,8 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @return {Camera} Returns iteself for chainability
      *&#x2F;
     update: function() {
+        gf.DisplayObject.prototype.update.call(this);
+
         &#x2F;&#x2F;follow entity
         if(this._target) {
             if(!this._deadzone) {

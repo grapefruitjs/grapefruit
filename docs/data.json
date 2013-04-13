@@ -882,7 +882,17 @@
         },
         {
             "file": "src\\gui\\HudItem.js",
-            "line": 43,
+            "line": 40,
+            "description": "The font to use for text",
+            "itemtype": "property",
+            "name": "font",
+            "type": "Font",
+            "class": "HudItem",
+            "module": "gf"
+        },
+        {
+            "file": "src\\gui\\HudItem.js",
+            "line": 50,
             "description": "The initial value of the item to reset to",
             "itemtype": "property",
             "name": "initialValue",
@@ -892,7 +902,7 @@
         },
         {
             "file": "src\\gui\\HudItem.js",
-            "line": 53,
+            "line": 70,
             "description": "Resets the value to the initialValue",
             "itemtype": "method",
             "name": "reset",
@@ -905,7 +915,7 @@
         },
         {
             "file": "src\\gui\\HudItem.js",
-            "line": 62,
+            "line": 79,
             "description": "Sets the value of the item, and marks it as dirty",
             "itemtype": "method",
             "name": "set",
@@ -2439,7 +2449,7 @@
         },
         {
             "file": "src\\utils\\utils.js",
-            "line": 36,
+            "line": 39,
             "description": "An empty function that performs no action",
             "itemtype": "method",
             "name": "noop",
@@ -2448,7 +2458,7 @@
         },
         {
             "file": "src\\utils\\utils.js",
-            "line": 42,
+            "line": 45,
             "description": "Performs an ajax request, and manages the callbacks passed in",
             "itemtype": "method",
             "name": "ajax",
@@ -2468,7 +2478,7 @@
         },
         {
             "file": "src\\utils\\utils.js",
-            "line": 90,
+            "line": 93,
             "description": "Wraps XMLHttpRequest in a cross-browser way.",
             "itemtype": "method",
             "name": "AjaxRequest",
@@ -2481,7 +2491,7 @@
         },
         {
             "file": "src\\utils\\utils.js",
-            "line": 120,
+            "line": 123,
             "description": "This will take values and override the passed obj's properties with those values.\nThe difference from a normal object extend is that this will try to massage the passed\nvalue into the same type as the object's property. Also if the key for the value is not\nin the original object, it is not copied.",
             "itemtype": "method",
             "name": "setValues",
@@ -2509,7 +2519,7 @@
         },
         {
             "file": "src\\utils\\utils.js",
-            "line": 200,
+            "line": 203,
             "description": "Clamps a number between two values.",
             "itemtype": "method",
             "name": "clamp",
@@ -3979,7 +3989,7 @@
         },
         {
             "file": "src\\Game.js",
-            "line": 209,
+            "line": 212,
             "description": "Removes a sprite from the stage",
             "itemtype": "method",
             "name": "removeObject",
@@ -3999,7 +4009,7 @@
         },
         {
             "file": "src\\Game.js",
-            "line": 226,
+            "line": 229,
             "description": "Loads the world map into the game",
             "itemtype": "method",
             "name": "loadWorld",
@@ -4019,7 +4029,7 @@
         },
         {
             "file": "src\\Game.js",
-            "line": 251,
+            "line": 254,
             "description": "Begins the render loop",
             "itemtype": "method",
             "name": "render",
@@ -4032,7 +4042,7 @@
         },
         {
             "file": "src\\Game.js",
-            "line": 263,
+            "line": 266,
             "description": "Check if passed entity collides with any others",
             "itemtype": "method",
             "name": "checkCollisions",
@@ -4052,7 +4062,7 @@
         },
         {
             "file": "src\\Game.js",
-            "line": 293,
+            "line": 296,
             "description": "The looping render tick",
             "itemtype": "method",
             "name": "_tick",
@@ -4121,7 +4131,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 99,
+            "line": 102,
             "description": "A callback that is used when the users clicks on the sprite with thier mouse",
             "itemtype": "method",
             "name": "click",
@@ -4137,7 +4147,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 105,
+            "line": 108,
             "description": "A callback that is used when the user clicks the mouse down over the sprite",
             "itemtype": "method",
             "name": "mousedown",
@@ -4153,7 +4163,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 111,
+            "line": 114,
             "description": "A callback that is used when the user releases the mouse that was over the sprite\nfor this callback to be fired the mouse must have been pressed down over the sprite",
             "itemtype": "method",
             "name": "mouseup",
@@ -4169,7 +4179,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 118,
+            "line": 121,
             "description": "A callback that is used when the users mouse rolls over the sprite",
             "itemtype": "method",
             "name": "mouseover",
@@ -4185,7 +4195,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 124,
+            "line": 127,
             "description": "A callback that is used when the users mouse leaves the sprite",
             "itemtype": "method",
             "name": "mouseout",
@@ -4201,7 +4211,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 134,
+            "line": 137,
             "description": "A callback that is used when the users taps on the sprite with thier finger\nbasically a touch version of click",
             "itemtype": "method",
             "name": "tap",
@@ -4217,7 +4227,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 141,
+            "line": 144,
             "description": "A callback that is used when the user touch's over the sprite",
             "itemtype": "method",
             "name": "touchstart",
@@ -4233,7 +4243,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 147,
+            "line": 150,
             "description": "A callback that is used when the user releases the touch that was over the sprite\nfor this callback to be fired. The touch must have started over the sprite",
             "itemtype": "method",
             "name": "touchend",
@@ -4249,7 +4259,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 156,
+            "line": 159,
             "description": "Defines a new animation on the Sprite",
             "itemtype": "method",
             "name": "addAnimation",
@@ -4277,7 +4287,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 214,
+            "line": 217,
             "description": "Sets the active animation of the sprite, and starts the animation at index 0",
             "itemtype": "method",
             "name": "setActiveAnimation",
@@ -4305,7 +4315,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 243,
+            "line": 251,
             "description": "Convenience method for setting the position of the Sprite.",
             "itemtype": "method",
             "name": "setPosition",
@@ -4333,7 +4343,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 272,
+            "line": 280,
             "description": "Checks if the name is the active animation",
             "itemtype": "method",
             "name": "isActiveAnimation",
@@ -4356,7 +4366,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 288,
+            "line": 296,
             "description": "Sets whether or not this sprite is interactive (can be clicked)",
             "itemtype": "method",
             "name": "setInteractive",
@@ -4372,7 +4382,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 312,
+            "line": 320,
             "description": "Stops the currently active animation",
             "itemtype": "method",
             "name": "stop",
@@ -4381,7 +4391,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 317,
+            "line": 325,
             "description": "Plays the currently active animation",
             "itemtype": "method",
             "name": "play",
@@ -4390,7 +4400,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 322,
+            "line": 330,
             "description": "Stops the currently active animation and goes to a specific frame",
             "itemtype": "method",
             "name": "gotoAndStop",
@@ -4406,7 +4416,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 328,
+            "line": 336,
             "description": "Goes to a specific frame and begins playing the currently active animation",
             "itemtype": "method",
             "name": "gotoAndPlay",

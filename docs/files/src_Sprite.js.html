@@ -211,6 +211,9 @@ gf.Sprite = function(pos, settings) {
     &#x2F;&#x2F;mixin user&#x27;s settings
     gf.utils.setValues(this, settings);
 
+    this.position.x = pos.x || pos[0] || parseInt(pos, 10) || 0;
+    this.position.y = pos.y || pos[1] || parseInt(pos, 10) || 0;
+
     &#x2F;&#x2F;add the animations passed to ctor
     if(settings.animations) {
         for(var name in settings.animations) {
@@ -369,6 +372,11 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
      *          .setActiveAnimation(&#x27;me&#x27;);
      *&#x2F;
     setActiveAnimation: function(name, loop, cb) {
+        if(typeof loop === &#x27;function&#x27;) {
+            cb = loop;
+            loop = false;
+        }
+
         if(this.anim[name] !== undefined) {
             if(this.currentAnim) {
                 this.currentAnim.stop();
