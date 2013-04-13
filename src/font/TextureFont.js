@@ -1,8 +1,6 @@
 gf.TextureFont = function(font, settings) {
     this.ext = '';
 
-    this.size = new gf.Vector();
-
     this.map = {};
 
     gf.Font.call(this, font, settings);
@@ -19,7 +17,7 @@ gf.TextureFont = function(font, settings) {
     if(this.ext && this.ext.charAt(0) !== '.')
         this.ext = '.' + this.ext;
 
-    this.sprites = [];
+    this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
     this.dirty = false;
 };
 
@@ -32,21 +30,12 @@ gf.inherits(gf.TextureFont, gf.Font, {
             throw 'there is no texture for character "' + ch + '" with extension "' + this.ext + '"';
 
         var texture = this.textures[ch + this.ext],
-            spr = this.sprites.pop();
+            spr = this.sprites.create(texture);
 
-        if(!spr) {
-            spr = new PIXI.Sprite(texture);
-            this.addChild(spr);
-        }
-        else
-            spr.setTexture(texture);
-
+        spr.setTexture(texture);
         spr.visible = true;
+
         return spr;
-    },
-    _freeSprite: function(spr) {
-        this.sprites.push(spr);
-        spr.visible = false;
     },
     setText: function(txt) {
         this.text = txt;
@@ -56,13 +45,13 @@ gf.inherits(gf.TextureFont, gf.Font, {
         if(!this.dirty) return;
 
         //free all sprites
-        for(var c = this.children.length - 1; c > -1; --c)
-            this._freeSprite(this.children[c]);
+        this.sprites.freeAll();
+        for(var c = 0, cl = this.children.length; c < cl; ++c)
+            this.children[c].visible = false;
 
         //add text sprites
         var strs = this.text.split('\n'),
-            w = this.size.x * this.lineWidth,
-            h = this.size.y * this.lineHeight,
+            h = 0,
             x = 0,
             y = 0;
 
@@ -77,10 +66,13 @@ gf.inherits(gf.TextureFont, gf.Font, {
                 spr.position.x = x;
                 spr.position.y = y;
 
-                x += w;
+                x += spr.texture.frame.width * this.lineWidth;
+
+                if(spr.texture.frame.height > h)
+                    h = spr.texture.frame.height;
             }
 
-            y += h;
+            y += h * this.lineHeight;
         }
 
         this.dirty = false;

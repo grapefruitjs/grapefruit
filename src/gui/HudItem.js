@@ -61,6 +61,9 @@ gf.HudItem = function(pos, settings) {
         this.font = new gf.Font();
         this.addChild(this.font);
     }
+
+    this.dirty = true;
+    this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
 };
 
 gf.inherits(gf.HudItem, gf.GuiItem, {
@@ -82,6 +85,7 @@ gf.inherits(gf.HudItem, gf.GuiItem, {
     set: function(val) {
         this.font.setText(val);
         this.value = val;
+        this.dirty = true;
         return this;
     },
 
