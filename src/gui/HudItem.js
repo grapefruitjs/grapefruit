@@ -62,7 +62,6 @@ gf.HudItem = function(pos, settings) {
         this.addChild(this.font);
     }
 
-    this.dirty = true;
     this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
 };
 
@@ -77,7 +76,7 @@ gf.inherits(gf.HudItem, gf.GuiItem, {
         return this.set(this.initialValue);
     },
     /**
-     * Sets the value of the item, and marks it as dirty
+     * Sets the value of the item
      *
      * @method set
      * @return {HudItem} Returns itself for chainability
@@ -85,7 +84,6 @@ gf.inherits(gf.HudItem, gf.GuiItem, {
     set: function(val) {
         this.font.setText(val);
         this.value = val;
-        this.dirty = true;
         return this;
     },
 

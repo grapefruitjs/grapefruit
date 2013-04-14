@@ -18,7 +18,6 @@ gf.TextureFont = function(font, settings) {
         this.ext = '.' + this.ext;
 
     this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
-    this.dirty = false;
 };
 
 gf.inherits(gf.TextureFont, gf.Font, {
@@ -37,12 +36,19 @@ gf.inherits(gf.TextureFont, gf.Font, {
 
         return spr;
     },
+    clone: function() {
+        return new gf.TextureFont(this.textures, {
+            ext: this.ext,
+            map: this.map,
+            text: this.text,
+            align: this.align,
+            baseline: this.baseline,
+            lineWidth: this.lineWidth,
+            lineHeight: this.lineHeight
+        });
+    },
     setText: function(txt) {
         this.text = txt;
-        this.dirty = true;
-    },
-    update: function() {
-        if(!this.dirty) return;
 
         //free all sprites
         this.sprites.freeAll();
@@ -50,7 +56,7 @@ gf.inherits(gf.TextureFont, gf.Font, {
             this.children[c].visible = false;
 
         //add text sprites
-        var strs = this.text.split('\n'),
+        var strs = this.text.toString().split('\n'),
             h = 0,
             x = 0,
             y = 0;
@@ -74,7 +80,5 @@ gf.inherits(gf.TextureFont, gf.Font, {
 
             y += h * this.lineHeight;
         }
-
-        this.dirty = false;
     }
 });
