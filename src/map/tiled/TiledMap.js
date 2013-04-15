@@ -73,8 +73,19 @@ gf.TiledMap = function(game, map) {
      */
     this.tilesets = [];
 
+    /**
+     * The tileset for the collision layer
+     *
+     * @property collisionTileset
+     * @type TiledTileset
+     */
+    this.collisionTileset = null;
+
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
-        this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
+        var len = this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
+
+        if(this.tilesets[len-1].name.toLowerCase().indexOf('collider') === 0)
+            this.collisionTileset = this.tilesets[len-1];
     }
 
     /**
@@ -84,14 +95,6 @@ gf.TiledMap = function(game, map) {
      * @type Array
      */
     this.collisionLayer = [];
-
-    /**
-     * The tileset for the collision layer
-     *
-     * @property collisionTileset
-     * @type TiledTileset
-     */
-    this.collisionTileset = null;
 
     /**
      * The version of this map
@@ -155,57 +158,113 @@ gf.inherits(gf.TiledMap, gf.Map, {
     },
     /**
      * Checks an entities collision with the collision layer of this map
-     * TODO: Fix this for new PIXI stuff
      *
      * @method checkCollision
-     * @param mesh {Entity} The entity to check
+     * @param ent {Entity} The entity to check
      * @param sz {Vector} The size of the entity
      * @param pv {Vector} The potential movement vector
      */
-    //if object is moved by pv get the tile it would be at
-    checkCollision: function(mesh, sz, pv) {
+    //see: http://stackoverflow.com/questions/2576412/tile-map-collision-detection
+    checkCollision: function(ent, pv) {
         if(!this.collisionLayer || !this.collisionTileset) return [];
 
-        var pos = new gf.Vector(mesh.position.x, mesh.position.y),
-            size = sz.clone().divideScalar(2),
-            left = pos.x - size.x,
-            right = pos.x + size.x,
-            top = pos.y + size.y,
-            bottom = pos.y - size.y,
-            x = (pv.x < 0) ? Math.floor(left + pv.x) : Math.ceil(right + pv.x),
-            y = (pv.y < 0) ? Math.floor(bottom + pv.y) : Math.ceil(top + pv.y),
-            res = [],
-            tile = null;
+            //get direction and normalize
+        var dir = pv.clone().normalize(),
+            //end location
+            end = new gf.Point(
+                (ent.position.x + pv.x),
+                (ent.position.y + pv.y)
+            ),
+            //the distance between 2 consectutive vertical lines
+            tDelta = new gf.Vector(
+                this.scaledTileSize.x / Math.abs(dir.x),
+                this.scaledTileSize.y / Math.abs(dir.y)
+            ),
+            //original cell location
+            cell = new gf.Point(
+                ent.position.x / this.scaledTileSize.x,
+                ent.position.y / this.scaledTileSize.y
+            ),
+            //end cell
+            endCell = new gf.Point(
+                end.x / this.scaledTileSize.x,
+                end.y / this.scaledTileSize.y
+            ),
+            //how to move between tiles
+            step = new gf.Vector(),
+            tMax = new gf.Vector(),
+            blk = new gf.Vector(),
+            //temp and return vars
+            tile = null,
+            res = [];
 
-        //check X movement
-        if(x <= this.extent.x.min || x >= this.extent.x.max) {
+        //check for max entent
+        /*
+        if(x <= 0 || x >= this.realSize.x) {
             res.push({ axis: 'x', tile: { type: gf.Layer.COLLISION.SOLID } });
-        } else if(pv.x) {
-            //x, bottom corner
-            tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.floor(bottom)));
-            if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
-                res.push({ axis: 'x', tile: tile });
-            } else {
-                //x, top corner
-                tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.ceil(top)));
-                if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
-                    res.push({ axis: 'x', tile: tile });
-                }
-            }
+        }
+        if(y <= 0 || y >= this.realSize.y) {
+            res.push({ axis: 'y', tile: { type: gf.Layer.COLLISION.SOLID } });
         }
 
-        //check Y movement
-        if(y <= this.extent.y.min || y >= this.extent.y.max) {
-            res.push({ axis: 'y', tile: { type: gf.Layer.COLLISION.SOLID } });
-        } else if(pv.y) {
-            //y, left corner
-            tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x < 0) ? Math.floor(left) : Math.ceil(right), y));
-            if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
-                res.push({ axis: 'y', tile: tile });
+        if(res.length) return res;
+        */
+
+        //determine step and tMax, defined as:
+        //step: Determine in what way do we move between cells
+        //tMax: the distance in terms of vector(dirX,dirY) to the next vertical line
+        if(end.x > ent.position.x) {
+            blk.x = 0;
+            step.x = 1;
+            tMax.x = dir.x === 0 ? 0 : ((cell.x + 1) * this.scaledTileSize.x - ent.position.x) / dir.x;
+        } else {
+            blk.x = 1;
+            step.x = -1;
+            tMax.x = dir.x === 0 ? 0 : (cell.x * this.scaledTileSize.x - ent.position.x) / dir.x;
+        }
+
+        if(end.y > ent.position.y) {
+            blk.y = 0;
+            step.y = 1;
+            tMax.y = dir.y === 0 ? 0 : ((cell.y + 1) * this.scaledTileSize.y - ent.position.y) / dir.y;
+        } else {
+            blk.y = 1;
+            step.y = -1;
+            tMax.y = dir.y === 0 ? 0 : (cell.y * this.scaledTileSize.y - ent.position.y) / dir.y;
+        }
+
+        window.console.log('dir', dir);
+        window.console.log('start', ent.position);
+        window.console.log('end', end);
+        window.console.log('cell', cell);
+        window.console.log('endCell', endCell);
+        window.console.log('blk', blk);
+        window.console.log('step', step);
+        window.console.log('tMax', tMax);
+        window.console.log('tilesize', this.scaledTileSize);
+        window.console.log('pv', pv);
+        //check if we are on a colliding tile
+        tile = this.collisionTileset.getTileProperties(this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))]);
+        if(tile && tile.isCollidable) {
+            res.push({ axis: 'x', tile: tile });
+            res.push({ axis: 'y', tile: tile });
+            return res;
+        }
+
+        //scan all the tiles along the movement vector
+        while(cell.x !== endCell.x || cell.y !== endCell.y) {
+            if(tMax.x < tMax.y) {
+                tMax.x += tDelta.x;
+                cell.x += step.x;
+                tile = this.collisionTileset.getTileProperties(this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))]);
+                if(tile && tile.isCollidable) {
+                    res.push({ axis: 'x', tile: tile });
+                }
             } else {
-                //y, right corner
-                tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x < 0) ? Math.ceil(right) : Math.floor(left), y));
-                if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
+                tMax.y += tDelta.y;
+                cell.y += step.y;
+                tile = this.collisionTileset.getTileProperties(this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))]);
+                if(tile && tile.isCollidable) {
                     res.push({ axis: 'y', tile: tile });
                 }
             }

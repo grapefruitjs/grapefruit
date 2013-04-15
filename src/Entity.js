@@ -281,8 +281,13 @@ gf.inherits(gf.Entity, gf.Sprite, {
         if(this.velocity.x === 0 && this.velocity.y === 0)
             return;
 
+        //apply gravity, friction, etc to this velocity
+        this.computeVelocity(this.velocity);
+
+        //TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
         //get the world colliders
-        var colliders = (this.game.world === undefined || !this.mapCollidable) ? [] : this.game.world.checkCollision(this);
+        var colliders = (this.game.world === undefined || !this.mapCollidable) ? [] : this.game.world.checkCollision(this, this.velocity);
+        if(colliders.length) window.console.log(colliders);
 
         //update flags
         this.onladder = false;
@@ -312,17 +317,8 @@ gf.inherits(gf.Entity, gf.Sprite, {
             }
         }
 
-        //TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
-
-        //apply gravity, friction, etc to this velocity
-        this.computeVelocity(this.velocity);
-
         //do the actual entity movement
         this.moveEntity();
-
-        //for debug output if it is enabled
-        gf.debug._playerColliders = colliders;
-        gf.debug._playerColliders.dirty = true;
 
         return colliders;
     },
