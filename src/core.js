@@ -45,6 +45,14 @@ window.gf = window.gf || {};
 gf.Point = PIXI.Point;
 
 /**
+ * Rectangle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html">PIXI.Point</a>
+ *
+ * @module gf
+ * @class Rectangle
+ */
+gf.Rectangle = PIXI.Rectangle;
+
+/**
  * Texture object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
  *
  * @module gf

@@ -63,7 +63,6 @@ gf.HudItem = function(pos, settings) {
     }
 
     this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
-    this.set(this.value);
 };
 
 gf.inherits(gf.HudItem, gf.GuiItem, {
