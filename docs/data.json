@@ -916,7 +916,7 @@
         {
             "file": "src\\gui\\HudItem.js",
             "line": 79,
-            "description": "Sets the value of the item, and marks it as dirty",
+            "description": "Sets the value of the item",
             "itemtype": "method",
             "name": "set",
             "return": {
