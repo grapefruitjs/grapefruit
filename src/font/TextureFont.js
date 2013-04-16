@@ -3,6 +3,8 @@ gf.TextureFont = function(font, settings) {
 
     this.map = {};
 
+    this.spaceSize = 15;
+
     gf.Font.call(this, font, settings);
 
     if(typeof font === 'string') {
@@ -24,6 +26,10 @@ gf.inherits(gf.TextureFont, gf.Font, {
     _getSprite: function(ch) {
         if(this.map[ch])
             ch = this.map[ch];
+
+        //skips spaces
+        if(ch === '' || ch === ' ')
+            return null;
 
         if(!this.textures[ch + this.ext])
             throw 'there is no texture for character "' + ch + '" with extension "' + this.ext + '"';
@@ -69,13 +75,18 @@ gf.inherits(gf.TextureFont, gf.Font, {
                 var ch = str.charAt(s),
                     spr = this._getSprite(ch);
 
-                spr.position.x = x;
-                spr.position.y = y;
+                if(spr !== null) {
+                    spr.position.x = x;
+                    spr.position.y = y;
 
-                x += spr.texture.frame.width * this.lineWidth;
+                    if(spr.texture.frame.height > h)
+                        h = spr.texture.frame.height;
 
-                if(spr.texture.frame.height > h)
-                    h = spr.texture.frame.height;
+                    x += spr.texture.frame.width * this.lineWidth;
+                } else {
+                    x += this.spaceSize * this.lineWidth;
+                }
+
             }
 
             y += h * this.lineHeight;
