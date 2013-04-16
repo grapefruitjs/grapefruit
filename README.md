@@ -22,6 +22,28 @@ Some features that GrapeFruit gives you:
 This project is under heavy development, and the API is subject to change at any time. Check the GitHub issue list
 to see what is needed to reach `v0.1.0`, the first unstable release.
 
+## Coming Features
+
+Grapefruit is still a baby, and it is only me working on it in my spare time, so I know it is missing a lot of features.
+Below is a list of the features I want to add in. If there is something else I missed, please open
+an [Issue](https://github.com/englercj/grapefruit/issues) and we can talk about it.
+
+Soon to come:
+
+- Tilemap Collisions
+- Entity Collisions
+- Multiple Cameras
+- More Entity Physics (like bounce)
+- Sprite Sheet Animation
+
+Coming in the future:
+
+- Path Finding
+- Touch Gestures
+- Particle System
+- Game State System
+- Generic Text (non-texture based font)
+
 ## Rendering Engine
 
 Under the hood gf uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) for low-level WebGL Rendering. If you
