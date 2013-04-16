@@ -101,7 +101,7 @@ gf.TiledTileset = function(settings) {
     this.tileproperties = settings.tileproperties || {};
 
     //massage tile properties
-    for(var i = 0, il = this.tileproperties.length; i < il; ++i) {
+    for(var i in this.tileproperties) {
         var v = this.tileproperties[i];
 
         if(v.normal) v.normal = gf.utils.ensureVector(v.normal);
