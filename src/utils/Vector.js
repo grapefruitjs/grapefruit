@@ -97,6 +97,30 @@ gf.inherits(gf.Vector, Object, {
         return this;
     },
     /**
+     * Floors the vector components
+     *
+     * @method floor
+     * @return {Vector} Returns itself
+     */
+    floor: function () {
+        this.x = Math.floor(this.x);
+        this.y = Math.floor(this.y);
+
+        return this;
+    },
+    /**
+     * Ceils the vector components
+     *
+     * @method ceil
+     * @return {Vector} Returns itself
+     */
+    ceil: function () {
+        this.x = Math.ceil(this.x);
+        this.y = Math.ceil(this.y);
+
+        return this;
+    },
+    /**
      * Adds a vector to this one
      *
      * @method add
