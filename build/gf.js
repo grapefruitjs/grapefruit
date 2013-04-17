@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-04-15
+ * Compiled: 2013-04-17
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -44,7 +44,7 @@ null)throw new TypeError("can't convert "+this+" to object");return String(this)
  * Copyright (c) 2012, Mat Groves
  * http://goodboydigital.com/
  *
- * Compiled: 2013-04-05
+ * Compiled: 2013-04-17
  *
  * Pixi.JS is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -217,6 +217,14 @@ PIXI.DisplayObject = function()
 	 */	
 	this.stage = null;
 	
+	/**
+	 * This is the defined area that will pick up mouse / touch events. It is null by default.
+	 * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
+	 * @property hitArea
+	 * @type Rectangle
+	 */	
+	this.hitArea = null;
+	
 	this.worldAlpha = 1;
 	this.color = [];
 	
@@ -230,12 +238,100 @@ PIXI.DisplayObject = function()
 	
 	this.renderable = false;
 	
-	// NOT YET :/ This only applies to children within the container..
-	this.interactive = true;
+	// [readonly] best not to toggle directly! use setInteractive()
+	this.interactive = false;
+	this.buttonMode = false;
+	
+	/*
+	 * MOUSE Callbacks
+	 */
+	
+	/**
+	 * A callback that is used when the users clicks on the displayObject with their mouse
+	 * @method click
+	 * @param interactionData {InteractionData}
+	 */
+	
+	/**
+	 * A callback that is used when the user clicks the mouse down over the sprite
+	 * @method mousedown
+	 * @param interactionData {InteractionData}
+	 */
+	 
+	/**
+	 * A callback that is used when the user releases the mouse that was over the displayObject
+	 * for this callback to be fired the mouse must have been pressed down over the displayObject
+	 * @method mouseup
+	 * @param interactionData {InteractionData}
+	 */
+	
+	/**
+	 * A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject
+	 * for this callback to be fired, The touch must have started over the displayObject
+	 * @method mouseupoutside
+	 * @param interactionData {InteractionData}
+	 */
+	
+	/**
+	 * A callback that is used when the users mouse rolls over the displayObject
+	 * @method mouseover
+	 * @param interactionData {InteractionData}
+	 */
+	
+	/**
+	 * A callback that is used when the users mouse leaves the displayObject
+	 * @method mouseout
+	 * @param interactionData {InteractionData}
+	 */
+	
+	
+	/*
+	 * TOUCH Callbacks
+	 */
+	
+	/**
+	 * A callback that is used when the users taps on the sprite with their finger
+	 * basically a touch version of click
+	 * @method tap
+	 * @param interactionData {InteractionData}
+	 */
+	
+	/**
+	 * A callback that is used when the user touch's over the displayObject
+	 * @method touchstart
+	 * @param interactionData {InteractionData}
+	 */
+	 
+	/**
+	 * A callback that is used when the user releases a touch over the displayObject
+	 * @method touchend
+	 * @param interactionData {InteractionData}
+	 */
+	
+	/**
+	 * A callback that is used when the user releases the touch that was over the displayObject
+	 * for this callback to be fired, The touch must have started over the sprite
+	 * @method touchendoutside
+	 * @param interactionData {InteractionData}
+	 */
 }
 
 // constructor
 PIXI.DisplayObject.constructor = PIXI.DisplayObject;
+
+/**
+ * Indicates if the sprite will have touch and mouse interactivity. It is false by default
+ * @method setInteractive
+ * @param interactive {Boolean}
+ */
+PIXI.DisplayObject.prototype.setInteractive = function(interactive)
+{
+	this.interactive = interactive;
+	// TODO more to be done here..
+	// need to sort out a re-crawl!
+	if(this.stage)this.stage.dirty = true;
+}
+
 
 /**
  * @private
@@ -473,14 +569,14 @@ PIXI.Sprite = function(texture)
 	 * @property width
 	 * @type #Number
 	 */
-	this.width = 1;
+	this.width = 0;
 	
 	/**
 	 * The height of the sprite (this is initially set by the texture)
 	 * @property height
 	 * @type #Number
 	 */
-	this.height = 1;
+	this.height = 0;
 	
 	if(texture.baseTexture.hasLoaded)
 	{
@@ -496,72 +592,9 @@ PIXI.Sprite = function(texture)
 	
 	this.renderable = true;
 	
-	
-	
-	// [readonly] best not to toggle directly! use setInteractive()
-	this.interactive = false;
-	
-	
 	// thi next bit is here for the docs...
 	
-	/*
-	 * MOUSE Callbacks
-	 */
 	
-	/**
-	 * A callback that is used when the users clicks on the sprite with thier mouse
-	 * @method click
-	 * @param interactionData {InteractionData}
-	 */
-	
-	/**
-	 * A callback that is used when the user clicks the mouse down over the sprite
-	 * @method mousedown
-	 * @param interactionData {InteractionData}
-	 */
-	 
-	/**
-	 * A callback that is used when the user releases the mouse that was over the sprite
-	 * for this callback to be fired the mouse must have been pressed down over the sprite
-	 * @method mouseup
-	 * @param interactionData {InteractionData}
-	 */
-	
-	/**
-	 * A callback that is used when the users mouse rolls over the sprite
-	 * @method mouseover
-	 * @param interactionData {InteractionData}
-	 */
-	
-	/**
-	 * A callback that is used when the users mouse leaves the sprite
-	 * @method mouseout
-	 * @param interactionData {InteractionData}
-	 */
-	
-	/*
-	 * TOUCH Callbacks
-	 */
-	
-	/**
-	 * A callback that is used when the users taps on the sprite with thier finger
-	 * basically a touch version of click
-	 * @method tap
-	 * @param interactionData {InteractionData}
-	 */
-	
-	/**
-	 * A callback that is used when the user touch's over the sprite
-	 * @method touchstart
-	 * @param interactionData {InteractionData}
-	 */
-	 
-	/**
-	 * A callback that is used when the user releases the touch that was over the sprite
-	 * for this callback to be fired. The touch must have started over the sprite
-	 * @method touchend
-	 * @param interactionData {InteractionData}
-	 */
 }
 
 // constructor
@@ -587,25 +620,12 @@ PIXI.Sprite.prototype.setTexture = function(texture)
 }
 
 /**
- * Indicates if the sprite will have touch and mouse interactivity. It is false by default
- * @method setInteractive
- * @param interactive {Boolean}
- */
-PIXI.Sprite.prototype.setInteractive = function(interactive)
-{
-	this.interactive = interactive;
-	// TODO more to be done here..
-	// need to sort out a re-crawl!
-	if(this.stage)this.stage.dirty = true;
-}
-
-/**
  * @private
  */
 PIXI.Sprite.prototype.onTextureUpdate = function(event)
 {
-	this.width   = this.texture.frame.width;
-	this.height  = this.texture.frame.height;
+	this.width   = this.width || this.texture.frame.width;
+	this.height  = this.height || this.texture.frame.height;
 	this.updateFrame = true;
 }
 
@@ -679,19 +699,19 @@ PIXI.MovieClip = function(textures)
 	 */
 	this.animationSpeed = 1;
 
-    /**
+	/**
 	 * Whether or not the movie clip repeats after playing.
 	 * @property loop
 	 * @type Boolean
 	 */
-    this.loop = true;
+	this.loop = true;
 
-    /**
+	/**
 	 * Function to call when a MovieClip finishes playing
 	 * @property onComplete
 	 * @type Function
 	 */
-    this.onComplete = null;
+	this.onComplete = null;
 	
 	/**
 	 * [read only] indicates if the MovieClip is currently playing
@@ -755,18 +775,18 @@ PIXI.MovieClip.prototype.updateTransform = function()
 	
 	this.currentFrame += this.animationSpeed;
 	var round = (this.currentFrame + 0.5) | 0;
-    if(this.loop){
-        this.setTexture(this.textures[round % this.textures.length]);
-    }else{
-        if (round>=this.textures.length){
-            this.currentFrame=this.textures.length-1;
-            this.setTexture(this.textures[this.textures.length-1]);
-            this.stop();
-            if(this.onComplete)this.onComplete();
-        }else{
-            this.setTexture(this.textures[round]);
-        }
-    }
+	if(this.loop || round < this.textures.length)
+	{
+		this.setTexture(this.textures[round % this.textures.length]);
+	}
+	else if(round >= this.textures.length)
+	{
+		this.gotoAndStop(this.textures.length - 1);
+		if(this.onComplete)
+		{
+			this.onComplete();
+		}
+	}
 }
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
@@ -815,92 +835,109 @@ PIXI.InteractionManager = function(stage)
 	this.pool = [];
 	
 	this.interactiveItems = [];
+
+	this.last = 0;
 }
 
 // constructor
 PIXI.InteractionManager.constructor = PIXI.InteractionManager;
 
-/**
- * This method will disable rollover/rollout for ALL interactive items
- * You may wish to use this an optimization if your app does not require rollover/rollout funcitonality
- * @method disableMouseOver
- */
-PIXI.InteractionManager.prototype.disableMouseOver = function()
-{
-	if(!this.mouseoverEnabled)return;
-	
-	this.mouseoverEnabled = false;
-	if(this.target)this.target.view.removeEventListener('mousemove',  this.onMouseMove.bind(this));
-}
-
-/**
- * This method will enable rollover/rollout for ALL interactive items
- * It is enabled by default
- * @method enableMouseOver
- */
-PIXI.InteractionManager.prototype.enableMouseOver = function()
-{
-	if(this.mouseoverEnabled)return;
-	
-	this.mouseoverEnabled = false;
-	if(this.target)this.target.view.addEventListener('mousemove',  this.onMouseMove.bind(this));
-}
-
-PIXI.InteractionManager.prototype.collectInteractiveSprite = function(displayObject)
+PIXI.InteractionManager.prototype.collectInteractiveSprite = function(displayObject, iParent)
 {
 	var children = displayObject.children;
 	var length = children.length;
 	
-	for (var i = length - 1; i >= 0; i--)
+	//this.interactiveItems = [];
+	/// make an interaction tree... {item.__interactiveParent}
+	for (var i = length-1; i >= 0; i--)
 	{
 		var child = children[i];
 		
-		// only sprite's right now...
-		if(child instanceof PIXI.Sprite)
+		// push all interactive bits
+		if(child.interactive)
 		{
-			if(child.interactive)this.interactiveItems.push(child);
+			iParent.interactiveChildren = true;
+			//child.__iParent = iParent;
+			this.interactiveItems.push(child);
+			
+			if(child.children.length > 0)
+			{
+				this.collectInteractiveSprite(child, child);
+			}
 		}
 		else
 		{
-			// use this to optimize..
-			if(!child.interactive)continue;
-		}
-		
-		if(child.children.length > 0)
-		{
-			this.collectInteractiveSprite(child);
+			child.__iParent = null;
+			
+			if(child.children.length > 0)
+			{
+				this.collectInteractiveSprite(child, iParent);
+			}
 		}
 	}
 }
 
 PIXI.InteractionManager.prototype.setTarget = function(target)
 {
-	this.target = target;
-	if(this.mouseoverEnabled)target.view.addEventListener('mousemove',  this.onMouseMove.bind(this), true);
-	target.view.addEventListener('mousedown',  this.onMouseDown.bind(this), true);
- 	target.view.addEventListener('mouseup', 	this.onMouseUp.bind(this), true);
- 	target.view.addEventListener('mouseout', 	this.onMouseUp.bind(this), true);
+	if (window.navigator.msPointerEnabled) 
+	{
+		// time to remove some of that zoom in ja..
+		target.view.style["-ms-content-zooming"] = "none";
+    	target.view.style["-ms-touch-action"] = "none"
+    
+		// DO some window specific touch!
+	}
 	
-	// aint no multi touch just yet!
-	target.view.addEventListener("touchstart", this.onTouchStart.bind(this), true);
-	target.view.addEventListener("touchend", this.onTouchEnd.bind(this), true);
-	target.view.addEventListener("touchmove", this.onTouchMove.bind(this), true);
+	
+	{
+		
+		this.target = target;
+		target.view.addEventListener('mousemove',  this.onMouseMove.bind(this), true);
+		target.view.addEventListener('mousedown',  this.onMouseDown.bind(this), true);
+	 	document.body.addEventListener('mouseup',  this.onMouseUp.bind(this), true);
+	 	target.view.addEventListener('mouseout',   this.onMouseUp.bind(this), true);
+		
+		// aint no multi touch just yet!
+		target.view.addEventListener("touchstart", this.onTouchStart.bind(this), true);
+		target.view.addEventListener("touchend", this.onTouchEnd.bind(this), true);
+		target.view.addEventListener("touchmove", this.onTouchMove.bind(this), true);
+	}
+	
+	
+	
 }
 
-PIXI.InteractionManager.prototype.hitTest = function(interactionData)
+PIXI.InteractionManager.prototype.update = function()
 {
+	// frequency of 30fps??
+	var now = Date.now();
+	var diff = now - this.last;
+	diff = (diff * 30) / 1000;
+	if(diff < 1)return;
+	this.last = now;
+	//
+	
+	// ok.. so mouse events??
+	// yes for now :)
+	// OPTIMSE - how often to check??
 	if(this.dirty)
 	{
 		this.dirty = false;
+		
+		var len = this.interactiveItems.length;
+		
+		for (var i=0; i < this.interactiveItems.length; i++) {
+		  this.interactiveItems[i].interactiveChildren = true;
+		}
+		
 		this.interactiveItems = [];
+		
+		if(this.stage.interactive)this.interactiveItems.push(this.stage);
 		// go through and collect all the objects that are interactive..
-		this.collectInteractiveSprite(this.stage);
+		this.collectInteractiveSprite(this.stage, this.stage);
 	}
 	
-	var tempPoint = this.tempPoint;
-	var tempMatrix = this.tempMatrix;
-	var global = interactionData.global;
-	
+	// loop through interactive objects!
 	var length = this.interactiveItems.length;
 	
 	for (var i = 0; i < length; i++)
@@ -908,42 +945,38 @@ PIXI.InteractionManager.prototype.hitTest = function(interactionData)
 		var item = this.interactiveItems[i];
 		if(!item.visible)continue;
 		
-		// TODO this could do with some optimizing!
-		// maybe store the inverse?
-		// or do a lazy check first?
-		//mat3.inverse(item.worldTransform, tempMatrix);
-		//tempPoint.x = tempMatrix[0] * global.x + tempMatrix[1] * global.y + tempMatrix[2]; 
-		//tempPoint.y = tempMatrix[4] * global.y + tempMatrix[3] * global.x + tempMatrix[5];
-	
-		// OPTIMIZED! assuming the matrix transform is affine.. which it totally shold be!
-		
-		var worldTransform = item.worldTransform;
-		
-		var a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
-            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
-            id = 1 / (a00 * a11 + a01 * -a10);
-		
-		tempPoint.x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id; 
-		tempPoint.y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
-		
-			
-		var x1 = -item.width * item.anchor.x;
-		
-		if(tempPoint.x > x1 && tempPoint.x < x1 + item.width)
+		// OPTIMISATION - only calculate every time if the mousemove function exists..
+		// OK so.. does the object have any other interactive functions?
+		// hit-test the clip!
+		if(item.mouseover || item.mouseout || item.buttonMode)
 		{
-			var y1 = -item.height * item.anchor.y;
-			
-			if(tempPoint.y > y1 && tempPoint.y < y1 + item.height)
+			// ok so there are some functions so lets hit test it..
+			item.__hit = this.hitTest(item, this.mouse);
+			// ok so deal with interactions..
+			// loks like there was a hit!
+			if(item.__hit)
 			{
-				interactionData.local.x = tempPoint.x;
-				interactionData.local.y = tempPoint.y;
-				
-				return item;
+				if(!item.__isOver)
+				{
+					if(item.buttonMode)this.target.view.style.cursor = "pointer";	
+					if(item.mouseover)item.mouseover(this.mouse);
+					item.__isOver = true;	
+				}
+			}
+			else
+			{
+				if(item.__isOver)
+				{
+					// roll out!
+					if(item.buttonMode)this.target.view.style.cursor = "default";	
+					if(item.mouseout)item.mouseout(this.mouse);
+					item.__isOver = false;	
+				}
 			}
 		}
-	}
 		
-	return null;	
+		// --->
+	}
 }
 
 PIXI.InteractionManager.prototype.onMouseMove = function(event)
@@ -956,65 +989,171 @@ PIXI.InteractionManager.prototype.onMouseMove = function(event)
 	this.mouse.global.x = (event.clientX - rect.left) * (this.target.width / rect.width);
 	this.mouse.global.y = (event.clientY - rect.top) * ( this.target.height / rect.height);
 	
-	var item = this.hitTest(this.mouse);
+	var length = this.interactiveItems.length;
+	var global = this.mouse.global;
 	
-	if(this.currentOver != item)
+	
+	for (var i = 0; i < length; i++)
 	{
-		if(this.currentOver)
+		var item = this.interactiveItems[i];
+		
+		if(item.mousemove)
 		{
-			this.mouse.target = this.currentOver;
-			if(this.currentOver.mouseout)this.currentOver.mouseout(this.mouse);
-			this.currentOver = null;
+			//call the function!
+			item.mousemove(this.mouse);
 		}
-		
-		this.target.view.style.cursor = "default";
-	}
-		
-	if(item)
-	{
-		
-		if(this.currentOver == item)return;
-		
-		this.currentOver = item;
-		this.target.view.style.cursor = "pointer";
-		this.mouse.target = item;
-		if(item.mouseover)item.mouseover(this.mouse);
 	}
 }
 
 PIXI.InteractionManager.prototype.onMouseDown = function(event)
 {
-	var rect = this.target.view.getBoundingClientRect();
-	this.mouse.global.x = (event.clientX - rect.left) * (this.target.width / rect.width);
-	this.mouse.global.y = (event.clientY - rect.top) * (this.target.height / rect.height);
+	event.preventDefault();
 	
-	var item = this.hitTest(this.mouse);
-	if(item)
+	// loop through inteaction tree...
+	// hit test each item! -> 
+	// --->--->--->--->
+	// get interactive items under point??
+	// --->--->--->--->
+	//stage.__i
+	var length = this.interactiveItems.length;
+	var global = this.mouse.global;
+	
+	var index = 0;
+	var parent = this.stage;
+	
+	// while 
+	// hit test 
+	for (var i = 0; i < length; i++)
 	{
-		this.currentDown = item;
-		this.mouse.target = item;
-		if(item.mousedown)item.mousedown(this.mouse);
+		var item = this.interactiveItems[i];
+		
+		if(item.mousedown || item.click)
+		{
+			item.__mouseIsDown = true;
+			item.__hit = this.hitTest(item, this.mouse);
+			
+			if(item.__hit)
+			{
+				//call the function!
+				if(item.mousedown)item.mousedown(this.mouse);
+				item.__isDown = true;
+				
+				// just the one!
+				if(!item.interactiveChildren)break;
+			}
+		}
 	}
 }
 
 PIXI.InteractionManager.prototype.onMouseUp = function(event)
 {
-	if(this.currentOver)
-	{
-		this.mouse.target = this.currentOver;
-		if(this.currentOver.mouseup)this.currentOver.mouseup(this.mouse);	
-	}
+	event.preventDefault();
+	var global = this.mouse.global;
 	
-	if(this.currentDown)
+	
+	var length = this.interactiveItems.length;
+	var up = false;
+	
+	for (var i = 0; i < length; i++)
 	{
-		this.mouse.target = this.currentDown;
-		// click!
-		if(this.currentOver == this.currentDown)if(this.currentDown.click)this.currentDown.click(this.mouse);
+		var item = this.interactiveItems[i];
 		
-	
-		this.currentDown = null;
+		if(item.mouseup || item.mouseupoutside || item.click)
+		{
+			item.__hit = this.hitTest(item, this.mouse);
+			
+			if(item.__hit && !up)
+			{
+				//call the function!
+				if(item.mouseup)
+				{
+					item.mouseup(this.mouse);
+				}
+				if(item.__isDown)
+				{
+					if(item.click)item.click(this.mouse);
+				}
+				
+				if(!item.interactiveChildren)up = true;
+			}
+			else
+			{
+				if(item.__isDown)
+				{
+					if(item.mouseupoutside)item.mouseupoutside(this.mouse);
+				}
+			}
+		
+			item.__isDown = false;	
+		}
 	}
 }
+
+PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
+{
+	var global = interactionData.global;
+	
+	if(!item.visible)return false;
+
+	if(item instanceof PIXI.Sprite)
+	{
+		var worldTransform = item.worldTransform;
+		
+		var a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
+            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+            id = 1 / (a00 * a11 + a01 * -a10);
+		
+		var x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id; 
+		var y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
+		
+		var x1 = -item.width * item.anchor.x;
+		
+		if(x > x1 && x < x1 + item.width)
+		{
+			var y1 = -item.height * item.anchor.y;
+			
+			if(y > y1 && y < y1 + item.height)
+			{
+				return true;
+			}
+		}
+	}
+	else if(item.hitArea)
+	{
+		var worldTransform = item.worldTransform;
+		var hitArea = item.hitArea;
+		
+		var a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
+            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+            id = 1 / (a00 * a11 + a01 * -a10);
+		
+		var x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id; 
+		var y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
+		
+		var x1 = hitArea.x;
+		if(x > x1 && x < x1 + hitArea.width)
+		{
+			var y1 = hitArea.y;
+			
+			if(y > y1 && y < y1 + hitArea.height)
+			{
+				return true;
+			}
+		}
+	}
+	
+	var length = item.children.length;
+	
+	for (var i = 0; i < length; i++)
+	{
+		var item = item.children[i];
+		var hit = this.hitTest(item, interactionData);
+		if(hit)return true;
+	}
+		
+	return false;	
+}
+
 
 
 PIXI.InteractionManager.prototype.onTouchMove = function(event)
@@ -1027,12 +1166,18 @@ PIXI.InteractionManager.prototype.onTouchMove = function(event)
 	for (var i=0; i < changedTouches.length; i++) 
 	{
 		var touchEvent = changedTouches[i];
-		
 		var touchData = this.touchs[touchEvent.identifier];
 		
 		// update the touch position
 		touchData.global.x = (touchEvent.clientX - rect.left) * (this.target.width / rect.width);
 		touchData.global.y = (touchEvent.clientY - rect.top)  * (this.target.height / rect.height);
+	}
+	
+	var length = this.interactiveItems.length;
+	for (var i = 0; i < length; i++)
+	{
+		var item = this.interactiveItems[i];
+		if(item.touchmove)item.touchmove(touchData);
 	}
 }
 
@@ -1040,8 +1185,8 @@ PIXI.InteractionManager.prototype.onTouchStart = function(event)
 {
 	event.preventDefault();
 	var rect = this.target.view.getBoundingClientRect();
-	var changedTouches = event.changedTouches;
 	
+	var changedTouches = event.changedTouches;
 	for (var i=0; i < changedTouches.length; i++) 
 	{
 		var touchEvent = changedTouches[i];
@@ -1050,47 +1195,95 @@ PIXI.InteractionManager.prototype.onTouchStart = function(event)
 		if(!touchData)touchData = new PIXI.InteractionData();
 		
 		this.touchs[touchEvent.identifier] = touchData;
-		
 		touchData.global.x = (touchEvent.clientX - rect.left) * (this.target.width / rect.width);
 		touchData.global.y = (touchEvent.clientY - rect.top)  * (this.target.height / rect.height);
 		
-		var item = this.hitTest(touchData);
-		if(item)
+		var length = this.interactiveItems.length;
+		
+		for (var j = 0; j < length; j++)
 		{
-			touchData.currentDown = item;
-			touchData.target = item;
-			if(item.touchstart)item.touchstart(touchData);
+			var item = this.interactiveItems[j];
+			
+			if(item.touchstart || item.tap)
+			{
+				item.__hit = this.hitTest(item, touchData);
+				
+				if(item.__hit)
+				{
+					//call the function!
+					if(item.touchstart)item.touchstart(touchData);
+					item.__isDown = true;
+					item.__touchData = touchData;
+					
+					if(!item.interactiveChildren)break;
+				}
+			}
 		}
 	}
+	
 }
 
 PIXI.InteractionManager.prototype.onTouchEnd = function(event)
 {
 	event.preventDefault();
 	
+	
 	var rect = this.target.view.getBoundingClientRect();
 	var changedTouches = event.changedTouches;
 	
 	for (var i=0; i < changedTouches.length; i++) 
 	{
+		 
 		var touchEvent = changedTouches[i];
 		var touchData = this.touchs[touchEvent.identifier];
-		
+		var up = false;
 		touchData.global.x = (touchEvent.clientX - rect.left) * (this.target.width / rect.width);
 		touchData.global.y = (touchEvent.clientY - rect.top)  * (this.target.height / rect.height);
 		
-		if(touchData.currentDown)
+		var length = this.interactiveItems.length;
+		for (var j = 0; j < length; j++)
 		{
-			if(touchData.currentDown.touchend)touchData.currentDown.touchend(touchData);
-			
-			var item = this.hitTest(touchData);
-			if(item == touchData.currentDown)
-			{
-				if(touchData.currentDown.tap)touchData.currentDown.tap(touchData);	
-			}
-			touchData.currentDown = null;
-		}
+			var item = this.interactiveItems[j];
+			var itemTouchData = item.__touchData; // <-- Here!
+			item.__hit = this.hitTest(item, touchData);
 		
+			if(itemTouchData == touchData)
+			{
+				// so this one WAS down...
+				
+				// hitTest??
+				
+				if(item.touchend || item.tap)
+				{
+					if(item.__hit && !up)
+					{
+						if(item.touchend)item.touchend(touchData);
+						if(item.__isDown)
+						{
+							if(item.tap)item.tap(touchData);
+						}
+						
+						if(!item.interactiveChildren)up = true;
+					}
+					else
+					{
+						if(item.__isDown)
+						{
+							if(item.touchendoutside)item.touchendoutside(touchData);
+						}
+					}
+					
+					item.__isDown = false;
+				}
+				
+				item.__touchData = null;
+					
+			}
+			else
+			{
+				
+			}
+		}
 		// remove the touch..
 		this.pool.push(touchData);
 		this.touchs[touchEvent.identifier] = null;
@@ -1110,11 +1303,7 @@ PIXI.InteractionData = function()
 	 */
 	this.global = new PIXI.Point();
 	
-	/**
-	 * This point stores the local coords of where the touch/mouse event happened
-	 * @property local 
-	 * @type Point
-	 */
+	// this is here for legacy... but will remove
 	this.local = new PIXI.Point();
 
 	/**
@@ -1123,6 +1312,26 @@ PIXI.InteractionData = function()
 	 * @type Sprite
 	 */
 	this.target;
+}
+
+/**
+ * This will return the local coords of the specified displayObject for this InteractionData
+ * @method getLocalPosition
+ * @param displayObject {DisplayObject} The DisplayObject that you would like the local coords off
+ * @return {Point} A point containing the coords of the InteractionData position relative to the DisplayObject
+ */
+PIXI.InteractionData.prototype.getLocalPosition = function(displayObject)
+{
+	var worldTransform = displayObject.worldTransform;
+	var global = this.global;
+	
+	// do a cheeky transform to get the mouse coords;
+	var a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
+        a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+        id = 1 / (a00 * a11 + a01 * -a10);
+	// set the mouse coords...
+	return new PIXI.Point(a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
+							   a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id)
 }
 
 // constructor
@@ -1150,7 +1359,9 @@ PIXI.Stage = function(backgroundColor, interactive)
 	this.__childrenAdded = [];
 	this.__childrenRemoved = [];
 	this.childIndex = 0;
-	this.stage=  this;
+	this.stage= this;
+	
+	this.stage.hitArea = new PIXI.Rectangle(0,0,100000, 100000);
 	
 	// interaction!
 	this.interactive = !!interactive;
@@ -1180,12 +1391,11 @@ PIXI.Stage.prototype.updateTransform = function()
 	if(this.dirty)
 	{
 		this.dirty = false;
-		
 		// update interactive!
 		this.interactionManager.dirty = true;
-		
-		
 	}
+
+	if(this.interactive)this.interactionManager.update();
 }
 
 /**
@@ -1604,8 +1814,10 @@ PIXI.mat4.multiply = function (mat, mat2, dest)
  * @param width {Number} the width of the renderers view
  * @param height {Number} the height of the renderers view
  * @param view {Canvas} the canvas to use as a view, optional
+ * @param transparent {Boolean} the transparency of the render view, default false
+ * @default false
  */
-PIXI.autoDetectRenderer = function(width, height, view)
+PIXI.autoDetectRenderer = function(width, height, view, transparent)
 {
 	if(!width)width = 800;
 	if(!height)height = 600;
@@ -1616,10 +1828,10 @@ PIXI.autoDetectRenderer = function(width, height, view)
 	//console.log(webgl);
 	if( webgl )
 	{
-		return new PIXI.WebGLRenderer(width, height, view);
+		return new PIXI.WebGLRenderer(width, height, view, transparent);
 	}
 
-	return	new PIXI.CanvasRenderer(width, height, view);
+	return	new PIXI.CanvasRenderer(width, height, view, transparent);
 };
 
 
@@ -1709,16 +1921,21 @@ PIXI._defaultFrame = new PIXI.Rectangle(0,0,1,1);
  * @param height {Number} the height of the canvas view
  * @default 0
  * @param view {Canvas} the canvas to use as a view, optional
+ * @param transparent {Boolean} the transparency of the render view, default false
+ * @default false
+ * 
  */
-PIXI.WebGLRenderer = function(width, height, view)
+PIXI.WebGLRenderer = function(width, height, view, transparent)
 {
+	//console.log(transparent)
+	this.transparent = !!transparent;
+	
 	this.width = width || 800;
 	this.height = height || 600;
 	
 	this.view = view || document.createElement( 'canvas' ); 
     this.view.width = this.width;
 	this.view.height = this.height;  
-	this.view.background = "#FF0000";
 	
 	// deal with losing context..	
     var scope = this;
@@ -1730,7 +1947,9 @@ PIXI.WebGLRenderer = function(width, height, view)
 	try 
  	{
         this.gl = this.view.getContext("experimental-webgl",  {  	
-    		 alpha: false
+    		 alpha: this.transparent,
+    		 antialias:false, // SPEED UP??
+    		 premultipliedAlpha:true
         });
     } 
     catch (e) 
@@ -1746,7 +1965,7 @@ PIXI.WebGLRenderer = function(width, height, view)
     this.batch = new PIXI.WebGLBatch(gl);
    	gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
-    gl.colorMask(true, true, true, false); 
+    gl.colorMask(true, true, true, this.transparent); 
     
     this.projectionMatrix =  PIXI.mat4.create();
     this.resize(this.width, this.height)
@@ -1854,6 +2073,15 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
 {
 	if(this.contextLost)return;
 	
+
+
+	// if rendering a new stage clear the batchs..
+	if(this.__stage !== stage)
+	{
+		if(this.__stage)this.checkVisibility(this.__stage, false)
+		this.__stage = stage;
+	}
+	
 	// update children if need be
 	// best to remove first!
 	for (var i=0; i < stage.__childrenRemoved.length; i++)
@@ -1880,7 +2108,8 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
 	
 	gl.clear(gl.COLOR_BUFFER_BIT)
 
-	gl.clearColor(stage.backgroundColorSplit[0], stage.backgroundColorSplit[1], stage.backgroundColorSplit[2], 1.0);     
+	gl.clearColor(stage.backgroundColorSplit[0], stage.backgroundColorSplit[1], stage.backgroundColorSplit[2], 0);     
+	
 	
 	// set the correct blend mode!
  	gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -1933,8 +2162,8 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
 		gl.bindTexture(gl.TEXTURE_2D, texture._glTexture);
 	 	gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
@@ -2947,16 +3176,25 @@ PIXI.WebGLBatch.prototype.render = function()
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
+
 /**
  * the CanvasRenderer draws the stage and all its content onto a 2d canvas. This renderer should be used for browsers that do not support webGL.
  * Dont forget to add the view to your DOM or you will not see anything :)
  * @class CanvasRenderer
+ * @constructor
  * @param width {Number} the width of the canvas view
+ * @default 0
  * @param height {Number} the height of the canvas view
+ * @default 0
  * @param view {Canvas} the canvas to use as a view, optional
+ * @param transparent {Boolean} the transparency of the render view, default false
+ * @default false
+ * 
  */
-PIXI.CanvasRenderer = function(width, height, view)
+PIXI.CanvasRenderer = function(width, height, view, transparent)
 {
+	this.transparent = transparent;
+	
 	/**
 	 * The width of the canvas view
 	 * @property width
@@ -3020,7 +3258,7 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
 	this.context.setTransform(1,0,0,1,0,0); 
 	
 	// update the background color
-	if(this.view.style.backgroundColor!=stage.backgroundColorString)this.view.style.backgroundColor = stage.backgroundColorString;
+	if(this.view.style.backgroundColor!=stage.backgroundColorString && !this.transparent)this.view.style.backgroundColor = stage.backgroundColorString;
 
 	this.context.clearRect(0, 0, this.width, this.height)
     this.renderDisplayObject(stage);
@@ -3741,23 +3979,8 @@ PIXI.Texture.fromFrame = function(frameId)
  */
 PIXI.Texture.fromCanvas = function(canvas)
 {
-	// create a canvas id??
-	var texture = PIXI.TextureCache[canvas];
-	
-	if(!texture)
-	{
-		var baseTexture = PIXI.BaseTextureCache[canvas];
-		if(!baseTexture) 
-		{
-			baseTexture = new PIXI.BaseTexture(canvas);
-			PIXI.BaseTextureCache[canvas] = baseTexture;
-		}
-		texture = new PIXI.Texture(baseTexture);
-		
-		PIXI.TextureCache[canvas] = texture;
-	}
-	
-	return texture;
+	var	baseTexture = new PIXI.BaseTexture(canvas);
+	return new PIXI.Texture(baseTexture);
 }
 
 
@@ -3859,16 +4082,19 @@ PIXI.SpriteSheetLoader.prototype.onLoaded = function()
 			for (var i in frameData) 
 			{
 				var rect = frameData[i].frame;
-				PIXI.TextureCache[i] = new PIXI.Texture(this.texture, {x:rect.x, y:rect.y, width:rect.w, height:rect.h});
-				
-				if(frameData[i].trimmed)
+				if (rect)
 				{
-					//var realSize = frameData[i].spriteSourceSize;
-					PIXI.TextureCache[i].realSize = frameData[i].spriteSourceSize;
-					PIXI.TextureCache[i].trim.x = 0// (realSize.x / rect.w)
-					// calculate the offset!
+					PIXI.TextureCache[i] = new PIXI.Texture(this.texture, {x:rect.x, y:rect.y, width:rect.w, height:rect.h});
+					
+					if(frameData[i].trimmed)
+					{
+						//var realSize = frameData[i].spriteSourceSize;
+						PIXI.TextureCache[i].realSize = frameData[i].spriteSourceSize;
+						PIXI.TextureCache[i].trim.x = 0// (realSize.x / rect.w)
+						// calculate the offset!
+					}
+	//				this.frames[i] = ;
 				}
-//				this.frames[i] = ;
    			}
 			
 			if(this.texture.hasLoaded)
@@ -4084,6 +4310,14 @@ window.gf = window.gf || {};
  * @class Point
  */
 gf.Point = PIXI.Point;
+
+/**
+ * Rectangle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html">PIXI.Point</a>
+ *
+ * @module gf
+ * @class Rectangle
+ */
+gf.Rectangle = PIXI.Rectangle;
 
 /**
  * Texture object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
@@ -6386,8 +6620,13 @@ gf.inherits(gf.Entity, gf.Sprite, {
         if(this.velocity.x === 0 && this.velocity.y === 0)
             return;
 
+        //apply gravity, friction, etc to this velocity
+        this.computeVelocity(this.velocity);
+
+        //TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
         //get the world colliders
-        var colliders = (this.game.world === undefined || !this.mapCollidable) ? [] : this.game.world.checkCollision(this);
+        var colliders = (this.game.world === undefined || !this.mapCollidable) ? [] : this.game.world.checkCollision(this, this.velocity);
+        if(colliders.length) window.console.log(colliders);
 
         //update flags
         this.onladder = false;
@@ -6417,17 +6656,8 @@ gf.inherits(gf.Entity, gf.Sprite, {
             }
         }
 
-        //TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
-
-        //apply gravity, friction, etc to this velocity
-        this.computeVelocity(this.velocity);
-
         //do the actual entity movement
         this.moveEntity();
-
-        //for debug output if it is enabled
-        gf.debug._playerColliders = colliders;
-        gf.debug._playerColliders.dirty = true;
 
         return colliders;
     },
@@ -7267,6 +7497,30 @@ gf.inherits(gf.Vector, Object, {
     copy: function(v) {
         this.x = v.x;
         this.y = v.y;
+
+        return this;
+    },
+    /**
+     * Floors the vector components
+     *
+     * @method floor
+     * @return {Vector} Returns itself
+     */
+    floor: function () {
+        this.x = Math.floor(this.x);
+        this.y = Math.floor(this.y);
+
+        return this;
+    },
+    /**
+     * Ceils the vector components
+     *
+     * @method ceil
+     * @return {Vector} Returns itself
+     */
+    ceil: function () {
+        this.x = Math.ceil(this.x);
+        this.y = Math.ceil(this.y);
 
         return this;
     },
@@ -8320,6 +8574,8 @@ gf.TextureFont = function(font, settings) {
 
     this.map = {};
 
+    this.spaceSize = 15;
+
     gf.Font.call(this, font, settings);
 
     if(typeof font === 'string') {
@@ -8341,6 +8597,10 @@ gf.inherits(gf.TextureFont, gf.Font, {
     _getSprite: function(ch) {
         if(this.map[ch])
             ch = this.map[ch];
+
+        //skips spaces
+        if(ch === '' || ch === ' ')
+            return null;
 
         if(!this.textures[ch + this.ext])
             throw 'there is no texture for character "' + ch + '" with extension "' + this.ext + '"';
@@ -8386,13 +8646,18 @@ gf.inherits(gf.TextureFont, gf.Font, {
                 var ch = str.charAt(s),
                     spr = this._getSprite(ch);
 
-                spr.position.x = x;
-                spr.position.y = y;
+                if(spr !== null) {
+                    spr.position.x = x;
+                    spr.position.y = y;
 
-                x += spr.texture.frame.width * this.lineWidth;
+                    if(spr.texture.frame.height > h)
+                        h = spr.texture.frame.height;
 
-                if(spr.texture.frame.height > h)
-                    h = spr.texture.frame.height;
+                    x += spr.texture.frame.width * this.lineWidth;
+                } else {
+                    x += this.spaceSize * this.lineWidth;
+                }
+
             }
 
             y += h * this.lineHeight;
@@ -8544,7 +8809,6 @@ gf.HudItem = function(pos, settings) {
     }
 
     this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
-    this.set(this.value);
 };
 
 gf.inherits(gf.HudItem, gf.GuiItem, {
@@ -8823,8 +9087,19 @@ gf.TiledMap = function(game, map) {
      */
     this.tilesets = [];
 
+    /**
+     * The tileset for the collision layer
+     *
+     * @property collisionTileset
+     * @type TiledTileset
+     */
+    this.collisionTileset = null;
+
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
-        this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
+        var len = this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
+
+        if(this.tilesets[len-1].name.toLowerCase().indexOf('collider') === 0)
+            this.collisionTileset = this.tilesets[len-1];
     }
 
     /**
@@ -8834,14 +9109,6 @@ gf.TiledMap = function(game, map) {
      * @type Array
      */
     this.collisionLayer = [];
-
-    /**
-     * The tileset for the collision layer
-     *
-     * @property collisionTileset
-     * @type TiledTileset
-     */
-    this.collisionTileset = null;
 
     /**
      * The version of this map
@@ -8905,57 +9172,126 @@ gf.inherits(gf.TiledMap, gf.Map, {
     },
     /**
      * Checks an entities collision with the collision layer of this map
-     * TODO: Fix this for new PIXI stuff
      *
      * @method checkCollision
-     * @param mesh {Entity} The entity to check
+     * @param ent {Entity} The entity to check
      * @param sz {Vector} The size of the entity
      * @param pv {Vector} The potential movement vector
      */
-    //if object is moved by pv get the tile it would be at
-    checkCollision: function(mesh, sz, pv) {
-        if(!this.collisionLayer || !this.collisionTileset) return [];
+    //see: http://stackoverflow.com/questions/2576412/tile-map-collision-detection
+    checkCollision: function(ent, pv) {
+        if(!this.collisionLayer || !this.collisionTileset || (pv.x === 0 && pv.y === 0))
+            return [];
 
-        var pos = new gf.Vector(mesh.position.x, mesh.position.y),
-            size = sz.clone().divideScalar(2),
-            left = pos.x - size.x,
-            right = pos.x + size.x,
-            top = pos.y + size.y,
-            bottom = pos.y - size.y,
-            x = (pv.x < 0) ? Math.floor(left + pv.x) : Math.ceil(right + pv.x),
-            y = (pv.y < 0) ? Math.floor(bottom + pv.y) : Math.ceil(top + pv.y),
-            res = [],
-            tile = null;
-
-        //check X movement
-        if(x <= this.extent.x.min || x >= this.extent.x.max) {
-            res.push({ axis: 'x', tile: { type: gf.Layer.COLLISION.SOLID } });
-        } else if(pv.x) {
-            //x, bottom corner
-            tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.floor(bottom)));
-            if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
-                res.push({ axis: 'x', tile: tile });
-            } else {
-                //x, top corner
-                tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.ceil(top)));
-                if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
-                    res.push({ axis: 'x', tile: tile });
-                }
-            }
+        if(gf.debug._showColliders && !this.sprites) {
+            this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
         }
 
-        //check Y movement
-        if(y <= this.extent.y.min || y >= this.extent.y.max) {
-            res.push({ axis: 'y', tile: { type: gf.Layer.COLLISION.SOLID } });
-        } else if(pv.y) {
-            //y, left corner
-            tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x < 0) ? Math.floor(left) : Math.ceil(right), y));
-            if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
-                res.push({ axis: 'y', tile: tile });
+            //get movement vector and normalize as our step
+        var step = pv.clone().normalize(),
+            //starting position
+            start = ent.position,
+            //end location
+            end = new gf.Point(
+                (start.x + pv.x),
+                (start.y + pv.y)
+            ),
+            //original cell location
+            cell = new gf.Point(
+                Math.floor(start.x / this.tileSize.x),
+                Math.floor(start.y / this.tileSize.y)
+            ),
+            //end cell
+            endCell = new gf.Point(
+                Math.floor(end.x / this.tileSize.x),
+                Math.floor(end.y / this.tileSize.y)
+            ),
+            //the distance between 2 consectutive vertical lines
+            tDelta = new gf.Vector(
+                this.tileSize.x / Math.abs(step.x),
+                this.tileSize.y / Math.abs(step.y)
+            ),
+            //temp and return vars
+            text = null,
+            tMax = new gf.Point(),
+            id = 0,
+            tile = null,
+            res = [];
+
+        if(end.x > start.x) {
+            tMax.x = step.x === 0 ? 0 : ((cell.x + 1) * this.tileSize.x - start.x) / step.x;
+        } else {
+            tMax.x = step.x === 0 ? 0 : (cell.x * this.tileSize.x - start.x) / step.x;
+        }
+
+        if(end.y > start.y) {
+            tMax.y = step.y === 0 ? 0 : ((cell.y + 1) * this.tileSize.y - start.y) / step.y;
+        } else {
+            tMax.y = step.y === 0 ? 0 : (cell.y * this.tileSize.y - start.y) / step.y;
+        }
+
+        //ceil afterwards so tDelta and tMax are correct
+        step.x = step.x < 0 ? Math.floor(step.x) : Math.ceil(step.x);
+        step.y = step.y < 0 ? Math.floor(step.y) : Math.ceil(step.y);
+
+        //check if we are on a colliding tile
+        tile = this.collisionTileset.getTileProperties(this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))]);
+        if(tile && tile.isCollidable) {
+            res.push({ axis: 'x', tile: tile });
+            res.push({ axis: 'y', tile: tile });
+            return res;
+        }
+
+        //collider overlays
+        if(gf.debug._showColliders) {
+            this.sprites.freeAll();
+            for(var s = 0; s < this.sprites.pool.length; ++s)
+                this.sprites.pool[s].visible = false;
+        }
+
+        var spr;
+        //scan all the tiles along the movement vector
+        while(cell.x !== endCell.x || cell.y !== endCell.y) {
+            if(tMax.x < tMax.y) {
+                tMax.x += tDelta.x;
+                cell.x += step.x;
+                id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
+
+                if(gf.debug._showColliders) {
+                    text = this.collisionTileset.getTileTexture(id);
+                    if(text) {
+                        spr = this.sprites.create(text);
+                        spr.position.x = cell.x * this.tileSize.x;
+                        spr.position.y = cell.y * this.tileSize.y;
+                        spr.alpha = 0.5;
+                        spr.visible = true;
+                        spr.setTexture(text);
+                    }
+                }
+
+                tile = this.collisionTileset.getTileProperties(id);
+                if(tile && tile.isCollidable) {
+                    res.push({ axis: 'x', tile: tile });
+                }
             } else {
-                //y, right corner
-                tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x < 0) ? Math.ceil(right) : Math.floor(left), y));
-                if(tile && tile.isCollidable && (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
+                tMax.y += tDelta.y;
+                cell.y += step.y;
+                id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
+
+                if(gf.debug._showColliders) {
+                    text = this.collisionTileset.getTileTexture(id);
+                    if(text) {
+                        spr = this.sprites.create(text);
+                        spr.position.x = cell.x * this.tileSize.x;
+                        spr.position.y = cell.y * this.tileSize.y;
+                        spr.alpha = 0.5;
+                        spr.visible = true;
+                        spr.setTexture(text);
+                    }
+                }
+
+                tile = this.collisionTileset.getTileProperties(id);
+                if(tile && tile.isCollidable) {
                     res.push({ axis: 'y', tile: tile });
                 }
             }
@@ -9359,7 +9695,7 @@ gf.TiledTileset = function(settings) {
     this.tileproperties = settings.tileproperties || {};
 
     //massage tile properties
-    for(var i = 0, il = this.tileproperties.length; i < il; ++i) {
+    for(var i in this.tileproperties) {
         var v = this.tileproperties[i];
 
         if(v.normal) v.normal = gf.utils.ensureVector(v.normal);
