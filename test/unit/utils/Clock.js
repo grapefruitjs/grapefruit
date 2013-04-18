@@ -1,3 +1,3 @@
 define(function() {
-    Q.module('Hud');
+    Q.module('Clock');
 });
