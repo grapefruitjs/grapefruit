@@ -1,3 +1,3 @@
 define(function() {
-    Q.module('Audio');
+    Q.module('Font');
 });

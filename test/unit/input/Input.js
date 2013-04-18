@@ -1,3 +1,3 @@
 define(function() {
-    Q.module('Loader');
+    Q.module('Input');
 });

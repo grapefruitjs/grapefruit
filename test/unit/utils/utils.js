@@ -7,15 +7,19 @@ define(function() {
 
     Q.test('#ensureVector', function() {
         var v2s = gf.utils.ensureVector('10|5'),
-            v2a = gf.utils.ensureVector([10,5]);
+            v2a = gf.utils.ensureVector([10,5]),
+            v2i = gf.utils.ensureVector(10);
 
         Q.ok(v2s instanceof gf.Vector, 'String converts to a Vector2');
         Q.ok(v2a instanceof gf.Vector, 'Array converts to a Vector2');
+        Q.ok(v2i instanceof gf.Vector, 'Number converts to a Vector2');
 
         Q.strictEqual(v2s.x, 10, 'String (V2) has X set correctly');
         Q.strictEqual(v2s.y, 5, 'String (V2) has Y set correctly');
         Q.strictEqual(v2a.x, 10, 'Array (V2) has Y set correctly');
         Q.strictEqual(v2a.y, 5, 'Array (V2) has Y set correctly');
+        Q.strictEqual(v2i.x, 10, 'Number (V2) has Y set correctly');
+        Q.strictEqual(v2i.y, 10, 'Number (V2) has Y set correctly');
     });
 
     Q.test('#noop', function() {
@@ -23,6 +27,10 @@ define(function() {
     });
 
     Q.test('#ajax', function() {
+        Q.skip('Need Tests');
+    });
+
+    Q.test('#AjaxRequest', function() {
         Q.skip('Need Tests');
     });
 

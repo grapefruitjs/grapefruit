@@ -5,25 +5,46 @@ requirejs.config({
 define(function(require) {
     var testModules = [
         'core',
-        'audio/audio',
-        'controls/controls',
-        'controls/gamepad',
+        'Game',
+        'AssetLoader',
+        'AudioPlayer',
+        'DisplayObject',
+        'Camera',
+        'Sprite',
+        'Entity',
+        'entityPool',
+
         'debug/debug',
-        'entity/Entity',
-        'entity/entityPool',
-        'entity/Sprite',
-        'gui/gui',
-        'gui/hud',
-        'gui/hud/HudItem',
-        'loader/AssetLoader',
+
+        'utils/utils',
+        'utils/Clock',
+        'utils/ObjectPool',
+        'utils/Vector',
+
+        'input/InputManager',
+        'input/Input',
+        'input/Mouse',
+        'input/Keyboard',
+        'input/Gamepad',
+        'input/GamepadButtons',
+        'input/GamepadSticks',
+
+        'font/Font',
+        'font/TextureFont',
+
+        'gui/Gui',
+        'gui/GuiItem',
+        'gui/Hud',
+        'gui/HudItem',
+
         'map/Map',
         'map/Layer',
-        'map/tiled/TiledLayer',
         'map/tiled/TiledMap',
-        'map/tiled/TiledObjectGroup',
+        'map/tiled/TiledLayer',
         'map/tiled/TiledTileset',
-        'plugin/plugin',
-        'utils/utils'
+        'map/tiled/TiledObjectGroup',
+
+        'plugin/plugin'
     ];
 
     // Resolve all testModules and then start the Test Runner.

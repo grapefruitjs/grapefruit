@@ -1,3 +1,3 @@
 define(function() {
-    Q.module('GUI');
+    Q.module('Gui');
 });
