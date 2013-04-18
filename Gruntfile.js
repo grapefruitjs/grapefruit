@@ -198,8 +198,8 @@ module.exports = function(grunt) {
     });
 
     //Load tasks
-    grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+    grunt.registerTask('default', ['build', 'test']);
     grunt.registerTask('build', ['jshint', 'concat', 'uglify']);
-    grunt.registerTask('test', ['concat', 'connect:qunit', 'qunit']);
+    grunt.registerTask('test', ['connect:qunit', 'qunit']);
     grunt.registerTask('docs', ['yuidoc']);
 };
