@@ -58,16 +58,6 @@ gf.Entity = function(game, pos, settings) {
     this.mapCollidable = true;
 
     /**
-     * Is an entity
-     *
-     * @property mapCollidable
-     * @type Boolean
-     * @default true
-     * @readOnly
-     */
-    this.entity = true;
-
-    /**
      * The velocity of the entity. You can set these in Tiled by using "x|y" notation
      * velocity of the entity (units per tick)
      *
@@ -240,35 +230,40 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * @return {Boolean}
      */
     intersects: function(obj)  {
-        return (Math.abs(this.position.x - obj.position.x) * 2 < (this.size.x + obj.size.x)) &&
-                (Math.abs(this.position.y - obj.position.y) * 2 < (this.size.y + obj.size.y));
+        return (Math.abs(this.position.x - obj.position.x) * 2 < (this.width + obj.width)) &&
+                (Math.abs(this.position.y - obj.position.y) * 2 < (this.height + obj.height));
     },
     /**
-     * Checks if this entity collides with the passed Entity, a penetration vector is calculated.
-     * This method is called from gf.game.checkCollisions(ent); That method will use this to check
-     * for any collisions between that entity and all the others on the stage.
+     * Checks if this entity collides with any Entities, and if so, a penetration vector is calculated.
      * from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
      *
-     * @method checkCollision
-     * @param obj {Entity} The Entity to check if this entity collides with
-     * @return {Vector}
+     * @method checkCollisions
+     * @return {Array}
      */
-    checkCollision: function(obj) {
-        //response vector
-        var p = new gf.Vector(0, 0);
+    checkCollisions: function(world) {
+        world = world || this.game.world;
 
-        //check if hitboxes intersect
-        if(this.intersects(obj)) {
-            //compute delta between this & entity
-            var dx = this.position.x - obj.position.x,
-                dy = this.position.y - obj.position.y;
+        var self = this,
+            res = [];
 
-            //compute penetration depth for both axis
-            p.x = dx / 2;
-            p.y = dy / 2;
-        }
+        //check if this entity collides with any others in the world
+        world.forEachEntity(function(ent) {
+            if(ent.collidable && self != ent && self.intersects(ent)) {
+                res.push({
+                    dx: (self.position.x - obj.position.x) / 2,
+                    dy: (self.position.y - obj.position.y) / 2,
+                    ent: ent
+                });
 
-        return p;
+                if(self.onCollision)
+                    self.onCollision(ent);
+
+                if(ent.onCollision)
+                    ent.onCollision(self);
+            }
+        });
+
+        return res;
     },
     /**
      * Calculate the velocity of the entity, and then apply it. This is different than moveEntity
@@ -343,7 +338,8 @@ gf.inherits(gf.Entity, gf.Sprite, {
         this.viewPosition.y = Math.round(this.position.y);
 
         //onMove event
-        this.onMove(vel);
+        if(this.onMove)
+            this.onMove(vel);
 
         return this;
     },
@@ -381,8 +377,8 @@ gf.inherits(gf.Entity, gf.Sprite, {
     },
     /**
      * On Collision Event
-     *      called when this object is collided into by another, by default if something collides with
-     *      a collectable entity we remove the collectable
+     *      called when this object collides into another, or is being collided into by another
+     *      by default if something collides with a collectable entity we remove the collectable
      *
      * @method onCollision
      * @param vel {Vector} Collision Vector
@@ -390,8 +386,8 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * @return {Entity} Returns itself for chainability
      */
     onCollision: function() {
-        if(this.collidable && this.type === gf.Entity.TYPE.COLLECTABLE)
-            this.game.removeObject(this);
+        if(this.type === gf.Entity.TYPE.COLLECTABLE)
+            this.parent.removeChild(this);
 
         return this;
     },

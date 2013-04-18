@@ -12,13 +12,22 @@
  */
 gf.Sprite = function(pos, settings) {
     /**
-     * The size of the sprite
+     * The width of the sprite
      *
-     * @property size
-     * @type gf.Vector
-     * @default new gf.Vector(0, 0);
+     * @property width
+     * @type Number
+     * @default 0
      */
-    this.size = new gf.Vector(0, 0);
+    this.width = 0;
+
+    /**
+     * The height of the sprite
+     *
+     * @property height
+     * @type Number
+     * @default 0
+     */
+    this.height = 0;
 
     /**
      * The name of this sprite
@@ -49,16 +58,6 @@ gf.Sprite = function(pos, settings) {
      */
     this.currentAnim = null;
 
-    /**
-     * Whether or not this Sprite is interactive. Please either pass this in with the
-     * ctor or use setInteractive to change it later. Changing this property directly
-     * on-the-fly will yield unexpected results.
-     *
-     * @property interactive
-     * @type Boolean
-     */
-    this.interactive = false;
-
     //call base ctor
     gf.DisplayObject.call(this);
 
@@ -88,9 +87,12 @@ gf.Sprite = function(pos, settings) {
 
         if(settings.texture instanceof gf.Texture) {
             var spr = new PIXI.Sprite(settings.texture);
-            if(settings.interactive) spr.setInteractive(true);
             this.addChild(spr);
-            this.anim['default'] = spr;
+            this.anim['default'] = spr.childIndex;
+            this.width = spr.width;
+            this.height = spr.height;
+            spr.setTexture = setTextureWrapper;
+            spr.onTextureUpdate = onTextureUpdateWrapper;
         }
     }
 
@@ -201,6 +203,8 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
         clip.stop();
         clip.visible = false;
         clip.name = name;
+        clip.setTexture = setTextureWrapper;
+        clip.onTextureUpdate = onTextureUpdateWrapper;
 
         if(this.interactive)
             clip.setInteractive(this.interactive);
@@ -241,6 +245,8 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
             this.currentAnim.visible = true;
             this.currentAnim.loop = loop;
             this.currentAnim.onComplete = cb;
+            this.width = this.currentAnim.width;
+            this.height = this.currentAnim.height;
             this.currentAnim.gotoAndPlay(0);
         } else {
             throw 'Unknown animation ' + name;
@@ -338,3 +344,17 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
  * @method gotoAndPlay
  * @param frameNumber {Number} frame index to start at
  */
+
+function setTextureWrapper(t) {
+    PIXI.Sprite.prototype.setTexture.call(this);
+
+    this.parent.width = this.currentAnim.width;
+    this.parent.height = this.currentAnim.height;
+}
+
+function onTextureUpdateWrapper(e) {
+    PIXI.Sprite.prototype.onTextureUpdate.call(this);
+
+    this.parent.width = this.currentAnim.width;
+    this.parent.height = this.currentAnim.height;
+}
