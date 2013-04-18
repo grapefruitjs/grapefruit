@@ -374,6 +374,15 @@ gf.inherits(gf.TiledMap, gf.Map, {
             }
         }
     },
+    forEachEntity: function(fn) {
+        //go through each object group and call for each entity. This is slightly more efficient
+        //than the generic DisplayObject version since we can skip over checking all the TiledLayers
+        //which will never have any Entities in them.
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            if(this.children[i] instanceof gf.TiledObjectGroup)
+                this.children[i].forEachEntity(fn);
+        }
+    },
     //WIP
     _checkHalfBlock: function(half, x, y) {
         var tx = Math.floor(x / this.scaledTileSize.x) * this.scaledTileSize.x,
