@@ -1,6 +1,6 @@
 /**
  * @license
- * GrapeFruit Game Engine - v0.0.2
+ * GrapeFruit Game Engine - v0.0.3
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
@@ -4342,7 +4342,7 @@ gf.EventTarget = PIXI.EventTarget;
  * @property version
  * @type String
  */
-gf.version = '0.0.2';
+gf.version = '0.0.3';
 
 /**
  * The cached assets loaded by any loader
