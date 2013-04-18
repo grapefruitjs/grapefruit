@@ -75,7 +75,7 @@ gf.EventTarget = PIXI.EventTarget;
  * @property version
  * @type String
  */
-gf.version = '0.0.2';
+gf.version = '@@VERSION';
 
 /**
  * The cached assets loaded by any loader

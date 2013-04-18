@@ -7,6 +7,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
+    grunt.loadNpmTasks('grunt-replace');
 
     //explicity set source files because order is important
     var srcFiles = [
@@ -91,6 +92,24 @@ module.exports = function(grunt) {
             outro: '<%= dirs.src %>/outro.js',
             build: '<%= dirs.build %>/<%= pkg.name %>.js',
             buildMin: '<%= dirs.build %>/<%= pkg.name %>.min.js'
+        },
+        replace: {
+            dist: {
+                options: {
+                    variables: {
+                        'VERSION': '<%= pkg.version %>'
+                    },
+                    prefix: '@@'
+                },
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: ['<%= files.build %>', '<%= files.buildMin %>'],
+                        dest: '<%= dirs.build %>'
+                    }
+                ]
+            }
         },
         concat: {
             options: {
@@ -199,7 +218,7 @@ module.exports = function(grunt) {
 
     //Load tasks
     grunt.registerTask('default', ['build', 'test']);
-    grunt.registerTask('build', ['jshint', 'concat', 'uglify']);
+    grunt.registerTask('build', ['jshint', 'concat', 'uglify', 'replace']);
     grunt.registerTask('test', ['connect:qunit', 'qunit']);
     grunt.registerTask('docs', ['yuidoc']);
 };
