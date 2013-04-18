@@ -1,7 +1,6 @@
 /**
  * The base Gui that holds GuiItems to be presented as a Gui
  *
- * @module gf
  * @class Gui
  * @extends DisplayObject
  * @constructor

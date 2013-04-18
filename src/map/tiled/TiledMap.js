@@ -3,7 +3,6 @@
  * The loader knows to load all textures and other resources when loading a world TMX
  * file, and this expets that to already be done.
  *
- * @module gf
  * @class TiledMap
  * @extends Map
  * @constructor

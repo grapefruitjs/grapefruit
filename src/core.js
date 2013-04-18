@@ -31,15 +31,12 @@
 /**
  * The base grapefruit object
  *
- * @module gf
- * @main gf
  */
 window.gf = window.gf || {};
 
 /**
  * Point object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Point.html">PIXI.Point</a>
  *
- * @module gf
  * @class Point
  */
 gf.Point = PIXI.Point;
@@ -47,7 +44,6 @@ gf.Point = PIXI.Point;
 /**
  * Rectangle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html">PIXI.Point</a>
  *
- * @module gf
  * @class Rectangle
  */
 gf.Rectangle = PIXI.Rectangle;
@@ -55,7 +51,6 @@ gf.Rectangle = PIXI.Rectangle;
 /**
  * Texture object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
  *
- * @module gf
  * @class Texture
  */
 gf.Texture = PIXI.Texture;
@@ -63,7 +58,6 @@ gf.Texture = PIXI.Texture;
 /**
  * EventTarget mixin, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/EventTarget.html">PIXI.EventTarget</a>
  *
- * @module gf
  * @class EventTarget
  */
 gf.EventTarget = PIXI.EventTarget;
@@ -71,7 +65,6 @@ gf.EventTarget = PIXI.EventTarget;
 /**
  * The current grapefruit version
  *
- * @module gf
  * @property version
  * @type String
  */
@@ -80,7 +73,6 @@ gf.version = '@@VERSION';
 /**
  * The cached assets loaded by any loader
  *
- * @module gf
  * @property assetCache
  * @type Object
  */
@@ -89,7 +81,6 @@ gf.assetCache = {};
 /**
  * Feature detection so we cans witch between renderers, play audio correctly, and other things.
  *
- * @module gf
  * @class support
  */
 gf.support = {
@@ -203,7 +194,6 @@ if(gf.support.audio.play) {
 /**
  * Compares version numbers, useful for plugins to specify a required gf version
  *
- * @module gf
  * @method checkVersion
  * @param first {String} The first version
  * @param second {String} The second version
@@ -239,7 +229,6 @@ gf.checkVersion = function(first, second) {
  * Inherits the prototype of a parent object.
  * from: https://github.com/isaacs/inherits/blob/master/inherits.js
  *
- * @module gf
  * @method inherits
  * @param child {Object} The Child to inherit the prototype
  * @param parent {Object} The Parent to inherit from

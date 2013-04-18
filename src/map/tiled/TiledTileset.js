@@ -2,7 +2,6 @@
  * This object represents a tileset used by a TiledMap.
  * There can be multiple Tilesets in a map
  *
- * @module gf
  * @class TiledTileset
  * @extends Texture
  * @constructor

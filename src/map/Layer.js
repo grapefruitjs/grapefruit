@@ -1,7 +1,6 @@
 /**
  * Base Layer implementation, provides common functions for all Layer types
  *
- * @module gf
  * @class Layer
  * @extends DisplayObject
  * @constructor

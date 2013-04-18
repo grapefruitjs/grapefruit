@@ -1,7 +1,6 @@
 /**
  * Tiled object group is a special layer that contains entities
  *
- * @module gf
  * @class TiledObjectGroup
  * @extends Layer
  * @constructor

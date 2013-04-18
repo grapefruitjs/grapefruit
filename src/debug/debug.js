@@ -1,7 +1,6 @@
 /**
  * A simple object to show some debug items
  *
- * @module gf
  * @class debug
  */
  gf.debug = {

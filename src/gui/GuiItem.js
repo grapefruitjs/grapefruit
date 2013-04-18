@@ -1,7 +1,6 @@
 /**
  * The base GuiItem that represents an element of a gui on the screen.
  *
- * @module gf
  * @class GuiItem
  * @extends Sprite
  * @constructor

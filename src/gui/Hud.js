@@ -1,7 +1,6 @@
 /**
  * The Hud that holds HudItems to be presented as a Hud
  *
- * @module gf
  * @class Hud
  * @extends DisplayObject
  * @constructor

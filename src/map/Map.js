@@ -1,7 +1,6 @@
 /**
  * Base Map implementation, provides common functions for all Map types
  *
- * @module gf
  * @class Map
  * @extends DisplayObject
  * @constructor

@@ -2,7 +2,6 @@
  * A 2d Vector implementation stolen directly from mrdoob's THREE.js
  * thanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js
  *
- * @module gf
  * @class Vector
  * @constructor
  * @param x {Number} The x component of the vector

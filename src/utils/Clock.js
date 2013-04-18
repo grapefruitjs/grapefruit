@@ -2,7 +2,6 @@
  * High performance clock, from mrdoob's Three.js
  * https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js
  *
- * @module gf
  * @class Clock
  * @constructor
  * @param autoStart {Boolean} Automatically start the counter or not

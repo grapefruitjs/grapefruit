@@ -1,4 +1,3 @@
-
 /**
  * A basic Camera object that provides some effects. It also will contain the HUD and GUI
  * to ensure they are using "screen-coords".
@@ -7,7 +6,6 @@
  *
  * TODO: Currently fade/flash don't show the colors. How should I actually show them, a PIXI.Sprite?
  *
- * @module gf
  * @class Camera
  * @extends DisplayObject
  * @constructor
