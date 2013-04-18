@@ -51,7 +51,13 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/map/tiled/TiledObjectGroup.js',
 
         '<%= dirs.src %>/plugin/plugin.js'
-    ], banner = [
+    ],
+    vendorFiles = [
+        '<%= dirs.vendor %>/es5-shim.min.js',
+        '<%= dirs.vendor %>/es5-sham.min.js',
+        '<%= dirs.vendor %>/pixi.dev.js'
+    ],
+    banner = [
         '/**',
         ' * @license',
         ' * <%= pkg.longName %> - v<%= pkg.version %>',
@@ -78,7 +84,7 @@ module.exports = function(grunt) {
             vendor: 'vendor'
         },
         files: {
-            vendor: '<%= dirs.vendor %>/**/*js',
+            vendorBlob: '<%= dirs.vendor %>/**/*js',
             srcBlob: '<%= dirs.src %>/**/*.js',
             testBlob: '<%= dirs.test %>/unit/**/*.js',
             intro: '<%= dirs.src %>/intro.js',
@@ -91,7 +97,7 @@ module.exports = function(grunt) {
                 banner: banner
             },
             dist: {
-                src: ['<%= files.intro %>', '<%= files.vendor %>'].concat(srcFiles).concat(['<%= files.outro %>']),
+                src: ['<%= files.intro %>'].concat(vendorFiles).concat(srcFiles).concat(['<%= files.outro %>']),
                 dest: '<%= files.build %>'
             }
         },
