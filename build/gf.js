@@ -4,21 +4,13 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-04-17
+ * Compiled: 2013-04-18
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
  */
 (function(window, undefined) {
     document = window.document;
-
-(function(f){"function"==typeof define?define(f):"function"==typeof YUI?YUI.add("es5-sham",f):f()})(function(){function f(a){try{return Object.defineProperty(a,"sentinel",{}),"sentinel"in a}catch(c){}}var b=Function.prototype.call,g=Object.prototype,h=b.bind(g.hasOwnProperty),p,q,k,l,i;if(i=h(g,"__defineGetter__"))p=b.bind(g.__defineGetter__),q=b.bind(g.__defineSetter__),k=b.bind(g.__lookupGetter__),l=b.bind(g.__lookupSetter__);Object.getPrototypeOf||(Object.getPrototypeOf=function(a){return a.__proto__||
-(a.constructor?a.constructor.prototype:g)});Object.getOwnPropertyDescriptor||(Object.getOwnPropertyDescriptor=function(a,c){if(typeof a!="object"&&typeof a!="function"||a===null)throw new TypeError("Object.getOwnPropertyDescriptor called on a non-object: "+a);if(h(a,c)){var d={enumerable:true,configurable:true};if(i){var b=a.__proto__;a.__proto__=g;var e=k(a,c),f=l(a,c);a.__proto__=b;if(e||f){if(e)d.get=e;if(f)d.set=f;return d}}d.value=a[c];return d}});Object.getOwnPropertyNames||(Object.getOwnPropertyNames=
-function(a){return Object.keys(a)});if(!Object.create){var m;if(null===Object.prototype.__proto__||"undefined"==typeof document)m=function(){return{__proto__:null}};else{var r=function(){},b=document.createElement("iframe"),j=document.body||document.documentElement;b.style.display="none";j.appendChild(b);b.src="javascript:";var e=b.contentWindow.Object.prototype;j.removeChild(b);b=null;delete e.constructor;delete e.hasOwnProperty;delete e.propertyIsEnumerable;delete e.isPrototypeOf;delete e.toLocaleString;
-delete e.toString;delete e.valueOf;e.__proto__=null;r.prototype=e;m=function(){return new r}}Object.create=function(a,c){function d(){}var b;if(a===null)b=m();else{if(typeof a!=="object"&&typeof a!=="function")throw new TypeError("Object prototype may only be an Object or null");d.prototype=a;b=new d;b.__proto__=a}c!==void 0&&Object.defineProperties(b,c);return b}}if(Object.defineProperty&&(b=f({}),j="undefined"==typeof document||f(document.createElement("div")),!b||!j))var n=Object.defineProperty,
-o=Object.defineProperties;if(!Object.defineProperty||n)Object.defineProperty=function(a,c,d){if(typeof a!="object"&&typeof a!="function"||a===null)throw new TypeError("Object.defineProperty called on non-object: "+a);if(typeof d!="object"&&typeof d!="function"||d===null)throw new TypeError("Property description must be an object: "+d);if(n)try{return n.call(Object,a,c,d)}catch(b){}if(h(d,"value"))if(i&&(k(a,c)||l(a,c))){var e=a.__proto__;a.__proto__=g;delete a[c];a[c]=d.value;a.__proto__=e}else a[c]=
-d.value;else{if(!i)throw new TypeError("getters & setters can not be defined on this javascript engine");h(d,"get")&&p(a,c,d.get);h(d,"set")&&q(a,c,d.set)}return a};if(!Object.defineProperties||o)Object.defineProperties=function(a,c){if(o)try{return o.call(Object,a,c)}catch(d){}for(var b in c)h(c,b)&&b!="__proto__"&&Object.defineProperty(a,b,c[b]);return a};Object.seal||(Object.seal=function(a){return a});Object.freeze||(Object.freeze=function(a){return a});try{Object.freeze(function(){})}catch(t){var s=
-Object.freeze;Object.freeze=function(a){return typeof a=="function"?a:s(a)}}Object.preventExtensions||(Object.preventExtensions=function(a){return a});Object.isSealed||(Object.isSealed=function(){return false});Object.isFrozen||(Object.isFrozen=function(){return false});Object.isExtensible||(Object.isExtensible=function(a){if(Object(a)!==a)throw new TypeError;for(var c="";h(a,c);)c=c+"?";a[c]=true;var b=h(a,c);delete a[c];return b})});
 
 (function(o){"function"==typeof define?define(o):"function"==typeof YUI?YUI.add("es5",o):o()})(function(){function o(){}function v(a){a=+a;a!==a?a=0:0!==a&&(a!==1/0&&a!==-(1/0))&&(a=(0<a||-1)*Math.floor(Math.abs(a)));return a}function s(a){var b=typeof a;return null===a||"undefined"===b||"boolean"===b||"number"===b||"string"===b}Function.prototype.bind||(Function.prototype.bind=function(a){var b=this;if("function"!=typeof b)throw new TypeError("Function.prototype.bind called on incompatible "+b);
 var d=q.call(arguments,1),c=function(){if(this instanceof c){var e=b.apply(this,d.concat(q.call(arguments)));return Object(e)===e?e:this}return b.apply(a,d.concat(q.call(arguments)))};b.prototype&&(o.prototype=b.prototype,c.prototype=new o,o.prototype=null);return c});var k=Function.prototype.call,p=Object.prototype,q=Array.prototype.slice,h=k.bind(p.toString),t=k.bind(p.hasOwnProperty);t(p,"__defineGetter__")&&(k.bind(p.__defineGetter__),k.bind(p.__defineSetter__),k.bind(p.__lookupGetter__),k.bind(p.__lookupSetter__));
@@ -37,6 +29,14 @@ if(typeof b!="function")throw new TypeError("toISOString property is not callabl
 0),j=Number(b[7]||0),m=!b[4]||b[8]?0:Number(new g(1970,0)),k=b[9]==="-"?1:-1,l=Number(b[10]||0),b=Number(b[11]||0);if(f<(h>0||i>0||j>0?24:25)&&h<60&&i<60&&j<1E3&&c>-1&&c<12&&l<24&&b<60&&e>-1&&e<u(d,c+1)-u(d,c)){d=((u(d,c)+e)*24+f+l*k)*60;d=((d+h+b*k)*60+i)*1E3+j+m;if(-864E13<=d&&d<=864E13)return d}return NaN}return g.parse.apply(this,arguments)};Date=m;Date.now||(Date.now=function(){return(new Date).getTime()});if("0".split(void 0,0).length){var D=String.prototype.split;String.prototype.split=function(a,
 b){return a===void 0&&b===0?[]:D.apply(this,arguments)}}if("".substr&&"b"!=="0b".substr(-1)){var E=String.prototype.substr;String.prototype.substr=function(a,b){return E.call(this,a<0?(a=this.length+a)<0?0:a:a,b)}}j="\t\n\x0B\f\r \u00a0\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u2028\u2029\ufeff";if(!String.prototype.trim||j.trim()){j="["+j+"]";var F=RegExp("^"+j+j+"*"),G=RegExp(j+j+"*$");String.prototype.trim=function(){if(this===void 0||this===
 null)throw new TypeError("can't convert "+this+" to object");return String(this).replace(F,"").replace(G,"")}}var n=function(a){if(a==null)throw new TypeError("can't convert "+a+" to object");return Object(a)}});
+
+(function(f){"function"==typeof define?define(f):"function"==typeof YUI?YUI.add("es5-sham",f):f()})(function(){function f(a){try{return Object.defineProperty(a,"sentinel",{}),"sentinel"in a}catch(c){}}var b=Function.prototype.call,g=Object.prototype,h=b.bind(g.hasOwnProperty),p,q,k,l,i;if(i=h(g,"__defineGetter__"))p=b.bind(g.__defineGetter__),q=b.bind(g.__defineSetter__),k=b.bind(g.__lookupGetter__),l=b.bind(g.__lookupSetter__);Object.getPrototypeOf||(Object.getPrototypeOf=function(a){return a.__proto__||
+(a.constructor?a.constructor.prototype:g)});Object.getOwnPropertyDescriptor||(Object.getOwnPropertyDescriptor=function(a,c){if(typeof a!="object"&&typeof a!="function"||a===null)throw new TypeError("Object.getOwnPropertyDescriptor called on a non-object: "+a);if(h(a,c)){var d={enumerable:true,configurable:true};if(i){var b=a.__proto__;a.__proto__=g;var e=k(a,c),f=l(a,c);a.__proto__=b;if(e||f){if(e)d.get=e;if(f)d.set=f;return d}}d.value=a[c];return d}});Object.getOwnPropertyNames||(Object.getOwnPropertyNames=
+function(a){return Object.keys(a)});if(!Object.create){var m;if(null===Object.prototype.__proto__||"undefined"==typeof document)m=function(){return{__proto__:null}};else{var r=function(){},b=document.createElement("iframe"),j=document.body||document.documentElement;b.style.display="none";j.appendChild(b);b.src="javascript:";var e=b.contentWindow.Object.prototype;j.removeChild(b);b=null;delete e.constructor;delete e.hasOwnProperty;delete e.propertyIsEnumerable;delete e.isPrototypeOf;delete e.toLocaleString;
+delete e.toString;delete e.valueOf;e.__proto__=null;r.prototype=e;m=function(){return new r}}Object.create=function(a,c){function d(){}var b;if(a===null)b=m();else{if(typeof a!=="object"&&typeof a!=="function")throw new TypeError("Object prototype may only be an Object or null");d.prototype=a;b=new d;b.__proto__=a}c!==void 0&&Object.defineProperties(b,c);return b}}if(Object.defineProperty&&(b=f({}),j="undefined"==typeof document||f(document.createElement("div")),!b||!j))var n=Object.defineProperty,
+o=Object.defineProperties;if(!Object.defineProperty||n)Object.defineProperty=function(a,c,d){if(typeof a!="object"&&typeof a!="function"||a===null)throw new TypeError("Object.defineProperty called on non-object: "+a);if(typeof d!="object"&&typeof d!="function"||d===null)throw new TypeError("Property description must be an object: "+d);if(n)try{return n.call(Object,a,c,d)}catch(b){}if(h(d,"value"))if(i&&(k(a,c)||l(a,c))){var e=a.__proto__;a.__proto__=g;delete a[c];a[c]=d.value;a.__proto__=e}else a[c]=
+d.value;else{if(!i)throw new TypeError("getters & setters can not be defined on this javascript engine");h(d,"get")&&p(a,c,d.get);h(d,"set")&&q(a,c,d.set)}return a};if(!Object.defineProperties||o)Object.defineProperties=function(a,c){if(o)try{return o.call(Object,a,c)}catch(d){}for(var b in c)h(c,b)&&b!="__proto__"&&Object.defineProperty(a,b,c[b]);return a};Object.seal||(Object.seal=function(a){return a});Object.freeze||(Object.freeze=function(a){return a});try{Object.freeze(function(){})}catch(t){var s=
+Object.freeze;Object.freeze=function(a){return typeof a=="function"?a:s(a)}}Object.preventExtensions||(Object.preventExtensions=function(a){return a});Object.isSealed||(Object.isSealed=function(){return false});Object.isFrozen||(Object.isFrozen=function(){return false});Object.isExtensible||(Object.isExtensible=function(a){if(Object(a)!==a)throw new TypeError;for(var c="";h(a,c);)c=c+"?";a[c]=true;var b=h(a,c);delete a[c];return b})});
 
 /**
  * @license
@@ -2162,8 +2162,8 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
 		gl.bindTexture(gl.TEXTURE_2D, texture._glTexture);
 	 	gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
@@ -6626,7 +6626,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
         //TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
         //get the world colliders
         var colliders = (this.game.world === undefined || !this.mapCollidable) ? [] : this.game.world.checkCollision(this, this.velocity);
-        if(colliders.length) window.console.log(colliders);
+        //if(colliders.length) window.console.log(colliders);
 
         //update flags
         this.onladder = false;
@@ -9187,36 +9187,135 @@ gf.inherits(gf.TiledMap, gf.Map, {
             this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
         }
 
+        //collider overlays
+        if(gf.debug._showColliders) {
+            this.sprites.freeAll();
+            for(var s = 0; s < this.sprites.pool.length; ++s)
+                this.sprites.pool[s].visible = false;
+        }
+
             //get movement vector and normalize as our step
         var step = pv.clone().normalize(),
-            //starting position
-            start = ent.position,
-            //end location
-            end = new gf.Point(
-                (start.x + pv.x),
-                (start.y + pv.y)
-            ),
-            //original cell location
-            cell = new gf.Point(
-                Math.floor(start.x / this.tileSize.x),
-                Math.floor(start.y / this.tileSize.y)
-            ),
-            //end cell
-            endCell = new gf.Point(
-                Math.floor(end.x / this.tileSize.x),
-                Math.floor(end.y / this.tileSize.y)
-            ),
-            //the distance between 2 consectutive vertical lines
-            tDelta = new gf.Vector(
-                this.tileSize.x / Math.abs(step.x),
-                this.tileSize.y / Math.abs(step.y)
-            ),
-            //temp and return vars
-            text = null,
-            tMax = new gf.Point(),
-            id = 0,
+            pos = ent.position,
+            width = ent.currentAnim ? ent.currentAnim.width : pos.x,
+            height = ent.currentAnim ? ent.currentAnim.height : pos.y,
+            i = 0,
+            il = 0,
             tile = null,
             res = [];
+
+        //scan along the right face of the bound box
+        if(step.x > 0) {
+            for(i = pos.y, il = pos.y + height; i < il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        pos.x + width,
+                        i
+                    ),
+                    step,
+                    pv,
+                    'x'
+                );
+                if(tile) break;
+            }
+        }
+        //scan along the left face of the bound box
+        else if(step.x < 0) {
+            for(i = pos.y, il = pos.y + height; i < il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        pos.x,
+                        i
+                    ),
+                    step,
+                    pv,
+                    'x'
+                );
+                if(tile) break;
+            }
+        }
+
+        if(tile) {
+            res.push(tile);
+            tile = null;
+        }
+
+        //scan along the bottom face of the bound box
+        if(step.y > 0) {
+            for(i = pos.x, il = pos.x + width; i < il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        i,
+                        pos.y + height
+                    ),
+                    step,
+                    pv,
+                    'y'
+                );
+                if(tile) break;
+            }
+        }
+        //scan along the top face of the bound box
+        else if(step.y < 0) {
+            for(i = pos.x, il = pos.x + width; i < il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        i,
+                        pos.y
+                    ),
+                    step,
+                    pv,
+                    'y'
+                );
+                if(tile) break;
+            }
+        }
+
+        if(tile) {
+            res.push(tile);
+            tile = null;
+        }
+
+        return res;
+    },
+    _showCollider: function(id, cell) {
+        var text = this.collisionTileset.getTileTexture(id);
+        if(text) {
+            var spr = this.sprites.create(text);
+            spr.position.x = cell.x * this.tileSize.x;
+            spr.position.y = cell.y * this.tileSize.y;
+            spr.alpha = 0.5;
+            spr.visible = true;
+            spr.setTexture(text);
+        }
+    },
+    _checkPoint: function(start, step, pv, ax) {
+        step = step.clone();
+
+        //end location
+        var end = new gf.Point(
+            (start.x + pv.x),
+            (start.y + pv.y)
+        ),
+        //original cell location
+        cell = new gf.Point(
+            Math.floor(start.x / this.tileSize.x),
+            Math.floor(start.y / this.tileSize.y)
+        ),
+        //end cell
+        endCell = new gf.Point(
+            Math.floor(end.x / this.tileSize.x),
+            Math.floor(end.y / this.tileSize.y)
+        ),
+        //the distance between 2 consectutive vertical lines
+        tDelta = new gf.Vector(
+            this.tileSize.x / Math.abs(step.x),
+            this.tileSize.y / Math.abs(step.y)
+        ),
+        //temp and return vars
+        tMax = new gf.Point(),
+        id = 0,
+        tile = null;
 
         if(end.x > start.x) {
             tMax.x = step.x === 0 ? 0 : ((cell.x + 1) * this.tileSize.x - start.x) / step.x;
@@ -9234,70 +9333,37 @@ gf.inherits(gf.TiledMap, gf.Map, {
         step.x = step.x < 0 ? Math.floor(step.x) : Math.ceil(step.x);
         step.y = step.y < 0 ? Math.floor(step.y) : Math.ceil(step.y);
 
-        //check if we are on a colliding tile
-        tile = this.collisionTileset.getTileProperties(this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))]);
+        //check the cell currently on
+        id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
+        tile = this.collisionTileset.getTileProperties(id);
         if(tile && tile.isCollidable) {
-            res.push({ axis: 'x', tile: tile });
-            res.push({ axis: 'y', tile: tile });
-            return res;
+            if(gf.debug._showColliders)
+                this._showCollider(id, cell);
+
+            return { axis: ax, tile: tile };
         }
 
-        //collider overlays
-        if(gf.debug._showColliders) {
-            this.sprites.freeAll();
-            for(var s = 0; s < this.sprites.pool.length; ++s)
-                this.sprites.pool[s].visible = false;
-        }
-
-        var spr;
         //scan all the tiles along the movement vector
         while(cell.x !== endCell.x || cell.y !== endCell.y) {
             if(tMax.x < tMax.y) {
                 tMax.x += tDelta.x;
                 cell.x += step.x;
-                id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
-
-                if(gf.debug._showColliders) {
-                    text = this.collisionTileset.getTileTexture(id);
-                    if(text) {
-                        spr = this.sprites.create(text);
-                        spr.position.x = cell.x * this.tileSize.x;
-                        spr.position.y = cell.y * this.tileSize.y;
-                        spr.alpha = 0.5;
-                        spr.visible = true;
-                        spr.setTexture(text);
-                    }
-                }
-
-                tile = this.collisionTileset.getTileProperties(id);
-                if(tile && tile.isCollidable) {
-                    res.push({ axis: 'x', tile: tile });
-                }
+                ax = 'x';
             } else {
                 tMax.y += tDelta.y;
                 cell.y += step.y;
-                id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
+                ax = 'y';
+            }
 
-                if(gf.debug._showColliders) {
-                    text = this.collisionTileset.getTileTexture(id);
-                    if(text) {
-                        spr = this.sprites.create(text);
-                        spr.position.x = cell.x * this.tileSize.x;
-                        spr.position.y = cell.y * this.tileSize.y;
-                        spr.alpha = 0.5;
-                        spr.visible = true;
-                        spr.setTexture(text);
-                    }
-                }
+            id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
+            tile = this.collisionTileset.getTileProperties(id);
+            if(tile && tile.isCollidable) {
+                if(gf.debug._showColliders)
+                    this._showCollider(id, cell);
 
-                tile = this.collisionTileset.getTileProperties(id);
-                if(tile && tile.isCollidable) {
-                    res.push({ axis: 'y', tile: tile });
-                }
+                return { axis: ax, tile: tile };
             }
         }
-
-        return res;
     },
     /**
      * Notifies the map it needs to resize, re renders the viewport
