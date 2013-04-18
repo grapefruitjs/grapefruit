@@ -73,7 +73,7 @@ gf.inherits(gf.AssetLoader, Object, {
 
         for(var i = 0, il = resources.length; i < il; ++i) {
             var name = typeof resources[i] === 'string' ? resources[i] : resources[i].name,
-                url = typeof resources[i] === 'string' ? resources[i] : resources[i].src,
+                url = typeof resources[i] === 'string' ? resources[i] : (resources[i].src || resources[i].url || resources[i].uri),
                 ext = url.split('.').pop().toLowerCase();
 
             //load a texture
@@ -89,6 +89,19 @@ gf.inherits(gf.AssetLoader, Object, {
                 this.loadData(name, url);
             }
         }
+    },
+    /**
+     * Adds a resource to the resources array.
+     *
+     * @method add
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     */
+    add: function(name, url) {
+        this.resources.push({
+            name: name,
+            src: url
+        });
     },
     /**
      * Loads a texture image and caches the result
