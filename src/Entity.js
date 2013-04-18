@@ -287,7 +287,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
         //TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
         //get the world colliders
         var colliders = (this.game.world === undefined || !this.mapCollidable) ? [] : this.game.world.checkCollision(this, this.velocity);
-        if(colliders.length) window.console.log(colliders);
+        //if(colliders.length) window.console.log(colliders);
 
         //update flags
         this.onladder = false;
