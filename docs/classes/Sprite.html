@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,10 +103,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
-            
-                <li><a href="..&#x2F;modules/input.html">input</a></li>
-            
             </ul>
         </div>
     </div>
@@ -147,6 +143,10 @@
     
 
     
+        <div class="extends">
+            Extends <a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a>
+        </div>
+    
 
     
         <div class="foundat">
@@ -154,10 +154,6 @@
         </div>
     
 
-    
-        
-            Module: <a href="../modules/gf.html">gf</a>
-        
     
 
     
@@ -169,6 +165,126 @@
     <p>The base Sprite class. This class is the base for all images on the screen</p>
 </div>
 
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_Sprite" class="method item">
+    <h3 class="name"><code>Sprite</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>pos</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>settings</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l1"><code>src\Sprite.js:1</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pos</code>
+                        <span class="type">Array | <a href="..\classes\Vector.html" class="crosslink">Vector</a> | <a href="..\classes\Point.html" class="crosslink">Point</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The starting position of the sprite</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">settings</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Settings to override the defauls</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code> var spr = new gf.Sprite([10, 1], { name: 'MySprite' });
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -193,10 +309,24 @@
                 <div class="index-section methods">
                     <h3>Methods</h3>
 
-                    <ul class="index-list methods">
+                    <ul class="index-list methods extends">
                         
                             <li class="index-item method">
                                 <a href="#method_addAnimation">addAnimation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_addChild">addChild</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_addChildAt">addChildAt</a>
 
                                 
                                 
@@ -265,6 +395,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method inherited">
+                                <a href="#method_removeChild">removeChild</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
                                 <a href="#method_setActiveAnimation">setActiveAnimation</a>
 
@@ -322,10 +459,24 @@
                 <div class="index-section properties">
                     <h3>Properties</h3>
 
-                    <ul class="index-list properties">
+                    <ul class="index-list properties extends">
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_alpha">alpha</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item property private">
                                 <a href="#property_anim">anim</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_children">children</a>
 
                                 
                                 
@@ -339,7 +490,7 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_interactive">interactive</a>
+                                <a href="#property_height">height</a>
 
                                 
                                 
@@ -352,8 +503,43 @@
                                 
                             </li>
                         
+                            <li class="index-item property inherited">
+                                <a href="#property_parent">parent</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_position">position</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_rotation">rotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_scale">scale</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_visible">visible</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property">
-                                <a href="#property_size">size</a>
+                                <a href="#property_width">width</a>
 
                                 
                                 
@@ -425,7 +611,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l159"><code>src\Sprite.js:159</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l160"><code>src\Sprite.js:160</code></a>
         
         </p>
 
@@ -509,6 +695,195 @@
 </div>
 
                 
+                    <div id="method_addChild" class="method item inherited">
+    <h3 class="name"><code>addChild</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_addChild">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l56"><code>src\DisplayObject.js:56</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a child to the object.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_addChildAt" class="method item inherited">
+    <h3 class="name"><code>addChildAt</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>index</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_addChildAt">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l62"><code>src\DisplayObject.js:62</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">index</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_click" class="method item">
     <h3 class="name"><code>click</code></h3>
 
@@ -551,7 +926,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l102"><code>src\Sprite.js:102</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l103"><code>src\Sprite.js:103</code></a>
         
         </p>
 
@@ -580,7 +955,7 @@
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -638,7 +1013,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l336"><code>src\Sprite.js:336</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l341"><code>src\Sprite.js:341</code></a>
         
         </p>
 
@@ -725,7 +1100,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l330"><code>src\Sprite.js:330</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l335"><code>src\Sprite.js:335</code></a>
         
         </p>
 
@@ -816,7 +1191,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l280"><code>src\Sprite.js:280</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l285"><code>src\Sprite.js:285</code></a>
         
         </p>
 
@@ -929,7 +1304,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l108"><code>src\Sprite.js:108</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l109"><code>src\Sprite.js:109</code></a>
         
         </p>
 
@@ -958,7 +1333,7 @@
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1016,7 +1391,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l127"><code>src\Sprite.js:127</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l128"><code>src\Sprite.js:128</code></a>
         
         </p>
 
@@ -1045,7 +1420,7 @@
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1103,7 +1478,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l121"><code>src\Sprite.js:121</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l122"><code>src\Sprite.js:122</code></a>
         
         </p>
 
@@ -1132,7 +1507,7 @@
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1190,7 +1565,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l114"><code>src\Sprite.js:114</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l115"><code>src\Sprite.js:115</code></a>
         
         </p>
 
@@ -1220,7 +1595,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1268,7 +1643,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l325"><code>src\Sprite.js:325</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l330"><code>src\Sprite.js:330</code></a>
         
         </p>
 
@@ -1282,6 +1657,90 @@ for this callback to be fired the mouse must have been pressed down over the spr
         <p>Plays the currently active animation</p>
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_removeChild" class="method item inherited">
+    <h3 class="name"><code>removeChild</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_removeChild">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l69"><code>src\DisplayObject.js:69</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Removes a child from the object.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1342,7 +1801,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l217"><code>src\Sprite.js:217</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l220"><code>src\Sprite.js:220</code></a>
         
         </p>
 
@@ -1467,7 +1926,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l296"><code>src\Sprite.js:296</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l301"><code>src\Sprite.js:301</code></a>
         
         </p>
 
@@ -1496,7 +1955,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1564,7 +2023,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l251"><code>src\Sprite.js:251</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l256"><code>src\Sprite.js:256</code></a>
         
         </p>
 
@@ -1682,7 +2141,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l320"><code>src\Sprite.js:320</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l325"><code>src\Sprite.js:325</code></a>
         
         </p>
 
@@ -1746,7 +2205,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l137"><code>src\Sprite.js:137</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l138"><code>src\Sprite.js:138</code></a>
         
         </p>
 
@@ -1776,7 +2235,7 @@ basically a touch version of click</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1834,7 +2293,7 @@ basically a touch version of click</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l150"><code>src\Sprite.js:150</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l151"><code>src\Sprite.js:151</code></a>
         
         </p>
 
@@ -1864,7 +2323,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1922,7 +2381,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l144"><code>src\Sprite.js:144</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l145"><code>src\Sprite.js:145</code></a>
         
         </p>
 
@@ -1951,7 +2410,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1973,6 +2432,47 @@ for this callback to be fired. The touch must have started over the sprite</p>
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_alpha" class="property item inherited">
+    <h3 class="name"><code>alpha</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_alpha">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l38"><code>src\DisplayObject.js:38</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The opacity of the object.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="property_anim" class="property item private">
@@ -2000,7 +2500,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l32"><code>src\Sprite.js:32</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l40"><code>src\Sprite.js:40</code></a>
         
         </p>
 
@@ -2011,6 +2511,47 @@ for this callback to be fired. The touch must have started over the sprite</p>
 
     <div class="description">
         <p>The defined animations for this Sprite, this maps the names to the childIndexes</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_children" class="property item inherited">
+    <h3 class="name"><code>children</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_children">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l15"><code>src\DisplayObject.js:15</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>[read-only] The of children of this object.</p>
     </div>
 
     
@@ -2046,7 +2587,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l42"><code>src\Sprite.js:42</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l50"><code>src\Sprite.js:50</code></a>
         
         </p>
 
@@ -2067,9 +2608,9 @@ for this callback to be fired. The touch must have started over the sprite</p>
 </div>
 
                 
-                    <div id="property_interactive" class="property item">
-    <h3 class="name"><code>interactive</code></h3>
-    <span class="type">Boolean</span>
+                    <div id="property_height" class="property item">
+    <h3 class="name"><code>height</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -2090,7 +2631,7 @@ for this callback to be fired. The touch must have started over the sprite</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l52"><code>src\Sprite.js:52</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l22"><code>src\Sprite.js:22</code></a>
         
         </p>
 
@@ -2100,11 +2641,11 @@ for this callback to be fired. The touch must have started over the sprite</p>
     </div>
 
     <div class="description">
-        <p>Whether or not this Sprite is interactive. Please either pass this in with the
-ctor or use setInteractive to change it later. Changing this property directly
-on-the-fly will yield unexpected results.</p>
+        <p>The height of the sprite</p>
     </div>
 
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -2136,7 +2677,7 @@ on-the-fly will yield unexpected results.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l23"><code>src\Sprite.js:23</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l31"><code>src\Sprite.js:31</code></a>
         
         </p>
 
@@ -2159,9 +2700,214 @@ on-the-fly will yield unexpected results.</p>
 </div>
 
                 
-                    <div id="property_size" class="property item">
-    <h3 class="name"><code>size</code></h3>
-    <span class="type">gf.Vector</span>
+                    <div id="property_parent" class="property item inherited">
+    <h3 class="name"><code>parent</code></h3>
+    <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_parent">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l50"><code>src\DisplayObject.js:50</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>[read-only] The display object that contains this display object.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_position" class="property item inherited">
+    <h3 class="name"><code>position</code></h3>
+    <span class="type"><a href="..\classes\Point.html" class="crosslink">Point</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_position">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l20"><code>src\DisplayObject.js:20</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The coordinate of the object relative to the local coordinates of the parent.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_rotation" class="property item inherited">
+    <h3 class="name"><code>rotation</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_rotation">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l32"><code>src\DisplayObject.js:32</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The rotation of the object in radians.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_scale" class="property item inherited">
+    <h3 class="name"><code>scale</code></h3>
+    <span class="type"><a href="..\classes\Point.html" class="crosslink">Point</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_scale">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l26"><code>src\DisplayObject.js:26</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The scale factor of the object.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_visible" class="property item inherited">
+    <h3 class="name"><code>visible</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_visible">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l44"><code>src\DisplayObject.js:44</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The visibility of the object.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_width" class="property item">
+    <h3 class="name"><code>width</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -2182,7 +2928,7 @@ on-the-fly will yield unexpected results.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l14"><code>src\Sprite.js:14</code></a>
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l13"><code>src\Sprite.js:13</code></a>
         
         </p>
 
@@ -2192,11 +2938,11 @@ on-the-fly will yield unexpected results.</p>
     </div>
 
     <div class="description">
-        <p>The size of the sprite</p>
+        <p>The width of the sprite</p>
     </div>
 
     
-        <p><strong>Default:</strong> new gf.Vector(0, 0);</p>
+        <p><strong>Default:</strong> 0</p>
     
 
     

@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,10 +103,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
-            
-                <li><a href="..&#x2F;modules/input.html">input</a></li>
-            
             </ul>
         </div>
     </div>
@@ -151,7 +147,6 @@
  * The loader knows to load all textures and other resources when loading a world TMX
  * file, and this expets that to already be done.
  *
- * @module gf
  * @class TiledMap
  * @extends Map
  * @constructor
@@ -520,6 +515,15 @@ gf.inherits(gf.TiledMap, gf.Map, {
                     numY
                 );
             }
+        }
+    },
+    forEachEntity: function(fn) {
+        &#x2F;&#x2F;go through each object group and call for each entity. This is slightly more efficient
+        &#x2F;&#x2F;than the generic DisplayObject version since we can skip over checking all the TiledLayers
+        &#x2F;&#x2F;which will never have any Entities in them.
+        for(var i = 0, il = this.children.length; i &lt; il; ++i) {
+            if(this.children[i] instanceof gf.TiledObjectGroup)
+                this.children[i].forEachEntity(fn);
         }
     },
     &#x2F;&#x2F;WIP

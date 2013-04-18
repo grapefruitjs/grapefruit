@@ -1,7 +1,6 @@
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
  *
- * @module gf
  * @class AudoPlayer
  * @constructor
  * @param game {Game} Game instance for this audio player

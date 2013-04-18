@@ -1,7 +1,6 @@
 /**
  * Main game object, controls the entire instance of the game
  *
- * @module gf
  * @class game
  * @constructor
  * @param contId {String} The container for the new canvas we will create for the game

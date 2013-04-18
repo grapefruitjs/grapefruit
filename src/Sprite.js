@@ -1,7 +1,6 @@
 /**
  * The base Sprite class. This class is the base for all images on the screen
  *
- * @module gf
  * @class Sprite
  * @extends DisplayObject
  * @constructor
@@ -95,66 +94,6 @@ gf.Sprite = function(pos, settings) {
             spr.onTextureUpdate = onTextureUpdateWrapper;
         }
     }
-
-    //copied from http://www.goodboydigital.com/pixijs/docs/files/src_pixi_Sprite.js.html
-
-    /*
-    * MOUSE Callbacks
-    */
-    /**
-    * A callback that is used when the users clicks on the sprite with thier mouse
-    * @method click
-    * @param interactionData {InteractionData}
-    */
-
-    /**
-    * A callback that is used when the user clicks the mouse down over the sprite
-    * @method mousedown
-    * @param interactionData {InteractionData}
-    */
-
-    /**
-    * A callback that is used when the user releases the mouse that was over the sprite
-    * for this callback to be fired the mouse must have been pressed down over the sprite
-    * @method mouseup
-    * @param interactionData {InteractionData}
-    */
-
-    /**
-    * A callback that is used when the users mouse rolls over the sprite
-    * @method mouseover
-    * @param interactionData {InteractionData}
-    */
-
-    /**
-    * A callback that is used when the users mouse leaves the sprite
-    * @method mouseout
-    * @param interactionData {InteractionData}
-    */
-
-    /*
-    * TOUCH Callbacks
-    */
-
-    /**
-    * A callback that is used when the users taps on the sprite with thier finger
-    * basically a touch version of click
-    * @method tap
-    * @param interactionData {InteractionData}
-    */
-
-    /**
-    * A callback that is used when the user touch's over the sprite
-    * @method touchstart
-    * @param interactionData {InteractionData}
-    */
-
-    /**
-    * A callback that is used when the user releases the touch that was over the sprite
-    * for this callback to be fired. The touch must have started over the sprite
-    * @method touchend
-    * @param interactionData {InteractionData}
-    */
 };
 
 gf.inherits(gf.Sprite, gf.DisplayObject, {

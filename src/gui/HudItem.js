@@ -1,7 +1,6 @@
 /**
  * The base HudItem that represents an element of a hud on the screen.
  *
- * @module gf
  * @class HudItem
  * @extends GuiItem
  * @constructor

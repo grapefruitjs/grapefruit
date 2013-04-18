@@ -4,7 +4,6 @@
  * This class will be created by the TiledMap, there shouldn't be a reason to
  * create an instance on your own.
  *
- * @module gf
  * @class TiledLayer
  * @extends Layer
  * @constructor

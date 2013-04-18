@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,10 +103,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
-            
-                <li><a href="..&#x2F;modules/input.html">input</a></li>
-            
             </ul>
         </div>
     </div>
@@ -179,15 +175,12 @@
 &#x2F;**
  * The base grapefruit object
  *
- * @module gf
- * @main gf
  *&#x2F;
 window.gf = window.gf || {};
 
 &#x2F;**
  * Point object, please see &lt;a href=&quot;http:&#x2F;&#x2F;www.goodboydigital.com&#x2F;pixijs&#x2F;docs&#x2F;classes&#x2F;Point.html&quot;&gt;PIXI.Point&lt;&#x2F;a&gt;
  *
- * @module gf
  * @class Point
  *&#x2F;
 gf.Point = PIXI.Point;
@@ -195,7 +188,6 @@ gf.Point = PIXI.Point;
 &#x2F;**
  * Rectangle object, please see &lt;a href=&quot;http:&#x2F;&#x2F;www.goodboydigital.com&#x2F;pixijs&#x2F;docs&#x2F;classes&#x2F;Rectangle.html&quot;&gt;PIXI.Point&lt;&#x2F;a&gt;
  *
- * @module gf
  * @class Rectangle
  *&#x2F;
 gf.Rectangle = PIXI.Rectangle;
@@ -203,7 +195,6 @@ gf.Rectangle = PIXI.Rectangle;
 &#x2F;**
  * Texture object, please see &lt;a href=&quot;http:&#x2F;&#x2F;www.goodboydigital.com&#x2F;pixijs&#x2F;docs&#x2F;classes&#x2F;Texture.html&quot;&gt;PIXI.Texture&lt;&#x2F;a&gt;
  *
- * @module gf
  * @class Texture
  *&#x2F;
 gf.Texture = PIXI.Texture;
@@ -211,7 +202,6 @@ gf.Texture = PIXI.Texture;
 &#x2F;**
  * EventTarget mixin, please see &lt;a href=&quot;http:&#x2F;&#x2F;www.goodboydigital.com&#x2F;pixijs&#x2F;docs&#x2F;classes&#x2F;EventTarget.html&quot;&gt;PIXI.EventTarget&lt;&#x2F;a&gt;
  *
- * @module gf
  * @class EventTarget
  *&#x2F;
 gf.EventTarget = PIXI.EventTarget;
@@ -219,16 +209,14 @@ gf.EventTarget = PIXI.EventTarget;
 &#x2F;**
  * The current grapefruit version
  *
- * @module gf
  * @property version
  * @type String
  *&#x2F;
-gf.version = &#x27;0.0.2&#x27;;
+gf.version = &#x27;@@VERSION&#x27;;
 
 &#x2F;**
  * The cached assets loaded by any loader
  *
- * @module gf
  * @property assetCache
  * @type Object
  *&#x2F;
@@ -237,7 +225,6 @@ gf.assetCache = {};
 &#x2F;**
  * Feature detection so we cans witch between renderers, play audio correctly, and other things.
  *
- * @module gf
  * @class support
  *&#x2F;
 gf.support = {
@@ -351,7 +338,6 @@ if(gf.support.audio.play) {
 &#x2F;**
  * Compares version numbers, useful for plugins to specify a required gf version
  *
- * @module gf
  * @method checkVersion
  * @param first {String} The first version
  * @param second {String} The second version
@@ -387,7 +373,6 @@ gf.checkVersion = function(first, second) {
  * Inherits the prototype of a parent object.
  * from: https:&#x2F;&#x2F;github.com&#x2F;isaacs&#x2F;inherits&#x2F;blob&#x2F;master&#x2F;inherits.js
  *
- * @module gf
  * @method inherits
  * @param child {Object} The Child to inherit the prototype
  * @param parent {Object} The Parent to inherit from

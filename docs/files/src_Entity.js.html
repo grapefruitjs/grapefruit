@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,10 +103,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
-            
-                <li><a href="..&#x2F;modules/input.html">input</a></li>
-            
             </ul>
         </div>
     </div>
@@ -159,7 +155,6 @@
 &#x2F;**
  * The base Entity class. This class is the base for all entities interacting on the stage
  *
- * @module gf
  * @class Entity
  * @extends Sprite
  * @constructor
@@ -204,16 +199,6 @@ gf.Entity = function(game, pos, settings) {
      * @default true
      *&#x2F;
     this.mapCollidable = true;
-
-    &#x2F;**
-     * Is an entity
-     *
-     * @property mapCollidable
-     * @type Boolean
-     * @default true
-     * @readOnly
-     *&#x2F;
-    this.entity = true;
 
     &#x2F;**
      * The velocity of the entity. You can set these in Tiled by using &quot;x|y&quot; notation
@@ -388,35 +373,40 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * @return {Boolean}
      *&#x2F;
     intersects: function(obj)  {
-        return (Math.abs(this.position.x - obj.position.x) * 2 &lt; (this.size.x + obj.size.x)) &amp;&amp;
-                (Math.abs(this.position.y - obj.position.y) * 2 &lt; (this.size.y + obj.size.y));
+        return (Math.abs(this.position.x - obj.position.x) * 2 &lt; (this.width + obj.width)) &amp;&amp;
+                (Math.abs(this.position.y - obj.position.y) * 2 &lt; (this.height + obj.height));
     },
     &#x2F;**
-     * Checks if this entity collides with the passed Entity, a penetration vector is calculated.
-     * This method is called from gf.game.checkCollisions(ent); That method will use this to check
-     * for any collisions between that entity and all the others on the stage.
+     * Checks if this entity collides with any Entities, and if so, a penetration vector is calculated.
      * from http:&#x2F;&#x2F;gamedev.stackexchange.com&#x2F;questions&#x2F;586&#x2F;what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
      *
-     * @method checkCollision
-     * @param obj {Entity} The Entity to check if this entity collides with
-     * @return {Vector}
+     * @method checkCollisions
+     * @return {Array}
      *&#x2F;
-    checkCollision: function(obj) {
-        &#x2F;&#x2F;response vector
-        var p = new gf.Vector(0, 0);
+    checkCollisions: function(world) {
+        world = world || this.game.world;
 
-        &#x2F;&#x2F;check if hitboxes intersect
-        if(this.intersects(obj)) {
-            &#x2F;&#x2F;compute delta between this &amp; entity
-            var dx = this.position.x - obj.position.x,
-                dy = this.position.y - obj.position.y;
+        var self = this,
+            res = [];
 
-            &#x2F;&#x2F;compute penetration depth for both axis
-            p.x = dx &#x2F; 2;
-            p.y = dy &#x2F; 2;
-        }
+        &#x2F;&#x2F;check if this entity collides with any others in the world
+        world.forEachEntity(function(ent) {
+            if(ent.collidable &amp;&amp; self != ent &amp;&amp; self.intersects(ent)) {
+                res.push({
+                    dx: (self.position.x - obj.position.x) &#x2F; 2,
+                    dy: (self.position.y - obj.position.y) &#x2F; 2,
+                    ent: ent
+                });
 
-        return p;
+                if(self.onCollision)
+                    self.onCollision(ent);
+
+                if(ent.onCollision)
+                    ent.onCollision(self);
+            }
+        });
+
+        return res;
     },
     &#x2F;**
      * Calculate the velocity of the entity, and then apply it. This is different than moveEntity
@@ -491,7 +481,8 @@ gf.inherits(gf.Entity, gf.Sprite, {
         this.viewPosition.y = Math.round(this.position.y);
 
         &#x2F;&#x2F;onMove event
-        this.onMove(vel);
+        if(this.onMove)
+            this.onMove(vel);
 
         return this;
     },
@@ -529,8 +520,8 @@ gf.inherits(gf.Entity, gf.Sprite, {
     },
     &#x2F;**
      * On Collision Event
-     *      called when this object is collided into by another, by default if something collides with
-     *      a collectable entity we remove the collectable
+     *      called when this object collides into another, or is being collided into by another
+     *      by default if something collides with a collectable entity we remove the collectable
      *
      * @method onCollision
      * @param vel {Vector} Collision Vector
@@ -538,8 +529,8 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * @return {Entity} Returns itself for chainability
      *&#x2F;
     onCollision: function() {
-        if(this.collidable &amp;&amp; this.type === gf.Entity.TYPE.COLLECTABLE)
-            this.game.removeObject(this);
+        if(this.type === gf.Entity.TYPE.COLLECTABLE)
+            this.parent.removeChild(this);
 
         return this;
     },

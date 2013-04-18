@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,10 +103,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
-            
-                <li><a href="..&#x2F;modules/input.html">input</a></li>
-            
             </ul>
         </div>
     </div>
@@ -147,17 +143,17 @@
     
 
     
-
-    
-        <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_Camera.js.html#l2"><code>src\Camera.js:2</code></a>
+        <div class="extends">
+            Extends <a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a>
         </div>
     
 
     
-        
-            Module: <a href="../modules/gf.html">gf</a>
-        
+        <div class="foundat">
+            Defined in: <a href="..&#x2F;files&#x2F;src_Camera.js.html#l1"><code>src\Camera.js:1</code></a>
+        </div>
+    
+
     
 
     
@@ -174,6 +170,117 @@ This camera instance is based on
 <p>TODO: Currently fade/flash don't show the colors. How should I actually show them, a PIXI.Sprite?</p>
 </div>
 
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_Camera" class="method item">
+    <h3 class="name"><code>Camera</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>game</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>settings</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l1"><code>src\Camera.js:1</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">game</code>
+                        <span class="type">Game</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The game this camera belongs to</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">settings</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Any settings you want to override the default properties with</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -198,7 +305,21 @@ This camera instance is based on
                 <div class="index-section methods">
                     <h3>Methods</h3>
 
-                    <ul class="index-list methods">
+                    <ul class="index-list methods extends">
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_addChild">addChild</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_addChildAt">addChildAt</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item method">
                                 <a href="#method_fade">fade</a>
@@ -230,6 +351,13 @@ This camera instance is based on
                         
                             <li class="index-item method">
                                 <a href="#method_pan">pan</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_removeChild">removeChild</a>
 
                                 
                                 
@@ -306,7 +434,7 @@ This camera instance is based on
                 <div class="index-section properties">
                     <h3>Properties</h3>
 
-                    <ul class="index-list properties">
+                    <ul class="index-list properties extends">
                         
                             <li class="index-item property private">
                                 <a href="#property__deadzone">_deadzone</a>
@@ -329,8 +457,22 @@ This camera instance is based on
                                 
                             </li>
                         
+                            <li class="index-item property inherited">
+                                <a href="#property_alpha">alpha</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property private">
                                 <a href="#property_bounds">bounds</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_children">children</a>
 
                                 
                                 
@@ -350,8 +492,43 @@ This camera instance is based on
                                 
                             </li>
                         
+                            <li class="index-item property inherited">
+                                <a href="#property_parent">parent</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_position">position</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_rotation">rotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_scale">scale</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property">
                                 <a href="#property_size">size</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_visible">visible</a>
 
                                 
                                 
@@ -369,6 +546,195 @@ This camera instance is based on
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_addChild" class="method item inherited">
+    <h3 class="name"><code>addChild</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_addChild">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l56"><code>src\DisplayObject.js:56</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a child to the object.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_addChildAt" class="method item inherited">
+    <h3 class="name"><code>addChildAt</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>index</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_addChildAt">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l62"><code>src\DisplayObject.js:62</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">index</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="method_fade" class="method item">
@@ -429,7 +795,7 @@ This camera instance is based on
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l160"><code>src\Camera.js:160</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l158"><code>src\Camera.js:158</code></a>
         
         </p>
 
@@ -575,7 +941,7 @@ This camera instance is based on
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l109"><code>src\Camera.js:109</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l107"><code>src\Camera.js:107</code></a>
         
         </p>
 
@@ -715,7 +1081,7 @@ This camera instance is based on
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l354"><code>src\Camera.js:354</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l352"><code>src\Camera.js:352</code></a>
         
         </p>
 
@@ -841,7 +1207,7 @@ not go outside the bounds set with setBounds()</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l289"><code>src\Camera.js:289</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l287"><code>src\Camera.js:287</code></a>
         
         </p>
 
@@ -968,7 +1334,7 @@ to move with them.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l383"><code>src\Camera.js:383</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l381"><code>src\Camera.js:381</code></a>
         
         </p>
 
@@ -1042,6 +1408,90 @@ not go outside the bounds set with setBounds()</p>
 </div>
 
                 
+                    <div id="method_removeChild" class="method item inherited">
+    <h3 class="name"><code>removeChild</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_removeChild">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l69"><code>src\DisplayObject.js:69</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Removes a child from the object.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_resize" class="method item private">
     <h3 class="name"><code>resize</code></h3>
 
@@ -1096,7 +1546,7 @@ not go outside the bounds set with setBounds()</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l418"><code>src\Camera.js:418</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l416"><code>src\Camera.js:416</code></a>
         
         </p>
 
@@ -1234,7 +1684,7 @@ when you call mygame.resize(). DO NOT CALL THIS DIRECTLY</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l437"><code>src\Camera.js:437</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l435"><code>src\Camera.js:435</code></a>
         
         </p>
 
@@ -1402,7 +1852,7 @@ min and max, and is set for you.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l211"><code>src\Camera.js:211</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l209"><code>src\Camera.js:209</code></a>
         
         </p>
 
@@ -1541,7 +1991,7 @@ min and max, and is set for you.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l276"><code>src\Camera.js:276</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l274"><code>src\Camera.js:274</code></a>
         
         </p>
 
@@ -1612,7 +2062,7 @@ min and max, and is set for you.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l200"><code>src\Camera.js:200</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l198"><code>src\Camera.js:198</code></a>
         
         </p>
 
@@ -1683,7 +2133,7 @@ min and max, and is set for you.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l149"><code>src\Camera.js:149</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l147"><code>src\Camera.js:147</code></a>
         
         </p>
 
@@ -1754,7 +2204,7 @@ min and max, and is set for you.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l260"><code>src\Camera.js:260</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l258"><code>src\Camera.js:258</code></a>
         
         </p>
 
@@ -1825,7 +2275,7 @@ min and max, and is set for you.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l344"><code>src\Camera.js:344</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l342"><code>src\Camera.js:342</code></a>
         
         </p>
 
@@ -1896,7 +2346,7 @@ min and max, and is set for you.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l462"><code>src\Camera.js:462</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l460"><code>src\Camera.js:460</code></a>
         
         </p>
 
@@ -1964,7 +2414,7 @@ min and max, and is set for you.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l36"><code>src\Camera.js:36</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l34"><code>src\Camera.js:34</code></a>
         
         </p>
 
@@ -2011,7 +2461,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l75"><code>src\Camera.js:75</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l73"><code>src\Camera.js:73</code></a>
         
         </p>
 
@@ -2057,7 +2507,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l47"><code>src\Camera.js:47</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l45"><code>src\Camera.js:45</code></a>
         
         </p>
 
@@ -2068,6 +2518,47 @@ before the camera moves to track it.</p>
 
     <div class="description">
         <p>The target that the camera will follow</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_alpha" class="property item inherited">
+    <h3 class="name"><code>alpha</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_alpha">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l38"><code>src\DisplayObject.js:38</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The opacity of the object.</p>
     </div>
 
     
@@ -2103,7 +2594,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l26"><code>src\Camera.js:26</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l24"><code>src\Camera.js:24</code></a>
         
         </p>
 
@@ -2114,6 +2605,47 @@ before the camera moves to track it.</p>
 
     <div class="description">
         <p>The bounds of that the camera can move to</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_children" class="property item inherited">
+    <h3 class="name"><code>children</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_children">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l15"><code>src\DisplayObject.js:15</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>[read-only] The of children of this object.</p>
     </div>
 
     
@@ -2147,7 +2679,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l18"><code>src\Camera.js:18</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l16"><code>src\Camera.js:16</code></a>
         
         </p>
 
@@ -2191,7 +2723,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l66"><code>src\Camera.js:66</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l64"><code>src\Camera.js:64</code></a>
         
         </p>
 
@@ -2202,6 +2734,170 @@ before the camera moves to track it.</p>
 
     <div class="description">
         <p>Half of the size of the camera</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_parent" class="property item inherited">
+    <h3 class="name"><code>parent</code></h3>
+    <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_parent">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l50"><code>src\DisplayObject.js:50</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>[read-only] The display object that contains this display object.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_position" class="property item inherited">
+    <h3 class="name"><code>position</code></h3>
+    <span class="type"><a href="..\classes\Point.html" class="crosslink">Point</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_position">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l20"><code>src\DisplayObject.js:20</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The coordinate of the object relative to the local coordinates of the parent.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_rotation" class="property item inherited">
+    <h3 class="name"><code>rotation</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_rotation">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l32"><code>src\DisplayObject.js:32</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The rotation of the object in radians.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_scale" class="property item inherited">
+    <h3 class="name"><code>scale</code></h3>
+    <span class="type"><a href="..\classes\Point.html" class="crosslink">Point</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_scale">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l26"><code>src\DisplayObject.js:26</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The scale factor of the object.</p>
     </div>
 
     
@@ -2235,7 +2931,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l57"><code>src\Camera.js:57</code></a>
+        <a href="..&#x2F;files&#x2F;src_Camera.js.html#l55"><code>src\Camera.js:55</code></a>
         
         </p>
 
@@ -2246,6 +2942,47 @@ before the camera moves to track it.</p>
 
     <div class="description">
         <p>The size of the camera</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_visible" class="property item inherited">
+    <h3 class="name"><code>visible</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_visible">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l44"><code>src\DisplayObject.js:44</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The visibility of the object.</p>
     </div>
 
     

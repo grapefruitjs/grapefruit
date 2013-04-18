@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,10 +103,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
-            
-                <li><a href="..&#x2F;modules/input.html">input</a></li>
-            
             </ul>
         </div>
     </div>
@@ -149,7 +145,6 @@
 &#x2F;**
  * The base display object, that anything being put on the screen inherits from
  *
- * @module gf
  * @class DisplayObject
  * @extends PIXI.DisplayObjectContainer
  * @constructor
@@ -247,6 +242,16 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
 
         &#x2F;&#x2F;clear the list and let the GC clean up
         this.children = [];
+    },
+    forEachEntity: function(fn) {
+        &#x2F;&#x2F;go through each child and call recurse children for each one
+        for(var i = 0, il = this.children.length; i &lt; il; ++i) {
+            if(this.children[i].forEachEntity)
+                this.children[i].forEachEntity(fn);
+        }
+
+        if(fn &amp;&amp; this instanceof gf.Entity)
+            fn(this);
     }
 });
     </pre>

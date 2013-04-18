@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,10 +103,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
-            
-                <li><a href="..&#x2F;modules/input.html">input</a></li>
-            
             </ul>
         </div>
     </div>
@@ -149,7 +145,6 @@
 &#x2F;**
  * The base Sprite class. This class is the base for all images on the screen
  *
- * @module gf
  * @class Sprite
  * @extends DisplayObject
  * @constructor
@@ -160,13 +155,22 @@
  *&#x2F;
 gf.Sprite = function(pos, settings) {
     &#x2F;**
-     * The size of the sprite
+     * The width of the sprite
      *
-     * @property size
-     * @type gf.Vector
-     * @default new gf.Vector(0, 0);
+     * @property width
+     * @type Number
+     * @default 0
      *&#x2F;
-    this.size = new gf.Vector(0, 0);
+    this.width = 0;
+
+    &#x2F;**
+     * The height of the sprite
+     *
+     * @property height
+     * @type Number
+     * @default 0
+     *&#x2F;
+    this.height = 0;
 
     &#x2F;**
      * The name of this sprite
@@ -197,16 +201,6 @@ gf.Sprite = function(pos, settings) {
      *&#x2F;
     this.currentAnim = null;
 
-    &#x2F;**
-     * Whether or not this Sprite is interactive. Please either pass this in with the
-     * ctor or use setInteractive to change it later. Changing this property directly
-     * on-the-fly will yield unexpected results.
-     *
-     * @property interactive
-     * @type Boolean
-     *&#x2F;
-    this.interactive = false;
-
     &#x2F;&#x2F;call base ctor
     gf.DisplayObject.call(this);
 
@@ -236,9 +230,12 @@ gf.Sprite = function(pos, settings) {
 
         if(settings.texture instanceof gf.Texture) {
             var spr = new PIXI.Sprite(settings.texture);
-            if(settings.interactive) spr.setInteractive(true);
             this.addChild(spr);
-            this.anim[&#x27;default&#x27;] = spr;
+            this.anim[&#x27;default&#x27;] = spr.childIndex;
+            this.width = spr.width;
+            this.height = spr.height;
+            spr.setTexture = setTextureWrapper;
+            spr.onTextureUpdate = onTextureUpdateWrapper;
         }
     }
 
@@ -349,6 +346,8 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
         clip.stop();
         clip.visible = false;
         clip.name = name;
+        clip.setTexture = setTextureWrapper;
+        clip.onTextureUpdate = onTextureUpdateWrapper;
 
         if(this.interactive)
             clip.setInteractive(this.interactive);
@@ -389,6 +388,8 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
             this.currentAnim.visible = true;
             this.currentAnim.loop = loop;
             this.currentAnim.onComplete = cb;
+            this.width = this.currentAnim.width;
+            this.height = this.currentAnim.height;
             this.currentAnim.gotoAndPlay(0);
         } else {
             throw &#x27;Unknown animation &#x27; + name;
@@ -486,6 +487,20 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
  * @method gotoAndPlay
  * @param frameNumber {Number} frame index to start at
  *&#x2F;
+
+function setTextureWrapper(t) {
+    PIXI.Sprite.prototype.setTexture.call(this);
+
+    this.parent.width = this.currentAnim.width;
+    this.parent.height = this.currentAnim.height;
+}
+
+function onTextureUpdateWrapper(e) {
+    PIXI.Sprite.prototype.onTextureUpdate.call(this);
+
+    this.parent.width = this.currentAnim.width;
+    this.parent.height = this.currentAnim.height;
+}
     </pre>
 </div>
 

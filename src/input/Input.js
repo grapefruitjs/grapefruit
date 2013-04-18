@@ -1,8 +1,5 @@
 /**
- * input submodule
- *
- * @module gf
- * @submodule input
+ * input object
  */
 gf.input = {
     /**
@@ -181,8 +178,6 @@ gf.input = {
 /**
  * The base Input object, holds common functions and properties between input types
  *
- * @module gf
- * @submodule input
  * @class Input
  * @constructor
  * @param manager {InputManager} The InputManager instance that this Input object is managed by

@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,10 +103,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
-            
-                <li><a href="..&#x2F;modules/input.html">input</a></li>
-            
             </ul>
         </div>
     </div>
@@ -147,6 +143,10 @@
     
 
     
+        <div class="extends">
+            Extends <a href="..\classes\Map.html" class="crosslink">Map</a>
+        </div>
+    
 
     
         <div class="foundat">
@@ -154,10 +154,6 @@
         </div>
     
 
-    
-        
-            Module: <a href="../modules/gf.html">gf</a>
-        
     
 
     
@@ -171,6 +167,96 @@ The loader knows to load all textures and other resources when loading a world T
 file, and this expets that to already be done.</p>
 </div>
 
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_TiledMap" class="method item">
+    <h3 class="name"><code>TiledMap</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>map</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l1"><code>src\map\tiled\TiledMap.js:1</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">map</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>All the settings for the map</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -195,7 +281,21 @@ file, and this expets that to already be done.</p>
                 <div class="index-section methods">
                     <h3>Methods</h3>
 
-                    <ul class="index-list methods">
+                    <ul class="index-list methods extends">
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_addChild">addChild</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_addChildAt">addChildAt</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item method">
                                 <a href="#method_checkCollision">checkCollision</a>
@@ -204,8 +304,29 @@ file, and this expets that to already be done.</p>
                                 
                             </li>
                         
+                            <li class="index-item method inherited">
+                                <a href="#method_getLayer">getLayer</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
                                 <a href="#method_getTileset">getTileset</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_pan">pan</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_removeChild">removeChild</a>
 
                                 
                                 
@@ -226,7 +347,21 @@ file, and this expets that to already be done.</p>
                 <div class="index-section properties">
                     <h3>Properties</h3>
 
-                    <ul class="index-list properties">
+                    <ul class="index-list properties extends">
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_alpha">alpha</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_children">children</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item property">
                                 <a href="#property_collisionLayer">collisionLayer</a>
@@ -242,8 +377,29 @@ file, and this expets that to already be done.</p>
                                 
                             </li>
                         
+                            <li class="index-item property inherited">
+                                <a href="#property_game">game</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property">
                                 <a href="#property_orientation">orientation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_parent">parent</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_position">position</a>
 
                                 
                                 
@@ -263,8 +419,29 @@ file, and this expets that to already be done.</p>
                                 
                             </li>
                         
+                            <li class="index-item property inherited">
+                                <a href="#property_rotation">rotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_scale">scale</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property">
                                 <a href="#property_scaledTileSize">scaledTileSize</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_size">size</a>
 
                                 
                                 
@@ -291,6 +468,13 @@ file, and this expets that to already be done.</p>
                                 
                             </li>
                         
+                            <li class="index-item property inherited">
+                                <a href="#property_visible">visible</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -303,6 +487,195 @@ file, and this expets that to already be done.</p>
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_addChild" class="method item inherited">
+    <h3 class="name"><code>addChild</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_addChild">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l56"><code>src\DisplayObject.js:56</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a child to the object.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_addChildAt" class="method item inherited">
+    <h3 class="name"><code>addChildAt</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>index</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_addChildAt">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l62"><code>src\DisplayObject.js:62</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">index</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="method_checkCollision" class="method item">
@@ -359,7 +732,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l159"><code>src\map\tiled\TiledMap.js:159</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l158"><code>src\map\tiled\TiledMap.js:158</code></a>
         
         </p>
 
@@ -434,6 +807,107 @@ file, and this expets that to already be done.</p>
 </div>
 
                 
+                    <div id="method_getLayer" class="method item inherited">
+    <h3 class="name"><code>getLayer</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>id</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Layer.html" class="crosslink">Layer</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Map.html#method_getLayer">Map</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_Map.js.html#l35"><code>src\map\Map.js:35</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Gets a layer based on the layer's id or name</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type">Number | String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The layer's number id or string name.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Layer.html" class="crosslink">Layer</a></span>:
+                    
+                    Returns the found layer, or null if not found
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_getTileset" class="method item">
     <h3 class="name"><code>getTileset</code></h3>
 
@@ -480,7 +954,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l147"><code>src\map\tiled\TiledMap.js:147</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l146"><code>src\map\tiled\TiledMap.js:146</code></a>
         
         </p>
 
@@ -537,6 +1011,212 @@ file, and this expets that to already be done.</p>
 </div>
 
                 
+                    <div id="method_pan" class="method item inherited">
+    <h3 class="name"><code>pan</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>x</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>y</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Map.html" class="crosslink">Map</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Map.html#method_pan">Map</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_Map.js.html#l53"><code>src\map\Map.js:53</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Pans the map around</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">x</code>
+                        <span class="type">Number | <a href="..\classes\Point.html" class="crosslink">Point</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The x amount to pan, if a Point is passed the y param is ignored</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">y</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The y ammount to pan</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Map.html" class="crosslink">Map</a></span>:
+                    
+                    Returns itself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_removeChild" class="method item inherited">
+    <h3 class="name"><code>removeChild</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_removeChild">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l69"><code>src\DisplayObject.js:69</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Removes a child from the object.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_resize" class="method item private">
     <h3 class="name"><code>resize</code></h3>
 
@@ -571,7 +1251,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l354"><code>src\map\tiled\TiledMap.js:354</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l353"><code>src\map\tiled\TiledMap.js:353</code></a>
         
         </p>
 
@@ -601,6 +1281,88 @@ file, and this expets that to already be done.</p>
                 <h2 class="off-left">Properties</h2>
 
                 
+                    <div id="property_alpha" class="property item inherited">
+    <h3 class="name"><code>alpha</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_alpha">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l38"><code>src\DisplayObject.js:38</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The opacity of the object.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_children" class="property item inherited">
+    <h3 class="name"><code>children</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_children">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l15"><code>src\DisplayObject.js:15</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>[read-only] The of children of this object.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_collisionLayer" class="property item">
     <h3 class="name"><code>collisionLayer</code></h3>
     <span class="type">Array</span>
@@ -624,7 +1386,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l91"><code>src\map\tiled\TiledMap.js:91</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l90"><code>src\map\tiled\TiledMap.js:90</code></a>
         
         </p>
 
@@ -668,7 +1430,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l76"><code>src\map\tiled\TiledMap.js:76</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l75"><code>src\map\tiled\TiledMap.js:75</code></a>
         
         </p>
 
@@ -679,6 +1441,47 @@ file, and this expets that to already be done.</p>
 
     <div class="description">
         <p>The tileset for the collision layer</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_game" class="property item inherited">
+    <h3 class="name"><code>game</code></h3>
+    <span class="type">Game</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Map.html#property_game">Map</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_Map.js.html#l10"><code>src\map\Map.js:10</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The game instance this belongs to</p>
     </div>
 
     
@@ -712,7 +1515,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l60"><code>src\map\tiled\TiledMap.js:60</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l59"><code>src\map\tiled\TiledMap.js:59</code></a>
         
         </p>
 
@@ -723,6 +1526,88 @@ file, and this expets that to already be done.</p>
 
     <div class="description">
         <p>The orientation of the map, currently only 'orthogonal' is supported</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_parent" class="property item inherited">
+    <h3 class="name"><code>parent</code></h3>
+    <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_parent">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l50"><code>src\DisplayObject.js:50</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>[read-only] The display object that contains this display object.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_position" class="property item inherited">
+    <h3 class="name"><code>position</code></h3>
+    <span class="type"><a href="..\classes\Point.html" class="crosslink">Point</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_position">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l20"><code>src\DisplayObject.js:20</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The coordinate of the object relative to the local coordinates of the parent.</p>
     </div>
 
     
@@ -756,7 +1641,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l40"><code>src\map\tiled\TiledMap.js:40</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l39"><code>src\map\tiled\TiledMap.js:39</code></a>
         
         </p>
 
@@ -802,7 +1687,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l49"><code>src\map\tiled\TiledMap.js:49</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l48"><code>src\map\tiled\TiledMap.js:48</code></a>
         
         </p>
 
@@ -813,6 +1698,88 @@ file, and this expets that to already be done.</p>
 
     <div class="description">
         <p>The real size (size * scaledTileSize)</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_rotation" class="property item inherited">
+    <h3 class="name"><code>rotation</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_rotation">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l32"><code>src\DisplayObject.js:32</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The rotation of the object in radians.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_scale" class="property item inherited">
+    <h3 class="name"><code>scale</code></h3>
+    <span class="type"><a href="..\classes\Point.html" class="crosslink">Point</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_scale">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l26"><code>src\DisplayObject.js:26</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The scale factor of the object.</p>
     </div>
 
     
@@ -846,7 +1813,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l29"><code>src\map\tiled\TiledMap.js:29</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l28"><code>src\map\tiled\TiledMap.js:28</code></a>
         
         </p>
 
@@ -859,6 +1826,49 @@ file, and this expets that to already be done.</p>
         <p>The scaled tile size</p>
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_size" class="property item inherited">
+    <h3 class="name"><code>size</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Map.html#property_size">Map</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_map_Map.js.html#l18"><code>src\map\Map.js:18</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The size of the map</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> new gf.Vector(0, 0)</p>
     
 
     
@@ -890,7 +1900,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l68"><code>src\map\tiled\TiledMap.js:68</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l67"><code>src\map\tiled\TiledMap.js:67</code></a>
         
         </p>
 
@@ -934,7 +1944,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l18"><code>src\map\tiled\TiledMap.js:18</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l17"><code>src\map\tiled\TiledMap.js:17</code></a>
         
         </p>
 
@@ -978,7 +1988,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l99"><code>src\map\tiled\TiledMap.js:99</code></a>
+        <a href="..&#x2F;files&#x2F;src_map_tiled_TiledMap.js.html#l98"><code>src\map\tiled\TiledMap.js:98</code></a>
         
         </p>
 
@@ -989,6 +1999,47 @@ file, and this expets that to already be done.</p>
 
     <div class="description">
         <p>The version of this map</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_visible" class="property item inherited">
+    <h3 class="name"><code>visible</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_visible">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l44"><code>src\DisplayObject.js:44</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The visibility of the object.</p>
     </div>
 
     

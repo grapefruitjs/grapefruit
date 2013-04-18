@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,10 +103,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
-            
-                <li><a href="..&#x2F;modules/input.html">input</a></li>
-            
             </ul>
         </div>
     </div>
@@ -147,6 +143,10 @@
     
 
     
+        <div class="extends">
+            Extends <a href="..\classes\Sprite.html" class="crosslink">Sprite</a>
+        </div>
+    
 
     
         <div class="foundat">
@@ -154,10 +154,6 @@
         </div>
     
 
-    
-        
-            Module: <a href="../modules/gf.html">gf</a>
-        
     
 
     
@@ -169,6 +165,127 @@
     <p>The base Entity class. This class is the base for all entities interacting on the stage</p>
 </div>
 
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_Entity" class="method item">
+    <h3 class="name"><code>Entity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>pos</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>settings</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l11"><code>src\Entity.js:11</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pos</code>
+                        <span class="type">Array | <a href="..\classes\Vector.html" class="crosslink">Vector</a> | <a href="..\classes\Point.html" class="crosslink">Point</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The starting position of the entity</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">settings</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Settings to override the defauls, acceptable values
+         are size {Vector}, name {String}, animations {Object}</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code> var ent = new gf.Entity([10, 1], { name: 'MyEntity' });
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -193,7 +310,28 @@
                 <div class="index-section methods">
                     <h3>Methods</h3>
 
-                    <ul class="index-list methods">
+                    <ul class="index-list methods extends">
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_addAnimation">addAnimation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_addChild">addChild</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_addChildAt">addChildAt</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item method">
                                 <a href="#method_applyFriction">applyFriction</a>
@@ -203,7 +341,14 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_checkCollision">checkCollision</a>
+                                <a href="#method_checkCollisions">checkCollisions</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_click">click</a>
 
                                 
                                 
@@ -223,8 +368,57 @@
                                 
                             </li>
                         
+                            <li class="index-item method inherited">
+                                <a href="#method_gotoAndPlay">gotoAndPlay</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_gotoAndStop">gotoAndStop</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
                                 <a href="#method_intersects">intersects</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_isActiveAnimation">isActiveAnimation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_mousedown">mousedown</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_mouseout">mouseout</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_mouseover">mouseover</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_mouseup">mouseup</a>
 
                                 
                                 
@@ -258,8 +452,64 @@
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method inherited">
+                                <a href="#method_play">play</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_removeChild">removeChild</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setActiveAnimation">setActiveAnimation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setInteractive">setInteractive</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
                                 <a href="#method_setPosition">setPosition</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_stop">stop</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_tap">tap</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_touchend">touchend</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_touchstart">touchstart</a>
 
                                 
                                 
@@ -287,7 +537,7 @@
                 <div class="index-section properties">
                     <h3>Properties</h3>
 
-                    <ul class="index-list properties">
+                    <ul class="index-list properties extends">
                         
                             <li class="index-item property">
                                 <a href="#property_accel">accel</a>
@@ -303,8 +553,36 @@
                                 
                             </li>
                         
+                            <li class="index-item property inherited">
+                                <a href="#property_alpha">alpha</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private inherited">
+                                <a href="#property_anim">anim</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_children">children</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property">
                                 <a href="#property_collidable">collidable</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private inherited">
+                                <a href="#property_currentAnim">currentAnim</a>
 
                                 
                                 
@@ -338,15 +616,15 @@
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_jumping">jumping</a>
+                            <li class="index-item property inherited">
+                                <a href="#property_height">height</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_mapCollidable">mapCollidable</a>
+                                <a href="#property_jumping">jumping</a>
 
                                 
                                 
@@ -366,6 +644,13 @@
                                 
                             </li>
                         
+                            <li class="index-item property inherited">
+                                <a href="#property_name">name</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property">
                                 <a href="#property_onladder">onladder</a>
 
@@ -373,8 +658,29 @@
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_type">type</a>
+                            <li class="index-item property inherited">
+                                <a href="#property_parent">parent</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_position">position</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_rotation">rotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_scale">scale</a>
 
                                 
                                 
@@ -382,6 +688,13 @@
                         
                             <li class="index-item property">
                                 <a href="#property_TYPE">TYPE</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_type">type</a>
 
                                 
                                 
@@ -401,6 +714,20 @@
                                 
                             </li>
                         
+                            <li class="index-item property inherited">
+                                <a href="#property_visible">visible</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_width">width</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -413,6 +740,328 @@
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_addAnimation" class="method item inherited">
+    <h3 class="name"><code>addAnimation</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>frames</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_addAnimation">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l160"><code>src\Sprite.js:160</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Defines a new animation on the Sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the animation, any string you want to name it</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">frames</code>
+                        <span class="type"><a href="..\classes\Texture.html" class="crosslink">Texture</a> | Array</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The frames of the animation, you can pass one gf.Texture
+     as a frame, or an Array of gf.Texture's</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                    
+                    Returns itself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code> spr.addAnimation('walk-left', new gf.Texture())
+     .addAnimation('walk-right', [new gf.Texture(), new gf.Texture()]);
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_addChild" class="method item inherited">
+    <h3 class="name"><code>addChild</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_addChild">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l56"><code>src\DisplayObject.js:56</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a child to the object.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_addChildAt" class="method item inherited">
+    <h3 class="name"><code>addChildAt</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>index</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_addChildAt">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l62"><code>src\DisplayObject.js:62</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">index</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="method_applyFriction" class="method item">
@@ -467,7 +1116,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l215"><code>src\Entity.js:215</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l204"><code>src\Entity.js:204</code></a>
         
         </p>
 
@@ -540,26 +1189,16 @@
 </div>
 
                 
-                    <div id="method_checkCollision" class="method item">
-    <h3 class="name"><code>checkCollision</code></h3>
+                    <div id="method_checkCollisions" class="method item">
+    <h3 class="name"><code>checkCollisions</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>obj</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
         <span class="returns-inline">
-            <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+            <span class="type">Array</span>
         </span>
     
 
@@ -586,7 +1225,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l246"><code>src\Entity.js:246</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l235"><code>src\Entity.js:235</code></a>
         
         </p>
 
@@ -597,10 +1236,81 @@
     </div>
 
     <div class="description">
-        <p>Checks if this entity collides with the passed Entity, a penetration vector is calculated.
-This method is called from gf.game.checkCollisions(ent); That method will use this to check
-for any collisions between that entity and all the others on the stage.
+        <p>Checks if this entity collides with any Entities, and if so, a penetration vector is calculated.
 from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection</p>
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Array</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_click" class="method item inherited">
+    <h3 class="name"><code>click</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>interactionData</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_click">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l103"><code>src\Sprite.js:103</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A callback that is used when the users clicks on the sprite with thier mouse</p>
     </div>
 
     
@@ -611,14 +1321,14 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
                 <li class="param">
                     
-                        <code class="param-name">obj</code>
-                        <span class="type"><a href="..\classes\Entity.html" class="crosslink">Entity</a></span>
+                        <code class="param-name">interactionData</code>
+                        <span class="type">InteractionData</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The Entity to check if this entity collides with</p>
+                         
                     </div>
 
                     
@@ -628,18 +1338,6 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
         </div>
     
 
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>:
-                    
-                
-            </div>
-        </div>
     
 
     
@@ -692,7 +1390,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l188"><code>src\Entity.js:188</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l177"><code>src\Entity.js:177</code></a>
         
         </p>
 
@@ -796,7 +1494,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l172"><code>src\Entity.js:172</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l161"><code>src\Entity.js:161</code></a>
         
         </p>
 
@@ -854,6 +1552,174 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
 </div>
 
                 
+                    <div id="method_gotoAndPlay" class="method item inherited">
+    <h3 class="name"><code>gotoAndPlay</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>frameNumber</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_gotoAndPlay">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l341"><code>src\Sprite.js:341</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Goes to a specific frame and begins playing the currently active animation</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">frameNumber</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>frame index to start at</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_gotoAndStop" class="method item inherited">
+    <h3 class="name"><code>gotoAndStop</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>frameNumber</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_gotoAndStop">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l335"><code>src\Sprite.js:335</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stops the currently active animation and goes to a specific frame</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">frameNumber</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>frame index to stop at</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_intersects" class="method item">
     <h3 class="name"><code>intersects</code></h3>
 
@@ -900,7 +1766,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l234"><code>src\Entity.js:234</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l223"><code>src\Entity.js:223</code></a>
         
         </p>
 
@@ -958,6 +1824,457 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
 </div>
 
                 
+                    <div id="method_isActiveAnimation" class="method item inherited">
+    <h3 class="name"><code>isActiveAnimation</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_isActiveAnimation">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l285"><code>src\Sprite.js:285</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Checks if the name is the active animation</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the animation to check if it is currently active</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    true if the animation is active, false otherwise.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code> spr.addAnimation('walk-left', new gf.Texture())
+     .isActiveAnimation('walk-left'); //false
+
+ spr.setActiveAnimation('walk-left')
+     .isActiveAnimation('walk-left'); //true
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_mousedown" class="method item inherited">
+    <h3 class="name"><code>mousedown</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>interactionData</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_mousedown">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l109"><code>src\Sprite.js:109</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A callback that is used when the user clicks the mouse down over the sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">interactionData</code>
+                        <span class="type">InteractionData</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_mouseout" class="method item inherited">
+    <h3 class="name"><code>mouseout</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>interactionData</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_mouseout">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l128"><code>src\Sprite.js:128</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A callback that is used when the users mouse leaves the sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">interactionData</code>
+                        <span class="type">InteractionData</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_mouseover" class="method item inherited">
+    <h3 class="name"><code>mouseover</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>interactionData</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_mouseover">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l122"><code>src\Sprite.js:122</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A callback that is used when the users mouse rolls over the sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">interactionData</code>
+                        <span class="type">InteractionData</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_mouseup" class="method item inherited">
+    <h3 class="name"><code>mouseup</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>interactionData</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_mouseup">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l115"><code>src\Sprite.js:115</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A callback that is used when the user releases the mouse that was over the sprite
+for this callback to be fired the mouse must have been pressed down over the sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">interactionData</code>
+                        <span class="type">InteractionData</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_moveEntity" class="method item">
     <h3 class="name"><code>moveEntity</code></h3>
 
@@ -1004,7 +2321,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l325"><code>src\Entity.js:325</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l319"><code>src\Entity.js:319</code></a>
         
         </p>
 
@@ -1108,7 +2425,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l409"><code>src\Entity.js:409</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l404"><code>src\Entity.js:404</code></a>
         
         </p>
 
@@ -1219,7 +2536,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l382"><code>src\Entity.js:382</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l377"><code>src\Entity.js:377</code></a>
         
         </p>
 
@@ -1231,8 +2548,8 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
 
     <div class="description">
         <p>On Collision Event
-     called when this object is collided into by another, by default if something collides with
-     a collectable entity we remove the collectable</p>
+     called when this object collides into another, or is being collided into by another
+     by default if something collides with a collectable entity we remove the collectable</p>
     </div>
 
     
@@ -1340,7 +2657,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l398"><code>src\Entity.js:398</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l393"><code>src\Entity.js:393</code></a>
         
         </p>
 
@@ -1399,6 +2716,357 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
 </div>
 
                 
+                    <div id="method_play" class="method item inherited">
+    <h3 class="name"><code>play</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_play">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l330"><code>src\Sprite.js:330</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Plays the currently active animation</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_removeChild" class="method item inherited">
+    <h3 class="name"><code>removeChild</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>child</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#method_removeChild">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l69"><code>src\DisplayObject.js:69</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Removes a child from the object.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">child</code>
+                        <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setActiveAnimation" class="method item inherited">
+    <h3 class="name"><code>setActiveAnimation</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>cb</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_setActiveAnimation">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l220"><code>src\Sprite.js:220</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the active animation of the sprite, and starts the animation at index 0</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the animation to play (defined with addAnimation());</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">cb</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Callback when the animation completes, NOT YET IMPLEMENTED</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                    
+                    Returns itself for chainability
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code> spr.addAnimation('me', new gf.Texture())
+     .setActiveAnimation('me');
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_setInteractive" class="method item inherited">
+    <h3 class="name"><code>setInteractive</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>interactive</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_setInteractive">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l301"><code>src\Sprite.js:301</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets whether or not this sprite is interactive (can be clicked)</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">interactive</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_setPosition" class="method item">
     <h3 class="name"><code>setPosition</code></h3>
 
@@ -1442,16 +3110,16 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
 
     <div class="meta">
         
+            <p>Inherited from
+            <a href="..\classes\Sprite.html#method_setPosition">
+                Sprite
+            </a>
             
-                
-                <p>
-                
-                Defined in
-                
+            but overwritten in
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l350"><code>src\Entity.js:350</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l345"><code>src\Entity.js:345</code></a>
         
         </p>
 
@@ -1537,6 +3205,311 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
 </div>
 
                 
+                    <div id="method_stop" class="method item inherited">
+    <h3 class="name"><code>stop</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_stop">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l325"><code>src\Sprite.js:325</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Stops the currently active animation</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_tap" class="method item inherited">
+    <h3 class="name"><code>tap</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>interactionData</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_tap">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l138"><code>src\Sprite.js:138</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A callback that is used when the users taps on the sprite with thier finger
+basically a touch version of click</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">interactionData</code>
+                        <span class="type">InteractionData</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_touchend" class="method item inherited">
+    <h3 class="name"><code>touchend</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>interactionData</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_touchend">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l151"><code>src\Sprite.js:151</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A callback that is used when the user releases the touch that was over the sprite
+for this callback to be fired. The touch must have started over the sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">interactionData</code>
+                        <span class="type">InteractionData</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_touchstart" class="method item inherited">
+    <h3 class="name"><code>touchstart</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>interactionData</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_touchstart">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l145"><code>src\Sprite.js:145</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A callback that is used when the user touch's over the sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">interactionData</code>
+                        <span class="type">InteractionData</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_update" class="method item">
     <h3 class="name"><code>update</code></h3>
 
@@ -1569,7 +3542,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l372"><code>src\Entity.js:372</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l367"><code>src\Entity.js:367</code></a>
         
         </p>
 
@@ -1627,7 +3600,7 @@ from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-w
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l273"><code>src\Entity.js:273</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l267"><code>src\Entity.js:267</code></a>
         
         </p>
 
@@ -1694,7 +3667,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l89"><code>src\Entity.js:89</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l78"><code>src\Entity.js:78</code></a>
         
         </p>
 
@@ -1740,7 +3713,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l116"><code>src\Entity.js:116</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l105"><code>src\Entity.js:105</code></a>
         
         </p>
 
@@ -1755,6 +3728,131 @@ because it checks for map collisions, and applies gravity and friction with comp
 
     
         <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_alpha" class="property item inherited">
+    <h3 class="name"><code>alpha</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_alpha">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l38"><code>src\DisplayObject.js:38</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The opacity of the object.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_anim" class="property item private inherited">
+    <h3 class="name"><code>anim</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#property_anim">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l40"><code>src\Sprite.js:40</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The defined animations for this Sprite, this maps the names to the childIndexes</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_children" class="property item inherited">
+    <h3 class="name"><code>children</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_children">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l15"><code>src\DisplayObject.js:15</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>[read-only] The of children of this object.</p>
+    </div>
+
     
 
     
@@ -1786,7 +3884,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l42"><code>src\Entity.js:42</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l41"><code>src\Entity.js:41</code></a>
         
         </p>
 
@@ -1801,6 +3899,49 @@ because it checks for map collisions, and applies gravity and friction with comp
 
     
         <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_currentAnim" class="property item private inherited">
+    <h3 class="name"><code>currentAnim</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#property_currentAnim">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l50"><code>src\Sprite.js:50</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The currently active animation</p>
+    </div>
+
     
 
     
@@ -1832,7 +3973,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l125"><code>src\Entity.js:125</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l114"><code>src\Entity.js:114</code></a>
         
         </p>
 
@@ -1878,7 +4019,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l98"><code>src\Entity.js:98</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l87"><code>src\Entity.js:87</code></a>
         
         </p>
 
@@ -1924,7 +4065,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l25"><code>src\Entity.js:25</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l24"><code>src\Entity.js:24</code></a>
         
         </p>
 
@@ -1968,7 +4109,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l107"><code>src\Entity.js:107</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l96"><code>src\Entity.js:96</code></a>
         
         </p>
 
@@ -1983,6 +4124,49 @@ because it checks for map collisions, and applies gravity and friction with comp
 
     
         <p><strong>Default:</strong> 0.98 (earth&#x27;s gravity)</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_height" class="property item inherited">
+    <h3 class="name"><code>height</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#property_height">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l22"><code>src\Sprite.js:22</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The height of the sprite</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -2014,7 +4198,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l135"><code>src\Entity.js:135</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l124"><code>src\Entity.js:124</code></a>
         
         </p>
 
@@ -2060,53 +4244,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l60"><code>src\Entity.js:60</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Is an entity</p>
-    </div>
-
-    
-        <p><strong>Default:</strong> true</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_mapCollidable" class="property item">
-    <h3 class="name"><code>mapCollidable</code></h3>
-    <span class="type">Boolean</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l51"><code>src\Entity.js:51</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l50"><code>src\Entity.js:50</code></a>
         
         </p>
 
@@ -2152,7 +4290,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l80"><code>src\Entity.js:80</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l69"><code>src\Entity.js:69</code></a>
         
         </p>
 
@@ -2167,6 +4305,49 @@ because it checks for map collisions, and applies gravity and friction with comp
 
     
         <p><strong>Default:</strong> new gf.Vector(15, 15)</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_name" class="property item inherited">
+    <h3 class="name"><code>name</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#property_name">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l31"><code>src\Sprite.js:31</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The name of this sprite</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
     
 
     
@@ -2198,7 +4379,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l145"><code>src\Entity.js:145</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l134"><code>src\Entity.js:134</code></a>
         
         </p>
 
@@ -2221,9 +4402,9 @@ because it checks for map collisions, and applies gravity and friction with comp
 </div>
 
                 
-                    <div id="property_type" class="property item">
-    <h3 class="name"><code>type</code></h3>
-    <span class="type">String</span>
+                    <div id="property_parent" class="property item inherited">
+    <h3 class="name"><code>parent</code></h3>
+    <span class="type"><a href="..\classes\DisplayObject.html" class="crosslink">DisplayObject</a></span>
 
     
 
@@ -2236,15 +4417,12 @@ because it checks for map collisions, and applies gravity and friction with comp
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_parent">DisplayObject</a>:
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l33"><code>src\Entity.js:33</code></a>
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l50"><code>src\DisplayObject.js:50</code></a>
         
         </p>
 
@@ -2254,11 +4432,132 @@ because it checks for map collisions, and applies gravity and friction with comp
     </div>
 
     <div class="description">
-        <p>The type of the entity</p>
+        <p>[read-only] The display object that contains this display object.</p>
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;neutral&#x27;</p>
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_position" class="property item inherited">
+    <h3 class="name"><code>position</code></h3>
+    <span class="type"><a href="..\classes\Point.html" class="crosslink">Point</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_position">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l20"><code>src\DisplayObject.js:20</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The coordinate of the object relative to the local coordinates of the parent.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_rotation" class="property item inherited">
+    <h3 class="name"><code>rotation</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_rotation">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l32"><code>src\DisplayObject.js:32</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The rotation of the object in radians.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_scale" class="property item inherited">
+    <h3 class="name"><code>scale</code></h3>
+    <span class="type"><a href="..\classes\Point.html" class="crosslink">Point</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_scale">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l26"><code>src\DisplayObject.js:26</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The scale factor of the object.</p>
+    </div>
+
     
 
     
@@ -2290,7 +4589,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l422"><code>src\Entity.js:422</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l417"><code>src\Entity.js:417</code></a>
         
         </p>
 
@@ -2303,6 +4602,52 @@ because it checks for map collisions, and applies gravity and friction with comp
         <p>Entity types</p>
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_type" class="property item">
+    <h3 class="name"><code>type</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l32"><code>src\Entity.js:32</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The type of the entity</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;neutral&#x27;</p>
     
 
     
@@ -2334,7 +4679,7 @@ because it checks for map collisions, and applies gravity and friction with comp
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l70"><code>src\Entity.js:70</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l59"><code>src\Entity.js:59</code></a>
         
         </p>
 
@@ -2381,7 +4726,7 @@ velocity of the entity (units per tick)</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l155"><code>src\Entity.js:155</code></a>
+        <a href="..&#x2F;files&#x2F;src_Entity.js.html#l144"><code>src\Entity.js:144</code></a>
         
         </p>
 
@@ -2394,6 +4739,90 @@ velocity of the entity (units per tick)</p>
         <p>The view position is a whole-number version of position.</p>
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_visible" class="property item inherited">
+    <h3 class="name"><code>visible</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\DisplayObject.html#property_visible">DisplayObject</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_DisplayObject.js.html#l44"><code>src\DisplayObject.js:44</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The visibility of the object.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_width" class="property item inherited">
+    <h3 class="name"><code>width</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#property_width">Sprite</a>:
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_Sprite.js.html#l13"><code>src\Sprite.js:13</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The width of the sprite</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     

@@ -11,7 +11,6 @@
 /**
  * The base Entity class. This class is the base for all entities interacting on the stage
  *
- * @module gf
  * @class Entity
  * @extends Sprite
  * @constructor

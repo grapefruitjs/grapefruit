@@ -2,7 +2,6 @@
  * Holds a pool of different Entities that can be created, makes it very
  * easy to quickly create different registered entities
  *
- * @module gf
  * @class entityPool
  */
 gf.entityPool = {

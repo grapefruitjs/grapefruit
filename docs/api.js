@@ -31,21 +31,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "support",
         "utils"
     ],
-    "modules": [
-        "gf",
-        "input"
-    ],
-    "allModules": [
-        {
-            "displayName": "gf",
-            "name": "gf",
-            "description": "The base grapefruit object"
-        },
-        {
-            "displayName": "input",
-            "name": "input",
-            "description": "input submodule"
-        }
-    ]
+    "modules": [],
+    "allModules": []
 } };
 });

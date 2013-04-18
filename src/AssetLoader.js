@@ -3,7 +3,6 @@
  * TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
  * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
  *
- * @module gf
  * @class AssetLoader
  * @constructor
  * @param resources {Array} Array of resources to load when `.load()` is called

@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.0.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -103,10 +103,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="..&#x2F;modules/gf.html">gf</a></li>
-            
-                <li><a href="..&#x2F;modules/input.html">input</a></li>
-            
             </ul>
         </div>
     </div>
@@ -155,10 +151,6 @@
     
 
     
-        
-            Module: <a href="../modules/gf.html">gf</a>
-        
-    
 
     
 </div>
@@ -171,6 +163,109 @@ TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Edit
 and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).</p>
 </div>
 
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_AssetLoader" class="method item">
+    <h3 class="name"><code>AssetLoader</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>resources</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l1"><code>src\AssetLoader.js:1</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">resources</code>
+                        <span class="type">Array</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Array of resources to load when <code>.load()</code> is called</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code> var loader = new AssetLoader(['/my/texture.png']);
+ loader.load();
+ //OR
+ var loader = new AssetLoader();
+ loader.load(['/my/texture.png']);
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -199,6 +294,13 @@ and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/te
                         
                             <li class="index-item method private">
                                 <a href="#method__storeAsset">_storeAsset</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_add">add</a>
 
                                 
                                 
@@ -341,7 +443,7 @@ and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/te
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l256"><code>src\AssetLoader.js:256</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l268"><code>src\AssetLoader.js:268</code></a>
         
         </p>
 
@@ -401,6 +503,114 @@ and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/te
 </div>
 
                 
+                    <div id="method_add" class="method item">
+    <h3 class="name"><code>add</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>url</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l92"><code>src\AssetLoader.js:92</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a resource to the resources array.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the resource (to use as the key in the cache)</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">url</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The URL to load the resource from (cross-domain not supported yet)</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_load" class="method item">
     <h3 class="name"><code>load</code></h3>
 
@@ -443,7 +653,7 @@ and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/te
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l63"><code>src\AssetLoader.js:63</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l62"><code>src\AssetLoader.js:62</code></a>
         
         </p>
 
@@ -542,7 +752,7 @@ load those instead.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l119"><code>src\AssetLoader.js:119</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l131"><code>src\AssetLoader.js:131</code></a>
         
         </p>
 
@@ -663,7 +873,7 @@ load those instead.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l149"><code>src\AssetLoader.js:149</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l161"><code>src\AssetLoader.js:161</code></a>
         
         </p>
 
@@ -775,7 +985,7 @@ load those instead.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l93"><code>src\AssetLoader.js:93</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l105"><code>src\AssetLoader.js:105</code></a>
         
         </p>
 
@@ -904,7 +1114,7 @@ load those instead.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l232"><code>src\AssetLoader.js:232</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l244"><code>src\AssetLoader.js:244</code></a>
         
         </p>
 
@@ -1010,7 +1220,7 @@ load those instead.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l38"><code>src\AssetLoader.js:38</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l37"><code>src\AssetLoader.js:37</code></a>
         
         </p>
 
@@ -1055,7 +1265,7 @@ in the global gf.assetCache</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l21"><code>src\AssetLoader.js:21</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l20"><code>src\AssetLoader.js:20</code></a>
         
         </p>
 
@@ -1101,7 +1311,7 @@ in the global gf.assetCache</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l47"><code>src\AssetLoader.js:47</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l46"><code>src\AssetLoader.js:46</code></a>
         
         </p>
 
@@ -1145,7 +1355,7 @@ in the global gf.assetCache</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l29"><code>src\AssetLoader.js:29</code></a>
+        <a href="..&#x2F;files&#x2F;src_AssetLoader.js.html#l28"><code>src\AssetLoader.js:28</code></a>
         
         </p>
 

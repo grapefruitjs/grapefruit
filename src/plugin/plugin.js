@@ -3,7 +3,6 @@
  * Namespace for all plugins, it also provides methods for patching
  * core functions, and registering plugins.
  *
- * @module gf
  * @class plugin
  */
 gf.plugin = {
