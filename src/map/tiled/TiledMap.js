@@ -173,36 +173,135 @@ gf.inherits(gf.TiledMap, gf.Map, {
             this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
         }
 
+        //collider overlays
+        if(gf.debug._showColliders) {
+            this.sprites.freeAll();
+            for(var s = 0; s < this.sprites.pool.length; ++s)
+                this.sprites.pool[s].visible = false;
+        }
+
             //get movement vector and normalize as our step
         var step = pv.clone().normalize(),
-            //starting position
-            start = ent.position,
-            //end location
-            end = new gf.Point(
-                (start.x + pv.x),
-                (start.y + pv.y)
-            ),
-            //original cell location
-            cell = new gf.Point(
-                Math.floor(start.x / this.tileSize.x),
-                Math.floor(start.y / this.tileSize.y)
-            ),
-            //end cell
-            endCell = new gf.Point(
-                Math.floor(end.x / this.tileSize.x),
-                Math.floor(end.y / this.tileSize.y)
-            ),
-            //the distance between 2 consectutive vertical lines
-            tDelta = new gf.Vector(
-                this.tileSize.x / Math.abs(step.x),
-                this.tileSize.y / Math.abs(step.y)
-            ),
-            //temp and return vars
-            text = null,
-            tMax = new gf.Point(),
-            id = 0,
+            pos = ent.position,
+            width = ent.currentAnim ? ent.currentAnim.width : pos.x,
+            height = ent.currentAnim ? ent.currentAnim.height : pos.y,
+            i = 0,
+            il = 0,
             tile = null,
             res = [];
+
+        //scan along the right face of the bound box
+        if(step.x > 0) {
+            for(i = pos.y, il = pos.y + height; i < il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        pos.x + width,
+                        i
+                    ),
+                    step,
+                    pv,
+                    'x'
+                );
+                if(tile) break;
+            }
+        }
+        //scan along the left face of the bound box
+        else if(step.x < 0) {
+            for(i = pos.y, il = pos.y + height; i < il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        pos.x,
+                        i
+                    ),
+                    step,
+                    pv,
+                    'x'
+                );
+                if(tile) break;
+            }
+        }
+
+        if(tile) {
+            res.push(tile);
+            tile = null;
+        }
+
+        //scan along the bottom face of the bound box
+        if(step.y > 0) {
+            for(i = pos.x, il = pos.x + width; i < il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        i,
+                        pos.y + height
+                    ),
+                    step,
+                    pv,
+                    'y'
+                );
+                if(tile) break;
+            }
+        }
+        //scan along the top face of the bound box
+        else if(step.y < 0) {
+            for(i = pos.x, il = pos.x + width; i < il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        i,
+                        pos.y
+                    ),
+                    step,
+                    pv,
+                    'y'
+                );
+                if(tile) break;
+            }
+        }
+
+        if(tile) {
+            res.push(tile);
+            tile = null;
+        }
+
+        return res;
+    },
+    _showCollider: function(id, cell) {
+        var text = this.collisionTileset.getTileTexture(id);
+        if(text) {
+            var spr = this.sprites.create(text);
+            spr.position.x = cell.x * this.tileSize.x;
+            spr.position.y = cell.y * this.tileSize.y;
+            spr.alpha = 0.5;
+            spr.visible = true;
+            spr.setTexture(text);
+        }
+    },
+    _checkPoint: function(start, step, pv, ax) {
+        step = step.clone();
+
+        //end location
+        var end = new gf.Point(
+            (start.x + pv.x),
+            (start.y + pv.y)
+        ),
+        //original cell location
+        cell = new gf.Point(
+            Math.floor(start.x / this.tileSize.x),
+            Math.floor(start.y / this.tileSize.y)
+        ),
+        //end cell
+        endCell = new gf.Point(
+            Math.floor(end.x / this.tileSize.x),
+            Math.floor(end.y / this.tileSize.y)
+        ),
+        //the distance between 2 consectutive vertical lines
+        tDelta = new gf.Vector(
+            this.tileSize.x / Math.abs(step.x),
+            this.tileSize.y / Math.abs(step.y)
+        ),
+        //temp and return vars
+        tMax = new gf.Point(),
+        id = 0,
+        tile = null;
 
         if(end.x > start.x) {
             tMax.x = step.x === 0 ? 0 : ((cell.x + 1) * this.tileSize.x - start.x) / step.x;
@@ -220,70 +319,37 @@ gf.inherits(gf.TiledMap, gf.Map, {
         step.x = step.x < 0 ? Math.floor(step.x) : Math.ceil(step.x);
         step.y = step.y < 0 ? Math.floor(step.y) : Math.ceil(step.y);
 
-        //check if we are on a colliding tile
-        tile = this.collisionTileset.getTileProperties(this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))]);
+        //check the cell currently on
+        id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
+        tile = this.collisionTileset.getTileProperties(id);
         if(tile && tile.isCollidable) {
-            res.push({ axis: 'x', tile: tile });
-            res.push({ axis: 'y', tile: tile });
-            return res;
+            if(gf.debug._showColliders)
+                this._showCollider(id, cell);
+
+            return { axis: ax, tile: tile };
         }
 
-        //collider overlays
-        if(gf.debug._showColliders) {
-            this.sprites.freeAll();
-            for(var s = 0; s < this.sprites.pool.length; ++s)
-                this.sprites.pool[s].visible = false;
-        }
-
-        var spr;
         //scan all the tiles along the movement vector
         while(cell.x !== endCell.x || cell.y !== endCell.y) {
             if(tMax.x < tMax.y) {
                 tMax.x += tDelta.x;
                 cell.x += step.x;
-                id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
-
-                if(gf.debug._showColliders) {
-                    text = this.collisionTileset.getTileTexture(id);
-                    if(text) {
-                        spr = this.sprites.create(text);
-                        spr.position.x = cell.x * this.tileSize.x;
-                        spr.position.y = cell.y * this.tileSize.y;
-                        spr.alpha = 0.5;
-                        spr.visible = true;
-                        spr.setTexture(text);
-                    }
-                }
-
-                tile = this.collisionTileset.getTileProperties(id);
-                if(tile && tile.isCollidable) {
-                    res.push({ axis: 'x', tile: tile });
-                }
+                ax = 'x';
             } else {
                 tMax.y += tDelta.y;
                 cell.y += step.y;
-                id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
+                ax = 'y';
+            }
 
-                if(gf.debug._showColliders) {
-                    text = this.collisionTileset.getTileTexture(id);
-                    if(text) {
-                        spr = this.sprites.create(text);
-                        spr.position.x = cell.x * this.tileSize.x;
-                        spr.position.y = cell.y * this.tileSize.y;
-                        spr.alpha = 0.5;
-                        spr.visible = true;
-                        spr.setTexture(text);
-                    }
-                }
+            id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
+            tile = this.collisionTileset.getTileProperties(id);
+            if(tile && tile.isCollidable) {
+                if(gf.debug._showColliders)
+                    this._showCollider(id, cell);
 
-                tile = this.collisionTileset.getTileProperties(id);
-                if(tile && tile.isCollidable) {
-                    res.push({ axis: 'y', tile: tile });
-                }
+                return { axis: ax, tile: tile };
             }
         }
-
-        return res;
     },
     /**
      * Notifies the map it needs to resize, re renders the viewport
