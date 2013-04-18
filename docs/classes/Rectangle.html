@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\input\Keyboard.js - gf</title>
+    <title>Rectangle - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -142,55 +142,66 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\input\Keyboard.js</h1>
+                        <h1>Rectangle Class</h1>
+<div class="box meta">
+    
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-gf.input.Keyboard = function(man, game) {
-    gf.input.Input.call(this, man, game);
+    
 
-    &#x2F;**
-     * Tracks if a key is already down, so we don&#x27;t repeat
-     *
-     * @property keydown
-     * @type Object
-     * @readOnly
-     *&#x2F;
-    this.keydown = {};
+    
+        <div class="foundat">
+            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l47"><code>src\core.js:47</code></a>
+        </div>
+    
 
-    document.addEventListener(&#x27;keydown&#x27;, this.onKeyDown.bind(this), false);
-    document.addEventListener(&#x27;keyup&#x27;, this.onKeyUp.bind(this), false);
-};
+    
+        
+            Module: <a href="../modules/gf.html">gf</a>
+        
+    
 
-gf.inherits(gf.input.Keyboard, gf.input.Input, {
-    &#x2F;&#x2F;on keydown event set gf.controls keycode&#x27;s action as active
-    &#x2F;&#x2F;and call any registered callbacks
-    onKeyDown: function(e, override) {
-        return this.modifyKey(e, override || e.keyCode || e.which, true);
-    },
-    onKeyUp: function(e, override) {
-        return this.modifyKey(e, override || e.keyCode || e.which, false);
-    },
-    modifyKey: function(e, key, val) {
-        if(this.binds[key]) {
-            &#x2F;&#x2F;Don&#x27;t fire events for repeats
-            if(this.keydown[key] === val)
-                return this.preventDefault(e);
+    
+</div>
 
-            &#x2F;&#x2F;track that the action has changed state
-            this.keydown[key] = val;
-            this.status[this.binds[key]] = val;
 
-            &#x2F;&#x2F;call each callback
-            this.runCallbacks(key, [val]);
 
-            return this.preventDefault(e);
-        }
+<div class="box intro">
+    <p>Rectangle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html">PIXI.Point</a></p>
+</div>
 
-        return true;
-    }
-});
-    </pre>
+
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+        
+        
+        
+        
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+            
+
+            
+
+            
+
+            
+        </div>
+
+        
+
+        
+
+        
+
+        
+    </div>
 </div>
 
                     </div>

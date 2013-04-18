@@ -257,6 +257,7 @@
             },
             "classes": {
                 "Point": 1,
+                "Rectangle": 1,
                 "Texture": 1,
                 "EventTarget": 1,
                 "support": 1
@@ -305,6 +306,7 @@
                 "game": 1,
                 "Sprite": 1,
                 "Point": 1,
+                "Rectangle": 1,
                 "Texture": 1,
                 "EventTarget": 1,
                 "support": 1,
@@ -707,6 +709,20 @@
             "line": 39,
             "description": "Point object, please see <a href=\"http://www.goodboydigital.com/pixijs/docs/classes/Point.html\">PIXI.Point</a>"
         },
+        "Rectangle": {
+            "name": "Rectangle",
+            "shortname": "Rectangle",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "gf",
+            "namespace": "",
+            "file": "src\\core.js",
+            "line": 47,
+            "description": "Rectangle object, please see <a href=\"http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html\">PIXI.Point</a>"
+        },
         "Texture": {
             "name": "Texture",
             "shortname": "Texture",
@@ -718,7 +734,7 @@
             "module": "gf",
             "namespace": "",
             "file": "src\\core.js",
-            "line": 47,
+            "line": 55,
             "description": "Texture object, please see <a href=\"http://www.goodboydigital.com/pixijs/docs/classes/Texture.html\">PIXI.Texture</a>"
         },
         "EventTarget": {
@@ -732,7 +748,7 @@
             "module": "gf",
             "namespace": "",
             "file": "src\\core.js",
-            "line": 55,
+            "line": 63,
             "description": "EventTarget mixin, please see <a href=\"http://www.goodboydigital.com/pixijs/docs/classes/EventTarget.html\">PIXI.EventTarget</a>"
         },
         "support": {
@@ -746,7 +762,7 @@
             "module": "gf",
             "namespace": "",
             "file": "src\\core.js",
-            "line": 81,
+            "line": 89,
             "description": "Feature detection so we cans witch between renderers, play audio correctly, and other things."
         },
         "entityPool": {
@@ -902,7 +918,7 @@
         },
         {
             "file": "src\\gui\\HudItem.js",
-            "line": 70,
+            "line": 69,
             "description": "Resets the value to the initialValue",
             "itemtype": "method",
             "name": "reset",
@@ -915,7 +931,7 @@
         },
         {
             "file": "src\\gui\\HudItem.js",
-            "line": 79,
+            "line": 78,
             "description": "Sets the value of the item",
             "itemtype": "method",
             "name": "set",
@@ -1354,17 +1370,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 80,
-            "description": "The layer for collisions",
-            "itemtype": "property",
-            "name": "collisionLayer",
-            "type": "Array",
-            "class": "TiledMap",
-            "module": "gf"
-        },
-        {
-            "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 88,
+            "line": 76,
             "description": "The tileset for the collision layer",
             "itemtype": "property",
             "name": "collisionTileset",
@@ -1374,7 +1380,17 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 96,
+            "line": 91,
+            "description": "The layer for collisions",
+            "itemtype": "property",
+            "name": "collisionLayer",
+            "type": "Array",
+            "class": "TiledMap",
+            "module": "gf"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledMap.js",
+            "line": 99,
             "description": "The version of this map",
             "itemtype": "property",
             "name": "version",
@@ -1384,7 +1400,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 144,
+            "line": 147,
             "description": "Gets the tileset that an ID is associated with",
             "itemtype": "method",
             "name": "getTileset",
@@ -1404,13 +1420,13 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 156,
-            "description": "Checks an entities collision with the collision layer of this map\nTODO: Fix this for new PIXI stuff",
+            "line": 159,
+            "description": "Checks an entities collision with the collision layer of this map",
             "itemtype": "method",
             "name": "checkCollision",
             "params": [
                 {
-                    "name": "mesh",
+                    "name": "ent",
                     "description": "The entity to check",
                     "type": "Entity"
                 },
@@ -1430,7 +1446,7 @@
         },
         {
             "file": "src\\map\\tiled\\TiledMap.js",
-            "line": 216,
+            "line": 354,
             "description": "Notifies the map it needs to resize, re renders the viewport",
             "itemtype": "method",
             "name": "resize",
@@ -2012,6 +2028,32 @@
         {
             "file": "src\\utils\\Vector.js",
             "line": 99,
+            "description": "Floors the vector components",
+            "itemtype": "method",
+            "name": "floor",
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 111,
+            "description": "Ceils the vector components",
+            "itemtype": "method",
+            "name": "ceil",
+            "return": {
+                "description": "Returns itself",
+                "type": "Vector"
+            },
+            "class": "Vector",
+            "module": "gf"
+        },
+        {
+            "file": "src\\utils\\Vector.js",
+            "line": 123,
             "description": "Adds a vector to this one",
             "itemtype": "method",
             "name": "add",
@@ -2031,7 +2073,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 112,
+            "line": 136,
             "description": "Adds two vectors to each other and stores the result in this vector",
             "itemtype": "method",
             "name": "addVectors",
@@ -2056,7 +2098,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 126,
+            "line": 150,
             "description": "Adds a scalar value to the x and y components of this vector",
             "itemtype": "method",
             "name": "addScalar",
@@ -2076,7 +2118,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 139,
+            "line": 163,
             "description": "Subtracts a vector from this one",
             "itemtype": "method",
             "name": "sub",
@@ -2096,7 +2138,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 152,
+            "line": 176,
             "description": "Subtracts two vectors from each other and stores the result in this vector",
             "itemtype": "method",
             "name": "subVectors",
@@ -2121,7 +2163,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 166,
+            "line": 190,
             "description": "Multiplies the x and y components of this vector by a scalar value",
             "itemtype": "method",
             "name": "multiplyScalar",
@@ -2141,7 +2183,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 179,
+            "line": 203,
             "description": "Divides the x and y components of this vector by a scalar value",
             "itemtype": "method",
             "name": "divideScalar",
@@ -2161,7 +2203,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 196,
+            "line": 220,
             "description": "Sets this vector components to the minimum value when compared to the passed vector's components",
             "itemtype": "method",
             "name": "min",
@@ -2181,7 +2223,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 214,
+            "line": 238,
             "description": "Sets this vector components to the maximum value when compared to the passed vector's components",
             "itemtype": "method",
             "name": "max",
@@ -2201,7 +2243,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 232,
+            "line": 256,
             "description": "Clamps the vectors components to be between min and max",
             "itemtype": "method",
             "name": "max",
@@ -2226,7 +2268,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 257,
+            "line": 281,
             "description": "Negates this vector (multiplies by -1)",
             "itemtype": "method",
             "name": "negate",
@@ -2239,7 +2281,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 266,
+            "line": 290,
             "description": "Performs the dot product between this vector and the passed one and returns the result",
             "itemtype": "method",
             "name": "dot",
@@ -2259,7 +2301,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 276,
+            "line": 300,
             "description": "Calculates the square length of the vector",
             "itemtype": "method",
             "name": "lengthSq",
@@ -2272,7 +2314,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 285,
+            "line": 309,
             "description": "Calculates the length of the vector",
             "itemtype": "method",
             "name": "length",
@@ -2285,7 +2327,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 294,
+            "line": 318,
             "description": "Normalizes this vector (divides by its length)",
             "itemtype": "method",
             "name": "normalize",
@@ -2298,7 +2340,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 303,
+            "line": 327,
             "description": "Calculates the distance to the passed vector",
             "itemtype": "method",
             "name": "distanceTo",
@@ -2318,7 +2360,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 313,
+            "line": 337,
             "description": "Calculates the square distance to the passed vector",
             "itemtype": "method",
             "name": "distanceToSquared",
@@ -2338,7 +2380,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 324,
+            "line": 348,
             "description": "Sets the length of the vector",
             "itemtype": "method",
             "name": "setLength",
@@ -2358,7 +2400,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 340,
+            "line": 364,
             "description": "Performs a linear interpolation between this vector and the passed vector",
             "itemtype": "method",
             "name": "lerp",
@@ -2383,7 +2425,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 354,
+            "line": 378,
             "description": "Checks if this vector is equal to another",
             "itemtype": "method",
             "name": "equals",
@@ -2403,7 +2445,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 364,
+            "line": 388,
             "description": "Returns an array with the components of this vector as the elements",
             "itemtype": "method",
             "name": "toArray",
@@ -2416,7 +2458,7 @@
         },
         {
             "file": "src\\utils\\Vector.js",
-            "line": 373,
+            "line": 397,
             "description": "Creates a new instance of Vector, with the same components as this vector",
             "itemtype": "method",
             "name": "clone",
@@ -3667,7 +3709,7 @@
         },
         {
             "file": "src\\Entity.js",
-            "line": 329,
+            "line": 325,
             "description": "Moves the entity to a new position using the velocity.",
             "itemtype": "method",
             "name": "moveEntity",
@@ -3687,7 +3729,7 @@
         },
         {
             "file": "src\\Entity.js",
-            "line": 354,
+            "line": 350,
             "description": "Convenience method for setting the position of an Entity.",
             "itemtype": "method",
             "name": "setPosition",
@@ -3715,7 +3757,7 @@
         },
         {
             "file": "src\\Entity.js",
-            "line": 376,
+            "line": 372,
             "description": "Overrides base update to do some calculations. Called internally on each frame",
             "itemtype": "method",
             "name": "update",
@@ -3724,7 +3766,7 @@
         },
         {
             "file": "src\\Entity.js",
-            "line": 386,
+            "line": 382,
             "description": "On Collision Event\n     called when this object is collided into by another, by default if something collides with\n     a collectable entity we remove the collectable",
             "itemtype": "method",
             "name": "onCollision",
@@ -3749,7 +3791,7 @@
         },
         {
             "file": "src\\Entity.js",
-            "line": 402,
+            "line": 398,
             "description": "On Move Event\n     called when this entity moves",
             "itemtype": "method",
             "name": "onMove",
@@ -3769,7 +3811,7 @@
         },
         {
             "file": "src\\Entity.js",
-            "line": 413,
+            "line": 409,
             "description": "On Break Tile Event\n     called when a tile is broken",
             "itemtype": "method",
             "name": "onBreakTile",
@@ -3789,7 +3831,7 @@
         },
         {
             "file": "src\\Entity.js",
-            "line": 426,
+            "line": 422,
             "description": "Entity types",
             "itemtype": "property",
             "name": "TYPE",
@@ -4439,7 +4481,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 88,
+            "line": 96,
             "description": "The current user agent string",
             "itemtype": "property",
             "name": "ua",
@@ -4449,7 +4491,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 96,
+            "line": 104,
             "description": "Whether or not canvas is supported",
             "itemtype": "property",
             "name": "canvas",
@@ -4459,7 +4501,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 104,
+            "line": 112,
             "description": "Whether or not webgl is supported",
             "itemtype": "property",
             "name": "webgl",
@@ -4469,7 +4511,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 112,
+            "line": 120,
             "description": "Whether or not web workers are supported",
             "itemtype": "property",
             "name": "workers",
@@ -4479,7 +4521,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 120,
+            "line": 128,
             "description": "Whether or not typed arrays are supported",
             "itemtype": "property",
             "name": "typedArrays",
@@ -4489,7 +4531,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 128,
+            "line": 136,
             "description": "Whether or not the filesystem API is supported",
             "itemtype": "property",
             "name": "fileapi",
@@ -4499,7 +4541,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 136,
+            "line": 144,
             "description": "Whether or not the audio elements are supported, and if so which types",
             "itemtype": "property",
             "name": "audio",
@@ -4509,7 +4551,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 150,
+            "line": 158,
             "description": "Whether or not local storage is supported",
             "itemtype": "property",
             "name": "localStorage",
@@ -4519,7 +4561,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 158,
+            "line": 166,
             "description": "Whether or not touch is supported",
             "itemtype": "property",
             "name": "touch",
@@ -4529,7 +4571,7 @@
         },
         {
             "file": "src\\core.js",
-            "line": 166,
+            "line": 174,
             "description": "Whether or not the gamepad API is supported",
             "itemtype": "property",
             "name": "gamepad",

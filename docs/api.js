@@ -16,6 +16,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "Layer",
         "Map",
         "Point",
+        "Rectangle",
         "Sprite",
         "Texture",
         "TiledLayer",

@@ -79,6 +79,8 @@
             
                 <li><a href="..&#x2F;classes/Point.html">Point</a></li>
             
+                <li><a href="..&#x2F;classes/Rectangle.html">Rectangle</a></li>
+            
                 <li><a href="..&#x2F;classes/Sprite.html">Sprite</a></li>
             
                 <li><a href="..&#x2F;classes/support.html">support</a></li>
@@ -219,8 +221,19 @@ gf.TiledMap = function(game, map) {
      *&#x2F;
     this.tilesets = [];
 
+    &#x2F;**
+     * The tileset for the collision layer
+     *
+     * @property collisionTileset
+     * @type TiledTileset
+     *&#x2F;
+    this.collisionTileset = null;
+
     for(var t = 0, tl = map.tilesets.length; t &lt; tl; ++t) {
-        this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
+        var len = this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
+
+        if(this.tilesets[len-1].name.toLowerCase().indexOf(&#x27;collider&#x27;) === 0)
+            this.collisionTileset = this.tilesets[len-1];
     }
 
     &#x2F;**
@@ -230,14 +243,6 @@ gf.TiledMap = function(game, map) {
      * @type Array
      *&#x2F;
     this.collisionLayer = [];
-
-    &#x2F;**
-     * The tileset for the collision layer
-     *
-     * @property collisionTileset
-     * @type TiledTileset
-     *&#x2F;
-    this.collisionTileset = null;
 
     &#x2F;**
      * The version of this map
@@ -301,63 +306,198 @@ gf.inherits(gf.TiledMap, gf.Map, {
     },
     &#x2F;**
      * Checks an entities collision with the collision layer of this map
-     * TODO: Fix this for new PIXI stuff
      *
      * @method checkCollision
-     * @param mesh {Entity} The entity to check
+     * @param ent {Entity} The entity to check
      * @param sz {Vector} The size of the entity
      * @param pv {Vector} The potential movement vector
      *&#x2F;
-    &#x2F;&#x2F;if object is moved by pv get the tile it would be at
-    checkCollision: function(mesh, sz, pv) {
-        if(!this.collisionLayer || !this.collisionTileset) return [];
+    &#x2F;&#x2F;see: http:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;2576412&#x2F;tile-map-collision-detection
+    checkCollision: function(ent, pv) {
+        if(!this.collisionLayer || !this.collisionTileset || (pv.x === 0 &amp;&amp; pv.y === 0))
+            return [];
 
-        var pos = new gf.Vector(mesh.position.x, mesh.position.y),
-            size = sz.clone().divideScalar(2),
-            left = pos.x - size.x,
-            right = pos.x + size.x,
-            top = pos.y + size.y,
-            bottom = pos.y - size.y,
-            x = (pv.x &lt; 0) ? Math.floor(left + pv.x) : Math.ceil(right + pv.x),
-            y = (pv.y &lt; 0) ? Math.floor(bottom + pv.y) : Math.ceil(top + pv.y),
-            res = [],
-            tile = null;
+        if(gf.debug._showColliders &amp;&amp; !this.sprites) {
+            this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
+        }
 
-        &#x2F;&#x2F;check X movement
-        if(x &lt;= this.extent.x.min || x &gt;= this.extent.x.max) {
-            res.push({ axis: &#x27;x&#x27;, tile: { type: gf.Layer.COLLISION.SOLID } });
-        } else if(pv.x) {
-            &#x2F;&#x2F;x, bottom corner
-            tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.floor(bottom)));
-            if(tile &amp;&amp; tile.isCollidable &amp;&amp; (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
-                res.push({ axis: &#x27;x&#x27;, tile: tile });
-            } else {
-                &#x2F;&#x2F;x, top corner
-                tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId(x, Math.ceil(top)));
-                if(tile &amp;&amp; tile.isCollidable &amp;&amp; (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
-                    res.push({ axis: &#x27;x&#x27;, tile: tile });
-                }
+        &#x2F;&#x2F;collider overlays
+        if(gf.debug._showColliders) {
+            this.sprites.freeAll();
+            for(var s = 0; s &lt; this.sprites.pool.length; ++s)
+                this.sprites.pool[s].visible = false;
+        }
+
+            &#x2F;&#x2F;get movement vector and normalize as our step
+        var step = pv.clone().normalize(),
+            pos = ent.position,
+            width = ent.currentAnim ? ent.currentAnim.width : pos.x,
+            height = ent.currentAnim ? ent.currentAnim.height : pos.y,
+            i = 0,
+            il = 0,
+            tile = null,
+            res = [];
+
+        &#x2F;&#x2F;scan along the right face of the bound box
+        if(step.x &gt; 0) {
+            for(i = pos.y, il = pos.y + height; i &lt; il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        pos.x + width,
+                        i
+                    ),
+                    step,
+                    pv,
+                    &#x27;x&#x27;
+                );
+                if(tile) break;
+            }
+        }
+        &#x2F;&#x2F;scan along the left face of the bound box
+        else if(step.x &lt; 0) {
+            for(i = pos.y, il = pos.y + height; i &lt; il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        pos.x,
+                        i
+                    ),
+                    step,
+                    pv,
+                    &#x27;x&#x27;
+                );
+                if(tile) break;
             }
         }
 
-        &#x2F;&#x2F;check Y movement
-        if(y &lt;= this.extent.y.min || y &gt;= this.extent.y.max) {
-            res.push({ axis: &#x27;y&#x27;, tile: { type: gf.Layer.COLLISION.SOLID } });
-        } else if(pv.y) {
-            &#x2F;&#x2F;y, left corner
-            tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x &lt; 0) ? Math.floor(left) : Math.ceil(right), y));
-            if(tile &amp;&amp; tile.isCollidable &amp;&amp; (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
-                res.push({ axis: &#x27;y&#x27;, tile: tile });
-            } else {
-                &#x2F;&#x2F;y, right corner
-                tile = this.collisionTileset.getTileProperties(this.collisionLayer.getTileId((pv.x &lt; 0) ? Math.ceil(right) : Math.floor(left), y));
-                if(tile &amp;&amp; tile.isCollidable &amp;&amp; (!tile.half || this._checkHalfBlock(tile.half, x, y))) {
-                    res.push({ axis: &#x27;y&#x27;, tile: tile });
-                }
+        if(tile) {
+            res.push(tile);
+            tile = null;
+        }
+
+        &#x2F;&#x2F;scan along the bottom face of the bound box
+        if(step.y &gt; 0) {
+            for(i = pos.x, il = pos.x + width; i &lt; il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        i,
+                        pos.y + height
+                    ),
+                    step,
+                    pv,
+                    &#x27;y&#x27;
+                );
+                if(tile) break;
             }
+        }
+        &#x2F;&#x2F;scan along the top face of the bound box
+        else if(step.y &lt; 0) {
+            for(i = pos.x, il = pos.x + width; i &lt; il; ++i) {
+                tile = this._checkPoint(
+                    new gf.Point(
+                        i,
+                        pos.y
+                    ),
+                    step,
+                    pv,
+                    &#x27;y&#x27;
+                );
+                if(tile) break;
+            }
+        }
+
+        if(tile) {
+            res.push(tile);
+            tile = null;
         }
 
         return res;
+    },
+    _showCollider: function(id, cell) {
+        var text = this.collisionTileset.getTileTexture(id);
+        if(text) {
+            var spr = this.sprites.create(text);
+            spr.position.x = cell.x * this.tileSize.x;
+            spr.position.y = cell.y * this.tileSize.y;
+            spr.alpha = 0.5;
+            spr.visible = true;
+            spr.setTexture(text);
+        }
+    },
+    _checkPoint: function(start, step, pv, ax) {
+        step = step.clone();
+
+        &#x2F;&#x2F;end location
+        var end = new gf.Point(
+            (start.x + pv.x),
+            (start.y + pv.y)
+        ),
+        &#x2F;&#x2F;original cell location
+        cell = new gf.Point(
+            Math.floor(start.x &#x2F; this.tileSize.x),
+            Math.floor(start.y &#x2F; this.tileSize.y)
+        ),
+        &#x2F;&#x2F;end cell
+        endCell = new gf.Point(
+            Math.floor(end.x &#x2F; this.tileSize.x),
+            Math.floor(end.y &#x2F; this.tileSize.y)
+        ),
+        &#x2F;&#x2F;the distance between 2 consectutive vertical lines
+        tDelta = new gf.Vector(
+            this.tileSize.x &#x2F; Math.abs(step.x),
+            this.tileSize.y &#x2F; Math.abs(step.y)
+        ),
+        &#x2F;&#x2F;temp and return vars
+        tMax = new gf.Point(),
+        id = 0,
+        tile = null;
+
+        if(end.x &gt; start.x) {
+            tMax.x = step.x === 0 ? 0 : ((cell.x + 1) * this.tileSize.x - start.x) &#x2F; step.x;
+        } else {
+            tMax.x = step.x === 0 ? 0 : (cell.x * this.tileSize.x - start.x) &#x2F; step.x;
+        }
+
+        if(end.y &gt; start.y) {
+            tMax.y = step.y === 0 ? 0 : ((cell.y + 1) * this.tileSize.y - start.y) &#x2F; step.y;
+        } else {
+            tMax.y = step.y === 0 ? 0 : (cell.y * this.tileSize.y - start.y) &#x2F; step.y;
+        }
+
+        &#x2F;&#x2F;ceil afterwards so tDelta and tMax are correct
+        step.x = step.x &lt; 0 ? Math.floor(step.x) : Math.ceil(step.x);
+        step.y = step.y &lt; 0 ? Math.floor(step.y) : Math.ceil(step.y);
+
+        &#x2F;&#x2F;check the cell currently on
+        id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
+        tile = this.collisionTileset.getTileProperties(id);
+        if(tile &amp;&amp; tile.isCollidable) {
+            if(gf.debug._showColliders)
+                this._showCollider(id, cell);
+
+            return { axis: ax, tile: tile };
+        }
+
+        &#x2F;&#x2F;scan all the tiles along the movement vector
+        while(cell.x !== endCell.x || cell.y !== endCell.y) {
+            if(tMax.x &lt; tMax.y) {
+                tMax.x += tDelta.x;
+                cell.x += step.x;
+                ax = &#x27;x&#x27;;
+            } else {
+                tMax.y += tDelta.y;
+                cell.y += step.y;
+                ax = &#x27;y&#x27;;
+            }
+
+            id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
+            tile = this.collisionTileset.getTileProperties(id);
+            if(tile &amp;&amp; tile.isCollidable) {
+                if(gf.debug._showColliders)
+                    this._showCollider(id, cell);
+
+                return { axis: ax, tile: tile };
+            }
+        }
     },
     &#x2F;**
      * Notifies the map it needs to resize, re renders the viewport
