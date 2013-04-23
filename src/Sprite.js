@@ -1,3 +1,21 @@
+function setTextureWrapper(t) {
+    PIXI.Sprite.prototype.setTexture.call(this, t);
+
+    if(!this.currentAnim) return;
+
+    this.parent.width = this.currentAnim.width;
+    this.parent.height = this.currentAnim.height;
+}
+
+function onTextureUpdateWrapper(e) {
+    PIXI.Sprite.prototype.onTextureUpdate.call(this, e);
+
+    if(!this.currentAnim) return;
+
+    this.parent.width = this.currentAnim.width;
+    this.parent.height = this.currentAnim.height;
+}
+
 /**
  * The base Sprite class. This class is the base for all images on the screen
  *
@@ -57,6 +75,14 @@ gf.Sprite = function(pos, settings) {
      */
     this.currentAnim = null;
 
+    /**
+     * The the anchor point for the textures
+     *
+     * @property anchor
+     * @type Point
+     */
+    this.anchor = new gf.Point();
+
     //call base ctor
     gf.DisplayObject.call(this);
 
@@ -90,6 +116,7 @@ gf.Sprite = function(pos, settings) {
             this.anim['default'] = spr.childIndex;
             this.width = spr.width;
             this.height = spr.height;
+            spr.anchor = this.anchor;
             spr.setTexture = setTextureWrapper;
             spr.onTextureUpdate = onTextureUpdateWrapper;
         }
@@ -142,6 +169,7 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
         clip.stop();
         clip.visible = false;
         clip.name = name;
+        clip.anchor = this.anchor;
         clip.setTexture = setTextureWrapper;
         clip.onTextureUpdate = onTextureUpdateWrapper;
 
@@ -283,17 +311,3 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
  * @method gotoAndPlay
  * @param frameNumber {Number} frame index to start at
  */
-
-function setTextureWrapper(t) {
-    PIXI.Sprite.prototype.setTexture.call(this);
-
-    this.parent.width = this.currentAnim.width;
-    this.parent.height = this.currentAnim.height;
-}
-
-function onTextureUpdateWrapper(e) {
-    PIXI.Sprite.prototype.onTextureUpdate.call(this);
-
-    this.parent.width = this.currentAnim.width;
-    this.parent.height = this.currentAnim.height;
-}
