@@ -174,7 +174,7 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
             var o = this.children[i];
 
             if(o.visible && o.update)
-                o.update();
+                o.update.apply(o, arguments);
         }
     },
     resize: function() {
@@ -182,7 +182,7 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
             var o = this.children[i];
 
             if(o.visible && o.resize)
-                o.resize();
+                o.resize.apply(o, arguments);
         }
     },
     removeAllChildren: function() {
