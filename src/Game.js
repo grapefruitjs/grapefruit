@@ -154,7 +154,7 @@ gf.Game = function(contId, settings) {
      */
     this.camera = new gf.Camera(this);
 
-    this.addObject(this.camera);
+    this.addChild(this.camera);
 
     this.camera.resize(w, h);
 
@@ -189,11 +189,11 @@ gf.inherits(gf.Game, Object, {
     /**
      * Adds an object to the current stage
      *
-     * @method addObject
+     * @method addChild
      * @param obj {Sprite} The sprite to the stage
      * @return {Game} Returns itself for chainability
      */
-    addObject: function(obj) {
+    addChild: function(obj) {
         if(obj) {
             //we add the camera in the ctor and the map later when
             //.loadWorld is called. This way the camera is always the
@@ -211,13 +211,13 @@ gf.inherits(gf.Game, Object, {
     /**
      * Removes a sprite from the stage
      *
-     * @method removeObject
+     * @method removeChild
      * @param obj {Sprite} The sprite to the stage
      * @return {Game} Returns itself for chainability
      */
-    removeObject: function(obj) {
+    removeChild: function(obj) {
         if(obj) {
-            if(obj instanceof gf.Gui || obj instanceof gf.Hud)
+            if(obj instanceof gf.Gui)
                 this.camera.removeChild(obj);
             else
                 this.world.removeChild(obj);
@@ -241,7 +241,7 @@ gf.inherits(gf.Game, Object, {
         }
 
         this.world = new gf.TiledMap(this, world);
-        this.addObject(this.world);
+        this.addChild(this.world);
         this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
 
         if(this.world.properties.music) {
