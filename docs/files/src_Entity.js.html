@@ -391,10 +391,10 @@ gf.inherits(gf.Entity, gf.Sprite, {
 
         &#x2F;&#x2F;check if this entity collides with any others in the world
         world.forEachEntity(function(ent) {
-            if(ent.collidable &amp;&amp; self != ent &amp;&amp; self.intersects(ent)) {
+            if(ent.collidable &amp;&amp; self !== ent &amp;&amp; self.intersects(ent)) {
                 res.push({
-                    dx: (self.position.x - obj.position.x) &#x2F; 2,
-                    dy: (self.position.y - obj.position.y) &#x2F; 2,
+                    dx: (self.position.x - ent.position.x) &#x2F; 2,
+                    dy: (self.position.y - ent.position.y) &#x2F; 2,
                     ent: ent
                 });
 

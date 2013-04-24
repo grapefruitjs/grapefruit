@@ -142,6 +142,24 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+function setTextureWrapper(t) {
+    PIXI.Sprite.prototype.setTexture.call(this, t);
+
+    if(!this.currentAnim) return;
+
+    this.parent.width = this.currentAnim.width;
+    this.parent.height = this.currentAnim.height;
+}
+
+function onTextureUpdateWrapper(e) {
+    PIXI.Sprite.prototype.onTextureUpdate.call(this, e);
+
+    if(!this.currentAnim) return;
+
+    this.parent.width = this.currentAnim.width;
+    this.parent.height = this.currentAnim.height;
+}
+
 &#x2F;**
  * The base Sprite class. This class is the base for all images on the screen
  *
@@ -201,6 +219,14 @@ gf.Sprite = function(pos, settings) {
      *&#x2F;
     this.currentAnim = null;
 
+    &#x2F;**
+     * The the anchor point for the textures
+     *
+     * @property anchor
+     * @type Point
+     *&#x2F;
+    this.anchor = new gf.Point();
+
     &#x2F;&#x2F;call base ctor
     gf.DisplayObject.call(this);
 
@@ -234,70 +260,11 @@ gf.Sprite = function(pos, settings) {
             this.anim[&#x27;default&#x27;] = spr.childIndex;
             this.width = spr.width;
             this.height = spr.height;
+            spr.anchor = this.anchor;
             spr.setTexture = setTextureWrapper;
             spr.onTextureUpdate = onTextureUpdateWrapper;
         }
     }
-
-    &#x2F;&#x2F;copied from http:&#x2F;&#x2F;www.goodboydigital.com&#x2F;pixijs&#x2F;docs&#x2F;files&#x2F;src_pixi_Sprite.js.html
-
-    &#x2F;*
-    * MOUSE Callbacks
-    *&#x2F;
-    &#x2F;**
-    * A callback that is used when the users clicks on the sprite with thier mouse
-    * @method click
-    * @param interactionData {InteractionData}
-    *&#x2F;
-
-    &#x2F;**
-    * A callback that is used when the user clicks the mouse down over the sprite
-    * @method mousedown
-    * @param interactionData {InteractionData}
-    *&#x2F;
-
-    &#x2F;**
-    * A callback that is used when the user releases the mouse that was over the sprite
-    * for this callback to be fired the mouse must have been pressed down over the sprite
-    * @method mouseup
-    * @param interactionData {InteractionData}
-    *&#x2F;
-
-    &#x2F;**
-    * A callback that is used when the users mouse rolls over the sprite
-    * @method mouseover
-    * @param interactionData {InteractionData}
-    *&#x2F;
-
-    &#x2F;**
-    * A callback that is used when the users mouse leaves the sprite
-    * @method mouseout
-    * @param interactionData {InteractionData}
-    *&#x2F;
-
-    &#x2F;*
-    * TOUCH Callbacks
-    *&#x2F;
-
-    &#x2F;**
-    * A callback that is used when the users taps on the sprite with thier finger
-    * basically a touch version of click
-    * @method tap
-    * @param interactionData {InteractionData}
-    *&#x2F;
-
-    &#x2F;**
-    * A callback that is used when the user touch&#x27;s over the sprite
-    * @method touchstart
-    * @param interactionData {InteractionData}
-    *&#x2F;
-
-    &#x2F;**
-    * A callback that is used when the user releases the touch that was over the sprite
-    * for this callback to be fired. The touch must have started over the sprite
-    * @method touchend
-    * @param interactionData {InteractionData}
-    *&#x2F;
 };
 
 gf.inherits(gf.Sprite, gf.DisplayObject, {
@@ -346,6 +313,7 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
         clip.stop();
         clip.visible = false;
         clip.name = name;
+        clip.anchor = this.anchor;
         clip.setTexture = setTextureWrapper;
         clip.onTextureUpdate = onTextureUpdateWrapper;
 
@@ -487,20 +455,6 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
  * @method gotoAndPlay
  * @param frameNumber {Number} frame index to start at
  *&#x2F;
-
-function setTextureWrapper(t) {
-    PIXI.Sprite.prototype.setTexture.call(this);
-
-    this.parent.width = this.currentAnim.width;
-    this.parent.height = this.currentAnim.height;
-}
-
-function onTextureUpdateWrapper(e) {
-    PIXI.Sprite.prototype.onTextureUpdate.call(this);
-
-    this.parent.width = this.currentAnim.width;
-    this.parent.height = this.currentAnim.height;
-}
     </pre>
 </div>
 

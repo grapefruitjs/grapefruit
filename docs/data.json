@@ -758,7 +758,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\Sprite.js",
-            "line": 1,
+            "line": 19,
             "description": "The base Sprite class. This class is the base for all images on the screen",
             "extends": "DisplayObject",
             "is_constructor": 1,
@@ -3290,6 +3290,195 @@
         {
             "file": "src\\DisplayObject.js",
             "line": 56,
+            "description": "[read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.",
+            "itemtype": "property",
+            "name": "stage",
+            "type": "Stage",
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 62,
+            "description": "This is the defined area that will pick up mouse / touch events. It is null by default.\nSetting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)",
+            "itemtype": "property",
+            "name": "hitArea",
+            "type": "Rectangle",
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 73,
+            "description": "A callback that is used when the users clicks on the displayObject with their mouse",
+            "itemtype": "method",
+            "name": "click",
+            "params": [
+                {
+                    "name": "interactionData",
+                    "description": "",
+                    "type": "InteractionData"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 79,
+            "description": "A callback that is used when the user clicks the mouse down over the sprite",
+            "itemtype": "method",
+            "name": "mousedown",
+            "params": [
+                {
+                    "name": "interactionData",
+                    "description": "",
+                    "type": "InteractionData"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 85,
+            "description": "A callback that is used when the user releases the mouse that was over the displayObject\nfor this callback to be fired the mouse must have been pressed down over the displayObject",
+            "itemtype": "method",
+            "name": "mouseup",
+            "params": [
+                {
+                    "name": "interactionData",
+                    "description": "",
+                    "type": "InteractionData"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 92,
+            "description": "A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject\nfor this callback to be fired, The touch must have started over the displayObject",
+            "itemtype": "method",
+            "name": "mouseupoutside",
+            "params": [
+                {
+                    "name": "interactionData",
+                    "description": "",
+                    "type": "InteractionData"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 99,
+            "description": "A callback that is used when the users mouse rolls over the displayObject",
+            "itemtype": "method",
+            "name": "mouseover",
+            "params": [
+                {
+                    "name": "interactionData",
+                    "description": "",
+                    "type": "InteractionData"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 105,
+            "description": "A callback that is used when the users mouse leaves the displayObject",
+            "itemtype": "method",
+            "name": "mouseout",
+            "params": [
+                {
+                    "name": "interactionData",
+                    "description": "",
+                    "type": "InteractionData"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 115,
+            "description": "A callback that is used when the users taps on the sprite with their finger\nbasically a touch version of click",
+            "itemtype": "method",
+            "name": "tap",
+            "params": [
+                {
+                    "name": "interactionData",
+                    "description": "",
+                    "type": "InteractionData"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 122,
+            "description": "A callback that is used when the user touch's over the displayObject",
+            "itemtype": "method",
+            "name": "touchstart",
+            "params": [
+                {
+                    "name": "interactionData",
+                    "description": "",
+                    "type": "InteractionData"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 128,
+            "description": "A callback that is used when the user releases a touch over the displayObject",
+            "itemtype": "method",
+            "name": "touchend",
+            "params": [
+                {
+                    "name": "interactionData",
+                    "description": "",
+                    "type": "InteractionData"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 134,
+            "description": "A callback that is used when the user releases the touch that was over the displayObject\nfor this callback to be fired, The touch must have started over the sprite",
+            "itemtype": "method",
+            "name": "touchendoutside",
+            "params": [
+                {
+                    "name": "interactionData",
+                    "description": "",
+                    "type": "InteractionData"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 141,
+            "description": "Inherited Methods",
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 145,
+            "description": "Indicates if the sprite will have touch and mouse interactivity. It is false by default",
+            "itemtype": "method",
+            "name": "setInteractive",
+            "params": [
+                {
+                    "name": "interactive",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "DisplayObject"
+        },
+        {
+            "file": "src\\DisplayObject.js",
+            "line": 151,
             "description": "Adds a child to the object.",
             "itemtype": "method",
             "name": "addChild",
@@ -3304,7 +3493,7 @@
         },
         {
             "file": "src\\DisplayObject.js",
-            "line": 62,
+            "line": 157,
             "description": "Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown",
             "itemtype": "method",
             "name": "addChildAt",
@@ -3324,7 +3513,7 @@
         },
         {
             "file": "src\\DisplayObject.js",
-            "line": 69,
+            "line": 164,
             "description": "Removes a child from the object.",
             "itemtype": "method",
             "name": "removeChild",
@@ -3870,7 +4059,7 @@
             "line": 189,
             "description": "Adds an object to the current stage",
             "itemtype": "method",
-            "name": "addObject",
+            "name": "addChild",
             "params": [
                 {
                     "name": "obj",
@@ -3889,7 +4078,7 @@
             "line": 211,
             "description": "Removes a sprite from the stage",
             "itemtype": "method",
-            "name": "removeObject",
+            "name": "removeChild",
             "params": [
                 {
                     "name": "obj",
@@ -3965,7 +4154,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 13,
+            "line": 31,
             "description": "The width of the sprite",
             "itemtype": "property",
             "name": "width",
@@ -3975,7 +4164,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 22,
+            "line": 40,
             "description": "The height of the sprite",
             "itemtype": "property",
             "name": "height",
@@ -3985,7 +4174,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 31,
+            "line": 49,
             "description": "The name of this sprite",
             "itemtype": "property",
             "name": "name",
@@ -3995,7 +4184,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 40,
+            "line": 58,
             "description": "The defined animations for this Sprite, this maps the names to the childIndexes",
             "itemtype": "property",
             "name": "anim",
@@ -4007,7 +4196,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 50,
+            "line": 68,
             "description": "The currently active animation",
             "itemtype": "property",
             "name": "currentAnim",
@@ -4019,127 +4208,16 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 103,
-            "description": "A callback that is used when the users clicks on the sprite with thier mouse",
-            "itemtype": "method",
-            "name": "click",
-            "params": [
-                {
-                    "name": "interactionData",
-                    "description": "",
-                    "type": "InteractionData"
-                }
-            ],
+            "line": 78,
+            "description": "The the anchor point for the textures",
+            "itemtype": "property",
+            "name": "anchor",
+            "type": "Point",
             "class": "Sprite"
         },
         {
             "file": "src\\Sprite.js",
-            "line": 109,
-            "description": "A callback that is used when the user clicks the mouse down over the sprite",
-            "itemtype": "method",
-            "name": "mousedown",
-            "params": [
-                {
-                    "name": "interactionData",
-                    "description": "",
-                    "type": "InteractionData"
-                }
-            ],
-            "class": "Sprite"
-        },
-        {
-            "file": "src\\Sprite.js",
-            "line": 115,
-            "description": "A callback that is used when the user releases the mouse that was over the sprite\nfor this callback to be fired the mouse must have been pressed down over the sprite",
-            "itemtype": "method",
-            "name": "mouseup",
-            "params": [
-                {
-                    "name": "interactionData",
-                    "description": "",
-                    "type": "InteractionData"
-                }
-            ],
-            "class": "Sprite"
-        },
-        {
-            "file": "src\\Sprite.js",
-            "line": 122,
-            "description": "A callback that is used when the users mouse rolls over the sprite",
-            "itemtype": "method",
-            "name": "mouseover",
-            "params": [
-                {
-                    "name": "interactionData",
-                    "description": "",
-                    "type": "InteractionData"
-                }
-            ],
-            "class": "Sprite"
-        },
-        {
-            "file": "src\\Sprite.js",
-            "line": 128,
-            "description": "A callback that is used when the users mouse leaves the sprite",
-            "itemtype": "method",
-            "name": "mouseout",
-            "params": [
-                {
-                    "name": "interactionData",
-                    "description": "",
-                    "type": "InteractionData"
-                }
-            ],
-            "class": "Sprite"
-        },
-        {
-            "file": "src\\Sprite.js",
-            "line": 138,
-            "description": "A callback that is used when the users taps on the sprite with thier finger\nbasically a touch version of click",
-            "itemtype": "method",
-            "name": "tap",
-            "params": [
-                {
-                    "name": "interactionData",
-                    "description": "",
-                    "type": "InteractionData"
-                }
-            ],
-            "class": "Sprite"
-        },
-        {
-            "file": "src\\Sprite.js",
-            "line": 145,
-            "description": "A callback that is used when the user touch's over the sprite",
-            "itemtype": "method",
-            "name": "touchstart",
-            "params": [
-                {
-                    "name": "interactionData",
-                    "description": "",
-                    "type": "InteractionData"
-                }
-            ],
-            "class": "Sprite"
-        },
-        {
-            "file": "src\\Sprite.js",
-            "line": 151,
-            "description": "A callback that is used when the user releases the touch that was over the sprite\nfor this callback to be fired. The touch must have started over the sprite",
-            "itemtype": "method",
-            "name": "touchend",
-            "params": [
-                {
-                    "name": "interactionData",
-                    "description": "",
-                    "type": "InteractionData"
-                }
-            ],
-            "class": "Sprite"
-        },
-        {
-            "file": "src\\Sprite.js",
-            "line": 160,
+            "line": 127,
             "description": "Defines a new animation on the Sprite",
             "itemtype": "method",
             "name": "addAnimation",
@@ -4166,7 +4244,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 220,
+            "line": 188,
             "description": "Sets the active animation of the sprite, and starts the animation at index 0",
             "itemtype": "method",
             "name": "setActiveAnimation",
@@ -4193,7 +4271,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 256,
+            "line": 224,
             "description": "Convenience method for setting the position of the Sprite.",
             "itemtype": "method",
             "name": "setPosition",
@@ -4220,7 +4298,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 285,
+            "line": 253,
             "description": "Checks if the name is the active animation",
             "itemtype": "method",
             "name": "isActiveAnimation",
@@ -4242,7 +4320,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 301,
+            "line": 269,
             "description": "Sets whether or not this sprite is interactive (can be clicked)",
             "itemtype": "method",
             "name": "setInteractive",
@@ -4257,7 +4335,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 325,
+            "line": 293,
             "description": "Stops the currently active animation",
             "itemtype": "method",
             "name": "stop",
@@ -4265,7 +4343,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 330,
+            "line": 298,
             "description": "Plays the currently active animation",
             "itemtype": "method",
             "name": "play",
@@ -4273,7 +4351,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 335,
+            "line": 303,
             "description": "Stops the currently active animation and goes to a specific frame",
             "itemtype": "method",
             "name": "gotoAndStop",
@@ -4288,7 +4366,7 @@
         },
         {
             "file": "src\\Sprite.js",
-            "line": 341,
+            "line": 309,
             "description": "Goes to a specific frame and begins playing the currently active animation",
             "itemtype": "method",
             "name": "gotoAndPlay",
@@ -4552,6 +4630,10 @@
         {
             "message": "Missing item type\ninput object",
             "line": " src\\input\\Input.js:1"
+        },
+        {
+            "message": "Missing item type\nInherited Methods",
+            "line": " src\\DisplayObject.js:141"
         },
         {
             "message": "Missing item type",

@@ -198,6 +198,101 @@ gf.DisplayObject = function() {
      *&#x2F;
 
     &#x2F;**
+     * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
+     * @property stage
+     * @type Stage
+     *&#x2F;
+
+    &#x2F;**
+     * This is the defined area that will pick up mouse &#x2F; touch events. It is null by default.
+     * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
+     * @property hitArea
+     * @type Rectangle
+     *&#x2F;
+
+    &#x2F;*
+     * MOUSE Callbacks
+     *&#x2F;
+
+    &#x2F;**
+     * A callback that is used when the users clicks on the displayObject with their mouse
+     * @method click
+     * @param interactionData {InteractionData}
+     *&#x2F;
+
+    &#x2F;**
+     * A callback that is used when the user clicks the mouse down over the sprite
+     * @method mousedown
+     * @param interactionData {InteractionData}
+     *&#x2F;
+
+    &#x2F;**
+     * A callback that is used when the user releases the mouse that was over the displayObject
+     * for this callback to be fired the mouse must have been pressed down over the displayObject
+     * @method mouseup
+     * @param interactionData {InteractionData}
+     *&#x2F;
+
+    &#x2F;**
+     * A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject
+     * for this callback to be fired, The touch must have started over the displayObject
+     * @method mouseupoutside
+     * @param interactionData {InteractionData}
+     *&#x2F;
+
+    &#x2F;**
+     * A callback that is used when the users mouse rolls over the displayObject
+     * @method mouseover
+     * @param interactionData {InteractionData}
+     *&#x2F;
+
+    &#x2F;**
+     * A callback that is used when the users mouse leaves the displayObject
+     * @method mouseout
+     * @param interactionData {InteractionData}
+     *&#x2F;
+
+    &#x2F;*
+     * TOUCH Callbacks
+     *&#x2F;
+
+    &#x2F;**
+     * A callback that is used when the users taps on the sprite with their finger
+     * basically a touch version of click
+     * @method tap
+     * @param interactionData {InteractionData}
+     *&#x2F;
+
+    &#x2F;**
+     * A callback that is used when the user touch&#x27;s over the displayObject
+     * @method touchstart
+     * @param interactionData {InteractionData}
+     *&#x2F;
+
+    &#x2F;**
+     * A callback that is used when the user releases a touch over the displayObject
+     * @method touchend
+     * @param interactionData {InteractionData}
+     *&#x2F;
+
+    &#x2F;**
+     * A callback that is used when the user releases the touch that was over the displayObject
+     * for this callback to be fired, The touch must have started over the sprite
+     * @method touchendoutside
+     * @param interactionData {InteractionData}
+     *&#x2F;
+
+    &#x2F;**
+     * Inherited Methods
+     *&#x2F;
+
+    &#x2F;**
+     * Indicates if the sprite will have touch and mouse interactivity. It is false by default
+     * @method setInteractive
+     * @param interactive {Boolean}
+     *&#x2F;
+
+    &#x2F;**
      * Adds a child to the object.
      * @method addChild
      * @param child {DisplayObject}
@@ -223,7 +318,7 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
             var o = this.children[i];
 
             if(o.visible &amp;&amp; o.update)
-                o.update();
+                o.update.apply(o, arguments);
         }
     },
     resize: function() {
@@ -231,7 +326,7 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
             var o = this.children[i];
 
             if(o.visible &amp;&amp; o.resize)
-                o.resize();
+                o.resize.apply(o, arguments);
         }
     },
     removeAllChildren: function() {
