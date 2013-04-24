@@ -9,12 +9,13 @@ intense and complex 2D games.
 Some features that GrapeFruit gives you:
 
  - WebGL rendering with Canvas Fallback
- - Powerful entity interaction system
- - Robust GUI/HUD system
+ - Entity and Tilemap Collisions
+ - GUI/HUD system
+ - Texture Fonts
  - Support for keyboard, mouse, and gamepad input
  - Channeled audio playback
- - First-class Tiled Map Editor integration
- - Easy-to-use plugin system
+ - Tiled Map Editor integration
+ - Plugin system
  - much more!
 
 ## Current State
@@ -30,11 +31,11 @@ an [Issue](https://github.com/englercj/grapefruit/issues) and we can talk about 
 
 Soon to come:
 
-- Tilemap Collisions
-- Entity Collisions
+- Tilemap Collisions (in there, but wonky)
+- Entity Collisions (may convert to QuadTree Interactions)
 - Multiple Cameras
-- More Entity Physics (like bounce)
-- Sprite Sheet Animation
+- More Entity Physics (like elasticity, and buoyancy)
+- Sprite Sheet Animations (without forcing TexturePacker format)
 
 Coming in the future:
 
