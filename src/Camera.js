@@ -92,7 +92,6 @@ gf.Camera = function(game, settings) {
             duration: 0,
             direction: gf.Camera.SHAKE.BOTH,
             offset: new gf.Point(0, 0),
-            previous: new gf.Point(0, 0),
             complete: null
         }
     };
@@ -249,8 +248,6 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         this._fx.shake.direction = direction;
         this._fx.shake.offset.x = 0;
         this._fx.shake.offset.y = 0;
-        this._fx.shake.previous.x = this.game.world.position.x;
-        this._fx.shake.previous.y = this.game.world.position.y;
         this._fx.shake.complete = cb;
 
         return this;
@@ -266,7 +263,6 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
             this._fx.shake.duration = 0;
             this._fx.shake.offset.x = 0;
             this._fx.shake.offset.y = 0;
-            this.focus(this._fx.shake.previous);
         }
 
         return this;
@@ -533,25 +529,30 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         if(this._fx.shake.duration > 0) {
             this._fx.shake.duration -= (this.game._delta * 1000);
 
+            //pan back to the original position
+            this._fx.shake.offset.x = -this._fx.shake.offset.x;
+            this._fx.shake.offset.y = -this._fx.shake.offset.y;
+            this.pan(this._fx.shake.offset);
+
             if(this._fx.shake.duration <= 0) {
                 this._fx.shake.duration = 0;
                 this._fx.shake.offset.x = 0;
                 this._fx.shake.offset.y = 0;
-                this.focus(this._fx.shake.previous);
 
                 if(this._fx.shake.complete) {
                     this._fx.shake.complete();
                 }
             }
             else {
+                //pan to a random offset
                 if((this._fx.shake.direction === gf.Camera.SHAKE.BOTH) || (this._fx.shake.direction === gf.Camera.SHAKE.HORIZONTAL))
-                    this._fx.shake.offset.x = (Math.random() * this._fx.shake.intensity * this.size.x * 2 - this._fx.shake.intensity * this.size.x);
+                    this._fx.shake.offset.x = Math.round(Math.random() * this._fx.shake.intensity * this.size.x * 2 - this._fx.shake.intensity * this.size.x);
 
                 if ((this._fx.shake.direction === gf.Camera.SHAKE.BOTH) || (this._fx.shake.direction === gf.Camera.SHAKE.VERTICAL))
-                    this._fx.shake.offset.y = (Math.random() * this._fx.shake.intensity * this.size.y * 2 - this._fx.shake.intensity * this.size.y);
-            }
+                    this._fx.shake.offset.y = Math.round(Math.random() * this._fx.shake.intensity * this.size.y * 2 - this._fx.shake.intensity * this.size.y);
 
-            this.pan(this._fx.shake.offset);
+                this.pan(this._fx.shake.offset);
+            }
         }
 
         return this;
