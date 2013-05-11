@@ -380,6 +380,9 @@ gf.inherits(gf.TiledMap, gf.Map, {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             if(this.children[i] instanceof gf.TiledObjectGroup)
                 this.children[i].forEachEntity(fn);
+
+            if(this.children[i] instanceof gf.Entity)
+                fn(this.children[i]);
         }
     },
     //WIP
