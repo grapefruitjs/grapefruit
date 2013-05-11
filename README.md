@@ -36,6 +36,7 @@ Soon to come:
 - Multiple Cameras
 - More Entity Physics (like elasticity, and buoyancy)
 - Sprite Sheet Animations (without forcing TexturePacker format)
+- Typewriter (for dialog-like text printing)
 
 Coming in the future:
 
