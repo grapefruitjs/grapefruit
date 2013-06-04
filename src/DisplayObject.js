@@ -169,14 +169,6 @@ gf.DisplayObject = function() {
 };
 
 gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
-    update: function() {
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.visible && o.update)
-                o.update.apply(o, arguments);
-        }
-    },
     resize: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
