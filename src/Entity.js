@@ -15,8 +15,7 @@
  * @extends Sprite
  * @constructor
  * @param pos {Array|Vector|Point} The starting position of the entity
- * @param settings {Object} Settings to override the defauls, acceptable values
- *          are size {Vector}, name {String}, animations {Object}
+ * @param settings {Object} Settings to override the defauls
  * @example
  *      var ent = new gf.Entity([10, 1], { name: 'MyEntity' });
  */
@@ -57,25 +56,6 @@ gf.Entity = function(game, pos, settings) {
     this.mapCollidable = true;
 
     /**
-     * The velocity of the entity. You can set these in Tiled by using "x|y" notation
-     * velocity of the entity (units per tick)
-     *
-     * @property velocity
-     * @type Vector
-     * @default new gf.Vector(0, 0)
-     */
-    this.velocity = new gf.Vector(0, 0);
-
-    /**
-     * Max velocity to cap the entity at (units per tick)
-     *
-     * @property maxVelocity
-     * @type Vector
-     * @default new gf.Vector(15, 15)
-     */
-    this.maxVelocity = new gf.Vector(15, 15);
-
-    /**
      * Acceleration of the entity (units per second)
      *
      * @property accel
@@ -83,24 +63,6 @@ gf.Entity = function(game, pos, settings) {
      * @default new gf.Vector(250, 250)
      */
     this.accel = new gf.Vector(250, 250);
-
-    /**
-     * Friction to apply to this entity
-     *
-     * @property friction
-     * @type Vector
-     * @default 0
-     */
-    this.friction = 0;
-
-    /**
-     * Gravity to apply to this entity
-     *
-     * @property gravity
-     * @type Vector
-     * @default 0.98 (earth's gravity)
-     */
-    this.gravity = 0;
 
     /**
      * Whether or not the entity is "alive", advisory only
@@ -363,16 +325,6 @@ gf.inherits(gf.Entity, gf.Sprite, {
         this.viewPosition.y = Math.round(this.position.y);
 
         return this;
-    },
-    /**
-     * Overrides base update to do some calculations. Called internally on each frame
-     *
-     * @method update
-     */
-    update: function() {
-        gf.Sprite.prototype.update.call(this);
-
-        this.updateMovement();
     },
     /**
      * On Collision Event

@@ -23,12 +23,4 @@ gf.GuiItem = function(pos, settings) {
 };
 
 gf.inherits(gf.GuiItem, gf.Sprite, {
-    /**
-     * Overrides base update to do some calculations. Called internally on each frame
-     *
-     * @method update
-     */
-    update: function() {
-        gf.Sprite.prototype.update.call(this);
-    }
 });

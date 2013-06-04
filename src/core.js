@@ -117,12 +117,20 @@ gf.support = {
     workers: !!window.Worker,
 
     /**
+     * Whether or not Blob URLs are supported
+     *
+     * @property blobs
+     * @type bool
+     */
+    blobUrls: !!window.Blob && !!window.URL && !!window.URL.createObjectURL,
+
+    /**
      * Whether or not typed arrays are supported
      *
      * @property typedArrays
      * @type bool
      */
-    typedArrays: !!('ArrayBuffer' in window),
+    typedArrays: !!window.ArrayBuffer,
 
     /**
      * Whether or not the filesystem API is supported
@@ -130,7 +138,7 @@ gf.support = {
      * @property fileapi
      * @type bool
      */
-    fileapi: window.File && window.FileReader && window.FileList && window.Blob,
+    fileapi: !!window.File && !!window.FileReader && !!window.FileList && !!window.Blob,
 
     /**
      * Whether or not the audio elements are supported, and if so which types
