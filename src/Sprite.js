@@ -119,6 +119,8 @@ gf.Sprite = function(pos, settings) {
             spr.anchor = this.anchor;
             spr.setTexture = setTextureWrapper;
             spr.onTextureUpdate = onTextureUpdateWrapper;
+
+            this.setTexture = spr.setTexture.bind(spr);
         }
     }
 };
