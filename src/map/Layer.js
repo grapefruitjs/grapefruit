@@ -53,18 +53,3 @@ gf.inherits(gf.Layer, gf.DisplayObject, {
     pan: function() {
     }
 });
-
-/**
- * Tile collision types
- *
- * @property COLLISION
- * @type Object
- */
-gf.Layer.COLLISION = {
-    NONE: 'none',
-    SOLID: 'solid',
-    CLIFF: 'cliff',
-    LADDER: 'ladder',
-    WATER: 'water',
-    DEEP_WATER: 'deep_water'
-};
