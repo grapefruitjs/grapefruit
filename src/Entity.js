@@ -185,5 +185,6 @@ gf.Entity.TYPE = {
     ENEMY: 'enemy',
     FRIENDLY: 'friendly',
     NEUTRAL: 'neutral',
-    COLLECTABLE: 'collectable'
+    COLLECTABLE: 'collectable',
+    TILE: 'tile'
 };
