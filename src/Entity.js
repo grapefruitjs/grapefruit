@@ -38,33 +38,6 @@ gf.Entity = function(game, pos, settings) {
     this.type = gf.Entity.TYPE.NEUTRAL;
 
     /**
-     * Can it collide with other entities
-     *
-     * @property collidable
-     * @type Boolean
-     * @default true
-     */
-    this.collidable = true;
-
-    /**
-     * Can collide with the map when moving
-     *
-     * @property mapCollidable
-     * @type Boolean
-     * @default true
-     */
-    this.mapCollidable = true;
-
-    /**
-     * The mass of the entity
-     *
-     * @property mass
-     * @type Number
-     * @default 1
-     */
-    this.mass = 1;
-
-    /**
      * Whether or not the entity is "alive", advisory only
      *
      * @property alive
@@ -72,6 +45,26 @@ gf.Entity = function(game, pos, settings) {
      * @default true
      */
     this.alive = true;
+
+    /**
+     * Can it collide with other entities
+     *
+     * @property collidable
+     * @type Boolean
+     * @default true
+     * @readOnly
+     */
+    this.collidable = true;
+
+    /**
+     * The mass of the entity
+     *
+     * @property mass
+     * @type Number
+     * @default 1
+     * @readOnly
+     */
+    this.mass = 1;
 
     /**
      * Whether the entity is falling (read only)
@@ -120,43 +113,31 @@ gf.Entity = function(game, pos, settings) {
 
     if(!game) throw 'No game instance passed to Entity, a game instance is required!';
 
-    this.setCollidable(this.collidable);
+    this.game.physics.add(this);
 };
 
 gf.inherits(gf.Entity, gf.Sprite, {
     setCollidable: function(canCollide) {
-        this.game.physics.removeEntity(this);
-        this.game.physics.addEntity(this, this.collidable ? 1 : 0);
-
         this.collidable = canCollide;
+        this.game.physics.setMass(this, canCollide ? this.mass : 0);
     },
-    /**
-     * Moves the entity to a new position using the velocity.
-     *
-     * @method moveEntity
-     * @param vel {Vector} The velocity to apply to the entity
-     * @return {Entity} Returns itself for chainability
-     */
-    moveEntity: function(vel) {
-        if(vel.x === 0 && vel.y === 0)
-            return;
+    setMass: function(mass) {
+        this.mass = mass < 0 ? 0 : mass;
+        this.game.physics.setMass(this, mass);
 
-
-
-        //update the entity position
-        this.position.x += vel.x;
-        this.position.y += vel.y;
-        this.viewPosition.x = Math.round(this.position.x);
-        this.viewPosition.y = Math.round(this.position.y);
-
-        //onMove event
-        if(this.onMove)
-            this.onMove(vel);
-
-        return this;
+        if(this.mass === 0)
+            this.collidable = false;
+    },
+    setVelocity: function(vel) {
+        this.game.physics.setVelocity(this, vel);
+    },
+    setRotation: function(rads) {
+        this.rotation = rads;
+        this.game.physics.setRotation(this, rads);
     },
     /**
      * Convenience method for setting the position of an Entity.
+     * WARNING: Using this will
      *
      * @method setPosition
      * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
@@ -169,11 +150,15 @@ gf.inherits(gf.Entity, gf.Sprite, {
      *          .setPosition(new gf.Point(10, 10))
      *          .setPosition(new gf.Vector(20, 20));
      */
-    setPosition: function(x, y) {
+    setPosition: function(x, y, skipPhysics) {
         gf.Sprite.prototype.setPosition.call(this, x, y);
 
         this.viewPosition.x = Math.round(this.position.x);
         this.viewPosition.y = Math.round(this.position.y);
+
+        if(!skipPhysics) {
+            this.game.physics.setPosition(this, this.position);
+        }
 
         return this;
     },
