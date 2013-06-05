@@ -269,10 +269,13 @@ gf.inherits(gf.Game, Object, {
         //update debug info
         gf.debug.update();
 
+        //gather input from user
         this.input.update();
 
+        //update any camera effects
         this.camera.update();
 
+        //simulate physics and detect/resolve collisions
         this.physics.update();
 
         //render scene
