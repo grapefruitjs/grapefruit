@@ -67,36 +67,6 @@ gf.Entity = function(game, pos, settings) {
     this.mass = 1;
 
     /**
-     * Whether the entity is falling (read only)
-     *
-     * @property falling
-     * @type Boolean
-     * @default false
-     * @readOnly
-     */
-    this.falling = false;
-
-    /**
-     * Whether the entity is jumping (read only)
-     *
-     * @property jumping
-     * @type Boolean
-     * @default false
-     * @readOnly
-     */
-    this.jumping = false;
-
-    /**
-     * Whether the entity is on a ladder tile (read only)
-     *
-     * @property onladder
-     * @type Boolean
-     * @default false
-     * @readOnly
-     */
-    this.onladder = false;
-
-    /**
      * The view position is a whole-number version of position.
      *
      * @property viewPosition
@@ -113,13 +83,17 @@ gf.Entity = function(game, pos, settings) {
 
     if(!game) throw 'No game instance passed to Entity, a game instance is required!';
 
-    this.game.physics.add(this);
+    this.setCollidable(this.collidable);
 };
 
 gf.inherits(gf.Entity, gf.Sprite, {
     setCollidable: function(canCollide) {
-        this.collidable = canCollide;
-        this.game.physics.setMass(this, canCollide ? this.mass : 0);
+        //turning off collisions
+        if(this.collidable && !canCollide)
+            this.game.physics.remove(this);
+        //turning on collisions
+        else if(!this.collidable && canCollide)
+            this.game.physics.add(this);
     },
     setMass: function(mass) {
         this.mass = mass < 0 ? 0 : mass;
@@ -137,7 +111,6 @@ gf.inherits(gf.Entity, gf.Sprite, {
     },
     /**
      * Convenience method for setting the position of an Entity.
-     * WARNING: Using this will
      *
      * @method setPosition
      * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
