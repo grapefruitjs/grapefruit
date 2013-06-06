@@ -60,7 +60,7 @@ module.exports = function(grunt) {
         '<%= dirs.vendor %>/es5-shim.min.js',
         '<%= dirs.vendor %>/es5-sham.min.js',
         '<%= dirs.vendor %>/pixi.dev.js',
-        '<%= dirs.vendor %>/p2.js'
+        '<%= dirs.vendor %>/cp.js'
     ],
     banner = [
         '/**',
@@ -181,7 +181,7 @@ module.exports = function(grunt) {
 
                     /* For the library */
                     PIXI: false,
-                    p2: false
+                    cp: false
                 }
             }
         },

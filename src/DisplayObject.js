@@ -241,8 +241,8 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
         }
         //passed in something else, lets try to massage it into numbers
         else {
-            this.position.x = parseInt(x, 10) || 0;
-            this.position.y = parseInt(y, 10) || 0;
+            this.position.x = parseFloat(x, 10) || 0;
+            this.position.y = parseFloat(y, 10) || 0;
         }
 
         return this;

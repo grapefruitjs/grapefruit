@@ -160,7 +160,7 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
                 this.tileproperties[tileId] = {
                     isCollidable: false,
                     isBreakable: false,
-                    type: gf.Tile.COLLISION.NONE
+                    type: gf.Tile.TYPE.NONE
                 };
     },
     /**

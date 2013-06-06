@@ -119,7 +119,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
             tile = this.tiles[toTileX][toTileY] = new gf.Tile(this.game, position, {
                 texture: texture,
-                mass: 999999,
+                mass: Infinity,
+                width: this.parent.tileSize.x,
+                height: this.parent.tileSize.y,
                 collidable: props.isCollidable,
                 collisionType: props.type
             });

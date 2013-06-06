@@ -1,160 +1,152 @@
-gf.PhysicsSystem = function(game, gravity, profile) {
+var COLLISION_TYPE = {
+    ENTITY: 0,
+    TILE: 1
+};
+
+gf.PhysicsSystem = function(game, options) {
     this.game = game;
 
-    this.world = new p2.World({
-        gravity: p2.V.create(0, gravity !== undefined ? gravity : -9.87),
-        doProfiling: profile
-    });
+    this.space = new cp.Space();
+    this.space.gravity = gf.utils.ensureVector(options.gravity);
 
-    //set some solver variables
-    this.world.solver.setSpookParams(1e50, 6);
-    this.world.solver.iterations = 6;
-    this.world.solver.tolerance = 0.001;
+    //Time a body must remain idle to fall asleep
+    //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#a928d74741904aae266a9efff5b5f68f7
+    this.space.sleepTimeThreshold = options.sleepTimeThreshold || 0.2;
+
+    //Amount of encouraged penetration between colliding shapes.
+    //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#af1bec644a24e12bfc642a942a88520f7
+    this.space.collisionSlop = options.collisionSlop || 0.1;
+
+    //These two collision scenarios are separate because we don't
+    //want tiles to collide with tiles all the time
+
+    //entity - entity collisions
+    this.space.addCollisionHandler(
+        COLLISION_TYPE.ENTITY,
+        COLLISION_TYPE.ENTITY,
+        this.onCollisionBegin.bind(this), //begin
+        null, //preSolve
+        null, //postSolve
+        null //separate
+    );
+
+    //entity - tile collisions
+    this.space.addCollisionHandler(
+        COLLISION_TYPE.ENTITY,
+        COLLISION_TYPE.TILE,
+        this.onCollisionBegin.bind(this), //begin
+        null, //preSolve
+        null, //postSolve
+        null //separate
+    );
 
     //the entity/body pairs added to the physics world
     this.entities = [];
+};
 
-    //the tile/body pairs to add to the physics world
-    this.tiles = [];
+gf.PhysicsSystem.prototype._createBody = function(ent) {
+    var b;
+
+    if(ent.mass === Infinity) {
+        b = this.space.staticBody;
+    } else {
+        b = this.space.addBody(new cp.Body(
+            ent.mass,
+            Infinity //cp.momentForBox(ent.mass, ent.width, ent.height)
+        ));
+    }
+
+    return b;
+};
+
+gf.PhysicsSystem.prototype._createShape = function(ent, body) {
+    var shape = this.space.addShape(
+        new cp.BoxShape(
+            body,
+            ent.width,
+            ent.height
+        )
+    );
+
+    shape.setElasticity(0);
+    shape.setFriction(ent.friction || 0.1);
+    shape.gfEntity = ent;
+    shape.setCollisionType(this.getCollisionType(ent));
+
+    return shape;
+};
+
+gf.PhysicsSystem.prototype.getCollisionType = function(ent) {
+    if(ent instanceof gf.Tile) {
+        return COLLISION_TYPE.TILE;
+    } else {
+        return COLLISION_TYPE.ENTITY;
+    }
 };
 
 gf.PhysicsSystem.prototype.add = function(ent) {
-    var shape = new p2.Plane(),
-        body = new p2.Body({
-            shape: shape,
-            mass: ent.mass,
-            angle: ent.rotation,
-            position: ent.position
-        });
+    var body = this._createBody(ent),
+        shape = this._createShape(ent, body);
 
-    this.world.addBody(body);
+    if(!ent._phys)
+        ent._phys = {};
 
-    if(ent instanceof gf.Entity) {
-        body.id = (this.entities.push(ent)) - 1;
-    } else {
-        body.id = (this.tiles.push(ent)) - 1;
-    }
-
-    //they need to reference eachother
-    ent.body = body;
-    body.ent = ent;
+    ent._phys.id = (this.entities.push(ent)) - 1;
+    ent._phys.body = body;
+    ent._phys.shape = shape;
 };
 
 gf.PhysicsSystem.prototype.remove = function(ent) {
-    //get the id if ent and ent.body exist
-    var id = ent && ent.body && ent.body.id;
+    if(!ent || !ent._phys || !ent._phys.body || !ent._phys.shape)
+        return;
 
-    //if we found one, remove it
-    if(typeof id === 'number' && id >= 0) {
-        if(ent instanceof gf.Entity) {
-            this.entities.splice(id, 1);
-        } else {
-            this.tiles.splice(id, 1);
-        }
+    this.space.remove(ent._phys.body);
+    this.space.remove(ent._phys.shape);
 
-        this.world.removeBody(ent.body);
+    ent._phys.shape.gfEntity = null;
 
-        //remove references
-        ent.body.ent = null;
-        ent.body = null;
-    }
-};
-
-gf.PhysicsSystem.prototype.removeAll = function(type) {
-    if(type === 'entities' || type === 'tiles') {
-        for(var i = 0, il = this[type].length; i < il; ++i) {
-            var ent = this[type][i];
-
-            //remove body
-            this.world.removeBody(ent.body);
-
-            //clear references
-            ent.body.ent = null;
-            ent.body = null;
-        }
-
-        //reset array
-        this[type].length = 0;
-    } else {
-        this.removeAll('entities');
-        this.removeAll('tiles');
-    }
-};
-
-gf.PhysicsSystem.prototype.set = function(ent, prop, val) {
-    var body = ent && ent.body;
-
-    if(body && prop) {
-        //if the value is a vector
-        if(val instanceof gf.Vector || val instanceof gf.Point) {
-            //try to set an already created vector
-            if(body[prop]) {
-                p2.V.set(body[prop], val.x, val.y);
-            }
-            //if that prop isn't there yet, create a new vector
-            else {
-                body[prop] = p2.V.create(val.x, val.y);
-            }
-        }
-        //just set the property normally
-        else {
-            body[prop] = val;
-        }
-    }
-
-    return this;
+    //remove references
+    ent._phys.id = null;
+    ent._phys.body = null;
+    ent._phys.shape = null;
 };
 
 gf.PhysicsSystem.prototype.setMass = function(ent, mass) {
-    return this.set(ent, 'mass', mass);
+    if(ent && ent._phys && ent._phys.body)
+        ent._phys.body.setMass(mass);
 };
 
 gf.PhysicsSystem.prototype.setVelocity = function(ent, vel) {
-    return this.set(ent, 'velocity', vel);
+    if(ent && ent._phys && ent._phys.body)
+        ent._phys.body.setVel(vel);
 };
 
 gf.PhysicsSystem.prototype.setPosition = function(ent, pos) {
-    return this.set(ent, 'position', pos);
+    if(ent && ent._phys && ent._phys.body)
+        ent._phys.body.setPos(pos);
 };
 
 gf.PhysicsSystem.prototype.setRotation = function(ent, rads) {
-    return this.set(ent, 'angle', rads);
-};
-
-gf.PhysicsSystem.prototype.defineGrid = function(numTiles, tileSize) {
-    this.world.broadphase = new p2.GridBroadphase(
-        0,          //xmin
-        numTiles.x, //xmax
-        0,          //ymin
-        numTiles.y, //ymax
-        numTiles.x * tileSize.x,    //num x
-        numTiles.y * tileSize.y     //num y
-    );
+    if(ent && ent._phys && ent._phys.body)
+        ent._phys.body.setAngle(rads);
 };
 
 gf.PhysicsSystem.prototype.update = function() {
     //execute the physics step
-    this.world.step(this.game._delta);
+    this.space.step(this.game._delta);
 
-    //update each entity's position and rotation
-    for(var i = 0, il = this.entities.length; i < il; ++i) {
-        var ent = this.entities[i];
+    //go through each changed shape
+    this.space.activeShapes.each(function(shape) {
+        shape.gfEntity.setPosition(shape.body.p.x, shape.body.p.y, true);
+        shape.gfEntity.rotation = shape.body.a;
+    });
+};
 
-        ent.setPosition(
-            p2.V.getX(ent.body.position),
-            p2.V.getY(ent.body.position),
-            true //skip the physics of setting position (engine already did that)
-        );
-        ent.rotation = ent.body.angle;
-    }
+gf.PhysicsSystem.prototype.onCollisionBegin = function(arbiter) {//, space) {
+    var shapes = arbiter.getShapes(),
+        ent1 = shapes[0].gfEntity,
+        ent2 = shapes[1].gfEntity;
 
-    //notify of any collisions
-    for(var c = 0, cl = this.world.contacts.length; c < cl; ++c) {
-        var con = this.world.contacts[c],
-            ent1 = con.bi.ent,
-            ent2 = con.bj.ent;
-
-        ent1.onCollision(ent2);
-        ent2.onCollision(ent1);
-    }
+    ent1.onCollision(ent2);
+    ent2.onCollision(ent1);
 };
