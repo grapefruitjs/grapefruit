@@ -26,10 +26,7 @@ gf.Layer = function(layer) {
     this.size = new gf.Vector(layer.width || 0, layer.height || 0);
 
     //call base ctor
-    gf.DisplayObject.call(this);
-
-    //mixin user's settings
-    gf.utils.setValues(this, layer);
+    gf.DisplayObject.call(this, [0, 0], layer);
 
     /**
      * Half of the size of the layer
