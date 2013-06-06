@@ -103,7 +103,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
             this.collidable = false;
     },
     setVelocity: function(vel) {
-        this.game.physics.setVelocity(this, vel);
+        this.game.physics.setVelocity(this, gf.utils.ensureVector(vel));
     },
     setRotation: function(rads) {
         this.rotation = rads;
@@ -139,14 +139,18 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * On Collision Event
      *      called when this object collides into another, or is being collided into by another
      *      by default if something collides with a collectable entity we remove the collectable
+     *      and if we collide with a solid tile we kill our velocity
      *
      * @method onCollision
      * @param obj {Entity} Colliding object
      * @return {Entity} Returns itself for chainability
      */
-    onCollision: function() {
+    onCollision: function(obj) {
         if(this.type === gf.Entity.TYPE.COLLECTABLE)
             this.parent.removeChild(this);
+
+        if(obj.collisionType === gf.Tile.COLLISION.SOLID)
+            this.setVelocity(0);
 
         return this;
     },

@@ -118,7 +118,14 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tileId = this.tileIds[id],
             set = this.parent.getTileset(tileId);
 
-        if(set) tile.setTexture(set.getTileTexture(tileId));
+        if(set) {
+            var props = set.getTileProperties(tileId);
+
+            tile.setTexture(set.getTileTexture(tileId));
+            tile.setCollidable(props.isCollidable);
+            tile.collisionType = props.type;
+        }
+
         tile.setPosition(
             toTileX * this.parent.tileSize.x,
             toTileY * this.parent.tileSize.y
