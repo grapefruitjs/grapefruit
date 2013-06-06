@@ -97,10 +97,7 @@ gf.Camera = function(game, settings) {
         }
     };
 
-    gf.DisplayObject.call(this, settings);
-
-    //mixin user's settings
-    gf.utils.setValues(this, settings);
+    gf.DisplayObject.call(this, [0, 0], settings);
 };
 
 gf.inherits(gf.Camera, gf.DisplayObject, {

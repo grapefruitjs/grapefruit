@@ -25,10 +25,7 @@ gf.Map = function(game, map) {
     this.size = new gf.Vector(map.width, map.height);
 
     //call base ctor
-    gf.DisplayObject.call(this);
-
-    //mixin user's settings
-    gf.utils.setValues(this, map);
+    gf.DisplayObject.call(this, [0, 0], map);
 };
 
 gf.inherits(gf.Map, gf.DisplayObject, {

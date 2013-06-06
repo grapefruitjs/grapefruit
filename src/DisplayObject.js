@@ -5,8 +5,13 @@
  * @extends PIXI.DisplayObjectContainer
  * @constructor
  */
-gf.DisplayObject = function() {
+gf.DisplayObject = function(pos, settings) {
     PIXI.DisplayObjectContainer.call(this);
+
+    //mixin user's settings
+    gf.utils.setValues(this, settings);
+
+    this.setPosition(pos);
 
     //Add these properties in so that all objects can see them in the docs
     //these properties are inherited from PIXI.DisplayObjectContainer
@@ -195,5 +200,34 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
 
         if(fn && this instanceof gf.Entity)
             fn(this);
-    }
+    },
+    /**
+     * Convenience method for setting the position of the Sprite.
+     *
+     * @method setPosition
+     * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
+     *       If an Array, Vector, or Point is passed then the y parameter is ignored
+     * @param y {Number} Y coord to put the sprite at
+     * @return {DisplayObject} Returns itself for chainability
+     * @example
+     *      spr.setPosition(1, 1)
+     *          .setPosition([5, 5])
+     *          .setPosition(new gf.Point(10, 10))
+     *          .setPosition(new gf.Vector(20, 20));
+     */
+    setPosition: function(x, y) {
+        if(x instanceof gf.Vector || x instanceof gf.Point) {
+            this.position.x = x.x;
+            this.position.y = x.y;
+        }
+        else if(x instanceof Array) {
+            this.position.x = x[0];
+            this.position.y = x[1];
+        } else {
+            this.position.x = parseInt(x, 10) || 0;
+            this.position.y = parseInt(y, 10) || 0;
+        }
+
+        return this;
+    },
 });
