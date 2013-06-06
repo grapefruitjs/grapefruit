@@ -7,6 +7,8 @@
  * @param tile {Object} All the settings for the tile
  */
 gf.Tile = function(game, pos, settings) {
+    this.collisionType = gf.Tile.COLLISION.NONE;
+
     //call base ctor
     gf.Entity.call(this, game, pos, settings);
 
