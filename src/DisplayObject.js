@@ -5,8 +5,16 @@
  * @extends PIXI.DisplayObjectContainer
  * @constructor
  */
-gf.DisplayObject = function(pos, settings) {
+gf.DisplayObject = function(game, pos, settings) {
     PIXI.DisplayObjectContainer.call(this);
+
+    /**
+     * The game instance this belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
 
     //mixin user's settings
     gf.utils.setValues(this, settings);
@@ -238,5 +246,5 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
         }
 
         return this;
-    },
+    }
 });

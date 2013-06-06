@@ -6,7 +6,7 @@
  * @constructor
  * @param map {Object} All the settings for the map
  */
-gf.Map = function(game, map) {
+gf.Map = function(game, pos, map) {
     /**
      * The game instance this belongs to
      *
@@ -25,7 +25,7 @@ gf.Map = function(game, map) {
     this.size = new gf.Vector(map.width, map.height);
 
     //call base ctor
-    gf.DisplayObject.call(this, [0, 0], map);
+    gf.DisplayObject.call(this, game, pos, map);
 };
 
 gf.inherits(gf.Map, gf.DisplayObject, {

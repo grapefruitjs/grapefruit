@@ -27,7 +27,7 @@ function onTextureUpdateWrapper(e) {
  * @example
  *      var spr = new gf.Sprite([10, 1], { name: 'MySprite' });
  */
-gf.Sprite = function(pos, settings) {
+gf.Sprite = function(game, pos, settings) {
     /**
      * The width of the sprite
      *
@@ -84,7 +84,7 @@ gf.Sprite = function(pos, settings) {
     this.anchor = new gf.Point();
 
     //call base ctor
-    gf.DisplayObject.call(this, pos, settings);
+    gf.DisplayObject.call(this, game, pos, settings);
 
     //add the animations passed to ctor
     if(settings.animations) {

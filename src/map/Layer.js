@@ -6,7 +6,7 @@
  * @constructor
  * @param layer {Object} All the settings for the layer
  */
-gf.Layer = function(layer) {
+gf.Layer = function(game, pos, layer) {
     /**
      * The name of the layer
      *
@@ -26,7 +26,7 @@ gf.Layer = function(layer) {
     this.size = new gf.Vector(layer.width || 0, layer.height || 0);
 
     //call base ctor
-    gf.DisplayObject.call(this, [0, 0], layer);
+    gf.DisplayObject.call(this, game, pos, layer);
 
     /**
      * Half of the size of the layer

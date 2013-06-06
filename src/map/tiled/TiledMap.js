@@ -8,8 +8,8 @@
  * @constructor
  * @param map {Object} All the settings for the map
  */
-gf.TiledMap = function(game, map) {
-    gf.Map.call(this, game, map);
+gf.TiledMap = function(game, pos, map) {
+    gf.Map.call(this, game, pos, map);
 
     this.scale.x = parseInt(map.properties.scale, 10) || 1;
     this.scale.y = parseInt(map.properties.scale, 10) || 1;
@@ -112,7 +112,7 @@ gf.TiledMap = function(game, map) {
 
         switch(map.layers[i].type) {
             case 'tilelayer':
-                lyr = new gf.TiledLayer(map.layers[i]);
+                lyr = new gf.TiledLayer(this.game, 0, map.layers[i]);
                 this.addChild(lyr);
 
                 //lyr.scale = this.scale;
@@ -132,7 +132,7 @@ gf.TiledMap = function(game, map) {
                 break;
 
             case 'objectgroup':
-                lyr = new gf.TiledObjectGroup(map.layers[i]);
+                lyr = new gf.TiledObjectGroup(this.game, 0, map.layers[i]);
                 this.addChild(lyr);
 
                 //auto spawn the player object group

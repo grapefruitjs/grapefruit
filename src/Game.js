@@ -231,7 +231,7 @@ gf.inherits(gf.Game, Object, {
             }
         }
 
-        this.world = new gf.TiledMap(this, world);
+        this.world = new gf.TiledMap(this, 0, world);
         this.addChild(this.world);
         this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
 

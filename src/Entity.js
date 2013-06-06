@@ -20,13 +20,7 @@
  *      var ent = new gf.Entity([10, 1], { name: 'MyEntity' });
  */
 gf.Entity = function(game, pos, settings) {
-    /**
-     * The game instance this belongs to
-     *
-     * @property game
-     * @type Game
-     */
-    this.game = game;
+    if(!game) throw 'No game instance passed to Entity, a game instance is required!';
 
     /**
      * The type of the entity
@@ -76,14 +70,14 @@ gf.Entity = function(game, pos, settings) {
     this.viewPosition = new gf.Point(0, 0);
 
     //call base ctor
-    gf.Sprite.call(this, pos, settings);
+    gf.Sprite.call(this, game, pos, settings);
 
     this.viewPosition.x = Math.round(this.position.x);
     this.viewPosition.y = Math.round(this.position.y);
 
-    if(!game) throw 'No game instance passed to Entity, a game instance is required!';
-
+    //setup physics
     this.setCollidable(this.collidable);
+    this.setPosition(this.position);
 };
 
 gf.inherits(gf.Entity, gf.Sprite, {
@@ -92,7 +86,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
         if(this.collidable && !canCollide)
             this.game.physics.remove(this);
         //turning on collisions
-        else if(!this.collidable && canCollide)
+        else if((!this.collidable && canCollide) || (canCollide && !this.body))
             this.game.physics.add(this);
     },
     setMass: function(mass) {
