@@ -177,11 +177,11 @@ gf.inherits(gf.Entity, gf.Sprite, {
     /**
      * Computes the velocity taking into account gravity, friction, etc
      *
-     * @method computeVelocity
+     * @method updateVelocity
      * @param vel {Vector} The Vector to apply the changes to
      * @return {Vector} The modified vector
      */
-    computeVelocity: function(vel) {
+    updateVelocity: function(vel) {
         //apply gravity
         if(this.gravity) {
             vel.y -= !this.onladder ? (this.gravity * this.game._delta) : 0;
@@ -234,9 +234,10 @@ gf.inherits(gf.Entity, gf.Sprite, {
     },
     /**
      * Checks if this entity collides with any Entities, and if so, a penetration vector is calculated.
-     * from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
      *
      * @method checkCollisions
+     * @param world {gf.Map} If passed this world will be checked instead of the
+     *      world of the game this entity is in.
      * @return {Array}
      */
     checkCollisions: function(world) {
@@ -276,12 +277,11 @@ gf.inherits(gf.Entity, gf.Sprite, {
             return;
 
         //apply gravity, friction, etc to this velocity
-        this.computeVelocity(this.velocity);
+        this.updateVelocity(this.velocity);
 
         //TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
         //get the world colliders
         var colliders = (this.game.world === undefined || !this.mapCollidable) ? [] : this.game.world.checkCollision(this, this.velocity);
-        //if(colliders.length) window.console.log(colliders);
 
         //update flags
         this.onladder = false;
@@ -320,7 +320,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * Moves the entity to a new position using the velocity.
      *
      * @method moveEntity
-     * @param vel {Vector} The optional velocity to move the entity.
+     * @param vel {Vector} The optional velocity to override the current velocity and move the entity.
      * @return {Entity} Returns itself for chainability
      */
     moveEntity: function(vel) {
@@ -380,7 +380,6 @@ gf.inherits(gf.Entity, gf.Sprite, {
      *      by default if something collides with a collectable entity we remove the collectable
      *
      * @method onCollision
-     * @param vel {Vector} Collision Vector
      * @param obj {Entity} Colliding object
      * @return {Entity} Returns itself for chainability
      */
@@ -403,7 +402,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
     },
     /**
      * On Break Tile Event
-     *      called when a tile is broken
+     *      called when a tile is broken by this entity
      *
      * @method onBreakTile
      * @param tile {Unkown} the tile that is broken

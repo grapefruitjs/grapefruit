@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-04-23
+ * Compiled: 2013-05-12
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -44,11 +44,19 @@ Object.freeze;Object.freeze=function(a){return typeof a=="function"?a:s(a)}}Obje
  * Copyright (c) 2012, Mat Groves
  * http://goodboydigital.com/
  *
- * Compiled: 2013-04-22
+ * Compiled: 2013-05-12
  *
  * Pixi.JS is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
  */
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+(function(){
+
+	var root = this;
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -90,7 +98,7 @@ PIXI.Point = function(x, y)
  * @method clone
  * @return a copy of the point
  */
-PIXI.Point.clone = function()
+PIXI.Point.prototype.clone = function()
 {
 	return new PIXI.Point(this.x, this.y);
 }
@@ -147,7 +155,7 @@ PIXI.Rectangle = function(x, y, width, height)
  * @method clone
  * @return a copy of the rectangle
  */
-PIXI.Rectangle.clone = function()
+PIXI.Rectangle.prototype.clone = function()
 {
 	return new PIXI.Rectangle(this.x, this.y, this.width, this.height);
 }
@@ -240,6 +248,12 @@ PIXI.DisplayObject = function()
 	
 	// [readonly] best not to toggle directly! use setInteractive()
 	this.interactive = false;
+	
+	/**
+	 * This is used to indicate if the displayObject should display a mouse hand cursor on rollover
+	 * @property buttonMode
+	 * @type Boolean
+	 */
 	this.buttonMode = false;
 	
 	/*
@@ -872,6 +886,358 @@ PIXI.MovieClip.prototype.updateTransform = function()
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
+/**
+ * A Text Object will create a line(s) of text. To split a line you can use "\n", "\r" or "\r\n"
+ * @class Text
+ * @extends Sprite
+ * @constructor
+ * @param {String} text The copy that you would like the text to display
+ * @param {Object} [style] The style parameters
+ * @param {String} [style.font] default "bold 20pt Arial" The style and size of the font
+ * @param {Object} [style.fill="black"] A canvas fillstyle that will be used on the text eg "red", "#00FF00"
+ * @param {String} [style.align="left"] An alignment of the multiline text ("left", "center" or "right")
+ * @param {String} [style.stroke] A canvas fillstyle that will be used on the text stroke eg "blue", "#FCFF00"
+ * @param {Number} [style.strokeThickness=0] A number that represents the thickness of the stroke. Default is 0 (no stroke)
+ */
+PIXI.Text = function(text, style)
+{
+    this.canvas = document.createElement("canvas");
+    this.context = this.canvas.getContext("2d");
+    PIXI.Sprite.call(this, PIXI.Texture.fromCanvas(this.canvas));
+
+    this.setText(text);
+    this.setStyle(style);
+    this.updateText();
+    this.dirty = false;
+};
+
+// constructor
+PIXI.Text.constructor = PIXI.Text;
+PIXI.Text.prototype = Object.create(PIXI.Sprite.prototype);
+
+/**
+ * Set the style of the text
+ * @method setStyle
+ * @param {Object} [style] The style parameters
+ * @param {String} [style.font="bold 20pt Arial"] The style and size of the font
+ * @param {Object} [style.fill="black"] A canvas fillstyle that will be used on the text eg "red", "#00FF00"
+ * @param {String} [style.align="left"] An alignment of the multiline text ("left", "center" or "right")
+ * @param {String} [style.stroke] A canvas fillstyle that will be used on the text stroke eg "blue", "#FCFF00"
+ * @param {Number} [style.strokeThickness=0] A number that represents the thickness of the stroke. Default is 0 (no stroke)
+ */
+PIXI.Text.prototype.setStyle = function(style)
+{
+    style = style || {};
+    style.font = style.font || "bold 20pt Arial";
+    style.fill = style.fill || "black";
+    style.align = style.align || "left";
+    style.strokeThickness = style.strokeThickness || 0;
+    this.style = style;
+    this.dirty = true;
+};
+
+/**
+ * Set the copy for the text object. To split a line you can use "\n"
+ * @method setText
+ * @param {String} text The copy that you would like the text to display
+ */
+PIXI.Sprite.prototype.setText = function(text)
+{
+    this.text = text || " ";
+    this.dirty = true;
+};
+
+/**
+ * Renders text
+ * @private
+ */
+PIXI.Text.prototype.updateText = function()
+{
+	this.context.font = this.style.font;
+
+	//split text into lines
+	var lines = this.text.split(/(?:\r\n|\r|\n)/);
+
+	//calculate text width
+	var lineWidths = [];
+	var maxLineWidth = 0;
+	for (var i = 0; i < lines.length; i++)
+	{
+		var lineWidth = this.context.measureText(lines[i]).width;
+		lineWidths[i] = lineWidth;
+		maxLineWidth = Math.max(maxLineWidth, lineWidth);
+	}
+	this.canvas.width = maxLineWidth + this.style.strokeThickness;
+	
+	//calculate text height
+	var lineHeight = this.determineFontHeight("font: " + this.style.font  + ";") + this.style.strokeThickness;
+	this.canvas.height = lineHeight * lines.length;
+
+	//set canvas text styles
+	this.context.fillStyle = this.style.fill;
+	this.context.font = this.style.font;
+	
+	this.context.strokeStyle = this.style.stroke;
+	this.context.lineWidth = this.style.strokeThickness;
+
+	this.context.textBaseline = "top";
+
+	//draw lines line by line
+	for (i = 0; i < lines.length; i++)
+	{
+		var linePosition = new PIXI.Point(this.style.strokeThickness / 2, this.style.strokeThickness / 2 + i * lineHeight);
+	
+		if(this.style.align == "right")
+		{
+			linePosition.x += maxLineWidth - lineWidths[i];
+		}
+		else if(this.style.align == "center")
+		{
+			linePosition.x += (maxLineWidth - lineWidths[i]) / 2;
+		}
+
+		if(this.style.stroke && this.style.strokeThickness)
+		{
+			this.context.strokeText(lines[i], linePosition.x, linePosition.y);
+		}
+
+		if(this.style.fill)
+		{
+			this.context.fillText(lines[i], linePosition.x, linePosition.y);
+		}
+	}
+	
+    this.updateTexture();
+};
+
+/**
+ * Updates texture size based on canvas size
+ * @private
+ */
+PIXI.Text.prototype.updateTexture = function()
+{
+
+    this.texture.baseTexture.width = this.canvas.width;
+    this.texture.baseTexture.height = this.canvas.height;
+    this.texture.frame.width = this.canvas.width;
+    this.texture.frame.height = this.canvas.height;
+    PIXI.texturesToUpdate.push(this.texture.baseTexture);
+};
+
+/**
+ * @private
+ */
+PIXI.Text.prototype.updateTransform = function()
+{
+	if(this.dirty)
+	{
+		this.updateText();	
+		this.dirty = false;
+	}
+	
+	PIXI.Sprite.prototype.updateTransform.call(this);
+};
+
+/**
+ * http://stackoverflow.com/users/34441/ellisbben
+ * great solution to the problem!
+ * @private
+ */
+PIXI.Text.prototype.determineFontHeight = function(fontStyle) 
+{
+	// build a little reference dictionary so if the font style has been used return a
+	// cached version...
+	var result = PIXI.Text.heightCache[fontStyle];
+	
+	if(!result)
+	{
+		var body = document.getElementsByTagName("body")[0];
+		var dummy = document.createElement("div");
+		var dummyText = document.createTextNode("M");
+		dummy.appendChild(dummyText);
+		dummy.setAttribute("style", fontStyle);
+		body.appendChild(dummy);
+		
+		result = dummy.offsetHeight;
+		PIXI.Text.heightCache[fontStyle] = result;
+		
+		body.removeChild(dummy);
+	}
+	
+	return result;
+};
+
+PIXI.Text.prototype.destroy = function(destroyTexture)
+{
+	if(destroyTexture)
+	{
+		this.texture.destroy();
+	}
+		
+};
+
+PIXI.Text.heightCache = {};
+
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+/**
+ * A Text Object will create a line(s) of text using bitmap font. To split a line you can use "\n", "\r" or "\r\n"
+ * You can generate the fnt files using 
+ * http://www.angelcode.com/products/bmfont/ for windows or
+ * http://www.bmglyph.com/ for mac.
+ * @class BitmapText
+ * @extends DisplayObjectContainer
+ * @constructor
+ * @param {String} text The copy that you would like the text to display
+ * @param {Object} style The style parameters
+ * @param {String} style.font The size (optional) and bitmap font id (required) eq "Arial" or "20px Arial" (must have loaded previously)
+ * @param {String} [style.align="left"] An alignment of the multiline text ("left", "center" or "right")
+ */
+PIXI.BitmapText = function(text, style)
+{
+    PIXI.DisplayObjectContainer.call(this);
+
+    this.setText(text);
+    this.setStyle(style);
+    this.updateText();
+    this.dirty = false
+
+};
+
+// constructor
+PIXI.BitmapText.constructor = PIXI.BitmapText;
+PIXI.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+
+/**
+ * Set the copy for the text object
+ * @method setText
+ * @param {String} text The copy that you would like the text to display
+ */
+PIXI.BitmapText.prototype.setText = function(text)
+{
+    this.text = text || " ";
+    this.dirty = true;
+};
+
+/**
+ * Set the style of the text
+ * @method setStyle
+ * @param {Object} style The style parameters
+ * @param {String} style.font The size (optional) and bitmap font id (required) eq "Arial" or "20px Arial" (must have loaded previously)
+ * @param {String} [style.align="left"] An alignment of the multiline text ("left", "center" or "right")
+ */
+PIXI.BitmapText.prototype.setStyle = function(style)
+{
+    style = style || {};
+    style.align = style.align || "left";
+    this.style = style;
+
+    var font = style.font.split(" ");
+    this.fontName = font[font.length - 1];
+    this.fontSize = font.length >= 2 ? parseInt(font[font.length - 2], 10) : PIXI.BitmapText.fonts[this.fontName].size;
+
+    this.dirty = true;
+};
+
+/**
+ * Renders text
+ * @private
+ */
+PIXI.BitmapText.prototype.updateText = function()
+{
+    var data = PIXI.BitmapText.fonts[this.fontName];
+    var pos = new PIXI.Point();
+    var prevCharCode = null;
+    var chars = [];
+    var maxLineWidth = 0;
+    var lineWidths = [];
+    var line = 0;
+    var scale = this.fontSize / data.size;
+    for(var i = 0; i < this.text.length; i++)
+    {
+        var charCode = this.text.charCodeAt(i);
+        if(/(?:\r\n|\r|\n)/.test(this.text.charAt(i)))
+        {
+            lineWidths.push(pos.x);
+            maxLineWidth = Math.max(maxLineWidth, pos.x);
+            line++;
+
+            pos.x = 0;
+            pos.y += data.lineHeight;
+            prevCharCode = null;
+            continue;
+        }
+        
+        var charData = data.chars[charCode];
+        if(!charData) continue;
+
+        if(prevCharCode && charData[prevCharCode])
+        {
+           pos.x += charData.kerning[prevCharCode];
+        }
+        chars.push({line: line, charCode: charCode, position: new PIXI.Point(pos.x + charData.xOffset, pos.y + charData.yOffset)});
+        pos.x += charData.xAdvance;
+
+        prevCharCode = charCode;
+    }
+
+    lineWidths.push(pos.x);
+    maxLineWidth = Math.max(maxLineWidth, pos.x);
+
+    var lineAlignOffsets = [];
+    for(i = 0; i <= line; i++)
+    {
+        var alignOffset = 0;
+        if(this.style.align == "right")
+        {
+            alignOffset = maxLineWidth - lineWidths[i];
+        }
+        else if(this.style.align == "center")
+        {
+            alignOffset = (maxLineWidth - lineWidths[i]) / 2;
+        }
+        lineAlignOffsets.push(alignOffset);
+    }
+
+    for(i = 0; i < chars.length; i++)
+    {
+        var char = PIXI.Sprite.fromFrame(chars[i].charCode);
+        char.position.x = (chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale;
+        char.position.y = chars[i].position.y * scale;
+        char.scale.x = char.scale.y = scale;
+        this.addChild(char);
+    }
+
+    this.width = pos.x * scale;
+    this.height = (pos.y + data.lineHeight) * scale;
+};
+
+/**
+ * @private
+ */
+PIXI.BitmapText.prototype.updateTransform = function()
+{
+	if(this.dirty)
+	{
+        while(this.children.length > 0)
+        {
+            this.removeChild(this.getChildAt(0));
+        }
+        this.updateText();
+
+        this.dirty = false;
+	}
+	
+	PIXI.DisplayObjectContainer.prototype.updateTransform.call(this);
+};
+
+PIXI.BitmapText.fonts = {};
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
 
 
 /**
@@ -1007,7 +1373,7 @@ PIXI.InteractionManager.prototype.update = function()
 		var len = this.interactiveItems.length;
 		
 		for (var i=0; i < this.interactiveItems.length; i++) {
-		  this.interactiveItems[i].interactiveChildren = true;
+		  this.interactiveItems[i].interactiveChildren = false;
 		}
 		
 		this.interactiveItems = [];
@@ -1020,6 +1386,8 @@ PIXI.InteractionManager.prototype.update = function()
 	// loop through interactive objects!
 	var length = this.interactiveItems.length;
 	
+	if(this.target)this.target.view.style.cursor = "default";	
+				
 	for (var i = 0; i < length; i++)
 	{
 		var item = this.interactiveItems[i];
@@ -1028,6 +1396,8 @@ PIXI.InteractionManager.prototype.update = function()
 		// OPTIMISATION - only calculate every time if the mousemove function exists..
 		// OK so.. does the object have any other interactive functions?
 		// hit-test the clip!
+		
+		
 		if(item.mouseover || item.mouseout || item.buttonMode)
 		{
 			// ok so there are some functions so lets hit test it..
@@ -1036,9 +1406,11 @@ PIXI.InteractionManager.prototype.update = function()
 			// loks like there was a hit!
 			if(item.__hit)
 			{
+				if(item.buttonMode)this.target.view.style.cursor = "pointer";	
+				
 				if(!item.__isOver)
 				{
-					if(item.buttonMode)this.target.view.style.cursor = "pointer";	
+					
 					if(item.mouseover)item.mouseover(this.mouse);
 					item.__isOver = true;	
 				}
@@ -1048,7 +1420,6 @@ PIXI.InteractionManager.prototype.update = function()
 				if(item.__isOver)
 				{
 					// roll out!
-					if(item.buttonMode)this.target.view.style.cursor = "default";	
 					if(item.mouseout)item.mouseout(this.mouse);
 					item.__isOver = false;	
 				}
@@ -1197,6 +1568,8 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 			
 			if(y > y1 && y < y1 + height)
 			{
+				// set the target property if a hit is true!
+				interactionData.target = item
 				return true;
 			}
 		}
@@ -1933,71 +2306,57 @@ PIXI.autoDetectRenderer = function(width, height, view, transparent)
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
-	
-PIXI.shaderFragmentSrc = [	"precision mediump float;",
-					  		"varying vec2 vTextureCoord;",
-					  		"varying float vColor;",
-					  		"uniform sampler2D uSampler;",
-					  		"void main(void) {",
-					  		"gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y));",
-					  		"gl_FragColor = gl_FragColor * vColor;",
-					  		"}"];
 
-PIXI.shaderVertexSrc = [	"attribute vec2 aVertexPosition;",
-	    					"attribute vec2 aTextureCoord;",
-	    					"attribute float aColor;",
-	  						"uniform mat4 uMVMatrix;",
-							"varying vec2 vTextureCoord;",
-							"varying float vColor;",
-							"void main(void) {",
-							"gl_Position = uMVMatrix * vec4(aVertexPosition, 1.0, 1.0);",
-							"vTextureCoord = aTextureCoord;",
-							"vColor = aColor;",
-	   					 	"}"]
+PIXI.shaderFragmentSrc = [
+  "precision mediump float;",
+  "varying vec2 vTextureCoord;",
+  "varying float vColor;",
+  "uniform sampler2D uSampler;",
+  "void main(void) {",
+    "gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y));",
+    "gl_FragColor = gl_FragColor * vColor;",
+  "}"
+];
+
+PIXI.shaderVertexSrc = [
+  "attribute vec2 aVertexPosition;",
+  "attribute vec2 aTextureCoord;",
+  "attribute float aColor;",
+  "uniform mat4 uMVMatrix;",
+  "varying vec2 vTextureCoord;",
+  "varying float vColor;",
+  "void main(void) {",
+    "gl_Position = uMVMatrix * vec4(aVertexPosition, 1.0, 1.0);",
+    "vTextureCoord = aTextureCoord;",
+    "vColor = aColor;",
+  "}"
+];
 
 PIXI.CompileVertexShader = function(gl, shaderSrc)
 {
-	var src = "";
-	
-	for (var i=0; i < shaderSrc.length; i++) {
-	  src += shaderSrc[i];
-	};
-	
-	var shader;
-    shader = gl.createShader(gl.VERTEX_SHADER);
-       
-    gl.shaderSource(shader, src);
-    gl.compileShader(shader);
-
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        alert(gl.getShaderInfoLog(shader));
-        return null;
-    }
-    
-    return shader;
+  return PIXI._CompileShader(gl, shaderSrc, gl.VERTEX_SHADER);
 }
 
 PIXI.CompileFragmentShader = function(gl, shaderSrc)
 {
-	var src = "";
-	
-	for (var i=0; i < shaderSrc.length; i++) {
-	  src += shaderSrc[i];
-	};
-	
-	var shader;
-    shader = gl.createShader(gl.FRAGMENT_SHADER);
-        
-    gl.shaderSource(shader, src);
-    gl.compileShader(shader);
-	
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        alert(gl.getShaderInfoLog(shader));
-        return null;
-    }
-    
-    return shader;
+  return PIXI._CompileShader(gl, shaderSrc, gl.FRAGMENT_SHADER);
 }
+
+PIXI._CompileShader = function(gl, shaderSrc, shaderType)
+{
+  var src = shaderSrc.join("\n");
+  var shader = gl.createShader(shaderType);
+  gl.shaderSource(shader, src);
+  gl.compileShader(shader);
+
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    alert(gl.getShaderInfoLog(shader));
+    return null;
+  }
+
+  return shader;
+}
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -2020,6 +2379,8 @@ PIXI._defaultFrame = new PIXI.Rectangle(0,0,1,1);
  */
 PIXI.WebGLRenderer = function(width, height, view, transparent)
 {
+	// do a catch.. only 1 webGL renderer..
+
 	//console.log(transparent)
 	this.transparent = !!transparent;
 	
@@ -2067,6 +2428,31 @@ PIXI.WebGLRenderer = function(width, height, view, transparent)
 
 // constructor
 PIXI.WebGLRenderer.constructor = PIXI.WebGLRenderer;
+
+/**
+ * @private 
+ */
+PIXI.WebGLRenderer.prototype.getBatch = function()
+{
+	if(PIXI._batchs.length == 0)
+	{
+		return new PIXI.WebGLBatch(this.gl);
+	}
+	else
+	{
+		return PIXI._batchs.pop();
+	}
+}
+
+/**
+ * @private
+ */
+PIXI.WebGLRenderer.prototype.returnBatch = function(batch)
+{
+	batch.clean();	
+	PIXI._batchs.push(batch);
+}
+
 
 /**
  * @private
@@ -2185,12 +2571,13 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
 
 	// update any textures	
 	for (var i=0; i < PIXI.texturesToUpdate.length; i++) this.updateTexture(PIXI.texturesToUpdate[i]);
+	for (var i=0; i < PIXI.texturesToDestroy.length; i++) this.destroyTexture(PIXI.texturesToDestroy[i]);
 	
 	// empty out the arrays
 	stage.__childrenRemoved = [];
 	stage.__childrenAdded = [];
 	PIXI.texturesToUpdate = [];
-	
+	PIXI.texturesToDestroy = [];
 	// recursivly loop through all items!
 	this.checkVisibility(stage, true);
 	
@@ -2295,12 +2682,23 @@ PIXI.WebGLRenderer.prototype.updateTexture = function(texture)
 	this.refreshBatchs = true;
 }
 
+PIXI.WebGLRenderer.prototype.destroyTexture = function(texture)
+{
+	var gl = this.gl;
+	
+	if(texture._glTexture)
+	{
+		texture._glTexture = gl.createTexture();
+		gl.deleteTexture(gl.TEXTURE_2D, texture._glTexture);
+	}
+}
+
 /**
  * @private
  */
 PIXI.WebGLRenderer.prototype.addDisplayObject = function(displayObject)
 {
-	
+	var objectDetaildisplayObject
 	if(!displayObject.stage)return; // means it was removed 
 	if(displayObject.__inWebGL)return; //means it is already in webgL
 	
@@ -2441,7 +2839,7 @@ PIXI.WebGLRenderer.prototype.addDisplayObject = function(displayObject)
 							 * seems the new sprite is in the middle of a batch
 							 * lets split it.. 
 							 */
-							var batch = PIXI._getBatch(this.gl);
+							var batch = this.getBatch();
 
 							var index = this.batchs.indexOf( previousBatch );
 							batch.init(displayObject);
@@ -2465,7 +2863,7 @@ PIXI.WebGLRenderer.prototype.addDisplayObject = function(displayObject)
 		 * time to create anew one!
 		 */
 		
-		var batch = PIXI._getBatch(this.gl);
+		var batch =  this.getBatch();
 		batch.init(displayObject);
 
 		if(previousBatch) // if this is invalid it means 
@@ -2524,7 +2922,6 @@ PIXI.WebGLRenderer.prototype.removeDisplayObject = function(displayObject)
 		
 		batch.remove(displayObject);
 		
-		
 		if(batch.size==0)
 		{
 			batchToRemove = batch
@@ -2549,7 +2946,7 @@ PIXI.WebGLRenderer.prototype.removeDisplayObject = function(displayObject)
 		{
 			// wha - eva! just get of the empty batch!
 			this.batchs.splice(index, 1);
-			if(batchToRemove instanceof PIXI.WebGLBatch)PIXI._returnBatch(batchToRemove);
+			if(batchToRemove instanceof PIXI.WebGLBatch)this.returnBatch(batchToRemove);
 		
 			return;
 		}
@@ -2561,8 +2958,8 @@ PIXI.WebGLRenderer.prototype.removeDisplayObject = function(displayObject)
 				//console.log("MERGE")
 				this.batchs[index-1].merge(this.batchs[index+1]);
 				
-				if(batchToRemove instanceof PIXI.WebGLBatch)PIXI._returnBatch(batchToRemove);
-				PIXI._returnBatch(this.batchs[index+1]);
+				if(batchToRemove instanceof PIXI.WebGLBatch)this.returnBatch(batchToRemove);
+				this.returnBatch(this.batchs[index+1]);
 				this.batchs.splice(index, 2);
 				return;
 			}
@@ -2570,7 +2967,7 @@ PIXI.WebGLRenderer.prototype.removeDisplayObject = function(displayObject)
 		
 		
 		this.batchs.splice(index, 1);
-		if(batchToRemove instanceof PIXI.WebGLBatch)PIXI._returnBatch(batchToRemove);
+		if(batchToRemove instanceof PIXI.WebGLBatch)this.returnBatch(batchToRemove);
 	}
 	
 	
@@ -3500,6 +3897,7 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
 	
 	// update textures if need be
 	PIXI.texturesToUpdate = [];
+	PIXI.texturesToDestroy = [];
 	
 	this.context.setTransform(1,0,0,1,0,0); 
 	stage.updateTransform();
@@ -3680,6 +4078,8 @@ PIXI.CanvasRenderer.prototype.renderTilingSprite = function(sprite)
 	
 	context.scale(1/tileScale.x, 1/tileScale.y);
     context.translate(-tilePosition.x, -tilePosition.y);
+    
+    context.closePath();
 }
 
 
@@ -4046,7 +4446,7 @@ PIXI.TilingSprite = function(texture, width, height)
 	 * @property tileScale
 	 * @type Point
 	 */	
-	this.tileScale = new PIXI.Point(2,1);
+	this.tileScale = new PIXI.Point(1,1);
 	/**
 	 * The offset position of the image that is being tiled
 	 * @property tileScale
@@ -4084,6 +4484,7 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function(event)
 
 PIXI.BaseTextureCache = {};
 PIXI.texturesToUpdate = [];
+PIXI.texturesToDestroy = [];
 
 /**
  * A texture stores the information that represents an image. All textures have a base texture
@@ -4165,6 +4566,18 @@ PIXI.BaseTexture = function(source)
 }
 
 PIXI.BaseTexture.constructor = PIXI.BaseTexture;
+
+PIXI.BaseTexture.prototype.destroy = function()
+{
+	
+	if(this.source instanceof Image)
+	{
+		this.source.src = null;
+	}
+	this.source = null;
+	PIXI.texturesToDestroy.push(this);
+}
+
 
 /**
  * 
@@ -4270,6 +4683,11 @@ PIXI.Texture.prototype.onBaseTextureLoaded = function(event)
 	this.scope.dispatchEvent( { type: 'update', content: this } );
 }
 
+PIXI.Texture.prototype.destroy = function(destroyBase)
+{
+	if(destroyBase)this.baseTexture.destroy();
+}
+
 /**
  * Specifies the rectangle region of the baseTexture
  * @method setFrame
@@ -4308,7 +4726,6 @@ PIXI.Texture.fromImage = function(imageUrl, crossorigin)
 	if(!texture)
 	{
 		texture = new PIXI.Texture(PIXI.BaseTexture.fromImage(imageUrl, crossorigin));
-		
 		PIXI.TextureCache[imageUrl] = texture;
 	}
 	
@@ -4381,123 +4798,17 @@ PIXI.Texture.frameUpdates = [];
  */
 
 /**
- * The sprite sheet loader is used to load in JSON sprite sheet data
- * To generate the data you can use http://www.codeandweb.com/texturepacker and publish the "JSON" format
- * There is a free version so thats nice, although the paid version is great value for money.
- * It is highly recommended to use Sprite sheets (also know as texture atlas') as it means sprite's can be batched and drawn together for highly increased rendering speed.
- * Once the data has been loaded the frames are stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFromeId()
- * This loader will also load the image file that the Spritesheet points to as well as the data.
- * When loaded this class will dispatch a 'loaded' event
- * @class SpriteSheetLoader
- * @extends EventTarget
- * @constructor
- * @param url {String} the url of the sprite sheet JSON file
- */
-
-PIXI.SpriteSheetLoader = function(url)
-{
-	/*
-	 * i use texture packer to load the assets..
-	 * http://www.codeandweb.com/texturepacker
-	 * make sure to set the format as "JSON"
-	 */
-	PIXI.EventTarget.call( this );
-	this.url = url;
-	this.baseUrl = url.replace(/[^\/]*$/, '');
-	this.texture;
-	this.frames = {};
-	this.crossorigin = false;
-}
-
-// constructor
-PIXI.SpriteSheetLoader.constructor = PIXI.SpriteSheetLoader;
-
-/**
- * This will begin loading the JSON file
- */
-PIXI.SpriteSheetLoader.prototype.load = function()
-{
-	this.ajaxRequest = new AjaxRequest();
-	var scope = this;
-	this.ajaxRequest.onreadystatechange=function()
-	{
-		scope.onLoaded();
-	}
-		
-	this.ajaxRequest.open("GET", this.url, true)
-	if (this.ajaxRequest.overrideMimeType) this.ajaxRequest.overrideMimeType("application/json");
-	this.ajaxRequest.send(null)
-}
-
-PIXI.SpriteSheetLoader.prototype.onLoaded = function()
-{
-	if (this.ajaxRequest.readyState==4)
-	{
-		 if (this.ajaxRequest.status==200 || window.location.href.indexOf("http")==-1)
-	 	{
-			var jsondata = eval("("+this.ajaxRequest.responseText+")");
-			
-			var textureUrl = this.baseUrl + jsondata.meta.image;
-			
-			this.texture = PIXI.Texture.fromImage(textureUrl, this.crossorigin).baseTexture;
-			
-		//	if(!this.texture)this.texture = new PIXI.Texture(textureUrl);
-			
-			var frameData = jsondata.frames;
-			for (var i in frameData) 
-			{
-				var rect = frameData[i].frame;
-				if (rect)
-				{
-					PIXI.TextureCache[i] = new PIXI.Texture(this.texture, {x:rect.x, y:rect.y, width:rect.w, height:rect.h});
-					
-					if(frameData[i].trimmed)
-					{
-						//var realSize = frameData[i].spriteSourceSize;
-						PIXI.TextureCache[i].realSize = frameData[i].spriteSourceSize;
-						PIXI.TextureCache[i].trim.x = 0// (realSize.x / rect.w)
-						// calculate the offset!
-					}
-	//				this.frames[i] = ;
-				}
-   			}
-			
-			if(this.texture.hasLoaded)
-			{
-				this.dispatchEvent( { type: 'loaded', content: this } );
-			}
-			else
-			{
-				var scope = this;
-				// wait for the texture to load..
-				this.texture.addEventListener('loaded', function(){
-					
-					scope.dispatchEvent( { type: 'loaded', content: scope } );
-					
-				});
-			}
-	 	}
-	}
-	
-}
-
-
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-/**
- * A Class that loads a bunch of images / sprite sheet files. Once the assets have been loaded they are added to the PIXI Texture cache and can be accessed easily through PIXI.Texture.fromFrame(), PIXI.Texture.fromImage() and PIXI.Sprite.fromImage(), PIXI.Sprite.fromFromeId()
- * When all items have been loaded this class will dispatch a 'loaded' event
- * As each individual item is loaded this class will dispatch a 'progress' event
+ * A Class that loads a bunch of images / sprite sheet / bitmap font files. Once the assets have been loaded they are added to the PIXI Texture cache and can be accessed easily through PIXI.Texture.fromImage() and PIXI.Sprite.fromImage()
+ * When all items have been loaded this class will dispatch a "onLoaded" event
+ * As each individual item is loaded this class will dispatch a "onProgress" event
  * @class AssetLoader
  * @constructor
  * @extends EventTarget
- * @param assetURLs {Array} an array of image/sprite sheet urls that you would like loaded supported. Supported image formats include "jpeg", "jpg", "png", "gif". Supported sprite sheet data formats only include "JSON" at this time
+ * @param {Array} assetURLs an array of image/sprite sheet urls that you would like loaded supported. Supported image formats include "jpeg", "jpg", "png", "gif". Supported sprite sheet data formats only include "JSON" at this time. Supported bitmap font data formats include "xml" and "fnt".
  */
 PIXI.AssetLoader = function(assetURLs)
 {
-	PIXI.EventTarget.call( this );
+	PIXI.EventTarget.call(this);
 	
 	/**
 	 * The array of asset URLs that are going to be loaded
@@ -4505,11 +4816,19 @@ PIXI.AssetLoader = function(assetURLs)
 	 * @type Array
 	 */
 	this.assetURLs = assetURLs;
-	
-	this.assets = [];
 
 	this.crossorigin = false;
-}
+
+    this.loadersByType = {
+        "jpg":  PIXI.ImageLoader,
+        "jpeg": PIXI.ImageLoader,
+        "png":  PIXI.ImageLoader,
+        "gif":  PIXI.ImageLoader,
+        "json": PIXI.SpriteSheetLoader,
+        "xml":  PIXI.BitmapFontLoader,
+        "fnt":  PIXI.BitmapFontLoader
+    };
+};
 
 /**
 Fired when an item has loaded
@@ -4529,107 +4848,344 @@ PIXI.AssetLoader.constructor = PIXI.AssetLoader;
  */
 PIXI.AssetLoader.prototype.load = function()
 {
-	this.loadCount = this.assetURLs.length;
-	var imageTypes = ["jpeg", "jpg", "png", "gif"];
-	
-	var spriteSheetTypes = ["json"];
-	
-	for (var i=0; i < this.assetURLs.length; i++) 
-	{
-		var filename = this.assetURLs[i];
-		var fileType = filename.split('.').pop().toLowerCase();
-		// what are we loading?
-		var type = null;
-		
-		for (var j=0; j < imageTypes.length; j++) 
-		{
-			if(fileType == imageTypes[j])
-			{
-				type = "img";
-				break;
-			}
-		}
-		
-		if(type != "img")
-		{
-			for (var j=0; j < spriteSheetTypes.length; j++) 
-			{
-				if(fileType == spriteSheetTypes[j])
-				{
-					type = "atlas";
-					break;
-				}
-			}
-		}
-		
-		if(type == "img")
-		{
-			
-			var texture = PIXI.Texture.fromImage(filename, this.crossorigin);
-			if(!texture.baseTexture.hasLoaded)
-			{
-				
-				var scope = this;
-				texture.baseTexture.addEventListener( 'loaded', function ( event ) 
-				{
-					scope.onAssetLoaded();
-				});
-	
-				this.assets.push(texture);
-			}
-			else
-			{
-				
-				// already loaded!
-				this.loadCount--;
-				// if this hits zero here.. then everything was cached!
-				if(this.loadCount == 0)
-				{
-					this.dispatchEvent( { type: 'onComplete', content: this } );
-					if(this.onComplete)this.onComplete();
-				}
-			}
-			
-		}
-		else if(type == "atlas")
-		{
-			var spriteSheetLoader = new PIXI.SpriteSheetLoader(filename);
-			spriteSheetLoader.crossorigin = this.crossorigin;
-			this.assets.push(spriteSheetLoader);
-			
-			var scope = this;
-			spriteSheetLoader.addEventListener( 'loaded', function ( event ) 
-			{
-				scope.onAssetLoaded();
-			});
-			
-			spriteSheetLoader.load();
-		}
-		else
-		{
-			// dont know what the file is! :/
-			//this.loadCount--;
-			throw new Error(filename + " is an unsupported file type " + this);
-		}
-		
-		//this.assets[i].load();
-	};
-}
+    var scope = this;
 
+	this.loadCount = this.assetURLs.length;
+
+    for (var i=0; i < this.assetURLs.length; i++)
+	{
+		var fileName = this.assetURLs[i];
+		var fileType = fileName.split(".").pop().toLowerCase();
+
+        var loaderClass = this.loadersByType[fileType];
+        if(!loaderClass)
+            throw new Error(fileType + " is an unsupported file type");
+
+        var loader = new loaderClass(fileName, this.crossorigin);
+
+        loader.addEventListener("loaded", function()
+        {
+            scope.onAssetLoaded();
+        });
+        loader.load();
+	}
+};
+
+/**
+ * Invoked after each file is loaded
+ * @private
+ */
 PIXI.AssetLoader.prototype.onAssetLoaded = function()
 {
-	this.loadCount--;
-	this.dispatchEvent( { type: 'onProgress', content: this } );
-	if(this.onProgress)this.onProgress();
+    this.loadCount--;
+	this.dispatchEvent({type: "onProgress", content: this});
+	if(this.onProgress) this.onProgress();
 	
 	if(this.loadCount == 0)
 	{
-		this.dispatchEvent( { type: 'onComplete', content: this } );
-		if(this.onComplete)this.onComplete();
+		this.dispatchEvent({type: "onComplete", content: this});
+		if(this.onComplete) this.onComplete();
 	}
-}
+};
 
 
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+/**
+ * The sprite sheet loader is used to load in JSON sprite sheet data
+ * To generate the data you can use http://www.codeandweb.com/texturepacker and publish the "JSON" format
+ * There is a free version so thats nice, although the paid version is great value for money.
+ * It is highly recommended to use Sprite sheets (also know as texture atlas") as it means sprite"s can be batched and drawn together for highly increased rendering speed.
+ * Once the data has been loaded the frames are stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFromeId()
+ * This loader will also load the image file that the Spritesheet points to as well as the data.
+ * When loaded this class will dispatch a "loaded" event
+ * @class SpriteSheetLoader
+ * @extends EventTarget
+ * @constructor
+ * @param {String} url the url of the sprite sheet JSON file
+ * @param {Boolean} crossorigin
+ */
+
+PIXI.SpriteSheetLoader = function(url, crossorigin)
+{
+	/*
+	 * i use texture packer to load the assets..
+	 * http://www.codeandweb.com/texturepacker
+	 * make sure to set the format as "JSON"
+	 */
+	PIXI.EventTarget.call(this);
+	this.url = url;
+	this.baseUrl = url.replace(/[^\/]*$/, "");
+	this.texture = null;
+	this.frames = {};
+	this.crossorigin = crossorigin;
+};
+
+// constructor
+PIXI.SpriteSheetLoader.constructor = PIXI.SpriteSheetLoader;
+
+/**
+ * This will begin loading the JSON file
+ */
+PIXI.SpriteSheetLoader.prototype.load = function()
+{
+	this.ajaxRequest = new AjaxRequest();
+	var scope = this;
+	this.ajaxRequest.onreadystatechange = function()
+	{
+		scope.onJSONLoaded();
+	};
+		
+	this.ajaxRequest.open("GET", this.url, true);
+	if (this.ajaxRequest.overrideMimeType) this.ajaxRequest.overrideMimeType("application/json");
+	this.ajaxRequest.send(null)
+};
+
+/**
+ * Invoke when JSON file is loaded
+ * @private
+ */
+PIXI.SpriteSheetLoader.prototype.onJSONLoaded = function()
+{
+	if (this.ajaxRequest.readyState == 4)
+	{
+		 if (this.ajaxRequest.status == 200 || window.location.href.indexOf("http") == -1)
+	 	{
+			var jsonData = eval("(" + this.ajaxRequest.responseText + ")");
+			var textureUrl = this.baseUrl + jsonData.meta.image;
+
+            var image = new PIXI.ImageLoader(textureUrl, this.crossorigin);
+            this.texture = image.texture.baseTexture;
+            var scope = this;
+            image.addEventListener("loaded", function(event) {
+                 scope.onLoaded();
+            });
+
+			var frameData = jsonData.frames;
+			for (var i in frameData)
+			{
+				var rect = frameData[i].frame;
+				if (rect)
+				{
+					PIXI.TextureCache[i] = new PIXI.Texture(this.texture, {x:rect.x, y:rect.y, width:rect.w, height:rect.h});
+					
+					if(frameData[i].trimmed)
+					{
+						//var realSize = frameData[i].spriteSourceSize;
+						PIXI.TextureCache[i].realSize = frameData[i].spriteSourceSize;
+						PIXI.TextureCache[i].trim.x = 0;// (realSize.x / rect.w)
+						// calculate the offset!
+					}
+				}
+   			}
+
+            image.load();
+	 	}
+	}	
+};
+/**
+ * Invoke when all files are loaded (json and texture)
+ * @private
+ */
+PIXI.SpriteSheetLoader.prototype.onLoaded = function()
+{
+    this.dispatchEvent({type: "loaded", content: this});
+};
+
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+/**
+ * The image loader class is responsible for loading images file formats ("jpeg", "jpg", "png" and "gif")
+ * Once the image has been loaded it is stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFromeId()
+ * When loaded this class will dispatch a 'loaded' event
+ * @class ImageLoader
+ * @extends EventTarget
+ * @constructor
+ * @param {String} url The url of the image
+ * @param {Boolean} crossorigin
+ */
+PIXI.ImageLoader = function(url, crossorigin)
+{
+    PIXI.EventTarget.call(this);
+    this.texture = PIXI.Texture.fromImage(url, crossorigin);
+};
+
+// constructor
+PIXI.ImageLoader.constructor = PIXI.ImageLoader;
+
+/**
+ * Loads image or takes it from cache
+ */
+PIXI.ImageLoader.prototype.load = function()
+{
+    if(!this.texture.baseTexture.hasLoaded)
+    {
+        var scope = this;
+        this.texture.baseTexture.addEventListener("loaded", function()
+        {
+            scope.onLoaded();
+        });
+    }
+    else
+    {
+        this.onLoaded();
+    }
+};
+
+/**
+ * Invoked when image file is loaded or it is already cached and ready to use
+ * @private
+ */
+PIXI.ImageLoader.prototype.onLoaded = function()
+{
+    this.dispatchEvent({type: "loaded", content: this});
+};
+
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+/**
+ * The xml loader is used to load in XML bitmap font data ("xml" or "fnt")
+ * To generate the data you can use http://www.angelcode.com/products/bmfont/
+ * This loader will also load the image file as the data.
+ * When loaded this class will dispatch a "loaded" event
+ * @class BitmapFontLoader
+ * @extends EventTarget
+ * @constructor
+ * @param {String} url the url of the sprite sheet JSON file
+ * @param {Boolean} crossorigin
+ */
+
+PIXI.BitmapFontLoader = function(url, crossorigin)
+{
+    /*
+     * i use texture packer to load the assets..
+     * http://www.codeandweb.com/texturepacker
+     * make sure to set the format as "JSON"
+     */
+    PIXI.EventTarget.call(this);
+    this.url = url;
+    this.baseUrl = url.replace(/[^\/]*$/, "");
+    this.texture = null;
+    this.crossorigin = crossorigin;
+};
+
+// constructor
+PIXI.BitmapFontLoader.constructor = PIXI.BitmapFontLoader;
+
+/**
+ * This will begin loading the JSON file
+ */
+PIXI.BitmapFontLoader.prototype.load = function()
+{
+    this.ajaxRequest = new XMLHttpRequest();
+    var scope = this;
+    this.ajaxRequest.onreadystatechange = function()
+    {
+        scope.onXMLLoaded();
+    };
+
+    this.ajaxRequest.open("GET", this.url, true);
+    if (this.ajaxRequest.overrideMimeType) this.ajaxRequest.overrideMimeType("application/xml");
+    this.ajaxRequest.send(null)
+};
+
+/**
+ * Invoked when XML file is loaded
+ * @private
+ */
+PIXI.BitmapFontLoader.prototype.onXMLLoaded = function()
+{
+    if (this.ajaxRequest.readyState == 4)
+    {
+        if (this.ajaxRequest.status == 200 || window.location.href.indexOf("http") == -1)
+        {
+            var textureUrl = this.baseUrl + this.ajaxRequest.responseXML.getElementsByTagName("page")[0].attributes.getNamedItem("file").nodeValue;
+            var image = new PIXI.ImageLoader(textureUrl, this.crossorigin);
+            this.texture = image.texture.baseTexture;
+
+            var data = {};
+            var info = this.ajaxRequest.responseXML.getElementsByTagName("info")[0];
+            var common = this.ajaxRequest.responseXML.getElementsByTagName("common")[0];
+            data.font = info.attributes.getNamedItem("face").nodeValue;
+            data.size = parseInt(info.attributes.getNamedItem("size").nodeValue, 10);
+            data.lineHeight = parseInt(common.attributes.getNamedItem("lineHeight").nodeValue, 10);
+            data.chars = {};
+
+            //parse letters
+            var letters = this.ajaxRequest.responseXML.getElementsByTagName("char");
+
+            for (var i = 0; i < letters.length; i++)
+            {
+                var charCode = parseInt(letters[i].attributes.getNamedItem("id").nodeValue, 10);
+
+                var textureRect = {
+                    x: parseInt(letters[i].attributes.getNamedItem("x").nodeValue, 10),
+                    y: parseInt(letters[i].attributes.getNamedItem("y").nodeValue, 10),
+                    width: parseInt(letters[i].attributes.getNamedItem("width").nodeValue, 10),
+                    height: parseInt(letters[i].attributes.getNamedItem("height").nodeValue, 10)
+                };
+                PIXI.TextureCache[charCode] = new PIXI.Texture(this.texture, textureRect);
+
+                data.chars[charCode] = {
+                    xOffset: parseInt(letters[i].attributes.getNamedItem("xoffset").nodeValue, 10),
+                    yOffset: parseInt(letters[i].attributes.getNamedItem("yoffset").nodeValue, 10),
+                    xAdvance: parseInt(letters[i].attributes.getNamedItem("xadvance").nodeValue, 10),
+                    kerning: {}
+                };
+            }
+
+            //parse kernings
+            var kernings = this.ajaxRequest.responseXML.getElementsByTagName("kerning");
+            for (i = 0; i < kernings.length; i++)
+            {
+               var first = parseInt(kernings[i].attributes.getNamedItem("first").nodeValue, 10);
+               var second = parseInt(kernings[i].attributes.getNamedItem("second").nodeValue, 10);
+               var amount = parseInt(kernings[i].attributes.getNamedItem("amount").nodeValue, 10);
+
+                data.chars[second].kerning[first] = amount;
+
+            }
+            PIXI.BitmapText.fonts[data.font] = data;
+
+            var scope = this;
+            image.addEventListener("loaded", function() {
+                scope.onLoaded();
+            });
+            image.load();
+        }
+    }
+};
+
+/**
+ * Invoked when all files are loaded (xml/fnt and texture)
+ * @private
+ */
+PIXI.BitmapFontLoader.prototype.onLoaded = function()
+{
+    this.dispatchEvent({type: "loaded", content: this});
+};
+
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+ if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = PIXI;
+    }
+    exports.PIXI = PIXI;
+  } else {
+    root.PIXI = PIXI;
+  }
+
+
+}).call(this);
 /**
 * @license GrapeFruit Game Engine
 * Copyright (c) 2012, Chad Engler
@@ -5329,6 +5885,9 @@ gf.inherits(gf.AssetLoader, Object, {
             texture.baseTexture.on('loaded', function() {
                 self.onAssetLoaded(null, 'texture', texture);
             });
+            texture.baseTexture.source.onerror = function() {
+                self.onAssetLoaded(new Error('Unable to load texture'), 'texture', texture);
+            };
         } else {
             self.onAssetLoaded(null, 'texture', texture);
         }
@@ -6955,11 +7514,11 @@ gf.inherits(gf.Entity, gf.Sprite, {
     /**
      * Computes the velocity taking into account gravity, friction, etc
      *
-     * @method computeVelocity
+     * @method updateVelocity
      * @param vel {Vector} The Vector to apply the changes to
      * @return {Vector} The modified vector
      */
-    computeVelocity: function(vel) {
+    updateVelocity: function(vel) {
         //apply gravity
         if(this.gravity) {
             vel.y -= !this.onladder ? (this.gravity * this.game._delta) : 0;
@@ -7012,9 +7571,10 @@ gf.inherits(gf.Entity, gf.Sprite, {
     },
     /**
      * Checks if this entity collides with any Entities, and if so, a penetration vector is calculated.
-     * from http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
      *
      * @method checkCollisions
+     * @param world {gf.Map} If passed this world will be checked instead of the
+     *      world of the game this entity is in.
      * @return {Array}
      */
     checkCollisions: function(world) {
@@ -7054,12 +7614,11 @@ gf.inherits(gf.Entity, gf.Sprite, {
             return;
 
         //apply gravity, friction, etc to this velocity
-        this.computeVelocity(this.velocity);
+        this.updateVelocity(this.velocity);
 
         //TODO: Edge rolling (if you are on the tip edge of a blocking tile, roll around it)
         //get the world colliders
         var colliders = (this.game.world === undefined || !this.mapCollidable) ? [] : this.game.world.checkCollision(this, this.velocity);
-        //if(colliders.length) window.console.log(colliders);
 
         //update flags
         this.onladder = false;
@@ -7098,7 +7657,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * Moves the entity to a new position using the velocity.
      *
      * @method moveEntity
-     * @param vel {Vector} The optional velocity to move the entity.
+     * @param vel {Vector} The optional velocity to override the current velocity and move the entity.
      * @return {Entity} Returns itself for chainability
      */
     moveEntity: function(vel) {
@@ -7158,7 +7717,6 @@ gf.inherits(gf.Entity, gf.Sprite, {
      *      by default if something collides with a collectable entity we remove the collectable
      *
      * @method onCollision
-     * @param vel {Vector} Collision Vector
      * @param obj {Entity} Colliding object
      * @return {Entity} Returns itself for chainability
      */
@@ -7181,7 +7739,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
     },
     /**
      * On Break Tile Event
-     *      called when a tile is broken
+     *      called when a tile is broken by this entity
      *
      * @method onBreakTile
      * @param tile {Unkown} the tile that is broken
@@ -9812,6 +10370,9 @@ gf.inherits(gf.TiledMap, gf.Map, {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             if(this.children[i] instanceof gf.TiledObjectGroup)
                 this.children[i].forEachEntity(fn);
+
+            if(this.children[i] instanceof gf.Entity)
+                fn(this.children[i]);
         }
     },
     //WIP
@@ -9932,6 +10493,13 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(set) {
             this.sprites[tileX][tileY] = new PIXI.Sprite(set.getTileTexture(tile));
             this.addChild(this.sprites[tileX][tileY]);
+            /**/
+            var spr = this.sprites[tileX][tileY];
+            spr.tile = tile;
+            spr.setInteractive(true);
+            spr.click = function() {
+                window.console.log(spr.tile, spr.parent.name);
+            };
         }
 
         return this.sprites[tileX][tileY];
