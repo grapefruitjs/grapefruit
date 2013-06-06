@@ -6,7 +6,7 @@ gf.Font = function(font, settings) {
 
     this.text = '';
 
-    gf.DisplayObject.call(this, [0, 0], settings);
+    gf.DisplayObject.call(this, null, 0, settings);
 };
 
 gf.inherits(gf.Font, gf.DisplayObject, {

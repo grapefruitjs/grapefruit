@@ -1,4 +1,6 @@
 gf.PhysicsSystem = function(game, gravity, profile) {
+    this.game = game;
+
     this.world = new p2.World({
         gravity: p2.V.create(0, gravity !== undefined ? gravity : -9.87),
         doProfiling: profile
@@ -84,7 +86,7 @@ gf.PhysicsSystem.prototype.set = function(ent, prop, val) {
 
     if(body && prop) {
         //if the value is a vector
-        if(val instanceof gf.Vector) {
+        if(val instanceof gf.Vector || val instanceof gf.Point) {
             //try to set an already created vector
             if(body[prop]) {
                 p2.V.set(body[prop], val.x, val.y);
@@ -148,9 +150,9 @@ gf.PhysicsSystem.prototype.update = function() {
 
     //notify of any collisions
     for(var c = 0, cl = this.world.contacts.length; c < cl; ++c) {
-        var c = this.world.contacts[c],
-            ent1 = c.bi.ent,
-            ent2 = c.bj.ent;
+        var con = this.world.contacts[c],
+            ent1 = con.bi.ent,
+            ent2 = con.bj.ent;
 
         ent1.onCollision(ent2);
         ent2.onCollision(ent1);

@@ -10,8 +10,8 @@
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
-gf.TiledLayer = function(layer) {
-    gf.Layer.call(this, layer);
+gf.TiledLayer = function(game, pos, layer) {
+    gf.Layer.call(this, game, pos, layer);
 
     /**
      * The tile IDs of the tilemap
@@ -85,16 +85,17 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tileId = this.tileIds[id],
             set = this.parent.getTileset(tileId),
             texture,
-            props;
+            props,
+            position;
 
         if(!set) return;
 
-        var texture = set.getTileTexture(tileId),
-            props = set.getTileProperties(tileId),
-            position = [
-                toTileX * this.parent.tileSize.x,
-                toTileY * this.parent.tileSize.y
-            ];
+        texture = set.getTileTexture(tileId);
+        props = set.getTileProperties(tileId);
+        position = [
+            toTileX * this.parent.tileSize.x,
+            toTileY * this.parent.tileSize.y
+        ];
 
         //get the cached tile from the pool, and set the properties
         if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
@@ -113,6 +114,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         }
         //if there is no tile there yet, create one
         else {
+            if(!this.tiles[toTileX])
+                this.tiles[toTileX] = {};
+
             tile = this.tiles[toTileX][toTileY] = new gf.Tile(this.game, position, {
                 texture: texture,
                 mass: 999999,
