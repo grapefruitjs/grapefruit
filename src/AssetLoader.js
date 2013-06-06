@@ -122,6 +122,9 @@ gf.inherits(gf.AssetLoader, Object, {
             texture.baseTexture.on('loaded', function() {
                 self.onAssetLoaded(null, 'texture', texture);
             });
+            texture.baseTexture.source.onerror = function() {
+                self.onAssetLoaded(new Error('Unable to load texture'), 'texture', texture);
+            };
         } else {
             self.onAssetLoaded(null, 'texture', texture);
         }
