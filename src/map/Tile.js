@@ -7,7 +7,7 @@
  * @param tile {Object} All the settings for the tile
  */
 gf.Tile = function(game, pos, settings) {
-    this.collisionType = gf.Tile.COLLISION.NONE;
+    this.collisionType = gf.Tile.TYPE.NONE;
 
     //call base ctor
     gf.Entity.call(this, game, pos, settings);
@@ -33,7 +33,7 @@ gf.inherits(gf.Tile, gf.Entity, {
  * @property COLLISION
  * @type Object
  */
-gf.Tile.COLLISION = {
+gf.Tile.TYPE = {
     NONE: 'none',
     SOLID: 'solid',
     CLIFF: 'cliff',

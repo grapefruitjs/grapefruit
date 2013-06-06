@@ -108,8 +108,8 @@ gf.Sprite = function(game, pos, settings) {
             var spr = new PIXI.Sprite(settings.texture);
             this.addChild(spr);
             this.anim['default'] = spr.childIndex;
-            this.width = spr.width;
-            this.height = spr.height;
+            this.width = this.width || spr.width;
+            this.height = this.height || spr.height;
             spr.anchor = this.anchor;
             spr.setTexture = setTextureWrapper;
             spr.onTextureUpdate = onTextureUpdateWrapper;

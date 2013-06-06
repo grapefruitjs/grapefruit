@@ -20,7 +20,8 @@
  *      var ent = new gf.Entity([10, 1], { name: 'MyEntity' });
  */
 gf.Entity = function(game, pos, settings) {
-    if(!game) throw 'No game instance passed to Entity, a game instance is required!';
+    if(!game)
+        throw 'No game instance passed to Entity, a game instance is required!';
 
     /**
      * The type of the entity
@@ -71,6 +72,9 @@ gf.Entity = function(game, pos, settings) {
 
     //call base ctor
     gf.Sprite.call(this, game, pos, settings);
+
+    if(!this.width || !this.height)
+        throw 'Entities must have a width and height.';
 
     this.viewPosition.x = Math.round(this.position.x);
     this.viewPosition.y = Math.round(this.position.y);
@@ -139,7 +143,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * @param obj {Entity} Colliding object
      * @return {Entity} Returns itself for chainability
      */
-    onCollision: function(obj) {
+    onCollision: function() {
         if(this.type === gf.Entity.TYPE.COLLECTABLE)
             this.parent.removeChild(this);
 

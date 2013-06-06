@@ -11,8 +11,8 @@
 gf.TiledMap = function(game, pos, map) {
     gf.Map.call(this, game, pos, map);
 
-    this.scale.x = parseInt(map.properties.scale, 10) || 1;
-    this.scale.y = parseInt(map.properties.scale, 10) || 1;
+    this.scale.x = parseFloat(map.properties.scale, 10) || 1;
+    this.scale.y = parseFloat(map.properties.scale, 10) || 1;
 
     /**
      * The tile size
