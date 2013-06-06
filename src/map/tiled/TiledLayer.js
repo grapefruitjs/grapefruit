@@ -132,36 +132,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         return tile;
     },
     /**
-     * Transforms an x,y coord into the index of a tile in the tiles array
-     *
-     * @method getTileIndex
-     * @param x {Number|Vector} The x coord to transform, if a vector is passed it's x/y is used and the y param is ignored
-     * @param y {Number} The y coord to transform
-     * @return {Number}
-     */
-    getTileIndex: function(x, y) {
-        x = x instanceof gf.Vector ? x.x : x;
-        y = x instanceof gf.Vector ? x.y : y;
-
-        //convert the position from units to tiles
-        x = Math.floor(x / this.parent.tileSize.x);
-        y = Math.floor(y / this.parent.tileSize.y);
-
-        //calculate index of this tile
-        return (x + (y * this.size.x));
-    },
-    /**
-     * Transforms an x,y coord into the TiledTileset tile id
-     *
-     * @method getTileId
-     * @param x {Number|Vector} The x coord to transform, if a vector is passed it's x/y is used and the y param is ignored
-     * @param y {Number} The y coord to transform
-     * @return {Number}
-     */
-    getTileId: function(x, y) {
-        return this.tileIds[this.getTileIndex(x, y)];
-    },
-    /**
      * Pans the layer around, rendering stuff if necessary
      *
      * @method pan
