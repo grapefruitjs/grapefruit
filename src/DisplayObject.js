@@ -202,7 +202,7 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
             fn(this);
     },
     /**
-     * Convenience method for setting the position of the Sprite.
+     * Convenience method for setting the position of the Object.
      *
      * @method setPosition
      * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
@@ -216,14 +216,23 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
      *          .setPosition(new gf.Vector(20, 20));
      */
     setPosition: function(x, y) {
+        //passed in a vector or point object
         if(x instanceof gf.Vector || x instanceof gf.Point) {
             this.position.x = x.x;
             this.position.y = x.y;
         }
+        //passed in an array of form [x, y]
         else if(x instanceof Array) {
             this.position.x = x[0];
             this.position.y = x[1];
-        } else {
+        }
+        //passed in a single number, that will apply to both
+        else if(typeof x === 'number' && y === undefined) {
+            this.position.x = x;
+            this.position.y = x;
+        }
+        //passed in something else, lets try to massage it into numbers
+        else {
             this.position.x = parseInt(x, 10) || 0;
             this.position.y = parseInt(y, 10) || 0;
         }
