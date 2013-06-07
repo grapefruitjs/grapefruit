@@ -143,7 +143,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
      * @param obj {Entity} Colliding object
      * @return {Entity} Returns itself for chainability
      */
-    onCollision: function() {
+    onCollision: function(obj) {
         if(this.type === gf.Entity.TYPE.COLLECTABLE)
             this.parent.removeChild(this);
 
