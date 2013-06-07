@@ -149,4 +149,7 @@ gf.PhysicsSystem.prototype.onCollisionBegin = function(arbiter) {//, space) {
 
     ent1.onCollision(ent2);
     ent2.onCollision(ent1);
+
+    //maintain the colliding state
+    return true;
 };
