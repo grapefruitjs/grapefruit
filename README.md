@@ -52,6 +52,11 @@ Under the hood gf uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) for 
 haven't heard of this library I suggest you check it out, it is a super performant 2D rendering engine. It is what
 allows gf to fallback to canvas and support a larger audience.
 
+## Physics Engine
+
+Grapefruit leverages [Chipmunk-js](https://github.com/josephg/Chipmunk-js) for 2D physics. Because of this powerful
+library grapefruit is able to support velocity, ellasticity, gravity, friction, collisions, and much more.
+
 ## License
 
 The MIT License
