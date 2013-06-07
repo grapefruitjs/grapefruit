@@ -147,7 +147,7 @@ gf.inherits(gf.Entity, gf.Sprite, {
         if(this.type === gf.Entity.TYPE.COLLECTABLE)
             this.parent.removeChild(this);
 
-        if(obj.collisionType === gf.Tile.COLLISION.SOLID)
+        if(obj.collisionType === gf.Tile.TYPE.SOLID)
             this.setVelocity(0);
 
         return this;
