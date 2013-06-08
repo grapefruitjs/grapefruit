@@ -6,7 +6,7 @@
  * @constructor
  * @param layer {Object} All the settings for the layer
  */
-gf.Layer = function(layer) {
+gf.Layer = function(game, pos, layer) {
     /**
      * The name of the layer
      *
@@ -26,10 +26,7 @@ gf.Layer = function(layer) {
     this.size = new gf.Vector(layer.width || 0, layer.height || 0);
 
     //call base ctor
-    gf.DisplayObject.call(this);
-
-    //mixin user's settings
-    gf.utils.setValues(this, layer);
+    gf.DisplayObject.call(this, game, pos, layer);
 
     /**
      * Half of the size of the layer
@@ -53,18 +50,3 @@ gf.inherits(gf.Layer, gf.DisplayObject, {
     pan: function() {
     }
 });
-
-/**
- * Tile collision types
- *
- * @property COLLISION
- * @type Object
- */
-gf.Layer.COLLISION = {
-    NONE: 'none',
-    SOLID: 'solid',
-    CLIFF: 'cliff',
-    LADDER: 'ladder',
-    WATER: 'water',
-    DEEP_WATER: 'deep_water'
-};

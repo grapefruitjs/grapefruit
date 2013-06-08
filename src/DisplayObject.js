@@ -5,8 +5,21 @@
  * @extends PIXI.DisplayObjectContainer
  * @constructor
  */
-gf.DisplayObject = function() {
+gf.DisplayObject = function(game, pos, settings) {
     PIXI.DisplayObjectContainer.call(this);
+
+    /**
+     * The game instance this belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
+
+    //mixin user's settings
+    gf.utils.setValues(this, settings);
+
+    this.setPosition(pos);
 
     //Add these properties in so that all objects can see them in the docs
     //these properties are inherited from PIXI.DisplayObjectContainer
@@ -169,14 +182,6 @@ gf.DisplayObject = function() {
 };
 
 gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
-    update: function() {
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.visible && o.update)
-                o.update.apply(o, arguments);
-        }
-    },
     resize: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
@@ -203,5 +208,43 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
 
         if(fn && this instanceof gf.Entity)
             fn(this);
+    },
+    /**
+     * Convenience method for setting the position of the Object.
+     *
+     * @method setPosition
+     * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
+     *       If an Array, Vector, or Point is passed then the y parameter is ignored
+     * @param y {Number} Y coord to put the sprite at
+     * @return {DisplayObject} Returns itself for chainability
+     * @example
+     *      spr.setPosition(1, 1)
+     *          .setPosition([5, 5])
+     *          .setPosition(new gf.Point(10, 10))
+     *          .setPosition(new gf.Vector(20, 20));
+     */
+    setPosition: function(x, y) {
+        //passed in a vector or point object
+        if(x instanceof gf.Vector || x instanceof gf.Point) {
+            this.position.x = x.x;
+            this.position.y = x.y;
+        }
+        //passed in an array of form [x, y]
+        else if(x instanceof Array) {
+            this.position.x = x[0];
+            this.position.y = x[1];
+        }
+        //passed in a single number, that will apply to both
+        else if(typeof x === 'number' && y === undefined) {
+            this.position.x = x;
+            this.position.y = x;
+        }
+        //passed in something else, lets try to massage it into numbers
+        else {
+            this.position.x = parseFloat(x, 10) || 0;
+            this.position.y = parseFloat(y, 10) || 0;
+        }
+
+        return this;
     }
 });

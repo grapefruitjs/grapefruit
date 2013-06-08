@@ -19,16 +19,8 @@ gf.GuiItem = function(pos, settings) {
 
     //allow user to pass the sprite texture as "image" to a GuiItem.
     settings.texture = settings.texture || settings.image;
-    gf.Sprite.call(this, pos, settings);
+    gf.Sprite.call(this, null, pos, settings);
 };
 
 gf.inherits(gf.GuiItem, gf.Sprite, {
-    /**
-     * Overrides base update to do some calculations. Called internally on each frame
-     *
-     * @method update
-     */
-    update: function() {
-        gf.Sprite.prototype.update.call(this);
-    }
 });

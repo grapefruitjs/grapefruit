@@ -6,8 +6,8 @@
  * @constructor
  * @param group {Object} All the settings for the layer
  */
- gf.TiledObjectGroup = function(group) {
-    gf.Layer.call(this, group);
+ gf.TiledObjectGroup = function(game, pos, group) {
+    gf.Layer.call(this, game, pos, group);
 
     /**
      * The user-defined properties of this group. Usually defined in the TiledEditor
@@ -52,8 +52,8 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             props.position = [o.x, o.y];
 
             //spawn from entity pool
-            this.addChild(gf.entityPool.create(this.parent.game, props.name, props));
-            this.parent.game.players.push(this.children[i]);
+            this.addChild(gf.entityPool.create(this.game, props.name, props));
+            this.game.players.push(this.children[i]);
         }
 
         return this;

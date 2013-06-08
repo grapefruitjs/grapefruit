@@ -46,17 +46,21 @@ module.exports = function(grunt) {
 
         '<%= dirs.src %>/map/Map.js',
         '<%= dirs.src %>/map/Layer.js',
+        '<%= dirs.src %>/map/Tile.js',
         '<%= dirs.src %>/map/tiled/TiledMap.js',
         '<%= dirs.src %>/map/tiled/TiledLayer.js',
         '<%= dirs.src %>/map/tiled/TiledTileset.js',
         '<%= dirs.src %>/map/tiled/TiledObjectGroup.js',
+
+        '<%= dirs.src %>/physics/PhysicsSystem.js',
 
         '<%= dirs.src %>/plugin/plugin.js'
     ],
     vendorFiles = [
         '<%= dirs.vendor %>/es5-shim.min.js',
         '<%= dirs.vendor %>/es5-sham.min.js',
-        '<%= dirs.vendor %>/pixi.dev.js'
+        '<%= dirs.vendor %>/pixi.dev.js',
+        '<%= dirs.vendor %>/cp.js'
     ],
     banner = [
         '/**',
@@ -176,7 +180,8 @@ module.exports = function(grunt) {
                     gf: false,
 
                     /* For the library */
-                    PIXI: false
+                    PIXI: false,
+                    cp: false
                 }
             }
         },
