@@ -68,7 +68,7 @@ gf.inherits(gf.TextureFont, gf.Font, {
 
         //try character code
         if(!texture)
-            texture = this.textures[ch.charCodeAt(0) + this.ext];
+            texture = this.textures['#' + ch.charCodeAt(0) + this.ext];
 
         //if no match, error
         if(!texture)
