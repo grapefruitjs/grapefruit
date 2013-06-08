@@ -31,20 +31,17 @@ an [Issue](https://github.com/englercj/grapefruit/issues) and we can talk about 
 
 Soon to come:
 
-- Tilemap Collisions (in there, but wonky)
-- Entity Collisions (may convert to QuadTree Interactions)
-- Multiple Cameras
-- More Entity Physics (like elasticity, and buoyancy)
+- Game State System
+- Particle System
+- Generic Text (non-texture based font)
 - Sprite Sheet Animations (without forcing TexturePacker format)
 - Typewriter (for dialog-like text printing)
 
 Coming in the future:
 
+- Multiple Cameras
 - Path Finding
 - Touch Gestures
-- Particle System
-- Game State System
-- Generic Text (non-texture based font)
 
 ## Rendering Engine
 
