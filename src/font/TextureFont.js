@@ -1,7 +1,40 @@
 gf.TextureFont = function(font, settings) {
     this.ext = '';
 
-    this.map = {};
+    this.map = {
+        '`': 'accent',
+        '~': 'tilde',
+        '!': 'exclamation',
+        '@': 'at',
+        '#': 'hash',
+        '$': 'dollar',
+        '%': 'percent',
+        '^': 'carret',
+        '&': 'ampersand',
+        '*': 'asterisk',
+        '(': 'open-parenthesis',
+        ')': 'close-parenthesis',
+        '-': 'dash',
+        '_': 'underscore',
+        '+': 'plus',
+        '=': 'equal',
+        '{': 'open-brace',
+        '}': 'close-brace',
+        '[': 'open-bracket',
+        ']': 'close-bracket',
+        '\\': 'backslash',
+        '|': 'pipe',
+        ':': 'colon',
+        ';': 'semicolon',
+        '"': 'quote',
+        '\'': 'single-quote',
+        '<': 'less-than',
+        '>': 'greater-than',
+        ',': 'comma',
+        '.': 'period',
+        '?': 'question',
+        '/': 'slash'
+    };
 
     this.spaceSize = 15;
 
@@ -31,11 +64,17 @@ gf.inherits(gf.TextureFont, gf.Font, {
         if(ch === '' || ch === ' ')
             return null;
 
-        if(!this.textures[ch + this.ext])
+        var texture = this.textures[ch + this.ext];
+
+        //try character code
+        if(!texture)
+            texture = this.textures[ch.charCodeAt(0) + this.ext];
+
+        //if no match, error
+        if(!texture)
             throw 'there is no texture for character "' + ch + '" with extension "' + this.ext + '"';
 
-        var texture = this.textures[ch + this.ext],
-            spr = this.sprites.create(texture);
+        var spr = this.sprites.create(texture);
 
         spr.setTexture(texture);
         spr.visible = true;
