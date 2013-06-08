@@ -27,7 +27,7 @@ function onTextureUpdateWrapper(e) {
  * @example
  *      var spr = new gf.Sprite([10, 1], { name: 'MySprite' });
  */
-gf.Sprite = function(pos, settings) {
+gf.Sprite = function(game, pos, settings) {
     /**
      * The width of the sprite
      *
@@ -84,13 +84,7 @@ gf.Sprite = function(pos, settings) {
     this.anchor = new gf.Point();
 
     //call base ctor
-    gf.DisplayObject.call(this);
-
-    //mixin user's settings
-    gf.utils.setValues(this, settings);
-
-    this.position.x = pos.x || pos[0] || parseInt(pos, 10) || 0;
-    this.position.y = pos.y || pos[1] || parseInt(pos, 10) || 0;
+    gf.DisplayObject.call(this, game, pos, settings);
 
     //add the animations passed to ctor
     if(settings.animations) {
@@ -114,11 +108,13 @@ gf.Sprite = function(pos, settings) {
             var spr = new PIXI.Sprite(settings.texture);
             this.addChild(spr);
             this.anim['default'] = spr.childIndex;
-            this.width = spr.width;
-            this.height = spr.height;
+            this.width = this.width || spr.width;
+            this.height = this.height || spr.height;
             spr.anchor = this.anchor;
             spr.setTexture = setTextureWrapper;
             spr.onTextureUpdate = onTextureUpdateWrapper;
+
+            this.setTexture = spr.setTexture.bind(spr);
         }
     }
 };
@@ -217,35 +213,6 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
             this.currentAnim.gotoAndPlay(0);
         } else {
             throw 'Unknown animation ' + name;
-        }
-
-        return this;
-    },
-    /**
-     * Convenience method for setting the position of the Sprite.
-     *
-     * @method setPosition
-     * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
-     *       If an Array, Vector, or Point is passed then the y parameter is ignored
-     * @param y {Number} Y coord to put the sprite at
-     * @return {Sprite} Returns itself for chainability
-     * @example
-     *      spr.setPosition(1, 1)
-     *          .setPosition([5, 5])
-     *          .setPosition(new gf.Point(10, 10))
-     *          .setPosition(new gf.Vector(20, 20));
-     */
-    setPosition: function(x, y) {
-        if(x instanceof gf.Vector || x instanceof gf.Point) {
-            this.position.x = x.x;
-            this.position.y = x.y;
-        }
-        else if(x instanceof Array) {
-            this.position.x = x[0];
-            this.position.y = x[1];
-        } else {
-            this.position.x = x;
-            this.position.y = y;
         }
 
         return this;

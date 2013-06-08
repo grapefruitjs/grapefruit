@@ -31,26 +31,28 @@ an [Issue](https://github.com/englercj/grapefruit/issues) and we can talk about 
 
 Soon to come:
 
-- Tilemap Collisions (in there, but wonky)
-- Entity Collisions (may convert to QuadTree Interactions)
-- Multiple Cameras
-- More Entity Physics (like elasticity, and buoyancy)
+- Game State System
+- Particle System
+- Generic Text (non-texture based font)
 - Sprite Sheet Animations (without forcing TexturePacker format)
 - Typewriter (for dialog-like text printing)
 
 Coming in the future:
 
+- Multiple Cameras
 - Path Finding
 - Touch Gestures
-- Particle System
-- Game State System
-- Generic Text (non-texture based font)
 
 ## Rendering Engine
 
 Under the hood gf uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) for low-level WebGL Rendering. If you
 haven't heard of this library I suggest you check it out, it is a super performant 2D rendering engine. It is what
 allows gf to fallback to canvas and support a larger audience.
+
+## Physics Engine
+
+Grapefruit leverages [Chipmunk-js](https://github.com/josephg/Chipmunk-js) for 2D physics. Because of this powerful
+library grapefruit is able to support velocity, ellasticity, gravity, friction, collisions, and much more.
 
 ## License
 

@@ -11,24 +11,6 @@ gf.Game = function(contId, settings) {
         h = settings.height || gf.utils.getStyle(this.container, 'height');
 
     /**
-     * The default gravity to use for the game, defaults to 0.98 (Earth's Gravity)
-     *
-     * @property gravity
-     * @type Number
-     * @default 0.98
-     */
-    this.gravity = 0.98;
-
-    /**
-     * The default friction to use for the game, defaults to 0,0
-     *
-     * @property friction
-     * @type Vector
-     * @default new gf.Vector(0, 0)
-     */
-    this.friction = new gf.Vector(0, 0);
-
-    /**
      * The method used to render values to the screen (either webgl, canvas, or css3)
      *
      * @property renderMethod
@@ -146,6 +128,15 @@ gf.Game = function(contId, settings) {
     this.input = new gf.InputManager(this);
 
     /**
+     * The physics system to simulate stuffs
+     *
+     * @property physics
+     * @type PhysicsSystem
+     * @readOnly
+     */
+    this.physics = new gf.PhysicsSystem(this, settings.gravity);
+
+    /**
      * The camera you view the scene through
      *
      * @property camera
@@ -240,7 +231,7 @@ gf.inherits(gf.Game, Object, {
             }
         }
 
-        this.world = new gf.TiledMap(this, world);
+        this.world = new gf.TiledMap(this, 0, world);
         this.addChild(this.world);
         this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
 
@@ -263,36 +254,6 @@ gf.inherits(gf.Game, Object, {
         return this;
     },
     /**
-     * Check if passed entity collides with any others
-     *
-     * @method checkCollisions
-     * @param obj {Entity} The sprite to the stage
-     * @return {Array} Returns an array of colliders
-     */
-    checkCollisions: function(ent) {
-        var colliders = [];
-
-        if(!ent.collidable) return colliders;
-
-        for(var i = 0, il = this.stage.children; i < il; ++i) {
-            var o = this.stage.children[i];
-
-            //check if this object collides with any others
-            if(o.visible && o.collidable && o.entity && (o !== ent)) {
-                var collisionVector = o.checkCollision(ent);
-                if(collisionVector.x !== 0 || collisionVector.y !== 0) {
-                    colliders.push({
-                        entity: o,
-                        vector: collisionVector
-                    });
-                    o.onCollision(ent);
-                }
-            }
-        }
-
-        return colliders;
-    },
-    /**
      * The looping render tick
      *
      * @method _tick
@@ -308,17 +269,14 @@ gf.inherits(gf.Game, Object, {
         //update debug info
         gf.debug.update();
 
+        //gather input from user
         this.input.update();
 
+        //update any camera effects
         this.camera.update();
 
-        //update each object
-        for(var i = 0, il = this.stage.children.length; i < il; ++i) {
-            var o = this.stage.children[i];
-
-            if(o.visible && o.update)
-                o.update();
-        }
+        //simulate physics and detect/resolve collisions
+        this.physics.update();
 
         //render scene
         this.renderer.render(this.stage);

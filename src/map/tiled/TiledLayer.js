@@ -10,8 +10,8 @@
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
-gf.TiledLayer = function(layer) {
-    gf.Layer.call(this, layer);
+gf.TiledLayer = function(game, pos, layer) {
+    gf.Layer.call(this, game, pos, layer);
 
     /**
      * The tile IDs of the tilemap
@@ -19,15 +19,15 @@ gf.TiledLayer = function(layer) {
      * @property name
      * @type Uint32Array
      */
-    this.tiles = gf.support.typedArrays ? new Uint32Array(layer.data) : layer.data;
+    this.tileIds = gf.support.typedArrays ? new Uint32Array(layer.data) : layer.data;
 
     /**
-     * The sprite pool for rendering tiles
+     * The tile pool for rendering tiles
      *
      * @property tilePool
      * @type Object
      */
-    this.sprites = {};
+    this.tiles = {};
 
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
@@ -69,39 +69,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._rendered.bottom = this._rendered.y + this._rendered.height;
     },
     /**
-     * Creates the sprite for a tile and caches it in a position
-     *
-     * @method getTileSprite
-     * @param tileX {Number} The x coord of the tile in units of tiles (not pixels)
-     * @param tileY {Number} The y coord of the tile in units of tiles (not pixels)
-     * @return {PIXI.Sprite} The sprite to display
-     */
-    getTileSprite: function(tileX, tileY) {
-        if(this.sprites[tileX] && this.sprites[tileX][tileY])
-            return this.sprites[tileX][tileY];
-
-        if(!this.sprites[tileX]) this.sprites[tileX] = {};
-
-        var id = (tileX + (tileY * this.size.x)),
-            tile = this.tiles[id],
-            set = this.parent.getTileset(tile);
-
-        if(set) {
-            this.sprites[tileX][tileY] = new PIXI.Sprite(set.getTileTexture(tile));
-            this.addChild(this.sprites[tileX][tileY]);
-            /*
-            var spr = this.sprites[tileX][tileY];
-            spr.tile = tile;
-            spr.setInteractive(true);
-            spr.click = function() {
-                window.console.log(spr.tile, spr.parent.name);
-            };
-            */
-        }
-
-        return this.sprites[tileX][tileY];
-    },
-    /**
      * Moves a tile sprite from one position to another,
      * creating it if the old position didn't have a sprite
      *
@@ -113,54 +80,55 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {PIXI.Sprite} The sprite to display
      */
     moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
-        var spr = this.getTileSprite(fromTileX, fromTileY);
+        var tile,
+            id = (toTileX + (toTileY * this.size.x)),
+            tileId = this.tileIds[id],
+            set = this.parent.getTileset(tileId),
+            texture,
+            props,
+            position;
 
-        if(!spr) return;
+        if(!set) return;
 
-        var id = (toTileX + (toTileY * this.size.x)),
-            tile = this.tiles[id],
-            set = this.parent.getTileset(tile);
+        texture = set.getTileTexture(tileId);
+        props = set.getTileProperties(tileId);
+        position = [
+            toTileX * this.parent.tileSize.x,
+            toTileY * this.parent.tileSize.y
+        ];
 
-        if(set) spr.setTexture(set.getTileTexture(tile));
-        spr.position.x = toTileX * this.parent.tileSize.x;
-        spr.position.y = toTileY * this.parent.tileSize.y;
+        //get the cached tile from the pool, and set the properties
+        if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
+            tile = this.tiles[fromTileX][fromTileY];
 
-        //move the sprite in the pool
-        if(!this.sprites[toTileX]) this.sprites[toTileX] = {};
-        this.sprites[toTileX][toTileY] = spr;
-        this.sprites[fromTileX][fromTileY] = null;
+            tile.collisionType = props.type;
+            tile.setTexture(texture);
+            tile.setCollidable(props.isCollidable);
+            tile.setPosition(position);
 
-        return spr;
-    },
-    /**
-     * Transforms an x,y coord into the index of a tile in the tiles array
-     *
-     * @method getTileIndex
-     * @param x {Number|Vector} The x coord to transform, if a vector is passed it's x/y is used and the y param is ignored
-     * @param y {Number} The y coord to transform
-     * @return {Number}
-     */
-    getTileIndex: function(x, y) {
-        x = x instanceof gf.Vector ? x.x : x;
-        y = x instanceof gf.Vector ? x.y : y;
+            //move the sprite in the pool
+            if(!this.tiles[toTileX]) this.tiles[toTileX] = {};
 
-        //convert the position from units to tiles
-        x = Math.floor(x / this.parent.tileSize.x);
-        y = Math.floor(y / this.parent.tileSize.y);
+            this.tiles[toTileX][toTileY] = tile;
+            this.tiles[fromTileX][fromTileY] = null;
+        }
+        //if there is no tile there yet, create one
+        else {
+            if(!this.tiles[toTileX])
+                this.tiles[toTileX] = {};
 
-        //calculate index of this tile
-        return (x + (y * this.size.x));
-    },
-    /**
-     * Transforms an x,y coord into the TiledTileset tile id
-     *
-     * @method getTileId
-     * @param x {Number|Vector} The x coord to transform, if a vector is passed it's x/y is used and the y param is ignored
-     * @param y {Number} The y coord to transform
-     * @return {Number}
-     */
-    getTileId: function(x, y) {
-        return this.tiles[this.getTileIndex(x, y)];
+            tile = this.tiles[toTileX][toTileY] = new gf.Tile(this.game, position, {
+                texture: texture,
+                mass: Infinity,
+                width: this.parent.tileSize.x,
+                height: this.parent.tileSize.y,
+                collidable: props.isCollidable,
+                collisionType: props.type
+            });
+            this.addChild(tile);
+        }
+
+        return tile;
     },
     /**
      * Pans the layer around, rendering stuff if necessary

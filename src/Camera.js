@@ -12,15 +12,7 @@
  * @param game {Game} The game this camera belongs to
  * @param settings {Object} Any settings you want to override the default properties with
  */
-gf.Camera = function(game, settings) {
-    /**
-     * The game instance this belongs to
-     *
-     * @property game
-     * @type Game
-     */
-    this.game = game;
-
+gf.Camera = function(game, pos, settings) {
     /**
      * The bounds of that the camera can move to
      *
@@ -96,10 +88,7 @@ gf.Camera = function(game, settings) {
         }
     };
 
-    gf.DisplayObject.call(this, settings);
-
-    //mixin user's settings
-    gf.utils.setValues(this, settings);
+    gf.DisplayObject.call(this, game, pos, settings);
 };
 
 gf.inherits(gf.Camera, gf.DisplayObject, {
@@ -460,8 +449,6 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @return {Camera} Returns iteself for chainability
      */
     update: function() {
-        gf.DisplayObject.prototype.update.call(this);
-
         //follow entity
         if(this._target) {
             if(!this._deadzone) {
