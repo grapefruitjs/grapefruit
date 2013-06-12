@@ -1,17 +1,17 @@
 /**
  * Main game object, controls the entire instance of the game
  *
- * @class game
+ * @class Game
  * @constructor
  * @param contId {String} The container for the new canvas we will create for the game
- * @param opts {Object} Options such as gravity, friction, and renderMethod
+ * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)
  */
 gf.Game = function(contId, settings) {
     var w = settings.width || gf.utils.getStyle(this.container, 'width'),
         h = settings.height || gf.utils.getStyle(this.container, 'height');
 
     /**
-     * The method used to render values to the screen (either webgl, canvas, or css3)
+     * The method used to render values to the screen (either webgl, or canvas)
      *
      * @property renderMethod
      * @type String
@@ -110,44 +110,23 @@ gf.Game = function(contId, settings) {
     this.loader = new gf.AssetLoader();
 
     /**
-     * The audio player for this game instance
+     * The GameStates added to the game
      *
-     * @property audio
-     * @type AudioPlayer
+     * @property states
+     * @type Array
      * @readOnly
      */
-    this.audio = new gf.AudioPlayer(this);
+    this.states = {};
 
     /**
-     * The input instance for this game
+     * The currently active GameState
      *
-     * @property input
-     * @type InputManager
+     * @property activeState
+     * @type GameState
      * @readOnly
      */
-    this.input = new gf.InputManager(this);
-
-    /**
-     * The physics system to simulate stuffs
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @readOnly
-     */
-    this.physics = new gf.PhysicsSystem(this, settings.gravity);
-
-    /**
-     * The camera you view the scene through
-     *
-     * @property camera
-     * @type Camera
-     * @readOnly
-     */
-    this.camera = new gf.Camera(this);
-
-    this.addChild(this.camera);
-
-    this.camera.resize(w, h);
+    this.activeState = null;
+    this._defaultState = new gf.GameState(this, '_default');
 
     //append the renderer view
     //this.renderer.view.style['z-index'] = opts.zIndex || 5;
@@ -155,6 +134,63 @@ gf.Game = function(contId, settings) {
 
     //mixin user settings
     gf.utils.setValues(this, settings);
+
+    this.enableState('_default');
+
+    //define getters for common properties in GameState
+    var self = this;
+    ['audio', 'input', 'physics', 'camera', 'world'].forEach(function(prop) {
+        self.__defineGetter__(prop, function() {
+            return self.activeState[prop];
+        });
+    });
+
+    //some docs for the getters above
+
+    /**
+     * The audio player for this game instance
+     * (refers to the active GameState's audio instance)
+     *
+     * @property audio
+     * @type AudioPlayer
+     * @readOnly
+     */
+
+    /**
+     * The input instance for this game
+     * (refers to the active GameState's input instance)
+     *
+     * @property input
+     * @type InputManager
+     * @readOnly
+     */
+
+    /**
+     * The physics system to simulate stuffs
+     * (refers to the active GameState's physics instance)
+     *
+     * @property physics
+     * @type PhysicsSystem
+     * @readOnly
+     */
+
+    /**
+     * The camera you view the scene through
+     * (refers to the active GameState's camera instance)
+     *
+     * @property camera
+     * @type Camera
+     * @readOnly
+     */
+
+    /**
+     * The world instance that holds all entites and the map
+     * (refers to the active GameState's world instance)
+     *
+     * @property world
+     * @type Map
+     * @readOnly
+     */
 };
 
 gf.inherits(gf.Game, Object, {
@@ -185,17 +221,7 @@ gf.inherits(gf.Game, Object, {
      * @return {Game} Returns itself for chainability
      */
     addChild: function(obj) {
-        if(obj) {
-            //we add the camera in the ctor and the map later when
-            //.loadWorld is called. This way the camera is always the
-            //last child of stage, so it is rendered on top!
-            if(obj instanceof gf.Camera || obj instanceof gf.Map)
-                this.stage.addChildAt(obj, 0);
-            else if(obj instanceof gf.Gui)
-                this.camera.addChild(obj);
-            else
-                this.world.addChild(obj);
-        }
+        this.activeState.addChild(obj);
 
         return this;
     },
@@ -216,6 +242,46 @@ gf.inherits(gf.Game, Object, {
 
         return this;
     },
+    addState: function(state) {
+        var name = state.name;
+
+        if(!name) {
+            throw 'No state name could be determined, did you give the state a name when you created it?';
+        } else if(this.states[name]) {
+            throw 'A state with the name "' + name + '" already exists, did you try to add it twice?';
+        } else {
+            this.states[name] = state;
+            this.stage.addChild(state);
+        }
+    },
+    removeState: function(state) {
+        var name = (typeof state === 'string') ? state : state.name;
+
+        if(!name) {
+            throw 'No state name could be determined, are you sure you passed me a game state?';
+        } else if(!this.states[name]) {
+            throw 'A state with the name "' + name + '" does not exist, are you sure you added it?';
+        } else {
+            //don't remove the default state
+            if(name === '_default') return;
+
+            //if this is the active state, revert to the default state
+            if(name === this.activeState.name) {
+                this.enableState('_default');
+            }
+
+            delete this.states[name];
+        }
+    }
+    enableState: function(state) {
+        var name = (typeof state === 'string') ? state : state.name;
+
+        this.activeState.disable();
+
+        this.activeState = this.states[name];
+
+        this.activeState.enable();
+    }
     /**
      * Loads the world map into the game
      *
@@ -224,20 +290,7 @@ gf.inherits(gf.Game, Object, {
      * @return {Game} Returns itself for chainability
      */
     loadWorld: function(world) {
-        if(typeof world === 'string'){
-            if(gf.assetCache[world]) world = gf.assetCache[world];
-            else {
-                throw 'World not found in assetCache!';
-            }
-        }
-
-        this.world = new gf.TiledMap(this, 0, world);
-        this.addChild(this.world);
-        this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
-
-        if(this.world.properties.music) {
-            this.audio.play(this.world.properties.music, { loop: this.world.properties.music_loop === 'true' });
-        }
+        this.activeState.loadWorld(world);
 
         return this;
     },
@@ -264,19 +317,13 @@ gf.inherits(gf.Game, Object, {
         window.requestAnimFrame(this._tick.bind(this));
 
         //get clock delta
-        this._delta = this.clock.getDelta();
+        var dt = this.clock.getDelta();
 
         //update debug info
-        gf.debug.update();
+        gf.debug.update(dt);
 
-        //gather input from user
-        this.input.update();
-
-        //update any camera effects
-        this.camera.update();
-
-        //simulate physics and detect/resolve collisions
-        this.physics.update();
+        //update this game state
+        this.activeState.update(dt);
 
         //render scene
         this.renderer.render(this.stage);

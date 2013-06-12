@@ -448,7 +448,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
      * @method update
      * @return {Camera} Returns iteself for chainability
      */
-    update: function() {
+    update: function(dt) {
         //follow entity
         if(this._target) {
             if(!this._deadzone) {
@@ -489,7 +489,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
 
         //update flash effect
         if(this._fx.flash.alpha > 0) {
-            this._fx.flash.alpha -= (this.game._delta * 1000) / this._fx.flash.duration;
+            this._fx.flash.alpha -= (dt * 1000) / this._fx.flash.duration;
 
             if(this._fx.flash.alpha <= 0) {
                 this._fx.flash.alpha = 0;
@@ -501,7 +501,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
 
         //update fade effect
         if(this._fx.fade.alpha > 0) {
-            this._fx.fade.alpha += (this.game._delta * 1000) / this._fx.fade.duration;
+            this._fx.fade.alpha += (dt * 1000) / this._fx.fade.duration;
 
             if(this._fx.fade.alpha >= 1) {
                 this._fx.fade.alpha = 1;
@@ -514,7 +514,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
 
         //update shake effect
         if(this._fx.shake.duration > 0) {
-            this._fx.shake.duration -= (this.game._delta * 1000);
+            this._fx.shake.duration -= (dt * 1000);
 
             //pan back to the original position
             this._fx.shake.offset.x = -this._fx.shake.offset.x;
