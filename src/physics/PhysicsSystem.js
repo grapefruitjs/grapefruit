@@ -7,7 +7,7 @@ gf.PhysicsSystem = function(game, options) {
     this.game = game;
 
     this.space = new cp.Space();
-    this.space.gravity = gf.utils.ensureVector(options.gravity);
+    this.space.gravity = gf.utils.ensureVector(options.gravity !== undefined ? options.gravity : 9.87);
 
     //Time a body must remain idle to fall asleep
     //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#a928d74741904aae266a9efff5b5f68f7
@@ -131,9 +131,9 @@ gf.PhysicsSystem.prototype.setRotation = function(ent, rads) {
         ent._phys.body.setAngle(rads);
 };
 
-gf.PhysicsSystem.prototype.update = function() {
+gf.PhysicsSystem.prototype.update = function(dt) {
     //execute the physics step
-    this.space.step(this.game._delta);
+    this.space.step(dt);
 
     //go through each changed shape
     this.space.activeShapes.each(function(shape) {
