@@ -13,6 +13,7 @@
  *      game.enableState(state); //or you can use the name from the ctor 'battle'
  */
 gf.GameState = function(game, name, settings) {
+    settings = settings || {};
     this.name = name;
 
     /**
@@ -22,7 +23,7 @@ gf.GameState = function(game, name, settings) {
      * @type AudioPlayer
      * @readOnly
      */
-    this.audio = new gf.AudioPlayer(this);
+    this.audio = new gf.AudioPlayer(game);
 
     /**
      * The input instance for this game
@@ -31,7 +32,7 @@ gf.GameState = function(game, name, settings) {
      * @type InputManager
      * @readOnly
      */
-    this.input = new gf.InputManager(this);
+    this.input = new gf.InputManager(game);
 
     /**
      * The physics system to simulate stuffs
@@ -40,7 +41,7 @@ gf.GameState = function(game, name, settings) {
      * @type PhysicsSystem
      * @readOnly
      */
-    this.physics = new gf.PhysicsSystem(this, settings.gravity);
+    this.physics = new gf.PhysicsSystem(game, settings.gravity);
 
     /**
      * The camera you view the scene through
@@ -49,7 +50,7 @@ gf.GameState = function(game, name, settings) {
      * @type Camera
      * @readOnly
      */
-    this.camera = new gf.Camera(this);
+    this.camera = new gf.Camera(game);
 
     /**
      * The world instance that holds all entites and the map
@@ -97,7 +98,7 @@ gf.inherits(gf.GameState, gf.DisplayObject, {
             }
         }
 
-        this.world = new gf.TiledMap(this, 0, world);
+        this.world = new gf.TiledMap(this.game, 0, world);
         this.addChild(this.world);
         this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
 

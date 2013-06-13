@@ -272,16 +272,17 @@ gf.inherits(gf.Game, Object, {
 
             delete this.states[name];
         }
-    }
+    },
     enableState: function(state) {
         var name = (typeof state === 'string') ? state : state.name;
 
-        this.activeState.disable();
+        if(this.activeState)
+            this.activeState.disable();
 
         this.activeState = this.states[name];
 
         this.activeState.enable();
-    }
+    },
     /**
      * Loads the world map into the game
      *
