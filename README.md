@@ -2,9 +2,8 @@
 
 The game engine that powers [lttp-webgl](https://github.com/englercj/lttp-webgl) and [shiv](https://github.com/englercj/shiv).
 
-The goal of this project is for users to be able to make a game with minimal programming and judicious use 
-of the [Tiled Map Editor](http://mapeditor.org); while at the same time providing a powerful API for creating
-intense and complex 2D games.
+The goal of this project is to provide a simple, yet powerful, API that enables game makers to quickly create amazing games. Anything
+from simple top-down shooters to complex RPGs are possible with grapefruit.
 
 Some features that GrapeFruit gives you:
 
@@ -20,8 +19,7 @@ Some features that GrapeFruit gives you:
 
 ## Current State
 
-This project is under heavy development, and the API is subject to change at any time. Check the GitHub issue list
-to see what is needed to reach `v0.1.0`, the first unstable release.
+This project is under heavy development, and the API is subject to change at any time. Check the GitHub issue list to see how to help!
 
 ## Coming Features
 
@@ -31,17 +29,23 @@ an [Issue](https://github.com/englercj/grapefruit/issues) and we can talk about 
 
 Soon to come:
 
-- Game State System
-- Particle System
 - Generic Text (non-texture based font)
 - Sprite Sheet Animations (without forcing TexturePacker format)
-- Typewriter (for dialog-like text printing)
 
 Coming in the future:
 
 - Multiple Cameras
 - Path Finding
 - Touch Gestures
+
+## Plugins
+
+As of right now there are no grapefruit plugins; however, here is a list of some planned plugins that will get some 
+work as soon as gf is stable:
+
+- Particle System
+- Typewriter (for dialog-like text printing)
+- Path Finding
 
 ## Rendering Engine
 
@@ -53,6 +57,11 @@ allows gf to fallback to canvas and support a larger audience.
 
 Grapefruit leverages [Chipmunk-js](https://github.com/josephg/Chipmunk-js) for 2D physics. Because of this powerful
 library grapefruit is able to support velocity, ellasticity, gravity, friction, collisions, and much more.
+
+## Tile Engine
+
+The tile map engine is custom written in grapefruit to support all kinds of maps. The main focus however has been on
+supporting the [Tiled Map Editor](http://mapeditor.org), and as many features of it as possible.
 
 ## License
 
