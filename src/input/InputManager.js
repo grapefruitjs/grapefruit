@@ -13,8 +13,8 @@ gf.InputManager = function(game) {
 };
 
 gf.inherits(gf.InputManager, Object, {
-    update: function() {
-        this.gamepad.update();
+    update: function(dt) {
+        this.gamepad.update(dt);
     },
     isActionActive: function(action) {
         return this.mouse.isActionActive(action) ||
