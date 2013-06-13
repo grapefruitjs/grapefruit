@@ -4,6 +4,7 @@ var COLLISION_TYPE = {
 };
 
 gf.PhysicsSystem = function(game, options) {
+    options = options || {};
     this.game = game;
 
     this.space = new cp.Space();

@@ -20,6 +20,7 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/Sprite.js',
         '<%= dirs.src %>/Entity.js',
         '<%= dirs.src %>/entityPool.js',
+        '<%= dirs.src %>/GameState.js',
 
         '<%= dirs.src %>/debug/debug.js',
 
