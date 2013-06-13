@@ -241,7 +241,7 @@
             top: top,
             left: left
         };
-    }
+    },
     ////////////////////////////////////////////////////////////////////////////////
     // DOM Manipulation stuff will be removed with the GUI rewrite
     getPosition: function(o) {
