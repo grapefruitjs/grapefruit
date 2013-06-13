@@ -88,12 +88,34 @@ gf.PhysicsSystem.prototype.add = function(ent) {
     var body = this._createBody(ent),
         shape = this._createShape(ent, body);
 
+
     if(!ent._phys)
         ent._phys = {};
 
     ent._phys.id = (this.entities.push(ent)) - 1;
     ent._phys.body = body;
     ent._phys.shape = shape;
+
+    //add control body and constraints
+    if(body.m !== Infinity) {
+        var cbody = new cp.Body(Infinity, Infinity), //control body
+            cpivot = this.space.addConstraint(new cp.PivotJoint(cbody, body, cp.vzero, cp.vzero)),
+            cgear = this.space.addConstraint(new cp.GearJoint(cbody, body, 0, 1));
+
+        cpivot.maxBias = 0; //disable join correction
+        cpivot.maxForce = 10000; //emulate linear friction
+
+        cgear.errorBias = 0; //attempt to fully correct the joint each step
+        cgear.maxBias = 1.2; //but limit the angular correction
+        cgear.maxForce = 50000; //emulate angular friction
+
+        if(!ent._phys.control)
+            ent._phys.control = {};
+
+        ent._phys.control.body = cbody;
+        ent._phys.control.pivot = cpivot;
+        ent._phys.control.gear = cgear;
+    }
 };
 
 gf.PhysicsSystem.prototype.remove = function(ent) {
@@ -117,18 +139,34 @@ gf.PhysicsSystem.prototype.setMass = function(ent, mass) {
 };
 
 gf.PhysicsSystem.prototype.setVelocity = function(ent, vel) {
-    if(ent && ent._phys && ent._phys.body)
+    //update control body velocity (and pivot contraint makes regular follow)
+    if(ent && ent._phys && ent._phys.control && ent._phys.control.body)
+        ent._phys.control.body.setVel(vel);
+
+    //if no control body then update real body
+    else if(ent && ent._phys && ent._phys.body)
         ent._phys.body.setVel(vel);
 };
 
 gf.PhysicsSystem.prototype.setPosition = function(ent, pos) {
+    //update body position
     if(ent && ent._phys && ent._phys.body)
         ent._phys.body.setPos(pos);
+
+    //update control body position
+    if(ent && ent._phys && ent._phys.control && ent._phys.control.body)
+        ent._phys.control.body.setPos(pos);
 };
 
 gf.PhysicsSystem.prototype.setRotation = function(ent, rads) {
-    if(ent && ent._phys && ent._phys.body)
+    //update control body rotation (and gear contraint makes regular follow)
+    if(ent && ent._phys && ent._phys.control && ent._phys.control.body)
+        ent._phys.control.body.setAngle(rads);
+
+    //if no control body then update real body
+    else if(ent && ent._phys && ent._phys.body)
         ent._phys.body.setAngle(rads);
+
 };
 
 gf.PhysicsSystem.prototype.update = function() {
