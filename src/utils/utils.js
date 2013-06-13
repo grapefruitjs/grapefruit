@@ -1,6 +1,5 @@
 /**
- * This object represents a tileset used by a TiledMap.
- * There can be multiple Tilesets in a map
+ * The grapefruit utility object, used for misc functions used throughout the code base
  *
  * @class utils
  */
@@ -199,34 +198,6 @@
 
         return obj;
     },
-    /**
-     * Clamps a number between two values.
-     *
-     * @method clamp
-     * @param num {Number} The number to clamp
-     * @param min {Number} The minimum value the number is allowed to be
-     * @param max {Number} The maximum value the number is allowed to be
-     * @return {Number} The clamped value
-     */
-    clamp: function(n, min, max) {
-        return Math.max(min, Math.min(max, n));
-    },
-    ////////////////////////////////////////////////////////////////////////////////
-    // DOM Manipulation stuff will be removed with the GUI rewrite
-    getPosition: function(o) {
-        var l = o.offsetLeft,
-            t = o.offsetTop;
-
-        while(!!(o = o.offsetParent)) {
-            l += o.offsetLeft;
-            t += o.offsetTop;
-        }
-
-        return {
-            top: t,
-            left: l
-        };
-    },
     getStyle: function(elm, prop) {
         var style = window.getComputedStyle(elm),
             val = style.getPropertyValue(prop).replace(/px|em|%|pt/, '');
@@ -236,12 +207,7 @@
 
         return val;
     },
-    setStyle: function(elm, prop, value) {
-        var style = window.getComputedStyle(elm);
-
-        return style.setPropertyValue(prop, value);
-    },
-    //Some things stolen from jQuery
+    //Some things stolen from jQuery, used for mouse input
     getOffset: function(elem) {
         var doc = elem && elem.ownerDocument,
             docElem = doc.documentElement,
@@ -276,5 +242,21 @@
             left: left
         };
     }
+    ////////////////////////////////////////////////////////////////////////////////
+    // DOM Manipulation stuff will be removed with the GUI rewrite
+    getPosition: function(o) {
+        var l = o.offsetLeft,
+            t = o.offsetTop;
+
+        while(!!(o = o.offsetParent)) {
+            l += o.offsetLeft;
+            t += o.offsetTop;
+        }
+
+        return {
+            top: t,
+            left: l
+        };
+    },
     /////////////////////////////////////////////////////////////////////////////
 };
