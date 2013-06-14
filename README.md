@@ -43,9 +43,14 @@ Coming in the future:
 As of right now there are no grapefruit plugins; however, here is a list of some planned plugins that will get some 
 work as soon as gf is stable:
 
+- UI Pack
 - Particle System
-- Typewriter (for dialog-like text printing)
+- Achievements
+- Saves and Storage
 - Path Finding
+- Typewriter (for dialog-like text printing)
+- Spines and spinal animation
+
 
 ## Rendering Engine
 
