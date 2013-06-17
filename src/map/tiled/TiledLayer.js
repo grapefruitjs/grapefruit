@@ -13,6 +13,8 @@
 gf.TiledLayer = function(game, pos, layer) {
     gf.Layer.call(this, game, pos, layer);
 
+    //Tiled Editor properties
+
     /**
      * The tile IDs of the tilemap
      *
@@ -33,6 +35,7 @@ gf.TiledLayer = function(game, pos, layer) {
     this.position.x = layer.x;
     this.position.y = layer.y;
     this.alpha = layer.opacity;
+    this.visible = layer.visible;
 
     this._tileBufferSize = 2;
     this._panDelta = new gf.Vector(0, 0);
@@ -54,7 +57,15 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         //render new sprites
         for(var x = startX; x < numX; ++x) {
+            //skip things outside the map size
+            if(x < 0 || x >= this.parent.size.x)
+                continue;
+
             for(var y = startY; y < numY; ++y) {
+                //skip things outside the map size
+                if(y < 0 || y >= this.parent.size.y)
+                    continue;
+
                 this.moveTileSprite(x, y, x, y);
             }
         }
@@ -93,9 +104,10 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         texture = set.getTileTexture(tileId);
         props = set.getTileProperties(tileId);
         position = [
-            toTileX * this.parent.tileSize.x,
-            toTileY * this.parent.tileSize.y
+            (toTileX * this.parent.tileSize.y),// + set.tileoffset.x,
+            (toTileY * this.parent.tileSize.y)// + set.tileoffset.y
         ];
+        window.console.log(position, set.tileoffset);
 
         //get the cached tile from the pool, and set the properties
         if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
@@ -120,11 +132,13 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tile = this.tiles[toTileX][toTileY] = new gf.Tile(this.game, position, {
                 texture: texture,
                 mass: Infinity,
-                width: this.parent.tileSize.x,
-                height: this.parent.tileSize.y,
+                width: set.tileSize.x,
+                height: set.tileSize.y,
+                rotation: this.parent.orientation === 'isometric' ? gf.math.degreesToRadians(-45) : 0,
                 collidable: props.isCollidable,
                 collisionType: props.type
             });
+
             this.addChild(tile);
         }
 

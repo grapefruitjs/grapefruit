@@ -7,6 +7,8 @@
  * @constructor
  * @param settings {Object} All the settings for the tileset
  */
+//TODO: Support external tilesets (TSX files) via the "source" attribute
+//see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
 gf.TiledTileset = function(settings) {
     if(!gf.assetCache[settings.name + '_texture']) {
         var loader = new gf.AssetLoader();
@@ -16,21 +18,15 @@ gf.TiledTileset = function(settings) {
     //initialize the base Texture class
     gf.Texture.call(this, gf.assetCache[settings.name + '_texture'].baseTexture);
 
-    /**
-     * The size of the tileset
-     *
-     * @property size
-     * @type Vector
-     */
-    this.size = new gf.Vector(settings.imagewidth, settings.imageheight);
+    //Tiled Editor properties
 
     /**
-     * The size of a tile in the tileset
+     * The first tileId in the tileset
      *
-     * @property tileSize
-     * @type Vector
+     * @property firstgid
+     * @type Number
      */
-    this.tileSize = new gf.Vector(settings.tilewidth, settings.tileheight);
+    this.firstgid = settings.firstgid;
 
     /**
      * The name of the tileset
@@ -41,12 +37,12 @@ gf.TiledTileset = function(settings) {
     this.name = settings.name;
 
     /**
-     * The margin around a tile in the tileset
+     * The size of a tile in the tileset
      *
-     * @property margin
-     * @type Number
+     * @property tileSize
+     * @type Vector
      */
-    this.margin = settings.margin;
+    this.tileSize = new gf.Vector(settings.tilewidth, settings.tileheight);
 
     /**
      * The spacing around a tile in the tileset
@@ -54,7 +50,31 @@ gf.TiledTileset = function(settings) {
      * @property spacing
      * @type Number
      */
-    this.spacing = settings.spacing;
+    this.spacing = settings.spacing || 0;
+
+    /**
+     * The margin around a tile in the tileset
+     *
+     * @property margin
+     * @type Number
+     */
+    this.margin = settings.margin || 0;
+
+    /**
+     * The offset of tile positions when rendered
+     *
+     * @property tileoffset
+     * @type Number
+     */
+    this.tileoffset = new gf.Vector(
+        settings.tileoffset ? settings.tileoffset.x : 0,
+        settings.tileoffset ? settings.tileoffset.y : 0
+    );
+
+    //TODO: Support for "tileoffset," "terraintypes," "image"
+    //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
+
+    //Custom/Optional properties
 
     /**
      * The number of tiles calculated based on size, margin, and spacing
@@ -66,14 +86,6 @@ gf.TiledTileset = function(settings) {
         ~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x + this.spacing)),
         ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y + this.spacing))
     );
-
-    /**
-     * The first tileId in the tileset
-     *
-     * @property firstgid
-     * @type Number
-     */
-    this.firstgid = settings.firstgid;
 
     /**
      * The last tileId in the tileset
@@ -99,6 +111,22 @@ gf.TiledTileset = function(settings) {
      */
     this.tileproperties = settings.tileproperties || {};
 
+    /**
+     * The size of the tileset
+     *
+     * @property size
+     * @type Vector
+     */
+    this.size = new gf.Vector(settings.imagewidth, settings.imageheight);
+
+    /**
+     * The texture instances for each tile in the set
+     *
+     * @property textures
+     * @type Array
+     */
+    this.textures = [];
+
     //massage tile properties
     for(var i in this.tileproperties) {
         var v = this.tileproperties[i];
@@ -109,16 +137,8 @@ gf.TiledTileset = function(settings) {
         if(v.isBreakable === 'true') v.isBreakable = true;
     }
 
-    /**
-     * The texture instances for each tile in the set
-     *
-     * @property textures
-     * @type Array
-     */
-    this.textures = [];
-
     //generate tile textures
-    for(var t = 0, tl = this.lastgid - this.firstgid; t < tl; ++t) {
+    for(var t = 0, tl = this.lastgid - this.firstgid + 1; t < tl; ++t) {
         //convert the tileId to x,y coords of the tile in the Texture
         var y = ~~(t / this.numTiles.x),
             x = (t - (y * this.numTiles.x));
@@ -127,8 +147,8 @@ gf.TiledTileset = function(settings) {
             new gf.Texture(
                 this.baseTexture,
                 new PIXI.Rectangle(
-                    x * this.tileSize.x,
-                    y * this.tileSize.y,
+                    (x * this.tileSize.x),
+                    (y * this.tileSize.y),
                     this.tileSize.x,
                     this.tileSize.y
                 )

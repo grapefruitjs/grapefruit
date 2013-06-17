@@ -27,15 +27,6 @@ gf.Layer = function(game, pos, layer) {
 
     //call base ctor
     gf.DisplayObject.call(this, game, pos, layer);
-
-    /**
-     * Half of the size of the layer
-     *
-     * @property hSize
-     * @type Vector
-     * @private
-     */
-    this.hSize = this.size.clone().divideScalar(2);
 };
 
 gf.inherits(gf.Layer, gf.DisplayObject, {
