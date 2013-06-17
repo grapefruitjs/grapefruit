@@ -174,8 +174,7 @@ gf.TiledMap = function(game, pos, map) {
 
     //rotate for isometric maps
     if(this.orientation === 'isometric') {
-        this.rotation = gf.math.degreesToRadians(45); //rotate by 45 degrees
-        this.position.x += this.realSize.x;
+        this.position.x += (this.realSize.x / 2) - (this.tileSize.x / 2);
     }
 };
 
