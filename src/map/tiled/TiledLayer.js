@@ -107,8 +107,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         position = iso ?
             // Isometric position
             [
-                (toTileX * this.parent.tileSize.y) - (toTileY * (this.parent.tileSize.x / 2)),// + set.tileoffset.x,
-                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2))// + set.tileoffset.y
+                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + set.tileoffset.x,
+                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + set.tileoffset.y
             ]
             :
             // Orthoganal position
