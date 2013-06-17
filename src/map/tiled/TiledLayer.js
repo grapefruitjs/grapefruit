@@ -95,6 +95,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             id = (toTileX + (toTileY * this.size.x)),
             tileId = this.tileIds[id],
             set = this.parent.getTileset(tileId),
+            iso = (this.parent.orientation === 'isometric'),
             texture,
             props,
             position;
@@ -103,11 +104,18 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         texture = set.getTileTexture(tileId);
         props = set.getTileProperties(tileId);
-        position = [
-            (toTileX * this.parent.tileSize.y),// + set.tileoffset.x,
-            (toTileY * this.parent.tileSize.y)// + set.tileoffset.y
-        ];
-        window.console.log(position, set.tileoffset);
+        position = iso ?
+            // Isometric position
+            [
+                (toTileX * this.parent.tileSize.y) - (toTileY * (this.parent.tileSize.x / 2)),// + set.tileoffset.x,
+                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2))// + set.tileoffset.y
+            ]
+            :
+            // Orthoganal position
+            [
+                toTileX * this.parent.tileSize.x,
+                toTileY * this.parent.tileSize.y
+            ];
 
         //get the cached tile from the pool, and set the properties
         if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
@@ -134,7 +142,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 mass: Infinity,
                 width: set.tileSize.x,
                 height: set.tileSize.y,
-                rotation: this.parent.orientation === 'isometric' ? gf.math.degreesToRadians(-45) : 0,
                 collidable: props.isCollidable,
                 collisionType: props.type
             });
