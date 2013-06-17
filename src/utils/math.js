@@ -139,7 +139,7 @@
 
         //if roll is larger than chance, return false
         if(Math.random() * 100 >= chance)
-            return false
+            return false;
 
         //roll passed, return true
         return true;

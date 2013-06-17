@@ -10,6 +10,14 @@
     gf.Layer.call(this, game, pos, group);
 
     /**
+     * The color to display objects in this group
+     *
+     * @property color
+     * @type
+     */
+    this.color = group.color;
+
+    /**
      * The user-defined properties of this group. Usually defined in the TiledEditor
      *
      * @property properties
@@ -29,6 +37,7 @@
     this.position.x = group.x;
     this.position.y = group.y;
     this.alpha = group.opacity;
+    this.visible = group.visible;
 };
 
 gf.inherits(gf.TiledObjectGroup, gf.Layer, {
@@ -48,8 +57,10 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             props.size = [o.width, o.height];
             props.zIndex = this.zIndex;
             props.opacity = this.opacity;
-            props.visible = this.visible;
+            props.visible = o.visible !== undefined ? (o.visible === 1) : true; //recently added, default old versions to true
             props.position = [o.x, o.y];
+            props.rotation = o.rotation;
+            props.gid = o.gid;
 
             //spawn from entity pool
             this.addChild(gf.entityPool.create(this.game, props.name, props));
