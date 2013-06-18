@@ -96,7 +96,7 @@ gf.support = {
      * Whether or not canvas is supported
      *
      * @property canvas
-     * @type bool
+     * @type Boolean
      */
     canvas: !!window.CanvasRenderingContext2D,
 
@@ -104,7 +104,7 @@ gf.support = {
      * Whether or not webgl is supported
      *
      * @property webgl
-     * @type bool
+     * @type Boolean
      */
     webgl: (function () { try { return !!window.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl'); } catch(e) { return false; } })(),
 
@@ -112,7 +112,7 @@ gf.support = {
      * Whether or not web workers are supported
      *
      * @property workers
-     * @type bool
+     * @type Boolean
      */
     workers: !!window.Worker,
 
@@ -120,7 +120,7 @@ gf.support = {
      * Whether or not Blob URLs are supported
      *
      * @property blobs
-     * @type bool
+     * @type Boolean
      */
     blobUrls: !!window.Blob && !!window.URL && !!window.URL.createObjectURL,
 
@@ -128,7 +128,7 @@ gf.support = {
      * Whether or not typed arrays are supported
      *
      * @property typedArrays
-     * @type bool
+     * @type Boolean
      */
     typedArrays: !!window.ArrayBuffer,
 
@@ -136,29 +136,31 @@ gf.support = {
      * Whether or not the filesystem API is supported
      *
      * @property fileapi
-     * @type bool
+     * @type Boolean
      */
     fileapi: !!window.File && !!window.FileReader && !!window.FileList && !!window.Blob,
 
     /**
-     * Whether or not the audio elements are supported, and if so which types
+     * Whether or not tje Web Audio API is supported
      *
-     * @property audio
-     * @type Object
+     * @property webAudio
+     * @type Boolean
      */
-    audio: {
-        play: !!document.createElement('audio').canPlayType,
-        m4a: false,
-        mp3: false,
-        ogg: false,
-        wav: false
-    },
+    webAudio: !!window.AudioContext || !!window.webkitAudioContext,
+
+    /**
+     * Whether html Audio is supported in this browser
+     *
+     * @property htmlAudio
+     * @type Boolean
+     */
+    htmlAudio: !!document.createElement('audio').canPlayType,
 
     /**
      * Whether or not local storage is supported
      *
      * @property localStorage
-     * @type bool
+     * @type Boolean
      */
     localStorage: !!window.localStorage,
 
@@ -166,7 +168,7 @@ gf.support = {
      * Whether or not touch is supported
      *
      * @property touch
-     * @type bool
+     * @type Boolean
      */
     touch: ('createTouch' in document) || ('ontouchstart' in window) || (navigator.isCocoonJS),
 
@@ -174,30 +176,10 @@ gf.support = {
      * Whether or not the gamepad API is supported
      *
      * @property gamepad
-     * @type bool
+     * @type Boolean
      */
     gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') !== -1)
 };
-
-//additional audio support checks
-if(gf.support.audio.play) {
-    var a = document.createElement('audio');
-
-    gf.support.audio.m4a = !!a.canPlayType('audio/mp4; codecs="mp4a.40.2"').replace(/no/, '');
-    gf.support.audio.mp3 = !!a.canPlayType('audio/mpeg').replace(/no/, '');
-    gf.support.audio.ogg = !!a.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, '');
-    gf.support.audio.wav = !!a.canPlayType('audio/wav; codecs="1"').replace(/no/, '');
-
-    //check for specific platforms
-    if(gf.support.ua.search('iphone') > -1 || gf.support.ua.search('ipod') > -1 ||
-        gf.support.ua.search('ipad') > -1 || gf.support.ua.search('android') > -1) {
-
-        //if on mobile device, without a specific HTML5 acceleration framework
-        if(!navigator.isCocoonJS) {
-            gf.support.audio.play = false;
-        }
-    }
-}
 
 /**
  * Compares version numbers, useful for plugins to specify a required gf version
