@@ -64,13 +64,8 @@
 
         xhr.onreadystatechange = function() {
             if(xhr.readyState === 4) {
-                var res = xhr.responseText,
+                var res = xhr.response,
                     err = null;
-
-                if(sets.dataType === 'json') {
-                    try { res = JSON.parse(res); }
-                    catch(e) { err = e; }
-                }
 
                 if(xhr.status !== 200)
                     err = 'Non-200 status code returned: ' + xhr.status;
@@ -83,6 +78,7 @@
             }
         };
 
+        xhr.responseType = sets.dataType;
         xhr.open(sets.method, sets.url, true);
         xhr.send();
 
