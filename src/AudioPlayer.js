@@ -1,11 +1,16 @@
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
+ * The GF Audio API was based on
+ * <a href="https://github.com/goldfire/howler.js">Howler.js</a>
  *
  * @class AudoPlayer
  * @constructor
  * @param game {Game} Game instance for this audio player
  */
 gf.AudioPlayer = function(game) {
+    //normalize Audio Context
+    var _AudioContext = window.AudioContext || window.webkitAudioContext;
+
     /**
      * The game instance this belongs to
      *
@@ -15,26 +20,182 @@ gf.AudioPlayer = function(game) {
     this.game = game;
 
     /**
-     * The pool of audio objects to play sounds with
+     * Whether the player is muted or not
      *
-     * @property playing
-     * @type Object
+     * @property muted
+     * @type Boolean
+     * @default false
      * @private
-     * @readOnly
      */
-    this.playing = {};
+    this._muted = false;
 
     /**
-     * When stopping or starting a sound, this is the time index to reset to
+     * The master volume of the player
      *
-     * @property resetTime
-     * @type number
-     * @default 0
+     * @property _volume
+     * @type Number
+     * @default 1
+     * @private
      */
-    this.resetTime = 0;
+    this._volume = 1;
+
+    /**
+     * The Web Audio API context if we are using it
+     *
+     * @property ctx
+     * @type AudioContext
+     * @readOnly
+     */
+    this.ctx = gf.support.webAudio ? new AudioContext : null;
+
+    /**
+     * If we have some way of playing audio
+     *
+     * @property canPlay
+     * @type Boolean
+     * @readOnly
+     */
+    this.canPlay = gf.support.webAudio || gf.support.htmlAudio;
+
+    /**
+     * The codecs that the browser supports
+     *
+     * @property codecs
+     * @type Object<Boolean>
+     * @readOnly
+     */
+    if(this.canPlay) {
+        this.codecs = {
+            mp3: !!audioTest.canPlayType('audio/mpeg;').replace(/^no$/,''),
+            opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/,''),
+            ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,''),
+            wav: !!audioTest.canPlayType('audio/wav; codecs="1"').replace(/^no$/,''),
+            m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),
+            webm: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')
+        }
+    }
+
+    //if we are using web audio, we need a master gain node
+    if(gf.support.webAudio) {
+        this.masterGain = this.ctx.createGain ? this.ctx.createGainNode() : this.ctx.createGain();
+        this.masterGain.gain.value = 1;
+        this.masterGain.connect(this.ctx.destination);
+    }
+
+    //array of elements to play audio with
+    this._plays = {};
+
+    var self = this;
+    //define volume getter/setter
+    this.__defineGetter__('volume', function() {
+        return self._volume;
+    });
+    this.__defineSetter__('volume', function(v) {
+        v = parseFloat(v, 10);
+
+        if(v !== NaN && v >= 0 && v <= 1) {
+            self._volume = v;
+
+            if(gf.support.webAudio)
+                self.masterGain.gain.value = v;
+
+            //go through each audio element and change their volume
+            for(var key in self._plays) {
+                if(self._plays.hasOwnProperty(key) && self._plays[key]._webAudio === false) {
+                    var play = self._plays[key];
+                    //loop through the audio nodes
+                    for(var i = 0, il = play._nodes.length; ++i) {
+                        play._nodes[i].volume = play._volume * self._volume;
+                    }
+                }
+            }
+        }
+    });
+
+    //define mute geter/setter
+    this.__defineGetter__('muted', function() {
+        return self._muted;
+    });
+    this.__defineSetter__('muted', function(m) {
+        self._muted = m = !!m;
+
+        if(gf.support.webAudio)
+            self.masterGain.gain.value = m ? 0 : self._volume;
+
+        //go through each audio element and mute/unmute them
+        for(var key in self._plays) {
+            if(self._plays.hasOwnProperty(key) && self._plays[key]._webAudio === false) {
+                var play = self._plays[key];
+                //loop through the audio nodes
+                for(var i = 0, il = play._nodes.length; ++i) {
+                    play._nodes[i].muted = m;
+                }
+            }
+        }
+    });
 };
 
 gf.inherits(gf.AudioPlayer, Object, {
+    mute: function() {
+        this.muted = true;
+
+        return this;
+    },
+    unmute: function() {
+        this.muted = false;
+
+        return this;
+    }
+});
+
+function Play(o) {
+    //mixin the Event Target methods
+    gf.EventTarget.call(this);
+
+    this.autoplay = false;
+    this.buffer = false;
+    this.duration = 0;
+    this.format = null;
+    this.loop = false;
+    this.loaded = false;
+    this.sprite = {};
+    this.src = '';
+    this.position = new gf.Point();
+    this.volume = 1;
+    this.urls = [];
+
+    this._canPlay = o.canPlay;
+    this._codecs = o.codecs;
+
+    this._webAudio = gf.support.webAudio && !this.buffer;
+
+    this._nodes = [];
+
+    //mixin user's settings
+    gf.utils.setValues(this, settings);
+
+    if(this._webAudio) {
+        this.setupWebAudioNode();
+    }
+
+    this.load();
+};
+
+gf.inherits(Play, Object, {
+    load: function() {
+        if(!this._canPlay) {
+            this.dispatchEvent({
+                type: 'error',
+                which: 'load',
+                message: 'Playing/Loading audio is not supported in this browser'
+            });
+        }
+
+        //loop through each source url and pick the first that is compatible
+        
+    }
+});
+    ,
     _getOpen: function(id) {
         var chans = this.playing[id];
 
