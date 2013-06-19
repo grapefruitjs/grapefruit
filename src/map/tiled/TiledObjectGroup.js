@@ -52,6 +52,17 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             var o = this.objects[i],
                 props = o.properties || {};
 
+            /*
+             * Future Shape support
+             *
+
+            if(o.polyline) this.spawnPolyline(o);
+            else if(o.polygon) this.spawnPolygon(o);
+            else if(o.ellipse) this.spawnEllipse(o);
+            else this.spawnRectangle(o);
+
+             */
+
             props.name = o.name;
             props.type = o.type;
             props.size = [o.width, o.height];
