@@ -47,9 +47,13 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * Creates all the tile sprites needed to display the layer
      *
      * @method renderTiles
+     * @param startX {Number} The starting x tile position
+     * @param startY {Number} The starting y tile position
+     * @param numX {Number} The number of tiles in the X direction to render
+     * @param numY {Number} The number of tiles in the Y direction to render
      */
     renderTiles: function(startX, startY, numX, numY) {
-        //add a tile buffer around the viewport
+        //add a tile buffer around the render area
         startX -= this._tileBufferSize;
         numX += this._tileBufferSize * 2;
         startY -= this._tileBufferSize;
@@ -80,8 +84,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._rendered.bottom = this._rendered.y + this._rendered.height;
     },
     /**
-     * Moves a tile sprite from one position to another,
-     * creating it if the old position didn't have a sprite
+     * Moves a tile sprite from one position to another, and creates a new tile
+     * if the old position didn't have a sprite
      *
      * @method moveTileSprite
      * @param fromTileX {Number} The x coord of the tile in units of tiles (not pixels) to move from
@@ -113,8 +117,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             :
             // Orthoganal position
             [
-                toTileX * this.parent.tileSize.x,
-                toTileY * this.parent.tileSize.y
+                (toTileX * this.parent.tileSize.x) + set.tileoffset.x,
+                (toTileY * this.parent.tileSize.y) + set.tileoffset.y
             ];
 
         //get the cached tile from the pool, and set the properties

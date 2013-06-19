@@ -199,16 +199,6 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
         //clear the list and let the GC clean up
         this.children = [];
     },
-    forEachEntity: function(fn) {
-        //go through each child and call recurse children for each one
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            if(this.children[i].forEachEntity)
-                this.children[i].forEachEntity(fn);
-        }
-
-        if(fn && this instanceof gf.Entity)
-            fn(this);
-    },
     /**
      * Convenience method for setting the position of the Object.
      *
