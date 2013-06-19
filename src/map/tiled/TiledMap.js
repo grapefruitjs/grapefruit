@@ -6,6 +6,8 @@
  * @class TiledMap
  * @extends Map
  * @constructor
+ * @param game {Game} The game the map is in
+ * @param position {Point|Vector|Array|Number} The starting position of the map
  * @param map {Object} All the settings for the map
  */
 gf.TiledMap = function(game, pos, map) {
@@ -13,6 +15,8 @@ gf.TiledMap = function(game, pos, map) {
 
     this.scale.x = parseFloat(map.properties.scale, 10) || 1;
     this.scale.y = parseFloat(map.properties.scale, 10) || 1;
+
+    //Tiled Editor properties
 
     /**
      * The tile size
@@ -26,6 +30,57 @@ gf.TiledMap = function(game, pos, map) {
     );
 
     /**
+     * The orientation of the map
+     *
+     * @property orientation
+     * @type String
+     */
+    this.orientation = map.orientation;
+
+    /**
+     * The version of the TMX format
+     *
+     * @property version
+     * @type Number
+     */
+    this.version = map.version;
+
+    /**
+     * The background color of the map (since Tiled 0.9.0)
+     *
+     * @property backgroundColor
+     * @type Number
+     */
+    this.backgroundColor = map.backgroundColor;
+
+    /**
+     * The user-defined properties
+     *
+     * @property properties
+     * @type Object
+     * @default {}
+     */
+    this.properties = map.properties || {};
+
+    //Custom/Optional properties
+
+    /**
+     * The tilesets used by this map
+     *
+     * @property tilesets
+     * @type Array
+     */
+    this.tilesets = [];
+
+    /**
+     * The layer for collisions
+     *
+     * @property collisionLayer
+     * @type Array
+     */
+    this.collisionLayer = [];
+
+    /**
      * The scaled tile size
      *
      * @property scaledTileSize
@@ -37,15 +92,6 @@ gf.TiledMap = function(game, pos, map) {
     );
 
     /**
-     * The user-defined properties
-     *
-     * @property properties
-     * @type Object
-     * @default {}
-     */
-    this.properties = map.properties || {};
-
-    /**
      * The real size (size * scaledTileSize)
      *
      * @property realSize
@@ -55,22 +101,6 @@ gf.TiledMap = function(game, pos, map) {
         this.size.x * this.scaledTileSize.x,
         this.size.y * this.scaledTileSize.y
     );
-
-    /**
-     * The orientation of the map, currently only 'orthogonal' is supported
-     *
-     * @property orientation
-     * @type String
-     */
-    this.orientation = map.orientation;
-
-    /**
-     * The tilesets used by this map
-     *
-     * @property tilesets
-     * @type Array
-     */
-    this.tilesets = [];
 
     /**
      * The tileset for the collision layer
@@ -87,25 +117,16 @@ gf.TiledMap = function(game, pos, map) {
             this.collisionTileset = this.tilesets[len-1];
     }
 
-    /**
-     * The layer for collisions
-     *
-     * @property collisionLayer
-     * @type Array
-     */
-    this.collisionLayer = [];
-
-    /**
-     * The version of this map
-     *
-     * @property version
-     * @type String
-     */
-    this.version = map.version;
-
     //create the layers
     var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
         numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
+
+    //special case where viewport is larger than map
+    if(numX > this.size.x)
+        numX = this.size.x;
+
+    if(numY > this.size.y)
+        numY = this.size.y;
 
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr;
@@ -138,7 +159,22 @@ gf.TiledMap = function(game, pos, map) {
                 //auto spawn the player object group
                 if(lyr.name === 'player' && !lyr.properties.manual)
                     lyr.spawn();
+
+                break;
+
+            case 'imagelayer':
+                lyr = new gf.ImageLayer(this.game, 0, {
+                    texture: map.layers[i]
+                });
+                this.addChild(lyr);
+
+                break;
         }
+    }
+
+    //rotate for isometric maps
+    if(this.orientation === 'isometric') {
+        this.position.x += (this.realSize.x / 2) - (this.tileSize.x / 2);
     }
 };
 

@@ -25,6 +25,7 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/debug/debug.js',
 
         '<%= dirs.src %>/utils/utils.js',
+        '<%= dirs.src %>/utils/math.js',
         '<%= dirs.src %>/utils/Clock.js',
         '<%= dirs.src %>/utils/ObjectPool.js',
         '<%= dirs.src %>/utils/Vector.js',
