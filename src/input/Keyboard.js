@@ -10,6 +10,26 @@ gf.input.Keyboard = function(man, game) {
      */
     this.keydown = {};
 
+    /**
+     * The current sequence of keys that have been pressed
+     *
+     * @property sequence
+     * @type Array<Number>
+     * @readOnly
+     */
+    this.sequence = [];
+
+    /**
+     * The amount of time it takes for the sequence to clear out, in ms
+     *
+     * @property sequenceTimeout
+     * @type Number
+     * @default 500
+     */
+    this.sequenceTimeout = 500;
+
+    this._clearSq = null;
+
     document.addEventListener('keydown', this.onKeyDown.bind(this), false);
     document.addEventListener('keyup', this.onKeyUp.bind(this), false);
 };
@@ -24,6 +44,23 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
         return this.modifyKey(e, override || e.keyCode || e.which, false);
     },
     modifyKey: function(e, key, val) {
+        //process the single key
+        var pkey = this.processKey(e, key, val);
+
+        //update the key sequence
+        this.sequence.push(key);
+
+        //process current sequence
+        var pseq = this.processKey(e, this.sequence.toString(), val);
+
+        //set timeout to clear sequence
+        clearTimeout(this._clearSq);
+        this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
+
+        //if either is false, then return false
+        return pkey && pseq;
+    },
+    processKey: function(e, key, val) {
         if(this.binds[key]) {
             //Don't fire events for repeats
             if(this.keydown[key] === val)
@@ -40,5 +77,8 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
         }
 
         return true;
+    },
+    _clearSequence: function() {
+        this.sequence.length = 0;
     }
 });
