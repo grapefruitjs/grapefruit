@@ -81,8 +81,8 @@ gf.AudioManager = function() {
         this.masterGain.connect(this.ctx.destination);
     }
 
-    //array of elements to play audio with
-    this._players = {};
+    //map of elements to play audio with
+    this.sounds = {};
 
     //define volume getter/setter
     this.__defineGetter__('volume', this.getVolume.bind(this));
@@ -113,9 +113,9 @@ gf.inherits(gf.AudioManager, Object, {
                 this.masterGain.gain.value = v;
 
             //go through each audio element and change their volume
-            for(var key in this._players) {
-                if(this._players.hasOwnProperty(key) && this._players[key]._webAudio === false) {
-                    var player = this._players[key];
+            for(var key in this.sounds) {
+                if(this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
+                    var player = this.sounds[key];
                     //loop through the audio nodes
                     for(var i = 0, il = player._nodes.length; ++i) {
                         player._nodes[i].volume = player._volume * this._volume;
@@ -137,9 +137,9 @@ gf.inherits(gf.AudioManager, Object, {
             this.masterGain.gain.value = m ? 0 : this._volume;
 
         //go through each audio element and mute/unmute them
-        for(var key in this._players) {
-            if(this._players.hasOwnProperty(key) && this._players[key]._webAudio === false) {
-                var player = this._players[key];
+        for(var key in this.sounds) {
+            if(this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
+                var player = this.sounds[key];
                 //loop through the audio nodes
                 for(var i = 0, il = player._nodes.length; ++i) {
                     player._nodes[i].muted = m;
@@ -149,7 +149,15 @@ gf.inherits(gf.AudioManager, Object, {
 
         return this;
     },
-    create: function() {
+    create: function(name, settings) {
+        if(typeof name !== 'string') {
+            settings = name;
+            name = null;
+        }
 
+        if(!name)
+            name = Math.round(Date.now() * Math.random()) + '';
+
+        return this.sounds[name] = new gf.AudioPlayer(this, settings);
     }
 });
