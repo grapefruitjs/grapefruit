@@ -23,7 +23,7 @@ gf.GameState = function(game, name, settings) {
      * @type AudioPlayer
      * @readOnly
      */
-    this.audio = new gf.AudioPlayer(game);
+    this.audio = new gf.AudioManager();
 
     /**
      * The input instance for this game
