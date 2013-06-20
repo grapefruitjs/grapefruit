@@ -121,13 +121,6 @@ gf.TiledMap = function(game, pos, map) {
     var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
         numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
 
-    //special case where viewport is larger than map
-    if(numX > this.size.x)
-        numX = this.size.x;
-
-    if(numY > this.size.y)
-        numY = this.size.y;
-
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr;
 
@@ -204,7 +197,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
-            if(o instanceof gf.TiledLayer && o.visible) {
+            if(o instanceof gf.TiledLayer) {
                 o.renderTiles(
                     Math.floor(this.position.x / this.scaledTileSize.x),
                     Math.floor(this.position.y / this.scaledTileSize.y),
