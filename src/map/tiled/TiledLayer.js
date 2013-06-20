@@ -63,17 +63,17 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         startY -= this._tileBufferSize;
         numY += this._tileBufferSize * 2;
 
+        //ensure we don't go below 0
+        startX = startX < 0 ? 0 : startX;
+        startY = startY < 0 ? 0 : startY;
+
+        //ensure we don't go outside the map size
+        numX = (startX + numX <= this.parent.size.x) ? numX : (this.parent.size.x - startX);
+        numY = (startY + numY <= this.parent.size.y) ? numY : (this.parent.size.y - startY);
+
         //render new sprites
         for(var x = startX; x < numX; ++x) {
-            //skip things outside the map size
-            if(x < 0 || x >= this.parent.size.x)
-                continue;
-
             for(var y = startY; y < numY; ++y) {
-                //skip things outside the map size
-                if(y < 0 || y >= this.parent.size.y)
-                    continue;
-
                 this.moveTileSprite(x, y, x, y);
             }
         }
@@ -138,14 +138,14 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         position = iso ?
             // Isometric position
             [
-                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + set.tileoffset.x,
-                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + set.tileoffset.y
+                (toTileX * (this.parent.scaledTileSize.x / 2)) - (toTileY * (this.parent.scaledTileSize.x / 2)) + set.tileoffset.x,
+                (toTileY * (this.parent.scaledTileSize.y / 2)) + (toTileX * (this.parent.scaledTileSize.y / 2)) + set.tileoffset.y
             ]
             :
             // Orthoganal position
             [
-                (toTileX * this.parent.tileSize.x) + set.tileoffset.x,
-                (toTileY * this.parent.tileSize.y) + set.tileoffset.y
+                (toTileX * this.parent.scaledTileSize.x) + set.tileoffset.x,
+                (toTileY * this.parent.scaledTileSize.y) + set.tileoffset.y
             ];
 
         //grab a new tile from the pool if there isn't one to move in the map
