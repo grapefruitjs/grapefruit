@@ -62,7 +62,8 @@ module.exports = function(grunt) {
         '<%= dirs.vendor %>/es5-shim.min.js',
         '<%= dirs.vendor %>/es5-sham.min.js',
         '<%= dirs.vendor %>/pixi.dev.js',
-        '<%= dirs.vendor %>/cp.js'
+        '<%= dirs.vendor %>/cp.js',
+        '<%= dirs.vendor %>/semver.js'
     ],
     banner = [
         '/**',
