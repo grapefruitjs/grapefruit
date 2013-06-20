@@ -51,31 +51,27 @@ gf.plugin = {
         }
     },
     /**
-     * Registers a plugin into the gf.plugin namespace.
+     * Registers a plugin into the gf namespace.
      *
      * @method register
      * @param plugin {Object} The object to place in the namespace
      * @param name {String} The name of the plugin to use as the key
      * @example
      *      //For example, to register a new plugin:
-     *      gf.plugin.register(MyPluginObject, 'myPluginName');
-     *      var plg = new gf.plugin.myPluginName();
-     *      //OR
-     *      gf.plugin.myPluginName.someFunction();
+     *      gf.plugin.register(MyPluginObject, 'MyPluginName');
+     *      var plg = new gf.MyPluginName();
      */
     register: function(plugin, name) {
         //ensure we don't overrite a name
-        if(gf.plugin[name]) {
-            throw 'plugin ' + name + ' already registered!';
+        if(gf[name]) {
+            throw 'Grapefruit: Unable to register plugin: "' + name + '" already exists in the gf namespace, please choose something else!';
         }
 
-        if(plugin.prototype.gfVersion === undefined) {
-            throw 'GradeFruitJS: Plugin gfVersion not defined for ' + name;
-        } else if(gf.checkVersion(plugin.prototype.gfVersion) > 0) {
-            throw 'GradeFruitJS: Plugin gfVersion mismatch, expected: ' + plugin.prototype.gfVersion + ', got: ' + gf.version;
+        if(plugin.gfVersion && !semver.satisfies(gf.version, plugin.gfVersion)) {
+            throw 'GrapeFruit: Plugin gfVersion mismatch, need grapefruit version ' + plugin.gfVersion + ', but using version ' + gf.version;
         }
 
         //store the plugin in the namespace
-        gf.plugin[name] = plugin;
+        gf[name] = plugin;
     }
 };

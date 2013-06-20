@@ -182,40 +182,6 @@ gf.support = {
 };
 
 /**
- * Compares version numbers, useful for plugins to specify a required gf version
- *
- * @method checkVersion
- * @param first {String} The first version
- * @param second {String} The second version
- * @return {Number}
- *      returns a number representing how far off a version is.
- *
- *      will return a negative value if the first version is behind the second,
- *      the negative number will show how many versions behind it is on largest version
- *      point.
- *      That is: '1.0' compared with '1.1' will yield -1
- *      and    : '1.2.3' compared with '1.2.1' will yield -2
- *
- *      0 is returned if the versions match, and a positive number is returned if
- *      the first version is larger than the second.
- */
-gf.checkVersion = function(first, second) {
-    second = second || gf.version;
-
-    var a = first.split('.'),
-        b = second.split('.'),
-        len = Math.min(a.length, b.length),
-        result = 0;
-
-    for(var i = 0; i < len; ++i) {
-        result = +a[i] - +b[i];
-        if(result) break;
-    }
-
-    return result ? result : a.length - b.length;
-};
-
-/**
  * Inherits the prototype of a parent object.
  * from: https://github.com/isaacs/inherits/blob/master/inherits.js
  *
