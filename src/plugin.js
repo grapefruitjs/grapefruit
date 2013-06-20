@@ -6,7 +6,6 @@
  * @class plugin
  */
 gf.plugin = {
-    Base: function() {},
     /**
      * Patches a core function with a new one. The function you override with has a special property
      * called `this._super` which is a reference to the function you are overriding.
