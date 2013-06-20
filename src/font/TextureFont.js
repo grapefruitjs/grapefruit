@@ -96,9 +96,11 @@ gf.inherits(gf.TextureFont, gf.Font, {
         this.text = txt;
 
         //free all sprites
-        this.sprites.freeAll();
-        for(var c = 0, cl = this.children.length; c < cl; ++c)
-            this.children[c].visible = false;
+        for(var c = 0, cl = this.children.length; c < cl; ++c) {
+            var child = this.children[c];
+            child.visible = false;
+            this.sprites.free(child);
+        }
 
         //add text sprites
         var strs = this.text.toString().split('\n'),
