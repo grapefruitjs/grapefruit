@@ -1,7 +1,6 @@
 gf.ObjectPool = function(type, parent) {
     this.type = type;
     this.pool = [];
-    this.alloced = [];
     this.parent = parent;
 };
 
@@ -15,19 +14,10 @@ gf.inherits(gf.ObjectPool, Object, {
                 this.parent.addChild(o);
         }
 
-        this.alloced.push(o);
-
         return o;
     },
     free: function(o) {
         this.pool.push(o);
-    },
-    freeAll: function() {
-        for(var i = 0, il = this.alloced.length; i < il; ++i) {
-            this.free(this.alloced[i]);
-        }
-
-        this.alloced.length = 0;
     },
     //have to do this hack around to be able to use
     //apply and new together
