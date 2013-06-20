@@ -37,9 +37,10 @@ gf.TiledLayer = function(game, pos, layer) {
     this.alpha = layer.opacity;
     this.visible = layer.visible;
 
+    this._tilePool = new gf.ObjectPool(gf.Tile, this);
     this._tileBufferSize = 2;
     this._panDelta = new gf.Vector(0, 0);
-    this._rendered = new PIXI.Rectangle(0, 0, 0, 0);
+    this._rendered = new gf.Rectangle(0, 0, 0, 0);
 };
 
 gf.inherits(gf.TiledLayer, gf.Layer, {
@@ -53,6 +54,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @param numY {Number} The number of tiles in the Y direction to render
      */
     renderTiles: function(startX, startY, numX, numY) {
+        //clear all the visual tiles
+        this.clearTiles();
+
         //add a tile buffer around the render area
         startX -= this._tileBufferSize;
         numX += this._tileBufferSize * 2;
@@ -82,6 +86,29 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._rendered.right = this._rendered.x + this._rendered.width;
         this._rendered.top = this._rendered.y;
         this._rendered.bottom = this._rendered.y + this._rendered.height;
+    },
+    /**
+     * Clears all the tiles currently used to render the layer
+     *
+     * @method clearTiles
+     */
+    clearTiles: function() {
+        //hide/free each tile and remove from the memory map
+        for(var x in this.tiles) {
+            for(var y in this.tiles[x]) {
+                var tile = this.tiles[x][y];
+
+                //hide/free the sprite
+                tile.visible = false;
+                this.tilePool.free(tile);
+
+                //remove the Y key
+                delete this.tiles[x][y];
+            }
+
+            //keep the X key so we dont have to recreate these objects
+            //delete this.tiles[x];
+        }
     },
     /**
      * Moves a tile sprite from one position to another, and creates a new tile
@@ -121,27 +148,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 (toTileY * this.parent.tileSize.y) + set.tileoffset.y
             ];
 
-        //get the cached tile from the pool, and set the properties
-        if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
-            tile = this.tiles[fromTileX][fromTileY];
-
-            tile.collisionType = props.type;
-            tile.setTexture(texture);
-            tile.setCollidable(props.isCollidable);
-            tile.setPosition(position);
-
-            //move the sprite in the pool
-            if(!this.tiles[toTileX]) this.tiles[toTileX] = {};
-
-            this.tiles[toTileX][toTileY] = tile;
-            this.tiles[fromTileX][fromTileY] = null;
-        }
-        //if there is no tile there yet, create one
-        else {
-            if(!this.tiles[toTileX])
-                this.tiles[toTileX] = {};
-
-            tile = this.tiles[toTileX][toTileY] = new gf.Tile(this.game, position, {
+        //grab a new tile from the pool if there isn't one to move in the map
+        if(!this.tiles[fromTileX] || !this.tiles[fromTileX][fromTileY]) {
+            tile = this._tilePool.create(this.game, position, {
                 texture: texture,
                 mass: Infinity,
                 width: set.tileSize.x,
@@ -149,9 +158,28 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 collidable: props.isCollidable,
                 collisionType: props.type
             });
-
-            this.addChild(tile);
         }
+        //if there is one to move in the map, lets just move it
+        else {
+            tile = this.tiles[fromTileX][fromTileY];
+            this.tiles[fromTileX][fromTileY] = null;
+        }
+
+        //ensure properties are set properly
+        // even if we pull from the pool those args are only
+        // passed when creating a *new* Tile, not recycling an old one
+        // so we need to manually specify them here as well
+        tile.setTexture(texture);
+        tile.setPosition(position);
+        tile.setCollidable(props.isCollidable);
+        tile.collisionType = props.type;
+        tile.visible = true;
+
+        //update sprite position in the map
+        if(!this.tiles[toTileX])
+            this.tiles[toTileX] = {};
+
+        this.tiles[toTileX][toTileY] = tile;
 
         return tile;
     },
