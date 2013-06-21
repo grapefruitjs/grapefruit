@@ -131,8 +131,9 @@ gf.inherits(gf.AssetLoader, Object, {
 
         this.emit({
             type: 'progress',
-            assetType: type,
-            asset: e.data
+            assetType: e.assetType,
+            url: e.url,
+            data: e.data
         });
 
         if(this.remaining === 0) {
@@ -145,8 +146,7 @@ gf.inherits(gf.AssetLoader, Object, {
         this.emit({
             type: 'error',
             assetType: e.assetType,
-            url: e.url,
-            data: e.data
+            message: e.message
         });
 
         if(this.remaining === 0) {

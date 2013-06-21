@@ -23,6 +23,7 @@ gf.inherits(gf.Loader, Object, {
     error: function(msg) {
         this.emit({
             type: 'error',
+            assetType: this.type,
             message: msg
         });
     }

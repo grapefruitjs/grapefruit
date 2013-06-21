@@ -15,11 +15,11 @@ gf.inherits(gf.JsonLoader, Object, {
         gf.Loader.protype.load.call(this);
 
         var self = this,
-            baseUrl = url.replace(/[^\/]*$/, '');
+            baseUrl = this.url.replace(/[^\/]*$/, '');
 
         gf.utils.ajax({
             method: 'GET',
-            url: url,
+            url: this.url,
             dataType: 'json',
             load: function(data) {
                 var loader;
