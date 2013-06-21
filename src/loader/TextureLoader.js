@@ -15,7 +15,7 @@ gf.inherits(gf.TextureLoader, Object, {
         gf.Loader.protype.load.call(this);
 
         var self = this,
-            texture = gf.Texture.fromImage(url);
+            texture = gf.Texture.fromImage(this.url);
 
         if(!texture.baseTexture.hasLoaded) {
             texture.baseTexture.on('loaded', function() {
