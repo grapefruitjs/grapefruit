@@ -19,16 +19,15 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/Camera.js',
         '<%= dirs.src %>/Sprite.js',
         '<%= dirs.src %>/Entity.js',
-        '<%= dirs.src %>/entityPool.js',
         '<%= dirs.src %>/GameState.js',
-
-        '<%= dirs.src %>/debug/debug.js',
 
         '<%= dirs.src %>/utils/utils.js',
         '<%= dirs.src %>/utils/math.js',
         '<%= dirs.src %>/utils/Clock.js',
-        '<%= dirs.src %>/utils/ObjectPool.js',
         '<%= dirs.src %>/utils/Vector.js',
+
+        '<%= dirs.src %>/pool/ObjectPool.js',
+        '<%= dirs.src %>/pool/EntityPool.js',
 
         '<%= dirs.src %>/input/InputManager.js',
         '<%= dirs.src %>/input/Input.js',

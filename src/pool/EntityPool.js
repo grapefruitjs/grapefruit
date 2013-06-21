@@ -94,7 +94,7 @@ gf.inherits(gf.EntityPool, Object, {
         return o;
     },
     //currently doesn't do any recycling unfortunately
-    free: function(o) {
+    free: function() {
         return;
     }
 });
