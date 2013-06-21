@@ -150,14 +150,54 @@ gf.inherits(gf.AudioManager, Object, {
         return this;
     },
     create: function(name, settings) {
+        //if we can't play audio return false
+        if(!this.canPlay) {
+            return false;
+        }
+
+        //name is "optional"
         if(typeof name !== 'string') {
             settings = name;
             name = null;
         }
 
+        //make up an ID if none was passed
         if(!name)
             name = Math.round(Date.now() * Math.random()) + '';
 
-        return this.sounds[name] = new gf.AudioPlayer(this, settings);
+        var src;
+
+        //loop through each source url and pick the first that is compatible
+        for(var i = 0, il = settings.urls.length; i < il; ++i) {
+            var url = settings.urls[i].toLowerCase(),
+                ext;
+
+            //if they pass a format override, use that
+            if(settings.format) {
+                ext = settings.format;
+            }
+            //otherwise extract the format from the url
+            else {
+                ext = url.match(/.+\.([^?]+)(\?|$)/);
+                ext = (ext && ext.length >= 2) ? ext[1] : url.match(/data\:audio\/([^?]+);/)[1];
+            }
+
+            //if we can play this url, then set the source of the player
+            if(this.codecs[ext]) {
+                src = url;
+                break;
+            }
+        }
+
+        //check if we found a usable url, if not return false
+        if(!src) {
+            return false;
+        }
+
+        //check if we already created a player for this audio
+        if(gf.assetCache[src])
+            return gf.assetCache[src];
+
+        return this.sounds[name] = gf.assetCache[src] = new gf.AudioPlayer(this, settings);
     }
 });
