@@ -1,8 +1,6 @@
 /**
  * A basic Camera object that provides some effects. It also will contain the HUD and GUI
  * to ensure they are using "screen-coords".
- * This camera instance is based on
- * <a href="https://github.com/photonstorm/kiwi-lite/blob/master/Kiwi%20Lite/Camera.ts">Kiwi-Lite's Camera</a>.
  *
  * TODO: Currently fade/flash don't show the colors. How should I actually show them, a PIXI.Sprite?
  *
