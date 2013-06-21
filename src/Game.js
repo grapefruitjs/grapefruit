@@ -10,6 +10,9 @@ gf.Game = function(contId, settings) {
     var w = settings.width || gf.utils.getStyle(this.container, 'width'),
         h = settings.height || gf.utils.getStyle(this.container, 'height');
 
+    //mixin the Event Target methods
+    gf.EventTarget.call(this);
+
     /**
      * The method used to render values to the screen (either webgl, or canvas)
      *
@@ -314,19 +317,15 @@ gf.inherits(gf.Game, Object, {
      * @private
      */
     _tick: function() {
+        this.emit({ type: 'beforetick' });
         //start render loop
         window.requestAnimFrame(this._tick.bind(this));
 
-        //get clock delta
-        var dt = this.clock.getDelta();
-
-        //update debug info
-        gf.debug.update(dt);
-
         //update this game state
-        this.activeState.update(dt);
+        this.activeState.update(this.clock.getDelta());
 
         //render scene
         this.renderer.render(this.stage);
+        this.emit({ type: 'aftertick' });
     }
 });
