@@ -113,6 +113,15 @@ gf.Game = function(contId, settings) {
     this.loader = new gf.AssetLoader();
 
     /**
+     * The entity pool to use to create registered entities
+     *
+     * @property entitypool
+     * @type EntityPool
+     * @readOnly
+     */
+    this.entitypool = new gf.EntityPool(this);
+
+    /**
      * The GameStates added to the game
      *
      * @property states
