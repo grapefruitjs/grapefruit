@@ -17,10 +17,9 @@ gf.AudioPlayer = function(manager, settings) {
     this.loop = false;
     this.pos3d = [0, 0, -0.5];
     this.sprite = {};
-    this.urls = [];
+    this.src = '';
     //volume is getter/setter
 
-    this._src = '';
     this._volume = 1;
     this._duration = 0;
     this._loaded = false;
@@ -52,45 +51,6 @@ gf.inherits(Player, Object, {
      * @return {AudioPlayer}
      */
     load: function() {
-        //if we can't play audio, dispatch an error
-        if(!this._canPlay) {
-            this.emit({
-                type: 'error',
-                message: 'Playing/Loading audio is not supported in this browser'
-            });
-        }
-
-        //loop through each source url and pick the first that is compatible
-        for(var i = 0, il = this.urls.length; i < il; ++i) {
-            var url = this.urls[i].toLowerCase(),
-                ext;
-
-            //if they pass a format override, use that
-            if(this.format) {
-                ext = this.format;
-            }
-            //otherwise extract the format from the url
-            else {
-                ext = url.match(/.+\.([^?]+)(\?|$)/);
-                ext = (ext && ext.length >= 2) ? ext[1] : url.match(/data\:audio\/([^?]+);/)[1];
-            }
-
-            //if we can play this url, then set the source of the player
-            if(this._codecs[ext]) {
-                this._src = url;
-                break;
-            }
-        }
-
-        //check if we found a usable url
-        if(!this._src) {
-            this.emit({
-                type: 'error',
-                message: 'Unable to find a supported audio format in the URLs given.'
-            });
-            return;
-        }
-
         //if using web audio, load up the buffer
         if(this._webAudio) {
             this.loadBuffer();
@@ -102,13 +62,10 @@ gf.inherits(Player, Object, {
             this._nodes.push(node);
 
             //setup the audio node
-            node.src = this._src;
+            node.src = this.src;
             node._pos = 0;
             node.preload = 'auto';
             node.volume = this._manager.muted ? 0 : this._volume * this._manager.volume;
-
-            //add this player to the gf asset cache
-            gf.assetCache[this._src] = this;
 
             //setup the event listener to start playing the sound when it has buffered
             var self = this, evt = function() {
@@ -123,7 +80,7 @@ gf.inherits(Player, Object, {
                     this.emit({
                         type: 'load',
                         message: 'Audio file loaded.',
-                        data: this._src
+                        data: this.src
                     });
                 }
 
@@ -812,7 +769,7 @@ if(gf.support.webAudio) {
             this.emit({
                 type: 'load',
                 message: 'Audio file loaded.',
-                data: this._src
+                data: this.src
             });
         }
 
@@ -833,7 +790,7 @@ if(gf.support.webAudio) {
 
         //setup the buffer source for playback
         node.bufferSource = this._manager.ctx.createBufferSource();
-        node.bufferSource.buffer = gf.assetCache[this._src];
+        node.bufferSource.buffer = gf.assetCache[this.src];
         node.bufferSource.connect(node.panner);
         node.bufferSource.loop = loop[0];
 

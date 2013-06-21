@@ -110,7 +110,7 @@ gf.Game = function(contId, settings) {
      * @type AssetLoader
      * @readOnly
      */
-    this.loader = new gf.AssetLoader();
+    this.loader = new gf.AssetLoader(this);
 
     /**
      * The entity pool to use to create registered entities
