@@ -13,7 +13,6 @@ module.exports = function(grunt) {
     var srcFiles = [
         '<%= dirs.src %>/core.js',
         '<%= dirs.src %>/Game.js',
-        '<%= dirs.src %>/AssetLoader.js',
         '<%= dirs.src %>/AudioPlayer.js',
         '<%= dirs.src %>/DisplayObject.js',
         '<%= dirs.src %>/Camera.js',
@@ -25,6 +24,14 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/utils/math.js',
         '<%= dirs.src %>/utils/Clock.js',
         '<%= dirs.src %>/utils/Vector.js',
+
+        '<%= dirs.src %>/loader/Loader.js',
+        '<%= dirs.src %>/loader/AssetLoader.js',
+        '<%= dirs.src %>/loader/AudioLoader.js',
+        '<%= dirs.src %>/loader/JsonLoader.js',
+        '<%= dirs.src %>/loader/SpriteSheetLoader.js',
+        '<%= dirs.src %>/loader/TextureLoader.js',
+        '<%= dirs.src %>/loader/WorldLoader.js',
 
         '<%= dirs.src %>/pool/ObjectPool.js',
         '<%= dirs.src %>/pool/EntityPool.js',
