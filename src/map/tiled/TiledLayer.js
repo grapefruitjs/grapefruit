@@ -100,7 +100,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
                 //hide/free the sprite
                 tile.visible = false;
-                this.tilePool.free(tile);
+                this._tilePool.free(tile);
 
                 //remove the Y key
                 delete this.tiles[x][y];
@@ -138,14 +138,14 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         position = iso ?
             // Isometric position
             [
-                (toTileX * (this.parent.scaledTileSize.x / 2)) - (toTileY * (this.parent.scaledTileSize.x / 2)) + set.tileoffset.x,
-                (toTileY * (this.parent.scaledTileSize.y / 2)) + (toTileX * (this.parent.scaledTileSize.y / 2)) + set.tileoffset.y
+                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + set.tileoffset.x,
+                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + set.tileoffset.y
             ]
             :
             // Orthoganal position
             [
-                (toTileX * this.parent.scaledTileSize.x) + set.tileoffset.x,
-                (toTileY * this.parent.scaledTileSize.y) + set.tileoffset.y
+                (toTileX * this.parent.tileSize.x) + set.tileoffset.x,
+                (toTileY * this.parent.tileSize.y) + set.tileoffset.y
             ];
 
         //grab a new tile from the pool if there isn't one to move in the map

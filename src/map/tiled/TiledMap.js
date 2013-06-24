@@ -73,14 +73,6 @@ gf.TiledMap = function(game, pos, map) {
     this.tilesets = [];
 
     /**
-     * The layer for collisions
-     *
-     * @property collisionLayer
-     * @type Array
-     */
-    this.collisionLayer = [];
-
-    /**
      * The scaled tile size
      *
      * @property scaledTileSize
@@ -102,19 +94,8 @@ gf.TiledMap = function(game, pos, map) {
         this.size.y * this.scaledTileSize.y
     );
 
-    /**
-     * The tileset for the collision layer
-     *
-     * @property collisionTileset
-     * @type TiledTileset
-     */
-    this.collisionTileset = null;
-
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
-        var len = this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
-
-        if(this.tilesets[len-1].name.toLowerCase().indexOf('collider') === 0)
-            this.collisionTileset = this.tilesets[len-1];
+        this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
     }
 
     //create the layers
@@ -131,18 +112,11 @@ gf.TiledMap = function(game, pos, map) {
 
                 //lyr.scale = this.scale;
                 lyr.renderTiles(
-                    Math.floor(this.position.x / this.tileSize.x),
-                    Math.floor(this.position.y / this.tileSize.y),
+                    Math.floor(this.position.x / this.scaledTileSize.x),
+                    Math.floor(this.position.y / this.scaledTileSize.y),
                     numX,
                     numY
                 );
-
-                if(lyr.name.toLowerCase().indexOf('collision') === 0) {
-                    this.collisionLayer = lyr;
-
-                    if(!gf.debug.showMapColliders)
-                        lyr.visible = false;
-                }
                 break;
 
             case 'objectgroup':
@@ -150,8 +124,8 @@ gf.TiledMap = function(game, pos, map) {
                 this.addChild(lyr);
 
                 //auto spawn the player object group
-                if(lyr.name === 'player' && !lyr.properties.manual)
-                    lyr.spawn();
+                //if(lyr.name === 'player' && !lyr.properties.manual)
+                    //lyr.spawn();
 
                 break;
 
@@ -166,8 +140,10 @@ gf.TiledMap = function(game, pos, map) {
     }
 
     //rotate for isometric maps
+    this.offset = new gf.Point();
     if(this.orientation === 'isometric') {
-        this.position.x += (this.realSize.x / 2) - (this.tileSize.x / 2);
+        this.offset.x = (this.realSize.x / 2) - (this.tileSize.x / 2);
+        this.position.x += this.offset.x;
     }
 };
 
@@ -199,8 +175,8 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
             if(o instanceof gf.TiledLayer) {
                 o.renderTiles(
-                    Math.floor(this.position.x / this.scaledTileSize.x),
-                    Math.floor(this.position.y / this.scaledTileSize.y),
+                    Math.floor((this.position.x - this.offset.x) / this.scaledTileSize.x),
+                    Math.floor((this.position.y - this.offset.y) / this.scaledTileSize.y),
                     numX,
                     numY
                 );

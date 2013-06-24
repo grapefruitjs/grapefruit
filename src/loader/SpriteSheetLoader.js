@@ -7,7 +7,8 @@ gf.SpriteSheetLoader = function(al, name, baseUrl, data) {
 
 gf.inherits(gf.SpriteSheetLoader, gf.Loader, {
     load: function() {
-        gf.Loader.protype.load.call(this);
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
 
         var self = this,
             data = this.data,

@@ -8,15 +8,7 @@
  */
 gf.AudioManager = function() {
     //normalize Audio Context
-    var _AudioContext = window.AudioContext || window.webkitAudioContext;
-
-    /**
-     * The game instance this belongs to
-     *
-     * @property game
-     * @type Game
-     */
-    this.game = game;
+    var GfAudioContext = window.AudioContext || window.webkitAudioContext;
 
     /**
      * Whether the player is muted or not
@@ -45,7 +37,7 @@ gf.AudioManager = function() {
      * @type AudioContext
      * @readOnly
      */
-    this.ctx = gf.support.webAudio ? new _AudioContext() : null;
+    this.ctx = gf.support.webAudio ? new GfAudioContext() : null;
 
     /**
      * If we have some way of playing audio
@@ -64,6 +56,8 @@ gf.AudioManager = function() {
      * @readOnly
      */
     if(this.canPlay) {
+        var audioTest = new Audio();
+
         this.codecs = {
             mp3: !!audioTest.canPlayType('audio/mpeg;').replace(/^no$/,''),
             opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/,''),
@@ -71,7 +65,7 @@ gf.AudioManager = function() {
             wav: !!audioTest.canPlayType('audio/wav; codecs="1"').replace(/^no$/,''),
             m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),
             webm: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')
-        }
+        };
     }
 
     //if we are using web audio, we need a master gain node
@@ -90,23 +84,13 @@ gf.AudioManager = function() {
 };
 
 gf.inherits(gf.AudioManager, Object, {
-    mute: function() {
-        this.muted = true;
-
-        return this;
-    },
-    unmute: function() {
-        this.muted = false;
-
-        return this;
-    },
     getVolume: function() {
         return this._volume;
     },
     setVolume: function(v) {
         v = parseFloat(v, 10);
 
-        if(v !== NaN && v >= 0 && v <= 1) {
+        if(!isNaN(v) && v >= 0 && v <= 1) {
             this._volume = v;
 
             if(gf.support.webAudio)
@@ -117,7 +101,7 @@ gf.inherits(gf.AudioManager, Object, {
                 if(this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
                     var player = this.sounds[key];
                     //loop through the audio nodes
-                    for(var i = 0, il = player._nodes.length; ++i) {
+                    for(var i = 0, il = player._nodes.length; i < il; ++i) {
                         player._nodes[i].volume = player._volume * this._volume;
                     }
                 }
@@ -126,7 +110,7 @@ gf.inherits(gf.AudioManager, Object, {
     },
     mute: function() {
         return this.setMuted(true);
-    }
+    },
     unmute: function() {
         return this.setMuted(false);
     },
@@ -141,7 +125,7 @@ gf.inherits(gf.AudioManager, Object, {
             if(this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
                 var player = this.sounds[key];
                 //loop through the audio nodes
-                for(var i = 0, il = player._nodes.length; ++i) {
+                for(var i = 0, il = player._nodes.length; i < il; ++i) {
                     player._nodes[i].muted = m;
                 }
             }

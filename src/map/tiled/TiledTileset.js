@@ -11,8 +11,7 @@
 //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
 gf.TiledTileset = function(settings) {
     if(!gf.assetCache[settings.name + '_texture']) {
-        var loader = new gf.AssetLoader();
-        loader.loadTexture(settings.name + '_texture', settings.image);
+        throw 'You must preload the tileset images! Try loading the world file with the AssetLoader';
     }
 
     //initialize the base Texture class
@@ -143,15 +142,14 @@ gf.TiledTileset = function(settings) {
         var y = ~~(t / this.numTiles.x),
             x = (t - (y * this.numTiles.x));
 
+        //get location in pixels
+        x = (x * this.tileSize.x) + (x * this.spacing) + this.margin;
+        y = (y * this.tileSize.y) + (y * this.spacing) + this.margin;
+
         this.textures.push(
             new gf.Texture(
                 this.baseTexture,
-                new PIXI.Rectangle(
-                    (x * this.tileSize.x),
-                    (y * this.tileSize.y),
-                    this.tileSize.x,
-                    this.tileSize.y
-                )
+                new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)
             )
         );
     }

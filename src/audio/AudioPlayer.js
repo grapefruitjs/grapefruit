@@ -44,7 +44,7 @@ gf.AudioPlayer = function(manager, settings) {
     this.load();
 };
 
-gf.inherits(Player, Object, {
+gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Load the audio file for this player
      *
@@ -91,7 +91,7 @@ gf.inherits(Player, Object, {
 
                 //clear the event listener
                 node.removeEventListener('canplaythrough', evt, false);
-            }
+            };
             node.addEventListener('canplaythrough', evt, false);
             node.load();
         }
@@ -165,7 +165,7 @@ gf.inherits(Player, Object, {
                     self.emit({
                         type: 'end',
                         message: 'Audio has finished playing',
-                        data: id
+                        data: o.id
                     });
                 }, duration * 1000);
 
@@ -361,7 +361,7 @@ gf.inherits(Player, Object, {
         //if we haven't loaded this sound yet, wait until we play it to mute it
         if(!this._loaded) {
             this.on('play', function() {
-                self.mute(id);
+                self.setMuted(muted, id);
             });
 
             return this;
@@ -425,7 +425,7 @@ gf.inherits(Player, Object, {
         //if we haven't loaded this sound yet, wait until it is to seek it
         if(!this._loaded) {
             this.on('load', function() {
-                self.seek(pos);
+                self.getPosition(id);
             });
 
             return this;
@@ -581,7 +581,7 @@ gf.inherits(Player, Object, {
         var node = this._nodes[0]; //default return value
 
         //find the node with this ID
-        for(var i = 0, il = this._nodes.length; ++i) {
+        for(var i = 0, il = this._nodes.length; i < il; ++i) {
             if(this._nodes[i].id === id) {
                 node = this._nodes[i];
                 break;
@@ -599,7 +599,7 @@ gf.inherits(Player, Object, {
         var node;
 
         //find the first playing node
-        for(var i = 0, il = this._nodes.length; ++i) {
+        for(var i = 0, il = this._nodes.length; i < il; ++i) {
             if(!this._nodes[i].paused) {
                 node = this._nodes[i];
                 break;
@@ -621,7 +621,7 @@ gf.inherits(Player, Object, {
         var node;
 
         //find first inactive node to recycle
-        for(var i = 0, il = this._nodes.length; ++i) {
+        for(var i = 0, il = this._nodes.length; i < il; ++i) {
             if(this._nodes[i].paused && this._nodes[i].readyState === 4) {
                 cb(node = this._nodes[i]);
                 break;
@@ -717,10 +717,10 @@ if(gf.support.webAudio) {
      *
      * @param url {String} The path to the sound file.
      */
-    AudioPlayer.prototype.loadBuffer = function(url) {
+    gf.AudioPlayer.prototype.loadBuffer = function(url) {
         //load from cache
         if(url in gf.assetCache) {
-            this._duration = cache[url].duration;
+            this._duration = gf.assetCache[url].duration;
             this.loadSound();
         } else {
             //load the buffer from the URL
@@ -739,11 +739,11 @@ if(gf.support.webAudio) {
                         }
                     });
                 },
-                error: function(err) {
+                error: function() {
                     //if there was an error, switch to HTML Audio
                     if(self._webAudio) {
                         self._buffer = true;
-                        self._webAudio = false
+                        self._webAudio = false;
                         self._nodes = [];
                         self.load();
                     }
@@ -757,11 +757,11 @@ if(gf.support.webAudio) {
      *
      * @param buffer {Object} The decoded buffer sound source.
      */
-    AudioPlayer.prototype.loadSound = function(buffer) {
+    gf.AudioPlayer.prototype.loadSound = function(buffer) {
         this._duration = buffer ? buffer.duration : this._duration;
 
         //setup a default sprite
-        this.sprite._default = [0, node.duration * 1000];
+        this.sprite._default = [0, this._duration * 1000];
 
         //fire the load event
         if(!this._loaded) {
@@ -785,7 +785,7 @@ if(gf.support.webAudio) {
      * @param  {Array}  loop  Loop boolean, pos, and duration.
      * @param  {String} id    (optional) The play instance ID.
      */
-    AudioPlayer.prototype.refreshBuffer = function(loop, id) {
+    gf.AudioPlayer.prototype.refreshBuffer = function(loop, id) {
         var node = this._nodeById(id);
 
         //setup the buffer source for playback

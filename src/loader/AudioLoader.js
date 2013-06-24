@@ -13,7 +13,8 @@ gf.AudioLoader = function(al, name, urls) {
 
 gf.inherits(gf.AudioLoader, gf.Loader, {
     load: function() {
-        gf.Loader.protype.load.call(this);
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
 
         var player = this.parent.game.audio.create(name, { urls: this.urls });
 
