@@ -182,6 +182,7 @@ gf.inherits(gf.AudioManager, Object, {
         if(gf.assetCache[src])
             return gf.assetCache[src];
 
+        settings.src = src;
         return this.sounds[name] = gf.assetCache[src] = new gf.AudioPlayer(this, settings);
     }
 });

@@ -38,7 +38,7 @@ gf.AudioPlayer = function(manager, settings) {
     this.__defineSetter__('volume', this.setVolume.bind(this));
 
     if(this._webAudio) {
-        this.setupWebAudioNode();
+        this._setupAudioNode();
     }
 
     this.load();
@@ -53,7 +53,7 @@ gf.inherits(gf.AudioPlayer, Object, {
     load: function() {
         //if using web audio, load up the buffer
         if(this._webAudio) {
-            this.loadBuffer();
+            this.loadBuffer(this.src);
         }
         //otherwise create some Audio nodes
         else {
