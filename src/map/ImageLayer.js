@@ -8,7 +8,7 @@
  * @param position {Point|Vector|Array|Number} The starting position of the layer
  * @param layer {Object|Texture} All the settings for the layer, or the texture to use
  */
-gf.Layer = function(game, pos, layer) {
+gf.ImageLayer = function(game, pos, layer) {
     this.sprite = new gf.Sprite(game, 0, {
         texture: layer.image || layer.texture || layer
     });
