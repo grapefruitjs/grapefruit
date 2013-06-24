@@ -64,16 +64,16 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         numY += this._tileBufferSize * 2;
 
         //ensure we don't go below 0
-        //startX = startX < 0 ? 0 : startX;
-        //startY = startY < 0 ? 0 : startY;
+        startX = startX < 0 ? 0 : startX;
+        startY = startY < 0 ? 0 : startY;
 
         //ensure we don't go outside the map size
-        //numX = (startX + numX <= this.parent.size.x) ? numX : (this.parent.size.x - startX);
-        //numY = (startY + numY <= this.parent.size.y) ? numY : (this.parent.size.y - startY);
+        var endX = (startX + numX <= this.parent.size.x) ? startX + numX : (this.parent.size.x - startX);
+        var endY = (startY + numY <= this.parent.size.y) ? startY + numY : (this.parent.size.y - startY);
 
         //render new sprites
-        for(var x = startX; x < numX; ++x) {
-            for(var y = startY; y < numY; ++y) {
+        for(var x = startX; x < endX; ++x) {
+            for(var y = startY; y < endY; ++y) {
                 this.moveTileSprite(x, y, x, y);
             }
         }
@@ -153,18 +153,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //grab a new tile from the pool if there isn't one to move in the map
         if(!this.tiles[fromTileX] || !this.tiles[fromTileX][fromTileY]) {
             tile = this._tilePool.pop();
-
-            if(!tile) {
-                tile = new gf.Tile(/*this._tilePool.create(*/this.game, position, {
-                    texture: texture,
-                    mass: Infinity,
-                    width: set.tileSize.x,
-                    height: set.tileSize.y,
-                    collidable: props.isCollidable,
-                    collisionType: props.type
-                });
-            }
-            this.addChild(tile);
         }
         //if there is one to move in the map, lets just move it
         else {
@@ -172,16 +160,23 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             this.tiles[fromTileX][fromTileY] = null;
         }
 
-        //ensure properties are set properly
-        // even if we pull from the pool those args are only
-        // passed when creating a *new* Tile, not recycling an old one
-        // so we need to manually specify them here as well
-        tile.setTexture(texture);
-        tile.setPosition(position);
-        tile.setCollidable(props.isCollidable);
-        tile.collisionType = props.type;
-        tile.visible = true;
-        //}
+        if(tile) {
+            tile.setTexture(texture);
+            tile.setPosition(position);
+            tile.setCollidable(props.isCollidable);
+            tile.collisionType = props.type;
+            tile.visible = true;
+        } else {
+            tile = new gf.Tile(this.game, position, {
+                texture: texture,
+                mass: Infinity,
+                width: set.tileSize.x,
+                height: set.tileSize.y,
+                collidable: props.isCollidable,
+                collisionType: props.type
+            });
+            this.addChild(tile);
+        }
 
         //update sprite position in the map
         if(!this.tiles[toTileX])
