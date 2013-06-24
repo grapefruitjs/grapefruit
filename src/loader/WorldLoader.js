@@ -9,7 +9,8 @@ gf.WorldLoader = function(al, name, baseUrl, data) {
 
 gf.inherits(gf.WorldLoader, gf.Loader, {
     load: function() {
-        gf.Loader.protype.load.call(this);
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
 
         //loop through each layer and load the sprites (objectgroup types)
         for(var i = 0, il = this.data.layers.length; i < il; ++i) {
@@ -22,13 +23,12 @@ gf.inherits(gf.WorldLoader, gf.Loader, {
                     txLoader;
 
                 if(!obj.properties.spritesheet) continue;
+                this.numTextures++;
 
                 txLoader = new gf.TextureLoader(this.parent, layer.name + '_' + obj.name + '_texture', obj.properties.spritesheet);
 
                 txLoader.on('load', this.onTextLoad.bind(this));
                 txLoader.on('error', this.onTextError.bind(this));
-
-                this.numTextures++;
                 txLoader.load();
             }
         }
@@ -39,13 +39,12 @@ gf.inherits(gf.WorldLoader, gf.Loader, {
                 txLoader2;
 
             if(!set.image) continue;
+            this.numTextures++;
 
             txLoader2 = new gf.TextureLoader(this.parent, set.name + '_texture', this.url + set.image);
 
             txLoader2.on('load', this.onTextLoad.bind(this));
             txLoader2.on('error', this.onTextError.bind(this));
-
-            this.numTextures++;
             txLoader2.load();
         }
     },
@@ -68,6 +67,6 @@ gf.inherits(gf.WorldLoader, gf.Loader, {
         if(this.errors.length)
             gf.Loader.prototype.error.call(this, this.errors);
         else
-            gf.Loader.prototype.done.call(this);
+            gf.Loader.prototype.done.call(this, this.data);
     }
 });

@@ -13,15 +13,6 @@ gf.Tile = function(game, pos, settings) {
     gf.Entity.call(this, game, pos, settings);
 
     this.type = gf.Entity.TYPE.TILE;
-
-    /*
-    var spr = this.tiles[tileX][tileY];
-    spr.tile = tile;
-    spr.setInteractive(true);
-    spr.click = function() {
-        window.console.log(spr.tile, spr.parent.name);
-    };
-    */
 };
 
 gf.inherits(gf.Tile, gf.Entity, {

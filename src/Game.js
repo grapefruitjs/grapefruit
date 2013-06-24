@@ -7,11 +7,23 @@
  * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)
  */
 gf.Game = function(contId, settings) {
-    var w = settings.width || gf.utils.getStyle(this.container, 'width'),
-        h = settings.height || gf.utils.getStyle(this.container, 'height');
-
     //mixin the Event Target methods
     gf.EventTarget.call(this);
+
+    /**
+     * The domElement that we are putting our rendering canvas into (the container)
+     *
+     * @property container
+     * @type DOMELement
+     * @readOnly
+     */
+    this.container = document.getElementById(contId);
+
+    if(!this.container)
+        this.container = document.body;
+
+    var w = settings.width || gf.utils.getStyle(this.container, 'width'),
+        h = settings.height || gf.utils.getStyle(this.container, 'height');
 
     /**
      * The method used to render values to the screen (either webgl, or canvas)
@@ -82,15 +94,6 @@ gf.Game = function(contId, settings) {
     } else if(this.renderMethod === 'canvas') {
         this.renderer = new PIXI.CanvasRenderer(w, h);
     }
-
-    /**
-     * The domElement that we are putting our rendering canvas into (the container)
-     *
-     * @property container
-     * @type DOMELement
-     * @readOnly
-     */
-    this.container = document.getElementById(contId);
 
     /**
      * Maximum Z value

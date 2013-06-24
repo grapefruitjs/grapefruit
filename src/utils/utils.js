@@ -64,11 +64,19 @@
 
         xhr.onreadystatechange = function() {
             if(xhr.readyState === 4) {
-                var res = xhr.response,
+                var res = xhr.response || xhr.responseText,
                     err = null;
 
                 if(xhr.status !== 200)
                     err = 'Non-200 status code returned: ' + xhr.status;
+
+                if(!err && typeof res === 'string' && sets.dataType === 'json') {
+                    try {
+                        res = JSON.parse(res);
+                    } catch(e) {
+                        err = e;
+                    }
+                }
 
                 if(err) {
                     if(sets.error) sets.error.call(xhr, err);
@@ -78,7 +86,10 @@
             }
         };
 
-        xhr.responseType = sets.dataType;
+        //chrome doesn't support json responseType
+        if(sets.dataType !== 'json')
+            xhr.responseType = sets.dataType;
+
         xhr.open(sets.method, sets.url, true);
         xhr.send();
 
@@ -253,6 +264,6 @@
             top: t,
             left: l
         };
-    },
+    }
     /////////////////////////////////////////////////////////////////////////////
 };

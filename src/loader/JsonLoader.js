@@ -10,9 +10,10 @@ gf.JsonLoader = function(al, name, url) {
     this.type = 'json';
 };
 
-gf.inherits(gf.JsonLoader, Object, {
+gf.inherits(gf.JsonLoader, gf.Loader, {
     load: function() {
-        gf.Loader.protype.load.call(this);
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
 
         var self = this,
             baseUrl = this.url.replace(/[^\/]*$/, '');
@@ -26,11 +27,11 @@ gf.inherits(gf.JsonLoader, Object, {
 
                 //check some properties to see if this is a TiledMap Object
                 if(data.orientation && data.layers && data.tilesets && data.version) {
-                    loader = new gf.WorldLoader(this.parent, this.name, baseUrl, data);
+                    loader = new gf.WorldLoader(self.parent, self.name, baseUrl, data);
                 }
                 //this is a sprite sheet (published from TexturePacker)
                 else if(data.frames && data.meta) {
-                    loader = new gf.SpriteSheetLoader(this.parent, this.name, baseUrl, data);
+                    loader = new gf.SpriteSheetLoader(self.parent, self.name, baseUrl, data);
                 }
 
                 if(loader) {
@@ -42,8 +43,10 @@ gf.inherits(gf.JsonLoader, Object, {
                     });
 
                     loader.load();
-                } else {
-                    self.error('Unkown json type, unable to load!');
+                }
+                //just some json data
+                else {
+                    self.done(data);
                 }
             },
             error: function(err) {

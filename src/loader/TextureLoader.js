@@ -10,9 +10,10 @@
     this.type = 'texture';
 };
 
-gf.inherits(gf.TextureLoader, Object, {
+gf.inherits(gf.TextureLoader, gf.Loader, {
     load: function() {
-        gf.Loader.protype.load.call(this);
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
 
         var self = this,
             texture = gf.Texture.fromImage(this.url);
@@ -25,7 +26,7 @@ gf.inherits(gf.TextureLoader, Object, {
                 self.error('Unable to load texture');
             };
         } else {
-            self.done(texture);
+            this.done(texture);
         }
     }
 });
