@@ -175,8 +175,8 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
             if(o instanceof gf.TiledLayer) {
                 o.renderTiles(
-                    Math.floor((this.position.x - this.offset.x) / this.scaledTileSize.x),
-                    Math.floor((this.position.y - this.offset.y) / this.scaledTileSize.y),
+                    Math.floor((Math.abs(this.position.x) - this.offset.x) / this.scaledTileSize.x),
+                    Math.floor((Math.abs(this.position.y) - this.offset.y) / this.scaledTileSize.y),
                     numX,
                     numY
                 );
