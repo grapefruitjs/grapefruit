@@ -24,9 +24,9 @@ gf.TiledLayer = function(game, pos, layer) {
     this.tileIds = gf.support.typedArrays ? new Uint32Array(layer.data) : layer.data;
 
     /**
-     * The tile pool for rendering tiles
+     * The current map of all tiles on the screen
      *
-     * @property tilePool
+     * @property tiles
      * @type Object
      */
     this.tiles = {};
@@ -37,7 +37,7 @@ gf.TiledLayer = function(game, pos, layer) {
     this.alpha = layer.opacity;
     this.visible = layer.visible;
 
-    this._tilePool = new gf.ObjectPool(gf.Tile, this);
+    this._tilePool = [];
     this._tileBufferSize = 2;
     this._panDelta = new gf.Vector(0, 0);
     this._rendered = new gf.Rectangle(0, 0, 0, 0);
@@ -64,12 +64,12 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         numY += this._tileBufferSize * 2;
 
         //ensure we don't go below 0
-        startX = startX < 0 ? 0 : startX;
-        startY = startY < 0 ? 0 : startY;
+        //startX = startX < 0 ? 0 : startX;
+        //startY = startY < 0 ? 0 : startY;
 
         //ensure we don't go outside the map size
-        numX = (startX + numX <= this.parent.size.x) ? numX : (this.parent.size.x - startX);
-        numY = (startY + numY <= this.parent.size.y) ? numY : (this.parent.size.y - startY);
+        //numX = (startX + numX <= this.parent.size.x) ? numX : (this.parent.size.x - startX);
+        //numY = (startY + numY <= this.parent.size.y) ? numY : (this.parent.size.y - startY);
 
         //render new sprites
         for(var x = startX; x < numX; ++x) {
@@ -98,9 +98,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             for(var y in this.tiles[x]) {
                 var tile = this.tiles[x][y];
 
-                //hide/free the sprite
-                tile.visible = false;
-                this._tilePool.free(tile);
+                if(tile) {
+                    //hide/free the sprite
+                    tile.visible = false;
+                    this._tilePool.push(tile);
+                }
 
                 //remove the Y key
                 delete this.tiles[x][y];
@@ -150,14 +152,19 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         //grab a new tile from the pool if there isn't one to move in the map
         if(!this.tiles[fromTileX] || !this.tiles[fromTileX][fromTileY]) {
-            tile = this._tilePool.create(this.game, position, {
-                texture: texture,
-                mass: Infinity,
-                width: set.tileSize.x,
-                height: set.tileSize.y,
-                collidable: props.isCollidable,
-                collisionType: props.type
-            });
+            tile = this._tilePool.pop();
+
+            if(!tile) {
+                tile = new gf.Tile(/*this._tilePool.create(*/this.game, position, {
+                    texture: texture,
+                    mass: Infinity,
+                    width: set.tileSize.x,
+                    height: set.tileSize.y,
+                    collidable: props.isCollidable,
+                    collisionType: props.type
+                });
+            }
+            this.addChild(tile);
         }
         //if there is one to move in the map, lets just move it
         else {
@@ -174,6 +181,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         tile.setCollidable(props.isCollidable);
         tile.collisionType = props.type;
         tile.visible = true;
+        //}
 
         //update sprite position in the map
         if(!this.tiles[toTileX])
