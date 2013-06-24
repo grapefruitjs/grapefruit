@@ -53,6 +53,9 @@
         sets.method = sets.method || 'GET';
         sets.dataType = sets.dataType || 'text';
 
+        if(!sets.url)
+            throw 'No URL passed to ajax';
+
         //callbacks
         sets.progress = sets.progress || gf.utils.noop;
         sets.load = sets.load || gf.utils.noop;

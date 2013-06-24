@@ -124,8 +124,8 @@ gf.TiledMap = function(game, pos, map) {
                 this.addChild(lyr);
 
                 //auto spawn the player object group
-                //if(lyr.name === 'player' && !lyr.properties.manual)
-                    //lyr.spawn();
+                if(lyr.name === 'player' && !lyr.properties.manual)
+                    lyr.spawn();
 
                 break;
 

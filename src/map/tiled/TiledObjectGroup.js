@@ -65,16 +65,17 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
             props.name = o.name;
             props.type = o.type;
-            props.size = [o.width, o.height];
+            props.width = o.width;
+            props.height = o.height;
             props.zIndex = this.zIndex;
-            props.opacity = this.opacity;
             props.visible = o.visible !== undefined ? (o.visible === 1) : true; //recently added, default old versions to true
             props.position = [o.x, o.y];
             props.rotation = o.rotation;
             props.gid = o.gid;
 
             //spawn from entity pool
-            this.addChild(gf.entityPool.create(this.game, props.name, props));
+            window.console.log(props);
+            this.addChild(this.game.entitypool.create(props.name, props));
             this.game.players.push(this.children[i]);
         }
 
