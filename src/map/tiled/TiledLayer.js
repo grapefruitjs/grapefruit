@@ -38,7 +38,6 @@ gf.TiledLayer = function(game, pos, layer) {
     this.visible = layer.visible;
 
     this._tilePool = [];
-    this._tileBufferSize = 2;
     this._panDelta = new gf.Vector(0, 0);
     this._rendered = new gf.Rectangle(0, 0, 0, 0);
 };
@@ -57,12 +56,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //clear all the visual tiles
         this.clearTiles();
 
-        //add a tile buffer around the render area
-        startX -= this._tileBufferSize;
-        numX += this._tileBufferSize * 2;
-        startY -= this._tileBufferSize;
-        numY += this._tileBufferSize * 2;
-
         //ensure we don't go below 0
         startX = startX < 0 ? 0 : startX;
         startY = startY < 0 ? 0 : startY;
@@ -80,12 +73,12 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         this._rendered.x = startX;
         this._rendered.y = startY;
-        this._rendered.width = numX;
-        this._rendered.height = numY;
-        this._rendered.left = this._rendered.x;
-        this._rendered.right = this._rendered.x + this._rendered.width;
-        this._rendered.top = this._rendered.y;
-        this._rendered.bottom = this._rendered.y + this._rendered.height;
+        this._rendered.width = endX - startX;
+        this._rendered.height = endY - startY;
+        this._rendered.left = startX;
+        this._rendered.right = endX - 1;
+        this._rendered.top = startY;
+        this._rendered.bottom = endY - 1;
     },
     /**
      * Clears all the tiles currently used to render the layer
@@ -133,7 +126,15 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             props,
             position;
 
-        if(!set) return;
+        //if no tileset, just ensure the "from" tile is put back in the pool
+        if(!set) {
+            if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
+                var t = this.tiles[fromTileX][fromTileY];
+                t.visible = false;
+                this._tilePool.push(t);
+            }
+            return;
+        }
 
         texture = set.getTileTexture(tileId);
         props = set.getTileProperties(tileId);
@@ -227,7 +228,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         for(var i = 0; i < this._rendered.height; ++i) {
             this.moveTileSprite(
                 this._rendered.right, this._rendered.top + i,
-                this._rendered.left, this._rendered.top + i
+                this._rendered.left - 1, this._rendered.top + i
             );
         }
         this._rendered.x--;
@@ -239,7 +240,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         for(var i = 0; i < this._rendered.height; ++i) {
             this.moveTileSprite(
                 this._rendered.left, this._rendered.top + i,
-                this._rendered.right, this._rendered.top + i
+                this._rendered.right + 1, this._rendered.top + i
             );
         }
         this._rendered.x++;
@@ -251,7 +252,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         for(var i = 0; i < this._rendered.width; ++i) {
             this.moveTileSprite(
                 this._rendered.left + i, this._rendered.bottom,
-                this._rendered.left + i, this._rendered.top
+                this._rendered.left + i, this._rendered.top - 1
             );
         }
         this._rendered.y--;
@@ -263,7 +264,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         for(var i = 0; i < this._rendered.width; ++i) {
             this.moveTileSprite(
                 this._rendered.left + i, this._rendered.top,
-                this._rendered.left + i, this._rendered.bottom
+                this._rendered.left + i, this._rendered.bottom + 1
             );
         }
         this._rendered.y++;
