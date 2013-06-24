@@ -76,23 +76,6 @@ gf.GameState = function(game, name, settings) {
 };
 
 gf.inherits(gf.GameState, gf.DisplayObject, {
-    /**
-     * Allows you to resize the game area
-     *
-     * @method resize
-     * @param width {Number} Width to resize to
-     * @param height {Number} Height to resize to
-     * @return {Game} Returns itself for chainability
-     */
-    resize: function(w, h) {
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.resize) o.resize(w, h);
-        }
-
-        return this;
-    },
     addChild: function(obj) {
         if(obj) {
             //we add the camera in the ctor and the map later when

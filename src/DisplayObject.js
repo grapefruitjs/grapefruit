@@ -186,7 +186,7 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
-            if(o.visible && o.resize)
+            if(o.resize)
                 o.resize.apply(o, arguments);
         }
     },

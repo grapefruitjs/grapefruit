@@ -74,7 +74,6 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             props.gid = o.gid;
 
             //spawn from entity pool
-            window.console.log(props);
             this.addChild(this.game.entitypool.create(props.name, props));
             this.game.players.push(this.children[i]);
         }
