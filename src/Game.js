@@ -50,7 +50,7 @@ gf.Game = function(contId, settings) {
      * @readOnly
      */
     this.stage = new PIXI.Stage(
-        settings.background || 0xff00ff,
+        settings.background,
         settings.interactive !== undefined ? settings.interactive : true
     );
 
@@ -90,9 +90,9 @@ gf.Game = function(contId, settings) {
 
     //initialize the correct renderer
     if(this.renderMethod === 'webgl') {
-        this.renderer = new PIXI.WebGLRenderer(w, h);
+        this.renderer = new PIXI.WebGLRenderer(w, h, settings.view, settings.transparent);
     } else if(this.renderMethod === 'canvas') {
-        this.renderer = new PIXI.CanvasRenderer(w, h);
+        this.renderer = new PIXI.CanvasRenderer(w, h, settings.view, settings.transparent);
     }
 
     /**

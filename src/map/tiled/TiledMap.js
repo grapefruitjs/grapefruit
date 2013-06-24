@@ -117,6 +117,10 @@ gf.TiledMap = function(game, pos, map) {
                     numX,
                     numY
                 );
+
+                if(lyr.name.toLowerCase().indexOf('collision') === 0) {
+                    lyr.visible = false;
+                 }
                 break;
 
             case 'objectgroup':
