@@ -1,10 +1,10 @@
 /**
  * @license
- * GrapeFruit Game Engine - v0.0.3
+ * GrapeFruit Game Engine - v0.0.1
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-06-17
+ * Compiled: 2013-06-23
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -40,11 +40,11 @@ Object.freeze;Object.freeze=function(a){return typeof a=="function"?a:s(a)}}Obje
 
 /**
  * @license
- * Pixi.JS - v1.0.0
+ * Pixi.JS - v1.2.0
  * Copyright (c) 2012, Mat Groves
  * http://goodboydigital.com/
  *
- * Compiled: 2013-06-17
+ * Compiled: 2013-06-19
  *
  * Pixi.JS is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -162,6 +162,37 @@ PIXI.Rectangle.prototype.clone = function()
 
 // constructor
 PIXI.Rectangle.constructor = PIXI.Rectangle;
+
+
+/**
+ * @author Adrien Brault <adrien.brault@gmail.com>
+ */
+
+/**
+ * @class Polygon
+ * @constructor
+ * @param points {Array}
+ */
+PIXI.Polygon = function(points)
+{
+	this.points = points;
+}
+
+/**
+ * @method clone
+ * @return a copy of the polygon
+ */
+PIXI.Polygon.clone = function()
+{
+	var points = [];
+	for (var i=0; i<this.points.length; i++) {
+		points.push(this.points[i].clone());
+	}
+
+	return new PIXI.Polygon(points);
+}
+
+PIXI.Polygon.constructor = PIXI.Polygon;
 
 
 /**
@@ -1342,11 +1373,11 @@ PIXI.BitmapText.prototype.updateText = function()
 
     for(i = 0; i < chars.length; i++)
     {
-        var char = new PIXI.Sprite(chars[i].texture)//PIXI.Sprite.fromFrame(chars[i].charCode);
-        char.position.x = (chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale;
-        char.position.y = chars[i].position.y * scale;
-        char.scale.x = char.scale.y = scale;
-        this.addChild(char);
+        var c = new PIXI.Sprite(chars[i].texture)//PIXI.Sprite.fromFrame(chars[i].charCode);
+        c.position.x = (chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale;
+        c.position.y = chars[i].position.y * scale;
+        c.scale.x = c.scale.y = scale;
+        this.addChild(c);
     }
 
     this.width = pos.x * scale;
@@ -1438,25 +1469,27 @@ PIXI.InteractionManager.prototype.collectInteractiveSprite = function(displayObj
 	{
 		var child = children[i];
 		
-		// push all interactive bits
-		if(child.interactive)
-		{
-			iParent.interactiveChildren = true;
-			//child.__iParent = iParent;
-			this.interactiveItems.push(child);
-			
-			if(child.children.length > 0)
+		if(child.visible) {
+			// push all interactive bits
+			if(child.interactive)
 			{
-				this.collectInteractiveSprite(child, child);
+				iParent.interactiveChildren = true;
+				//child.__iParent = iParent;
+				this.interactiveItems.push(child);
+
+				if(child.children.length > 0)
+				{
+					this.collectInteractiveSprite(child, child);
+				}
 			}
-		}
-		else
-		{
-			child.__iParent = null;
-			
-			if(child.children.length > 0)
+			else
 			{
-				this.collectInteractiveSprite(child, iParent);
+				child.__iParent = null;
+
+				if(child.children.length > 0)
+				{
+					this.collectInteractiveSprite(child, iParent);
+				}
 			}
 		}
 	}
@@ -1566,8 +1599,6 @@ PIXI.InteractionManager.prototype.update = function()
 
 PIXI.InteractionManager.prototype.onMouseMove = function(event)
 {
-	event.preventDefault();
-	
 	// TODO optimize by not check EVERY TIME! maybe half as often? //
 	var rect = this.target.view.getBoundingClientRect();
 	
@@ -1630,7 +1661,8 @@ PIXI.InteractionManager.prototype.onMouseDown = function(event)
 
 PIXI.InteractionManager.prototype.onMouseUp = function(event)
 {
-	event.preventDefault();
+	
+	
 	var global = this.mouse.global;
 	
 	
@@ -1677,27 +1709,66 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 	var global = interactionData.global;
 	
 	if(!item.visible)return false;
-	
-	if(item instanceof PIXI.Sprite)
+
+	var isSprite = (item instanceof PIXI.Sprite),
+		worldTransform = item.worldTransform,
+		a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
+		a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+		id = 1 / (a00 * a11 + a01 * -a10),
+		x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
+		y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
+
+	//a sprite or display object with a hit area defined
+	if(item.hitArea)
 	{
-		var worldTransform = item.worldTransform;
-		
-		var a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
-            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
-            id = 1 / (a00 * a11 + a01 * -a10);
-		
-		var x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id; 
-		var y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
-		
-		var width = item.texture.frame.width;
-		var height = item.texture.frame.height;
-		
-		var x1 = -width * item.anchor.x;
+		var hitArea = item.hitArea;
+
+		//Polygon hit area
+		if(item.hitArea instanceof PIXI.Polygon) {
+			var inside = false;
+
+			// use some raycasting to test hits
+			// https://github.com/substack/point-in-polygon/blob/master/index.js
+			for(var i = 0, j = item.hitArea.points.length - 1; i < item.hitArea.points.length; j = i++) {
+				var xi = item.hitArea.points[i].x, yi = item.hitArea.points[i].y,
+					xj = item.hitArea.points[j].x, yj = item.hitArea.points[j].y,
+					intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+
+				if(intersect) inside = !inside;
+			}
+			
+			if(inside) {
+				if(isSprite) interactionData.target = item;
+				return true;
+			}
+		}
+		//Rectangle hit area
+		else {
+			var x1 = hitArea.x;
+			if(x > x1 && x < x1 + hitArea.width)
+			{
+				var y1 = hitArea.y;
+				
+				if(y > y1 && y < y1 + hitArea.height)
+				{
+					if(isSprite) interactionData.target = item;
+					return true;
+				}
+			}
+		}
+	}
+	// a sprite with no hitarea defined
+	else if(isSprite)
+	{
+		var width = item.texture.frame.width,
+			height = item.texture.frame.height,
+			x1 = -width * item.anchor.x,
+			y1;
 		
 		if(x > x1 && x < x1 + width)
 		{
-			var y1 = -height * item.anchor.y;
-			
+			y1 = -height * item.anchor.y;
+		
 			if(y > y1 && y < y1 + height)
 			{
 				// set the target property if a hit is true!
@@ -1706,30 +1777,7 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 			}
 		}
 	}
-	else if(item.hitArea)
-	{
-		var worldTransform = item.worldTransform;
-		var hitArea = item.hitArea;
-		
-		var a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
-            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
-            id = 1 / (a00 * a11 + a01 * -a10);
-		
-		var x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id; 
-		var y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
-		
-		var x1 = hitArea.x;
-		if(x > x1 && x < x1 + hitArea.width)
-		{
-			var y1 = hitArea.y;
-			
-			if(y > y1 && y < y1 + hitArea.height)
-			{
-				return true;
-			}
-		}
-	}
-	
+
 	var length = item.children.length;
 	
 	for (var i = 0; i < length; i++)
@@ -1738,7 +1786,7 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 		var hit = this.hitTest(tempItem, interactionData);
 		if(hit)return true;
 	}
-		
+
 	return false;	
 }
 
@@ -1746,8 +1794,6 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 
 PIXI.InteractionManager.prototype.onTouchMove = function(event)
 {
-	event.preventDefault();
-	
 	var rect = this.target.view.getBoundingClientRect();
 	var changedTouches = event.changedTouches;
 	
@@ -1772,6 +1818,7 @@ PIXI.InteractionManager.prototype.onTouchMove = function(event)
 PIXI.InteractionManager.prototype.onTouchStart = function(event)
 {
 	event.preventDefault();
+	
 	var rect = this.target.view.getBoundingClientRect();
 	
 	var changedTouches = event.changedTouches;
@@ -1813,9 +1860,6 @@ PIXI.InteractionManager.prototype.onTouchStart = function(event)
 
 PIXI.InteractionManager.prototype.onTouchEnd = function(event)
 {
-	event.preventDefault();
-	
-	
 	var rect = this.target.view.getBoundingClientRect();
 	var changedTouches = event.changedTouches;
 	
@@ -2838,9 +2882,11 @@ PIXI.WebGLRenderer.prototype.handleContextRestored = function(event)
         
 	this.initShaders();	
 	
-	for (var i=0; i < PIXI.TextureCache.length; i++) 
+	for(var key in PIXI.TextureCache) 
 	{
-		this.updateTexture(PIXI.TextureCache[i]);
+        	var texture = PIXI.TextureCache[key].baseTexture;
+        	texture._glTexture = null;
+        	PIXI.WebGLRenderer.updateTexture(texture);
 	};
 	
 	for (var i=0; i <  this.batchs.length; i++) 
@@ -4323,7 +4369,7 @@ PIXI.WebGLRenderGroup.prototype.renderTilingSprite = function(sprite, projection
 /**
  * @private
  */
-PIXI.WebGLRenderer.prototype.initStrip = function(strip)
+PIXI.WebGLRenderGroup.prototype.initStrip = function(strip)
 {
 	// build the strip!
 	var gl = this.gl;
@@ -5034,7 +5080,7 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function(event)
  * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
  * @class Spine
  * @constructor
- * @extends 
+ * @extends DisplayObjectContainer
  * @param {String} url the url of the spine anim file to be used
  */
 PIXI.Spine = function(url)
@@ -6619,7 +6665,9 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin)
 	var baseTexture = PIXI.BaseTextureCache[imageUrl];
 	if(!baseTexture)
 	{
-		var image = new Image();
+		// new Image() breaks tex loading in some versions of Chrome.
+		// See https://code.google.com/p/chromium/issues/detail?id=238071
+		var image = new Image();//document.createElement('img'); 
 		if (crossorigin)
 		{
 			image.crossOrigin = '';
@@ -6826,13 +6874,33 @@ PIXI.Texture.frameUpdates = [];
  */
 
 /**
- * A RenderTexture is a special texture that allows any pixi displayObject to be rendered to it. 
- * @class RenderTexture
- * @extends Texture
- * @constructor
- * @param width {Number}
- * @param height {Number}
- */
+ A RenderTexture is a special texture that allows any pixi displayObject to be rendered to it.
+
+ __Hint__: All DisplayObjects (exmpl. Sprites) that renders on RenderTexture should be preloaded. 
+ Otherwise black rectangles will be drawn instead.  
+ 
+ RenderTexture takes snapshot of DisplayObject passed to render method. If DisplayObject is passed to render method, position and rotation of it will be ignored. For example:
+ 
+	var renderTexture = new PIXI.RenderTexture(800, 600);
+	var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
+	sprite.position.x = 800/2;
+	sprite.position.y = 600/2;
+	sprite.anchor.x = 0.5;
+	sprite.anchor.y = 0.5;
+	renderTexture.render(sprite);
+
+ Sprite in this case will be rendered to 0,0 position. To render this sprite at center DisplayObjectContainer should be used:
+
+	var doc = new PIXI.DisplayObjectContainer();
+	doc.addChild(sprite);
+	renderTexture.render(doc);  // Renders to center of renderTexture
+
+ @class RenderTexture
+ @extends Texture
+ @constructor
+ @param width {Number}
+ @param height {Number}
+ **/
 PIXI.RenderTexture = function(width, height)
 {
 	PIXI.EventTarget.call( this );
@@ -7306,6 +7374,7 @@ PIXI.SpriteSheetLoader.prototype.onLoaded = function () {
 		content: this
 	});
 };
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -7504,7 +7573,7 @@ PIXI.BitmapFontLoader.prototype.onLoaded = function()
  * When loaded this class will dispatch a "loaded" event
  * @class Spine
  * @constructor
- * @extends 
+ * @extends EventTarget
  * @param {String} url the url of the sprite sheet JSON file
  * @param {Boolean} crossorigin
  */
@@ -13844,7 +13913,7 @@ gf.EventTarget = PIXI.EventTarget;
  * @property version
  * @type String
  */
-gf.version = '0.0.3';
+gf.version = '0.0.1';
 
 /**
  * The cached assets loaded by any loader
@@ -13872,7 +13941,7 @@ gf.support = {
      * Whether or not canvas is supported
      *
      * @property canvas
-     * @type bool
+     * @type Boolean
      */
     canvas: !!window.CanvasRenderingContext2D,
 
@@ -13880,7 +13949,7 @@ gf.support = {
      * Whether or not webgl is supported
      *
      * @property webgl
-     * @type bool
+     * @type Boolean
      */
     webgl: (function () { try { return !!window.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl'); } catch(e) { return false; } })(),
 
@@ -13888,7 +13957,7 @@ gf.support = {
      * Whether or not web workers are supported
      *
      * @property workers
-     * @type bool
+     * @type Boolean
      */
     workers: !!window.Worker,
 
@@ -13896,7 +13965,7 @@ gf.support = {
      * Whether or not Blob URLs are supported
      *
      * @property blobs
-     * @type bool
+     * @type Boolean
      */
     blobUrls: !!window.Blob && !!window.URL && !!window.URL.createObjectURL,
 
@@ -13904,7 +13973,7 @@ gf.support = {
      * Whether or not typed arrays are supported
      *
      * @property typedArrays
-     * @type bool
+     * @type Boolean
      */
     typedArrays: !!window.ArrayBuffer,
 
@@ -13912,29 +13981,31 @@ gf.support = {
      * Whether or not the filesystem API is supported
      *
      * @property fileapi
-     * @type bool
+     * @type Boolean
      */
     fileapi: !!window.File && !!window.FileReader && !!window.FileList && !!window.Blob,
 
     /**
-     * Whether or not the audio elements are supported, and if so which types
+     * Whether or not tje Web Audio API is supported
      *
-     * @property audio
-     * @type Object
+     * @property webAudio
+     * @type Boolean
      */
-    audio: {
-        play: !!document.createElement('audio').canPlayType,
-        m4a: false,
-        mp3: false,
-        ogg: false,
-        wav: false
-    },
+    webAudio: !!window.AudioContext || !!window.webkitAudioContext,
+
+    /**
+     * Whether html Audio is supported in this browser
+     *
+     * @property htmlAudio
+     * @type Boolean
+     */
+    htmlAudio: !!document.createElement('audio').canPlayType,
 
     /**
      * Whether or not local storage is supported
      *
      * @property localStorage
-     * @type bool
+     * @type Boolean
      */
     localStorage: !!window.localStorage,
 
@@ -13942,7 +14013,7 @@ gf.support = {
      * Whether or not touch is supported
      *
      * @property touch
-     * @type bool
+     * @type Boolean
      */
     touch: ('createTouch' in document) || ('ontouchstart' in window) || (navigator.isCocoonJS),
 
@@ -13950,63 +14021,9 @@ gf.support = {
      * Whether or not the gamepad API is supported
      *
      * @property gamepad
-     * @type bool
+     * @type Boolean
      */
     gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') !== -1)
-};
-
-//additional audio support checks
-if(gf.support.audio.play) {
-    var a = document.createElement('audio');
-
-    gf.support.audio.m4a = !!a.canPlayType('audio/mp4; codecs="mp4a.40.2"').replace(/no/, '');
-    gf.support.audio.mp3 = !!a.canPlayType('audio/mpeg').replace(/no/, '');
-    gf.support.audio.ogg = !!a.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, '');
-    gf.support.audio.wav = !!a.canPlayType('audio/wav; codecs="1"').replace(/no/, '');
-
-    //check for specific platforms
-    if(gf.support.ua.search('iphone') > -1 || gf.support.ua.search('ipod') > -1 ||
-        gf.support.ua.search('ipad') > -1 || gf.support.ua.search('android') > -1) {
-
-        //if on mobile device, without a specific HTML5 acceleration framework
-        if(!navigator.isCocoonJS) {
-            gf.support.audio.play = false;
-        }
-    }
-}
-
-/**
- * Compares version numbers, useful for plugins to specify a required gf version
- *
- * @method checkVersion
- * @param first {String} The first version
- * @param second {String} The second version
- * @return {Number}
- *      returns a number representing how far off a version is.
- *
- *      will return a negative value if the first version is behind the second,
- *      the negative number will show how many versions behind it is on largest version
- *      point.
- *      That is: '1.0' compared with '1.1' will yield -1
- *      and    : '1.2.3' compared with '1.2.1' will yield -2
- *
- *      0 is returned if the versions match, and a positive number is returned if
- *      the first version is larger than the second.
- */
-gf.checkVersion = function(first, second) {
-    second = second || gf.version;
-
-    var a = first.split('.'),
-        b = second.split('.'),
-        len = Math.min(a.length, b.length),
-        result = 0;
-
-    for(var i = 0; i < len; ++i) {
-        result = +a[i] - +b[i];
-        if(result) break;
-    }
-
-    return result ? result : a.length - b.length;
 };
 
 /**
@@ -14039,6 +14056,21 @@ gf.inherits = function(c, p, proto) {
  * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)
  */
 gf.Game = function(contId, settings) {
+    //mixin the Event Target methods
+    gf.EventTarget.call(this);
+
+    /**
+     * The domElement that we are putting our rendering canvas into (the container)
+     *
+     * @property container
+     * @type DOMELement
+     * @readOnly
+     */
+    this.container = document.getElementById(contId);
+
+    if(!this.container)
+        this.container = document.body;
+
     var w = settings.width || gf.utils.getStyle(this.container, 'width'),
         h = settings.height || gf.utils.getStyle(this.container, 'height');
 
@@ -14113,15 +14145,6 @@ gf.Game = function(contId, settings) {
     }
 
     /**
-     * The domElement that we are putting our rendering canvas into (the container)
-     *
-     * @property container
-     * @type DOMELement
-     * @readOnly
-     */
-    this.container = document.getElementById(contId);
-
-    /**
      * Maximum Z value
      *
      * @property MAX_Z
@@ -14139,7 +14162,16 @@ gf.Game = function(contId, settings) {
      * @type AssetLoader
      * @readOnly
      */
-    this.loader = new gf.AssetLoader();
+    this.loader = new gf.AssetLoader(this);
+
+    /**
+     * The entity pool to use to create registered entities
+     *
+     * @property entitypool
+     * @type EntityPool
+     * @readOnly
+     */
+    this.entitypool = new gf.EntityPool(this);
 
     /**
      * The GameStates added to the game
@@ -14346,505 +14378,19 @@ gf.inherits(gf.Game, Object, {
      * @private
      */
     _tick: function() {
+        this.emit({ type: 'beforetick' });
         //start render loop
         window.requestAnimFrame(this._tick.bind(this));
 
-        //get clock delta
-        var dt = this.clock.getDelta();
-
-        //update debug info
-        gf.debug.update(dt);
-
         //update this game state
-        this.activeState.update(dt);
+        this.activeState.update(this.clock.getDelta());
 
         //render scene
         this.renderer.render(this.stage);
+        this.emit({ type: 'aftertick' });
     }
 });
 
-/**
- * The AssetLoader loads and parses different game assets, such as sounds, textures,
- * TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
- * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
- *
- * @class AssetLoader
- * @constructor
- * @param resources {Array} Array of resources to load when `.load()` is called
- * @example
- *      var loader = new AssetLoader(['/my/texture.png']);
- *      loader.load();
- *      //OR
- *      var loader = new AssetLoader();
- *      loader.load(['/my/texture.png']);
- */
-gf.AssetLoader = function(resources) {
-    //mixin the Event Target methods
-    gf.EventTarget.call(this);
-
-    /**
-     * The array of asset URLs that are going to be loaded
-     *
-     * @property assetURLs
-     * @type Array
-     */
-    this.resources = resources || [];
-
-    /**
-     * The count of remaining assets to load
-     *
-     * @property loadCount
-     * @type Number
-     * @readOnly
-     */
-    this.loadCount = 0;
-
-    /**
-     * A reference to the assets loaded by this loader. They are also put
-     * in the global gf.assetCache
-     *
-     * @property assets
-     * @type Object
-     */
-    this.assets = {};
-
-    /**
-     * A mapping of extensions to types. We assume all images are textures :)
-     *
-     * @property exts
-     * @type Object
-     * @readOnly
-     * @private
-     */
-    this.exts = {
-        imgs: ['jpeg', 'jpg', 'png', 'gif'],
-        sound: ['mp3', 'ogg', 'wma', 'wav'],
-        data: ['json']
-    };
-};
-
-gf.inherits(gf.AssetLoader, Object, {
-    /**
-     * Starts the loading festivities. If called without any arguments it will load
-     * the resources passed in at the ctor. If an array of resources is passed it will
-     * load those instead.
-     *
-     * @method load
-     * @param items {Array} Array of resources to load instead of the object's resources
-     */
-    load: function(items) {
-        var resources = items || this.resources;
-
-        for(var i = 0, il = resources.length; i < il; ++i) {
-            var name = typeof resources[i] === 'string' ? resources[i] : resources[i].name,
-                url = typeof resources[i] === 'string' ? resources[i] : (resources[i].src || resources[i].url || resources[i].uri),
-                ext = url.split('.').pop().toLowerCase();
-
-            //load a texture
-            if(this.exts.imgs.indexOf(ext) !== -1) {
-                this.loadTexture(name, url);
-            }
-            //load a sound clip
-            else if(this.exts.sound.indexOf(ext) !== -1) {
-                this.loadAudio(name, url);
-            }
-            //load a data file (world, spritesheet, etc)
-            else if(this.exts.data.indexOf(ext) !== -1) {
-                this.loadData(name, url);
-            }
-        }
-    },
-    /**
-     * Adds a resource to the resources array.
-     *
-     * @method add
-     * @param name {String} The name of the resource (to use as the key in the cache)
-     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
-     */
-    add: function(name, url) {
-        this.resources.push({
-            name: name,
-            src: url
-        });
-    },
-    /**
-     * Loads a texture image and caches the result
-     *
-     * @method loadTexture
-     * @param name {String} The name of the resource (to use as the key in the cache)
-     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
-     * @return {Texture} Returns the texture object, so it can be used even before it is fully loaded
-     */
-    loadTexture: function(name, url) {
-        this.loadCount++;
-
-        var self = this,
-            texture = gf.Texture.fromImage(url);
-
-        this._storeAsset(name, texture);
-
-        if(!texture.baseTexture.hasLoaded) {
-            texture.baseTexture.on('loaded', function() {
-                self.onAssetLoaded(null, 'texture', texture);
-            });
-            texture.baseTexture.source.onerror = function() {
-                self.onAssetLoaded(new Error('Unable to load texture'), 'texture', texture);
-            };
-        } else {
-            self.onAssetLoaded(null, 'texture', texture);
-        }
-
-        return texture;
-    },
-    /**
-     * Loads an audio clip and caches the result
-     *
-     * @method loadAudio
-     * @param name {String} The name of the resource (to use as the key in the cache)
-     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
-     * @return {Audio} Returns the audio object, so it can be used even before it is fully loaded
-     */
-    loadAudio: function(name, url) {
-        this.loadCount++;
-
-        var self = this,
-            audio = new Audio(url);
-
-        audio.preload = 'auto';
-
-        this._storeAsset(name, audio);
-
-        audio.addEventListener('canplaythrough', function() {
-            self.onAssetLoaded(null, 'audio', audio);
-        }, false);
-
-        audio.addEventListener('error', function() {
-            self.onAssetLoaded(new Error('Failed to load audio "' + name + '" at url: ' + url), 'audio');
-        }, false);
-
-        audio.load();
-
-        return audio;
-    },
-    /**
-     * Loads a data (json) object. This is usually either SpriteSheet or TMX Map
-     *
-     * @method loadData
-     * @param name {String} The name of the resource (to use as the key in the cache)
-     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
-     */
-    loadData: function(name, url) {
-        this.loadCount++;
-
-        var self = this,
-            baseUrl = url.replace(/[^\/]*$/, '');
-
-        gf.utils.ajax({
-            method: 'GET',
-            url: url,
-            dataType: 'json',
-            load: function(data) {
-                //check some properties to see if this is a TiledMap Object
-                if(data.orientation && data.layers && data.tilesets && data.version) {
-                    self._storeAsset(name, data);
-
-                    //loop through each layer and load the sprites (objectgroup types)
-                    for(var i = 0, il = data.layers.length; i < il; ++i) {
-                        var layer = data.layers[i];
-                        if(layer.type !== 'objectgroup') continue;
-
-                        //loop through each object, and load the textures
-                        for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
-                            var obj = layer.objects[o];
-                            if(!obj.properties.spritesheet) continue;
-
-                            self.loadTexture(layer.name + '_' + obj.name + '_texture', obj.properties.spritesheet);
-                        }
-                    }
-
-                    //loop through each tileset and load the texture
-                    for(var s = 0, sl = data.tilesets.length; s < sl; ++s) {
-                        var set = data.tilesets[s];
-                        if(!set.image) continue;
-
-                        self.loadTexture(set.name + '_texture', baseUrl + set.image);
-                    }
-
-                    self.onAssetLoaded(null, 'world', data);
-                }
-                //this is a sprite sheet (published from TexturePacker)
-                else if(data.frames && data.meta) {
-                    var textureUrl = baseUrl + data.meta.image,
-                        texture =  gf.Texture.fromImage(textureUrl).baseTexture,
-                        frames = data.frames,
-                        assets = {};
-
-                    for(var f in frames) {
-                        var rect = frames[f].frame;
-
-                        PIXI.TextureCache[f] = new gf.Texture(texture, { x: rect.x, y: rect.y, width: rect.w, height: rect.h });
-
-                        if(frames[f].trimmed) {
-                            PIXI.TextureCache[f].realSize = frames[f].spriteSourceSize;
-                            PIXI.TextureCache[f].trim.x = 0;
-                        }
-
-                        assets[f] = PIXI.TextureCache[f];
-                    }
-
-                    self._storeAsset(name, assets);
-
-                    if(texture.hasLoaded) {
-                        self.onAssetLoaded(null, 'spritesheet', assets);
-                    }
-                    else {
-                        texture.addEventListener('loaded', function() {
-                            self.onAssetLoaded(null, 'spritesheet', assets);
-                        });
-                    }
-                }
-            },
-            error: function(err) {
-                self.onAssetLoaded(err);
-            }
-        });
-    },
-    /**
-     * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
-     *
-     * @method onAssetLoaded
-     * @private
-     * @param err {String} An option error if there was an issue loading that resource
-     * @param type {String} The type of asset loaded (texture, audio, world, or spritesheet)
-     * @param asset {Texture|Audio|Object} The actual asset that was loaded
-     */
-    onAssetLoaded: function(err, type, asset) {
-        //texture (image)
-        //audio
-        //spritesheet (json sheet)
-        //world (TiledEditor Json data)
-        this.loadCount--;
-
-        this.emit({ type: 'progress', error: err, assetType: type, asset: asset });
-        if(this.onProgress) this.onProgress(err, type, asset);
-
-        if(this.loadCount === 0) {
-            this.dispatchEvent({ type: 'complete' });
-            if(this.onComplete) this.onComplete();
-        }
-    },
-    /**
-     * Stores a reference to an asset into the global and local caches
-     *
-     * @method _storeAsset
-     * @private
-     * @param name {String} The name of the resource (to use as the key in the cache)
-     * @param asset {Texture|Audio|Object} The actual asset that was loaded
-     */
-    _storeAsset: function(name, asset) {
-        this.assets[name] = asset;
-        gf.assetCache[name] = asset;
-    }
-});
-
-/**
- * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
- *
- * @class AudoPlayer
- * @constructor
- * @param game {Game} Game instance for this audio player
- */
-gf.AudioPlayer = function(game) {
-    /**
-     * The game instance this belongs to
-     *
-     * @property game
-     * @type Game
-     */
-    this.game = game;
-
-    /**
-     * The pool of audio objects to play sounds with
-     *
-     * @property playing
-     * @type Object
-     * @private
-     * @readOnly
-     */
-    this.playing = {};
-
-    /**
-     * When stopping or starting a sound, this is the time index to reset to
-     *
-     * @property resetTime
-     * @type number
-     * @default 0
-     */
-    this.resetTime = 0;
-};
-
-gf.inherits(gf.AudioPlayer, Object, {
-    _getOpen: function(id) {
-        var chans = this.playing[id];
-
-        //find an open channel
-        for(var i = 0, il = chans.length; i < il; ++i) {
-            var clip = chans[i++];
-            if(clip.ended || !clip.currentTime) {
-                clip.currentTime = this.resetTime;
-                return clip;
-            }
-        }
-
-        //create a new channel
-        var sound = new Audio(chans[0].src);
-        sound.preload = 'auto';
-        sound.load();
-        sound.channel = chans.length;
-        chans.push(sound);
-
-        return chans[chans.length - 1];
-    },
-    /**
-     * Plays a loaded audio clip
-     *
-     * @method play
-     * @param id {String|Object} The id of the sound clip to play. You can also pass the object returned from a previous play
-     * @param options {Object} The options object you can pass properties like "loop," "volume," "channel"
-     * @param callback {Function} The callback to call after the sound finishes playing
-     * @return {Object} The object returned can be passed to any audio function in the
-     *      first parameter to control that audio clip
-     */
-    play: function(id, opts, cb) {
-        if(!gf.assetCache[id]) {
-            throw 'Tried to play unloaded audio: ' + id;
-        }
-
-        if(typeof opts === 'function') {
-            cb = opts;
-            opts = null;
-        }
-
-        if(typeof id === 'object') {
-            opts = id;
-            id = opts.id;
-        }
-
-        opts = opts || {};
-
-        opts.id = id;
-        opts.loop = opts.loop || false;
-        opts.volume = opts.volume || 1;
-
-        //resume a paused channel
-        if(opts.channel !== undefined && this.playing[id]) {
-            this.playing[id][opts.channel].play();
-            return opts;
-        }
-
-        //we haven't played this sound yet, create a new channel list
-        if(!this.playing[id]) {
-            this.playing[id] = [gf.assetCache[id]];
-            this.playing[id][0].channel = 0;
-        }
-
-        var sound = this._getOpen(id);
-        sound.loop = opts.loop;
-        sound.volume = opts.volume;
-        sound.play();
-
-        opts.channel = sound.channel;
-
-        if(!opts.loop) {
-            var self = this,
-                ended = function() {
-                    sound.removeEventListener('ended', ended, false);
-                    self.stop(opts);
-                    if(cb) cb();
-                };
-            sound.addEventListener('ended', ended, false);
-        }
-
-        return opts;
-    },
-    /**
-     * Stops a playing audio clip
-     *
-     * @method stop
-     * @param id {String|Object} The id of the sound clip to stop. You can also pass the object returned from a previous play
-     * @param channel {Number} The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)
-     */
-    stop: function(id, channel) {
-        if(typeof id === 'object') {
-            channel = id.channel;
-            id = id.id;
-        }
-
-        if(!this.playing[id]) return;
-        if(!this.playing[id][channel]) return;
-
-        this.playing[id][channel].pause();
-        this.playing[id][channel].currentTime = this.resetTime;
-        this.playing[id][channel].ended = true;
-    },
-    /**
-     * Pauses a playing audio clip
-     *
-     * @method stop
-     * @param id {String|Object} The id of the sound clip to pause. You can also pass the object returned from a previous play
-     * @param channel {Number} The channel that the clip is playing on (not needed if you pass the clip object as the first parameter)
-     */
-    pause: function(id, channel) {
-        if(typeof id === 'object') {
-            channel = id.channel;
-            id = id.id;
-        }
-
-        if(!this.playing[id]) return;
-        if(!this.playing[id][channel]) return;
-
-        this.playing[id][channel].pause();
-    },
-    /**
-     * Plays all currently paused or stopped audio clips (only ones that have previously been started with gf.play)
-     *
-     * @method playAll
-     */
-    playAll: function() {
-        for(var sid in this.playing) {
-            var chans = this.playing[sid];
-
-            for(var i = 0, il = chans.length; i < il; ++i)
-                this.play({ id: sid, channel: i });
-        }
-    },
-    /**
-     * Stops all currently paused or playing audio clips
-     *
-     * @method stopAll
-     */
-    stopAll: function() {
-        for(var sid in this.playing) {
-            var chans = this.playing[sid];
-
-            for(var i = 0, il = chans.length; i < il; ++i)
-                this.stop(sid, i);
-        }
-    },
-    /**
-     * Pauses all currently playing audio clips
-     *
-     * @method pauseAll
-     */
-    pauseAll: function() {
-        for(var sid in this.playing) {
-            var chans = this.playing[sid];
-
-            for(var i = 0, il = chans.length; i < il; ++i)
-                this.pause(sid, i);
-        }
-    }
-});
 /**
  * The base display object, that anything being put on the screen inherits from
  *
@@ -15033,7 +14579,7 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
-            if(o.visible && o.resize)
+            if(o.resize)
                 o.resize.apply(o, arguments);
         }
     },
@@ -15045,16 +14591,6 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
 
         //clear the list and let the GC clean up
         this.children = [];
-    },
-    forEachEntity: function(fn) {
-        //go through each child and call recurse children for each one
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            if(this.children[i].forEachEntity)
-                this.children[i].forEachEntity(fn);
-        }
-
-        if(fn && this instanceof gf.Entity)
-            fn(this);
     },
     /**
      * Convenience method for setting the position of the Object.
@@ -15098,8 +14634,6 @@ gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
 /**
  * A basic Camera object that provides some effects. It also will contain the HUD and GUI
  * to ensure they are using "screen-coords".
- * This camera instance is based on
- * <a href="https://github.com/photonstorm/kiwi-lite/blob/master/Kiwi%20Lite/Camera.ts">Kiwi-Lite's Camera</a>.
  *
  * TODO: Currently fade/flash don't show the colors. How should I actually show them, a PIXI.Sprite?
  *
@@ -16128,91 +15662,6 @@ gf.Entity.TYPE = {
     TILE: 'tile'
 };
 /**
- * Holds a pool of different Entities that can be created, makes it very
- * easy to quickly create different registered entities
- *
- * @class entityPool
- */
-gf.entityPool = {
-    _objects: {},
-    /**
-     * Adds an entity Object to the pool
-     *
-     * @method add
-     * @param name {String} The user-defined name of the Entity to add
-     * @param obj {Object} The Entity or decendant to add to the pool
-     * @return {Object} Returns the passed object
-     * @example
-     *      //create a new ckass to be instantiated
-     *      var Bug = gf.entityPool.add('bug', gf.Entity.extend({
-     *          //ctor function
-     *          init: function(pos, settings) {
-     *              //call the base ctor
-     *              this._super(pos, settings);
-     *
-     *              this.color = 'red';
-     *          },
-     *          beBug: function() {
-     *              console.log("I'm a bug");
-     *          }
-     *      }));
-     *
-     *      //then later in your game code
-     *      var mybug = gf.entityPool.create('bug', {
-     *          pos: [10, 10]
-     *      });
-     */
-    add: function(name, obj) {
-        return gf.entityPool._objects[name] = obj;
-    },
-    /**
-     * Checks if the entity exists in the pool
-     *
-     * @method has
-     * @param name {String} The user-defined name of the Entity to check if is in the pool
-     * @return {Boolean} Returns the passed object
-     */
-    has: function(name) {
-        return !!gf.entityPool._objects[name];
-    },
-    /**
-     * Creates a new entity from the pool
-     *
-     * @method create
-     * @param name {String} The user-defined name of the Entity to check if is in the pool
-     * @param props {Object} The properties that would normally be passed as the "settings" of the Entity
-     * @return {Entity} Returns a new instance of the object from the pool
-     * @example
-     *      //create a new ckass to be instantiated
-     *      var Bug = function(pos, settings) {
-     *          gf.Entity.call(this, pos, settings);
-     *          this.color = 'red';
-     *      };
-     *
-     *      gf.inherits(Bug, gf.Entity, {
-     *          beBug: function() {
-     *              console.log("I'm a bug");
-     *          }
-     *      });
-     *
-     *      //then later in your game code
-     *      var mybug = gf.entityPool.create('bug', {
-     *          pos: [10, 10] //pos, and/or position properties get sent as the first param to the ctor
-     *      });
-     */
-    create: function(game, name, props) {
-        //if the name is in our pool, create it
-        if(name && gf.entityPool.has(name)) {
-            return new gf.entityPool._objects[name](game, props.pos || props.position || [props.x, props.y], props);
-        }
-        //otherwise create a general Entity
-        else {
-            return new gf.Entity(game, props.pos || props.position || [props.x, props.y], props);
-        }
-    }
-};
-
-/**
  * GameStates are different , controls the entire instance of the game
  *
  * @class GameState
@@ -16237,7 +15686,7 @@ gf.GameState = function(game, name, settings) {
      * @type AudioPlayer
      * @readOnly
      */
-    this.audio = new gf.AudioPlayer(game);
+    this.audio = new gf.AudioManager();
 
     /**
      * The input instance for this game
@@ -16340,134 +15789,6 @@ gf.inherits(gf.GameState, gf.DisplayObject, {
     }
 });
 /**
- * A simple object to show some debug items
- *
- * @class debug
- */
- gf.debug = {
-    /**
-     * The styles applied to the fps box after it is created
-     *
-     * @property fpsStyle
-     */
-    fpsStyle: {
-        position: 'absolute',
-        top: '0px',
-        left: '0px',
-        'z-index': 10
-    },
-    /**
-     * Shows the FPS Counter
-     *
-     * @method showFpsCounter
-     */
-    showFpsCounter: function() {
-        gf.debug._fpsCounter = new gf.debug.FpsCounter();
-        for(var s in gf.debug.fpsStyle) {
-            gf.debug._fpsCounter.domElement.style[s] = gf.debug.fpsStyle[s];
-        }
-        document.body.appendChild(gf.debug._fpsCounter.domElement);
-    },
-    /**
-     * Shows some debug info such as player position and the gamepad state
-     *
-     * @method showDebugInfo
-     * @param game {Game} The game instance to show info for
-     * @param pad {Boolean} Whether or not to show gamepad info (defaults to true)
-     */
-    showDebugInfo: function(game, pad) {
-        gf.debug._info = new gf.debug.Info(game, pad);
-        document.body.appendChild(gf.debug._info.domElement);
-    },
-    /**
-     * Called internally by the Game instance
-     *
-     * @method update
-     * @private
-     */
-    update: function() {
-        //update fps box
-        if(gf.debug._fpsCounter) gf.debug._fpsCounter.update();
-
-        //update debug info
-        if(gf.debug._info) gf.debug._info.update();
-    },
-    Info: function(game, pad) {
-        this.game = game;
-        this.showGamepad = pad !== undefined ? pad : true;
-
-        var br = document.createElement('br');
-
-        //container
-        var container = document.createElement('div');
-        container.id = 'gf-debug-info';
-        container.style['position'] = 'absolute';
-        container.style['top'] = '50px';
-        container.style['left'] = '0';
-        container.style['z-index'] = '10';
-        container.style['color'] = '#FFF';
-        container.style['font-size'] = '0.9em';
-
-        //title
-        var title = document.createElement('h3');
-        title.id = 'gf-debug-info-title';
-        title.textContent = 'Debug Info';
-        title.style.cssText = 'margin:1px;display:block;';
-
-        container.appendChild(title);
-
-        //player position
-        var pos = document.createElement('span'),
-            posVal = document.createElement('span');
-        pos.id = 'gf-debug-info-position';
-        posVal.id = 'gf-debug-info-position-value';
-        pos.textContent = 'Player Position: ';
-        posVal.textContent = 'X: 0, Y: 0';
-
-        //gamepads
-        var pads = document.createElement('span');
-        pads.id = 'gf-debug-info-gamepads';
-
-        container.appendChild(pads);
-
-        pos.appendChild(posVal);
-        container.appendChild(pos);
-        container.appendChild(br.cloneNode());
-
-        this.player = 
-
-        this.REVISION = 1;
-        this.domElement = container;
-        this.update = function() {
-            posVal.textContent = this.game.players[0] ?
-                                    'X: ' + this.game.players[0].position.x.toFixed(1) + ', Y: ' + this.game.players[0].position.y.toFixed(1) :
-                                    'none';
-
-            if(this.showGamepad) {
-                pads.innerHTML = '';
-                if(this.game.input.gamepad.pads && this.game.input.gamepad.pads.length) {
-                    for(var i = 0, il = this.game.input.gamepad.pads.length; i < il; ++i) {
-                        var pad = this.game.input.gamepad.pads[i];
-
-                        pads.innerHTML += 'Gamepad: [' + pad.index + '] ' + pad.id + '<br/>';
-                        pads.innerHTML += '&nbsp;&nbsp;&nbsp;Buttons:<br/>' + 
-                                            pad.buttons.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.input.getGpButtonName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
-                        pads.innerHTML += '&nbsp;&nbsp;&nbsp;Axes:<br/>' + 
-                                            pad.axes.map(function(v, i) { return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + gf.input.getGpAxisName(i) + ': ' + v.toFixed(2); }).join('<br/>') + '<br/>';
-                    }
-                }
-            }
-        };
-    },
-    //mrdoob's stats.js (stats.js r10 - http://github.com/mrdoob/stats.js)
-    FpsCounter:function(){var l=Date.now(),m=l,g=0,n=1E3,o=0,h=0,p=1E3,q=0,r=0,s=0,f=document.createElement("div");f.id="gf-stats";f.addEventListener("mousedown",function(b){b.preventDefault();t(++s%2)},!1);f.style.cssText="width:80px;opacity:0.9;cursor:pointer";var a=document.createElement("div");a.id="fps";a.style.cssText="padding:0 0 3px 3px;text-align:left;background-color:#002";f.appendChild(a);var i=document.createElement("div");i.id="fpsText";i.style.cssText="color:#0ff;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px";
-    i.innerHTML="FPS";a.appendChild(i);var c=document.createElement("div");c.id="fpsGraph";c.style.cssText="position:relative;width:74px;height:30px;background-color:#0ff";for(a.appendChild(c);74>c.children.length;){var j=document.createElement("span");j.style.cssText="width:1px;height:30px;float:left;background-color:#113";c.appendChild(j)}var d=document.createElement("div");d.id="ms";d.style.cssText="padding:0 0 3px 3px;text-align:left;background-color:#020;display:none";f.appendChild(d);var k=document.createElement("div");
-    k.id="msText";k.style.cssText="color:#0f0;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px";k.innerHTML="MS";d.appendChild(k);var e=document.createElement("div");e.id="msGraph";e.style.cssText="position:relative;width:74px;height:30px;background-color:#0f0";for(d.appendChild(e);74>e.children.length;)j=document.createElement("span"),j.style.cssText="width:1px;height:30px;float:left;background-color:#131",e.appendChild(j);var t=function(b){s=b;switch(s){case 0:a.style.display=
-    "block";d.style.display="none";break;case 1:a.style.display="none",d.style.display="block"}};return{domElement:f,setMode:t,begin:function(){l=Date.now()},end:function(){var b=Date.now();g=b-l;n=Math.min(n,g);o=Math.max(o,g);k.textContent=g+" MS ("+n+"-"+o+")";var a=Math.min(30,30-30*(g/200));e.appendChild(e.firstChild).style.height=a+"px";r++;b>m+1E3&&(h=Math.round(1E3*r/(b-m)),p=Math.min(p,h),q=Math.max(q,h),i.textContent=h+" FPS ("+p+"-"+q+")",a=Math.min(30,30-30*(h/100)),c.appendChild(c.firstChild).style.height=
-    a+"px",m=b,r=0);return b},update:function(){l=this.end()}}}
-};
-
-/**
  * The grapefruit utility object, used for misc functions used throughout the code base
  *
  * @class utils
@@ -16522,6 +15843,9 @@ gf.inherits(gf.GameState, gf.DisplayObject, {
         sets.method = sets.method || 'GET';
         sets.dataType = sets.dataType || 'text';
 
+        if(!sets.url)
+            throw 'No URL passed to ajax';
+
         //callbacks
         sets.progress = sets.progress || gf.utils.noop;
         sets.load = sets.load || gf.utils.noop;
@@ -16533,16 +15857,19 @@ gf.inherits(gf.GameState, gf.DisplayObject, {
 
         xhr.onreadystatechange = function() {
             if(xhr.readyState === 4) {
-                var res = xhr.responseText,
+                var res = xhr.response || xhr.responseText,
                     err = null;
-
-                if(sets.dataType === 'json') {
-                    try { res = JSON.parse(res); }
-                    catch(e) { err = e; }
-                }
 
                 if(xhr.status !== 200)
                     err = 'Non-200 status code returned: ' + xhr.status;
+
+                if(!err && typeof res === 'string' && sets.dataType === 'json') {
+                    try {
+                        res = JSON.parse(res);
+                    } catch(e) {
+                        err = e;
+                    }
+                }
 
                 if(err) {
                     if(sets.error) sets.error.call(xhr, err);
@@ -16551,6 +15878,10 @@ gf.inherits(gf.GameState, gf.DisplayObject, {
                 }
             }
         };
+
+        //chrome doesn't support json responseType
+        if(sets.dataType !== 'json')
+            xhr.responseType = sets.dataType;
 
         xhr.open(sets.method, sets.url, true);
         xhr.send();
@@ -16726,7 +16057,7 @@ gf.inherits(gf.GameState, gf.DisplayObject, {
             top: t,
             left: l
         };
-    },
+    }
     /////////////////////////////////////////////////////////////////////////////
 };
 
@@ -17007,47 +16338,6 @@ gf.inherits(gf.Clock, Object, {
     }
 });
 
-gf.ObjectPool = function(type, parent) {
-    this.type = type;
-    this.pool = [];
-    this.alloced = [];
-    this.parent = parent;
-};
-
-gf.inherits(gf.ObjectPool, Object, {
-    create: function() {
-        var o = this.pool.pop();
-
-        if(!o) {
-            o = this._construct(this.type, arguments);
-            if(this.parent)
-                this.parent.addChild(o);
-        }
-
-        this.alloced.push(o);
-
-        return o;
-    },
-    free: function(o) {
-        this.pool.push(o);
-    },
-    freeAll: function() {
-        for(var i = 0, il = this.alloced.length; i < il; ++i) {
-            this.free(this.alloced[i]);
-        }
-
-        this.alloced.length = 0;
-    },
-    //have to do this hack around to be able to use
-    //apply and new together
-    _construct: function(ctor, args) {
-        function F() {
-            return ctor.apply(this, args);
-        }
-        F.prototype = ctor.prototype;
-        return new F();
-    }
-});
 /**
  * A 2d Vector implementation stolen directly from mrdoob's THREE.js
  * thanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js
@@ -17451,6 +16741,1581 @@ gf.inherits(gf.Vector, Object, {
      */
     clone: function () {
         return new gf.Vector(this.x, this.y);
+    }
+});
+
+/**
+ * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
+ * The GF Audio API was based on
+ * <a href="https://github.com/goldfire/howler.js">Howler.js</a>
+ *
+ * @class AudioManager
+ * @constructor
+ */
+gf.AudioManager = function() {
+    //normalize Audio Context
+    var GfAudioContext = window.AudioContext || window.webkitAudioContext;
+
+    /**
+     * Whether the player is muted or not
+     *
+     * @property muted
+     * @type Boolean
+     * @default false
+     * @private
+     */
+    this._muted = false;
+
+    /**
+     * The master volume of the player
+     *
+     * @property _volume
+     * @type Number
+     * @default 1
+     * @private
+     */
+    this._volume = 1;
+
+    /**
+     * The Web Audio API context if we are using it
+     *
+     * @property ctx
+     * @type AudioContext
+     * @readOnly
+     */
+    this.ctx = gf.support.webAudio ? new GfAudioContext() : null;
+
+    /**
+     * If we have some way of playing audio
+     *
+     * @property canPlay
+     * @type Boolean
+     * @readOnly
+     */
+    this.canPlay = gf.support.webAudio || gf.support.htmlAudio;
+
+    /**
+     * The codecs that the browser supports
+     *
+     * @property codecs
+     * @type Object<Boolean>
+     * @readOnly
+     */
+    if(this.canPlay) {
+        var audioTest = new Audio();
+
+        this.codecs = {
+            mp3: !!audioTest.canPlayType('audio/mpeg;').replace(/^no$/,''),
+            opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/,''),
+            ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,''),
+            wav: !!audioTest.canPlayType('audio/wav; codecs="1"').replace(/^no$/,''),
+            m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),
+            webm: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')
+        };
+    }
+
+    //if we are using web audio, we need a master gain node
+    if(gf.support.webAudio) {
+        this.masterGain = this.ctx.createGain ? this.ctx.createGainNode() : this.ctx.createGain();
+        this.masterGain.gain.value = 1;
+        this.masterGain.connect(this.ctx.destination);
+    }
+
+    //map of elements to play audio with
+    this.sounds = {};
+
+    //define volume getter/setter
+    this.__defineGetter__('volume', this.getVolume.bind(this));
+    this.__defineSetter__('volume', this.setVolume.bind(this));
+};
+
+gf.inherits(gf.AudioManager, Object, {
+    getVolume: function() {
+        return this._volume;
+    },
+    setVolume: function(v) {
+        v = parseFloat(v, 10);
+
+        if(!isNaN(v) && v >= 0 && v <= 1) {
+            this._volume = v;
+
+            if(gf.support.webAudio)
+                this.masterGain.gain.value = v;
+
+            //go through each audio element and change their volume
+            for(var key in this.sounds) {
+                if(this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
+                    var player = this.sounds[key];
+                    //loop through the audio nodes
+                    for(var i = 0, il = player._nodes.length; i < il; ++i) {
+                        player._nodes[i].volume = player._volume * this._volume;
+                    }
+                }
+            }
+        }
+    },
+    mute: function() {
+        return this.setMuted(true);
+    },
+    unmute: function() {
+        return this.setMuted(false);
+    },
+    setMuted: function(m) {
+        this._muted = m = !!m;
+
+        if(gf.support.webAudio)
+            this.masterGain.gain.value = m ? 0 : this._volume;
+
+        //go through each audio element and mute/unmute them
+        for(var key in this.sounds) {
+            if(this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
+                var player = this.sounds[key];
+                //loop through the audio nodes
+                for(var i = 0, il = player._nodes.length; i < il; ++i) {
+                    player._nodes[i].muted = m;
+                }
+            }
+        }
+
+        return this;
+    },
+    create: function(name, settings) {
+        //if we can't play audio return false
+        if(!this.canPlay) {
+            return false;
+        }
+
+        //name is "optional"
+        if(typeof name !== 'string') {
+            settings = name;
+            name = null;
+        }
+
+        //make up an ID if none was passed
+        if(!name)
+            name = Math.round(Date.now() * Math.random()) + '';
+
+        var src;
+
+        //loop through each source url and pick the first that is compatible
+        for(var i = 0, il = settings.urls.length; i < il; ++i) {
+            var url = settings.urls[i].toLowerCase(),
+                ext;
+
+            //if they pass a format override, use that
+            if(settings.format) {
+                ext = settings.format;
+            }
+            //otherwise extract the format from the url
+            else {
+                ext = url.match(/.+\.([^?]+)(\?|$)/);
+                ext = (ext && ext.length >= 2) ? ext[1] : url.match(/data\:audio\/([^?]+);/)[1];
+            }
+
+            //if we can play this url, then set the source of the player
+            if(this.codecs[ext]) {
+                src = url;
+                break;
+            }
+        }
+
+        //check if we found a usable url, if not return false
+        if(!src) {
+            return false;
+        }
+
+        //check if we already created a player for this audio
+        if(gf.assetCache[src])
+            return gf.assetCache[src];
+
+        settings.src = src;
+        return this.sounds[name] = gf.assetCache[src] = new gf.AudioPlayer(this, settings);
+    }
+});
+/**
+ * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
+ * The GF Audio API was based on
+ * <a href="https://github.com/goldfire/howler.js">Howler.js</a>
+ *
+ * @class AudoPlayer
+ * @constructor
+ * @param manager {AudioManager} AudioManager instance for this audio player
+ */
+gf.AudioPlayer = function(manager, settings) {
+    //mixin the Event Target methods
+    gf.EventTarget.call(this);
+
+    this.autoplay = false;
+    this.buffer = false;
+    this.format = null;
+    this.loop = false;
+    this.pos3d = [0, 0, -0.5];
+    this.sprite = {};
+    this.src = '';
+    //volume is getter/setter
+
+    this._volume = 1;
+    this._duration = 0;
+    this._loaded = false;
+    this._manager = manager;
+    this._canPlay = manager.canPlay;
+    this._codecs = manager.codecs;
+    this._webAudio = gf.support.webAudio && !this.buffer;
+    this._nodes = [];
+    this._onendTimer = [];
+
+    //mixin user's settings
+    gf.utils.setValues(this, settings);
+
+    //define volume getter/setter
+    this.__defineGetter__('volume', this.getVolume.bind(this));
+    this.__defineSetter__('volume', this.setVolume.bind(this));
+
+    if(this._webAudio) {
+        this._setupAudioNode();
+    }
+
+    this.load();
+};
+
+gf.inherits(gf.AudioPlayer, Object, {
+    /**
+     * Load the audio file for this player
+     *
+     * @return {AudioPlayer}
+     */
+    load: function() {
+        //if using web audio, load up the buffer
+        if(this._webAudio) {
+            this.loadBuffer(this.src);
+        }
+        //otherwise create some Audio nodes
+        else {
+            //create a new adio node
+            var node = new Audio();
+            this._nodes.push(node);
+
+            //setup the audio node
+            node.src = this.src;
+            node._pos = 0;
+            node.preload = 'auto';
+            node.volume = this._manager.muted ? 0 : this._volume * this._manager.volume;
+
+            //setup the event listener to start playing the sound when it has buffered
+            var self = this, evt = function() {
+                self._duration = node.duration;
+
+                //setup a default sprite
+                self.sprite._default = [0, node.duration * 1000];
+
+                //check if loaded
+                if(!this._loaded) {
+                    this._loaded = true;
+                    this.emit({
+                        type: 'load',
+                        message: 'Audio file loaded.',
+                        data: this.src
+                    });
+                }
+
+                //if autoplay then start it
+                if(self.autoplay) {
+                    self.play();
+                }
+
+                //clear the event listener
+                node.removeEventListener('canplaythrough', evt, false);
+            };
+            node.addEventListener('canplaythrough', evt, false);
+            node.load();
+        }
+
+        return this;
+    },
+    /**
+     * Play a sound from the current time (0 by default).
+     *
+     * @param sprite {String} (optional) Plays from the specified position in the sound sprite definition.
+     * @param callback {Function} (optional) Returns the unique playback id for this sound instance.
+     * @return {AudioPlayer}
+     */
+    play: function(sprite, cb) {
+        var self = this;
+
+        if(typeof sprite === 'function') {
+            cb = sprite;
+            sprite = null;
+        }
+
+        //if no sprite specified, use default
+        if(!sprite) {
+            sprite = '_default';
+        }
+
+        //if we haven't loaded yet, wait until we do
+        if(!this._loaded) {
+            this.on('load', function() {
+                self.play(sprite, cb);
+            });
+
+            return this;
+        }
+
+        //if the sprite doesn't exist, play nothing
+        if(!this.sprite[sprite]) {
+            if(typeof cb === 'function') cb();
+            return this;
+        }
+
+        //get an audio node to use to play
+        this._inactiveNode(function(node) {
+            var pos = node._pos > 0 ? node._pos : this.sprite[sprite][0] / 1000,
+            duration = (this.sprite[sprite][1] / 1000) - node._pos,
+            loop = (this.loop || this.sprite[sprite][2]),
+            soundId = (typeof cb === 'string') ? cb : (Math.round(Date.now() * Math.random()) + ''),
+            timerId;
+
+            node._sprite = sprite;
+
+            //after the audio finishes:
+            (function(o) {
+                timerId = setTimeout(function() {
+                    //if looping restsart it
+                    if(!self._webAudio && o.loop) {
+                        self.stop(o.id, o.timer).play(o.sprite, o.id);
+                    }
+
+                    // set web audio node to paused
+                    if(self._webAudio && !o.loop) {
+                        self._nodeById(o.id).paused = true;
+                    }
+
+                    //end the track if it is HTML audio and a sprite
+                    if(!self._webAudio && !o.loop) {
+                        self.stop(o.id, o.timer);
+                    }
+
+                    //fire off the end event
+                    self.emit({
+                        type: 'end',
+                        message: 'Audio has finished playing',
+                        data: o.id
+                    });
+                }, duration * 1000);
+
+                //store the timer
+                self._onendTimer.push(timerId);
+
+                //remember which timer to kill
+                o.timer = timerId;
+            })({
+                id: soundId,
+                sprite: sprite,
+                loop: loop
+            });
+
+            //setup webAudio functions
+            if(self._webAudio) {
+                //set the play id to this node and load into context
+                node.id = soundId;
+                node.paused = false;
+                this.refreshBuffer([loop, pos, duration], soundId);
+                this._playStart = this._manager.ctx.currentTime;
+                node.gain.value = this._volume;
+
+                if(typeof node.bufferSource.start === 'undefined') {
+                    node.bufferSource.noteGrainOn(0, pos, duration);
+                } else {
+                    node.bufferSource.start(0, pos, duration);
+                }
+            } else {
+                if(node.readyState === 4) {
+                    node.id = soundId;
+                    node.currentTime = pos;
+                    node.muted = this._manager.muted;
+                    node.volume = this._volume * this._manager.volume;
+                    node.play();
+                } else {
+                    this._clearEndTimer(timerId);
+
+                    (function() {
+                        var sound = self,
+                            playSpr = sprite,
+                            fn = cb,
+                            newNode = node;
+
+                        var evt = function() {
+                            sound.play(playSpr, fn);
+
+                            //clear listener
+                            newNode.removeEventListener('canplaythrough', evt, false);
+                        };
+                        newNode.addEventListener('canplaythrough', evt, false);
+                    })();
+
+                    return this;
+                }
+            }
+
+            this.emit({
+                type: 'play',
+                message: 'Playing audio file',
+                data: soundId
+            });
+
+            if(typeof cb === 'function')
+                cb(soundId);
+        });
+
+        return this;
+    },
+    /**
+     * Pause playback and save the current position.
+     *
+     * @param id {String} (optional) The play instance ID.
+     * @param timerId {String} (optional) Clear the correct timeout ID.
+     * @return {AudioPlayer}
+     */
+    pause: function(id, timerId) {
+        var self = this;
+
+        //if we haven't loaded this sound yet, wait until we play it to pause it
+        if(!this._loaded) {
+            this.on('play', function() {
+                self.play(id);
+            });
+
+            return this;
+        }
+
+        //clear the onend timer
+        this._clearEndTimer(timerId || 0);
+
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if(activeNode) {
+            if(this._webAudio) {
+                //ensure the sound was created
+                if(!activeNode.bufferSource)
+                    return this;
+
+                activeNode.paused = true;
+                activeNode._pos += this._manager.ctx.currentTime - this._playStart;
+
+                if(typeof activeNode.bufferSource.stop === 'undefined') {
+                    activeNode.bufferSource.noteOff(0);
+                } else {
+                    activeNode.bufferSource.stop(0);
+                }
+            } else {
+                activeNode._pos = activeNode.currentTime;
+                activeNode.pause();
+            }
+        }
+
+        this.emit({
+            type: 'pause',
+            message: 'Audio file paused',
+            data: id
+        });
+
+        return this;
+    },
+    /**
+     * Stop playback and reset to start.
+     *
+     * @param id {String} (optional) The play instance ID.
+     * @param timerId {String} (optional) Clear the correct timeout ID.
+     * @return {AudioPlayer}
+     */
+    stop: function(id, timerId) {
+        var self = this;
+
+        //if we haven't loaded this sound yet, wait until we play it to stop it
+        if(!this._loaded) {
+            this.on('play', function() {
+                self.stop(id);
+            });
+
+            return this;
+        }
+
+        //clear onend timer
+        this._clearEndTimer(timerId || 0);
+
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if(activeNode) {
+            activeNode._pos = 0;
+
+            if(this._webAudio) {
+                if(!activeNode.bufferSource)
+                    return this;
+
+                activeNode.paused = true;
+
+                if(typeof activeNode.bufferSource.stop === 'undefined') {
+                    activeNode.bufferSource.noteOff(0);
+                } else {
+                    activeNode.bufferSource.stop(0);
+                }
+            } else {
+                activeNode.pause();
+                activeNode.currentTime = 0;
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Mute this sound.
+     *
+     * @param id {String} (optional) The play instance ID.
+     * @return {AudioPlayer}
+     */
+    mute: function(id) {
+        return this.setMuted(true, id);
+    },
+    /**
+     * Unmute this sound.
+     *
+     * @param id {String} (optional) The play instance ID.
+     * @return {AudioPlayer}
+     */
+    unmute: function(id) {
+        return this.setMuted(false, id);
+    },
+    /**
+     * Set the muted state of this sound.
+     *
+     * @param id {String} (optional) The play instance ID.
+     * @return {AudioPlayer}
+     */
+    setMuted: function(muted, id) {
+        var self  = this;
+
+        //if we haven't loaded this sound yet, wait until we play it to mute it
+        if(!this._loaded) {
+            this.on('play', function() {
+                self.setMuted(muted, id);
+            });
+
+            return this;
+        }
+
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if(activeNode) {
+            if(this._webAudio) {
+                activeNode.gain.value = muted ? 0 : this._volume;
+            } else {
+                activeNode.volume =  muted ? 0 : this._volume;
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Set the position of playback.
+     *
+     * @param pos {Number} The position to move current playback to.
+     * @param id {String} (optional) The play instance ID.
+     * @return {AudioPlayer}
+     */
+    seek: function(pos, id) {
+        var self = this;
+
+        //if we haven't loaded this sound yet, wait until it is to seek it
+        if(!this._loaded) {
+            this.on('load', function() {
+                self.seek(pos);
+            });
+
+            return this;
+        }
+
+        //if position is < 0, or invalid, then set to 0
+        if(!pos || pos < 0)
+            pos = 0;
+
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if(activeNode) {
+            if(this._webAudio) {
+                activeNode._pos = pos;
+                this.pause(activeNode.id).play(activeNode._sprite, id);
+            } else {
+                activeNode.currentTime = pos;
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Get the position of playback.
+     *
+     * @param id {String} (optional) The play instance ID.
+     * @return {Number}
+     */
+    getPosition: function(id) {
+        var self = this;
+
+        //if we haven't loaded this sound yet, wait until it is to seek it
+        if(!this._loaded) {
+            this.on('load', function() {
+                self.getPosition(id);
+            });
+
+            return this;
+        }
+
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if(activeNode) {
+            if(this._webAudio) {
+                return activeNode._pos + (this._manager.ctx.currentTime - this._playStart);
+            } else {
+                return activeNode.currentTime;
+            }
+        }
+
+        return 0;
+    },
+    /**
+     * Fade a currently playing sound between two volumes.
+     *
+     * @param from {Number} The volume to fade from (0.0 to 1.0).
+     * @param to {Number} The volume to fade to (0.0 to 1.0).
+     * @param len {Number} Time in milliseconds to fade.
+     * @param id {String} (optional) The play instance ID.
+     * @param callback {Function} (optional) Fired when the fade is complete.
+     * @return {AudioPlayer}
+     */
+    fade: function(from, to, len, id, cb) {
+        var self = this,
+            diff = Math.abs(from - to),
+            dir = from > to ? 'dowm' : 'up',
+            steps = diff / 0.01,
+            stepTime = len / steps;
+
+        if(typeof id === 'function') {
+            cb = id;
+            id = null;
+        }
+
+        //if we haven't loaded this sound yet, wait until it is to seek it
+        if(!this._loaded) {
+            this.on('load', function() {
+                self.fade(from, to, len, id, cb);
+            });
+
+            return this;
+        }
+
+        this.setVolume(from, id);
+
+        for(var i = 1; i <= steps; ++i) {
+            var change = this._volume + ((dir === 'up' ? 0.01 : -0.01) * i),
+                vol = Math.round(1000 * change) / 1000,
+                wait = stepTime * i;
+
+            this._doFadeStep(vol, wait, to, id, cb);
+        }
+    },
+    getVolume: function() {
+        return this._volume;
+    },
+    setVolume: function(vol, id) {
+        var self = this;
+
+        // make sure volume is a number
+        vol = parseFloat(vol);
+
+        //if we haven't loaded this sound yet, wait until we play it to change the volume
+        if(!this._loaded) {
+            this.on('play', function() {
+                self.setVolume(vol, id);
+            });
+
+            return this;
+        }
+
+        //set the volume
+        if(vol >= 0 && vol <= 1) {
+            this._volume = vol;
+
+            var activeNode = id ? this._nodeById(id) : this._activeNode();
+            if(activeNode) {
+                if(this._webAudio) {
+                    activeNode.gain.volume = vol;
+                } else {
+                    activeNode.volume = vol * this._manager.volume;
+                }
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Set the 3D position of the audio source.
+     * The most common usage is to set the 'x' position
+     * to affect the left/right ear panning. Setting any value higher than
+     * 1.0 will begin to decrease the volume of the sound as it moves further away.
+     * NOTE: This only works with Web Audio API, HTML5 Audio playback
+     * will not be affected.
+     *
+     * @param x {Number} The x-position of the playback from -1000.0 to 1000.0
+     * @param y {Number} The y-position of the playback from -1000.0 to 1000.0
+     * @param z {Number} The z-position of the playback from -1000.0 to 1000.0
+     * @param id {String} (optional) The play instance ID.
+     * @return {AudioPlayer}
+     */
+    setPosition: function(x, y, z, id) {
+        var self = this;
+
+        //set a default for the optional 'y' and 'z'
+        x = !x ? 0 : x;
+        y = !y ? 0 : y;
+        z = (!z && z !== 0) ? -0.5 : z;
+
+        //if we haven't loaded this sound yet, wait until we play it to change the position
+        if(!this._loaded) {
+            this.on('play', function() {
+                self.setPosition(x, y, z, id);
+            });
+
+            return this;
+        }
+
+        if(this._webAudio) {
+            var activeNode = id ? this._nodeById(id) : this._activeNode();
+            if(activeNode) {
+                this.pos3d[0] = x;
+                this.pos3d[1] = y;
+                this.pos3d[2] = z;
+                activeNode.panner.setPosition(x, y, z);
+            }
+        }
+
+        return this;
+    },
+    _doFadeStep: function(vol, wait, end, id, cb) {
+        var self = this;
+
+        setTimeout(function() {
+            self.setVolume(vol, id);
+
+            if(vol === end) {
+                if(typeof cb === 'function')
+                    cb();
+            }
+        }, wait);
+    },
+    /**
+     * Get an audio node by ID.
+     *
+     * @return {AudioPlayer} Audio node.
+     */
+    _nodeById: function(id) {
+        var node = this._nodes[0]; //default return value
+
+        //find the node with this ID
+        for(var i = 0, il = this._nodes.length; i < il; ++i) {
+            if(this._nodes[i].id === id) {
+                node = this._nodes[i];
+                break;
+            }
+        }
+
+        return node;
+    },
+    /**
+     * Get the first active audio node.
+     *
+     * @return {Howl} Audio node.
+     */
+    _activeNode: function() {
+        var node;
+
+        //find the first playing node
+        for(var i = 0, il = this._nodes.length; i < il; ++i) {
+            if(!this._nodes[i].paused) {
+                node = this._nodes[i];
+                break;
+            }
+        }
+
+        //remove excess inactive nodes
+        this._drainPool();
+
+        return node;
+    },
+    /**
+     * Get the first inactive audio node.
+     * If there is none, create a new one and add it to the pool.
+     *
+     * @param  {Function} callback Function to call when the audio node is ready.
+     */
+    _inactiveNode: function(cb) {
+        var node;
+
+        //find first inactive node to recycle
+        for(var i = 0, il = this._nodes.length; i < il; ++i) {
+            if(this._nodes[i].paused && this._nodes[i].readyState === 4) {
+                cb(node = this._nodes[i]);
+                break;
+            }
+        }
+
+        //remove excess inactive nodes
+        this._drainPool();
+
+        if(node) return;
+
+        //create new node if there are no inactives
+        if(this._webAudio) {
+            node = this._setupAudioNode();
+            cb(node);
+        } else {
+            this.load();
+            node = this._nodes[this.nodes.length - 1];
+            node.addEventListener('loadedmetadata', function() {
+                cb(node);
+            });
+        }
+    },
+    /**
+     * If there are more than 5 inactive audio nodes in the pool, clear out the rest.
+     */
+    _drainPool: function() {
+        var inactive = 0,
+            i = 0, il = 0;
+
+        //count inactive nodes
+        for(i = 0, il = this._nodes.length; i < il; ++i) {
+            if(this._nodes[i].paused) {
+                inactive++;
+            }
+        }
+
+        //remove excess inactive nodes
+        for(i = this._nodes.length; i >= 0; --i) {
+            if(inactive <= 5)
+                break;
+
+            if(this._nodes[i].paused) {
+                inactive--;
+                this._nodes.splice(i, 1);
+            }
+        }
+    },
+    /**
+     * Clear 'onend' timeout before it ends.
+     * @param  {Number} timerId The ID of the sound to be cancelled.
+     */
+    _clearEndTimer: function(timerId) {
+        var timer = this._onendTimer.indexOf(timerId);
+
+        //make sure the timer is cleared
+        timer = timer >= 0 ? timer : 0;
+
+        if(this._onendTimer[timer]) {
+            clearTimeout(this._onendTimer[timer]);
+            this._onendTimer.splice(timer, 1);
+        }
+    },
+    /**
+     * Setup the gain node and panner for a Web Audio instance.
+     * @return {Object} The new audio node.
+     */
+    _setupAudioNode: function() {
+        var node = this._nodes,
+            i = this._nodes.length;
+
+        //create gain node
+        node.push((typeof this._manager.ctx.createGain === 'undefined') ? this._manager.ctx.createGainNode : this._manager.ctx.createGain());
+        node[i].gain.value = this._volume;
+        node[i].paused = true;
+        node[i]._pos = 0;
+        node[i].readyState = 4;
+        node[i].connect(this._manager.masterGain);
+
+        //create the panner
+        node[i].panner = this._manager.ctx.createPanner();
+        node[i].panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
+        node[i].panner.connect(node[i]);
+
+        return node[i];
+    }
+});
+
+//define some prototype functions that are only available when using the WebAudio API
+if(gf.support.webAudio) {
+    /**
+     * Buffer a sound from URL (or from cache) and decode to audio source (Web Audio API).
+     *
+     * @param url {String} The path to the sound file.
+     */
+    gf.AudioPlayer.prototype.loadBuffer = function(url) {
+        //load from cache
+        if(url in gf.assetCache) {
+            this._duration = gf.assetCache[url].duration;
+            this.loadSound();
+        } else {
+            //load the buffer from the URL
+            var self = this;
+
+            gf.utils.ajax({
+                method: 'GET',
+                url: url,
+                dataType: 'arraybuffer',
+                load: function(data) {
+                    //decode the buffer into an audio source
+                    self._manager.ctx.decodeAudioData(data, function(buffer) {
+                        if(buffer) {
+                            gf.assetCache[url] = buffer;
+                            self.loadSound(buffer);
+                        }
+                    });
+                },
+                error: function() {
+                    //if there was an error, switch to HTML Audio
+                    if(self._webAudio) {
+                        self._buffer = true;
+                        self._webAudio = false;
+                        self._nodes = [];
+                        self.load();
+                    }
+                }
+            });
+        }
+    };
+
+    /**
+     * Finishes loading the Web Audio API sound and fires the loaded event
+     *
+     * @param buffer {Object} The decoded buffer sound source.
+     */
+    gf.AudioPlayer.prototype.loadSound = function(buffer) {
+        this._duration = buffer ? buffer.duration : this._duration;
+
+        //setup a default sprite
+        this.sprite._default = [0, this._duration * 1000];
+
+        //fire the load event
+        if(!this._loaded) {
+            this._loaded = true;
+            this.emit({
+                type: 'load',
+                message: 'Audio file loaded.',
+                data: this.src
+            });
+        }
+
+        //autoplay is appropriate
+        if(this.autoplay) {
+            this.play();
+        }
+    };
+
+    /**
+     * Load the sound back into the buffer source.
+     *
+     * @param  {Array}  loop  Loop boolean, pos, and duration.
+     * @param  {String} id    (optional) The play instance ID.
+     */
+    gf.AudioPlayer.prototype.refreshBuffer = function(loop, id) {
+        var node = this._nodeById(id);
+
+        //setup the buffer source for playback
+        node.bufferSource = this._manager.ctx.createBufferSource();
+        node.bufferSource.buffer = gf.assetCache[this.src];
+        node.bufferSource.connect(node.panner);
+        node.bufferSource.loop = loop[0];
+
+        if(loop[0]) {
+            node.bufferSource.loopStart = loop[1];
+            node.bufferSource.loopEnd = loop[1] + loop[2];
+        }
+    };
+}
+gf.Loader = function(al, name, url) {
+    gf.EventTarget.call(this);
+
+    this.type = 'hey';
+
+    this.parent = al;
+    this.name = name;
+    this.url = url;
+};
+
+gf.inherits(gf.Loader, Object, {
+    load: function() {
+        var self = this;
+
+        if(gf.assetCache[this.name]) {
+            return setTimeout(function() {
+                self.done(gf.assetCache[self.name]);
+            }, 0);
+        }
+        else if(gf.assetCache[this.url]) {
+            return setTimeout(function() {
+                self.done(gf.assetCache[self.url]);
+            }, 0);
+        }
+    },
+    done: function(data) {
+        gf.assetCache[this.name] = data;
+
+        //be async for sure
+        var self = this;
+        setTimeout(function() {
+            self.emit({
+                type: 'load',
+                name: self.name,
+                assetType: self.type,
+                url: self.url,
+                data: data
+            });
+        }, 0);
+    },
+    error: function(msg) {
+        //be async for sure
+        var self = this;
+        setTimeout(function() {
+            self.emit({
+                type: 'error',
+                name: self.name,
+                assetType: self.type,
+                url: self.url,
+                message: msg
+            });
+        }, 0);
+    }
+});
+/**
+ * The AssetLoader loads and parses different game assets, such as sounds, textures,
+ * TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
+ * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
+ *
+ * @class AssetLoader
+ * @constructor
+ * @param assets {Array} Array of assets to load when `.load()` is called
+ * @example
+ *      var loader = new AssetLoader(['/my/texture.png']);
+ *      loader.load();
+ *      //OR
+ *      var loader = new AssetLoader();
+ *      loader.load(['/my/texture.png']);
+ */
+gf.AssetLoader = function(game) {
+    //mixin the Event Target methods
+    gf.EventTarget.call(this);
+
+    this.game = game;
+
+    /**
+     * The array of assets to load
+     *
+     * @property assets
+     * @type Array
+     */
+    this.assets = [];
+
+    /**
+     * The count of remaining assets to load
+     *
+     * @property remaining
+     * @type Number
+     * @readOnly
+     */
+    this.remaining = 0;
+
+    /**
+     * A mapping of extensions to types
+     *
+     * @property loaders
+     * @type Object
+     * @readOnly
+     * @private
+     */
+    this.loaders = {
+        'texture': gf.TextureLoader,
+        'jpeg': gf.TextureLoader,
+        'jpg': gf.TextureLoader,
+        'png': gf.TextureLoader,
+        'gif': gf.TextureLoader,
+
+        'audio': gf.AudioLoader,
+        'music': gf.AudioLoader,
+        'mp3': gf.AudioLoader,
+        'ogg': gf.AudioLoader,
+        'wma': gf.AudioLoader,
+        'wav': gf.AudioLoader,
+
+        'json': gf.JsonLoader
+    };
+};
+/**
+ * Fired when an item has loaded
+ *
+ * @event onProgress
+ */
+
+/**
+ * Fired when all the assets have loaded
+ *
+ * @event onComplete 
+ */
+
+gf.inherits(gf.AssetLoader, Object, {
+    /**
+     * Adds a resource to the assets array.
+     *
+     * @method add
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     */
+    add: function(name, url) {
+        this.assets.push({
+            name: name,
+            src: url
+        });
+    },
+    /**
+     * Starts the loading festivities. If called without any arguments it will load
+     * the assets passed in at the ctor. If an array of assets are passed it will
+     * load those instead.
+     *
+     * @method load
+     * @param items {Array} Array of resources to load instead of the object's resources
+     */
+    load: function(items) {
+        var assets = items || this.assets;
+
+        for(var i = 0, il = assets.length; i < il; ++i) {
+            var name = typeof assets[i] === 'string' ? assets[i] : assets[i].name,
+                url = typeof assets[i] === 'string' ? assets[i] : (assets[i].src || assets[i].url || assets[i].uri),
+                ext = assets[i].type || (url instanceof Array ? 'audio' : null) || url.split('.').pop().toLowerCase(), //assume arrays of urls are for audio
+                Loader = this.loaders[ext];
+
+            if(!Loader)
+                throw 'Unknown type "' + ext + '", unable to preload!';
+
+            this.remaining++;
+            var loader = new Loader(this, name, url);
+
+            loader.on('load', this.onAssetLoaded.bind(this));
+            loader.on('error', this.onAssetError.bind(this));
+            loader.load();
+        }
+    },
+    /**
+     * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
+     *
+     * @method onAssetLoaded
+     * @private
+     * @param err {String} An option error if there was an issue loading that resource
+     * @param type {String} The type of asset loaded (texture, audio, world, or spritesheet)
+     * @param asset {Texture|Audio|Object} The actual asset that was loaded
+     */
+    onAssetLoaded: function(e) {
+        this.remaining--;
+
+        this.emit({
+            type: 'progress',
+            assetType: e.assetType,
+            url: e.url,
+            data: e.data
+        });
+
+        if(this.remaining === 0) {
+            this.emit({ type: 'complete' });
+        }
+    },
+    onAssetError: function(e) {
+        this.remaining--;
+
+        this.emit({
+            type: 'error',
+            assetType: e.assetType,
+            message: e.message
+        });
+
+        if(this.remaining === 0) {
+            this.emit({ type: 'complete' });
+        }
+    }
+});
+
+/**
+ * Loads an audio clip
+ *
+ * @class AudioLoader
+ * @constructor
+ */
+gf.AudioLoader = function(al, name, urls) {
+    gf.Loader.call(this, al, name, urls);
+
+    this.type = 'audio';
+    this.urls = typeof urls === 'string' ? [urls] : urls;
+};
+
+gf.inherits(gf.AudioLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var player = this.parent.game.audio.create(name, { urls: this.urls });
+
+        if(!player) {
+            this.error('Cannot find a url for an audio type supported by this browser.');
+        } else {
+            var self = this;
+            player.on('load', function() {
+                self.done(player);
+            });
+
+            player.on('error', function(e) {
+                self.error(e.message);
+            });
+        }
+    }
+});
+/**
+ * Loads json data
+ *
+ * @class JsonLoader
+ * @constructor
+ */
+gf.JsonLoader = function(al, name, url) {
+    gf.Loader.call(this, al, name, url);
+
+    this.type = 'json';
+};
+
+gf.inherits(gf.JsonLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var self = this,
+            baseUrl = this.url.replace(/[^\/]*$/, '');
+
+        gf.utils.ajax({
+            method: 'GET',
+            url: this.url,
+            dataType: 'json',
+            load: function(data) {
+                var loader;
+
+                //check some properties to see if this is a TiledMap Object
+                if(data.orientation && data.layers && data.tilesets && data.version) {
+                    loader = new gf.WorldLoader(self.parent, self.name, baseUrl, data);
+                }
+                //this is a sprite sheet (published from TexturePacker)
+                else if(data.frames && data.meta) {
+                    loader = new gf.SpriteSheetLoader(self.parent, self.name, baseUrl, data);
+                }
+
+                if(loader) {
+                    loader.on('load', function(e) {
+                        self.done(e.data);
+                    });
+                    loader.on('error', function(e) {
+                        self.error(e.message);
+                    });
+
+                    loader.load();
+                }
+                //just some json data
+                else {
+                    self.done(data);
+                }
+            },
+            error: function(err) {
+                self.error(err.message || err);
+            }
+        });
+    }
+});
+gf.SpriteSheetLoader = function(al, name, baseUrl, data) {
+    gf.Loader.call(this, null, name, baseUrl);
+
+    this.type = 'spritesheet';
+    this.data = data;
+};
+
+gf.inherits(gf.SpriteSheetLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var self = this,
+            data = this.data,
+            txLoader = new gf.TextureLoader(this.parent, this.name, this.url + data.meta.image);
+
+        txLoader.on('load', function(e) {
+            var texture =  e.data.baseTexture,
+                frames = self.data.frames,
+                assets = {};
+
+            for(var f in frames) {
+                var rect = frames[f].frame;
+
+                if(rect) {
+                    assets[f] = PIXI.TextureCache[f] = new gf.Texture(texture, {
+                        x: rect.x,
+                        y: rect.y,
+                        width: rect.w,
+                        height: rect.h
+                    });
+
+                    if(frames[f].trimmed) {
+                        PIXI.TextureCache[f].realSize = frames[f].spriteSourceSize;
+                        PIXI.TextureCache[f].trim.x = 0;
+                    }
+                }
+            }
+
+            self.done(assets);
+        });
+
+        txLoader.on('error', function(e) {
+            self.error(e.message);
+        });
+
+        txLoader.load();
+    }
+});
+/**
+ * Loads a texture image
+ *
+ * @class TextureLoader
+ * @constructor
+ */
+ gf.TextureLoader = function(al, name, url) {
+    gf.Loader.call(this, al, name, url);
+
+    this.type = 'texture';
+};
+
+gf.inherits(gf.TextureLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var self = this,
+            texture = gf.Texture.fromImage(this.url);
+
+        if(!texture.baseTexture.hasLoaded) {
+            texture.baseTexture.on('loaded', function() {
+                self.done(texture);
+            });
+            texture.baseTexture.source.onerror = function() {
+                self.error('Unable to load texture');
+            };
+        } else {
+            this.done(texture);
+        }
+    }
+});
+gf.WorldLoader = function(al, name, baseUrl, data) {
+    gf.Loader.call(this, al, name, baseUrl);
+
+    this.type = 'world';
+    this.data = data;
+    this.numTextures = 0;
+    this.errors = [];
+};
+
+gf.inherits(gf.WorldLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        //loop through each layer and load the sprites (objectgroup types)
+        for(var i = 0, il = this.data.layers.length; i < il; ++i) {
+            var layer = this.data.layers[i];
+            if(layer.type !== 'objectgroup') continue;
+
+            //loop through each object, and load the textures
+            for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
+                var obj = layer.objects[o],
+                    txLoader;
+
+                if(!obj.properties.spritesheet) continue;
+                this.numTextures++;
+
+                txLoader = new gf.TextureLoader(this.parent, layer.name + '_' + obj.name + '_texture', obj.properties.spritesheet);
+
+                txLoader.on('load', this.onTextLoad.bind(this));
+                txLoader.on('error', this.onTextError.bind(this));
+                txLoader.load();
+            }
+        }
+
+        //loop through each tileset and load the texture
+        for(var s = 0, sl = this.data.tilesets.length; s < sl; ++s) {
+            var set = this.data.tilesets[s],
+                txLoader2;
+
+            if(!set.image) continue;
+            this.numTextures++;
+
+            txLoader2 = new gf.TextureLoader(this.parent, set.name + '_texture', this.url + set.image);
+
+            txLoader2.on('load', this.onTextLoad.bind(this));
+            txLoader2.on('error', this.onTextError.bind(this));
+            txLoader2.load();
+        }
+    },
+    onTextLoad: function() {
+        this.numTextures--;
+
+        if(this.numTextures === 0) {
+            this.done();
+        }
+    },
+    onTextError: function(e) {
+        this.numTextures--;
+        this.errors.push(e);
+
+        if(this.numTextures === 0) {
+            this.done();
+        }
+    },
+    done: function() {
+        if(this.errors.length)
+            gf.Loader.prototype.error.call(this, this.errors);
+        else
+            gf.Loader.prototype.done.call(this, this.data);
+    }
+});
+gf.ObjectPool = function(type, parent) {
+    this.type = type;
+    this.pool = [];
+    this.parent = parent;
+};
+
+gf.inherits(gf.ObjectPool, Object, {
+    create: function() {
+        var o = this.pool.pop();
+
+        if(!o) {
+            o = this._construct(this.type, arguments);
+            if(this.parent)
+                this.parent.addChild(o);
+        }
+
+        return o;
+    },
+    free: function(o) {
+        this.pool.push(o);
+    },
+    //have to do this hack around to be able to use
+    //apply and new together
+    _construct: function(ctor, args) {
+        function F() {
+            return ctor.apply(this, args);
+        }
+        F.prototype = ctor.prototype;
+        return new F();
+    }
+});
+/**
+ * Holds a pool of different Entities that can be created, makes it very
+ * easy to quickly create different registered entities
+ *
+ * @class entityPool
+ */
+gf.EntityPool = function(game) {
+    this.game = game;
+    this.types = {};
+
+    this.add('_default', gf.Entity);
+};
+
+gf.inherits(gf.EntityPool, Object, {
+    /**
+     * Adds an Entity Type to the pool
+     *
+     * @method add
+     * @param name {String} The user-defined name of the Entity Type to add
+     * @param obj {Object} The Entity or decendant type to add to the pool
+     * @return {Object} Returns the passed object
+     * @example
+     *      //create a new class to be instantiated
+     *      var Bug = function(game, pos, settings) {
+     *          gf.Entity.call(this, game, pos, settings);
+     *          this.color = 'red';
+     *      };
+     *
+     *      //inherit from Entity
+     *      gf.inherits(Bug, gf.Entity, {
+     *          beBug: function() {
+     *              console.log("I'm a bug");
+     *          }
+     *      });
+     *
+     *      //add to our game's entity pool
+     *      game.entitypool.add('bug', Bug);
+     *
+     *      //then later in your game code, create one
+     *      var mybug = gf.entityPool.create('bug', {
+     *          pos: [10, 10] //pos, position, or x and y properties are sent as the "pos" param to the ctor
+     *      });
+     */
+    add: function(name, obj) {
+        return this.types[name] = obj;
+    },
+    /**
+     * Checks if the Entity Type exists in the pool
+     *
+     * @method has
+     * @param name {String} The user-defined name of the Entity Type to check if is in the pool
+     * @return {Boolean}
+     */
+    has: function(name) {
+        return !!this.types[name];
+    },
+    /**
+     * Creates a new entity from the pool
+     *
+     * @method create
+     * @param name {String} The user-defined name of the Entity to check if is in the pool
+     * @param props {Object} The properties that would normally be passed as the "settings" of the Entity
+     * @return {Entity} Returns a new instance of the object from the pool
+     * @example
+     *      //create a new ckass to be instantiated
+     *      var Bug = function(game, pos, settings) {
+     *          gf.Entity.call(this, game, pos, settings);
+     *          this.color = 'red';
+     *      };
+     *
+     *      //inherit from Entity
+     *      gf.inherits(Bug, gf.Entity, {
+     *          beBug: function() {
+     *              console.log("I'm a bug");
+     *          }
+     *      });
+     *
+     *      //add to our game's entity pool
+     *      game.entitypool.add('bug', Bug);
+     *
+     *      //then later in your game code
+     *      var mybug = gf.entityPool.create('bug', {
+     *          pos: [10, 10] //pos, position, or x and y properties are sent as the "pos" param to the ctor
+     *      });
+     */
+    create: function(name, props) {
+        if(!name || !this.types[name])
+            name = '_default';
+
+        //create a new object
+        var pos = props.pos || props.position || [props.x, props.y],
+            o = new this.types[name](this.game, pos, props);
+
+        return o;
+    },
+    //currently doesn't do any recycling unfortunately
+    free: function() {
+        return;
     }
 });
 
@@ -17951,6 +18816,26 @@ gf.input.Keyboard = function(man, game) {
      */
     this.keydown = {};
 
+    /**
+     * The current sequence of keys that have been pressed
+     *
+     * @property sequence
+     * @type Array<Number>
+     * @readOnly
+     */
+    this.sequence = [];
+
+    /**
+     * The amount of time it takes for the sequence to clear out, in ms
+     *
+     * @property sequenceTimeout
+     * @type Number
+     * @default 500
+     */
+    this.sequenceTimeout = 500;
+
+    this._clearSq = null;
+
     document.addEventListener('keydown', this.onKeyDown.bind(this), false);
     document.addEventListener('keyup', this.onKeyUp.bind(this), false);
 };
@@ -17965,6 +18850,23 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
         return this.modifyKey(e, override || e.keyCode || e.which, false);
     },
     modifyKey: function(e, key, val) {
+        //process the single key
+        var pkey = this.processKey(e, key, val);
+
+        //update the key sequence
+        this.sequence.push(key);
+
+        //process current sequence
+        var pseq = this.processKey(e, this.sequence.toString(), val);
+
+        //set timeout to clear sequence
+        clearTimeout(this._clearSq);
+        this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
+
+        //if either is false, then return false
+        return pkey && pseq;
+    },
+    processKey: function(e, key, val) {
         if(this.binds[key]) {
             //Don't fire events for repeats
             if(this.keydown[key] === val)
@@ -17981,6 +18883,9 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
         }
 
         return true;
+    },
+    _clearSequence: function() {
+        this.sequence.length = 0;
     }
 });
 gf.input.Gamepad = function(man, game) {
@@ -18305,9 +19210,11 @@ gf.inherits(gf.TextureFont, gf.Font, {
         this.text = txt;
 
         //free all sprites
-        this.sprites.freeAll();
-        for(var c = 0, cl = this.children.length; c < cl; ++c)
-            this.children[c].visible = false;
+        for(var c = 0, cl = this.children.length; c < cl; ++c) {
+            var child = this.children[c];
+            child.visible = false;
+            this.sprites.free(child);
+        }
 
         //add text sprites
         var strs = this.text.toString().split('\n'),
@@ -18657,15 +19564,6 @@ gf.Tile = function(game, pos, settings) {
     gf.Entity.call(this, game, pos, settings);
 
     this.type = gf.Entity.TYPE.TILE;
-
-    /*
-    var spr = this.tiles[tileX][tileY];
-    spr.tile = tile;
-    spr.setInteractive(true);
-    spr.click = function() {
-        window.console.log(spr.tile, spr.parent.name);
-    };
-    */
 };
 
 gf.inherits(gf.Tile, gf.Entity, {
@@ -18760,14 +19658,6 @@ gf.TiledMap = function(game, pos, map) {
     this.tilesets = [];
 
     /**
-     * The layer for collisions
-     *
-     * @property collisionLayer
-     * @type Array
-     */
-    this.collisionLayer = [];
-
-    /**
      * The scaled tile size
      *
      * @property scaledTileSize
@@ -18789,31 +19679,13 @@ gf.TiledMap = function(game, pos, map) {
         this.size.y * this.scaledTileSize.y
     );
 
-    /**
-     * The tileset for the collision layer
-     *
-     * @property collisionTileset
-     * @type TiledTileset
-     */
-    this.collisionTileset = null;
-
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
-        var len = this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
-
-        if(this.tilesets[len-1].name.toLowerCase().indexOf('collider') === 0)
-            this.collisionTileset = this.tilesets[len-1];
+        this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
     }
 
     //create the layers
     var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
         numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
-
-    //special case where viewport is larger than map
-    if(numX > this.size.x)
-        numX = this.size.x;
-
-    if(numY > this.size.y)
-        numY = this.size.y;
 
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr;
@@ -18825,18 +19697,11 @@ gf.TiledMap = function(game, pos, map) {
 
                 //lyr.scale = this.scale;
                 lyr.renderTiles(
-                    Math.floor(this.position.x / this.tileSize.x),
-                    Math.floor(this.position.y / this.tileSize.y),
+                    Math.floor(this.position.x / this.scaledTileSize.x),
+                    Math.floor(this.position.y / this.scaledTileSize.y),
                     numX,
                     numY
                 );
-
-                if(lyr.name.toLowerCase().indexOf('collision') === 0) {
-                    this.collisionLayer = lyr;
-
-                    if(!gf.debug.showMapColliders)
-                        lyr.visible = false;
-                }
                 break;
 
             case 'objectgroup':
@@ -18860,8 +19725,10 @@ gf.TiledMap = function(game, pos, map) {
     }
 
     //rotate for isometric maps
+    this.offset = new gf.Point();
     if(this.orientation === 'isometric') {
-        this.position.x += (this.realSize.x / 2) - (this.tileSize.x / 2);
+        this.offset.x = (this.realSize.x / 2) - (this.tileSize.x / 2);
+        this.position.x += this.offset.x;
     }
 };
 
@@ -18879,201 +19746,6 @@ gf.inherits(gf.TiledMap, gf.Map, {
                 return this.tilesets[i];
     },
     /**
-     * Checks an entities collision with the collision layer of this map
-     *
-     * @method checkCollision
-     * @param ent {Entity} The entity to check
-     * @param sz {Vector} The size of the entity
-     * @param pv {Vector} The potential movement vector
-     */
-    //see: http://stackoverflow.com/questions/2576412/tile-map-collision-detection
-    checkCollision: function(ent, pv) {
-        if(!this.collisionLayer || !this.collisionTileset || (pv.x === 0 && pv.y === 0))
-            return [];
-
-        if(gf.debug._showColliders && !this.sprites) {
-            this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
-        }
-
-        //collider overlays
-        if(gf.debug._showColliders) {
-            this.sprites.freeAll();
-            for(var s = 0; s < this.sprites.pool.length; ++s)
-                this.sprites.pool[s].visible = false;
-        }
-
-            //get movement vector and normalize as our step
-        var step = pv.clone().normalize(),
-            pos = ent.position,
-            width = ent.currentAnim ? ent.currentAnim.width : pos.x,
-            height = ent.currentAnim ? ent.currentAnim.height : pos.y,
-            i = 0,
-            il = 0,
-            tile = null,
-            res = [];
-
-        //scan along the right face of the bound box
-        if(step.x > 0) {
-            for(i = pos.y, il = pos.y + height; i < il; ++i) {
-                tile = this._checkPoint(
-                    new gf.Point(
-                        pos.x + width,
-                        i
-                    ),
-                    step,
-                    pv,
-                    'x'
-                );
-                if(tile) break;
-            }
-        }
-        //scan along the left face of the bound box
-        else if(step.x < 0) {
-            for(i = pos.y, il = pos.y + height; i < il; ++i) {
-                tile = this._checkPoint(
-                    new gf.Point(
-                        pos.x,
-                        i
-                    ),
-                    step,
-                    pv,
-                    'x'
-                );
-                if(tile) break;
-            }
-        }
-
-        if(tile) {
-            res.push(tile);
-            tile = null;
-        }
-
-        //scan along the bottom face of the bound box
-        if(step.y > 0) {
-            for(i = pos.x, il = pos.x + width; i < il; ++i) {
-                tile = this._checkPoint(
-                    new gf.Point(
-                        i,
-                        pos.y + height
-                    ),
-                    step,
-                    pv,
-                    'y'
-                );
-                if(tile) break;
-            }
-        }
-        //scan along the top face of the bound box
-        else if(step.y < 0) {
-            for(i = pos.x, il = pos.x + width; i < il; ++i) {
-                tile = this._checkPoint(
-                    new gf.Point(
-                        i,
-                        pos.y
-                    ),
-                    step,
-                    pv,
-                    'y'
-                );
-                if(tile) break;
-            }
-        }
-
-        if(tile) {
-            res.push(tile);
-            tile = null;
-        }
-
-        return res;
-    },
-    _showCollider: function(id, cell) {
-        var text = this.collisionTileset.getTileTexture(id);
-        if(text) {
-            var spr = this.sprites.create(text);
-            spr.position.x = cell.x * this.tileSize.x;
-            spr.position.y = cell.y * this.tileSize.y;
-            spr.alpha = 0.5;
-            spr.visible = true;
-            spr.setTexture(text);
-        }
-    },
-    _checkPoint: function(start, step, pv, ax) {
-        step = step.clone();
-
-        //end location
-        var end = new gf.Point(
-            (start.x + pv.x),
-            (start.y + pv.y)
-        ),
-        //original cell location
-        cell = new gf.Point(
-            Math.floor(start.x / this.tileSize.x),
-            Math.floor(start.y / this.tileSize.y)
-        ),
-        //end cell
-        endCell = new gf.Point(
-            Math.floor(end.x / this.tileSize.x),
-            Math.floor(end.y / this.tileSize.y)
-        ),
-        //the distance between 2 consectutive vertical lines
-        tDelta = new gf.Vector(
-            this.tileSize.x / Math.abs(step.x),
-            this.tileSize.y / Math.abs(step.y)
-        ),
-        //temp and return vars
-        tMax = new gf.Point(),
-        id = 0,
-        tile = null;
-
-        if(end.x > start.x) {
-            tMax.x = step.x === 0 ? 0 : ((cell.x + 1) * this.tileSize.x - start.x) / step.x;
-        } else {
-            tMax.x = step.x === 0 ? 0 : (cell.x * this.tileSize.x - start.x) / step.x;
-        }
-
-        if(end.y > start.y) {
-            tMax.y = step.y === 0 ? 0 : ((cell.y + 1) * this.tileSize.y - start.y) / step.y;
-        } else {
-            tMax.y = step.y === 0 ? 0 : (cell.y * this.tileSize.y - start.y) / step.y;
-        }
-
-        //ceil afterwards so tDelta and tMax are correct
-        step.x = step.x < 0 ? Math.floor(step.x) : Math.ceil(step.x);
-        step.y = step.y < 0 ? Math.floor(step.y) : Math.ceil(step.y);
-
-        //check the cell currently on
-        id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
-        tile = this.collisionTileset.getTileProperties(id);
-        if(tile && tile.isCollidable) {
-            if(gf.debug._showColliders)
-                this._showCollider(id, cell);
-
-            return { axis: ax, tile: tile };
-        }
-
-        //scan all the tiles along the movement vector
-        while(cell.x !== endCell.x || cell.y !== endCell.y) {
-            if(tMax.x < tMax.y) {
-                tMax.x += tDelta.x;
-                cell.x += step.x;
-                ax = 'x';
-            } else {
-                tMax.y += tDelta.y;
-                cell.y += step.y;
-                ax = 'y';
-            }
-
-            id = this.collisionLayer.tiles[(cell.x + (cell.y * this.collisionLayer.size.x))];
-            tile = this.collisionTileset.getTileProperties(id);
-            if(tile && tile.isCollidable) {
-                if(gf.debug._showColliders)
-                    this._showCollider(id, cell);
-
-                return { axis: ax, tile: tile };
-            }
-        }
-    },
-    /**
      * Notifies the map it needs to resize, re renders the viewport
      *
      * @method resize
@@ -19086,52 +19758,15 @@ gf.inherits(gf.TiledMap, gf.Map, {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
-            if(o instanceof gf.TiledLayer && o.visible) {
+            if(o instanceof gf.TiledLayer) {
                 o.renderTiles(
-                    Math.floor(this.position.x / this.scaledTileSize.x),
-                    Math.floor(this.position.y / this.scaledTileSize.y),
+                    Math.floor((this.position.x - this.offset.x) / this.scaledTileSize.x),
+                    Math.floor((this.position.y - this.offset.y) / this.scaledTileSize.y),
                     numX,
                     numY
                 );
             }
         }
-    },
-    forEachEntity: function(fn) {
-        //go through each object group and call for each entity. This is slightly more efficient
-        //than the generic DisplayObject version since we can skip over checking all the TiledLayers
-        //which will never have any Entities in them.
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            if(this.children[i] instanceof gf.TiledObjectGroup)
-                this.children[i].forEachEntity(fn);
-
-            if(this.children[i] instanceof gf.Entity)
-                fn(this.children[i]);
-        }
-    },
-    //WIP
-    _checkHalfBlock: function(half, x, y) {
-        var tx = Math.floor(x / this.scaledTileSize.x) * this.scaledTileSize.x,
-            ty = Math.floor(y / this.scaledTileSize.y) * this.scaledTileSize.y,
-            midX = tx + ((this.scaledTileSize.x) / 2),
-            endX = tx + (this.scaledTileSize.x),
-            midY = ty - ((this.scaledTileSize.y) / 2),
-            endY = ty - (this.scaledTileSize.y);
-
-        switch(half) {
-            case gf.types.HALF.LEFT:
-                return (x > tx && x < midX);
-
-            case gf.types.HALF.RIGHT:
-                return (x > midX && x < endX);
-
-            case gf.types.HALF.TOP:
-                return (y > midY && y < ty);
-
-            case gf.types.HALF.BOTTOM:
-                return (y > endY && y < midY);
-        }
-
-        return false;
     }
 });
 
@@ -19161,9 +19796,9 @@ gf.TiledLayer = function(game, pos, layer) {
     this.tileIds = gf.support.typedArrays ? new Uint32Array(layer.data) : layer.data;
 
     /**
-     * The tile pool for rendering tiles
+     * The current map of all tiles on the screen
      *
-     * @property tilePool
+     * @property tiles
      * @type Object
      */
     this.tiles = {};
@@ -19174,9 +19809,10 @@ gf.TiledLayer = function(game, pos, layer) {
     this.alpha = layer.opacity;
     this.visible = layer.visible;
 
+    this._tilePool = [];
     this._tileBufferSize = 2;
     this._panDelta = new gf.Vector(0, 0);
-    this._rendered = new PIXI.Rectangle(0, 0, 0, 0);
+    this._rendered = new gf.Rectangle(0, 0, 0, 0);
 };
 
 gf.inherits(gf.TiledLayer, gf.Layer, {
@@ -19184,25 +19820,32 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * Creates all the tile sprites needed to display the layer
      *
      * @method renderTiles
+     * @param startX {Number} The starting x tile position
+     * @param startY {Number} The starting y tile position
+     * @param numX {Number} The number of tiles in the X direction to render
+     * @param numY {Number} The number of tiles in the Y direction to render
      */
     renderTiles: function(startX, startY, numX, numY) {
-        //add a tile buffer around the viewport
+        //clear all the visual tiles
+        this.clearTiles();
+
+        //add a tile buffer around the render area
         startX -= this._tileBufferSize;
         numX += this._tileBufferSize * 2;
         startY -= this._tileBufferSize;
         numY += this._tileBufferSize * 2;
 
+        //ensure we don't go below 0
+        //startX = startX < 0 ? 0 : startX;
+        //startY = startY < 0 ? 0 : startY;
+
+        //ensure we don't go outside the map size
+        //numX = (startX + numX <= this.parent.size.x) ? numX : (this.parent.size.x - startX);
+        //numY = (startY + numY <= this.parent.size.y) ? numY : (this.parent.size.y - startY);
+
         //render new sprites
         for(var x = startX; x < numX; ++x) {
-            //skip things outside the map size
-            if(x < 0 || x >= this.parent.size.x)
-                continue;
-
             for(var y = startY; y < numY; ++y) {
-                //skip things outside the map size
-                if(y < 0 || y >= this.parent.size.y)
-                    continue;
-
                 this.moveTileSprite(x, y, x, y);
             }
         }
@@ -19217,8 +19860,33 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._rendered.bottom = this._rendered.y + this._rendered.height;
     },
     /**
-     * Moves a tile sprite from one position to another,
-     * creating it if the old position didn't have a sprite
+     * Clears all the tiles currently used to render the layer
+     *
+     * @method clearTiles
+     */
+    clearTiles: function() {
+        //hide/free each tile and remove from the memory map
+        for(var x in this.tiles) {
+            for(var y in this.tiles[x]) {
+                var tile = this.tiles[x][y];
+
+                if(tile) {
+                    //hide/free the sprite
+                    tile.visible = false;
+                    this._tilePool.push(tile);
+                }
+
+                //remove the Y key
+                delete this.tiles[x][y];
+            }
+
+            //keep the X key so we dont have to recreate these objects
+            //delete this.tiles[x];
+        }
+    },
+    /**
+     * Moves a tile sprite from one position to another, and creates a new tile
+     * if the old position didn't have a sprite
      *
      * @method moveTileSprite
      * @param fromTileX {Number} The x coord of the tile in units of tiles (not pixels) to move from
@@ -19244,47 +19912,54 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         position = iso ?
             // Isometric position
             [
-                (toTileX * this.parent.tileSize.y) - (toTileY * (this.parent.tileSize.x / 2)),// + set.tileoffset.x,
-                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2))// + set.tileoffset.y
+                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + set.tileoffset.x,
+                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + set.tileoffset.y
             ]
             :
             // Orthoganal position
             [
-                toTileX * this.parent.tileSize.x,
-                toTileY * this.parent.tileSize.y
+                (toTileX * this.parent.tileSize.x) + set.tileoffset.x,
+                (toTileY * this.parent.tileSize.y) + set.tileoffset.y
             ];
 
-        //get the cached tile from the pool, and set the properties
-        if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
-            tile = this.tiles[fromTileX][fromTileY];
+        //grab a new tile from the pool if there isn't one to move in the map
+        if(!this.tiles[fromTileX] || !this.tiles[fromTileX][fromTileY]) {
+            tile = this._tilePool.pop();
 
-            tile.collisionType = props.type;
-            tile.setTexture(texture);
-            tile.setCollidable(props.isCollidable);
-            tile.setPosition(position);
-
-            //move the sprite in the pool
-            if(!this.tiles[toTileX]) this.tiles[toTileX] = {};
-
-            this.tiles[toTileX][toTileY] = tile;
-            this.tiles[fromTileX][fromTileY] = null;
-        }
-        //if there is no tile there yet, create one
-        else {
-            if(!this.tiles[toTileX])
-                this.tiles[toTileX] = {};
-
-            tile = this.tiles[toTileX][toTileY] = new gf.Tile(this.game, position, {
-                texture: texture,
-                mass: Infinity,
-                width: set.tileSize.x,
-                height: set.tileSize.y,
-                collidable: props.isCollidable,
-                collisionType: props.type
-            });
-
+            if(!tile) {
+                tile = new gf.Tile(/*this._tilePool.create(*/this.game, position, {
+                    texture: texture,
+                    mass: Infinity,
+                    width: set.tileSize.x,
+                    height: set.tileSize.y,
+                    collidable: props.isCollidable,
+                    collisionType: props.type
+                });
+            }
             this.addChild(tile);
         }
+        //if there is one to move in the map, lets just move it
+        else {
+            tile = this.tiles[fromTileX][fromTileY];
+            this.tiles[fromTileX][fromTileY] = null;
+        }
+
+        //ensure properties are set properly
+        // even if we pull from the pool those args are only
+        // passed when creating a *new* Tile, not recycling an old one
+        // so we need to manually specify them here as well
+        tile.setTexture(texture);
+        tile.setPosition(position);
+        tile.setCollidable(props.isCollidable);
+        tile.collisionType = props.type;
+        tile.visible = true;
+        //}
+
+        //update sprite position in the map
+        if(!this.tiles[toTileX])
+            this.tiles[toTileX] = {};
+
+        this.tiles[toTileX][toTileY] = tile;
 
         return tile;
     },
@@ -19387,8 +20062,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
 gf.TiledTileset = function(settings) {
     if(!gf.assetCache[settings.name + '_texture']) {
-        var loader = new gf.AssetLoader();
-        loader.loadTexture(settings.name + '_texture', settings.image);
+        throw 'You must preload the tileset images! Try loading the world file with the AssetLoader';
     }
 
     //initialize the base Texture class
@@ -19519,15 +20193,14 @@ gf.TiledTileset = function(settings) {
         var y = ~~(t / this.numTiles.x),
             x = (t - (y * this.numTiles.x));
 
+        //get location in pixels
+        x = (x * this.tileSize.x) + (x * this.spacing) + this.margin;
+        y = (y * this.tileSize.y) + (y * this.spacing) + this.margin;
+
         this.textures.push(
             new gf.Texture(
                 this.baseTexture,
-                new PIXI.Rectangle(
-                    (x * this.tileSize.x),
-                    (y * this.tileSize.y),
-                    this.tileSize.x,
-                    this.tileSize.y
-                )
+                new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)
             )
         );
     }
@@ -19633,18 +20306,29 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             var o = this.objects[i],
                 props = o.properties || {};
 
+            /*
+             * Future Shape support
+             *
+
+            if(o.polyline) this.spawnPolyline(o);
+            else if(o.polygon) this.spawnPolygon(o);
+            else if(o.ellipse) this.spawnEllipse(o);
+            else this.spawnRectangle(o);
+
+             */
+
             props.name = o.name;
             props.type = o.type;
-            props.size = [o.width, o.height];
+            props.width = o.width;
+            props.height = o.height;
             props.zIndex = this.zIndex;
-            props.opacity = this.opacity;
             props.visible = o.visible !== undefined ? (o.visible === 1) : true; //recently added, default old versions to true
             props.position = [o.x, o.y];
             props.rotation = o.rotation;
             props.gid = o.gid;
 
             //spawn from entity pool
-            this.addChild(gf.entityPool.create(this.game, props.name, props));
+            this.addChild(this.game.entitypool.create(props.name, props));
             this.game.players.push(this.children[i]);
         }
 
@@ -19860,87 +20544,5 @@ gf.PhysicsSystem.prototype.onCollisionBegin = function(arbiter) {//, space) {
     //maintain the colliding state
     return true;
 };
-//Great ideas taken from: https://github.com/obiot/melonJS/blob/master/src/plugin/plugin.js
-/**
- * Namespace for all plugins, it also provides methods for patching
- * core functions, and registering plugins.
- *
- * @class plugin
- */
-gf.plugin = {
-    Base: function() {},
-    /**
-     * Patches a core function with a new one. The function you override with has a special property
-     * called `this._super` which is a reference to the function you are overriding.
-     *
-     * @method patch
-     * @param obj {Object} The object with the method to override
-     * @param name {String} The name of the method to override
-     * @param fn {Function} The function to override with
-     * @example
-     *      //For example, to patch the gf.Sprite.prototype.isActiveAnimation function:
-     *
-     *      gf.plugin.patch(gf.Sprite, 'isActiveAnimation', function() {
-     *          //display a console message
-     *          console.log('checking animation!');
-     *          //call the original function
-     *          this._super();
-     *      });
-     */
-    patch: function(obj, name, fn) {
-        if(obj.prototype !== undefined) {
-            obj = obj.prototype;
-        }
-
-        if(typeof obj[name] === 'function' && typeof fn === 'function') {
-            var _super = obj[name];
-
-            obj[name] = (function(name, fn) {
-                return function() {
-                    var tmp = this._super;
-
-                    this._super = _super;
-
-                    var ret = fn.apply(this, arguments);
-                    this._super = tmp;
-
-                    return ret;
-                };
-            })(name, fn);
-        }
-        else {
-            throw (name + ' is not a function in the passed object.');
-        }
-    },
-    /**
-     * Registers a plugin into the gf.plugin namespace.
-     *
-     * @method register
-     * @param plugin {Object} The object to place in the namespace
-     * @param name {String} The name of the plugin to use as the key
-     * @example
-     *      //For example, to register a new plugin:
-     *      gf.plugin.register(MyPluginObject, 'myPluginName');
-     *      var plg = new gf.plugin.myPluginName();
-     *      //OR
-     *      gf.plugin.myPluginName.someFunction();
-     */
-    register: function(plugin, name) {
-        //ensure we don't overrite a name
-        if(gf.plugin[name]) {
-            throw 'plugin ' + name + ' already registered!';
-        }
-
-        if(plugin.prototype.gfVersion === undefined) {
-            throw 'GradeFruitJS: Plugin gfVersion not defined for ' + name;
-        } else if(gf.checkVersion(plugin.prototype.gfVersion) > 0) {
-            throw 'GradeFruitJS: Plugin gfVersion mismatch, expected: ' + plugin.prototype.gfVersion + ', got: ' + gf.version;
-        }
-
-        //store the plugin in the namespace
-        gf.plugin[name] = plugin;
-    }
-};
-
 
 })(window);
