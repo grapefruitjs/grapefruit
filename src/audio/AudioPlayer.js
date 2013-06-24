@@ -75,12 +75,12 @@ gf.inherits(gf.AudioPlayer, Object, {
                 self.sprite._default = [0, node.duration * 1000];
 
                 //check if loaded
-                if(!this._loaded) {
-                    this._loaded = true;
-                    this.emit({
+                if(!self._loaded) {
+                    self._loaded = true;
+                    self.emit({
                         type: 'load',
                         message: 'Audio file loaded.',
-                        data: this.src
+                        data: self.src
                     });
                 }
 
@@ -135,9 +135,9 @@ gf.inherits(gf.AudioPlayer, Object, {
 
         //get an audio node to use to play
         this._inactiveNode(function(node) {
-            var pos = node._pos > 0 ? node._pos : this.sprite[sprite][0] / 1000,
-            duration = (this.sprite[sprite][1] / 1000) - node._pos,
-            loop = (this.loop || this.sprite[sprite][2]),
+            var pos = node._pos > 0 ? node._pos : self.sprite[sprite][0] / 1000,
+            duration = (self.sprite[sprite][1] / 1000) - node._pos,
+            loop = (self.loop || self.sprite[sprite][2]),
             soundId = (typeof cb === 'string') ? cb : (Math.round(Date.now() * Math.random()) + ''),
             timerId;
 
@@ -185,9 +185,9 @@ gf.inherits(gf.AudioPlayer, Object, {
                 //set the play id to this node and load into context
                 node.id = soundId;
                 node.paused = false;
-                this.refreshBuffer([loop, pos, duration], soundId);
-                this._playStart = this._manager.ctx.currentTime;
-                node.gain.value = this._volume;
+                self.refreshBuffer([loop, pos, duration], soundId);
+                self._playStart = self._manager.ctx.currentTime;
+                node.gain.value = self._volume;
 
                 if(typeof node.bufferSource.start === 'undefined') {
                     node.bufferSource.noteGrainOn(0, pos, duration);
@@ -198,11 +198,11 @@ gf.inherits(gf.AudioPlayer, Object, {
                 if(node.readyState === 4) {
                     node.id = soundId;
                     node.currentTime = pos;
-                    node.muted = this._manager.muted;
-                    node.volume = this._volume * this._manager.volume;
+                    node.muted = self._manager.muted;
+                    node.volume = self._volume * self._manager.volume;
                     node.play();
                 } else {
-                    this._clearEndTimer(timerId);
+                    self._clearEndTimer(timerId);
 
                     (function() {
                         var sound = self,
@@ -219,11 +219,11 @@ gf.inherits(gf.AudioPlayer, Object, {
                         newNode.addEventListener('canplaythrough', evt, false);
                     })();
 
-                    return this;
+                    return self;
                 }
             }
 
-            this.emit({
+            self.emit({
                 type: 'play',
                 message: 'Playing audio file',
                 data: soundId
