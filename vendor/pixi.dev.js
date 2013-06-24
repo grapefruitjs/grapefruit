@@ -1,10 +1,10 @@
 /**
  * @license
- * Pixi.JS - v1.0.0
+ * Pixi.JS - v1.2.0
  * Copyright (c) 2012, Mat Groves
  * http://goodboydigital.com/
  *
- * Compiled: 2013-06-17
+ * Compiled: 2013-06-19
  *
  * Pixi.JS is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -122,6 +122,37 @@ PIXI.Rectangle.prototype.clone = function()
 
 // constructor
 PIXI.Rectangle.constructor = PIXI.Rectangle;
+
+
+/**
+ * @author Adrien Brault <adrien.brault@gmail.com>
+ */
+
+/**
+ * @class Polygon
+ * @constructor
+ * @param points {Array}
+ */
+PIXI.Polygon = function(points)
+{
+	this.points = points;
+}
+
+/**
+ * @method clone
+ * @return a copy of the polygon
+ */
+PIXI.Polygon.clone = function()
+{
+	var points = [];
+	for (var i=0; i<this.points.length; i++) {
+		points.push(this.points[i].clone());
+	}
+
+	return new PIXI.Polygon(points);
+}
+
+PIXI.Polygon.constructor = PIXI.Polygon;
 
 
 /**
@@ -1302,11 +1333,11 @@ PIXI.BitmapText.prototype.updateText = function()
 
     for(i = 0; i < chars.length; i++)
     {
-        var char = new PIXI.Sprite(chars[i].texture)//PIXI.Sprite.fromFrame(chars[i].charCode);
-        char.position.x = (chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale;
-        char.position.y = chars[i].position.y * scale;
-        char.scale.x = char.scale.y = scale;
-        this.addChild(char);
+        var c = new PIXI.Sprite(chars[i].texture)//PIXI.Sprite.fromFrame(chars[i].charCode);
+        c.position.x = (chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale;
+        c.position.y = chars[i].position.y * scale;
+        c.scale.x = c.scale.y = scale;
+        this.addChild(c);
     }
 
     this.width = pos.x * scale;
@@ -1398,25 +1429,27 @@ PIXI.InteractionManager.prototype.collectInteractiveSprite = function(displayObj
 	{
 		var child = children[i];
 		
-		// push all interactive bits
-		if(child.interactive)
-		{
-			iParent.interactiveChildren = true;
-			//child.__iParent = iParent;
-			this.interactiveItems.push(child);
-			
-			if(child.children.length > 0)
+		if(child.visible) {
+			// push all interactive bits
+			if(child.interactive)
 			{
-				this.collectInteractiveSprite(child, child);
+				iParent.interactiveChildren = true;
+				//child.__iParent = iParent;
+				this.interactiveItems.push(child);
+
+				if(child.children.length > 0)
+				{
+					this.collectInteractiveSprite(child, child);
+				}
 			}
-		}
-		else
-		{
-			child.__iParent = null;
-			
-			if(child.children.length > 0)
+			else
 			{
-				this.collectInteractiveSprite(child, iParent);
+				child.__iParent = null;
+
+				if(child.children.length > 0)
+				{
+					this.collectInteractiveSprite(child, iParent);
+				}
 			}
 		}
 	}
@@ -1526,8 +1559,6 @@ PIXI.InteractionManager.prototype.update = function()
 
 PIXI.InteractionManager.prototype.onMouseMove = function(event)
 {
-	event.preventDefault();
-	
 	// TODO optimize by not check EVERY TIME! maybe half as often? //
 	var rect = this.target.view.getBoundingClientRect();
 	
@@ -1590,7 +1621,8 @@ PIXI.InteractionManager.prototype.onMouseDown = function(event)
 
 PIXI.InteractionManager.prototype.onMouseUp = function(event)
 {
-	event.preventDefault();
+	
+	
 	var global = this.mouse.global;
 	
 	
@@ -1637,27 +1669,66 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 	var global = interactionData.global;
 	
 	if(!item.visible)return false;
-	
-	if(item instanceof PIXI.Sprite)
+
+	var isSprite = (item instanceof PIXI.Sprite),
+		worldTransform = item.worldTransform,
+		a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
+		a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+		id = 1 / (a00 * a11 + a01 * -a10),
+		x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
+		y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
+
+	//a sprite or display object with a hit area defined
+	if(item.hitArea)
 	{
-		var worldTransform = item.worldTransform;
-		
-		var a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
-            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
-            id = 1 / (a00 * a11 + a01 * -a10);
-		
-		var x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id; 
-		var y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
-		
-		var width = item.texture.frame.width;
-		var height = item.texture.frame.height;
-		
-		var x1 = -width * item.anchor.x;
+		var hitArea = item.hitArea;
+
+		//Polygon hit area
+		if(item.hitArea instanceof PIXI.Polygon) {
+			var inside = false;
+
+			// use some raycasting to test hits
+			// https://github.com/substack/point-in-polygon/blob/master/index.js
+			for(var i = 0, j = item.hitArea.points.length - 1; i < item.hitArea.points.length; j = i++) {
+				var xi = item.hitArea.points[i].x, yi = item.hitArea.points[i].y,
+					xj = item.hitArea.points[j].x, yj = item.hitArea.points[j].y,
+					intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+
+				if(intersect) inside = !inside;
+			}
+			
+			if(inside) {
+				if(isSprite) interactionData.target = item;
+				return true;
+			}
+		}
+		//Rectangle hit area
+		else {
+			var x1 = hitArea.x;
+			if(x > x1 && x < x1 + hitArea.width)
+			{
+				var y1 = hitArea.y;
+				
+				if(y > y1 && y < y1 + hitArea.height)
+				{
+					if(isSprite) interactionData.target = item;
+					return true;
+				}
+			}
+		}
+	}
+	// a sprite with no hitarea defined
+	else if(isSprite)
+	{
+		var width = item.texture.frame.width,
+			height = item.texture.frame.height,
+			x1 = -width * item.anchor.x,
+			y1;
 		
 		if(x > x1 && x < x1 + width)
 		{
-			var y1 = -height * item.anchor.y;
-			
+			y1 = -height * item.anchor.y;
+		
 			if(y > y1 && y < y1 + height)
 			{
 				// set the target property if a hit is true!
@@ -1666,30 +1737,7 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 			}
 		}
 	}
-	else if(item.hitArea)
-	{
-		var worldTransform = item.worldTransform;
-		var hitArea = item.hitArea;
-		
-		var a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
-            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
-            id = 1 / (a00 * a11 + a01 * -a10);
-		
-		var x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id; 
-		var y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
-		
-		var x1 = hitArea.x;
-		if(x > x1 && x < x1 + hitArea.width)
-		{
-			var y1 = hitArea.y;
-			
-			if(y > y1 && y < y1 + hitArea.height)
-			{
-				return true;
-			}
-		}
-	}
-	
+
 	var length = item.children.length;
 	
 	for (var i = 0; i < length; i++)
@@ -1698,7 +1746,7 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 		var hit = this.hitTest(tempItem, interactionData);
 		if(hit)return true;
 	}
-		
+
 	return false;	
 }
 
@@ -1706,8 +1754,6 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 
 PIXI.InteractionManager.prototype.onTouchMove = function(event)
 {
-	event.preventDefault();
-	
 	var rect = this.target.view.getBoundingClientRect();
 	var changedTouches = event.changedTouches;
 	
@@ -1732,6 +1778,7 @@ PIXI.InteractionManager.prototype.onTouchMove = function(event)
 PIXI.InteractionManager.prototype.onTouchStart = function(event)
 {
 	event.preventDefault();
+	
 	var rect = this.target.view.getBoundingClientRect();
 	
 	var changedTouches = event.changedTouches;
@@ -1773,9 +1820,6 @@ PIXI.InteractionManager.prototype.onTouchStart = function(event)
 
 PIXI.InteractionManager.prototype.onTouchEnd = function(event)
 {
-	event.preventDefault();
-	
-	
 	var rect = this.target.view.getBoundingClientRect();
 	var changedTouches = event.changedTouches;
 	
@@ -2798,9 +2842,11 @@ PIXI.WebGLRenderer.prototype.handleContextRestored = function(event)
         
 	this.initShaders();	
 	
-	for (var i=0; i < PIXI.TextureCache.length; i++) 
+	for(var key in PIXI.TextureCache) 
 	{
-		this.updateTexture(PIXI.TextureCache[i]);
+        	var texture = PIXI.TextureCache[key].baseTexture;
+        	texture._glTexture = null;
+        	PIXI.WebGLRenderer.updateTexture(texture);
 	};
 	
 	for (var i=0; i <  this.batchs.length; i++) 
@@ -4283,7 +4329,7 @@ PIXI.WebGLRenderGroup.prototype.renderTilingSprite = function(sprite, projection
 /**
  * @private
  */
-PIXI.WebGLRenderer.prototype.initStrip = function(strip)
+PIXI.WebGLRenderGroup.prototype.initStrip = function(strip)
 {
 	// build the strip!
 	var gl = this.gl;
@@ -4994,7 +5040,7 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function(event)
  * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
  * @class Spine
  * @constructor
- * @extends 
+ * @extends DisplayObjectContainer
  * @param {String} url the url of the spine anim file to be used
  */
 PIXI.Spine = function(url)
@@ -6579,7 +6625,9 @@ PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin)
 	var baseTexture = PIXI.BaseTextureCache[imageUrl];
 	if(!baseTexture)
 	{
-		var image = new Image();
+		// new Image() breaks tex loading in some versions of Chrome.
+		// See https://code.google.com/p/chromium/issues/detail?id=238071
+		var image = new Image();//document.createElement('img'); 
 		if (crossorigin)
 		{
 			image.crossOrigin = '';
@@ -6786,13 +6834,33 @@ PIXI.Texture.frameUpdates = [];
  */
 
 /**
- * A RenderTexture is a special texture that allows any pixi displayObject to be rendered to it. 
- * @class RenderTexture
- * @extends Texture
- * @constructor
- * @param width {Number}
- * @param height {Number}
- */
+ A RenderTexture is a special texture that allows any pixi displayObject to be rendered to it.
+
+ __Hint__: All DisplayObjects (exmpl. Sprites) that renders on RenderTexture should be preloaded. 
+ Otherwise black rectangles will be drawn instead.  
+ 
+ RenderTexture takes snapshot of DisplayObject passed to render method. If DisplayObject is passed to render method, position and rotation of it will be ignored. For example:
+ 
+	var renderTexture = new PIXI.RenderTexture(800, 600);
+	var sprite = PIXI.Sprite.fromImage("spinObj_01.png");
+	sprite.position.x = 800/2;
+	sprite.position.y = 600/2;
+	sprite.anchor.x = 0.5;
+	sprite.anchor.y = 0.5;
+	renderTexture.render(sprite);
+
+ Sprite in this case will be rendered to 0,0 position. To render this sprite at center DisplayObjectContainer should be used:
+
+	var doc = new PIXI.DisplayObjectContainer();
+	doc.addChild(sprite);
+	renderTexture.render(doc);  // Renders to center of renderTexture
+
+ @class RenderTexture
+ @extends Texture
+ @constructor
+ @param width {Number}
+ @param height {Number}
+ **/
 PIXI.RenderTexture = function(width, height)
 {
 	PIXI.EventTarget.call( this );
@@ -7266,6 +7334,7 @@ PIXI.SpriteSheetLoader.prototype.onLoaded = function () {
 		content: this
 	});
 };
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -7464,7 +7533,7 @@ PIXI.BitmapFontLoader.prototype.onLoaded = function()
  * When loaded this class will dispatch a "loaded" event
  * @class Spine
  * @constructor
- * @extends 
+ * @extends EventTarget
  * @param {String} url the url of the sprite sheet JSON file
  * @param {Boolean} crossorigin
  */
