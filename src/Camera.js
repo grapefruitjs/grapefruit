@@ -353,17 +353,7 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
             dx = goToX + this.game.world.position.x, //world pos is negative
             dy = goToY + this.game.world.position.y;
 
-        //if we move a lot, then just re render
-        if(Math.abs(dx) > this.hSize.x || Math.abs(dy) > this.hSize.y) {
-            this.game.world.setPosition(-goToX, -goToY);
-            this.game.world.resize();
-        }
-        //otherwise just pan
-        else {
-            this.pan(dx, dy);
-        }
-
-        return this;
+        return this.pan(dx, dy);
     },
     focusEntity: function(ent) {
         this.focus(
@@ -401,8 +391,17 @@ gf.inherits(gf.Camera, gf.DisplayObject, {
         else if(newY < -this._bounds.maxPanY)
             dy = this._bounds.maxPanY + this.game.world.position.y;
 
-        if(dx || dy)
-            this.game.world.pan(-dx, -dy);
+        if(dx || dy) {
+            //if we move a lot, then just force a re render (less expensive then panning all the way there)
+            if(Math.abs(dx) > this.hSize.x || Math.abs(dy) > this.hSize.y) {
+                this.game.world.setPosition(this.game.world.position.x - dx, this.game.world.position.y - dy);
+                this.game.world.resize();
+            }
+            //otherwise just pan
+            else {
+                this.game.world.pan(-dx, -dy);
+            }
+        }
 
         return this;
     },
