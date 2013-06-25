@@ -38,6 +38,7 @@ gf.TiledLayer = function(game, pos, layer) {
     this.visible = layer.visible;
 
     this._tilePool = [];
+    this._buffered = { left: false, right: false, top: false, bottom: false };
     this._panDelta = new gf.Vector(0, 0);
     this._rendered = new gf.Rectangle(0, 0, 0, 0);
 };
@@ -71,14 +72,19 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             }
         }
 
+        //set rendered area
         this._rendered.x = startX;
         this._rendered.y = startY;
         this._rendered.width = endX - startX;
         this._rendered.height = endY - startY;
-        this._rendered.left = startX;
-        this._rendered.right = endX - 1;
-        this._rendered.top = startY;
-        this._rendered.bottom = endY - 1;
+        this._updateRenderSq();
+
+        //reset buffered status
+        this._buffered.left = this._buffered.right = this._buffered.top = this._buffered.bottom = false;
+
+        //reset panDelta
+        this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
+        this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
     /**
      * Clears all the tiles currently used to render the layer
@@ -130,6 +136,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(!set) {
             if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
                 var t = this.tiles[fromTileX][fromTileY];
+                this.tiles[fromTileX][fromTileY] = null;
+
                 t.visible = false;
                 this._tilePool.push(t);
             }
@@ -151,14 +159,14 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 (toTileY * this.parent.tileSize.y) + set.tileoffset.y
             ];
 
-        //grab a new tile from the pool if there isn't one to move in the map
-        if(!this.tiles[fromTileX] || !this.tiles[fromTileX][fromTileY]) {
-            tile = this._tilePool.pop();
-        }
         //if there is one to move in the map, lets just move it
-        else {
+        if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
             tile = this.tiles[fromTileX][fromTileY];
             this.tiles[fromTileX][fromTileY] = null;
+        }
+        //otherwise grab a new tile from the pool
+        else {
+            tile = this._tilePool.pop();
         }
 
         if(tile) {
@@ -199,6 +207,22 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.x += dx;
         this._panDelta.y += dy;
 
+        //check if we need to build a buffer around the viewport
+        //usually this happens on the first pan after a full render
+
+        //moving world right, so left will be exposed
+        if(dx > 0 && !this._buffered.left)
+            this._renderLeft(this._buffered.left = true);
+        //moving world left, so right will be exposed
+        else if(dx < 0 && !this._buffered.right)
+            this._renderRight(this._buffered.right = true);
+        //moving world down, so top will be exposed
+        else if(dy > 0 && !this._buffered.top)
+            this._renderUp(this._buffered.top = true);
+        //moving world up, so bottom will be exposed
+        else if(dy < 0 && !this._buffered.bottom)
+            this._renderDown(this._buffered.bottom = true);
+
         //moved position right, so render left
         while(this._panDelta.x >= this.parent.scaledTileSize.x) {
             this._renderLeft();
@@ -223,52 +247,66 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             this._panDelta.y += this.parent.scaledTileSize.y;
         }
     },
-    _renderLeft: function() {
+    _renderLeft: function(forceNew) {
         //move all the far right tiles to the left side
         for(var i = 0; i < this._rendered.height; ++i) {
             this.moveTileSprite(
-                this._rendered.right, this._rendered.top + i,
-                this._rendered.left - 1, this._rendered.top + i
+                forceNew ? -1 : this._rendered.right,
+                forceNew ? -1 : this._rendered.top + i,
+                this._rendered.left - 1,
+                this._rendered.top + i
             );
         }
         this._rendered.x--;
-        this._rendered.left--;
-        this._rendered.right--;
+        if(forceNew) this._rendered.width++;
+        this._updateRenderSq();
     },
-    _renderRight: function() {
+    _renderRight: function(forceNew) {
         //move all the far left tiles to the right side
         for(var i = 0; i < this._rendered.height; ++i) {
             this.moveTileSprite(
-                this._rendered.left, this._rendered.top + i,
-                this._rendered.right + 1, this._rendered.top + i
+                forceNew ? -1 : this._rendered.left,
+                forceNew ? -1 : this._rendered.top + i,
+                this._rendered.right + 1,
+                this._rendered.top + i
             );
         }
-        this._rendered.x++;
-        this._rendered.left++;
-        this._rendered.right++;
+        if(!forceNew) this._rendered.x++;
+        if(forceNew) this._rendered.width++;
+        this._updateRenderSq();
     },
-    _renderUp: function() {
+    _renderUp: function(forceNew) {
         //move all the far bottom tiles to the top side
         for(var i = 0; i < this._rendered.width; ++i) {
             this.moveTileSprite(
-                this._rendered.left + i, this._rendered.bottom,
-                this._rendered.left + i, this._rendered.top - 1
+                forceNew ? -1 : this._rendered.left + i,
+                forceNew ? -1 : this._rendered.bottom,
+                this._rendered.left + i,
+                this._rendered.top - 1
             );
         }
         this._rendered.y--;
-        this._rendered.top--;
-        this._rendered.bottom--;
+        if(forceNew) this._rendered.height++;
+        this._updateRenderSq();
     },
-    _renderDown: function() {
+    _renderDown: function(forceNew) {
         //move all the far top tiles to the bottom side
         for(var i = 0; i < this._rendered.width; ++i) {
             this.moveTileSprite(
-                this._rendered.left + i, this._rendered.top,
-                this._rendered.left + i, this._rendered.bottom + 1
+                forceNew ? -1 : this._rendered.left + i,
+                forceNew ? -1 : this._rendered.top,
+                this._rendered.left + i,
+                this._rendered.bottom + 1
             );
         }
-        this._rendered.y++;
-        this._rendered.top++;
-        this._rendered.bottom++;
+        if(!forceNew) this._rendered.y++;
+        if(forceNew) this._rendered.height++;
+        this._updateRenderSq();
+    },
+    _updateRenderSq: function() {
+        this._rendered.left = this._rendered.x;
+        this._rendered.right = this._rendered.x + this._rendered.width - 1;
+        this._rendered.top = this._rendered.y;
+        this._rendered.bottom = this._rendered.y + this._rendered.height - 1;
     }
 });
