@@ -14,6 +14,7 @@ gf.TiledLayer = function(game, pos, layer) {
     gf.Layer.call(this, game, pos, layer);
 
     //Tiled Editor properties
+    var props = layer.properties || {};
 
     /**
      * The tile IDs of the tilemap
@@ -30,6 +31,14 @@ gf.TiledLayer = function(game, pos, layer) {
      * @type Object
      */
     this.tiles = {};
+
+    /**
+     * Whether or not the tiles are interactive
+     *
+     * @property interactiveTiles
+     * @type Boolean
+     */
+    this.interactiveTiles = props.interactive || props.interactiveTiles || false;
 
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
@@ -182,8 +191,21 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 width: set.tileSize.x,
                 height: set.tileSize.y,
                 collidable: props.isCollidable,
-                collisionType: props.type
+                collisionType: props.type,
+                interactive: this.interactiveTiles
             });
+
+            //pass through all events
+            if(this.interactiveTiles) {
+                tile.click = this.onTileEvent.bind(this, 'click', tile);
+                tile.mousedown = this.onTileEvent.bind(this, 'mousedown', tile);
+                tile.mouseup = this.onTileEvent.bind(this, 'mouseup', tile);
+                tile.mousemove = this.onTileEvent.bind(this, 'mousemove', tile);
+                tile.mouseout = this.onTileEvent.bind(this, 'mouseout', tile);
+                tile.mouseover = this.onTileEvent.bind(this, 'mouseover', tile);
+                tile.mouseupoutside = this.onTileEvent.bind(this, 'mouseupoutside', tile);
+            }
+
             this.addChild(tile);
         }
 
@@ -194,6 +216,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this.tiles[toTileX][toTileY] = tile;
 
         return tile;
+    },
+    onTileEvent: function(eventName, tile, data) {
+        this.parent.onTileEvent(eventName, tile, data);
     },
     /**
      * Pans the layer around, rendering stuff if necessary

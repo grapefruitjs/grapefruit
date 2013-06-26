@@ -113,6 +113,7 @@ gf.Sprite = function(game, pos, settings) {
             spr.anchor = this.anchor;
             spr.setTexture = setTextureWrapper;
             spr.onTextureUpdate = onTextureUpdateWrapper;
+            spr.setInteractive(this.interactive);
 
             this.setTexture = spr.setTexture.bind(spr);
         }
