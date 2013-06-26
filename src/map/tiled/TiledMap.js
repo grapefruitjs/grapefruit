@@ -186,5 +186,12 @@ gf.inherits(gf.TiledMap, gf.Map, {
                 );
             }
         }
+    },
+    onTileEvent: function(eventName, tile, data) {
+        this.emit({
+            type: 'tile_' + eventName,
+            tile: tile,
+            data: data
+        });
     }
 });

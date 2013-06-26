@@ -7,6 +7,9 @@
  * @param map {Object} All the settings for the map
  */
 gf.Map = function(game, pos, map) {
+    //mixin the Event Target methods
+    gf.EventTarget.call(this);
+
     /**
      * The game instance this belongs to
      *
