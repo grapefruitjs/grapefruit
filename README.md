@@ -7,12 +7,12 @@ from simple top-down shooters to complex RPGs are possible with grapefruit.
 
 Some features that GrapeFruit gives you:
 
- - WebGL rendering with Canvas Fallback
- - Entity and Tilemap Collisions
+ - Rendering Engine (WebGL, with Canvas fallback)
+ - Full Physics System (collisions, gravity, etc)
  - GUI/HUD system
  - Texture Fonts
- - Support for keyboard, mouse, and gamepad input
- - Channeled audio playback
+ - Extensible Input Manager (built-in keyboard, mouse, and gamepad)
+ - Audio Manager
  - Tiled Map Editor integration
  - Plugin system
  - much more!
@@ -29,6 +29,7 @@ an [Issue](https://github.com/englercj/grapefruit/issues) and we can talk about 
 
 Soon to come:
 
+- Isometric maps
 - Generic Text (non-texture based font)
 - Sprite Sheet Animations (without forcing TexturePacker format)
 
@@ -66,7 +67,7 @@ library grapefruit is able to support velocity, ellasticity, gravity, friction, 
 ## Tile Engine
 
 The tile map engine is custom written in grapefruit to support all kinds of maps. The main focus however has been on
-supporting the [Tiled Map Editor](http://mapeditor.org), and as many features of it as possible.
+supporting the [Tiled Map Editor](http://mapeditor.org), and its full feature set.
 
 ## License
 
@@ -78,7 +79,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
+copies of the Software, and to prmit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in
