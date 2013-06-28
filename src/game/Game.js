@@ -8,7 +8,7 @@
  */
 gf.Game = function(contId, settings) {
     //mixin the Event Target methods
-    gf.EventTarget.call(this);
+    gf.Emitter.call(this);
 
     /**
      * The domElement that we are putting our rendering canvas into (the container)

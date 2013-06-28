@@ -1,5 +1,5 @@
 gf.Loader = function(al, name, url) {
-    gf.EventTarget.call(this);
+    gf.Emitter.call(this);
 
     this.type = 'hey';
 
