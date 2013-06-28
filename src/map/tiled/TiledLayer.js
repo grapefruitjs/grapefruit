@@ -185,11 +185,14 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tile.collisionType = props.type;
             tile.visible = true;
         } else {
+            var hitArea = props.hitArea || set.properties.tileHitArea;
+
             tile = new gf.Tile(this.game, position, {
                 texture: texture,
                 mass: Infinity,
                 width: set.tileSize.x,
                 height: set.tileSize.y,
+                hitArea: hitArea,
                 collidable: props.isCollidable,
                 collisionType: props.type,
                 interactive: this.interactiveTiles
