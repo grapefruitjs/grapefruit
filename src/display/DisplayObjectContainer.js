@@ -1,11 +1,11 @@
 /**
  * The base display object, that anything being put on the screen inherits from
  *
- * @class DisplayObject
+ * @class DisplayObjectContainer
  * @extends PIXI.DisplayObjectContainer
  * @constructor
  */
-gf.DisplayObject = function(game, pos, settings) {
+gf.DisplayObjectContainer = function(game, pos, settings) {
     PIXI.DisplayObjectContainer.call(this);
 
     /**
@@ -181,7 +181,7 @@ gf.DisplayObject = function(game, pos, settings) {
      */
 };
 
-gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
+gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
     resize: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];

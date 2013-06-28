@@ -1,5 +1,5 @@
 var COLLISION_TYPE = {
-    ENTITY: 0,
+    sprITY: 0,
     TILE: 1
 };
 
@@ -21,81 +21,80 @@ gf.PhysicsSystem = function(game, options) {
     //These two collision scenarios are separate because we don't
     //want tiles to collide with tiles all the time
 
-    //entity - entity collisions
+    //sprity - sprity collisions
     this.space.addCollisionHandler(
-        COLLISION_TYPE.ENTITY,
-        COLLISION_TYPE.ENTITY,
+        COLLISION_TYPE.sprITY,
+        COLLISION_TYPE.sprITY,
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         null, //postSolve
         null //separate
     );
 
-    //entity - tile collisions
+    //sprity - tile collisions
     this.space.addCollisionHandler(
-        COLLISION_TYPE.ENTITY,
+        COLLISION_TYPE.sprITY,
         COLLISION_TYPE.TILE,
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         null, //postSolve
         null //separate
     );
-
-    //the entity/body pairs added to the physics world
-    this.entities = [];
 };
 
-gf.PhysicsSystem.prototype._createBody = function(ent) {
+gf.PhysicsSystem.prototype._createBody = function(spr) {
     var b;
 
-    if(ent.mass === Infinity) {
+    if(spr.mass === Infinity) {
         b = this.space.staticBody;
     } else {
         b = this.space.addBody(new cp.Body(
-            ent.mass,
-            Infinity //cp.momentForBox(ent.mass, ent.width, ent.height)
+            spr.mass,
+            Infinity //cp.momsprForBox(spr.mass, spr.width, spr.height)
         ));
     }
 
     return b;
 };
 
-gf.PhysicsSystem.prototype._createShape = function(ent, body) {
+gf.PhysicsSystem.prototype._createShape = function(spr, body) {
     var shape = this.space.addShape(
         new cp.BoxShape(
             body,
-            ent.width,
-            ent.height
+            spr.width,
+            spr.height
         )
     );
 
     shape.setElasticity(0);
-    shape.setFriction(ent.friction || 0.1);
-    shape.gfEntity = ent;
-    shape.setCollisionType(this.getCollisionType(ent));
+    shape.setFriction(spr.friction || 0.1);
+    shape.sprite = spr;
+    shape.setCollisionType(this.getCollisionType(spr));
 
     return shape;
 };
 
-gf.PhysicsSystem.prototype.getCollisionType = function(ent) {
-    if(ent instanceof gf.Tile) {
+gf.PhysicsSystem.prototype.getCollisionType = function(spr) {
+    if(spr instanceof gf.Tile) {
         return COLLISION_TYPE.TILE;
     } else {
-        return COLLISION_TYPE.ENTITY;
+        return COLLISION_TYPE.sprITY;
     }
 };
 
-gf.PhysicsSystem.prototype.add = function(ent) {
-    var body = this._createBody(ent),
-        shape = this._createShape(ent, body);
+gf.PhysicsSystem.prototype.add = function(spr) {
+    if(!spr._phys)
+        spr._phys = {};
 
+    //already in system
+    if(spr._phys.body)
+        return;
 
-    if(!ent._phys)
-        ent._phys = {};
+    var body = this._createBody(spr),
+        shape = this._createShape(spr, body);
 
-    ent._phys.id = (this.entities.push(ent)) - 1;
-    ent._phys.body = body;
-    ent._phys.shape = shape;
+    spr._phys.body = body;
+    spr._phys.shape = shape;
 
     //add control body and constraints
     if(body.m !== Infinity) {
@@ -110,63 +109,62 @@ gf.PhysicsSystem.prototype.add = function(ent) {
         cgear.maxBias = 1.2; //but limit the angular correction
         cgear.maxForce = 50000; //emulate angular friction
 
-        if(!ent._phys.control)
-            ent._phys.control = {};
+        if(!spr._phys.control)
+            spr._phys.control = {};
 
-        ent._phys.control.body = cbody;
-        ent._phys.control.pivot = cpivot;
-        ent._phys.control.gear = cgear;
+        spr._phys.control.body = cbody;
+        spr._phys.control.pivot = cpivot;
+        spr._phys.control.gear = cgear;
     }
 };
 
-gf.PhysicsSystem.prototype.remove = function(ent) {
-    if(!ent || !ent._phys || !ent._phys.body || !ent._phys.shape)
+gf.PhysicsSystem.prototype.remove = function(spr) {
+    if(!spr || !spr._phys || !spr._phys.body || !spr._phys.shape)
         return;
 
-    this.space.remove(ent._phys.body);
-    this.space.remove(ent._phys.shape);
+    this.space.remove(spr._phys.body);
+    this.space.remove(spr._phys.shape);
 
-    ent._phys.shape.gfEntity = null;
+    spr._phys.shape.sprite = null;
 
     //remove references
-    ent._phys.id = null;
-    ent._phys.body = null;
-    ent._phys.shape = null;
+    spr._phys.body = null;
+    spr._phys.shape = null;
 };
 
-gf.PhysicsSystem.prototype.setMass = function(ent, mass) {
-    if(ent && ent._phys && ent._phys.body)
-        ent._phys.body.setMass(mass);
+gf.PhysicsSystem.prototype.setMass = function(spr, mass) {
+    if(spr && spr._phys && spr._phys.body)
+        spr._phys.body.setMass(mass);
 };
 
-gf.PhysicsSystem.prototype.setVelocity = function(ent, vel) {
+gf.PhysicsSystem.prototype.setVelocity = function(spr, vel) {
     //update control body velocity (and pivot contraint makes regular follow)
-    if(ent && ent._phys && ent._phys.control && ent._phys.control.body)
-        ent._phys.control.body.setVel(vel);
+    if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+        spr._phys.control.body.setVel(vel);
 
     //if no control body then update real body
-    else if(ent && ent._phys && ent._phys.body)
-        ent._phys.body.setVel(vel);
+    else if(spr && spr._phys && spr._phys.body)
+        spr._phys.body.setVel(vel);
 };
 
-gf.PhysicsSystem.prototype.setPosition = function(ent, pos) {
+gf.PhysicsSystem.prototype.setPosition = function(spr, pos) {
     //update body position
-    if(ent && ent._phys && ent._phys.body)
-        ent._phys.body.setPos(pos);
+    if(spr && spr._phys && spr._phys.body)
+        spr._phys.body.setPos(pos);
 
     //update control body position
-    if(ent && ent._phys && ent._phys.control && ent._phys.control.body)
-        ent._phys.control.body.setPos(pos);
+    if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+        spr._phys.control.body.setPos(pos);
 };
 
-gf.PhysicsSystem.prototype.setRotation = function(ent, rads) {
+gf.PhysicsSystem.prototype.setRotation = function(spr, rads) {
     //update control body rotation (and gear contraint makes regular follow)
-    if(ent && ent._phys && ent._phys.control && ent._phys.control.body)
-        ent._phys.control.body.setAngle(rads);
+    if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+        spr._phys.control.body.setAngle(rads);
 
     //if no control body then update real body
-    else if(ent && ent._phys && ent._phys.body)
-        ent._phys.body.setAngle(rads);
+    else if(spr && spr._phys && spr._phys.body)
+        spr._phys.body.setAngle(rads);
 
 };
 
@@ -176,18 +174,18 @@ gf.PhysicsSystem.prototype.update = function(dt) {
 
     //go through each changed shape
     this.space.activeShapes.each(function(shape) {
-        shape.gfEntity.setPosition(shape.body.p.x, shape.body.p.y, true);
-        shape.gfEntity.rotation = shape.body.a;
+        shape.sprite.setPosition(shape.body.p.x, shape.body.p.y, true);
+        shape.sprite.setRotation(shape.body.a, true);
     });
 };
 
 gf.PhysicsSystem.prototype.onCollisionBegin = function(arbiter) {//, space) {
     var shapes = arbiter.getShapes(),
-        ent1 = shapes[0].gfEntity,
-        ent2 = shapes[1].gfEntity;
+        spr1 = shapes[0].sprite,
+        spr2 = shapes[1].sprite;
 
-    ent1.onCollision(ent2);
-    ent2.onCollision(ent1);
+    spr1.onCollision(spr2);
+    spr2.onCollision(spr1);
 
     //maintain the colliding state
     return true;

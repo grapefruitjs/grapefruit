@@ -12,12 +12,15 @@ module.exports = function(grunt) {
     //explicity set source files because order is important
     var srcFiles = [
         '<%= dirs.src %>/core.js',
-        '<%= dirs.src %>/Game.js',
-        '<%= dirs.src %>/DisplayObject.js',
-        '<%= dirs.src %>/Camera.js',
-        '<%= dirs.src %>/Sprite.js',
-        '<%= dirs.src %>/Entity.js',
-        '<%= dirs.src %>/GameState.js',
+        '<%= dirs.src %>/plugin.js',
+
+        '<%= dirs.src %>/game/Game.js',
+        '<%= dirs.src %>/game/GameState.js',
+
+        '<%= dirs.src %>/display/DisplayObject.js',
+        '<%= dirs.src %>/display/Sprite.js',
+        '<%= dirs.src %>/display/AnimatedSprite.js',
+        '<%= dirs.src %>/display/Camera.js',
 
         '<%= dirs.src %>/utils/utils.js',
         '<%= dirs.src %>/utils/math.js',
@@ -62,9 +65,7 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/map/tiled/TiledTileset.js',
         '<%= dirs.src %>/map/tiled/TiledObjectGroup.js',
 
-        '<%= dirs.src %>/physics/PhysicsSystem.js',
-
-        '<%= dirs.src %>/plugin/plugin.js'
+        '<%= dirs.src %>/physics/PhysicsSystem.js'
     ],
     vendorFiles = [
         '<%= dirs.vendor %>/es5-shim.min.js',
