@@ -135,7 +135,7 @@ gf.TiledTileset = function(settings) {
             throw 'Uneven number of values for tileHitArea on tileset! Should be a flat array of x/y values.';
         }
 
-        var hv =  = [];
+        var hv = [];
         for(var i = 0, il = h.length; i < il; i+=2) {
             hv.push(
                 new gf.Point(
@@ -165,11 +165,11 @@ gf.TiledTileset = function(settings) {
             }
 
             var hav = [];
-            for(var i = 0, il = h.length; i < il; i+=2) {
+            for(var p = 0, pl = ha.length; p < pl; p+=2) {
                 hav.push(
                     new gf.Point(
-                        parseFloat(h[i], 10),
-                        parseFloat(h[i + 1], 10)
+                        parseFloat(ha[p], 10),
+                        parseFloat(ha[p + 1], 10)
                     )
                 );
             }
