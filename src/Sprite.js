@@ -83,6 +83,14 @@ gf.Sprite = function(game, pos, settings) {
      */
     this.anchor = new gf.Point();
 
+    /**
+     * The hit area for the sprite (to override the default)
+     *
+     * @property hitArea
+     * @type Point
+     */
+    this.hitArea = null;
+
     //call base ctor
     gf.DisplayObject.call(this, game, pos, settings);
 
@@ -111,6 +119,7 @@ gf.Sprite = function(game, pos, settings) {
             this.width = this.width || spr.width;
             this.height = this.height || spr.height;
             spr.anchor = this.anchor;
+            spr.hitArea = this.hitArea;
             spr.setTexture = setTextureWrapper;
             spr.onTextureUpdate = onTextureUpdateWrapper;
             spr.setInteractive(this.interactive);
@@ -167,6 +176,7 @@ gf.inherits(gf.Sprite, gf.DisplayObject, {
         clip.visible = false;
         clip.name = name;
         clip.anchor = this.anchor;
+        clip.hitArea = this.hitArea;
         clip.setTexture = setTextureWrapper;
         clip.onTextureUpdate = onTextureUpdateWrapper;
 

@@ -42,11 +42,18 @@ window.gf = window.gf || {};
 gf.Point = PIXI.Point;
 
 /**
- * Rectangle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html">PIXI.Point</a>
+ * Rectangle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html">PIXI.Rectangle</a>
  *
  * @class Rectangle
  */
 gf.Rectangle = PIXI.Rectangle;
+
+/**
+ * Polygon object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Polygon.html">PIXI.Polygon</a>
+ *
+ * @class Polygon
+ */
+gf.Polygon = PIXI.Polygon;
 
 /**
  * Texture object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>

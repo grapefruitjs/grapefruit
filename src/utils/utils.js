@@ -4,7 +4,7 @@
  * @class utils
  */
  gf.utils = {
-    _arrayDelim: '|',
+    _arrayDelim: /[|,]/,
     /**
      * Ensures that some input is a vector, converts strings and arrays into vector objects
      *
