@@ -79,8 +79,10 @@ gf.AudioManager = function() {
     this.sounds = {};
 
     //define volume getter/setter
-    this.__defineGetter__('volume', this.getVolume.bind(this));
-    this.__defineSetter__('volume', this.setVolume.bind(this));
+    Object.defineProperty(this, 'volume', {
+        get: this.getVolume.bind(this),
+        set: this.setVolume.bind(this)
+    });
 };
 
 gf.inherits(gf.AudioManager, Object, {
