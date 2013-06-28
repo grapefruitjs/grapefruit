@@ -9,7 +9,7 @@
  */
 gf.AudioPlayer = function(manager, settings) {
     //mixin the Event Target methods
-    gf.EventTarget.call(this);
+    gf.Emitter.call(this);
 
     this.autoplay = false;
     this.buffer = false;

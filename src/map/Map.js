@@ -8,7 +8,7 @@
  */
 gf.Map = function(game, pos, map) {
     //mixin the Event Target methods
-    gf.EventTarget.call(this);
+    gf.Emitter.call(this);
 
     /**
      * The game instance this belongs to

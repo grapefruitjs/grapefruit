@@ -63,13 +63,6 @@ gf.Polygon = PIXI.Polygon;
 gf.Texture = PIXI.Texture;
 
 /**
- * EventTarget mixin, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/EventTarget.html">PIXI.EventTarget</a>
- *
- * @class EventTarget
- */
-gf.EventTarget = PIXI.EventTarget;
-
-/**
  * The current grapefruit version
  *
  * @property version

@@ -15,7 +15,7 @@
  */
 gf.AssetLoader = function(game) {
     //mixin the Event Target methods
-    gf.EventTarget.call(this);
+    gf.Emitter.call(this);
 
     this.game = game;
 
