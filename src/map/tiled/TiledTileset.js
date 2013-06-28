@@ -126,14 +126,55 @@ gf.TiledTileset = function(settings) {
      */
     this.textures = [];
 
+    //ensure hitArea is an array of points
+    if(this.properties.tileHitArea) {
+        var h = this.properties.tileHitArea.split(gf.utils._arrayDelim);
+
+        //odd number of values
+        if(h.length % 2 !== 0) {
+            throw 'Uneven number of values for tileHitArea on tileset! Should be a flat array of x/y values.';
+        }
+
+        var hv =  = [];
+        for(var i = 0, il = h.length; i < il; i+=2) {
+            hv.push(
+                new gf.Point(
+                    parseFloat(h[i], 10),
+                    parseFloat(h[i + 1], 10)
+                )
+            );
+        }
+        this.properties.tileHitArea = new gf.Polygon(hv);
+    }
+
     //massage tile properties
-    for(var i in this.tileproperties) {
-        var v = this.tileproperties[i];
+    for(var k in this.tileproperties) {
+        var v = this.tileproperties[k];
 
         if(v.normal) v.normal = gf.utils.ensureVector(v.normal);
 
         if(v.isCollidable === 'true') v.isCollidable = true;
         if(v.isBreakable === 'true') v.isBreakable = true;
+
+        if(v.hitArea) {
+            var ha = v.hitArea.split(gf.utils._arrayDelim);
+
+            //odd number of values
+            if(ha.length % 2 !== 0) {
+                throw 'Uneven number of values for hitArea on a tile of a tileset! Should be a flat array of x/y values.';
+            }
+
+            var hav = [];
+            for(var i = 0, il = h.length; i < il; i+=2) {
+                hav.push(
+                    new gf.Point(
+                        parseFloat(h[i], 10),
+                        parseFloat(h[i + 1], 10)
+                    )
+                );
+            }
+            v.hitArea = new gf.Polygon(hav);
+        }
     }
 
     //generate tile textures
