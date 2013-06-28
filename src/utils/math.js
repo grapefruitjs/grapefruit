@@ -8,6 +8,16 @@
     RAD_TO_DEG: 180 / Math.PI,
     SEED: Math.random(),
     /**
+     * Quickly rounds a number. This is about twice as fast as Math.round()
+     *
+     * @method round
+     * @param num {Number} The number to round
+     * @return {Number} The rounded value
+     */
+    round: function(n) {
+        return ~~(n + (n > 0 ? 0.5 : -0.5));
+    },
+    /**
      * Clamps a number between two values.
      *
      * @method clamp
