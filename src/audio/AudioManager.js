@@ -1,3 +1,6 @@
+gf.__AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
+gf.__audioctx = gf.support.webAudio ? new gf.__AudioCtx() : null;
+
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
  * The GF Audio API was based on
@@ -7,9 +10,6 @@
  * @constructor
  */
 gf.AudioManager = function() {
-    //normalize Audio Context
-    var GfAudioContext = window.AudioContext || window.webkitAudioContext;
-
     /**
      * Whether the player is muted or not
      *
@@ -37,7 +37,7 @@ gf.AudioManager = function() {
      * @type AudioContext
      * @readOnly
      */
-    this.ctx = gf.support.webAudio ? new GfAudioContext() : null;
+    this.ctx = gf.__audioctx;
 
     /**
      * If we have some way of playing audio
