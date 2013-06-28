@@ -187,7 +187,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         } else {
             var hitArea = props.hitArea || set.properties.tileHitArea;
 
-            window.console.log('hitArea', hitArea);
             tile = new gf.Tile(this.game, position, {
                 texture: texture,
                 mass: Infinity,
