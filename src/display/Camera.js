@@ -86,10 +86,10 @@ gf.Camera = function(game, pos, settings) {
         }
     };
 
-    gf.DisplayObject.call(this, game, pos, settings);
+    gf.DisplayObjectContainer.call(this, game, pos, settings);
 };
 
-gf.inherits(gf.Camera, gf.DisplayObject, {
+gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
     /**
      * Makes the camera flash with a certain color
      *

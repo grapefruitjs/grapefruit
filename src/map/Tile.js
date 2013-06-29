@@ -6,11 +6,11 @@
  * @constructor
  * @param tile {Object} All the settings for the tile
  */
-gf.Tile = function(game, pos, settings) {
+gf.Tile = function(texture) {
     this.collisionType = gf.Tile.TYPE.NONE;
 
     //call base ctor
-    gf.Sprite.call(this, game, pos, settings);
+    gf.Sprite.call(this, texture);
 
     this.type = gf.Sprite.TYPE.TILE;
 };

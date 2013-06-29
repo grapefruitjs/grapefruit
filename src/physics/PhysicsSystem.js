@@ -3,9 +3,8 @@ var COLLISION_TYPE = {
     TILE: 1
 };
 
-gf.PhysicsSystem = function(game, options) {
+gf.PhysicsSystem = function(options) {
     options = options || {};
-    this.game = game;
 
     this.space = new cp.Space();
     this.space.gravity = gf.utils.ensureVector(options.gravity !== undefined ? options.gravity : 9.87);

@@ -108,7 +108,7 @@ gf.inherits(gf.AssetLoader, Object, {
                 throw 'Unknown type "' + ext + '", unable to preload!';
 
             this.remaining++;
-            var loader = new Loader(this, name, url);
+            var loader = new Loader(name, url);
 
             loader.on('load', this.onAssetLoaded.bind(this));
             loader.on('error', this.onAssetError.bind(this));

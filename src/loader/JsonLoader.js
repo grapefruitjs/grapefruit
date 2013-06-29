@@ -4,8 +4,8 @@
  * @class JsonLoader
  * @constructor
  */
-gf.JsonLoader = function(al, name, url) {
-    gf.Loader.call(this, al, name, url);
+gf.JsonLoader = function(name, url) {
+    gf.Loader.call(this, name, url);
 
     this.type = 'json';
 };
@@ -27,11 +27,11 @@ gf.inherits(gf.JsonLoader, gf.Loader, {
 
                 //check some properties to see if this is a TiledMap Object
                 if(data.orientation && data.layers && data.tilesets && data.version) {
-                    loader = new gf.WorldLoader(self.parent, self.name, baseUrl, data);
+                    loader = new gf.WorldLoader(self.name, baseUrl, data);
                 }
                 //this is a sprite sheet (published from TexturePacker)
                 else if(data.frames && data.meta) {
-                    loader = new gf.SpriteSheetLoader(self.parent, self.name, baseUrl, data);
+                    loader = new gf.SpriteSheetLoader(self.name, baseUrl, data);
                 }
 
                 if(loader) {

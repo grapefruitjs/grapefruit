@@ -1,5 +1,5 @@
-gf.input.GamepadSticks = function(man, game) {
-    gf.input.Input.call(this, man, game);
+gf.input.GamepadSticks = function() {
+    gf.input.Input.call(this);
 
     /**
      * The threshold at which we consider a stick "moved"

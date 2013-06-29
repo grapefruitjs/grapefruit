@@ -6,10 +6,10 @@ gf.Font = function(font, settings) {
 
     this.text = '';
 
-    gf.DisplayObject.call(this, null, 0, settings);
+    gf.DisplayObjectContainer.call(this, settings);
 };
 
-gf.inherits(gf.Font, gf.DisplayObject, {
+gf.inherits(gf.Font, gf.DisplayObjectContainer, {
     setText: function(txt) {
         this.text = txt;
     }

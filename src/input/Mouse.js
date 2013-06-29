@@ -1,5 +1,5 @@
-gf.input.Mouse = function(man, game) {
-    gf.input.Input.call(this, man, game);
+gf.input.Mouse = function(view) {
+    gf.input.Input.call(this, view);
 
     /**
      * The current screen touches
@@ -26,58 +26,37 @@ gf.input.Mouse = function(man, game) {
      * @type Point
      * @readOnly
      */
-    this.offset = gf.utils.getOffset(game.renderer.view);
+    this.offset = gf.utils.getOffset(this.view);
 
     //bind touch events
-    game.renderer.view.addEventListener('touchmove', this.onMouseMove.bind(this), false);
+    this.view.addEventListener('touchmove', this.onMouse.bind(this), false);
     for(var t in gf.input.Mouse.TOUCH_EVENT) {
         if(gf.input.Mouse.TOUCH_EVENT[t] === 'touchmove') return;
-        game.renderer.view.addEventListener(gf.input.Mouse.TOUCH_EVENT[t], this.onTouch.bind(this), false);
+        this.view.addEventListener(gf.input.Mouse.TOUCH_EVENT[t], this.onTouch.bind(this), false);
     }
 
     //Bind mouse events
-    game.renderer.view.addEventListener('mousemove', this.onMouseMove.bind(this), false);
     document.addEventListener('mousewheel', this.onMouseWheel.bind(this), false); //needs to be document and check target?
-
     for(var k in gf.input.Mouse.EVENT) {
         var v = gf.input.Mouse.EVENT[k];
-        if(v === 'mousemove'|| v === 'mousewheel') return;
+        if(v === 'mousewheel') return;
 
-        game.renderer.view.addEventListener(v, this.onMouse.bind(this), false);
+        this.view.addEventListener(v, this.onMouse.bind(this), false);
     }
 };
 
 gf.inherits(gf.input.Mouse, gf.input.Input, {
-    //mouse/touch move event
-    onMouseMove: function(e) {
-        this.updateCoords(e);
-
-        if(this.dispatchMouseEvent(e))
-            return this.preventDefault(e);
-
-        return true;
-    },
-    //generic mouse event (click, down, up, etc)
+    //generic mouse event (click, down, up, mouve, touchmove, etc)
     onMouse: function(e) {
         this.updateCoords(e);
 
         if(this.dispatchMouseEvent(e))
             return this.preventDefault(e);
 
-        //incase touch event button is undefined
-        var keycode = this.binds[e.button || 0];
-
-        if(keycode) {
-            if(e.type === 'mousedown' || e.type === 'touchstart')
-                return this.manager.keyboard.onKeyDown(e, keycode);
-            else
-                return this.manager.keyboard.onKeyUp(e, keycode);
-        }
-
         return true;
     },
     onMouseWheel: function(e) {
-        if(e.target === this.game.renderer.view)
+        if(e.target === this.view)
             if(this.dispatchMouseEvent(e))
                 return this.preventDefault(e);
 

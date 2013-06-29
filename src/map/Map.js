@@ -28,10 +28,10 @@ gf.Map = function(game, pos, map) {
     this.size = new gf.Vector(map.width, map.height);
 
     //call base ctor
-    gf.DisplayObject.call(this, game, pos, map);
+    gf.DisplayObjectContainer.call(this, map);
 };
 
-gf.inherits(gf.Map, gf.DisplayObject, {
+gf.inherits(gf.Map, gf.DisplayObjectContainer, {
     /**
      * Gets a layer based on the layer's id or name
      *

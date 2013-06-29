@@ -183,22 +183,14 @@ gf.input = {
  * @param manager {InputManager} The InputManager instance that this Input object is managed by
  * @param game {Game} The game this camera belongs to
  */
-gf.input.Input = function(man, game) {
+gf.input.Input = function(view) {
     /**
-     * The game instance this belongs to
+     * The dom element to bind events to
      *
-     * @property game
+     * @property view
      * @type Game
      */
-    this.game = game;
-
-    /**
-     * The input manager this belongs to
-     *
-     * @property manager
-     * @type InputManager
-     */
-    this.manager = man;
+    this.view = view;
 
     /**
      * The binds that map an action to an input value

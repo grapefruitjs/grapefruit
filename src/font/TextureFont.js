@@ -1,6 +1,7 @@
 gf.TextureFont = function(font, settings) {
     this.ext = '';
 
+    //default map up
     this.map = {
         '`': 'accent',
         '~': 'tilde',
@@ -52,7 +53,7 @@ gf.TextureFont = function(font, settings) {
     if(this.ext && this.ext.charAt(0) !== '.')
         this.ext = '.' + this.ext;
 
-    this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
+    this.sprites = new gf.ObjectPool(gf.Sprite, this);
 };
 
 gf.inherits(gf.TextureFont, gf.Font, {

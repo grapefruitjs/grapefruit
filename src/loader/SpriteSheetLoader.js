@@ -1,5 +1,5 @@
-gf.SpriteSheetLoader = function(al, name, baseUrl, data) {
-    gf.Loader.call(this, null, name, baseUrl);
+gf.SpriteSheetLoader = function(name, baseUrl, data) {
+    gf.Loader.call(this, name, baseUrl);
 
     this.type = 'spritesheet';
     this.data = data;
@@ -12,7 +12,7 @@ gf.inherits(gf.SpriteSheetLoader, gf.Loader, {
 
         var self = this,
             data = this.data,
-            txLoader = new gf.TextureLoader(this.parent, this.name, this.url + data.meta.image);
+            txLoader = new gf.TextureLoader(this.name, this.url + data.meta.image);
 
         txLoader.on('load', function(e) {
             var texture =  e.data.baseTexture,
