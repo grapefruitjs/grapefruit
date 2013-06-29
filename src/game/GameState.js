@@ -32,7 +32,7 @@ gf.GameState = function(game, name, settings) {
      * @type InputManager
      * @readOnly
      */
-    this.input = new gf.InputManager(game);
+    this.input = new gf.InputManager(game.renderer.view);
 
     /**
      * The physics system to simulate stuffs
@@ -41,7 +41,7 @@ gf.GameState = function(game, name, settings) {
      * @type PhysicsSystem
      * @readOnly
      */
-    this.physics = new gf.PhysicsSystem(game, settings.gravity);
+    this.physics = new gf.PhysicsSystem({ gravity: settings.gravity });
 
     /**
      * The camera you view the scene through
@@ -62,7 +62,7 @@ gf.GameState = function(game, name, settings) {
     this.world = null;
 
     //call base ctor
-    gf.DisplayObject.call(this, game, [0, 0], settings);
+    gf.DisplayObjectContainer.call(this, game, [0, 0], settings);
 
     //start disabled
     this.disable();
@@ -75,7 +75,7 @@ gf.GameState = function(game, name, settings) {
     this.game.addState(this);
 };
 
-gf.inherits(gf.GameState, gf.DisplayObject, {
+gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
     addChild: function(obj) {
         if(obj) {
             //we add the camera in the ctor and the map later when

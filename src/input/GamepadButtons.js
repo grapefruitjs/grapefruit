@@ -1,5 +1,5 @@
-gf.input.GamepadButtons = function(man, game) {
-    gf.input.Input.call(this, man, game);
+gf.input.GamepadButtons = function() {
+    gf.input.Input.call(this);
 
     /**
      * The threshold at which we consider a button "pressed"

@@ -4,8 +4,8 @@
  * @class TextureLoader
  * @constructor
  */
- gf.TextureLoader = function(al, name, url) {
-    gf.Loader.call(this, al, name, url);
+ gf.TextureLoader = function(name, url) {
+    gf.Loader.call(this, name, url);
 
     this.type = 'texture';
 };

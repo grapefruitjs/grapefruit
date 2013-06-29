@@ -1,5 +1,5 @@
-gf.input.Keyboard = function(man, game) {
-    gf.input.Input.call(this, man, game);
+gf.input.Keyboard = function(view) {
+    gf.input.Input.call(this, view);
 
     /**
      * Tracks if a key is already down, so we don't repeat
@@ -38,10 +38,12 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
     //on keydown event set gf.controls keycode's action as active
     //and call any registered callbacks
     onKeyDown: function(e, override) {
-        return this.modifyKey(e, override || e.keyCode || e.which, true);
+        if(e.target === this.view)
+            return this.modifyKey(e, override || e.keyCode || e.which, true);
     },
     onKeyUp: function(e, override) {
-        return this.modifyKey(e, override || e.keyCode || e.which, false);
+        if(e.target === this.view)
+            return this.modifyKey(e, override || e.keyCode || e.which, false);
     },
     modifyKey: function(e, key, val) {
         //process the single key

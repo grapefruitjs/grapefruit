@@ -5,21 +5,11 @@
  * @extends PIXI.DisplayObjectContainer
  * @constructor
  */
-gf.DisplayObjectContainer = function(game, pos, settings) {
+gf.DisplayObjectContainer = function(settings) {
     PIXI.DisplayObjectContainer.call(this);
-
-    /**
-     * The game instance this belongs to
-     *
-     * @property game
-     * @type Game
-     */
-    this.game = game;
 
     //mixin user's settings
     gf.utils.setValues(this, settings);
-
-    this.setPosition(pos);
 
     //Add these properties in so that all objects can see them in the docs
     //these properties are inherited from PIXI.DisplayObjectContainer
@@ -190,25 +180,17 @@ gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
                 o.resize.apply(o, arguments);
         }
     },
-    removeAllChildren: function() {
-        //remove each from the stage
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            if(this.stage) this.stage.__removeChild(this.children[i]);
-        }
-
-        //clear the list and let the GC clean up
-        this.children = [];
-    },
     /**
      * Convenience method for setting the position of the Object.
      *
      * @method setPosition
-     * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
+     * @param x {Number|Array<Number>|Vector|Point} X coord to put the object at.
      *       If an Array, Vector, or Point is passed then the y parameter is ignored
-     * @param y {Number} Y coord to put the sprite at
-     * @return {DisplayObject} Returns itself for chainability
+     * @param y {Number} Y coord to put the object at
+     * @return {DisplayObjectContainer} Returns itself for chainability
      * @example
-     *      spr.setPosition(1, 1)
+     *      obj.setPosition(0) //will set to (0, 0)
+     *          .setPosition(1, 1)
      *          .setPosition([5, 5])
      *          .setPosition(new gf.Point(10, 10))
      *          .setPosition(new gf.Vector(20, 20));

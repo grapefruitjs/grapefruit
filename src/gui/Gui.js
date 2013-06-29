@@ -17,7 +17,7 @@ gf.Gui = function(pos, settings) {
      */
     this.name = '';
 
-    gf.DisplayObject.call(this, null, pos, settings);
+    gf.DisplayObjectContainer.call(this, null, pos, settings);
 };
 
-gf.inherits(gf.Gui, gf.DisplayObject);
+gf.inherits(gf.Gui, gf.DisplayObjectContainer);

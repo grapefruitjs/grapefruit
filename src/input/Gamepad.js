@@ -1,5 +1,5 @@
-gf.input.Gamepad = function(man, game) {
-    gf.input.Input.call(this, man, game);
+gf.input.Gamepad = function() {
+    gf.input.Input.call(this);
 
     //are we polling for status/connections?
     this.ticking = false;
@@ -10,8 +10,8 @@ gf.input.Gamepad = function(man, game) {
     //timestamp tracking for state changes
     this.prevTimestamps = [];
 
-    this.buttons = new gf.input.GamepadButtons(man, game);
-    this.sticks = new gf.input.GamepadSticks(man, game);
+    this.buttons = new gf.input.GamepadButtons();
+    this.sticks = new gf.input.GamepadSticks();
 
     //Firefox uses connect/disconnect events so listen to those
     window.addEventListener('MozGamepadConnected', this.onGamepadConnect.bind(this), false);

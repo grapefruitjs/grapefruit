@@ -1,9 +1,8 @@
-gf.Loader = function(al, name, url) {
+gf.Loader = function(name, url) {
     gf.Emitter.call(this);
 
     this.type = 'hey';
 
-    this.parent = al;
     this.name = name;
     this.url = url;
 };

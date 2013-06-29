@@ -25,11 +25,19 @@ gf.Layer = function(game, pos, layer) {
      */
     this.size = new gf.Vector(layer.width || 0, layer.height || 0);
 
+    /**
+     * The game instance this belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
+
     //call base ctor
-    gf.DisplayObject.call(this, game, pos, layer);
+    gf.DisplayObjectContainer.call(this, layer);
 };
 
-gf.inherits(gf.Layer, gf.DisplayObject, {
+gf.inherits(gf.Layer, gf.DisplayObjectContainer, {
     /**
      * Pans the layer around, rendering stuff if necessary
      *

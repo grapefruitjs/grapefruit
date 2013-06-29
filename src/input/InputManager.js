@@ -1,15 +1,15 @@
-gf.InputManager = function(game) {
+gf.InputManager = function(view) {
     /**
-     * The game instance this belongs to
+     * The dom element to bind events to
      *
-     * @property game
+     * @property view
      * @type Game
      */
-    this.game = game;
+    this.view = game;
 
-    this.mouse = new gf.input.Mouse(this, game);
-    this.keyboard = new gf.input.Keyboard(this, game);
-    this.gamepad = new gf.input.Gamepad(this, game);
+    this.mouse = new gf.input.Mouse(view);
+    this.keyboard = new gf.input.Keyboard(view);
+    this.gamepad = new gf.input.Gamepad();
 };
 
 gf.inherits(gf.InputManager, Object, {

@@ -1,5 +1,5 @@
 gf.WorldLoader = function(al, name, baseUrl, data) {
-    gf.Loader.call(this, al, name, baseUrl);
+    gf.Loader.call(this, name, baseUrl);
 
     this.type = 'world';
     this.data = data;
@@ -25,7 +25,7 @@ gf.inherits(gf.WorldLoader, gf.Loader, {
                 if(!obj.properties.spritesheet) continue;
                 this.numTextures++;
 
-                txLoader = new gf.TextureLoader(this.parent, layer.name + '_' + obj.name + '_texture', obj.properties.spritesheet);
+                txLoader = new gf.TextureLoader(layer.name + '_' + obj.name + '_texture', obj.properties.spritesheet);
 
                 txLoader.on('load', this.onTextLoad.bind(this));
                 txLoader.on('error', this.onTextError.bind(this));
@@ -41,7 +41,7 @@ gf.inherits(gf.WorldLoader, gf.Loader, {
             if(!set.image) continue;
             this.numTextures++;
 
-            txLoader2 = new gf.TextureLoader(this.parent, set.name + '_texture', this.url + set.image);
+            txLoader2 = new gf.TextureLoader(set.name + '_texture', this.url + set.image);
 
             txLoader2.on('load', this.onTextLoad.bind(this));
             txLoader2.on('error', this.onTextError.bind(this));
