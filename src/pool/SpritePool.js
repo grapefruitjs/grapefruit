@@ -37,14 +37,15 @@ gf.inherits(gf.SpritePool, Object, {
      *
      * @method create
      * @param name {String} The user-defined name of the Sprite to check if is in the pool
-     * @param props {Sprite} The properties that would normally be passed as the "settings" of the Sprite
+     * @param texture {Texture} The texture for the sprite
+     * @param props {Object} Extra object that will be passed along (for custom sprite options)
      * @return {Sprite} Returns a new instance of the object from the pool
      */
-    create: function(name, props) {
+    create: function(name, texture, props) {
         if(!name || !this.types[name])
             name = '_default';
 
-        return new this.types[name](props);
+        return new this.types[name](texture, props);
     },
     //currently doesn't do any recycling unfortunately
     free: function() {

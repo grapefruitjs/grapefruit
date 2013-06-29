@@ -107,7 +107,6 @@ gf.TiledMap = function(map) {
 
             case 'objectgroup':
                 lyr = new gf.TiledObjectGroup(map.layers[i]);
-                lyr.spawn();
                 break;
 
             case 'imagelayer':
@@ -158,6 +157,15 @@ gf.inherits(gf.TiledMap, gf.Map, {
                     numX,
                     numY
                 );
+            }
+        }
+    },
+    spawnObjects: function() {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o instanceof gf.TiledObjectGroup) {
+                o.spawn();
             }
         }
     },

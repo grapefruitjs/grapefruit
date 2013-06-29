@@ -82,8 +82,8 @@ gf.TiledTileset = function(settings) {
      * @type Vector
      */
     this.numTiles = new gf.Vector(
-        ~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x + this.spacing)),
-        ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y + this.spacing))
+        ~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), //75 / 
+        ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing))
     );
 
     /**
@@ -136,13 +136,8 @@ gf.TiledTileset = function(settings) {
         }
 
         var hv = [];
-        for(var i = 0, il = h.length; i < il; i+=2) {
-            hv.push(
-                new gf.Point(
-                    parseFloat(h[i], 10),
-                    parseFloat(h[i + 1], 10)
-                )
-            );
+        for(var i = 0, il = h.length; i < il; ++i) {
+            hv.push(parseFloat(h[i], 10));
         }
         this.properties.tileHitArea = new gf.Polygon(hv);
     }

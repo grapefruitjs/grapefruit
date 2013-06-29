@@ -49,6 +49,20 @@ gf.Point = PIXI.Point;
 gf.Rectangle = PIXI.Rectangle;
 
 /**
+ * Circle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Circle.html">PIXI.Circle</a>
+ *
+ * @class Circle
+ */
+gf.Circle = PIXI.Circle;
+
+/**
+ * Ellipse object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html">PIXI.Ellipse</a>
+ *
+ * @class Ellipse
+ */
+gf.Ellipse = PIXI.Ellipse;
+
+/**
  * Polygon object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Polygon.html">PIXI.Polygon</a>
  *
  * @class Polygon
