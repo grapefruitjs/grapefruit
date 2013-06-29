@@ -10,8 +10,8 @@
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
-gf.TiledLayer = function(game, pos, layer) {
-    gf.Layer.call(this, game, pos, layer);
+gf.TiledLayer = function(layer) {
+    gf.Layer.call(this, layer);
 
     //Tiled Editor properties
     var props = layer.properties || {};
@@ -109,6 +109,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 if(tile) {
                     //hide/free the sprite
                     tile.visible = false;
+                    tile.disablePhysics();
                     this._tilePool.push(tile);
                 }
 
@@ -139,7 +140,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             iso = (this.parent.orientation === 'isometric'),
             texture,
             props,
-            position;
+            position,
+            hitArea,
+            interactive;
 
         //if no tileset, just ensure the "from" tile is put back in the pool
         if(!set) {
@@ -153,8 +156,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             return;
         }
 
+        //grab some values for the tile
         texture = set.getTileTexture(tileId);
         props = set.getTileProperties(tileId);
+        hitArea = props.hitArea || set.properties.tileHitArea;
+        interactive = props.interactive !== undefined ? props.interactive : (set.properties.interactive !== undefined ? set.properties.interactive : this.interactiveTiles);
         position = iso ?
             // Isometric position
             [
@@ -178,38 +184,34 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tile = this._tilePool.pop();
         }
 
-        if(tile) {
-            tile.setTexture(texture);
-            tile.setPosition(position);
-            tile.setCollidable(props.isCollidable);
-            tile.collisionType = props.type;
-            tile.visible = true;
-        } else {
-            var hitArea = props.hitArea || set.properties.tileHitArea;
-
-            tile = new gf.Tile(this.game, position, {
-                texture: texture,
-                mass: Infinity,
-                width: set.tileSize.x,
-                height: set.tileSize.y,
-                hitArea: hitArea,
-                collidable: props.isCollidable,
-                collisionType: props.type,
-                interactive: this.interactiveTiles
-            });
-
-            //pass through all events
-            if(this.interactiveTiles) {
-                tile.click = this.onTileEvent.bind(this, 'click', tile);
-                tile.mousedown = this.onTileEvent.bind(this, 'mousedown', tile);
-                tile.mouseup = this.onTileEvent.bind(this, 'mouseup', tile);
-                tile.mousemove = this.onTileEvent.bind(this, 'mousemove', tile);
-                tile.mouseout = this.onTileEvent.bind(this, 'mouseout', tile);
-                tile.mouseover = this.onTileEvent.bind(this, 'mouseover', tile);
-                tile.mouseupoutside = this.onTileEvent.bind(this, 'mouseupoutside', tile);
-            }
-
+        //if we couldn't find a tile from the pool, or one to move
+        //then create a new tile
+        if(!tile) {
+            tile = new gf.Tile(texture);
+            tile.mass = Infinity;
             this.addChild(tile);
+        }
+
+        if(props.isCollidable)
+            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
+
+        tile.setTexture(texture);
+        tile.setPosition(position);
+        tile.setInteractive(interactive);
+
+        tile.collisionType = props.type;
+        tile.visible = true;
+        tile.hitArea = hitArea;
+
+        //pass through all events
+        if(interactive) {
+            tile.click = this.onTileEvent.bind(this, 'click', tile);
+            tile.mousedown = this.onTileEvent.bind(this, 'mousedown', tile);
+            tile.mouseup = this.onTileEvent.bind(this, 'mouseup', tile);
+            tile.mousemove = this.onTileEvent.bind(this, 'mousemove', tile);
+            tile.mouseout = this.onTileEvent.bind(this, 'mouseout', tile);
+            tile.mouseover = this.onTileEvent.bind(this, 'mouseover', tile);
+            tile.mouseupoutside = this.onTileEvent.bind(this, 'mouseupoutside', tile);
         }
 
         //update sprite position in the map

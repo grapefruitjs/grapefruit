@@ -1,13 +1,14 @@
 /**
  * Tiled object group is a special layer that contains entities
+ * TODO: This is all trash
  *
  * @class TiledObjectGroup
  * @extends Layer
  * @constructor
  * @param group {Object} All the settings for the layer
  */
- gf.TiledObjectGroup = function(game, pos, group) {
-    gf.Layer.call(this, game, pos, group);
+ gf.TiledObjectGroup = function(group) {
+    gf.Layer.call(this, group);
 
     /**
      * The color to display objects in this group
@@ -62,6 +63,9 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             else this.spawnRectangle(o);
 
              */
+
+            //this.TiledMap.GameState.Game.spritepool
+            //this.parent.parent.parent.spritepool.create(o.name, )
 
             props.name = o.name;
             props.type = o.type;
