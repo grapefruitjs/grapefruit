@@ -1,5 +1,5 @@
 var COLLISION_TYPE = {
-    sprITY: 0,
+    SPRITE: 0,
     TILE: 1
 };
 
@@ -22,8 +22,8 @@ gf.PhysicsSystem = function(options) {
 
     //sprity - sprity collisions
     this.space.addCollisionHandler(
-        COLLISION_TYPE.sprITY,
-        COLLISION_TYPE.sprITY,
+        COLLISION_TYPE.SPRITE,
+        COLLISION_TYPE.SPRITE,
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         null, //postSolve
@@ -32,7 +32,7 @@ gf.PhysicsSystem = function(options) {
 
     //sprity - tile collisions
     this.space.addCollisionHandler(
-        COLLISION_TYPE.sprITY,
+        COLLISION_TYPE.SPRITE,
         COLLISION_TYPE.TILE,
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
@@ -42,18 +42,10 @@ gf.PhysicsSystem = function(options) {
 };
 
 gf.PhysicsSystem.prototype._createBody = function(spr) {
-    var b;
-
-    if(spr.mass === Infinity) {
-        b = this.space.staticBody;
-    } else {
-        b = this.space.addBody(new cp.Body(
-            spr.mass,
-            Infinity //cp.momsprForBox(spr.mass, spr.width, spr.height)
-        ));
-    }
-
-    return b;
+    return this.space.addBody(new cp.Body(
+        spr.mass,
+        Infinity //cp.momsprForBox(spr.mass, spr.width, spr.height)
+    ));
 };
 
 gf.PhysicsSystem.prototype._createShape = function(spr, body) {
@@ -77,7 +69,7 @@ gf.PhysicsSystem.prototype.getCollisionType = function(spr) {
     if(spr instanceof gf.Tile) {
         return COLLISION_TYPE.TILE;
     } else {
-        return COLLISION_TYPE.sprITY;
+        return COLLISION_TYPE.SPRITE;
     }
 };
 

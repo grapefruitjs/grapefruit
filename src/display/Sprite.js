@@ -33,6 +33,15 @@ gf.Sprite = function(texture) {
     this.alive = true;
 
     /**
+     * The mass of this sprite (if using physics)
+     *
+     * @property mass
+     * @type Number
+     * @default 0
+     */
+    this.mass = 0;
+
+    /**
      * The physics system that this sprite is a part of. This is advisory only
      * please use enablePhysics() or disablePhysics() and do not set this value
      * directly.

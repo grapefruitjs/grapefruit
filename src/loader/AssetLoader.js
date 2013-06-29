@@ -13,11 +13,9 @@
  *      var loader = new AssetLoader();
  *      loader.load(['/my/texture.png']);
  */
-gf.AssetLoader = function(game) {
+gf.AssetLoader = function() {
     //mixin the Event Target methods
     gf.Emitter.call(this);
-
-    this.game = game;
 
     /**
      * The array of assets to load

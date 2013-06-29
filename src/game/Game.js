@@ -113,7 +113,7 @@ gf.Game = function(contId, settings) {
      * @type AssetLoader
      * @readOnly
      */
-    this.loader = new gf.AssetLoader(this);
+    this.loader = new gf.AssetLoader();
 
     /**
      * The entity pool to use to create registered entities
@@ -122,7 +122,7 @@ gf.Game = function(contId, settings) {
      * @type EntityPool
      * @readOnly
      */
-    this.entitypool = new gf.EntityPool(this);
+    this.spritepool = new gf.SpritePool();
 
     /**
      * The GameStates added to the game
@@ -223,7 +223,8 @@ gf.inherits(gf.Game, Object, {
         for(var i = 0, il = this.stage.children.length; i < il; ++i) {
             var o = this.stage.children[i];
 
-            if(o.resize) o.resize(w, h);
+            if(o.resize)
+                o.resize(w, h);
         }
 
         return this;

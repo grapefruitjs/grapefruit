@@ -99,12 +99,14 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
         }
 
         this.world = new gf.TiledMap(this.game, 0, world);
-        this.addChild(this.world);
+        this.world.resize(this.game.renderer.width, this.game.renderer.height);
         this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
+        this.addChild(this.world);
 
+        /* TODO: Autoplay music
         if(this.world.properties.music) {
             this.audio.play(this.world.properties.music, { loop: this.world.properties.music_loop === 'true' });
-        }
+        }*/
 
         return this;
     },

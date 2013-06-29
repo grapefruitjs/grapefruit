@@ -6,7 +6,7 @@
  * @constructor
  * @param layer {Object} All the settings for the layer
  */
-gf.Layer = function(game, pos, layer) {
+gf.Layer = function(layer) {
     /**
      * The name of the layer
      *
@@ -24,14 +24,6 @@ gf.Layer = function(game, pos, layer) {
      * @default new gf.Vector(1, 1)
      */
     this.size = new gf.Vector(layer.width || 0, layer.height || 0);
-
-    /**
-     * The game instance this belongs to
-     *
-     * @property game
-     * @type Game
-     */
-    this.game = game;
 
     //call base ctor
     gf.DisplayObjectContainer.call(this, layer);

@@ -10,8 +10,8 @@
  * @param position {Point|Vector|Array|Number} The starting position of the map
  * @param map {Object} All the settings for the map
  */
-gf.TiledMap = function(game, pos, map) {
-    gf.Map.call(this, game, pos, map);
+gf.TiledMap = function(map) {
+    gf.Map.call(this, map);
 
     this.scale.x = parseFloat(map.properties.scale, 10) || 1;
     this.scale.y = parseFloat(map.properties.scale, 10) || 1;
@@ -98,49 +98,24 @@ gf.TiledMap = function(game, pos, map) {
         this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
     }
 
-    //create the layers
-    var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
-        numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
-
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr;
 
         switch(map.layers[i].type) {
             case 'tilelayer':
-                lyr = new gf.TiledLayer(this.game, 0, map.layers[i]);
-                this.addChild(lyr);
-
-                //lyr.scale = this.scale;
-                lyr.renderTiles(
-                    Math.floor(this.position.x / this.scaledTileSize.x),
-                    Math.floor(this.position.y / this.scaledTileSize.y),
-                    numX,
-                    numY
-                );
-
-                if(lyr.name.toLowerCase().indexOf('collision') === 0) {
-                    lyr.visible = false;
-                 }
+                lyr = new gf.TiledLayer(map.layers[i]);
                 break;
 
             case 'objectgroup':
-                lyr = new gf.TiledObjectGroup(this.game, 0, map.layers[i]);
-                this.addChild(lyr);
-
-                //auto spawn the player object group
-                if(lyr.name === 'player' && !lyr.properties.manual)
-                    lyr.spawn();
-
+                lyr = new gf.TiledObjectGroup(map.layers[i]);
+                lyr.spawn();
                 break;
 
             case 'imagelayer':
-                lyr = new gf.ImageLayer(this.game, 0, {
-                    texture: map.layers[i]
-                });
-                this.addChild(lyr);
-
+                lyr = new gf.ImageLayer(map.layers[i]);
                 break;
         }
+        this.addChild(lyr);
     }
 
     //rotate for isometric maps
@@ -170,9 +145,9 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @method resize
      * @private
      */
-    resize: function() {
-        var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
-            numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
+    resize: function(width, height) {
+        var numX = Math.ceil(width / this.scaledTileSize.x),
+            numY = Math.ceil(height / this.scaledTileSize.y);
 
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];

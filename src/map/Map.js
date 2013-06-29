@@ -6,17 +6,9 @@
  * @constructor
  * @param map {Object} All the settings for the map
  */
-gf.Map = function(game, pos, map) {
+gf.Map = function(map) {
     //mixin the Event Target methods
     gf.Emitter.call(this);
-
-    /**
-     * The game instance this belongs to
-     *
-     * @property game
-     * @type Game
-     */
-    this.game = game;
 
     /**
      * The size of the map
@@ -32,24 +24,6 @@ gf.Map = function(game, pos, map) {
 };
 
 gf.inherits(gf.Map, gf.DisplayObjectContainer, {
-    /**
-     * Gets a layer based on the layer's id or name
-     *
-     * @method getLayer
-     * @param id {Number|String} The layer's number id or string name.
-     * @return {Layer} Returns the found layer, or null if not found
-     */
-    getLayer: function(id) {
-        if(typeof id === 'number')
-            return this.layers[id] || null; //return null if not found
-
-        if(typeof id === 'string')
-            for(var i = 0, il = this.children.length; i < il; ++i)
-                if(this.children[i].name === id)
-                    return this.children[i];
-
-        return null;
-    },
     /**
      * Pans the map around
      *
