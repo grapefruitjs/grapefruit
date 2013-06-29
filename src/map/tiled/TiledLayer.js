@@ -196,7 +196,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
 
         tile.setTexture(texture);
-        tile.setPosition(position);
+        tile.setPosition(position[0], position[1]);
         tile.setInteractive(interactive);
 
         tile.collisionType = props.type;

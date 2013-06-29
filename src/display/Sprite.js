@@ -10,7 +10,7 @@
  * @example
  *      var spr = new gf.Sprite(texture, [10, 1], { name: 'MySprite' });
  */
-gf.Sprite = function(texture) {
+gf.Sprite = function(tx) {
     PIXI.Sprite.call(this, tx);
     gf.Emitter.call(this);
 
@@ -21,7 +21,7 @@ gf.Sprite = function(texture) {
      * @type String
      * @default 'neutral'
      */
-    this.type = gf.Entity.TYPE.NEUTRAL;
+    this.type = gf.Sprite.TYPE.NEUTRAL;
 
     /**
      * Whether or not the sprite is "alive", advisory only
@@ -110,8 +110,7 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
      *      and if we collide with a solid tile we kill our velocity
      *
      * @method onCollision
-     * @param obj {Entity} Colliding sprite
-     * @return {Entity} Returns itself for chainability
+     * @param obj {Sprite} Colliding sprite
      */
     onCollision: function(obj) {
         if(obj.type === gf.Sprite.TYPE.COLLECTABLE)

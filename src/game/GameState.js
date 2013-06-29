@@ -12,8 +12,20 @@
  *
  *      game.enableState(state); //or you can use the name from the ctor 'battle'
  */
-gf.GameState = function(game, name, settings) {
+gf.GameState = function(name, settings) {
+    if(typeof name === 'object') {
+        settings = name;
+        name = Math.floor(Date.now() * Math.random()).toString();
+    }
+
     settings = settings || {};
+
+    /**
+     * The name of this game state
+     *
+     * @property name
+     * @type String
+     */
     this.name = name;
 
     /**
@@ -26,15 +38,6 @@ gf.GameState = function(game, name, settings) {
     this.audio = new gf.AudioManager();
 
     /**
-     * The input instance for this game
-     *
-     * @property input
-     * @type InputManager
-     * @readOnly
-     */
-    this.input = new gf.InputManager(game.renderer.view);
-
-    /**
      * The physics system to simulate stuffs
      *
      * @property physics
@@ -44,13 +47,22 @@ gf.GameState = function(game, name, settings) {
     this.physics = new gf.PhysicsSystem({ gravity: settings.gravity });
 
     /**
+     * The input instance for this game
+     *
+     * @property input
+     * @type InputManager
+     * @readOnly
+     */
+    this.input = null; //need to be added to a game first
+
+    /**
      * The camera you view the scene through
      *
      * @property camera
      * @type Camera
      * @readOnly
      */
-    this.camera = new gf.Camera(game);
+    this.camera = null; //need to be added to a game first
 
     /**
      * The world instance that holds all entites and the map
@@ -61,21 +73,38 @@ gf.GameState = function(game, name, settings) {
      */
     this.world = null;
 
+    /**
+     * The game instance that this state belongs too
+     *
+     * @property game
+     * @type Game
+     */
+    Object.defineProperty(this, 'game', {
+        get: function() { return this._game; },
+        set: this._setGame.bind(this),
+        enumerable: true
+    });
+
     //call base ctor
-    gf.DisplayObjectContainer.call(this, game, [0, 0], settings);
+    gf.DisplayObjectContainer.call(this, settings);
 
     //start disabled
     this.disable();
-
-    //add camera
-    this.addChild(this.camera);
-    this.camera.resize(this.game.renderer.width, this.game.renderer.height);
-
-    //add this state to the game
-    this.game.addState(this);
 };
 
 gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
+    _setGame: function(game) {
+        this._game = game;
+
+        this.input = new gf.InputManager(game.renderer.view);
+
+        if(this.camera)
+            this.removeChild(this.camera);
+
+        this.camera = new gf.Camera(game);
+        this.addChild(this.camera);
+        this.camera.resize(game.renderer.width, game.renderer.height);
+    },
     addChild: function(obj) {
         if(obj) {
             //we add the camera in the ctor and the map later when
@@ -98,8 +127,8 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
             }
         }
 
-        this.world = new gf.TiledMap(this.game, 0, world);
-        this.world.resize(this.game.renderer.width, this.game.renderer.height);
+        this.world = new gf.TiledMap(world);
+        this.world.resize(this._game.renderer.width, this._game.renderer.height);
         this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
         this.addChild(this.world);
 

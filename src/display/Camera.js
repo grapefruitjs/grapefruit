@@ -10,7 +10,7 @@
  * @param game {Game} The game this camera belongs to
  * @param settings {Object} Any settings you want to override the default properties with
  */
-gf.Camera = function(game, pos, settings) {
+gf.Camera = function(game, settings) {
     /**
      * The bounds of that the camera can move to
      *
@@ -22,7 +22,7 @@ gf.Camera = function(game, pos, settings) {
     this._bounds = new PIXI.Rectangle(0, 0, 0, 0);
 
     /**
-     * When following an entity this is the space within the camera that it can move around
+     * When following a sprite this is the space within the camera that it can move around
      * before the camera moves to track it.
      *
      * @property _deadzone
@@ -36,7 +36,7 @@ gf.Camera = function(game, pos, settings) {
      * The target that the camera will follow
      *
      * @property _target
-     * @type Entity
+     * @type Sprite
      * @readOnly
      * @private
      */
@@ -86,7 +86,7 @@ gf.Camera = function(game, pos, settings) {
         }
     };
 
-    gf.DisplayObjectContainer.call(this, game, pos, settings);
+    gf.DisplayObjectContainer.call(this, settings);
 };
 
 gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
@@ -319,7 +319,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
                 break;
         }
 
-        this.focusEntity(this._target);
+        this.focusSprite(this._target);
 
         return this;
     },
@@ -457,10 +457,10 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {Camera} Returns iteself for chainability
      */
     update: function(dt) {
-        //follow entity
+        //follow sprite
         if(this._target) {
             if(!this._deadzone) {
-                this.focusEntity(this._target);
+                this.focusSprite(this._target);
             } else {
                 var moveX, moveY,
                     dx, dy,

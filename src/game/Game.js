@@ -116,10 +116,10 @@ gf.Game = function(contId, settings) {
     this.loader = new gf.AssetLoader();
 
     /**
-     * The entity pool to use to create registered entities
+     * The sprite pool to use to create registered entities
      *
-     * @property entitypool
-     * @type EntityPool
+     * @property spritepool
+     * @type SpritePool
      * @readOnly
      */
     this.spritepool = new gf.SpritePool();
@@ -141,7 +141,7 @@ gf.Game = function(contId, settings) {
      * @readOnly
      */
     this.activeState = null;
-    this._defaultState = new gf.GameState(this, '_default');
+    this._defaultState = new gf.GameState('_default');
 
     //append the renderer view
     //this.renderer.view.style['z-index'] = opts.zIndex || 5;
@@ -150,6 +150,8 @@ gf.Game = function(contId, settings) {
     //mixin user settings
     gf.utils.setValues(this, settings);
 
+    //enable default state
+    this.addState(this._defaultState);
     this.enableState('_default');
 
     //define getters for common properties in GameState
@@ -199,7 +201,7 @@ gf.Game = function(contId, settings) {
      */
 
     /**
-     * The world instance that holds all entites and the map
+     * The world instance that holds all sprites and the map
      * (refers to the active GameState's world instance)
      *
      * @property world
@@ -268,6 +270,8 @@ gf.inherits(gf.Game, Object, {
         } else {
             this.states[name] = state;
             this.stage.addChild(state);
+
+            state.game = this;
         }
     },
     removeState: function(state) {
