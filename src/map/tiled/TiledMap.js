@@ -13,10 +13,18 @@
 gf.TiledMap = function(map) {
     gf.Map.call(this, map);
 
-    this.scale.x = parseFloat(map.properties.scale, 10) || 1;
-    this.scale.y = parseFloat(map.properties.scale, 10) || 1;
-
     //Tiled Editor properties
+
+    /**
+     * The user-defined properties
+     *
+     * @property properties
+     * @type Object
+     * @default {}
+     */
+    this.properties = map.properties || {};
+    this.scale.x = parseFloat(this.properties.scale, 10) || 1;
+    this.scale.y = parseFloat(this.properties.scale, 10) || 1;
 
     /**
      * The tile size
@@ -52,15 +60,6 @@ gf.TiledMap = function(map) {
      * @type Number
      */
     this.backgroundColor = map.backgroundColor;
-
-    /**
-     * The user-defined properties
-     *
-     * @property properties
-     * @type Object
-     * @default {}
-     */
-    this.properties = map.properties || {};
 
     //Custom/Optional properties
 

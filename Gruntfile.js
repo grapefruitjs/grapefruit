@@ -14,32 +14,24 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/core.js',
         '<%= dirs.src %>/plugin.js',
 
-        '<%= dirs.src %>/game/Game.js',
-        '<%= dirs.src %>/game/GameState.js',
+        '<%= dirs.src %>/audio/AudioManager.js',
+        '<%= dirs.src %>/audio/AudioPlayer.js',
 
-        '<%= dirs.src %>/display/DisplayObject.js',
+        '<%= dirs.src %>/display/DisplayObjectContainer.js',
         '<%= dirs.src %>/display/Sprite.js',
         '<%= dirs.src %>/display/AnimatedSprite.js',
         '<%= dirs.src %>/display/Camera.js',
 
-        '<%= dirs.src %>/utils/utils.js',
-        '<%= dirs.src %>/utils/math.js',
-        '<%= dirs.src %>/utils/Clock.js',
-        '<%= dirs.src %>/utils/Vector.js',
+        '<%= dirs.src %>/font/Font.js',
+        '<%= dirs.src %>/font/TextureFont.js',
 
-        '<%= dirs.src %>/audio/AudioManager.js',
-        '<%= dirs.src %>/audio/AudioPlayer.js',
+        '<%= dirs.src %>/game/Game.js',
+        '<%= dirs.src %>/game/GameState.js',
 
-        '<%= dirs.src %>/loader/Loader.js',
-        '<%= dirs.src %>/loader/AssetLoader.js',
-        '<%= dirs.src %>/loader/AudioLoader.js',
-        '<%= dirs.src %>/loader/JsonLoader.js',
-        '<%= dirs.src %>/loader/SpriteSheetLoader.js',
-        '<%= dirs.src %>/loader/TextureLoader.js',
-        '<%= dirs.src %>/loader/WorldLoader.js',
-
-        '<%= dirs.src %>/pool/ObjectPool.js',
-        '<%= dirs.src %>/pool/EntityPool.js',
+        '<%= dirs.src %>/gui/Gui.js',
+        '<%= dirs.src %>/gui/GuiItem.js',
+        '<%= dirs.src %>/gui/Hud.js',
+        '<%= dirs.src %>/gui/HudItem.js',
 
         '<%= dirs.src %>/input/InputManager.js',
         '<%= dirs.src %>/input/Input.js',
@@ -49,23 +41,33 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/input/GamepadButtons.js',
         '<%= dirs.src %>/input/GamepadSticks.js',
 
-        '<%= dirs.src %>/font/Font.js',
-        '<%= dirs.src %>/font/TextureFont.js',
-
-        '<%= dirs.src %>/gui/Gui.js',
-        '<%= dirs.src %>/gui/GuiItem.js',
-        '<%= dirs.src %>/gui/Hud.js',
-        '<%= dirs.src %>/gui/HudItem.js',
+        '<%= dirs.src %>/loader/Loader.js',
+        '<%= dirs.src %>/loader/AssetLoader.js',
+        '<%= dirs.src %>/loader/AudioLoader.js',
+        '<%= dirs.src %>/loader/JsonLoader.js',
+        '<%= dirs.src %>/loader/SpriteSheetLoader.js',
+        '<%= dirs.src %>/loader/TextureLoader.js',
+        '<%= dirs.src %>/loader/WorldLoader.js',
 
         '<%= dirs.src %>/map/Map.js',
         '<%= dirs.src %>/map/Layer.js',
+        '<%= dirs.src %>/map/ImageLayer.js',
         '<%= dirs.src %>/map/Tile.js',
         '<%= dirs.src %>/map/tiled/TiledMap.js',
         '<%= dirs.src %>/map/tiled/TiledLayer.js',
         '<%= dirs.src %>/map/tiled/TiledTileset.js',
         '<%= dirs.src %>/map/tiled/TiledObjectGroup.js',
 
-        '<%= dirs.src %>/physics/PhysicsSystem.js'
+        '<%= dirs.src %>/physics/PhysicsSystem.js',
+
+        '<%= dirs.src %>/pool/ObjectPool.js',
+        '<%= dirs.src %>/pool/SpritePool.js',
+
+        '<%= dirs.src %>/utils/utils.js',
+        '<%= dirs.src %>/utils/math.js',
+        '<%= dirs.src %>/utils/Clock.js',
+        '<%= dirs.src %>/utils/Vector.js',
+        '<%= dirs.src %>/utils/Emitter.js'
     ],
     vendorFiles = [
         '<%= dirs.vendor %>/es5-shim.min.js',
@@ -193,7 +195,8 @@ module.exports = function(grunt) {
 
                     /* For the library */
                     PIXI: false,
-                    cp: false
+                    cp: false,
+                    semver: false
                 }
             }
         },

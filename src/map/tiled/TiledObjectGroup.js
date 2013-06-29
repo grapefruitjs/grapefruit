@@ -77,21 +77,21 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             props.rotation = o.rotation;
             props.gid = o.gid;
 
-            //spawn from entity pool
-            this.addChild(this.game.entitypool.create(props.name, props));
-            this.game.players.push(this.children[i]);
+            //spawn from sprite pool
+            //this.addChild(this.game.spritepool.create(props.name, props));
+            //this.game.players.push(this.children[i]);
         }
 
         return this;
     },
     /**
-     * Despawns all the entities associated with this layer
+     * Despawns all the sprites associated with this layer
      *
      * @method despawn
      * @return {TiledObjectGroup} Returns itself for chainability
      */
     despawn: function() {
-        //remove each entity from the game
+        //remove each sprite from the game
         for(var i = this.children.length; i > -1; --i) {
             this.removeChild(this.children[i]);
         }

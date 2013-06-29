@@ -1,4 +1,4 @@
-gf.WorldLoader = function(al, name, baseUrl, data) {
+gf.WorldLoader = function(name, baseUrl, data) {
     gf.Loader.call(this, name, baseUrl);
 
     this.type = 'world';

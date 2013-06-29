@@ -1,6 +1,6 @@
 gf.Emitter = function() {
     var listeners = {};
-    
+
     this.addEventListener = this.on = function(type, listener) {
         if(listeners[type] === undefined) {
             listeners[type] = [];
@@ -17,10 +17,12 @@ gf.Emitter = function() {
             type = data.type;
         }
 
-        for(var listener in listeners[type]) {
-            listeners[event.type][listener].call(this, event);
-        }
+        if(!listeners[type])
+            return;
 
+        for(var i = 0, il = listeners[type].length; i < il; ++i) {
+            listeners[type][i].call(this, data);
+        }
     };
 
     this.removeEventListener = this.off = function(type, listener) {

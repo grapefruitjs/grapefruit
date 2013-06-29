@@ -28,8 +28,7 @@ gf.inherits(gf.Loader, Object, {
         //be async for sure
         var self = this;
         setTimeout(function() {
-            self.emit({
-                type: 'load',
+            self.emit('load', {
                 name: self.name,
                 assetType: self.type,
                 url: self.url,
@@ -41,8 +40,7 @@ gf.inherits(gf.Loader, Object, {
         //be async for sure
         var self = this;
         setTimeout(function() {
-            self.emit({
-                type: 'error',
+            self.emit('error', {
                 name: self.name,
                 assetType: self.type,
                 url: self.url,

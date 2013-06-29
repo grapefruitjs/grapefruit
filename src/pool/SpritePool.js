@@ -1,13 +1,13 @@
 /**
- * Holds a pool of different Entities that can be created, makes it very
+ * Holds a pool of different Sprites that can be created, makes it very
  * easy to quickly create different registered entities
  *
- * @class entityPool
+ * @class SpritePool
  */
 gf.SpritePool = function() {
     this.types = {};
 
-    this.add('_default', gf.Entity);
+    this.add('_default', gf.Sprite);
 };
 
 gf.inherits(gf.SpritePool, Object, {
@@ -33,7 +33,7 @@ gf.inherits(gf.SpritePool, Object, {
         return !!this.types[name];
     },
     /**
-     * Creates a new entity from the pool
+     * Creates a new sprite from the pool
      *
      * @method create
      * @param name {String} The user-defined name of the Sprite to check if is in the pool

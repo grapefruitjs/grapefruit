@@ -23,8 +23,7 @@ gf.inherits(gf.Tile, gf.Sprite, {
      *      and if we collide with a solid tile we kill our velocity
      *
      * @method onCollision
-     * @param obj {Entity} Colliding sprite
-     * @return {Entity} Returns itself for chainability
+     * @param obj {Sprite} Colliding sprite
      */
     onCollision: function(obj) {
         gf.Sprite.prototype.onCollision.call(this, obj);
