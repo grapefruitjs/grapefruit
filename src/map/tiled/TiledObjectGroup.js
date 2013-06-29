@@ -35,8 +35,6 @@
     this.objects = group.objects;
 
     //translate some tiled properties to our inherited properties
-    this.position.x = group.x;
-    this.position.y = group.y;
     this.alpha = group.opacity;
     this.visible = group.visible;
 };
@@ -49,40 +47,111 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
      * @return {TiledObjectGroup} Returns itself for chainability
      */
     spawn: function() {
+        var game = this.parent.parent.game; //this.TiledMap.GameState.Game
+
         for(var i = 0, il = this.objects.length; i < il; ++i) {
             var o = this.objects[i],
-                props = o.properties || {};
+                props = o.properties || {},
+                obj;
 
-            /*
-             * Future Shape support
-             *
+            //define a hitArea
+            if(o.polyline)
+                props.hitArea = this._getPolyline(o);
+            else if(o.polygon)
+                props.hitArea = this._getPolygon(o);
+            else if(o.ellipse)
+                props.hitArea = this._getEllipse(o);
+            else
+                props.hitArea = this._getRectangle(o);
 
-            if(o.polyline) this.spawnPolyline(o);
-            else if(o.polygon) this.spawnPolygon(o);
-            else if(o.ellipse) this.spawnEllipse(o);
-            else this.spawnRectangle(o);
+            //create a sprite with that texture
+            if(o.gid) {
+                var set = this.parent.getTileset(o.gid);
 
-             */
+                if(set) {
+                    props.texture = set.getTileTexture(o.gid);
+                }
+            }
 
-            //this.TiledMap.GameState.Game.spritepool
-            //this.parent.parent.parent.spritepool.create(o.name, )
+            //a manually specified string texture
+            if(typeof props.texture === 'string') {
+                props.texture = gf.assetCache[props.texture];
+            }
 
-            props.name = o.name;
-            props.type = o.type;
-            props.width = o.width;
-            props.height = o.height;
-            props.zIndex = this.zIndex;
-            props.visible = o.visible !== undefined ? (o.visible === 1) : true; //recently added, default old versions to true
-            props.position = [o.x, o.y];
-            props.rotation = o.rotation;
-            props.gid = o.gid;
+            //just a regular DisplayObject
+            if(!props.texture) {
+                obj = new gf.DisplayObjectContainer();
 
-            //spawn from sprite pool
-            //this.addChild(this.game.spritepool.create(props.name, props));
-            //this.game.players.push(this.children[i]);
+                obj.width = o.width;
+                obj.height = o.height;
+                obj.name = o.name;
+                obj.hitArea = props.hitArea;
+                obj.rotation = o.rotation;
+            } else {
+                //some variable for the user if they want them
+                //these will be passed through to a custom sprite if wanted
+                props.width = o.width;
+                props.height = o.height;
+                props.zIndex = this.zIndex;
+
+                obj = game.spritepool.create(o.name, props.texture, props);
+
+                //assign some values
+                obj.name = o.name;
+                obj.type = o.type;
+                obj.hitArea = props.hitArea;
+                obj.anchor.y = 1;
+                obj.anchor.x = this.parent.orientation === 'isometric' ? 0.5 : 0;
+
+                if(props.physical === 'true' || props.physics === 'true')
+                    obj.enablePhysics(game.physics);
+
+                //set some more stuffz
+                obj.setRotation(o.rotation);
+            }
+
+            //visible was recently added to Tiled, default old versions to true
+            obj.visible = o.visible !== undefined ? !!o.visible : true;
+
+            if(this.parent.orientation === 'isometric') {
+                var toTileX = o.x / this.parent.tileSize.x,
+                    toTileY = o.y / this.parent.tileSize.y;
+
+                //This cannot be the simplest form of this...
+                o.x = (toTileX * this.parent.tileSize.x) - ((toTileY - 1) * (this.parent.tileSize.x / 2));
+                o.y = (toTileY * (this.parent.tileSize.y * 1.5)) - ((toTileY - 1) * this.parent.tileSize.y) + (toTileX * this.parent.tileSize.y);
+
+                //Simplified, but less readable so I kept the above expansion
+                //o.y = (this.parent.tileSize.y * ((toTileY * 1.5) - (toTileY - 1) + toTileX));
+            }
+
+            obj.setPosition(o.x, o.y);
+            this.addChild(obj);
         }
 
         return this;
+    },
+    _getPolygon: function(o) {
+        var points = [];
+        for(var i = 0, il = o.polygon.length; i < il; ++i) {
+            points.push(new gf.Point(o.polygon[i].x, o.polygon[i].y));
+        }
+
+        return new gf.Polygon(points);
+    },
+    _getPolyline: function(o) {
+        var points = [];
+        for(var i = 0, il = o.polyline.length; i < il; ++i) {
+            points.push(new gf.Point(o.polyline[i].x, o.polyline[i].y));
+        }
+
+        return new gf.Polygon(points);
+    },
+    _getEllipse: function(o) {
+        return new gf.Ellipse(0, 0, o.width, o.height);
+    },
+    _getRectangle: function(o) {
+        return new gf.Rectangle(0, 0, o.width, o.height);
     },
     /**
      * Despawns all the sprites associated with this layer
