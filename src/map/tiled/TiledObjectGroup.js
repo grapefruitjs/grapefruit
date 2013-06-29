@@ -52,6 +52,8 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
         for(var i = 0, il = this.objects.length; i < il; ++i) {
             var o = this.objects[i],
                 props = o.properties || {},
+                set,
+                interactive,
                 obj;
 
             //define a hitArea
@@ -66,7 +68,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
             //create a sprite with that texture
             if(o.gid) {
-                var set = this.parent.getTileset(o.gid);
+                set = this.parent.getTileset(o.gid);
 
                 if(set) {
                     props.texture = set.getTileTexture(o.gid);
@@ -125,11 +127,29 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 //o.y = (this.parent.tileSize.y * ((toTileY * 1.5) - (toTileY - 1) + toTileX));
             }
 
+            interactive = this._getInteractive(set, o);
+
+            //pass through all events
+            if(interactive) {
+                obj.setInteractive(interactive);
+
+                obj.click = this.onObjectEvent.bind(this, 'click', obj);
+                obj.mousedown = this.onObjectEvent.bind(this, 'mousedown', obj);
+                obj.mouseup = this.onObjectEvent.bind(this, 'mouseup', obj);
+                obj.mousemove = this.onObjectEvent.bind(this, 'mousemove', obj);
+                obj.mouseout = this.onObjectEvent.bind(this, 'mouseout', obj);
+                obj.mouseover = this.onObjectEvent.bind(this, 'mouseover', obj);
+                obj.mouseupoutside = this.onObjectEvent.bind(this, 'mouseupoutside', obj);
+            }
+
             obj.setPosition(o.x, o.y);
             this.addChild(obj);
         }
 
         return this;
+    },
+    onObjectEvent: function(eventName, obj, data) {
+        this.parent.onObjectEvent(eventName, obj, data);
     },
     _getPolygon: function(o) {
         var points = [];
@@ -152,6 +172,30 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
     },
     _getRectangle: function(o) {
         return new gf.Rectangle(0, 0, o.width, o.height);
+    },
+    _getInteractive: function(set, o) {
+        var v;
+
+        //first check the lowest level value (on the tile iteself)
+        if(o.interactive !== undefined || o.interactiveTiles !== undefined)
+            v = o;
+        //next check if the tileset has the value
+        else if(set && set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined)
+            v = set.properties;
+        //next check if this layer has interactive tiles
+        else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
+            v = this.properties;
+        //finally check if the map as a whole has interactive tiles
+        else if(this.parent.properties.interactive !== undefined || this.parent.properties.interactiveTiles !== undefined)
+            v = this.parent.properties;
+
+        //see if anything has a value to use
+        if(v) {
+            //if they do, lets grab what the interactive value is
+            return !!(v.interactive || v.interactiveTiles);
+        }
+
+        return false;
     },
     /**
      * Despawns all the sprites associated with this layer

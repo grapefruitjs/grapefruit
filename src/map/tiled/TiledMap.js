@@ -171,7 +171,14 @@ gf.inherits(gf.TiledMap, gf.Map, {
     },
     onTileEvent: function(eventName, tile, data) {
         this.emit({
-            type: 'tile_' + eventName,
+            type: 'tile.' + eventName,
+            tile: tile,
+            data: data
+        });
+    },
+    onObjectEvent: function(eventName, tile, data) {
+        this.emit({
+            type: 'object.' + eventName,
             tile: tile,
             data: data
         });

@@ -32,14 +32,6 @@ gf.TiledLayer = function(layer) {
      */
     this.tiles = {};
 
-    /**
-     * Whether or not the tiles are interactive
-     *
-     * @property interactiveTiles
-     * @type Boolean
-     */
-    this.interactiveTiles = props.interactive || props.interactiveTiles || false;
-
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
     this.position.y = layer.y;
@@ -160,7 +152,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         texture = set.getTileTexture(tileId);
         props = set.getTileProperties(tileId);
         hitArea = props.hitArea || set.properties.tileHitArea;
-        interactive = props.interactive !== undefined ? props.interactive : (set.properties.interactive !== undefined ? set.properties.interactive : this.interactiveTiles);
+        interactive = this._getInteractive(set, props),
         position = iso ?
             // Isometric position
             [
@@ -224,6 +216,30 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
     },
     onTileEvent: function(eventName, tile, data) {
         this.parent.onTileEvent(eventName, tile, data);
+    },
+    _getInteractive: function(set, o) {
+        var v;
+
+        //first check the lowest level value (on the tile iteself)
+        if(o.interactive !== undefined || o.interactiveTiles !== undefined)
+            v = o;
+        //next check if the tileset has the value
+        else if(set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined)
+            v = set.properties;
+        //next check if this layer has interactive tiles
+        else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
+            v = this.properties;
+        //finally check if the map as a whole has interactive tiles
+        else if(this.parent.properties.interactive !== undefined || this.parent.properties.interactiveTiles !== undefined)
+            v = this.parent.properties;
+
+        //see if anything has a value to use
+        if(v) {
+            //if they do, lets grab what the interactive value is
+            return !!(v.interactive || v.interactiveTiles);
+        }
+
+        return false;
     },
     /**
      * Pans the layer around, rendering stuff if necessary
