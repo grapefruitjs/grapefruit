@@ -103,6 +103,11 @@ gf.TiledMap = function(map) {
         switch(map.layers[i].type) {
             case 'tilelayer':
                 lyr = new gf.TiledLayer(map.layers[i]);
+
+                //due to the fact that we use top-left anchors for everything, but tiled uses bottom-left
+                //we need to move the position of the map down by a single tile
+                lyr.position.y += this.tileSize.y;
+
                 break;
 
             case 'objectgroup':
@@ -113,6 +118,7 @@ gf.TiledMap = function(map) {
                 lyr = new gf.ImageLayer(map.layers[i]);
                 break;
         }
+
         this.addChild(lyr);
     }
 
