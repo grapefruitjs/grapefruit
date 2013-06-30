@@ -123,10 +123,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
                 //This cannot be the simplest form of this...
                 o.x = (toTileX * this.parent.tileSize.x) - ((toTileY - 1) * (this.parent.tileSize.x / 2));
-                o.y = (toTileY * (this.parent.tileSize.y * 1.5)) - ((toTileY - 1) * this.parent.tileSize.y) + (toTileX * this.parent.tileSize.y);
-
-                //Simplified, but less readable so I kept the above expansion
-                //o.y = (this.parent.tileSize.y * ((toTileY * 1.5) - (toTileY - 1) + toTileX));
+                o.y = (toTileY * this.parent.tileSize.y / 2) + (toTileX * this.parent.tileSize.y);
             }
 
             interactive = this._getInteractive(set, o);

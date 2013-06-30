@@ -161,8 +161,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         position = iso ?
             // Isometric position
             [
-                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + (this.parent.tileSize.x - set.tileSize.x) + set.tileoffset.x,
-                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + (this.parent.tileSize.y - set.tileSize.y) + set.tileoffset.y
+                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + set.tileoffset.x,
+                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + set.tileoffset.y
             ]
             :
             // Orthoganal position
@@ -186,6 +186,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(!tile) {
             tile = new gf.Tile(texture);
             tile.mass = Infinity;
+            tile.anchor.y = 1;
             this.addChild(tile);
         }
 
