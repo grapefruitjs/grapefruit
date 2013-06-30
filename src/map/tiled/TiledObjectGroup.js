@@ -49,7 +49,9 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
     spawn: function() {
         var game = this.parent.parent.game; //this.TiledMap.GameState.Game
 
-        for(var i = 0, il = this.objects.length; i < il; ++i) {
+        //we go through these backwards so that things that are higher in the
+        //list of object gets rendered on top.
+        for(var i = this.objects.length - 1; i >= 0; --i) {
             var o = this.objects[i],
                 props = o.properties || {},
                 set,
@@ -180,7 +182,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
         if(o.interactive !== undefined || o.interactiveTiles !== undefined)
             v = o;
         //next check if the tileset has the value
-        else if(set && set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined)
+        else if(set && (set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined))
             v = set.properties;
         //next check if this layer has interactive tiles
         else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
