@@ -1,3 +1,3 @@
 define(function() {
-    Q.module('Entity');
+    Q.module('Tile');
 });
