@@ -2,7 +2,7 @@ define(function() {
     Q.module('Utils');
 
     Q.test('#_arrayDelim', function() {
-        Q.strictEqual(gf.utils._arrayDelim, '|', 'Array delim is set to "|"');
+        Q.deepEqual(gf.utils._arrayDelim, /[|,]/, 'Array delim is set to [|,]');
     });
 
     Q.test('#ensureVector', function() {

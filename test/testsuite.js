@@ -5,21 +5,26 @@ requirejs.config({
 define(function(require) {
     var testModules = [
         'core',
-        'Game',
-        'AssetLoader',
-        'AudioPlayer',
-        'DisplayObject',
-        'Camera',
-        'Sprite',
-        'Entity',
-        'entityPool',
+        'plugin',
 
-        'debug/debug',
+        'audio/AudioPlayer',
+        'audio/AudioManager',
 
-        'utils/utils',
-        'utils/Clock',
-        'utils/ObjectPool',
-        'utils/Vector',
+        'display/Sprite',
+        'display/AnimatedSprite',
+        'display/Camera',
+        'display/DisplayObjectContainer',
+
+        'font/Font',
+        'font/TextureFont',
+
+        'game/Game',
+        'game/GameState',
+
+        'gui/Gui',
+        'gui/GuiItem',
+        'gui/Hud',
+        'gui/HudItem',
 
         'input/InputManager',
         'input/Input',
@@ -29,22 +34,33 @@ define(function(require) {
         'input/GamepadButtons',
         'input/GamepadSticks',
 
-        'font/Font',
-        'font/TextureFont',
-
-        'gui/Gui',
-        'gui/GuiItem',
-        'gui/Hud',
-        'gui/HudItem',
+        'loader/AssetLoader',
+        'loader/Loader',
+        'loader/AudioLoader',
+        'loader/JsonLoader',
+        'loader/SpriteSheetLoader',
+        'loader/TextureLoader',
+        'loader/WorldLoader',
 
         'map/Map',
         'map/Layer',
+        'map/ImageLayer',
+        'map/Tile',
         'map/tiled/TiledMap',
         'map/tiled/TiledLayer',
         'map/tiled/TiledTileset',
         'map/tiled/TiledObjectGroup',
 
-        'plugin/plugin'
+        'physics/PhysicsSystem',
+
+        'pool/SpritePool',
+        'pool/ObjectPool',
+
+        'utils/utils',
+        'utils/math',
+        'utils/Clock',
+        'utils/Vector',
+        'utils/Emitter'
     ];
 
     // Resolve all testModules and then start the Test Runner.
