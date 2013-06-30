@@ -1,10 +1,10 @@
 /**
  * @license
- * GrapeFruit Game Engine - v0.0.1
+ * GrapeFruit Game Engine - v0.0.2
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-06-27
+ * Compiled: 2013-06-30
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -44,7 +44,7 @@ Object.freeze;Object.freeze=function(a){return typeof a=="function"?a:s(a)}}Obje
  * Copyright (c) 2012, Mat Groves
  * http://goodboydigital.com/
  *
- * Compiled: 2013-06-27
+ * Compiled: 2013-06-30
  *
  * Pixi.JS is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -160,6 +160,31 @@ PIXI.Rectangle.prototype.clone = function()
 	return new PIXI.Rectangle(this.x, this.y, this.width, this.height);
 }
 
+/**
+ * @method contains
+ * @param x {Number} The X coord of the point to test
+ * @param y {Number} The Y coord of the point to test
+ * @return if the x/y coords are within this polygon
+ */
+PIXI.Rectangle.contains = function(x, y)
+{
+    if(this.width <= 0 || this.height <= 0)
+        return false;
+
+	var x1 = this.x;
+	if(x > x1 && x < x1 + this.width)
+	{
+		var y1 = this.y;
+		
+		if(y > y1 && y < y1 + this.height)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 // constructor
 PIXI.Rectangle.constructor = PIXI.Rectangle;
 
@@ -171,10 +196,23 @@ PIXI.Rectangle.constructor = PIXI.Rectangle;
 /**
  * @class Polygon
  * @constructor
- * @param points {Array}
+ * @param points {Array<Point>|Array<Number>} This cna be an array of Points or a flat array of numbers
+ *      that will be interpreted as [x,y, x,y, ...]
  */
 PIXI.Polygon = function(points)
 {
+    //if this is a flat array of numbers, convert it to points
+    if(typeof points[0] === 'number') {
+        var p = [];
+        for(var i = 0, il = points.length; i < il; i+=2) {
+            p.push(
+                new PIXI.Point(points[i], points[i + 1])
+            );
+        }
+
+        points = p;
+    }
+
 	this.points = points;
 }
 
@@ -192,7 +230,180 @@ PIXI.Polygon.clone = function()
 	return new PIXI.Polygon(points);
 }
 
+/**
+ * @method contains
+ * @param x {Number} The X coord of the point to test
+ * @param y {Number} The Y coord of the point to test
+ * @return if the x/y coords are within this polygon
+ */
+PIXI.Polygon.contains = function(x, y)
+{
+    var inside = false;
+
+    // use some raycasting to test hits
+    // https://github.com/substack/point-in-polygon/blob/master/index.js
+    for(var i = 0, j = this.points.length - 1; i < this.points.length; j = i++) {
+        var xi = this.points[i].x, yi = this.points[i].y,
+            xj = this.points[j].x, yj = this.points[j].y,
+            intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+
+        if(intersect) inside = !inside;
+    }
+
+    return inside;
+}
+
 PIXI.Polygon.constructor = PIXI.Polygon;
+
+
+/**
+ * @author Chad Engler <chad@pantherdev.com>
+ */
+
+/**
+ * @class Circle
+ * @constructor
+ * @param x {Number} The X coord of the upper-left corner of the framing rectangle of this circle
+ * @param y {Number} The Y coord of the upper-left corner of the framing rectangle of this circle
+ * @param radius {Number} The radius of the circle
+ */
+PIXI.Circle = function(x, y, radius)
+{
+    /**
+     * @property x
+     * @type Number
+     * @default 0
+     */
+    this.x = x || 0;
+    
+    /**
+     * @property y
+     * @type Number
+     * @default 0
+     */
+    this.y = y || 0;
+
+    /**
+     * @property radius
+     * @type Number
+     * @default 0
+     */
+    this.radius = radius || 0;
+}
+
+/**
+ * @method clone
+ * @return a copy of the polygon
+ */
+PIXI.Circle.clone = function()
+{
+    return new PIXI.Circle(this.x, this.y, this.radius);
+}
+
+/**
+ * @method contains
+ * @param x {Number} The X coord of the point to test
+ * @param y {Number} The Y coord of the point to test
+ * @return if the x/y coords are within this polygon
+ */
+PIXI.Circle.contains = function(x, y)
+{
+    if(this.radius <= 0)
+        return false;
+
+    var dx = (this.x - x),
+        dy = (this.y - y),
+        r2 = this.radius * this.radius;
+
+    dx *= dx;
+    dy *= dy;
+
+    return (dx + dy <= r2);
+}
+
+PIXI.Circle.constructor = PIXI.Circle;
+
+
+/**
+ * @author Chad Engler <chad@pantherdev.com>
+ */
+
+/**
+ * @class Ellipse
+ * @constructor
+ * @param x {Number} The X coord of the upper-left corner of the framing rectangle of this circle
+ * @param y {Number} The Y coord of the upper-left corner of the framing rectangle of this circle
+ * @param width {Number} The overall height of this ellipse
+ * @param height {Number} The overall width of this ellipse
+ */
+PIXI.Ellipse = function(x, y, width, height)
+{
+    /**
+     * @property x
+     * @type Number
+     * @default 0
+     */
+    this.x = x || 0;
+    
+    /**
+     * @property y
+     * @type Number
+     * @default 0
+     */
+    this.y = y || 0;
+    
+    /**
+     * @property width
+     * @type Number
+     * @default 0
+     */
+    this.width = width || 0;
+    
+    /**
+     * @property height
+     * @type Number
+     * @default 0
+     */
+    this.height = height || 0;
+}
+
+/**
+ * @method clone
+ * @return a copy of the polygon
+ */
+PIXI.Ellipse.clone = function()
+{
+    return new PIXI.Ellipse(this.x, this.y, this.width, this.height);
+}
+
+/**
+ * @method contains
+ * @param x {Number} The X coord of the point to test
+ * @param y {Number} The Y coord of the point to test
+ * @return if the x/y coords are within this polygon
+ */
+PIXI.Ellipse.contains = function(x, y)
+{
+    if(this.width <= 0 || this.height <= 0)
+        return false;
+
+    //normalize the coords to an ellipse with center 0,0
+    //and a radius of 0.5
+    var normx = ((x - this.x) / this.width) - 0.5,
+        normy = ((y - this.y) / this.height) - 0.5;
+
+    normx *= normx;
+    normy *= normy;
+
+    return (normx + normy < 0.25);
+}
+
+PIXI.Ellipse.getBounds = function()
+{
+    return new PIXI.Rectangle(this.x, this.y, this.width, this.height);
+}
+
+PIXI.Ellipse.constructor = PIXI.Ellipse;
 
 
 
@@ -483,6 +694,9 @@ PIXI.mat4.multiply = function (mat, mat2, dest)
  */
 PIXI.DisplayObject = function()
 {
+	this.last = this;
+	this.first = this;
+	
 	/**
 	 * The coordinate of the object relative to the local coordinates of the parent.
 	 * @property position
@@ -670,7 +884,7 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'visible', {
 PIXI.DisplayObject.prototype.setInteractive = function(interactive)
 {
 	this.interactive = interactive;
-
+	
 }
 
 /**
@@ -690,6 +904,69 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'interactive', {
 		if(this.stage)this.stage.dirty = true;
     }
 });
+
+PIXI.DisplayObject.prototype.addFilter = function()
+{
+	
+	// insert a filter block..
+	var start = new PIXI.FilterBlock();
+	var end = new PIXI.FilterBlock();
+	
+	/*
+	 * 
+	 * and an start filter
+	 * 
+	 */
+	
+	var childFirst = start
+	var childLast = start
+	var nextObject;
+	var previousObject;
+		
+	previousObject = this.first._iPrev;
+	nextObject = previousObject._iNext;
+	
+	if(nextObject)
+	{
+		nextObject._iPrev = childLast;
+		childLast._iNext = nextObject;
+	}
+	childFirst._iPrev = previousObject;
+	previousObject._iNext = childFirst;		
+	// now insert the end filter block..
+	
+	/*
+	 * 
+	 * and an end filter
+	 * 
+	 */
+	
+	var childFirst = end
+	var childLast = end
+	var nextObject = null;
+	var previousObject = null;
+		
+	previousObject = this.last;
+	nextObject = previousObject._iNext;
+	
+	if(nextObject)
+	{
+		nextObject._iPrev = childLast;
+		childLast._iNext = nextObject;
+	}
+	childFirst._iPrev = previousObject;
+	previousObject._iNext = childFirst;	
+	
+	this.first = start;
+	this.last = end;
+	
+	// TODO need to check if the stage already exists...
+}
+
+PIXI.FilterBlock = function()
+{
+	
+}
 
 /**
  * @private
@@ -713,26 +990,21 @@ PIXI.DisplayObject.prototype.updateTransform = function()
 	localTransform[3] = this._sr * this.scale.x;
 	localTransform[4] = this._cr * this.scale.y;
 	
-	///AAARR GETTER SETTTER!
-	//localTransform[2] = this.position.x;
-	//localTransform[5] = this.position.y;
+	// TODO --> do we even need a local matrix???
 	
 	var px = this.pivot.x;
 	var py = this.pivot.y;
    	
-   	// Cache the matrix values (makes for huge speed increases!)
-    var a00 = localTransform[0], a01 = localTransform[1], a02 = localTransform[2],
-        a10 = localTransform[3], a11 = localTransform[4], a12 = localTransform[5],
+    // Cache the matrix values (makes for huge speed increases!)
+    var a00 = localTransform[0], a01 = localTransform[1], a02 = this.position.x - localTransform[0] * px - py * localTransform[1],
+        a10 = localTransform[3], a11 = localTransform[4], a12 = this.position.y - localTransform[4] * py - px * localTransform[3],
 
         b00 = parentTransform[0], b01 = parentTransform[1], b02 = parentTransform[2],
         b10 = parentTransform[3], b11 = parentTransform[4], b12 = parentTransform[5];
-        
-   	///AAARR GETTER SETTTER!
-	localTransform[2] = this.position.x - a00 * px - py * a01;
-	localTransform[5] = this.position.y - a11 * py - px * a10;
 
-    
-
+	localTransform[2] = a02
+	localTransform[5] = a12
+	
     worldTransform[0] = b00 * a00 + b01 * a10;
     worldTransform[1] = b00 * a01 + b01 * a11;
     worldTransform[2] = b00 * a02 + b01 * a12 + b02;
@@ -745,7 +1017,6 @@ PIXI.DisplayObject.prototype.updateTransform = function()
 	// mat3.multiply(this.localTransform, this.parent.worldTransform, this.worldTransform);
 	this.worldAlpha = this.alpha * this.parent.worldAlpha;
 
-	
 }
 
 /**
@@ -770,6 +1041,7 @@ PIXI.DisplayObjectContainer = function()
 	this.children = [];
 	//s
 	this.renderable = false;
+	
 }
 
 // constructor
@@ -795,21 +1067,77 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'visible', {
  */
 PIXI.DisplayObjectContainer.prototype.addChild = function(child)
 {
+	
+	//this.addChildAt(child, this.children.length)
+	//return;
+	
 	if(child.parent != undefined)
 	{
+		
+		//// COULD BE THIS???
 		child.parent.removeChild(child);
+	//	return;
 	}
 	
 	child.parent = this;
-	child.childIndex = this.children.length;
+	//child.childIndex = this.children.length;
 	
 	this.children.push(child);	
 	
+	// updae the stage refference..
+	
 	if(this.stage)
 	{
-		this.stage.__addChild(child);
+		var tmpChild = child;
+		do
+		{
+			if(tmpChild.interactive)this.stage.dirty = true;
+			tmpChild.stage = this.stage;
+			tmpChild = tmpChild._iNext;
+		}	
+		while(tmpChild)
 	}
 	
+	// LINKED LIST //
+	
+	// modify the list..
+	var childFirst = child.first
+	var childLast = child.last;
+//	console.log(childFirst)
+	var nextObject;
+	var previousObject;
+		
+	previousObject =  this.last;
+	
+//	if(this.last._iNext)
+	
+	//console.log( this.last._iNext);
+	nextObject = previousObject._iNext;
+	
+	// always true in this case
+	//this.last = child.last;
+	// need to make sure the parents last is updated too
+	var updateLast = this;
+	var prevLast = this.last;
+	while(updateLast)
+	{
+		if(updateLast.last == prevLast)
+		{
+			updateLast.last = child.last;
+		}
+		updateLast = updateLast.parent;
+	}
+	
+	if(nextObject)
+	{
+		nextObject._iPrev = childLast;
+		childLast._iNext = nextObject;
+	}
+	
+	childFirst._iPrev = previousObject;
+	previousObject._iNext = childFirst;		
+	
+//	console.log(childFirst);
 	// need to remove any render groups..
 	if(this.__renderGroup)
 	{
@@ -818,6 +1146,7 @@ PIXI.DisplayObjectContainer.prototype.addChild = function(child)
 		// add them to the new render group..
 		this.__renderGroup.addDisplayObjectAndChildren(child);
 	}
+	
 }
 
 /**
@@ -834,30 +1163,65 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 		{
 			child.parent.removeChild(child);
 		}
-	
-		if (index == this.children.length)
-		{
-		  	this.children.push(child);
-		}	
-		else 
-		{
-			this.children.splice(index, 0, child);
-		}
-
 		child.parent = this;
-		child.childIndex = index;
-		
-		var length = this.children.length;
-		for (var i=index; i < length; i++) 
-		{
-		  this.children[i].childIndex = i;
-		}
 		
 		if(this.stage)
 		{
-			this.stage.__addChild(child);
+			var tmpChild = child;
+			do
+			{
+				if(tmpChild.interactive)this.stage.dirty = true;
+				tmpChild.stage = this.stage;
+				tmpChild = tmpChild._iNext;
+			}
+			while(tmpChild)
 		}
 		
+		// modify the list..
+		var childFirst = child.first
+		var childLast = child.last;
+		var nextObject;
+		var previousObject;
+		
+		if(index == this.children.length)
+		{
+			previousObject =  this.last;
+			var updateLast = this;//.parent;
+			var prevLast = this.last;
+			while(updateLast)
+			{
+				if(updateLast.last == prevLast)
+				{
+					updateLast.last = child.last;
+				}
+				updateLast = updateLast.parent;
+			}
+	
+	
+		}
+		else if(index == 0)
+		{
+			previousObject = this;
+		}
+		else
+		{
+			previousObject = this.children[index].last;
+		}
+		
+		nextObject = previousObject._iNext;
+		
+		// always true in this case
+		if(nextObject)
+		{
+			nextObject._iPrev = childLast;
+			childLast._iNext = nextObject;
+		}
+		
+		childFirst._iPrev = previousObject;
+		previousObject._iNext = childFirst;		
+		
+		
+		this.children.splice(index, 0, child);
 		// need to remove any render groups..
 		if(this.__renderGroup)
 		{
@@ -866,11 +1230,10 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 			// add them to the new render group..
 			this.__renderGroup.addDisplayObjectAndChildren(child);
 		}
+		
 	}
 	else
 	{
-		// error!
-		
 		throw new Error(child + " The index "+ index +" supplied is out of bounds " + this.children.length);
 	}
 }
@@ -883,6 +1246,9 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
  */
 PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
 {
+	return;
+	// need to fix this function :/
+	
 	// TODO I already know this??
 	var index = this.children.indexOf( child );
 	var index2 = this.children.indexOf( child2 );
@@ -890,6 +1256,8 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
 	if ( index !== -1 && index2 !== -1 ) 
 	{
 		// cool
+		
+		/*
 		if(this.stage)
 		{
 			// this is to satisfy the webGL batching..
@@ -899,11 +1267,8 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
 			
 			this.stage.__addChild(child);
 			this.stage.__addChild(child2);
-		}
+		}*/
 		
-		// swap the indexes..
-		child.childIndex = index2;
-		child2.childIndex = index;
 		// swap the positions..
 		this.children[index] = child2;
 		this.children[index2] = child;
@@ -929,7 +1294,6 @@ PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
 	else
 	{
 		throw new Error(child + " Both the supplied DisplayObjects must be a child of the caller " + this);
-	
 	}
 }
 
@@ -941,30 +1305,57 @@ PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
 PIXI.DisplayObjectContainer.prototype.removeChild = function(child)
 {
 	var index = this.children.indexOf( child );
-	
 	if ( index !== -1 ) 
 	{
-		if(this.stage)
+		//console.log(">>")
+		// unlink //
+		// modify the list..
+		var childFirst = child.first
+		var childLast = child.last;
+		
+		var nextObject = childLast._iNext;
+		var previousObject = childFirst._iPrev;
+			
+		if(nextObject)nextObject._iPrev = previousObject;
+		previousObject._iNext = nextObject;		
+		
+		if(this.last == childLast)
 		{
-			this.stage.__removeChild(child);
+			var tempLast =  childFirst._iPrev;	
+			// need to make sure the parents last is updated too
+			var updateLast = this;
+			while(updateLast.last == childLast.last)
+			{
+				updateLast.last = tempLast;
+				updateLast = updateLast.parent;
+				if(!updateLast)break;
+			}
 		}
 		
+		childLast._iNext = null;
+		childFirst._iPrev = null;
+		 
+		// update the stage reference..
+		if(this.stage)
+		{
+			var tmpChild = child;
+			do
+			{
+				if(tmpChild.interactive)this.stage.dirty = true;
+				tmpChild.stage = null;
+				tmpChild = tmpChild._iNext;
+			}	
+			while(tmpChild)
+		}
+	
 		// webGL trim
 		if(child.__renderGroup)
 		{
 			child.__renderGroup.removeDisplayObjectAndChildren(child);
 		}
 		
-	//	console.log(">" + child.__renderGroup)
 		child.parent = undefined;
-
 		this.children.splice( index, 1 );
-	
-		// update in dexs!
-		for(var i=index,j=this.children.length; i<j; i++)
-		{
-			this.children[i].childIndex -= 1;
-		}
 	}
 	else
 	{
@@ -2016,43 +2407,11 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 		y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
 
 	//a sprite or display object with a hit area defined
-	if(item.hitArea)
-	{
-		var hitArea = item.hitArea;
+	if(item.hitArea && item.hitArea.contains && item.hitArea.contains(x, y)) {
+		if(isSprite)
+			interactionData.target = item;
 
-		//Polygon hit area
-		if(item.hitArea instanceof PIXI.Polygon) {
-			var inside = false;
-
-			// use some raycasting to test hits
-			// https://github.com/substack/point-in-polygon/blob/master/index.js
-			for(var i = 0, j = item.hitArea.points.length - 1; i < item.hitArea.points.length; j = i++) {
-				var xi = item.hitArea.points[i].x, yi = item.hitArea.points[i].y,
-					xj = item.hitArea.points[j].x, yj = item.hitArea.points[j].y,
-					intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-
-				if(intersect) inside = !inside;
-			}
-			
-			if(inside) {
-				if(isSprite) interactionData.target = item;
-				return true;
-			}
-		}
-		//Rectangle hit area
-		else {
-			var x1 = hitArea.x;
-			if(x > x1 && x < x1 + hitArea.width)
-			{
-				var y1 = hitArea.y;
-				
-				if(y > y1 && y < y1 + hitArea.height)
-				{
-					if(isSprite) interactionData.target = item;
-					return true;
-				}
-			}
-		}
+		return true;
 	}
 	// a sprite with no hitarea defined
 	else if(isSprite)
@@ -2299,8 +2658,8 @@ PIXI.Stage = function(backgroundColor, interactive)
 	this.__childrenAdded = [];
 	this.__childrenRemoved = [];
 	
-	this.childIndex = 0;
-	this.stage= this;
+	//this.childIndex = 0;
+	this.stage = this;
 	this.interactive = interactive;
 	
 	this.stage.hitArea = new PIXI.Rectangle(0,0,100000, 100000);
@@ -2311,7 +2670,6 @@ PIXI.Stage = function(backgroundColor, interactive)
 	
 	this.setBackgroundColor(backgroundColor);
 	this.worldVisible = true;
-	
 	this.stage.dirty = true;
 }
 
@@ -2365,7 +2723,7 @@ PIXI.Stage.prototype.getMousePosition = function()
 {
 	return this.interactionManager.mouse.global;
 }
-
+/*
 PIXI.Stage.prototype.__addChild = function(child)
 {
 	if(child.interactive)this.dirty = true;
@@ -2396,7 +2754,7 @@ PIXI.Stage.prototype.__removeChild = function(child)
 		  	this.__removeChild(child.children[i]);
 		}
 	}
-}
+}*/
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
@@ -3635,8 +3993,8 @@ PIXI.WebGLRenderer.updateTexture = function(texture)
 	 	gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 	 	
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 		
 		// reguler...
 		
@@ -4342,7 +4700,6 @@ PIXI.WebGLRenderGroup = function(gl)
 	this.toRemove = [];
 }
 
-
 // constructor
 PIXI.WebGLRenderGroup.constructor = PIXI.WebGLRenderGroup;
 
@@ -4360,7 +4717,6 @@ PIXI.WebGLRenderGroup.prototype.setRenderable = function(displayObject)
 	this.root = displayObject;
 	//displayObject.__renderGroup = this;
 	this.addDisplayObjectAndChildren(displayObject);
-	//displayObject
 }
 
 PIXI.WebGLRenderGroup.prototype.render = function(projection)
@@ -4369,9 +4725,6 @@ PIXI.WebGLRenderGroup.prototype.render = function(projection)
 	
 	var gl = this.gl;
 
-	// set the flipped matrix..
-//	gl.uniformMatrix4fv(PIXI.shaderProgram.mvMatrixUniform, false, PIXI.projectionMatrix);
-	
 	gl.uniform2f(PIXI.shaderProgram.projectionVector, projection.x, projection.y);
 
 	// TODO remove this by replacing visible with getter setters..	
@@ -4390,6 +4743,7 @@ PIXI.WebGLRenderGroup.prototype.render = function(projection)
 		}
 		else if(renderable instanceof PIXI.TilingSprite)
 		{
+			
 			if(renderable.visible)this.renderTilingSprite(renderable, projection);
 		}
 		else if(renderable instanceof PIXI.Strip)
@@ -4414,8 +4768,6 @@ PIXI.WebGLRenderGroup.prototype.renderSpecific = function(displayObject, project
 //	gl.uniformMatrix4fv(PIXI.shaderProgram.mvMatrixUniform, false, projectionMatrix);
 	gl.uniform2f(PIXI.shaderProgram.projectionVector, projection.x, projection.y);
 
-	
-	//console.log("SPECIFIC");
 	// to do!
 	// render part of the scene...
 	
@@ -4570,14 +4922,14 @@ PIXI.WebGLRenderGroup.prototype.renderSpecial = function(renderable)
 
 PIXI.WebGLRenderGroup.prototype.checkVisibility = function(displayObject, globalVisible)
 {
-	// give the dp a refference to its renderGroup...
+	// give the dp a reference to its renderGroup...
 	var children = displayObject.children;
 	//displayObject.worldVisible = globalVisible;
 	for (var i=0; i < children.length; i++) 
 	{
 		var child = children[i];
 		
-		// TODO optimize... shouldt need to loop through everything all the time
+		// TODO optimize... should'nt need to loop through everything all the time
 		child.worldVisible = child.visible && globalVisible;
 		
 		// everything should have a batch!
@@ -4585,12 +4937,7 @@ PIXI.WebGLRenderGroup.prototype.checkVisibility = function(displayObject, global
 		if(child.textureChange)
 		{
 			child.textureChange = false;
-			if(child.worldVisible)
-			{
-				this.removeDisplayObject(child);
-				this.addDisplayObject(child);
-				//this.updateTexture(child);
-			}
+			if(child.worldVisible)this.updateTexture(child);
 			// update texture!!
 		}
 		
@@ -4603,122 +4950,109 @@ PIXI.WebGLRenderGroup.prototype.checkVisibility = function(displayObject, global
 
 PIXI.WebGLRenderGroup.prototype.updateTexture = function(displayObject)
 {
-	// we know this exists..
-	// is it in a batch..
-	// check batch length
-	if(displayObject.batch.length == 1)
+	
+	// TODO definitely can optimse this function..
+	
+	this.removeObject(displayObject);
+	
+	/*
+	 *  LOOK FOR THE PREVIOUS RENDERABLE
+	 *  This part looks for the closest previous sprite that can go into a batch
+	 *  It keeps going back until it finds a sprite or the stage
+	 */
+	var previousRenderable = displayObject.first;
+	while(previousRenderable != this.root)
 	{
-		// just one! this guy! so simply swap the texture
-		displayObject.batch.texture = displayObject.texture.baseTexture;
-		return;
+		previousRenderable = previousRenderable._iPrev;
+		if(previousRenderable.renderable && previousRenderable.__renderGroup)break;
 	}
 	
-	// early out!
-	if(displayObject.batch.texture == displayObject.texture.baseTexture)return;
+	/*
+	 *  LOOK FOR THE NEXT SPRITE
+	 *  This part looks for the closest next sprite that can go into a batch
+	 *  it keeps looking until it finds a sprite or gets to the end of the display
+	 *  scene graph
+	 */
+	var nextRenderable = displayObject.last;
+	while(nextRenderable._iNext)
+	{
+		nextRenderable = nextRenderable._iNext;
+		if(nextRenderable.renderable && nextRenderable.__renderGroup)break;
+	}
 	
-	
-	if(displayObject.batch.head == displayObject)
-	{
-		//console.log("HEAD")
-		var currentBatch = displayObject.batch;
-		
-		var index = this.batchs.indexOf( currentBatch );
-		var previousBatch =  this.batchs[index-1];
-		currentBatch.remove(displayObject);
-		
-		if(previousBatch)
-		{
-			if(previousBatch.texture == displayObject.texture.baseTexture && previousBatch.blendMode == displayObject.blendMode)
-			{
-				previousBatch.insertAfter(displayObject, previousBatch.tail);
-			}
-			else
-			{
-				// add it before..
-				var batch = PIXI.WebGLRenderer.getBatch();
-				batch.init(displayObject);
-				this.batchs.splice(index-1, 0, batch);
-			}
-			
-		}
-		else
-		{
-			// we are 0!
-			var batch = PIXI.WebGLRenderer.getBatch();
-			batch.init(displayObject);
-			this.batchs.splice(0, 0, batch);
-		}
-		
-	}
-	else if(displayObject.batch.tail == displayObject)
-	{
-		var currentBatch = displayObject.batch;
-		
-		var index = this.batchs.indexOf( currentBatch );
-		var nextBatch =  this.batchs[index+1];
-		currentBatch.remove(displayObject);
-		
-		if(nextBatch)
-		{
-			if(nextBatch.texture == displayObject.texture.baseTexture && nextBatch.blendMode == displayObject.blendMode)
-			{
-				nextBatch.insertBefore(displayObject, nextBatch.head);
-				return;
-			}
-			else
-			{
-				// add it before..
-				var batch = PIXI.WebGLRenderer.getBatch();
-				batch.init(displayObject);
-				this.batchs.splice(index+1, 0, batch);
-			}
-			
-		}
-		else
-		{
-			// we are 0!
-			var batch = PIXI.WebGLRenderer.getBatch();
-			batch.init(displayObject);
-			this.batchs.push(batch);
-		}
-	}
-	else
-	{
-	//	console.log("MIDDLE")
-		var currentBatch = displayObject.batch;
-		
-		// split the batch into 2
-		// AH! dont split on the current display object as the texture is wrong!
-		var splitBatch = currentBatch.split(displayObject);
-		
-		// now remove the display object
-		splitBatch.remove(displayObject);
-		
-		var batch = PIXI.WebGLRenderer.getBatch();
-		var index = this.batchs.indexOf( currentBatch );
-		batch.init(displayObject);
-		this.batchs.splice(index+1, 0, batch, splitBatch);
-	}
+	this.insertObject(displayObject, previousRenderable, nextRenderable);
 }
 
-PIXI.WebGLRenderGroup.prototype.addDisplayObject = function(displayObject)
+PIXI.WebGLRenderGroup.prototype.addDisplayObjectAndChildren = function(displayObject)
 {
-	// add a child to the render group..
 	if(displayObject.__renderGroup)displayObject.__renderGroup.removeDisplayObjectAndChildren(displayObject);
-
-	// DONT htink this is needed?
-	//	displayObject.batch = null;
 	
-	displayObject.__renderGroup = this;
+	/*
+	 *  LOOK FOR THE PREVIOUS RENDERABLE
+	 *  This part looks for the closest previous sprite that can go into a batch
+	 *  It keeps going back until it finds a sprite or the stage
+	 */
+	
+	var previousRenderable = displayObject.first;
+	while(previousRenderable != this.root)
+	{
+		previousRenderable = previousRenderable._iPrev;
+		if(previousRenderable.renderable && previousRenderable.__renderGroup)break;
+	}
+	
+	/*
+	 *  LOOK FOR THE NEXT SPRITE
+	 *  This part looks for the closest next sprite that can go into a batch
+	 *  it keeps looking until it finds a sprite or gets to the end of the display
+	 *  scene graph
+	 */
+	var nextRenderable = displayObject.last;
+	while(nextRenderable._iNext)
+	{
+		nextRenderable = nextRenderable._iNext;
+		if(nextRenderable.renderable && nextRenderable.__renderGroup)break;
+	}
+	
+	// one the display object hits this. we can break the loop	
+	
+	var tempObject = displayObject.first;
+	var testObject = displayObject.last._iNext;
+	
+	do	
+	{
+		tempObject.__renderGroup = this;
 
-	//displayObject.cacheVisible = true;
-	if(!displayObject.renderable)return;
+		if(tempObject.renderable)
+		{
+			this.insertObject(tempObject, previousRenderable, nextRenderable);
+			previousRenderable = tempObject;
+		}
+		
+		tempObject = tempObject._iNext;
+	}
+	while(tempObject != testObject)
+}
 
+PIXI.WebGLRenderGroup.prototype.removeDisplayObjectAndChildren = function(displayObject)
+{
+	if(displayObject.__renderGroup != this)return;
+	
+//	var displayObject = displayObject.first;
+	var lastObject = displayObject.last;
+	do	
+	{
+		displayObject.__renderGroup = null;
+		if(displayObject.renderable)this.removeObject(displayObject);
+		displayObject = displayObject._iNext;
+	}
+	while(displayObject)
+}
+
+PIXI.WebGLRenderGroup.prototype.insertObject = function(displayObject, previousObject, nextObject)
+{
 	// while looping below THE OBJECT MAY NOT HAVE BEEN ADDED
-	//displayObject.__inWebGL = true;
-	
-	var previousSprite = this.getPreviousRenderable(displayObject);
-	var nextSprite = this.getNextRenderable(displayObject);
+	var previousSprite = previousObject;
+	var nextSprite = nextObject;
 
 	/*
 	 * so now we have the next renderable and the previous renderable
@@ -4834,25 +5168,9 @@ PIXI.WebGLRenderGroup.prototype.addDisplayObject = function(displayObject)
 		//this.initStrip(displayObject);
 		this.batchs.push(displayObject);
 	}
-	
-	// if its somthing else... then custom codes!
-	this.batchUpdate = true;
 }
 
-PIXI.WebGLRenderGroup.prototype.addDisplayObjectAndChildren = function(displayObject)
-{
-	// TODO - this can be faster - but not as important right now
-	
-	this.addDisplayObject(displayObject);
-	var children = displayObject.children;
-	
-	for (var i=0; i < children.length; i++) 
-	{
-	  	this.addDisplayObjectAndChildren(children[i]);
-	};
-}
-
-PIXI.WebGLRenderGroup.prototype.removeDisplayObject = function(displayObject)
+PIXI.WebGLRenderGroup.prototype.removeObject = function(displayObject)
 {
 	// loop through children..
 	// display object //
@@ -4860,10 +5178,7 @@ PIXI.WebGLRenderGroup.prototype.removeDisplayObject = function(displayObject)
 	// add a child from the render group..
 	// remove it and all its children!
 	//displayObject.cacheVisible = false;//displayObject.visible;
-	displayObject.__renderGroup = null;
-	
-	if(!displayObject.renderable)return;
-	
+
 	/*
 	 * removing is a lot quicker..
 	 * 
@@ -4921,111 +5236,18 @@ PIXI.WebGLRenderGroup.prototype.removeDisplayObject = function(displayObject)
 			}
 		}
 		
-		
 		this.batchs.splice(index, 1);
 		if(batchToRemove instanceof PIXI.WebGLBatch)PIXI.WebGLRenderer.returnBatch(batchToRemove);
 	}
 }
 
-PIXI.WebGLRenderGroup.prototype.removeDisplayObjectAndChildren = function(displayObject)
-{
-	// TODO - this can be faster - but not as important right now
-	if(displayObject.__renderGroup != this)return;
-	
-	this.removeDisplayObject(displayObject);
-	var children = displayObject.children;
-	
-	for (var i=0; i < children.length; i++) 
-	{
-	  	this.removeDisplayObjectAndChildren(children[i]);
-	};
-}
 
 /**
  * @private
  */
 
-PIXI.WebGLRenderGroup.prototype.getNextRenderable = function(displayObject)
-{
-	/*
-	 *  LOOK FOR THE NEXT SPRITE
-	 *  This part looks for the closest next sprite that can go into a batch
-	 *  it keeps looking until it finds a sprite or gets to the end of the display
-	 *  scene graph
-	 * 
-	 *  These look a lot scarier than the actually are...
-	 */
-	
-	var nextSprite = displayObject;
-	do
-	{
-		// moving forward!
-		// if it has no children.. 
-		if(nextSprite.children.length == 0)
-		{
-			//maynot have a parent
-			if(!nextSprite.parent)return null;
-			
-			// go along to the parent..
-			while(nextSprite.childIndex == nextSprite.parent.children.length-1)
-			{
-				nextSprite = nextSprite.parent;
-				//console.log(">" + nextSprite);
-//				console.log(">-" + this.root);
-				if(nextSprite ==  this.root || !nextSprite.parent)//displayObject.stage)
-				{
-					nextSprite = null
-					break;
-				}
-			}
-			
-			if(nextSprite)nextSprite = nextSprite.parent.children[nextSprite.childIndex+1];
-		}
-		else
-		{
-			nextSprite = nextSprite.children[0];
-		}
 
-		if(!nextSprite)break;
-	}
-	while(!nextSprite.renderable || !nextSprite.__renderGroup)
-	
-	return nextSprite;
-}
 
-PIXI.WebGLRenderGroup.prototype.getPreviousRenderable = function(displayObject)
-{
-	/*
-	 *  LOOK FOR THE PREVIOUS SPRITE
-	 *  This part looks for the closest previous sprite that can go into a batch
-	 *  It keeps going back until it finds a sprite or the stage
-	 */
-	var previousSprite = displayObject;
-	do
-	{
-		if(previousSprite.childIndex == 0)
-		{
-			previousSprite = previousSprite.parent;
-			if(!previousSprite)return null;
-		}
-		else
-		{
-			
-			previousSprite = previousSprite.parent.children[previousSprite.childIndex-1];
-			// what if the bloop has children???
-			while(previousSprite.children.length != 0)
-			{
-				// keep diggin till we get to the last child
-				previousSprite = previousSprite.children[previousSprite.children.length-1];
-			}
-		}
-		
-		if(previousSprite == this.root)break;
-	}
-	while(!previousSprite.renderable || !previousSprite.__renderGroup);
-	
-	return previousSprite;
-}
 
 /**
  * @private
@@ -5365,47 +5587,41 @@ PIXI.CanvasRenderer.prototype.resize = function(width, height)
 
 PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 {
-	var transform = displayObject.worldTransform;
+	// no loger recurrsive!
+	var transform;
 	var context = this.context;
-	//context.globalCompositeOperation = "source-over"
-	var blit = false;
 	
-	if(!displayObject.visible)return;
-		
-	if(displayObject instanceof PIXI.Sprite)
+	// one the display object hits this. we can break the loop	
+	var testObject = displayObject.last._iNext;
+	displayObject = displayObject.first;
+	
+	do	
 	{
-		var frame = displayObject.texture.frame;
+		transform = displayObject.worldTransform;
 		
-		if(frame)
+		if(!displayObject.visible)
 		{
-			context.globalAlpha = displayObject.worldAlpha;
+			displayObject = displayObject.last._iNext;
+			continue;
+		}
+		
+		if(!displayObject.renderable)
+		{
+			displayObject = displayObject._iNext;
+			continue;
+		}
+		
+		if(displayObject instanceof PIXI.Sprite)
+		{
+				
+			var frame = displayObject.texture.frame;
 			
-			// BLITZ!!!
-			/*
-			 * if the rotation is 0 then we can blitz it
-			 * meaning we dont need to do a transform and also we
-			 * can round to the nearest round number for a little extra speed!
-			 */
-			/*if(displayObject.rotation == 0)
+			if(frame)
 			{
-				if(!blit)this.context.setTransform(1,0,0,1,0,0); 
-				blit = true;
-				context.drawImage(displayObject.texture.baseTexture.image, 
-								   frame.x,
-								   frame.y,
-								   frame.width,
-								   frame.height,
-								   (transform[2]+ ((displayObject.anchor.x - displayObject.texture.trim.x) * -frame.width) * transform[0]),
-								   (transform[5]+ ((displayObject.anchor.y - displayObject.texture.trim.y) * -frame.height)* transform[4]),
-								   (displayObject.width * transform[0]),
-								   (displayObject.height * transform[4]));
+				context.globalAlpha = displayObject.worldAlpha;
 				
-			}	
-			else
-			{*/
-			//	blit = false;
 				context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
-				
+					
 				context.drawImage(displayObject.texture.baseTexture.source, 
 								   frame.x,
 								   frame.y,
@@ -5413,45 +5629,38 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 								   frame.height,
 								   (displayObject.anchor.x) * -frame.width, 
 								   (displayObject.anchor.y) * -frame.height,
-								 //   (displayObject.anchor.x - displayObject.texture.trim.x) * -frame.width, 
-								  // (displayObject.anchor.y - displayObject.texture.trim.y) * -frame.height,
-								  
 								   frame.width,
 								   frame.height);
-			//}
-		}					   
-   	}
-   	else if(displayObject instanceof PIXI.Strip)
-	{
-		context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
-		this.renderStrip(displayObject);
-	}
-	else if(displayObject instanceof PIXI.TilingSprite)
-	{
-		context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
-		this.renderTilingSprite(displayObject);
-	}
-	else if(displayObject instanceof PIXI.CustomRenderable)
-	{
-		displayObject.renderCanvas(this);
-	}
-	else if(displayObject instanceof PIXI.Graphics)
-	{
-		context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
-		PIXI.CanvasGraphics.renderGraphics(displayObject, context);
-	}
-	
-	// render!
-	if(displayObject.children)
-	{
-		for (var i=0; i < displayObject.children.length; i++) 
+			}					   
+	   	}
+	   	else if(displayObject instanceof PIXI.Strip)
 		{
-			this.renderDisplayObject(displayObject.children[i]);
+			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
+			this.renderStrip(displayObject);
 		}
+		else if(displayObject instanceof PIXI.TilingSprite)
+		{
+			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
+			this.renderTilingSprite(displayObject);
+		}
+		else if(displayObject instanceof PIXI.CustomRenderable)
+		{
+			displayObject.renderCanvas(this);
+		}
+		else if(displayObject instanceof PIXI.Graphics)
+		{
+			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
+			PIXI.CanvasGraphics.renderGraphics(displayObject, context);
+		}
+		
+	//	count++
+		displayObject = displayObject._iNext;
+		
+		
 	}
-	
-	this.context.setTransform(1,0,0,1,0,0); 
+	while(displayObject != testObject)
 }
+
 
 /**
  * @private
@@ -5481,11 +5690,9 @@ PIXI.CanvasRenderer.prototype.renderStripFlat = function(strip)
 		
 	};	
 	
-//	context.globalCompositeOperation = 'lighter';
 	context.fillStyle = "#FF0000";
 	context.fill();
 	context.closePath();
-	//context.globalCompositeOperation = 'source-over';	
 }
 
 /**
@@ -6211,7 +6418,6 @@ PIXI.TilingSprite = function(texture, width, height)
 	this.width = width;
 	this.height = height;
 	this.renderable = true;
-	
 	/**
 	 * The scaling of the image that is being tiled
 	 * @property tileScale
@@ -15083,6 +15289,20 @@ gf.Point = PIXI.Point;
 gf.Rectangle = PIXI.Rectangle;
 
 /**
+ * Circle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Circle.html">PIXI.Circle</a>
+ *
+ * @class Circle
+ */
+gf.Circle = PIXI.Circle;
+
+/**
+ * Ellipse object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html">PIXI.Ellipse</a>
+ *
+ * @class Ellipse
+ */
+gf.Ellipse = PIXI.Ellipse;
+
+/**
  * Polygon object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Polygon.html">PIXI.Polygon</a>
  *
  * @class Polygon
@@ -15097,19 +15317,12 @@ gf.Polygon = PIXI.Polygon;
 gf.Texture = PIXI.Texture;
 
 /**
- * EventTarget mixin, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/EventTarget.html">PIXI.EventTarget</a>
- *
- * @class EventTarget
- */
-gf.EventTarget = PIXI.EventTarget;
-
-/**
  * The current grapefruit version
  *
  * @property version
  * @type String
  */
-gf.version = '0.0.1';
+gf.version = '0.0.2';
 
 /**
  * The cached assets loaded by any loader
@@ -15243,2722 +15456,85 @@ gf.inherits = function(c, p, proto) {
   c['super'] = p;
 };
 
+//Great ideas taken from: https://github.com/obiot/melonJS/blob/master/src/plugin/plugin.js
 /**
- * Main game object, controls the entire instance of the game
+ * Namespace for all plugins, it also provides methods for patching
+ * core functions, and registering plugins.
  *
- * @class Game
- * @constructor
- * @param contId {String} The container for the new canvas we will create for the game
- * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)
+ * @class plugin
  */
-gf.Game = function(contId, settings) {
-    //mixin the Event Target methods
-    gf.EventTarget.call(this);
-
+gf.plugin = {
     /**
-     * The domElement that we are putting our rendering canvas into (the container)
+     * Patches a core function with a new one. The function you override with has a special property
+     * called `this._super` which is a reference to the function you are overriding.
      *
-     * @property container
-     * @type DOMELement
-     * @readOnly
-     */
-    this.container = document.getElementById(contId);
-
-    if(!this.container)
-        this.container = document.body;
-
-    var w = settings.width || gf.utils.getStyle(this.container, 'width'),
-        h = settings.height || gf.utils.getStyle(this.container, 'height');
-
-    /**
-     * The method used to render values to the screen (either webgl, or canvas)
-     *
-     * @property renderMethod
-     * @type String
-     * @default 'webgl'
-     */
-    this.renderMethod = 'webgl';
-
-    /**
-     * The player entities added into the game
-     *
-     * @property players
-     * @type {Array}
-     */
-    this.players = [];
-
-    /**
-     * Raw PIXI.stage instance
-     *
-     * @property stage
-     * @type PIXI.Stage
-     * @readOnly
-     */
-    this.stage = new PIXI.Stage(
-        settings.background,
-        settings.interactive !== undefined ? settings.interactive : true
-    );
-
-    /**
-     * Raw Clock instance for internal timing
-     *
-     * @property clock
-     * @type Clock
-     * @readOnly
-     */
-    this.clock = new gf.Clock(false);
-
-    /**
-     * Raw rendering engine
-     *
-     * @property renderer
-     * @type PIXI.WebGLRenderer|PIXI.CanvasRenderer
-     * @readOnly
-     */
-    this.renderer = null;
-
-    //if they speciy a method, check if it is available
-    if(settings.renderMethod) {
-        if(!gf.support[settings.renderMethod]) {
-            throw 'Render method ' + settings.renderMethod + ' is not supported by this browser!';
-        }
-        this.renderMethod = settings.renderMethod;
-    }
-    //if they don't specify a method, guess the best to use
-    else {
-        if(gf.support.webgl) this.renderMethod = 'webgl';
-        else if(gf.support.canvas) this.renderMethod = 'canvas';
-        else {
-            throw 'Neither WebGL nor Canvas is supported by this browser!';
-        }
-    }
-
-    //initialize the correct renderer
-    if(this.renderMethod === 'webgl') {
-        this.renderer = new PIXI.WebGLRenderer(w, h, settings.view, settings.transparent);
-    } else if(this.renderMethod === 'canvas') {
-        this.renderer = new PIXI.CanvasRenderer(w, h, settings.view, settings.transparent);
-    }
-
-    /**
-     * Maximum Z value
-     *
-     * @property MAX_Z
-     * @type {Number}
-     * @default 500
-     * @private
-     * @readOnly
-     */
-    this.MAX_Z = 500;
-
-    /**
-     * The loader for this game instance
-     *
-     * @property loader
-     * @type AssetLoader
-     * @readOnly
-     */
-    this.loader = new gf.AssetLoader(this);
-
-    /**
-     * The entity pool to use to create registered entities
-     *
-     * @property entitypool
-     * @type EntityPool
-     * @readOnly
-     */
-    this.entitypool = new gf.EntityPool(this);
-
-    /**
-     * The GameStates added to the game
-     *
-     * @property states
-     * @type Array
-     * @readOnly
-     */
-    this.states = {};
-
-    /**
-     * The currently active GameState
-     *
-     * @property activeState
-     * @type GameState
-     * @readOnly
-     */
-    this.activeState = null;
-    this._defaultState = new gf.GameState(this, '_default');
-
-    //append the renderer view
-    //this.renderer.view.style['z-index'] = opts.zIndex || 5;
-    this.container.appendChild(this.renderer.view);
-
-    //mixin user settings
-    gf.utils.setValues(this, settings);
-
-    this.enableState('_default');
-
-    //define getters for common properties in GameState
-    var self = this;
-    ['audio', 'input', 'physics', 'camera', 'world'].forEach(function(prop) {
-        self.__defineGetter__(prop, function() {
-            return self.activeState[prop];
-        });
-    });
-
-    //some docs for the getters above
-
-    /**
-     * The audio player for this game instance
-     * (refers to the active GameState's audio instance)
-     *
-     * @property audio
-     * @type AudioPlayer
-     * @readOnly
-     */
-
-    /**
-     * The input instance for this game
-     * (refers to the active GameState's input instance)
-     *
-     * @property input
-     * @type InputManager
-     * @readOnly
-     */
-
-    /**
-     * The physics system to simulate stuffs
-     * (refers to the active GameState's physics instance)
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @readOnly
-     */
-
-    /**
-     * The camera you view the scene through
-     * (refers to the active GameState's camera instance)
-     *
-     * @property camera
-     * @type Camera
-     * @readOnly
-     */
-
-    /**
-     * The world instance that holds all entites and the map
-     * (refers to the active GameState's world instance)
-     *
-     * @property world
-     * @type Map
-     * @readOnly
-     */
-};
-
-gf.inherits(gf.Game, Object, {
-    /**
-     * Allows you to resize the game area
-     *
-     * @method resize
-     * @param width {Number} Width to resize to
-     * @param height {Number} Height to resize to
-     * @return {Game} Returns itself for chainability
-     */
-    resize: function(w, h) {
-        this.renderer.resize(w, h);
-
-        for(var i = 0, il = this.stage.children.length; i < il; ++i) {
-            var o = this.stage.children[i];
-
-            if(o.resize) o.resize(w, h);
-        }
-
-        return this;
-    },
-    /**
-     * Adds an object to the current stage
-     *
-     * @method addChild
-     * @param obj {Sprite} The sprite to the stage
-     * @return {Game} Returns itself for chainability
-     */
-    addChild: function(obj) {
-        this.activeState.addChild(obj);
-
-        return this;
-    },
-    /**
-     * Removes a sprite from the stage
-     *
-     * @method removeChild
-     * @param obj {Sprite} The sprite to the stage
-     * @return {Game} Returns itself for chainability
-     */
-    removeChild: function(obj) {
-        if(obj) {
-            if(obj instanceof gf.Gui)
-                this.camera.removeChild(obj);
-            else
-                this.world.removeChild(obj);
-        }
-
-        return this;
-    },
-    addState: function(state) {
-        var name = state.name;
-
-        if(!name) {
-            throw 'No state name could be determined, did you give the state a name when you created it?';
-        } else if(this.states[name]) {
-            throw 'A state with the name "' + name + '" already exists, did you try to add it twice?';
-        } else {
-            this.states[name] = state;
-            this.stage.addChild(state);
-        }
-    },
-    removeState: function(state) {
-        var name = (typeof state === 'string') ? state : state.name;
-
-        if(!name) {
-            throw 'No state name could be determined, are you sure you passed me a game state?';
-        } else if(!this.states[name]) {
-            throw 'A state with the name "' + name + '" does not exist, are you sure you added it?';
-        } else {
-            //don't remove the default state
-            if(name === '_default') return;
-
-            //if this is the active state, revert to the default state
-            if(name === this.activeState.name) {
-                this.enableState('_default');
-            }
-
-            delete this.states[name];
-        }
-    },
-    enableState: function(state) {
-        var name = (typeof state === 'string') ? state : state.name;
-
-        if(this.activeState)
-            this.activeState.disable();
-
-        this.activeState = this.states[name];
-
-        this.activeState.enable();
-    },
-    /**
-     * Loads the world map into the game
-     *
-     * @method loadWorld
-     * @param world {String|Map} The map to load as the current world
-     * @return {Game} Returns itself for chainability
-     */
-    loadWorld: function(world) {
-        this.activeState.loadWorld(world);
-
-        return this;
-    },
-    /**
-     * Begins the render loop
-     *
-     * @method render
-     * @return {Game} Returns itself for chainability
-     */
-    render: function() {
-        this.clock.start();
-        this._tick();
-
-        return this;
-    },
-    /**
-     * The looping render tick
-     *
-     * @method _tick
-     * @private
-     */
-    _tick: function() {
-        this.emit({ type: 'beforetick' });
-        //start render loop
-        window.requestAnimFrame(this._tick.bind(this));
-
-        //update this game state
-        this.activeState.update(this.clock.getDelta());
-
-        //render scene
-        this.renderer.render(this.stage);
-        this.emit({ type: 'aftertick' });
-    }
-});
-
-/**
- * The base display object, that anything being put on the screen inherits from
- *
- * @class DisplayObject
- * @extends PIXI.DisplayObjectContainer
- * @constructor
- */
-gf.DisplayObject = function(game, pos, settings) {
-    PIXI.DisplayObjectContainer.call(this);
-
-    /**
-     * The game instance this belongs to
-     *
-     * @property game
-     * @type Game
-     */
-    this.game = game;
-
-    //mixin user's settings
-    gf.utils.setValues(this, settings);
-
-    this.setPosition(pos);
-
-    //Add these properties in so that all objects can see them in the docs
-    //these properties are inherited from PIXI.DisplayObjectContainer
-    //most of these blocks are copied straight from PIXI source
-
-    /**
-     * [read-only] The of children of this object.
-     * @property children {Array}
-     */
-
-    /**
-     * The coordinate of the object relative to the local coordinates of the parent.
-     * @property position
-     * @type Point
-     */
-
-    /**
-     * The scale factor of the object.
-     * @property scale
-     * @type Point
-     */
-
-    /**
-     * The rotation of the object in radians.
-     * @property rotation
-     * @type Number
-     */
-
-    /**
-     * The opacity of the object.
-     * @property alpha
-     * @type Number
-     */
-
-    /**
-     * The visibility of the object.
-     * @property visible
-     * @type Boolean
-     */
-
-    /**
-     * [read-only] The display object that contains this display object.
-     * @property parent
-     * @type DisplayObject
-     */
-
-    /**
-     * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
-     * @property stage
-     * @type Stage
-     */
-
-    /**
-     * This is the defined area that will pick up mouse / touch events. It is null by default.
-     * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
-     * @property hitArea
-     * @type Rectangle
-     */
-
-    /*
-     * MOUSE Callbacks
-     */
-
-    /**
-     * A callback that is used when the users clicks on the displayObject with their mouse
-     * @method click
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user clicks the mouse down over the sprite
-     * @method mousedown
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user releases the mouse that was over the displayObject
-     * for this callback to be fired the mouse must have been pressed down over the displayObject
-     * @method mouseup
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject
-     * for this callback to be fired, The touch must have started over the displayObject
-     * @method mouseupoutside
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the users mouse rolls over the displayObject
-     * @method mouseover
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the users mouse leaves the displayObject
-     * @method mouseout
-     * @param interactionData {InteractionData}
-     */
-
-    /*
-     * TOUCH Callbacks
-     */
-
-    /**
-     * A callback that is used when the users taps on the sprite with their finger
-     * basically a touch version of click
-     * @method tap
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user touch's over the displayObject
-     * @method touchstart
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user releases a touch over the displayObject
-     * @method touchend
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user releases the touch that was over the displayObject
-     * for this callback to be fired, The touch must have started over the sprite
-     * @method touchendoutside
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * Inherited Methods
-     */
-
-    /**
-     * Indicates if the sprite will have touch and mouse interactivity. It is false by default
-     * @method setInteractive
-     * @param interactive {Boolean}
-     */
-
-    /**
-     * Adds a child to the object.
-     * @method addChild
-     * @param child {DisplayObject}
-     */
-
-    /**
-     * Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown
-     * @method addChildAt
-     * @param child {DisplayObject}
-     * @param index {Number}
-     */
-
-    /**
-     * Removes a child from the object.
-     * @method removeChild
-     * @param child {DisplayObject}
-     */
-};
-
-gf.inherits(gf.DisplayObject, PIXI.DisplayObjectContainer, {
-    resize: function() {
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.resize)
-                o.resize.apply(o, arguments);
-        }
-    },
-    removeAllChildren: function() {
-        //remove each from the stage
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            if(this.stage) this.stage.__removeChild(this.children[i]);
-        }
-
-        //clear the list and let the GC clean up
-        this.children = [];
-    },
-    /**
-     * Convenience method for setting the position of the Object.
-     *
-     * @method setPosition
-     * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
-     *       If an Array, Vector, or Point is passed then the y parameter is ignored
-     * @param y {Number} Y coord to put the sprite at
-     * @return {DisplayObject} Returns itself for chainability
+     * @method patch
+     * @param obj {Object} The object with the method to override
+     * @param name {String} The name of the method to override
+     * @param fn {Function} The function to override with
      * @example
-     *      spr.setPosition(1, 1)
-     *          .setPosition([5, 5])
-     *          .setPosition(new gf.Point(10, 10))
-     *          .setPosition(new gf.Vector(20, 20));
+     *      //For example, to patch the gf.Sprite.prototype.isActiveAnimation function:
+     *
+     *      gf.plugin.patch(gf.Sprite, 'isActiveAnimation', function() {
+     *          //display a console message
+     *          console.log('checking animation!');
+     *          //call the original function
+     *          this._super();
+     *      });
      */
-    setPosition: function(x, y) {
-        //passed in a vector or point object
-        if(x instanceof gf.Vector || x instanceof gf.Point) {
-            this.position.x = x.x;
-            this.position.y = x.y;
-        }
-        //passed in an array of form [x, y]
-        else if(x instanceof Array) {
-            this.position.x = x[0];
-            this.position.y = x[1];
-        }
-        //passed in a single number, that will apply to both
-        else if(typeof x === 'number' && y === undefined) {
-            this.position.x = x;
-            this.position.y = x;
-        }
-        //passed in something else, lets try to massage it into numbers
-        else {
-            this.position.x = parseFloat(x, 10) || 0;
-            this.position.y = parseFloat(y, 10) || 0;
+    patch: function(obj, name, fn) {
+        if(obj.prototype !== undefined) {
+            obj = obj.prototype;
         }
 
-        return this;
-    }
-});
-/**
- * A basic Camera object that provides some effects. It also will contain the HUD and GUI
- * to ensure they are using "screen-coords".
- *
- * TODO: Currently fade/flash don't show the colors. How should I actually show them, a PIXI.Sprite?
- *
- * @class Camera
- * @extends DisplayObject
- * @constructor
- * @param game {Game} The game this camera belongs to
- * @param settings {Object} Any settings you want to override the default properties with
- */
-gf.Camera = function(game, pos, settings) {
-    /**
-     * The bounds of that the camera can move to
-     *
-     * @property bounds
-     * @type PIXI.Rectangle
-     * @readOnly
-     * @private
-     */
-    this._bounds = new PIXI.Rectangle(0, 0, 0, 0);
+        if(typeof obj[name] === 'function' && typeof fn === 'function') {
+            var _super = obj[name];
 
-    /**
-     * When following an entity this is the space within the camera that it can move around
-     * before the camera moves to track it.
-     *
-     * @property _deadzone
-     * @type PIXI.Rectangle
-     * @readOnly
-     * @private
-     */
-    this._deadzone = null;
+            obj[name] = (function(name, fn) {
+                return function() {
+                    var tmp = this._super;
 
-    /**
-     * The target that the camera will follow
-     *
-     * @property _target
-     * @type Entity
-     * @readOnly
-     * @private
-     */
-    this._target = null;
+                    this._super = _super;
 
-    /**
-     * The size of the camera
-     *
-     * @property size
-     * @type Vector
-     * @readOnly
-     */
-    this.size = new gf.Vector(0, 0);
+                    var ret = fn.apply(this, arguments);
+                    this._super = tmp;
 
-    /**
-     * Half of the size of the camera
-     *
-     * @property hSize
-     * @type Vector
-     * @readOnly
-     */
-    this.hSize = new gf.Vector(0, 0);
-
-    /**
-     * The _fx namespace has all the instance variables for all the fx
-     *
-     * @property _fx
-     * @type Object
-     * @private
-     * @readOnly
-     */
-    this._fx = {
-        flash: {
-            alpha: 0,
-            complete: null
-        },
-        fade: {
-            alpha: 0,
-            complete: null
-        },
-        shake: {
-            intensity: 0,
-            duration: 0,
-            direction: gf.Camera.SHAKE.BOTH,
-            offset: new gf.Point(0, 0),
-            complete: null
-        }
-    };
-
-    gf.DisplayObject.call(this, game, pos, settings);
-};
-
-gf.inherits(gf.Camera, gf.DisplayObject, {
-    /**
-     * Makes the camera flash with a certain color
-     *
-     * @method flash
-     * @param color {Number} The color to flash the screen with
-     * @param duration {Number} The time in milliseconds to fade away
-     * @param callback {Function} The callback to call when the flash has completed
-     * @return {Camera} Returns iteself for chainability
-     */
-    flash: function(color, duration, cb) {
-        if(this._fx.flash.alpha > 0) return this;
-
-        if(typeof duration === 'function') {
-            cb = duration;
-            duration = 1;
-        }
-
-        if(typeof color === 'function') {
-            cb = color;
-            duration = 1;
-            color = 0xFFFFFF;
-        }
-
-        duration = duration || 1;
-        if(duration < 0) duration = 1;
-
-        if(color === undefined)
-            color = 0xFFFFFF;
-
-        /*var red = color >> 16 & 0xFF,
-            green = color >> 8 & 0xFF,
-            blue = color & 0xFF;*/
-
-        this._fx.flash.color = color;
-        this._fx.flash.duration = duration;
-        this._fx.flash.alpha = 1;
-        this._fx.flash.complete = cb;
-
-        return this;
-    },
-    /**
-     * Stops a running flash, instantly hiding it
-     *
-     * @method stopFlash
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopFlash: function() {
-        this._fx.flash.alpha = 0;
-
-        return this;
-    },
-    /**
-     * Makes the camera fade into a color
-     *
-     * @method fade
-     * @param color {Number} The color to fade into
-     * @param duration {Number} The time in milliseconds to take to fade in
-     * @param callback {Function} The callback to call when the fade has completed
-     * @return {Camera} Returns iteself for chainability
-     */
-    fade: function(color, duration, cb) {
-        if(this._fx.fade.alpha > 0) return this;
-
-        if(typeof duration === 'function') {
-            cb = duration;
-            duration = 1;
-        }
-
-        if(typeof color === 'function') {
-            cb = color;
-            duration = 1;
-            color = 0xFFFFFF;
-        }
-
-        duration = duration || 1;
-        if(duration < 0) duration = 1;
-
-        if(color === undefined)
-            color = 0xFFFFFF;
-
-        /*var red = color >> 16 & 0xFF,
-            green = color >> 8 & 0xFF,
-            blue = color & 0xFF;*/
-
-        this._fx.fade.color = color;
-        this._fx.fade.duration = duration;
-        this._fx.fade.alpha = 0.01;
-        this._fx.fade.complete = cb;
-
-        return this;
-    },
-    /**
-     * Stops a running fade, instantly hiding it
-     *
-     * @method stopFade
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopFade: function() {
-        this._fx.fade.alpha = 0;
-
-        return this;
-    },
-    /**
-     * Shakes the camera around a bit, to show it who is boss.
-     *
-     * @method shake
-     * @param intensity {Number} How hard to shake around
-     * @param duration {Number} The time in milliseconds to shake for
-     * @param direction {Camera.SHAKE} The axes to shake the camera in default is gf.Camera.SHAKE.BOTH
-     * @param callback {Function} The callback to call when the shaking has stopped
-     * @return {Camera} Returns iteself for chainability
-     */
-    shake: function(intensity, duration, direction, cb) {
-        //already shaking (call stop first)
-        if(this._fx.shake.offset.x !== 0 || this._fx.shake.offset.y !== 0)
-            return this;
-
-        if(typeof direction === 'function') {
-            cb = direction;
-            direction = gf.Camera.SHAKE.BOTH;
-        }
-
-        if(typeof duration === 'function') {
-            cb = duration;
-            direction = gf.Camera.SHAKE.BOTH;
-            duration = null;
-        }
-
-        if(typeof intensity === 'function') {
-            cb = intensity;
-            direction = gf.Camera.SHAKE.BOTH;
-            duration = null;
-            intensity = null;
-        }
-
-        intensity = intensity || 0.01;
-        duration = duration || 1000;
-        direction = direction || gf.Camera.SHAKE.BOTH;
-
-        //setup a shake effect
-        this._fx.shake.intensity = intensity;
-        this._fx.shake.duration = duration;
-        this._fx.shake.direction = direction;
-        this._fx.shake.offset.x = 0;
-        this._fx.shake.offset.y = 0;
-        this._fx.shake.complete = cb;
-
-        return this;
-    },
-    /**
-     * Stops a running shake effect
-     *
-     * @method stopShake
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopShake: function() {
-        if(this._fx.shake.duration !== 0) {
-            this._fx.shake.duration = 0;
-            this._fx.shake.offset.x = 0;
-            this._fx.shake.offset.y = 0;
-        }
-
-        return this;
-    },
-    /**
-     * Stops all currently running effects (flash, fade, shake)
-     *
-     * @method stopAll
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopAll: function() {
-        this.stopFlash();
-        this.stopFade();
-        this.stopShake();
-
-        return this;
-    },
-    /**
-     * Follows an entity with the camera, ensuring they are always center view. You can
-     * pass a follow style to change the area an entity can move around in before we start
-     * to move with them.
-     *
-     * @method follow
-     * @param entity {Entity} The entity to follow
-     * @param style {Camera.FOLLOW} The style of following, defaults to gf.Camera.FOLLOW.LOCKON
-     * @return {Camera} Returns iteself for chainability
-     */
-    follow: function(ent, style) {
-        if(!(ent instanceof gf.Entity)) return this;
-
-        this._target = ent;
-
-        switch(style) {
-            case gf.Camera.FOLLOW.PLATFORMER:
-                var w = this.size.x / 8;
-                var h = this.size.y / 3;
-                this._deadzone = new PIXI.Rectangle(
-                    (this.size.x - w) / 2,
-                    (this.size.y - h) / 2 - (h / 4),
-                    w,
-                    h
-                );
-                break;
-            case gf.Camera.FOLLOW.TOPDOWN:
-                var sq4 = Math.max(this.size.x, this.size.y) / 4;
-                this._deadzone = new PIXI.Rectangle(
-                    (this.size.x - sq4) / 2,
-                    (this.size.y - sq4) / 2,
-                    sq4,
-                    sq4
-                );
-                break;
-            case gf.Camera.FOLLOW.TOPDOWN_TIGHT:
-                var sq8 = Math.max(this.size.x, this.size.y) / 8;
-                this._deadzone = new PIXI.Rectangle(
-                    (this.size.x - sq8) / 2,
-                    (this.size.y - sq8) / 2,
-                    sq8,
-                    sq8
-                );
-                break;
-            case gf.Camera.FOLLOW.LOCKON:
-                /* falls through */
-            default:
-                this._deadzone = null;
-                break;
-        }
-
-        this.focusEntity(this._target);
-
-        return this;
-    },
-    /**
-     * Stops following any entities
-     *
-     * @method unfollow
-     * @return {Camera} Returns iteself for chainability
-     */
-    unfollow: function() {
-        this._target = null;
-        return this;
-    },
-    /**
-     * Focuses the camera on an x,y position. Ensures that the camera does
-     * not go outside the bounds set with setBounds()
-     *
-     * @method focus
-     * @param x {Number|Point} The x coord to focus on, if a Point is passed the y param is ignored
-     * @param y {Number} The y coord to focus on
-     * @return {Camera} Returns iteself for chainability
-     */
-    focus: function(x, y) {
-        y = x instanceof gf.Point ? x.y : (y || 0);
-        x = x instanceof gf.Point ? x.x : (x || 0);
-        //x += (x > 0) ? 0.0000001 : -0.0000001;
-        //y += (y > 0) ? 0.0000001 : -0.0000001;
-
-        //calculate how much we need to pan
-        var goToX = x - this.hSize.x,
-            goToY = y - this.hSize.y,
-            dx = goToX + this.game.world.position.x, //world pos is negative
-            dy = goToY + this.game.world.position.y;
-
-        return this.pan(dx, dy);
-    },
-    focusEntity: function(ent) {
-        this.focus(
-            ent.viewPosition.x * this.game.world.scale.x,
-            ent.viewPosition.y * this.game.world.scale.y
-        );
-    },
-    /**
-     * Pans the camera around by the x,y amount. Ensures that the camera does
-     * not go outside the bounds set with setBounds()
-     *
-     * @method pan
-     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
-     * @param y {Number} The y ammount to pan
-     * @return {Camera} Returns iteself for chainability
-     */
-    pan: function(dx, dy) {
-        dy = dx instanceof gf.Point ? dx.y : (dy || 0);
-        dx = dx instanceof gf.Point ? dx.x : (dx || 0);
-
-        if(!dx && !dy) return;
-
-        var newX = this.game.world.position.x - dx,
-            newY = this.game.world.position.y - dy;
-
-        //move only the difference that puts us at 0
-        if(newX > 0)
-            dx = 0 + this.game.world.position.x;
-        //move only the difference that puts us at max (remember that position is negative)
-        else if(newX < -this._bounds.maxPanX)
-            dx = this._bounds.maxPanX + this.game.world.position.x;
-
-        if(newY > 0)
-            dy = 0 - Math.abs(this.game.world.position.y);
-        else if(newY < -this._bounds.maxPanY)
-            dy = this._bounds.maxPanY + this.game.world.position.y;
-
-        if(dx || dy) {
-            //if we move a lot, then just force a re render (less expensive then panning all the way there)
-            if(Math.abs(dx) > this.hSize.x || Math.abs(dy) > this.hSize.y) {
-                this.game.world.setPosition(this.game.world.position.x - dx, this.game.world.position.y - dy);
-                this.game.world.resize();
-            }
-            //otherwise just pan
-            else {
-                this.game.world.pan(-dx, -dy);
-            }
-        }
-
-        return this;
-    },
-    /**
-     * Resizes the viewing area, this is called internally by your game instance
-     * when you call mygame.resize(). DO NOT CALL THIS DIRECTLY
-     *
-     * @method resize
-     * @private
-     * @param w {Number} The new width
-     * @param h {Number} The new height
-     * @return {Camera} Returns iteself for chainability
-     */
-    resize: function(w, h) {
-        this.size.set(w, h);
-        this.hSize.set(
-            Math.round(this.size.x / 2),
-            Math.round(this.size.y / 2)
-        );
-
-        return this;
-    },
-    /**
-     * Sets the bounds the camera is allowed to go. Usually this is the world's
-     * min and max, and is set for you.
-     *
-     * @method setBounds
-     * @param x {Number} The minimum x coord (usually 0)
-     * @param y {Number} The minimum y coord (usually 0)
-     * @param width {Number} The maximum x coord (usually map width)
-     * @param height {Number} The maximum y coord (usually map height)
-     * @return {Camera} Returns iteself for chainability
-     */
-    setBounds: function(x, y, width, height) {
-        this._bounds.x = x;
-        this._bounds.y = y;
-        this._bounds.width = width;
-        this._bounds.height = height;
-
-        this._bounds.maxX = this._bounds.x + this._bounds.width;
-        this._bounds.maxY = this._bounds.y + this._bounds.height;
-
-        this._bounds.maxPanX = width - this.size.x;
-        this._bounds.maxPanY = height - this.size.y;
-
-        return this;
-    },
-    /**
-     * Called internally every frame. Updates all effects and the follow
-     *
-     * @method update
-     * @return {Camera} Returns iteself for chainability
-     */
-    update: function(dt) {
-        //follow entity
-        if(this._target) {
-            if(!this._deadzone) {
-                this.focusEntity(this._target);
-            } else {
-                var moveX, moveY,
-                    dx, dy,
-                    //get the x,y of the sprite on the screen
-                    camX = (this._target.position.x + (this.game.world.position.x / this.game.world.scale.x)) * this.game.world.scale.x,
-                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * this.game.world.scale.x;
-
-                moveX = moveY = dx = dy = 0;
-
-                //check less than
-                dx = camX - this._deadzone.x;
-                dy = camY - this._deadzone.y;
-
-                if(dx < 0)
-                    moveX = dx;
-                if(dy < 0)
-                    moveY = dy;
-
-                //check greater than
-                dx = camX - (this._deadzone.x + this._deadzone.width);
-                dy = camY - (this._deadzone.y + this._deadzone.height);
-
-                if(dx > 0)
-                    moveX = dx;
-                if(dy > 0)
-                    moveY = dy;
-
-                this.pan(
-                    Math.round(moveX),
-                    Math.round(moveY)
-                );
-            }
-        }
-
-        //update flash effect
-        if(this._fx.flash.alpha > 0) {
-            this._fx.flash.alpha -= (dt * 1000) / this._fx.flash.duration;
-
-            if(this._fx.flash.alpha <= 0) {
-                this._fx.flash.alpha = 0;
-
-                if(this._fx.flash.complete)
-                    this._fx.flash.complete();
-            }
-        }
-
-        //update fade effect
-        if(this._fx.fade.alpha > 0) {
-            this._fx.fade.alpha += (dt * 1000) / this._fx.fade.duration;
-
-            if(this._fx.fade.alpha >= 1) {
-                this._fx.fade.alpha = 1;
-
-                if(this._fx.fade.complete) {
-                    this._fx.fade.complete();
-                }
-            }
-        }
-
-        //update shake effect
-        if(this._fx.shake.duration > 0) {
-            this._fx.shake.duration -= (dt * 1000);
-
-            //pan back to the original position
-            this._fx.shake.offset.x = -this._fx.shake.offset.x;
-            this._fx.shake.offset.y = -this._fx.shake.offset.y;
-            this.pan(this._fx.shake.offset);
-
-            if(this._fx.shake.duration <= 0) {
-                this._fx.shake.duration = 0;
-                this._fx.shake.offset.x = 0;
-                this._fx.shake.offset.y = 0;
-
-                if(this._fx.shake.complete) {
-                    this._fx.shake.complete();
-                }
-            }
-            else {
-                //pan to a random offset
-                if((this._fx.shake.direction === gf.Camera.SHAKE.BOTH) || (this._fx.shake.direction === gf.Camera.SHAKE.HORIZONTAL))
-                    this._fx.shake.offset.x = Math.round(Math.random() * this._fx.shake.intensity * this.size.x * 2 - this._fx.shake.intensity * this.size.x);
-
-                if ((this._fx.shake.direction === gf.Camera.SHAKE.BOTH) || (this._fx.shake.direction === gf.Camera.SHAKE.VERTICAL))
-                    this._fx.shake.offset.y = Math.round(Math.random() * this._fx.shake.intensity * this.size.y * 2 - this._fx.shake.intensity * this.size.y);
-
-                this.pan(this._fx.shake.offset);
-            }
-        }
-
-        return this;
-    }
-});
-
-gf.Camera.FOLLOW = {
-    PLATFORMER: 0,
-    TOPDOWN: 1,
-    TOPDOWN_TIGHT: 2,
-    LOCKON: 3
-};
-
-gf.Camera.SHAKE = {
-    BOTH: 0,
-    HORIZONTAL: 1,
-    VERTICAL: 2
-};
-function setTextureWrapper(t) {
-    PIXI.Sprite.prototype.setTexture.call(this, t);
-
-    if(!this.currentAnim) return;
-
-    this.parent.width = this.currentAnim.width;
-    this.parent.height = this.currentAnim.height;
-}
-
-function onTextureUpdateWrapper(e) {
-    PIXI.Sprite.prototype.onTextureUpdate.call(this, e);
-
-    if(!this.currentAnim) return;
-
-    this.parent.width = this.currentAnim.width;
-    this.parent.height = this.currentAnim.height;
-}
-
-/**
- * The base Sprite class. This class is the base for all images on the screen
- *
- * @class Sprite
- * @extends DisplayObject
- * @constructor
- * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
- * @example
- *      var spr = new gf.Sprite([10, 1], { name: 'MySprite' });
- */
-gf.Sprite = function(game, pos, settings) {
-    /**
-     * The width of the sprite
-     *
-     * @property width
-     * @type Number
-     * @default 0
-     */
-    this.width = 0;
-
-    /**
-     * The height of the sprite
-     *
-     * @property height
-     * @type Number
-     * @default 0
-     */
-    this.height = 0;
-
-    /**
-     * The name of this sprite
-     *
-     * @property name
-     * @type String
-     * @default ''
-     */
-    this.name = '';
-
-    /**
-     * The defined animations for this Sprite, this maps the names to the childIndexes
-     *
-     * @property anim
-     * @private
-     * @readOnly
-     * @type Object
-     */
-    this.anim = {};
-
-    /**
-     * The currently active animation
-     *
-     * @property currentAnim
-     * @private
-     * @readOnly
-     * @type Object
-     */
-    this.currentAnim = null;
-
-    /**
-     * The the anchor point for the textures
-     *
-     * @property anchor
-     * @type Point
-     */
-    this.anchor = new gf.Point();
-
-    /**
-     * The hit area for the sprite (to override the default)
-     *
-     * @property hitArea
-     * @type Point
-     */
-    this.hitArea = null;
-
-    //call base ctor
-    gf.DisplayObject.call(this, game, pos, settings);
-
-    //add the animations passed to ctor
-    if(settings.animations) {
-        for(var name in settings.animations) {
-            this.addAnimation(name, settings.animations[name]);
-        }
-    }
-
-    //if a texture is passed, make this just display the texture
-    if(settings.texture) {
-        if(typeof settings.texture === 'string') {
-            if(gf.assetCache[settings.texture])
-                settings.texture = gf.assetCache[settings.texture];
-            else {
-                var loader = new gf.AssetLoader();
-                settings.texture = loader.loadTexture(settings.texture, settings.texture);
-            }
-        }
-
-        if(settings.texture instanceof gf.Texture) {
-            var spr = new PIXI.Sprite(settings.texture);
-            this.addChild(spr);
-            this.anim['default'] = spr.childIndex;
-            this.width = this.width || spr.width;
-            this.height = this.height || spr.height;
-            spr.anchor = this.anchor;
-            spr.hitArea = this.hitArea;
-            spr.setTexture = setTextureWrapper;
-            spr.onTextureUpdate = onTextureUpdateWrapper;
-            spr.setInteractive(this.interactive);
-
-            this.setTexture = spr.setTexture.bind(spr);
-        }
-    }
-};
-
-gf.inherits(gf.Sprite, gf.DisplayObject, {
-    /**
-     * Defines a new animation on the Sprite
-     *
-     * @method addAnimation
-     * @param name {String} The name of the animation, any string you want to name it
-     * @param frames {Texture|Array} The frames of the animation, you can pass one gf.Texture
-     *      as a frame, or an Array of gf.Texture's
-     * @return {Sprite} Returns itself for chainability
-     * @example
-     *      spr.addAnimation('walk-left', new gf.Texture())
-     *          .addAnimation('walk-right', [new gf.Texture(), new gf.Texture()]);
-     */
-    addAnimation: function(name, frames, speed) {
-        if(!frames)
-            throw 'No textures passed to addAnimation()';
-
-        //ensure all the items in the array are textures
-        if(frames instanceof Array) {
-            for(var i = 0, il = frames.length; i < il; ++i) {
-                if(typeof frames[i] === 'string') {
-                    if(!PIXI.TextureCache[frames[i]])
-                        throw 'Texture ' + frames[i] + ' is not in cache, please load it first';
-
-                    frames[i] = PIXI.TextureCache[frames[i]];
-                }
-            }
-        }
-
-        //if there is a single texture passed, then put it in an array
-        if(frames instanceof gf.Texture)
-            frames = [frames];
-
-        //if a string is passed, get it from the texture cache
-        if(typeof frames === 'string') {
-            if(!PIXI.TextureCache[frames])
-                throw 'Texture ' + frames + ' is not in cache, please load it first';
-
-            frames = [PIXI.TextureCache[frames]];
-        }
-
-        //create a movie clip from the textures
-        var clip = new PIXI.MovieClip(frames);
-        clip.stop();
-        clip.visible = false;
-        clip.name = name;
-        clip.anchor = this.anchor;
-        clip.hitArea = this.hitArea;
-        clip.setTexture = setTextureWrapper;
-        clip.onTextureUpdate = onTextureUpdateWrapper;
-
-        if(this.interactive)
-            clip.setInteractive(this.interactive);
-
-        if(speed)
-            clip.animationSpeed = speed;
-
-        this.addChild(clip);
-
-        this.anim[name] = clip.childIndex;
-
-        return this;
-    },
-    /**
-     * Sets the active animation of the sprite, and starts the animation at index 0
-     *
-     * @method setActiveAnimation
-     * @param name {String} The name of the animation to play (defined with addAnimation());
-     * @param cb {Function} Callback when the animation completes, NOT YET IMPLEMENTED
-     * @return {Sprite} Returns itself for chainability
-     * @example
-     *      spr.addAnimation('me', new gf.Texture())
-     *          .setActiveAnimation('me');
-     */
-    setActiveAnimation: function(name, loop, cb) {
-        if(typeof loop === 'function') {
-            cb = loop;
-            loop = false;
-        }
-
-        if(this.anim[name] !== undefined) {
-            if(this.currentAnim) {
-                this.currentAnim.stop();
-                this.currentAnim.visible = false;
-            }
-
-            this.currentAnim = this.children[this.anim[name]];
-            this.currentAnim.visible = true;
-            this.currentAnim.loop = loop;
-            this.currentAnim.onComplete = cb;
-            this.width = this.currentAnim.width;
-            this.height = this.currentAnim.height;
-            this.currentAnim.gotoAndPlay(0);
-        } else {
-            throw 'Unknown animation ' + name;
-        }
-
-        return this;
-    },
-    /**
-     * Checks if the name is the active animation
-     *
-     * @method isActiveAnimation
-     * @param name {String} The name of the animation to check if it is currently active
-     * @return {Boolean} true if the animation is active, false otherwise.
-     * @example
-     *      spr.addAnimation('walk-left', new gf.Texture())
-     *          .isActiveAnimation('walk-left'); //false
-     *
-     *      spr.setActiveAnimation('walk-left')
-     *          .isActiveAnimation('walk-left'); //true
-     */
-    isActiveAnimation: function(name) {
-        return this.currentAnim.name === name;
-    },
-    /**
-     * Sets whether or not this sprite is interactive (can be clicked)
-     *
-     * @method setInteractive
-     * @param interactive {Boolean}
-     */
-    setInteractive: function(interactive) {
-        this.interactive = interactive;
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            if(this.children[i].setInteractive)
-                this.children[i].setInteractive(interactive);
-        }
-    }
-});
-
-//Add some PIXI.MovieClip functions that just call that
-// function for the currently playing animation
-['stop', 'play', 'gotoAndStop', 'gotoAndPlay'].forEach(function(fn) {
-    gf.Sprite.prototype[fn] = function() {
-        if(this.currentAnim && this.currentAnim[fn])
-            this.currentAnim[fn].apply(this.currentAnim, arguments);
-    };
-});
-
-/**
- * Stops the currently active animation
- * @method stop
- */
-
-/**
- * Plays the currently active animation
- * @method play
- */
-
-/**
- * Stops the currently active animation and goes to a specific frame
- * @method gotoAndStop
- * @param frameNumber {Number} frame index to stop at
- */
-
-/**
- * Goes to a specific frame and begins playing the currently active animation
- * @method gotoAndPlay
- * @param frameNumber {Number} frame index to start at
- */
-//Features TODO:
-//      - flipX
-//      - flipY
-//      - doWalk
-//      - doClimb
-//      - doJump
-//      - forceJump
-//      - checkSlope
-//      - updateMovement (slopes/breakable tiles)
-
-/**
- * The base Entity class. This class is the base for all entities interacting on the stage
- *
- * @class Entity
- * @extends Sprite
- * @constructor
- * @param pos {Array|Vector|Point} The starting position of the entity
- * @param settings {Object} Settings to override the defauls
- * @example
- *      var ent = new gf.Entity([10, 1], { name: 'MyEntity' });
- */
-gf.Entity = function(game, pos, settings) {
-    if(!game)
-        throw 'No game instance passed to Entity, a game instance is required!';
-
-    /**
-     * The type of the entity
-     *
-     * @property type
-     * @type String
-     * @default 'neutral'
-     */
-    this.type = gf.Entity.TYPE.NEUTRAL;
-
-    /**
-     * Whether or not the entity is "alive", advisory only
-     *
-     * @property alive
-     * @type Boolean
-     * @default true
-     */
-    this.alive = true;
-
-    /**
-     * Can it collide with other entities
-     *
-     * @property collidable
-     * @type Boolean
-     * @default true
-     * @readOnly
-     */
-    this.collidable = true;
-
-    /**
-     * The mass of the entity
-     *
-     * @property mass
-     * @type Number
-     * @default 1
-     * @readOnly
-     */
-    this.mass = 1;
-
-    /**
-     * The view position is a whole-number version of position.
-     *
-     * @property viewPosition
-     * @type Point
-     * @readOnly
-     */
-    this.viewPosition = new gf.Point(0, 0);
-
-    //call base ctor
-    gf.Sprite.call(this, game, pos, settings);
-
-    if(!this.width || !this.height)
-        throw 'Entities must have a width and height.';
-
-    this.viewPosition.x = Math.round(this.position.x);
-    this.viewPosition.y = Math.round(this.position.y);
-
-    //setup physics
-    this.setCollidable(this.collidable);
-    this.setPosition(this.position);
-};
-
-gf.inherits(gf.Entity, gf.Sprite, {
-    setCollidable: function(canCollide) {
-        //turning off collisions
-        if(this.collidable && !canCollide)
-            this.game.physics.remove(this);
-        //turning on collisions
-        else if((!this.collidable && canCollide) || (canCollide && !this.body))
-            this.game.physics.add(this);
-    },
-    setMass: function(mass) {
-        this.mass = mass < 0 ? 0 : mass;
-        this.game.physics.setMass(this, mass);
-
-        if(this.mass === 0)
-            this.collidable = false;
-    },
-    setVelocity: function(vel) {
-        this.game.physics.setVelocity(this, gf.utils.ensureVector(vel));
-    },
-    setRotation: function(rads) {
-        this.rotation = rads;
-        this.game.physics.setRotation(this, rads);
-    },
-    /**
-     * Convenience method for setting the position of an Entity.
-     *
-     * @method setPosition
-     * @param x {Number|Array|Vector|Point} X coord to put the sprite at.
-     *       If an Array, Vector, or Point is passed then the y parameter is ignored
-     * @param y {Number} Y coord to put the sprite at
-     * @return {Entity} Returns itself for chainability
-     * @example
-     *      spr.setPosition(1, 1)
-     *          .setPosition([5, 5])
-     *          .setPosition(new gf.Point(10, 10))
-     *          .setPosition(new gf.Vector(20, 20));
-     */
-    setPosition: function(x, y, skipPhysics) {
-        gf.Sprite.prototype.setPosition.call(this, x, y);
-
-        this.viewPosition.x = Math.round(this.position.x);
-        this.viewPosition.y = Math.round(this.position.y);
-
-        if(!skipPhysics) {
-            this.game.physics.setPosition(this, this.position);
-        }
-
-        return this;
-    },
-    /**
-     * On Collision Event
-     *      called when this object collides into another, or is being collided into by another
-     *      by default if something collides with a collectable entity we remove the collectable
-     *      and if we collide with a solid tile we kill our velocity
-     *
-     * @method onCollision
-     * @param obj {Entity} Colliding object
-     * @return {Entity} Returns itself for chainability
-     */
-    onCollision: function(obj) {
-        if(this.type === gf.Entity.TYPE.COLLECTABLE)
-            this.parent.removeChild(this);
-
-        if(obj.collisionType === gf.Tile.TYPE.SOLID)
-            this.setVelocity(0);
-
-        return this;
-    },
-    /**
-     * On Move Event
-     *      called when this entity moves
-     *
-     * @method onMove
-     * @param vel {Vector} The difference of position that the entity moved
-     * @return {Entity} Returns itself for chainability
-     */
-    onMove: function() {
-        return this;
-    },
-    /**
-     * On Break Tile Event
-     *      called when a tile is broken by this entity
-     *
-     * @method onBreakTile
-     * @param tile {Unkown} the tile that is broken
-     * @return {Entity} Returns itself for chainability
-     */
-    onBreakTile: function() {
-        return this;
-    }
-});
-
-/**
- * Entity types
- *
- * @property TYPE
- * @type Object
- */
-gf.Entity.TYPE = {
-    PLAYER: 'player',
-    ENEMY: 'enemy',
-    FRIENDLY: 'friendly',
-    NEUTRAL: 'neutral',
-    COLLECTABLE: 'collectable',
-    TILE: 'tile'
-};
-/**
- * GameStates are different , controls the entire instance of the game
- *
- * @class GameState
- * @constructor
- * @param game {Game} The game instance this GameState belongs to
- * @param name {String} 
- * @example
- *      var state = new gf.GameState(game, 'battle');
- *      state.addChild(battlePlayer);
- *      state.addChild(enemy);
- *
- *      game.enableState(state); //or you can use the name from the ctor 'battle'
- */
-gf.GameState = function(game, name, settings) {
-    settings = settings || {};
-    this.name = name;
-
-    /**
-     * The audio player for this game instance
-     *
-     * @property audio
-     * @type AudioPlayer
-     * @readOnly
-     */
-    this.audio = new gf.AudioManager();
-
-    /**
-     * The input instance for this game
-     *
-     * @property input
-     * @type InputManager
-     * @readOnly
-     */
-    this.input = new gf.InputManager(game);
-
-    /**
-     * The physics system to simulate stuffs
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @readOnly
-     */
-    this.physics = new gf.PhysicsSystem(game, settings.gravity);
-
-    /**
-     * The camera you view the scene through
-     *
-     * @property camera
-     * @type Camera
-     * @readOnly
-     */
-    this.camera = new gf.Camera(game);
-
-    /**
-     * The world instance that holds all entites and the map
-     *
-     * @property world
-     * @type Map
-     * @readOnly
-     */
-    this.world = null;
-
-    //call base ctor
-    gf.DisplayObject.call(this, game, [0, 0], settings);
-
-    //start disabled
-    this.disable();
-
-    //add camera
-    this.addChild(this.camera);
-    this.camera.resize(this.game.renderer.width, this.game.renderer.height);
-
-    //add this state to the game
-    this.game.addState(this);
-};
-
-gf.inherits(gf.GameState, gf.DisplayObject, {
-    addChild: function(obj) {
-        if(obj) {
-            //we add the camera in the ctor and the map later when
-            //.loadWorld is called. This way the camera is always the
-            //last child of stage, so it is rendered on top!
-            if(obj instanceof gf.Camera || obj instanceof gf.Map)
-                this.addChildAt(obj, 0);
-            else if(obj instanceof gf.Gui)
-                this.camera.addChild(obj);
-            else
-                this.world.addChild(obj);
-        }
-    },
-    loadWorld: function(world) {
-        if(typeof world === 'string'){
-            if(gf.assetCache[world]) {
-                world = gf.assetCache[world];
-            } else {
-                throw 'World "' + world + '" needs to be preloaded before being added to a game!';
-            }
-        }
-
-        this.world = new gf.TiledMap(this.game, 0, world);
-        this.addChild(this.world);
-        this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
-
-        if(this.world.properties.music) {
-            this.audio.play(this.world.properties.music, { loop: this.world.properties.music_loop === 'true' });
-        }
-
-        return this;
-    },
-    enable: function() {
-        this.visible = true;
-    },
-    disable: function() {
-        this.visible = false;
-    },
-    update: function(dt) {
-        //gather input from user
-        this.input.update(dt);
-
-        //update any camera effects
-        this.camera.update(dt);
-
-        //simulate physics and detect/resolve collisions
-        this.physics.update(dt);
-    }
-});
-/**
- * The grapefruit utility object, used for misc functions used throughout the code base
- *
- * @class utils
- */
- gf.utils = {
-    _arrayDelim: /[|,]/,
-    /**
-     * Ensures that some input is a vector, converts strings and arrays into vector objects
-     *
-     * @method ensureVector
-     * @param vec {Array|String|Vector} The object to ensure becomes a vector
-     * @return {Vector} The vector created with the passed values, if the values can't be made
-     *      into a Vector, then a new Vector with 0,0 is returned
-     */
-    ensureVector: function(vec) {
-        if(vec instanceof gf.Vector)
-            return vec;
-
-        var a = vec;
-        if(typeof vec === 'string')
-            a = vec.split(gf.utils._arrayDelim);
-
-        if(a instanceof Array) {
-            switch(a.length) {
-                case 1: return new gf.Vector(parseFloat(a[0], 10) || 0, parseFloat(a[0], 10) || 0);
-                case 2: return new gf.Vector(parseFloat(a[0], 10) || 0, parseFloat(a[1], 10) || 0);
-            }
-        }
-        else if(typeof a === 'number') {
-            return new gf.Vector(a, a);
+                    return ret;
+                };
+            })(name, fn);
         }
         else {
-            return new gf.Vector();
+            throw (name + ' is not a function in the passed object.');
         }
     },
     /**
-     * An empty function that performs no action
+     * Registers a plugin into the gf namespace.
      *
-     * @method noop
-     */
-    noop: function() {},
-    /**
-     * Performs an ajax request, and manages the callbacks passed in
-     *
-     * @method ajax
-     * @param settings {Object} The settings of the ajax request, similar to jQuery's ajax function
-     * @return {AjaxRequest} An XHR object
-     */
-    ajax: function(sets) {
-        //base settings
-        sets = sets || {};
-        sets.method = sets.method || 'GET';
-        sets.dataType = sets.dataType || 'text';
-
-        if(!sets.url)
-            throw 'No URL passed to ajax';
-
-        //callbacks
-        sets.progress = sets.progress || gf.utils.noop;
-        sets.load = sets.load || gf.utils.noop;
-        sets.error = sets.error || gf.utils.noop;
-        sets.abort = sets.abort || gf.utils.noop;
-        sets.complete = sets.complete || gf.utils.noop;
-
-        var xhr = new gf.utils.AjaxRequest();
-
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState === 4) {
-                var res = xhr.response || xhr.responseText,
-                    err = null;
-
-                if(xhr.status !== 200)
-                    err = 'Non-200 status code returned: ' + xhr.status;
-
-                if(!err && typeof res === 'string' && sets.dataType === 'json') {
-                    try {
-                        res = JSON.parse(res);
-                    } catch(e) {
-                        err = e;
-                    }
-                }
-
-                if(err) {
-                    if(sets.error) sets.error.call(xhr, err);
-                } else {
-                    if(sets.load) sets.load.call(xhr, res);
-                }
-            }
-        };
-
-        //chrome doesn't support json responseType
-        if(sets.dataType !== 'json')
-            xhr.responseType = sets.dataType;
-
-        xhr.open(sets.method, sets.url, true);
-        xhr.send();
-
-        return xhr;
-    },
-    /**
-     * Wraps XMLHttpRequest in a cross-browser way.
-     *
-     * @method AjaxRequest
-     * @return {ActiveXObject|XMLHttpRequest}
-     */
-    //from pixi.js
-    AjaxRequest: function() {
-        //activeX versions to check for in IE
-        var activexmodes = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP'];
-
-        //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
-        if(window.ActiveXObject) {
-            for(var i=0; i<activexmodes.length; i++) {
-                try {
-                    return new window.ActiveXObject(activexmodes[i]);
-                }
-                catch(e) {
-                    //suppress error
-                }
-            }
-        }
-        // if Mozilla, Safari etc
-        else if(window.XMLHttpRequest) {
-            return new XMLHttpRequest();
-        }
-        else {
-            return false;
-        }
-    },
-    /**
-     * This will take values and override the passed obj's properties with those values.
-     * The difference from a normal object extend is that this will try to massage the passed
-     * value into the same type as the object's property. Also if the key for the value is not
-     * in the original object, it is not copied.
-     *
-     * @method setValues
-     * @param obj {Object} The object to extend the values into
-     * @param values {Object} The values to put into the object
-     * @return {Object} returns the updated object
+     * @method register
+     * @param plugin {Object} The object to place in the namespace
+     * @param name {String} The name of the plugin to use as the key
      * @example
-     *      var obj = { vec: new gf.Vector(), arr: [] },
-     *          vals = { vec: '2|5', arr: '5|10|11' };
-     *      gf.setValues(obj, vals);
-     *      //now obj is:
-     *      // { vec: gf.Vector(2, 5), arr: [5, 10, 11] }
-     *      
+     *      //For example, to register a new plugin:
+     *      gf.plugin.register(MyPluginObject, 'MyPluginName');
+     *      var plg = new gf.MyPluginName();
      */
-    //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
-    setValues: function(obj, values) {
-        if(!values) return;
-
-        for(var key in values) {
-            var newVal = values[key];
-
-            if(newVal === undefined) {
-                //console.warn('Object parameter '' + key + '' is undefined.');
-                continue;
-            }
-            if(key in obj) {
-                var curVal = obj[key];
-
-                //massage strings into numbers
-                if(typeof curVal === 'number' && typeof newVal === 'string') {
-                    var n;
-                    if(newVal.indexOf('0x') === 0) n = parseInt(newVal, 16);
-                    else n = parseInt(newVal, 10);
-
-                    if(!isNaN(n))
-                        obj[key] = n;
-                    /*else
-                        console.warn('Object parameter '' + key + '' evaluated to NaN, using default. Value passed: ' + newVal);*/
-
-                }
-                //massage vectors
-                else if(curVal instanceof gf.Vector && newVal instanceof Array) {
-                    curVal.set(parseFloat(newVal[0], 10) || 0, parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0);
-                } else if(curVal instanceof gf.Vector && typeof newVal === 'string') {
-                    var a = newVal.split(gf.utils._arrayDelim, 2);
-                    curVal.set(parseFloat(a[0], 10) || 0, parseFloat(a[1], 10) || parseFloat(a[0], 10) || 0);
-                } else if(curVal instanceof gf.Vector && typeof newVal === 'number') {
-                    curVal.set(newVal, newVal);
-                }
-                //massage points
-                else if(curVal instanceof gf.Point && newVal instanceof Array) {
-                    curVal.x = parseFloat(newVal[0], 10) || 0;
-                    curVal.y = parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0;
-                } else if(curVal instanceof gf.Point && typeof newVal === 'string') {
-                    var a2 = newVal.split(gf.utils._arrayDelim, 2);
-                    curVal.x = parseFloat(a2[0], 10) || 0;
-                    curVal.y = parseFloat(a2[1], 10) || parseFloat(a2[0], 10) || 0;
-                } else if(curVal instanceof gf.Point && typeof newVal === 'number') {
-                    curVal.x = newVal;
-                    curVal.y = newVal;
-                }
-                //massage arrays
-                else if(curVal instanceof Array && typeof newVal === 'string') {
-                    obj[key] = newVal.split(gf.utils._arrayDelim);
-                    for(var i = 0, il = obj[key].length; i < il; ++i) {
-                        var val = obj[key][i];
-                        if(!isNaN(val)) obj[key][i] = parseFloat(val, 10);
-                    }
-                } else {
-                    obj[key] = newVal;
-                }
-            }
+    register: function(plugin, name) {
+        //ensure we don't overrite a name
+        if(gf[name]) {
+            throw 'Grapefruit: Unable to register plugin: "' + name + '" already exists in the gf namespace, please choose something else!';
         }
 
-        return obj;
-    },
-    getStyle: function(elm, prop) {
-        var style = window.getComputedStyle(elm),
-            val = style.getPropertyValue(prop).replace(/px|em|%|pt/, '');
-
-        if(!isNaN(val))
-            val = parseInt(val, 10);
-
-        return val;
-    },
-    //Some things stolen from jQuery, used for mouse input
-    getOffset: function(elem) {
-        var doc = elem && elem.ownerDocument,
-            docElem = doc.documentElement,
-            box;
-
-        try {
-            box = elem.getBoundingClientRect();
-        } catch(e) {}
-
-        // Make sure we're not dealing with a disconnected DOM node
-        if (!box || !(docElem !== elem && (docElem.contains ? docElem.contains(elem) : true))) {  //(!box || !jQuery.contains(docElem, elem)) {
-            return box ? {
-                top: box.top,
-                left: box.left
-            } : {
-                top: 0,
-                left: 0
-            };
+        if(plugin.gfVersion && !semver.satisfies(gf.version, plugin.gfVersion)) {
+            throw 'GrapeFruit: Plugin gfVersion mismatch, need grapefruit version ' + plugin.gfVersion + ', but using version ' + gf.version;
         }
 
-        var body = doc.body,
-            win = window,
-            clientTop = docElem.clientTop || body.clientTop || 0,
-            clientLeft = docElem.clientLeft || body.clientLeft || 0,
-            scrollTop = win.pageYOffset || docElem.scrollTop || body.scrollTop,
-            scrollLeft = win.pageXOffset || docElem.scrollLeft || body.scrollLeft,
-            top = box.top + scrollTop - clientTop,
-            left = box.left + scrollLeft - clientLeft;
-
-        return {
-            top: top,
-            left: left
-        };
-    },
-    ////////////////////////////////////////////////////////////////////////////////
-    // DOM Manipulation stuff will be removed with the GUI rewrite
-    getPosition: function(o) {
-        var l = o.offsetLeft,
-            t = o.offsetTop;
-
-        while(!!(o = o.offsetParent)) {
-            l += o.offsetLeft;
-            t += o.offsetTop;
-        }
-
-        return {
-            top: t,
-            left: l
-        };
+        //store the plugin in the namespace
+        gf[name] = plugin;
     }
-    /////////////////////////////////////////////////////////////////////////////
 };
 
-/**
- * The grapefruit math library, used to abstract commonly used math operations
- *
- * @class math
- */
- gf.math = {
-    DEG_TO_RAD: Math.PI / 180,
-    RAD_TO_DEG: 180 / Math.PI,
-    SEED: Math.random(),
-    /**
-     * Clamps a number between two values.
-     *
-     * @method clamp
-     * @param num {Number} The number to clamp
-     * @param min {Number} The minimum value the number is allowed to be
-     * @param max {Number} The maximum value the number is allowed to be
-     * @return {Number} The clamped value
-     */
-    clamp: function(n, min, max) {
-        return Math.max(min, Math.min(max, n));
-    },
-    /**
-     * Truncates the decimal from a number
-     *
-     * @method truncate
-     * @param num {Number} The number to truncate
-     * @return {Number} The truncated value
-     */
-    truncate: function(n) {
-        return (n > 0) ? Math.floor(n) : Math.ceil(n);
-    },
-    /**
-     * Snaps a number to a grid value.
-     * For example, if you have a grid with gaps the size of 10 horizontally, and
-     * a position of 11, it would snap to 10; a position of 18 would snap to 20
-     *
-     * @method snap
-     * @param num {Number} The number to snap
-     * @param gap {Number} The gap size of the grid (the tile size)
-     * @param offset {Number} The starting offset of a grid slice (aka tile)
-     * @return {Number} The snapped value
-     */
-    snap: function(n, gap, offset) {
-        if(gap === 0) return n;
-
-        n -= offset;
-        n = gap * Math.round(n / gap);
-
-        return offset + n;
-    },
-    /**
-     * Snaps a number to a grid value, using floor.
-     * For example, if you have a grid with gaps the size of 10 horizontally, and
-     * a position of 11, it would snap to 10; a position of 18 would also snap to 10
-     *
-     * @method snapFloor
-     * @param num {Number} The number to snap
-     * @param gap {Number} The gap size of the grid (the tile size)
-     * @param offset {Number} The starting offset of a grid slice (aka tile)
-     * @return {Number} The snapped value
-     */
-    snapFloor: function(n, gap, offset) {
-        if(gap === 0) return n;
-
-        n -= offset;
-        n = gap * Math.floor(n / gap);
-
-        return offset + n;
-    },
-    /**
-     * Snaps a number to a grid value, using ceiling.
-     * For example, if you have a grid with gaps the size of 10 horizontally, and
-     * a position of 11, it would snap to 20; a position of 18 would also snap to 20
-     *
-     * @method snapCeil
-     * @param num {Number} The number to snap
-     * @param gap {Number} The gap size of the grid (the tile size)
-     * @param offset {Number} The starting offset of a grid slice (aka tile)
-     * @return {Number} The snapped value
-     */
-    snapCeil: function(n, gap, offset) {
-        if(gap === 0) return n;
-
-        n -= offset;
-        n = gap * Math.ceil(n / gap);
-
-        return offset + n;
-    },
-    /**
-     * Convert radians to degrees
-     *
-     * @method radiansToDegrees
-     * @param angle {Number} The angle in radians to convert
-     * @return {Number} The angle in degrees
-     */
-    radiansToDegrees: function(angle) {
-        return angle * gf.math.RAD_TO_DEG;
-    },
-    /**
-     * Convert radians to degrees
-     *
-     * @method degreesToRadians
-     * @param angle {Number} The angle in degrees to convert
-     * @return {Number} The angle in radians
-     */
-    degreesToRadians: function(angle) {
-        return angle * gf.math.DEG_TO_RAD;
-    },
-    /**
-     * Calculates the angle between two points
-     *
-     * @method angleBetween
-     * @param pos1 {Vector|Point} The first position
-     * @param pos2 {Vector|Point} The second position
-     * @return {Number} The angle in radians
-     */
-    angleBetween: function(pos1, pos2) {
-        return Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x);
-    },
-    /**
-     * Returns a random boolean based on the provided chance. The chance represents the
-     * percentage chance of returning: true.
-     *
-     * @method randomBool
-     * @param chance {Number} The % chance of getting true (0 - 100), defaults to 50%
-     * @return {Boolean}
-     */
-    randomBool: function(chance) {
-        if(chance === undefined)
-            chance = 50;
-
-        //no chance of true
-        if(chance <= 0)
-            return false;
-
-        //must always be true
-        if(chance >= 100)
-            return true;
-
-        //if roll is larger than chance, return false
-        if(Math.random() * 100 >= chance)
-            return false;
-
-        //roll passed, return true
-        return true;
-    },
-    randomInt: function(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    },
-    /**
-     * Returns a random sign based on the provided chance. The chance represents the
-     * percentage chance of returning 1 (positive).
-     *
-     * @method randomSign
-     * @param chance {Number} The % chance of getting true (0 - 100), defaults to 50%
-     * @return {Number} either 1 or -1
-     */
-    randomSign: function(chance) {
-        return gf.math.randomBool(chance) ? 1 : -1;
-    },
-    /**
-     * Returns a random element of an array.
-     *
-     * @method randomElement
-     * @param array {Array} The array to choose from
-     * @param start {Number} The index of the first element to include, defaults to 0
-     * @param length {Number} The number of elements from the start to include, defaults to the length of the array (minus the start index)
-     * @return {Number} either 1 or -1
-     */
-    randomElement: function(array, start, len) {
-        //default for start
-        if(!start || start < 0)
-            start = start || 0;
-
-        //default for len
-        if(!len || len < 1 || len > array.length - start)
-            len = array.length - start;
-
-        //ensure we have an array, and there are elements to check
-        if(!array || len < 1)
-            return null;
-
-        return array[start + Math.floor(Math.random() * len)];
-    }
- };
-/**
- * High performance clock, from mrdoob's Three.js
- * https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js
- *
- * @class Clock
- * @constructor
- * @param autoStart {Boolean} Automatically start the counter or not
- * @example
- *      var clock = new gf.Clock(false);
- *      //... some code ...
- *      clock.start();
- *      //... some long code ...
- *      var delta = clock.getDelta();
- */
-gf.Clock = function(autoStart) {
-    this.autoStart = (autoStart !== undefined) ? autoStart : true;
-
-    this.startTime = 0;
-    this.oldTime = 0;
-    this.elapsedTime = 0;
-
-    this.running = false;
-};
-
-gf.inherits(gf.Clock, Object, {
-    /**
-     * Starts the timer
-     *
-     * @method start
-     * @example
-     *      clock.start();
-     */
-    start: function() {
-        this.startTime = window.performance !== undefined && window.performance.now !== undefined ?
-                            window.performance.now() : Date.now();
-
-        this.oldTime = this.startTime;
-        this.running = true;
-    },
-    /**
-     * Stops the timer
-     *
-     * @method stop
-     * @example
-     *      clock.stop();
-     */
-    stop: function() {
-        this.getElapsedTime();
-        this.running = false;
-    },
-    /**
-     * Gets the total time that the timer has been running
-     *
-     * @method getElapsedTime
-     * @return {Number} Total ellapsed time in ms
-     * @example
-     *      clock.getElapsedTime();
-     */
-    getElapsedTime: function() {
-        this.getDelta();
-
-        return this.elapsedTime;
-    },
-    /**
-     * Gets the difference in time since getDelta() was called last
-     *
-     * @method getDelta
-     * @return {Number} Ellapsed time since last call in seconds
-     * @example
-     *      clock.getDelta();
-     */
-    getDelta: function() {
-        var diff = 0;
-
-        if(this.autoStart && !this.running) {
-            this.start();
-        }
-
-        if(this.running) {
-            var newTime = window.performance !== undefined && window.performance.now !== undefined ?
-                                window.performance.now() : Date.now();
-
-            diff = 0.001 * (newTime - this.oldTime);
-            this.oldTime = newTime;
-
-            this.elapsedTime += diff;
-        }
-
-        return diff;
-    }
-});
-
-/**
- * A 2d Vector implementation stolen directly from mrdoob's THREE.js
- * thanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js
- *
- * @class Vector
- * @constructor
- * @param x {Number} The x component of the vector
- * @param y {Number} The y component of the vector
- */
-gf.Vector = function(x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
-};
-
-gf.inherits(gf.Vector, Object, {
-    /**
-     * Sets the value of the vector
-     *
-     * @method set
-     * @param x {Number} The x component of the vector
-     * @param y {Number} The y component of the vector
-     * @return {Vector} Returns itself
-     */
-    set: function(x, y) {
-        this.x = x;
-        this.y = y;
-
-        return this;
-    },
-    /**
-     * Sets the X value of the vector
-     *
-     * @method setX
-     * @param x {Number} The x component of the vector
-     * @return {Vector} Returns itself
-     */
-    setX: function(x) {
-        this.x = x;
-
-        return this;
-    },
-    /**
-     * Sets the Y value of the vector
-     *
-     * @method setY
-     * @param y {Number} The y component of the vector
-     * @return {Vector} Returns itself
-     */
-    setY: function(y) {
-        this.y = y;
-
-        return this;
-    },
-    /**
-     * Sets a component value of the vector
-     *
-     * @method setComponent
-     * @param index {Number} The index of the component to set (0 = x, 1 = y)
-     * @param value {Number} The value to set the component to
-     * @return {Vector} Returns itself
-     */
-    setComponent: function(index, value) {
-        switch(index) {
-            case 0: this.x = value; break;
-            case 1: this.y = value; break;
-            default: throw new Error('index is out of range: ' + index);
-        }
-
-        return this;
-    },
-    /**
-     * Gets a component value of the vector
-     *
-     * @method getComponent
-     * @param index {Number} The index of the component to set (0 = x, 1 = y)
-     * @return {Number} Returns the component value
-     */
-    getComponent: function(index) {
-        switch(index) {
-            case 0: return this.x;
-            case 1: return this.y;
-            default: throw new Error('index is out of range: ' + index);
-        }
-    },
-    /**
-     * Copies the passed vector's components to this vector
-     *
-     * @method copy
-     * @param vector {Vector} The vector to copy the values from
-     * @return {Vector} Returns itself
-     */
-    copy: function(v) {
-        this.x = v.x;
-        this.y = v.y;
-
-        return this;
-    },
-    /**
-     * Floors the vector components
-     *
-     * @method floor
-     * @return {Vector} Returns itself
-     */
-    floor: function () {
-        this.x = Math.floor(this.x);
-        this.y = Math.floor(this.y);
-
-        return this;
-    },
-    /**
-     * Ceils the vector components
-     *
-     * @method ceil
-     * @return {Vector} Returns itself
-     */
-    ceil: function () {
-        this.x = Math.ceil(this.x);
-        this.y = Math.ceil(this.y);
-
-        return this;
-    },
-    /**
-     * Adds a vector to this one
-     *
-     * @method add
-     * @param vector {Vector} The vector to add to this one
-     * @return {Vector} Returns itself
-     */
-    add: function(v) {
-        this.x += v.x;
-        this.y += v.y;
-
-        return this;
-    },
-    /**
-     * Adds two vectors to each other and stores the result in this vector
-     *
-     * @method addVectors
-     * @param vector1 {Vector}
-     * @param vector2 {Vector}
-     * @return {Vector} Returns itself
-     */
-    addVectors: function(a, b) {
-        this.x = a.x + b.x;
-        this.y = a.y + b.y;
-
-        return this;
-    },
-    /**
-     * Adds a scalar value to the x and y components of this vector
-     *
-     * @method addScalar
-     * @param scalar {Number} The scalar value to add
-     * @return {Vector} Returns itself
-     */
-    addScalar: function(s) {
-        this.x += s;
-        this.y += s;
-
-        return this;
-    },
-    /**
-     * Subtracts a vector from this one
-     *
-     * @method sub
-     * @param vector {Vector} The vector to subtract from this one
-     * @return {Vector} Returns itself
-     */
-    sub: function(v) {
-        this.x -= v.x;
-        this.y -= v.y;
-
-        return this;
-    },
-    /**
-     * Subtracts two vectors from each other and stores the result in this vector
-     *
-     * @method subVectors
-     * @param vector1 {Vector}
-     * @param vector2 {Vector}
-     * @return {Vector} Returns itself
-     */
-    subVectors: function(a, b) {
-        this.x = a.x - b.x;
-        this.y = a.y - b.y;
-
-        return this;
-    },
-    /**
-     * Multiplies the x and y components of this vector by a scalar value
-     *
-     * @method multiplyScalar
-     * @param scalar {Number} The value to multiply by
-     * @return {Vector} Returns itself
-     */
-    multiplyScalar: function(s) {
-        this.x *= s;
-        this.y *= s;
-
-        return this;
-    },
-    /**
-     * Divides the x and y components of this vector by a scalar value
-     *
-     * @method divideScalar
-     * @param scalar {Number} The value to divide by
-     * @return {Vector} Returns itself
-     */
-    divideScalar: function(s) {
-        if(s !== 0) {
-            this.x /= s;
-            this.y /= s;
-        } else {
-            this.set(0, 0);
-        }
-
-        return this;
-    },
-    /**
-     * Sets this vector components to the minimum value when compared to the passed vector's components
-     *
-     * @method min
-     * @param vector {Vector} The vector to compare to
-     * @return {Vector} Returns itself
-     */
-    min: function(v) {
-        if(this.x > v.x) {
-            this.x = v.x;
-        }
-
-        if(this.y > v.y) {
-            this.y = v.y;
-        }
-
-        return this;
-    },
-    /**
-     * Sets this vector components to the maximum value when compared to the passed vector's components
-     *
-     * @method max
-     * @param vector {Vector} The vector to compare to
-     * @return {Vector} Returns itself
-     */
-    max: function(v) {
-        if(this.x < v.x) {
-            this.x = v.x;
-        }
-
-        if(this.y < v.y) {
-            this.y = v.y;
-        }
-
-        return this;
-    },
-    /**
-     * Clamps the vectors components to be between min and max
-     *
-     * @method max
-     * @param min {Number} The minimum value a component can be
-     * @param max {Number} The maximum value a component can be
-     * @return {Vector} Returns itself
-     */
-    clamp: function(min, max) {
-        // This function assumes min < max, if this assumption
-        //isn't true it will not operate correctly
-        if(this.x < min.x) {
-            this.x = min.x;
-        } else if(this.x > max.x) {
-            this.x = max.x;
-        }
-
-        if(this.y < min.y) {
-            this.y = min.y;
-        } else if(this.y > max.y) {
-            this.y = max.y;
-        }
-
-        return this;
-    },
-    /**
-     * Negates this vector (multiplies by -1)
-     *
-     * @method negate
-     * @return {Vector} Returns itself
-     */
-    negate: function() {
-        return this.multiplyScalar(-1);
-    },
-    /**
-     * Performs the dot product between this vector and the passed one and returns the result
-     *
-     * @method dot
-     * @param vector {Vector}
-     * @return {Number} Returns the dot product
-     */
-    dot: function(v) {
-        return this.x * v.x + this.y * v.y;
-    },
-    /**
-     * Calculates the square length of the vector
-     *
-     * @method lengthSq
-     * @return {Number} Returns the square length of the vector
-     */
-    lengthSq: function() {
-        return this.x * this.x + this.y * this.y;
-    },
-    /**
-     * Calculates the length of the vector
-     *
-     * @method length
-     * @return {Number} Returns the length of the vector
-     */
-    length: function() {
-        return Math.sqrt(this.x * this.x + this.y * this.y);
-    },
-    /**
-     * Normalizes this vector (divides by its length)
-     *
-     * @method normalize
-     * @return {Vector} Returns the normalized vector
-     */
-    normalize: function() {
-        return this.divideScalar(this.length());
-    },
-    /**
-     * Calculates the distance to the passed vector
-     *
-     * @method distanceTo
-     * @param vector {Vector}
-     * @return {Number} The distance
-     */
-    distanceTo: function(v) {
-        return Math.sqrt(this.distanceToSquared(v));
-    },
-    /**
-     * Calculates the square distance to the passed vector
-     *
-     * @method distanceToSquared
-     * @param vector {Vector}
-     * @return {Number} The square distance
-     */
-    distanceToSquared: function(v) {
-        var dx = this.x - v.x, dy = this.y - v.y;
-        return dx * dx + dy * dy;
-    },
-    /**
-     * Sets the length of the vector
-     *
-     * @method setLength
-     * @param length {Number}
-     * @return {Vector} Returns itself
-     */
-    setLength: function(l) {
-        var oldLength = this.length();
-
-        if(oldLength !== 0 && l !== oldLength) {
-            this.multiplyScalar(l / oldLength);
-        }
-
-        return this;
-    },
-    /**
-     * Performs a linear interpolation between this vector and the passed vector
-     *
-     * @method lerp
-     * @param vector {Vector}
-     * @param alpha {Number}
-     * @return {Vector} Returns itself
-     */
-    lerp: function(v, alpha) {
-        this.x += (v.x - this.x) * alpha;
-        this.y += (v.y - this.y) * alpha;
-
-        return this;
-    },
-    /**
-     * Checks if this vector is equal to another
-     *
-     * @method equals
-     * @param vector {Vector} The vector to compare with
-     * @return {Vector} Returns itself
-     */
-    equals: function(v) {
-        return ((v.x === this.x) && (v.y === this.y));
-    },
-    /**
-     * Returns an array with the components of this vector as the elements
-     *
-     * @method toArray
-     * @return {Vector} Returns an array of [x,y] form
-     */
-    toArray: function () {
-        return [this.x, this.y];
-    },
-    /**
-     * Creates a new instance of Vector, with the same components as this vector
-     *
-     * @method clone
-     * @return {Vector} Returns a new Vector with the same values
-     */
-    clone: function () {
-        return new gf.Vector(this.x, this.y);
-    }
-});
+gf.__AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
+gf.__audioctx = gf.support.webAudio ? new gf.__AudioCtx() : null;
 
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
@@ -17969,9 +15545,6 @@ gf.inherits(gf.Vector, Object, {
  * @constructor
  */
 gf.AudioManager = function() {
-    //normalize Audio Context
-    var GfAudioContext = window.AudioContext || window.webkitAudioContext;
-
     /**
      * Whether the player is muted or not
      *
@@ -17999,7 +15572,7 @@ gf.AudioManager = function() {
      * @type AudioContext
      * @readOnly
      */
-    this.ctx = gf.support.webAudio ? new GfAudioContext() : null;
+    this.ctx = gf.__audioctx;
 
     /**
      * If we have some way of playing audio
@@ -18041,8 +15614,10 @@ gf.AudioManager = function() {
     this.sounds = {};
 
     //define volume getter/setter
-    this.__defineGetter__('volume', this.getVolume.bind(this));
-    this.__defineSetter__('volume', this.setVolume.bind(this));
+    Object.defineProperty(this, 'volume', {
+        get: this.getVolume.bind(this),
+        set: this.setVolume.bind(this)
+    });
 };
 
 gf.inherits(gf.AudioManager, Object, {
@@ -18159,7 +15734,7 @@ gf.inherits(gf.AudioManager, Object, {
  */
 gf.AudioPlayer = function(manager, settings) {
     //mixin the Event Target methods
-    gf.EventTarget.call(this);
+    gf.Emitter.call(this);
 
     this.autoplay = false;
     this.buffer = false;
@@ -18950,603 +16525,1889 @@ if(gf.support.webAudio) {
         }
     };
 }
-gf.Loader = function(al, name, url) {
-    gf.EventTarget.call(this);
-
-    this.type = 'hey';
-
-    this.parent = al;
-    this.name = name;
-    this.url = url;
-};
-
-gf.inherits(gf.Loader, Object, {
-    load: function() {
-        var self = this;
-
-        if(gf.assetCache[this.name]) {
-            return setTimeout(function() {
-                self.done(gf.assetCache[self.name]);
-            }, 0);
-        }
-        else if(gf.assetCache[this.url]) {
-            return setTimeout(function() {
-                self.done(gf.assetCache[self.url]);
-            }, 0);
-        }
-    },
-    done: function(data) {
-        gf.assetCache[this.name] = data;
-
-        //be async for sure
-        var self = this;
-        setTimeout(function() {
-            self.emit({
-                type: 'load',
-                name: self.name,
-                assetType: self.type,
-                url: self.url,
-                data: data
-            });
-        }, 0);
-    },
-    error: function(msg) {
-        //be async for sure
-        var self = this;
-        setTimeout(function() {
-            self.emit({
-                type: 'error',
-                name: self.name,
-                assetType: self.type,
-                url: self.url,
-                message: msg
-            });
-        }, 0);
-    }
-});
 /**
- * The AssetLoader loads and parses different game assets, such as sounds, textures,
- * TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
- * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
+ * The base display object, that anything being put on the screen inherits from
  *
- * @class AssetLoader
+ * @class DisplayObjectContainer
+ * @extends PIXI.DisplayObjectContainer
  * @constructor
- * @param assets {Array} Array of assets to load when `.load()` is called
- * @example
- *      var loader = new AssetLoader(['/my/texture.png']);
- *      loader.load();
- *      //OR
- *      var loader = new AssetLoader();
- *      loader.load(['/my/texture.png']);
  */
-gf.AssetLoader = function(game) {
-    //mixin the Event Target methods
-    gf.EventTarget.call(this);
+gf.DisplayObjectContainer = function(settings) {
+    PIXI.DisplayObjectContainer.call(this);
 
-    this.game = game;
+    //mixin user's settings
+    gf.utils.setValues(this, settings);
+
+    //Add these properties in so that all objects can see them in the docs
+    //these properties are inherited from PIXI.DisplayObjectContainer
+    //most of these blocks are copied straight from PIXI source
 
     /**
-     * The array of assets to load
-     *
-     * @property assets
-     * @type Array
+     * [read-only] The of children of this object.
+     * @property children {Array}
      */
-    this.assets = [];
 
     /**
-     * The count of remaining assets to load
-     *
-     * @property remaining
+     * The coordinate of the object relative to the local coordinates of the parent.
+     * @property position
+     * @type Point
+     */
+
+    /**
+     * The scale factor of the object.
+     * @property scale
+     * @type Point
+     */
+
+    /**
+     * The rotation of the object in radians.
+     * @property rotation
      * @type Number
-     * @readOnly
      */
-    this.remaining = 0;
 
     /**
-     * A mapping of extensions to types
-     *
-     * @property loaders
-     * @type Object
-     * @readOnly
-     * @private
+     * The opacity of the object.
+     * @property alpha
+     * @type Number
      */
-    this.loaders = {
-        'texture': gf.TextureLoader,
-        'jpeg': gf.TextureLoader,
-        'jpg': gf.TextureLoader,
-        'png': gf.TextureLoader,
-        'gif': gf.TextureLoader,
 
-        'audio': gf.AudioLoader,
-        'music': gf.AudioLoader,
-        'mp3': gf.AudioLoader,
-        'ogg': gf.AudioLoader,
-        'wma': gf.AudioLoader,
-        'wav': gf.AudioLoader,
+    /**
+     * The visibility of the object.
+     * @property visible
+     * @type Boolean
+     */
 
-        'json': gf.JsonLoader
-    };
+    /**
+     * [read-only] The display object that contains this display object.
+     * @property parent
+     * @type DisplayObject
+     */
+
+    /**
+     * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
+     * @property stage
+     * @type Stage
+     */
+
+    /**
+     * This is the defined area that will pick up mouse / touch events. It is null by default.
+     * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
+     * @property hitArea
+     * @type Rectangle
+     */
+
+    /*
+     * MOUSE Callbacks
+     */
+
+    /**
+     * A callback that is used when the users clicks on the displayObject with their mouse
+     * @method click
+     * @param interactionData {InteractionData}
+     */
+
+    /**
+     * A callback that is used when the user clicks the mouse down over the sprite
+     * @method mousedown
+     * @param interactionData {InteractionData}
+     */
+
+    /**
+     * A callback that is used when the user releases the mouse that was over the displayObject
+     * for this callback to be fired the mouse must have been pressed down over the displayObject
+     * @method mouseup
+     * @param interactionData {InteractionData}
+     */
+
+    /**
+     * A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject
+     * for this callback to be fired, The touch must have started over the displayObject
+     * @method mouseupoutside
+     * @param interactionData {InteractionData}
+     */
+
+    /**
+     * A callback that is used when the users mouse rolls over the displayObject
+     * @method mouseover
+     * @param interactionData {InteractionData}
+     */
+
+    /**
+     * A callback that is used when the users mouse leaves the displayObject
+     * @method mouseout
+     * @param interactionData {InteractionData}
+     */
+
+    /*
+     * TOUCH Callbacks
+     */
+
+    /**
+     * A callback that is used when the users taps on the sprite with their finger
+     * basically a touch version of click
+     * @method tap
+     * @param interactionData {InteractionData}
+     */
+
+    /**
+     * A callback that is used when the user touch's over the displayObject
+     * @method touchstart
+     * @param interactionData {InteractionData}
+     */
+
+    /**
+     * A callback that is used when the user releases a touch over the displayObject
+     * @method touchend
+     * @param interactionData {InteractionData}
+     */
+
+    /**
+     * A callback that is used when the user releases the touch that was over the displayObject
+     * for this callback to be fired, The touch must have started over the sprite
+     * @method touchendoutside
+     * @param interactionData {InteractionData}
+     */
+
+    /**
+     * Inherited Methods
+     */
+
+    /**
+     * Indicates if the sprite will have touch and mouse interactivity. It is false by default
+     * @method setInteractive
+     * @param interactive {Boolean}
+     */
+
+    /**
+     * Adds a child to the object.
+     * @method addChild
+     * @param child {DisplayObject}
+     */
+
+    /**
+     * Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown
+     * @method addChildAt
+     * @param child {DisplayObject}
+     * @param index {Number}
+     */
+
+    /**
+     * Removes a child from the object.
+     * @method removeChild
+     * @param child {DisplayObject}
+     */
 };
+
+gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
+    resize: function() {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.resize)
+                o.resize.apply(o, arguments);
+        }
+    },
+    /**
+     * Convenience method for setting the position of the Object.
+     *
+     * @method setPosition
+     * @param x {Number|Array<Number>|Vector|Point} X coord to put the object at.
+     *       If an Array, Vector, or Point is passed then the y parameter is ignored
+     * @param y {Number} Y coord to put the object at
+     * @return {DisplayObjectContainer} Returns itself for chainability
+     * @example
+     *      obj.setPosition(0) //will set to (0, 0)
+     *          .setPosition(1, 1)
+     *          .setPosition([5, 5])
+     *          .setPosition(new gf.Point(10, 10))
+     *          .setPosition(new gf.Vector(20, 20));
+     */
+    setPosition: function(x, y) {
+        //passed in a vector or point object
+        if(x instanceof gf.Vector || x instanceof gf.Point) {
+            this.position.x = x.x;
+            this.position.y = x.y;
+        }
+        //passed in an array of form [x, y]
+        else if(x instanceof Array) {
+            this.position.x = x[0];
+            this.position.y = x[1];
+        }
+        //passed in a single number, that will apply to both
+        else if(typeof x === 'number' && y === undefined) {
+            this.position.x = x;
+            this.position.y = x;
+        }
+        //passed in something else, lets try to massage it into numbers
+        else {
+            this.position.x = parseFloat(x, 10) || 0;
+            this.position.y = parseFloat(y, 10) || 0;
+        }
+
+        return this;
+    }
+});
 /**
- * Fired when an item has loaded
+ * The base Sprite class. This class is the base for all images on the screen
  *
- * @event onProgress
+ * @class Sprite
+ * @extends PIXI.Sprite
+ * @constructor
+ * @param texture {Texture} The texture to set the sprite to
+ * @param pos {Array|Vector|Point|Number} The starting position of the sprite
+ * @param settings {Object} Settings to override the defauls
+ * @example
+ *      var spr = new gf.Sprite(texture, [10, 1], { name: 'MySprite' });
  */
+gf.Sprite = function(tx) {
+    PIXI.Sprite.call(this, tx);
+    gf.Emitter.call(this);
 
-/**
- * Fired when all the assets have loaded
- *
- * @event onComplete 
- */
-
-gf.inherits(gf.AssetLoader, Object, {
     /**
-     * Adds a resource to the assets array.
+     * The type of the sprite
      *
-     * @method add
-     * @param name {String} The name of the resource (to use as the key in the cache)
-     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     * @property type
+     * @type String
+     * @default 'neutral'
      */
-    add: function(name, url) {
-        this.assets.push({
-            name: name,
-            src: url
-        });
+    this.type = gf.Sprite.TYPE.NEUTRAL;
+
+    /**
+     * Whether or not the sprite is "alive", advisory only
+     *
+     * @property alive
+     * @type Boolean
+     * @default true
+     */
+    this.alive = true;
+
+    /**
+     * The mass of this sprite (if using physics)
+     *
+     * @property mass
+     * @type Number
+     * @default 0
+     */
+    this.mass = 0;
+
+    /**
+     * The physics system that this sprite is a part of. This is advisory only
+     * please use enablePhysics() or disablePhysics() and do not set this value
+     * directly.
+     *
+     * @property physics
+     * @type PhysicsSystem
+     * @default null
+     * @readOnly
+     */
+    this.physics = null;
+};
+
+gf.inherits(gf.Sprite, PIXI.Sprite, {
+    enablePhysics: function(sys) {
+        if(sys && this.physics !== sys) {
+            if(this.physics)
+                this.physics.remove(this);
+
+            this.physics = sys;
+        }
+
+        this.physics.add(this);
     },
-    /**
-     * Starts the loading festivities. If called without any arguments it will load
-     * the assets passed in at the ctor. If an array of assets are passed it will
-     * load those instead.
-     *
-     * @method load
-     * @param items {Array} Array of resources to load instead of the object's resources
-     */
-    load: function(items) {
-        var assets = items || this.assets;
-
-        for(var i = 0, il = assets.length; i < il; ++i) {
-            var name = typeof assets[i] === 'string' ? assets[i] : assets[i].name,
-                url = typeof assets[i] === 'string' ? assets[i] : (assets[i].src || assets[i].url || assets[i].uri),
-                ext = assets[i].type || (url instanceof Array ? 'audio' : null) || url.split('.').pop().toLowerCase(), //assume arrays of urls are for audio
-                Loader = this.loaders[ext];
-
-            if(!Loader)
-                throw 'Unknown type "' + ext + '", unable to preload!';
-
-            this.remaining++;
-            var loader = new Loader(this, name, url);
-
-            loader.on('load', this.onAssetLoaded.bind(this));
-            loader.on('error', this.onAssetError.bind(this));
-            loader.load();
+    disablePhysics: function() {
+        if(this.physics) {
+            this.physics.remove(this);
         }
     },
-    /**
-     * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
-     *
-     * @method onAssetLoaded
-     * @private
-     * @param err {String} An option error if there was an issue loading that resource
-     * @param type {String} The type of asset loaded (texture, audio, world, or spritesheet)
-     * @param asset {Texture|Audio|Object} The actual asset that was loaded
-     */
-    onAssetLoaded: function(e) {
-        this.remaining--;
-
-        this.emit({
-            type: 'progress',
-            assetType: e.assetType,
-            url: e.url,
-            data: e.data
-        });
-
-        if(this.remaining === 0) {
-            this.emit({ type: 'complete' });
+    setMass: function(mass) {
+        if(this.physics) {
+            this.physics.setMass(this, mass);
         }
     },
-    onAssetError: function(e) {
-        this.remaining--;
-
-        this.emit({
-            type: 'error',
-            assetType: e.assetType,
-            message: e.message
-        });
-
-        if(this.remaining === 0) {
-            this.emit({ type: 'complete' });
+    setVelocity: function(vel) {
+        if(this.physics) {
+            this.physics.setVelocity(this, gf.utils.ensureVector(vel));
         }
+    },
+    setRotation: function(rads, skipPhysics) {
+        this.rotation = rads;
+
+        if(!skipPhysics && this.physics) {
+            this.physics.setRotation(this, rads);
+        }
+    },
+    setPosition: function(x, y, skipPhysics) {
+        this.position.x = x;
+        this.position.y = y;
+
+        if(!skipPhysics && this.physics) {
+            this.physics.setPosition(this, this.position);
+        }
+    },
+    destroy: function() {
+        if(this.parent)
+            this.parent.removeChild(this);
+
+        if(this.physics)
+            this.physics.remove(this);
+
+    },
+    /**
+     * On Collision Event
+     *      called when this sprite collides into another, or is being collided into by another.
+     *      By default if something collides with a collectable sprite we remove the collectable
+     *      and if we collide with a solid tile we kill our velocity
+     *
+     * @method onCollision
+     * @param obj {Sprite} Colliding sprite
+     */
+    onCollision: function(obj) {
+        if(obj.type === gf.Sprite.TYPE.COLLECTABLE)
+            obj.destroy();
+
+        this.emit('collision', obj);
     }
 });
 
 /**
- * Loads an audio clip
+ * Sprite types
  *
- * @class AudioLoader
- * @constructor
+ * @property TYPE
+ * @type Object
  */
-gf.AudioLoader = function(al, name, urls) {
-    gf.Loader.call(this, al, name, urls);
+gf.Sprite.TYPE = {
+    PLAYER: 'player',
+    ENEMY: 'enemy',
+    FRIENDLY: 'friendly',
+    NEUTRAL: 'neutral',
+    COLLECTABLE: 'collectable',
+    TILE: 'tile'
+};
+/**
+ * The base AnimatedSprite class
+ * @class AnimatedSprite
+ * @extends Sprite
+ * @constructor
+ * @param animations {Object} An object of the form <code>{ animationName: [frame1, frame2] }</code> or you can also specify overrides on a per-animation basis:
+ *      <code>{ animationName: { frames: [frame1, frame2], speed: 2 } }. Each frame is a Texture object
+ * @param speed {Number} The speed of the animations (can be overriden on a specific animations)
+ * @param start {String} The animation to start with, defaults to the first found key otherwise
+ */
+gf.AnimatedSprite = function(anims, speed, start) {
+    //massage animations into proper format
+    for(var a in anims) {
+        if(start === undefined)
+            start = a;
 
-    this.type = 'audio';
-    this.urls = typeof urls === 'string' ? [urls] : urls;
+        var anim = anims[a];
+
+        if(anim instanceof Array)
+            anims[a] = { frames: anim };
+    }
+
+    gf.Sprite.call(this, anims[start].frames[0]);
+
+    this.animations = anims;
+    this.speed = speed || 1;
+    this.currentAnimation = start;
+    this.currentFrame = 0;
+    this.playing = false;
+    this.loop = false;
 };
 
-gf.inherits(gf.AudioLoader, gf.Loader, {
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
-
-        var player = this.parent.game.audio.create(name, { urls: this.urls });
-
-        if(!player) {
-            this.error('Cannot find a url for an audio type supported by this browser.');
+gf.inherits(gf.AnimatedSprite, gf.Sprite, {
+    addAnimation: function(name, frames, speed, loop) {
+        if(typeof name === 'object') {
+            this.animations[name.name] = name;
         } else {
-            var self = this;
-            player.on('load', function() {
-                self.done(player);
-            });
-
-            player.on('error', function(e) {
-                self.error(e.message);
-            });
-        }
-    }
-});
-/**
- * Loads json data
- *
- * @class JsonLoader
- * @constructor
- */
-gf.JsonLoader = function(al, name, url) {
-    gf.Loader.call(this, al, name, url);
-
-    this.type = 'json';
-};
-
-gf.inherits(gf.JsonLoader, gf.Loader, {
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
-
-        var self = this,
-            baseUrl = this.url.replace(/[^\/]*$/, '');
-
-        gf.utils.ajax({
-            method: 'GET',
-            url: this.url,
-            dataType: 'json',
-            load: function(data) {
-                var loader;
-
-                //check some properties to see if this is a TiledMap Object
-                if(data.orientation && data.layers && data.tilesets && data.version) {
-                    loader = new gf.WorldLoader(self.parent, self.name, baseUrl, data);
-                }
-                //this is a sprite sheet (published from TexturePacker)
-                else if(data.frames && data.meta) {
-                    loader = new gf.SpriteSheetLoader(self.parent, self.name, baseUrl, data);
-                }
-
-                if(loader) {
-                    loader.on('load', function(e) {
-                        self.done(e.data);
-                    });
-                    loader.on('error', function(e) {
-                        self.error(e.message);
-                    });
-
-                    loader.load();
-                }
-                //just some json data
-                else {
-                    self.done(data);
-                }
-            },
-            error: function(err) {
-                self.error(err.message || err);
-            }
-        });
-    }
-});
-gf.SpriteSheetLoader = function(al, name, baseUrl, data) {
-    gf.Loader.call(this, null, name, baseUrl);
-
-    this.type = 'spritesheet';
-    this.data = data;
-};
-
-gf.inherits(gf.SpriteSheetLoader, gf.Loader, {
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
-
-        var self = this,
-            data = this.data,
-            txLoader = new gf.TextureLoader(this.parent, this.name, this.url + data.meta.image);
-
-        txLoader.on('load', function(e) {
-            var texture =  e.data.baseTexture,
-                frames = self.data.frames,
-                assets = {};
-
-            for(var f in frames) {
-                var rect = frames[f].frame;
-
-                if(rect) {
-                    assets[f] = PIXI.TextureCache[f] = new gf.Texture(texture, {
-                        x: rect.x,
-                        y: rect.y,
-                        width: rect.w,
-                        height: rect.h
-                    });
-
-                    if(frames[f].trimmed) {
-                        PIXI.TextureCache[f].realSize = frames[f].spriteSourceSize;
-                        PIXI.TextureCache[f].trim.x = 0;
-                    }
-                }
-            }
-
-            self.done(assets);
-        });
-
-        txLoader.on('error', function(e) {
-            self.error(e.message);
-        });
-
-        txLoader.load();
-    }
-});
-/**
- * Loads a texture image
- *
- * @class TextureLoader
- * @constructor
- */
- gf.TextureLoader = function(al, name, url) {
-    gf.Loader.call(this, al, name, url);
-
-    this.type = 'texture';
-};
-
-gf.inherits(gf.TextureLoader, gf.Loader, {
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
-
-        var self = this,
-            texture = gf.Texture.fromImage(this.url);
-
-        if(!texture.baseTexture.hasLoaded) {
-            texture.baseTexture.on('loaded', function() {
-                self.done(texture);
-            });
-            texture.baseTexture.source.onerror = function() {
-                self.error('Unable to load texture');
+            this.animations[name] = {
+                name: name,
+                frames: frames,
+                speed: speed,
+                loop: loop
             };
-        } else {
-            this.done(texture);
         }
-    }
-});
-gf.WorldLoader = function(al, name, baseUrl, data) {
-    gf.Loader.call(this, al, name, baseUrl);
+    },
+    gotoAndPlay: function(anim, frame) {
+        if(typeof anim === 'number') {
+            this.currenFrame = anim;
+        } else {
+            this.currenFrame = frame || 0;
+            this.currentAnimation = anim;
+        }
 
-    this.type = 'world';
-    this.data = data;
-    this.numTextures = 0;
-    this.errors = [];
-};
+        this.playing = true;
+    },
+    gotoAndStop: function(anim, frame) {
+        if(typeof anim === 'number') {
+            this.currentFrame = anim;
+        } else {
+            this.currentFrame = frame || 0;
+            this.currentAnimation = anim;
+        }
 
-gf.inherits(gf.WorldLoader, gf.Loader, {
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
+        this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
+        this.playing = false;
+    },
+    play: function() {
+        this.playing = true;
+    },
+    stop: function() {
+        this.playing = false;
+    },
+    updateTransform: function() {
+        gf.Sprite.prototype.updateTransform.call(this);
 
-        //loop through each layer and load the sprites (objectgroup types)
-        for(var i = 0, il = this.data.layers.length; i < il; ++i) {
-            var layer = this.data.layers[i];
-            if(layer.type !== 'objectgroup') continue;
+        if(!this.playing) return;
 
-            //loop through each object, and load the textures
-            for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
-                var obj = layer.objects[o],
-                    txLoader;
+        var anim = this.animations[this.currentAnimation],
+            round;
 
-                if(!obj.properties.spritesheet) continue;
-                this.numTextures++;
+        this.currentFrame += anim.speed || this.speed;
+        round = gf.math.round(this.currentFrame);
 
-                txLoader = new gf.TextureLoader(this.parent, layer.name + '_' + obj.name + '_texture', obj.properties.spritesheet);
-
-                txLoader.on('load', this.onTextLoad.bind(this));
-                txLoader.on('error', this.onTextError.bind(this));
-                txLoader.load();
+        if(round < anim.frames.length) {
+            this.setTexture(anim.frames[round]);
+        }
+        else {
+            if(anim.loop || this.loop) {
+                this.gotoAndPlay(0);
+            } else {
+                this.stop();
+                this.emit('complete', this.currentAnimation);
             }
         }
-
-        //loop through each tileset and load the texture
-        for(var s = 0, sl = this.data.tilesets.length; s < sl; ++s) {
-            var set = this.data.tilesets[s],
-                txLoader2;
-
-            if(!set.image) continue;
-            this.numTextures++;
-
-            txLoader2 = new gf.TextureLoader(this.parent, set.name + '_texture', this.url + set.image);
-
-            txLoader2.on('load', this.onTextLoad.bind(this));
-            txLoader2.on('error', this.onTextError.bind(this));
-            txLoader2.load();
-        }
-    },
-    onTextLoad: function() {
-        this.numTextures--;
-
-        if(this.numTextures === 0) {
-            this.done();
-        }
-    },
-    onTextError: function(e) {
-        this.numTextures--;
-        this.errors.push(e);
-
-        if(this.numTextures === 0) {
-            this.done();
-        }
-    },
-    done: function() {
-        if(this.errors.length)
-            gf.Loader.prototype.error.call(this, this.errors);
-        else
-            gf.Loader.prototype.done.call(this, this.data);
-    }
-});
-gf.ObjectPool = function(type, parent) {
-    this.type = type;
-    this.pool = [];
-    this.parent = parent;
-};
-
-gf.inherits(gf.ObjectPool, Object, {
-    create: function() {
-        var o = this.pool.pop();
-
-        if(!o) {
-            o = this._construct(this.type, arguments);
-            if(this.parent)
-                this.parent.addChild(o);
-        }
-
-        return o;
-    },
-    free: function(o) {
-        this.pool.push(o);
-    },
-    //have to do this hack around to be able to use
-    //apply and new together
-    _construct: function(ctor, args) {
-        function F() {
-            return ctor.apply(this, args);
-        }
-        F.prototype = ctor.prototype;
-        return new F();
     }
 });
 /**
- * Holds a pool of different Entities that can be created, makes it very
- * easy to quickly create different registered entities
+ * A basic Camera object that provides some effects. It also will contain the HUD and GUI
+ * to ensure they are using "screen-coords".
  *
- * @class entityPool
+ * TODO: Currently fade/flash don't show the colors. How should I actually show them, a PIXI.Sprite?
+ *
+ * @class Camera
+ * @extends DisplayObject
+ * @constructor
+ * @param game {Game} The game this camera belongs to
+ * @param settings {Object} Any settings you want to override the default properties with
  */
-gf.EntityPool = function(game) {
-    this.game = game;
-    this.types = {};
+gf.Camera = function(game, settings) {
+    /**
+     * The bounds of that the camera can move to
+     *
+     * @property bounds
+     * @type PIXI.Rectangle
+     * @readOnly
+     * @private
+     */
+    this._bounds = new PIXI.Rectangle(0, 0, 0, 0);
 
-    this.add('_default', gf.Entity);
+    /**
+     * When following a sprite this is the space within the camera that it can move around
+     * before the camera moves to track it.
+     *
+     * @property _deadzone
+     * @type PIXI.Rectangle
+     * @readOnly
+     * @private
+     */
+    this._deadzone = null;
+
+    /**
+     * The target that the camera will follow
+     *
+     * @property _target
+     * @type Sprite
+     * @readOnly
+     * @private
+     */
+    this._target = null;
+
+    /**
+     * The size of the camera
+     *
+     * @property size
+     * @type Vector
+     * @readOnly
+     */
+    this.size = new gf.Vector(0, 0);
+
+    /**
+     * Half of the size of the camera
+     *
+     * @property hSize
+     * @type Vector
+     * @readOnly
+     */
+    this.hSize = new gf.Vector(0, 0);
+
+    /**
+     * The _fx namespace has all the instance variables for all the fx
+     *
+     * @property _fx
+     * @type Object
+     * @private
+     * @readOnly
+     */
+    this._fx = {
+        flash: {
+            alpha: 0,
+            complete: null
+        },
+        fade: {
+            alpha: 0,
+            complete: null
+        },
+        shake: {
+            intensity: 0,
+            duration: 0,
+            direction: gf.Camera.SHAKE.BOTH,
+            offset: new gf.Point(0, 0),
+            complete: null
+        }
+    };
+
+    gf.DisplayObjectContainer.call(this, settings);
 };
 
-gf.inherits(gf.EntityPool, Object, {
+gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
     /**
-     * Adds an Entity Type to the pool
+     * Makes the camera flash with a certain color
      *
-     * @method add
-     * @param name {String} The user-defined name of the Entity Type to add
-     * @param obj {Object} The Entity or decendant type to add to the pool
-     * @return {Object} Returns the passed object
-     * @example
-     *      //create a new class to be instantiated
-     *      var Bug = function(game, pos, settings) {
-     *          gf.Entity.call(this, game, pos, settings);
-     *          this.color = 'red';
-     *      };
-     *
-     *      //inherit from Entity
-     *      gf.inherits(Bug, gf.Entity, {
-     *          beBug: function() {
-     *              console.log("I'm a bug");
-     *          }
-     *      });
-     *
-     *      //add to our game's entity pool
-     *      game.entitypool.add('bug', Bug);
-     *
-     *      //then later in your game code, create one
-     *      var mybug = gf.entityPool.create('bug', {
-     *          pos: [10, 10] //pos, position, or x and y properties are sent as the "pos" param to the ctor
-     *      });
+     * @method flash
+     * @param color {Number} The color to flash the screen with
+     * @param duration {Number} The time in milliseconds to fade away
+     * @param callback {Function} The callback to call when the flash has completed
+     * @return {Camera} Returns iteself for chainability
      */
-    add: function(name, obj) {
-        return this.types[name] = obj;
-    },
-    /**
-     * Checks if the Entity Type exists in the pool
-     *
-     * @method has
-     * @param name {String} The user-defined name of the Entity Type to check if is in the pool
-     * @return {Boolean}
-     */
-    has: function(name) {
-        return !!this.types[name];
-    },
-    /**
-     * Creates a new entity from the pool
-     *
-     * @method create
-     * @param name {String} The user-defined name of the Entity to check if is in the pool
-     * @param props {Object} The properties that would normally be passed as the "settings" of the Entity
-     * @return {Entity} Returns a new instance of the object from the pool
-     * @example
-     *      //create a new ckass to be instantiated
-     *      var Bug = function(game, pos, settings) {
-     *          gf.Entity.call(this, game, pos, settings);
-     *          this.color = 'red';
-     *      };
-     *
-     *      //inherit from Entity
-     *      gf.inherits(Bug, gf.Entity, {
-     *          beBug: function() {
-     *              console.log("I'm a bug");
-     *          }
-     *      });
-     *
-     *      //add to our game's entity pool
-     *      game.entitypool.add('bug', Bug);
-     *
-     *      //then later in your game code
-     *      var mybug = gf.entityPool.create('bug', {
-     *          pos: [10, 10] //pos, position, or x and y properties are sent as the "pos" param to the ctor
-     *      });
-     */
-    create: function(name, props) {
-        if(!name || !this.types[name])
-            name = '_default';
+    flash: function(color, duration, cb) {
+        if(this._fx.flash.alpha > 0) return this;
 
-        //create a new object
-        var pos = props.pos || props.position || [props.x, props.y],
-            o = new this.types[name](this.game, pos, props);
+        if(typeof duration === 'function') {
+            cb = duration;
+            duration = 1;
+        }
 
-        return o;
+        if(typeof color === 'function') {
+            cb = color;
+            duration = 1;
+            color = 0xFFFFFF;
+        }
+
+        duration = duration || 1;
+        if(duration < 0) duration = 1;
+
+        if(color === undefined)
+            color = 0xFFFFFF;
+
+        /*var red = color >> 16 & 0xFF,
+            green = color >> 8 & 0xFF,
+            blue = color & 0xFF;*/
+
+        this._fx.flash.color = color;
+        this._fx.flash.duration = duration;
+        this._fx.flash.alpha = 1;
+        this._fx.flash.complete = cb;
+
+        return this;
     },
-    //currently doesn't do any recycling unfortunately
-    free: function() {
-        return;
+    /**
+     * Stops a running flash, instantly hiding it
+     *
+     * @method stopFlash
+     * @return {Camera} Returns iteself for chainability
+     */
+    stopFlash: function() {
+        this._fx.flash.alpha = 0;
+
+        return this;
+    },
+    /**
+     * Makes the camera fade into a color
+     *
+     * @method fade
+     * @param color {Number} The color to fade into
+     * @param duration {Number} The time in milliseconds to take to fade in
+     * @param callback {Function} The callback to call when the fade has completed
+     * @return {Camera} Returns iteself for chainability
+     */
+    fade: function(color, duration, cb) {
+        if(this._fx.fade.alpha > 0) return this;
+
+        if(typeof duration === 'function') {
+            cb = duration;
+            duration = 1;
+        }
+
+        if(typeof color === 'function') {
+            cb = color;
+            duration = 1;
+            color = 0xFFFFFF;
+        }
+
+        duration = duration || 1;
+        if(duration < 0) duration = 1;
+
+        if(color === undefined)
+            color = 0xFFFFFF;
+
+        /*var red = color >> 16 & 0xFF,
+            green = color >> 8 & 0xFF,
+            blue = color & 0xFF;*/
+
+        this._fx.fade.color = color;
+        this._fx.fade.duration = duration;
+        this._fx.fade.alpha = 0.01;
+        this._fx.fade.complete = cb;
+
+        return this;
+    },
+    /**
+     * Stops a running fade, instantly hiding it
+     *
+     * @method stopFade
+     * @return {Camera} Returns iteself for chainability
+     */
+    stopFade: function() {
+        this._fx.fade.alpha = 0;
+
+        return this;
+    },
+    /**
+     * Shakes the camera around a bit, to show it who is boss.
+     *
+     * @method shake
+     * @param intensity {Number} How hard to shake around
+     * @param duration {Number} The time in milliseconds to shake for
+     * @param direction {Camera.SHAKE} The axes to shake the camera in default is gf.Camera.SHAKE.BOTH
+     * @param callback {Function} The callback to call when the shaking has stopped
+     * @return {Camera} Returns iteself for chainability
+     */
+    shake: function(intensity, duration, direction, cb) {
+        //already shaking (call stop first)
+        if(this._fx.shake.offset.x !== 0 || this._fx.shake.offset.y !== 0)
+            return this;
+
+        if(typeof direction === 'function') {
+            cb = direction;
+            direction = gf.Camera.SHAKE.BOTH;
+        }
+
+        if(typeof duration === 'function') {
+            cb = duration;
+            direction = gf.Camera.SHAKE.BOTH;
+            duration = null;
+        }
+
+        if(typeof intensity === 'function') {
+            cb = intensity;
+            direction = gf.Camera.SHAKE.BOTH;
+            duration = null;
+            intensity = null;
+        }
+
+        intensity = intensity || 0.01;
+        duration = duration || 1000;
+        direction = direction || gf.Camera.SHAKE.BOTH;
+
+        //setup a shake effect
+        this._fx.shake.intensity = intensity;
+        this._fx.shake.duration = duration;
+        this._fx.shake.direction = direction;
+        this._fx.shake.offset.x = 0;
+        this._fx.shake.offset.y = 0;
+        this._fx.shake.complete = cb;
+
+        return this;
+    },
+    /**
+     * Stops a running shake effect
+     *
+     * @method stopShake
+     * @return {Camera} Returns iteself for chainability
+     */
+    stopShake: function() {
+        if(this._fx.shake.duration !== 0) {
+            this._fx.shake.duration = 0;
+            this._fx.shake.offset.x = 0;
+            this._fx.shake.offset.y = 0;
+        }
+
+        return this;
+    },
+    /**
+     * Stops all currently running effects (flash, fade, shake)
+     *
+     * @method stopAll
+     * @return {Camera} Returns iteself for chainability
+     */
+    stopAll: function() {
+        this.stopFlash();
+        this.stopFade();
+        this.stopShake();
+
+        return this;
+    },
+    /**
+     * Follows an sprite with the camera, ensuring they are always center view. You can
+     * pass a follow style to change the area an sprite can move around in before we start
+     * to move with them.
+     *
+     * @method follow
+     * @param sprite {Sprite} The sprite to follow
+     * @param style {Camera.FOLLOW} The style of following, defaults to gf.Camera.FOLLOW.LOCKON
+     * @return {Camera} Returns iteself for chainability
+     */
+    follow: function(spr, style) {
+        if(!(spr instanceof gf.Sprite))
+            return this;
+
+        this._target = spr;
+
+        switch(style) {
+            case gf.Camera.FOLLOW.PLATFORMER:
+                var w = this.size.x / 8;
+                var h = this.size.y / 3;
+                this._deadzone = new PIXI.Rectangle(
+                    (this.size.x - w) / 2,
+                    (this.size.y - h) / 2 - (h / 4),
+                    w,
+                    h
+                );
+                break;
+            case gf.Camera.FOLLOW.TOPDOWN:
+                var sq4 = Math.max(this.size.x, this.size.y) / 4;
+                this._deadzone = new PIXI.Rectangle(
+                    (this.size.x - sq4) / 2,
+                    (this.size.y - sq4) / 2,
+                    sq4,
+                    sq4
+                );
+                break;
+            case gf.Camera.FOLLOW.TOPDOWN_TIGHT:
+                var sq8 = Math.max(this.size.x, this.size.y) / 8;
+                this._deadzone = new PIXI.Rectangle(
+                    (this.size.x - sq8) / 2,
+                    (this.size.y - sq8) / 2,
+                    sq8,
+                    sq8
+                );
+                break;
+            case gf.Camera.FOLLOW.LOCKON:
+                /* falls through */
+            default:
+                this._deadzone = null;
+                break;
+        }
+
+        this.focusSprite(this._target);
+
+        return this;
+    },
+    /**
+     * Stops following any sprites
+     *
+     * @method unfollow
+     * @return {Camera} Returns iteself for chainability
+     */
+    unfollow: function() {
+        this._target = null;
+        return this;
+    },
+    /**
+     * Focuses the camera on an x,y position. Ensures that the camera does
+     * not go outside the bounds set with setBounds()
+     *
+     * @method focus
+     * @param x {Number|Point} The x coord to focus on, if a Point is passed the y param is ignored
+     * @param y {Number} The y coord to focus on
+     * @return {Camera} Returns iteself for chainability
+     */
+    focus: function(x, y) {
+        y = x instanceof gf.Point ? x.y : (y || 0);
+        x = x instanceof gf.Point ? x.x : (x || 0);
+        //x += (x > 0) ? 0.0000001 : -0.0000001;
+        //y += (y > 0) ? 0.0000001 : -0.0000001;
+
+        //calculate how much we need to pan
+        var goToX = x - this.hSize.x,
+            goToY = y - this.hSize.y,
+            dx = goToX + this.game.world.position.x, //world pos is negative
+            dy = goToY + this.game.world.position.y;
+
+        return this.pan(dx, dy);
+    },
+    focusSprite: function(spr) {
+        this.focus(
+            gf.math.round(spr.position.x) * this.game.world.scale.x,
+            gf.math.round(spr.position.y) * this.game.world.scale.y
+        );
+    },
+    /**
+     * Pans the camera around by the x,y amount. Ensures that the camera does
+     * not go outside the bounds set with setBounds()
+     *
+     * @method pan
+     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
+     * @param y {Number} The y ammount to pan
+     * @return {Camera} Returns iteself for chainability
+     */
+    pan: function(dx, dy) {
+        dy = dx instanceof gf.Point ? dx.y : (dy || 0);
+        dx = dx instanceof gf.Point ? dx.x : (dx || 0);
+
+        if(!dx && !dy) return;
+
+        var newX = this.game.world.position.x - dx,
+            newY = this.game.world.position.y - dy;
+
+        //move only the difference that puts us at 0
+        if(newX > 0)
+            dx = 0 + this.game.world.position.x;
+        //move only the difference that puts us at max (remember that position is negative)
+        else if(newX < -this._bounds.maxPanX)
+            dx = this._bounds.maxPanX + this.game.world.position.x;
+
+        if(newY > 0)
+            dy = 0 - Math.abs(this.game.world.position.y);
+        else if(newY < -this._bounds.maxPanY)
+            dy = this._bounds.maxPanY + this.game.world.position.y;
+
+        if(dx || dy) {
+            //if we move a lot, then just force a re render (less expensive then panning all the way there)
+            if(Math.abs(dx) > this.hSize.x || Math.abs(dy) > this.hSize.y) {
+                this.game.world.setPosition(this.game.world.position.x - dx, this.game.world.position.y - dy);
+                this.game.world.resize();
+            }
+            //otherwise just pan
+            else {
+                this.game.world.pan(-dx, -dy);
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Resizes the viewing area, this is called internally by your game instance
+     * when you call mygame.resize(). DO NOT CALL THIS DIRECTLY
+     *
+     * @method resize
+     * @private
+     * @param w {Number} The new width
+     * @param h {Number} The new height
+     * @return {Camera} Returns iteself for chainability
+     */
+    resize: function(w, h) {
+        this.size.set(w, h);
+        this.hSize.set(
+            Math.round(this.size.x / 2),
+            Math.round(this.size.y / 2)
+        );
+
+        return this;
+    },
+    /**
+     * Sets the bounds the camera is allowed to go. Usually this is the world's
+     * min and max, and is set for you.
+     *
+     * @method setBounds
+     * @param x {Number} The minimum x coord (usually 0)
+     * @param y {Number} The minimum y coord (usually 0)
+     * @param width {Number} The maximum x coord (usually map width)
+     * @param height {Number} The maximum y coord (usually map height)
+     * @return {Camera} Returns iteself for chainability
+     */
+    setBounds: function(x, y, width, height) {
+        this._bounds.x = x;
+        this._bounds.y = y;
+        this._bounds.width = width;
+        this._bounds.height = height;
+
+        this._bounds.maxX = this._bounds.x + this._bounds.width;
+        this._bounds.maxY = this._bounds.y + this._bounds.height;
+
+        this._bounds.maxPanX = width - this.size.x;
+        this._bounds.maxPanY = height - this.size.y;
+
+        return this;
+    },
+    /**
+     * Called internally every frame. Updates all effects and the follow
+     *
+     * @method update
+     * @return {Camera} Returns iteself for chainability
+     */
+    update: function(dt) {
+        //follow sprite
+        if(this._target) {
+            if(!this._deadzone) {
+                this.focusSprite(this._target);
+            } else {
+                var moveX, moveY,
+                    dx, dy,
+                    //get the x,y of the sprite on the screen
+                    camX = (this._target.position.x + (this.game.world.position.x / this.game.world.scale.x)) * this.game.world.scale.x,
+                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * this.game.world.scale.x;
+
+                moveX = moveY = dx = dy = 0;
+
+                //check less than
+                dx = camX - this._deadzone.x;
+                dy = camY - this._deadzone.y;
+
+                if(dx < 0)
+                    moveX = dx;
+                if(dy < 0)
+                    moveY = dy;
+
+                //check greater than
+                dx = camX - (this._deadzone.x + this._deadzone.width);
+                dy = camY - (this._deadzone.y + this._deadzone.height);
+
+                if(dx > 0)
+                    moveX = dx;
+                if(dy > 0)
+                    moveY = dy;
+
+                this.pan(
+                    Math.round(moveX),
+                    Math.round(moveY)
+                );
+            }
+        }
+
+        //update flash effect
+        if(this._fx.flash.alpha > 0) {
+            this._fx.flash.alpha -= (dt * 1000) / this._fx.flash.duration;
+
+            if(this._fx.flash.alpha <= 0) {
+                this._fx.flash.alpha = 0;
+
+                if(this._fx.flash.complete)
+                    this._fx.flash.complete();
+            }
+        }
+
+        //update fade effect
+        if(this._fx.fade.alpha > 0) {
+            this._fx.fade.alpha += (dt * 1000) / this._fx.fade.duration;
+
+            if(this._fx.fade.alpha >= 1) {
+                this._fx.fade.alpha = 1;
+
+                if(this._fx.fade.complete) {
+                    this._fx.fade.complete();
+                }
+            }
+        }
+
+        //update shake effect
+        if(this._fx.shake.duration > 0) {
+            this._fx.shake.duration -= (dt * 1000);
+
+            //pan back to the original position
+            this._fx.shake.offset.x = -this._fx.shake.offset.x;
+            this._fx.shake.offset.y = -this._fx.shake.offset.y;
+            this.pan(this._fx.shake.offset);
+
+            if(this._fx.shake.duration <= 0) {
+                this._fx.shake.duration = 0;
+                this._fx.shake.offset.x = 0;
+                this._fx.shake.offset.y = 0;
+
+                if(this._fx.shake.complete) {
+                    this._fx.shake.complete();
+                }
+            }
+            else {
+                //pan to a random offset
+                if((this._fx.shake.direction === gf.Camera.SHAKE.BOTH) || (this._fx.shake.direction === gf.Camera.SHAKE.HORIZONTAL))
+                    this._fx.shake.offset.x = Math.round(Math.random() * this._fx.shake.intensity * this.size.x * 2 - this._fx.shake.intensity * this.size.x);
+
+                if ((this._fx.shake.direction === gf.Camera.SHAKE.BOTH) || (this._fx.shake.direction === gf.Camera.SHAKE.VERTICAL))
+                    this._fx.shake.offset.y = Math.round(Math.random() * this._fx.shake.intensity * this.size.y * 2 - this._fx.shake.intensity * this.size.y);
+
+                this.pan(this._fx.shake.offset);
+            }
+        }
+
+        return this;
     }
 });
 
-gf.InputManager = function(game) {
+gf.Camera.FOLLOW = {
+    PLATFORMER: 0,
+    TOPDOWN: 1,
+    TOPDOWN_TIGHT: 2,
+    LOCKON: 3
+};
+
+gf.Camera.SHAKE = {
+    BOTH: 0,
+    HORIZONTAL: 1,
+    VERTICAL: 2
+};
+gf.Font = function(font, settings) {
+    this.align = 'left';
+    this.baseline = 'top';
+    this.lineWidth = 1;
+    this.lineHeight = 1;
+
+    this.text = '';
+
+    gf.DisplayObjectContainer.call(this, settings);
+};
+
+gf.inherits(gf.Font, gf.DisplayObjectContainer, {
+    setText: function(txt) {
+        this.text = txt;
+    }
+});
+gf.TextureFont = function(font, settings) {
+    this.ext = '';
+
+    //default map up
+    this.map = {
+        '`': 'accent',
+        '~': 'tilde',
+        '!': 'exclamation',
+        '@': 'at',
+        '#': 'hash',
+        '$': 'dollar',
+        '%': 'percent',
+        '^': 'carret',
+        '&': 'ampersand',
+        '*': 'asterisk',
+        '(': 'open-parenthesis',
+        ')': 'close-parenthesis',
+        '-': 'dash',
+        '_': 'underscore',
+        '+': 'plus',
+        '=': 'equal',
+        '{': 'open-brace',
+        '}': 'close-brace',
+        '[': 'open-bracket',
+        ']': 'close-bracket',
+        '\\': 'backslash',
+        '|': 'pipe',
+        ':': 'colon',
+        ';': 'semicolon',
+        '"': 'quote',
+        '\'': 'single-quote',
+        '<': 'less-than',
+        '>': 'greater-than',
+        ',': 'comma',
+        '.': 'period',
+        '?': 'question',
+        '/': 'slash'
+    };
+
+    this.spaceSize = 15;
+
+    gf.Font.call(this, font, settings);
+
+    if(typeof font === 'string') {
+        if(gf.assetCache[font])
+            font = gf.assetCache[font];
+        else
+            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
+    }
+
+    this.textures = font;
+
+    if(this.ext && this.ext.charAt(0) !== '.')
+        this.ext = '.' + this.ext;
+
+    this.sprites = new gf.ObjectPool(gf.Sprite, this);
+};
+
+gf.inherits(gf.TextureFont, gf.Font, {
+    _getSprite: function(ch) {
+        if(this.map[ch])
+            ch = this.map[ch];
+
+        //skips spaces
+        if(ch === '' || ch === ' ')
+            return null;
+
+        var texture = this.textures[ch + this.ext];
+
+        //try character code
+        if(!texture)
+            texture = this.textures['#' + ch.charCodeAt(0) + this.ext];
+
+        //if no match, error
+        if(!texture)
+            throw 'there is no texture for character "' + ch + '" with extension "' + this.ext + '"';
+
+        var spr = this.sprites.create(texture);
+
+        spr.setTexture(texture);
+        spr.visible = true;
+
+        return spr;
+    },
+    clone: function() {
+        return new gf.TextureFont(this.textures, {
+            ext: this.ext,
+            map: this.map,
+            text: this.text,
+            align: this.align,
+            baseline: this.baseline,
+            lineWidth: this.lineWidth,
+            lineHeight: this.lineHeight
+        });
+    },
+    setText: function(txt) {
+        this.text = txt;
+
+        //free all sprites
+        for(var c = 0, cl = this.children.length; c < cl; ++c) {
+            var child = this.children[c];
+            child.visible = false;
+            this.sprites.free(child);
+        }
+
+        //add text sprites
+        var strs = this.text.toString().split('\n'),
+            h = 0,
+            x = 0,
+            y = 0;
+
+        for(var i = 0, il = strs.length; i < il; ++i) {
+            var str = strs[i];
+
+            //create the string sprites
+            for(var s = 0, sl = str.length; s < sl; ++s) {
+                var ch = str.charAt(s),
+                    spr = this._getSprite(ch);
+
+                if(spr !== null) {
+                    spr.position.x = x;
+                    spr.position.y = y;
+
+                    if(spr.texture.frame.height > h)
+                        h = spr.texture.frame.height;
+
+                    x += spr.texture.frame.width * this.lineWidth;
+                } else {
+                    x += this.spaceSize * this.lineWidth;
+                }
+
+            }
+
+            y += h * this.lineHeight;
+        }
+    }
+});
+/**
+ * Main game object, controls the entire instance of the game
+ *
+ * @class Game
+ * @constructor
+ * @param contId {String} The container for the new canvas we will create for the game
+ * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)
+ */
+gf.Game = function(contId, settings) {
+    //mixin the Event Target methods
+    gf.Emitter.call(this);
+
     /**
-     * The game instance this belongs to
+     * The domElement that we are putting our rendering canvas into (the container)
+     *
+     * @property container
+     * @type DOMELement
+     * @readOnly
+     */
+    this.container = document.getElementById(contId);
+
+    if(!this.container)
+        this.container = document.body;
+
+    var w = settings.width || gf.utils.getStyle(this.container, 'width'),
+        h = settings.height || gf.utils.getStyle(this.container, 'height');
+
+    /**
+     * The method used to render values to the screen (either webgl, or canvas)
+     *
+     * @property renderMethod
+     * @type String
+     * @default 'webgl'
+     */
+    this.renderMethod = 'webgl';
+
+    /**
+     * The player entities added into the game
+     *
+     * @property players
+     * @type {Array}
+     */
+    this.players = [];
+
+    /**
+     * Raw PIXI.stage instance
+     *
+     * @property stage
+     * @type PIXI.Stage
+     * @readOnly
+     */
+    this.stage = new PIXI.Stage(
+        settings.background,
+        settings.interactive !== undefined ? settings.interactive : true
+    );
+
+    /**
+     * Raw Clock instance for internal timing
+     *
+     * @property clock
+     * @type Clock
+     * @readOnly
+     */
+    this.clock = new gf.Clock(false);
+
+    /**
+     * Raw rendering engine
+     *
+     * @property renderer
+     * @type PIXI.WebGLRenderer|PIXI.CanvasRenderer
+     * @readOnly
+     */
+    this.renderer = null;
+
+    //if they speciy a method, check if it is available
+    if(settings.renderMethod) {
+        if(!gf.support[settings.renderMethod]) {
+            throw 'Render method ' + settings.renderMethod + ' is not supported by this browser!';
+        }
+        this.renderMethod = settings.renderMethod;
+    }
+    //if they don't specify a method, guess the best to use
+    else {
+        if(gf.support.webgl) this.renderMethod = 'webgl';
+        else if(gf.support.canvas) this.renderMethod = 'canvas';
+        else {
+            throw 'Neither WebGL nor Canvas is supported by this browser!';
+        }
+    }
+
+    //initialize the correct renderer
+    if(this.renderMethod === 'webgl') {
+        this.renderer = new PIXI.WebGLRenderer(w, h, settings.view, settings.transparent);
+    } else if(this.renderMethod === 'canvas') {
+        this.renderer = new PIXI.CanvasRenderer(w, h, settings.view, settings.transparent);
+    }
+
+    /**
+     * Maximum Z value
+     *
+     * @property MAX_Z
+     * @type {Number}
+     * @default 500
+     * @private
+     * @readOnly
+     */
+    this.MAX_Z = 500;
+
+    /**
+     * The loader for this game instance
+     *
+     * @property loader
+     * @type AssetLoader
+     * @readOnly
+     */
+    this.loader = new gf.AssetLoader();
+
+    /**
+     * The sprite pool to use to create registered entities
+     *
+     * @property spritepool
+     * @type SpritePool
+     * @readOnly
+     */
+    this.spritepool = new gf.SpritePool();
+
+    /**
+     * The GameStates added to the game
+     *
+     * @property states
+     * @type Array
+     * @readOnly
+     */
+    this.states = {};
+
+    /**
+     * The currently active GameState
+     *
+     * @property activeState
+     * @type GameState
+     * @readOnly
+     */
+    this.activeState = null;
+    this._defaultState = new gf.GameState('_default');
+
+    //append the renderer view
+    //this.renderer.view.style['z-index'] = opts.zIndex || 5;
+    this.container.appendChild(this.renderer.view);
+
+    //mixin user settings
+    gf.utils.setValues(this, settings);
+
+    //enable default state
+    this.addState(this._defaultState);
+    this.enableState('_default');
+
+    //define getters for common properties in GameState
+    var self = this;
+    ['audio', 'input', 'physics', 'camera', 'world'].forEach(function(prop) {
+        self.__defineGetter__(prop, function() {
+            return self.activeState[prop];
+        });
+    });
+
+    //some docs for the getters above
+
+    /**
+     * The audio player for this game instance
+     * (refers to the active GameState's audio instance)
+     *
+     * @property audio
+     * @type AudioPlayer
+     * @readOnly
+     */
+
+    /**
+     * The input instance for this game
+     * (refers to the active GameState's input instance)
+     *
+     * @property input
+     * @type InputManager
+     * @readOnly
+     */
+
+    /**
+     * The physics system to simulate stuffs
+     * (refers to the active GameState's physics instance)
+     *
+     * @property physics
+     * @type PhysicsSystem
+     * @readOnly
+     */
+
+    /**
+     * The camera you view the scene through
+     * (refers to the active GameState's camera instance)
+     *
+     * @property camera
+     * @type Camera
+     * @readOnly
+     */
+
+    /**
+     * The world instance that holds all sprites and the map
+     * (refers to the active GameState's world instance)
+     *
+     * @property world
+     * @type Map
+     * @readOnly
+     */
+};
+
+gf.inherits(gf.Game, Object, {
+    /**
+     * Allows you to resize the game area
+     *
+     * @method resize
+     * @param width {Number} Width to resize to
+     * @param height {Number} Height to resize to
+     * @return {Game} Returns itself for chainability
+     */
+    resize: function(w, h) {
+        this.renderer.resize(w, h);
+
+        for(var i = 0, il = this.stage.children.length; i < il; ++i) {
+            var o = this.stage.children[i];
+
+            if(o.resize)
+                o.resize(w, h);
+        }
+
+        return this;
+    },
+    /**
+     * Adds an object to the current stage
+     *
+     * @method addChild
+     * @param obj {Sprite} The sprite to the stage
+     * @return {Game} Returns itself for chainability
+     */
+    addChild: function(obj) {
+        this.activeState.addChild(obj);
+
+        return this;
+    },
+    /**
+     * Removes a sprite from the stage
+     *
+     * @method removeChild
+     * @param obj {Sprite} The sprite to the stage
+     * @return {Game} Returns itself for chainability
+     */
+    removeChild: function(obj) {
+        if(obj) {
+            if(obj instanceof gf.Gui)
+                this.camera.removeChild(obj);
+            else
+                this.world.removeChild(obj);
+        }
+
+        return this;
+    },
+    addState: function(state) {
+        var name = state.name;
+
+        if(!name) {
+            throw 'No state name could be determined, did you give the state a name when you created it?';
+        } else if(this.states[name]) {
+            throw 'A state with the name "' + name + '" already exists, did you try to add it twice?';
+        } else {
+            this.states[name] = state;
+            this.stage.addChild(state);
+
+            state.game = this;
+        }
+    },
+    removeState: function(state) {
+        var name = (typeof state === 'string') ? state : state.name;
+
+        if(!name) {
+            throw 'No state name could be determined, are you sure you passed me a game state?';
+        } else if(!this.states[name]) {
+            throw 'A state with the name "' + name + '" does not exist, are you sure you added it?';
+        } else {
+            //don't remove the default state
+            if(name === '_default') return;
+
+            //if this is the active state, revert to the default state
+            if(name === this.activeState.name) {
+                this.enableState('_default');
+            }
+
+            delete this.states[name];
+        }
+    },
+    enableState: function(state) {
+        var name = (typeof state === 'string') ? state : state.name;
+
+        if(this.activeState)
+            this.activeState.disable();
+
+        this.activeState = this.states[name];
+
+        this.activeState.enable();
+    },
+    /**
+     * Loads the world map into the game
+     *
+     * @method loadWorld
+     * @param world {String|Map} The map to load as the current world
+     * @return {Game} Returns itself for chainability
+     */
+    loadWorld: function(world) {
+        this.activeState.loadWorld(world);
+
+        return this;
+    },
+    /**
+     * Begins the render loop
+     *
+     * @method render
+     * @return {Game} Returns itself for chainability
+     */
+    render: function() {
+        this.clock.start();
+        this._tick();
+
+        return this;
+    },
+    /**
+     * The looping render tick
+     *
+     * @method _tick
+     * @private
+     */
+    _tick: function() {
+        this.emit({ type: 'beforetick' });
+        //start render loop
+        window.requestAnimFrame(this._tick.bind(this));
+
+        //update this game state
+        this.activeState.update(this.clock.getDelta());
+
+        //render scene
+        this.renderer.render(this.stage);
+        this.emit({ type: 'aftertick' });
+    }
+});
+
+/**
+ * GameStates are different , controls the entire instance of the game
+ *
+ * @class GameState
+ * @constructor
+ * @param game {Game} The game instance this GameState belongs to
+ * @param name {String} 
+ * @example
+ *      var state = new gf.GameState(game, 'battle');
+ *      state.addChild(battlePlayer);
+ *      state.addChild(enemy);
+ *
+ *      game.enableState(state); //or you can use the name from the ctor 'battle'
+ */
+gf.GameState = function(name, settings) {
+    if(typeof name === 'object') {
+        settings = name;
+        name = Math.floor(Date.now() * Math.random()).toString();
+    }
+
+    settings = settings || {};
+
+    /**
+     * The name of this game state
+     *
+     * @property name
+     * @type String
+     */
+    this.name = name;
+
+    /**
+     * The audio player for this game instance
+     *
+     * @property audio
+     * @type AudioPlayer
+     * @readOnly
+     */
+    this.audio = new gf.AudioManager();
+
+    /**
+     * The physics system to simulate stuffs
+     *
+     * @property physics
+     * @type PhysicsSystem
+     * @readOnly
+     */
+    this.physics = new gf.PhysicsSystem({ gravity: settings.gravity });
+
+    /**
+     * The input instance for this game
+     *
+     * @property input
+     * @type InputManager
+     * @readOnly
+     */
+    this.input = null; //need to be added to a game first
+
+    /**
+     * The camera you view the scene through
+     *
+     * @property camera
+     * @type Camera
+     * @readOnly
+     */
+    this.camera = null; //need to be added to a game first
+
+    /**
+     * The world instance that holds all entites and the map
+     *
+     * @property world
+     * @type Map
+     * @readOnly
+     */
+    this.world = null;
+
+    /**
+     * The game instance that this state belongs too
      *
      * @property game
      * @type Game
      */
-    this.game = game;
+    Object.defineProperty(this, 'game', {
+        get: function() { return this._game; },
+        set: this._setGame.bind(this),
+        enumerable: true
+    });
 
-    this.mouse = new gf.input.Mouse(this, game);
-    this.keyboard = new gf.input.Keyboard(this, game);
-    this.gamepad = new gf.input.Gamepad(this, game);
+    //call base ctor
+    gf.DisplayObjectContainer.call(this, settings);
+
+    //start disabled
+    this.disable();
+};
+
+gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
+    _setGame: function(game) {
+        this._game = game;
+
+        this.input = new gf.InputManager(game.renderer.view);
+
+        if(this.camera)
+            this.removeChild(this.camera);
+
+        this.camera = new gf.Camera(game);
+        this.addChild(this.camera);
+        this.camera.resize(game.renderer.width, game.renderer.height);
+    },
+    addChild: function(obj) {
+        if(obj) {
+            //we add the camera in the ctor and the map later when
+            //.loadWorld is called. This way the camera is always the
+            //last child of stage, so it is rendered on top!
+            if(obj instanceof gf.Camera || obj instanceof gf.Map)
+                this.addChildAt(obj, 0);
+            else if(obj instanceof gf.Gui)
+                this.camera.addChild(obj);
+            else
+                this.world.addChild(obj);
+        }
+    },
+    loadWorld: function(world) {
+        if(typeof world === 'string'){
+            if(gf.assetCache[world]) {
+                world = gf.assetCache[world];
+            } else {
+                throw 'World "' + world + '" needs to be preloaded before being added to a game!';
+            }
+        }
+
+        this.world = new gf.TiledMap(world);
+        this.addChild(this.world);
+
+        this.world.resize(this._game.renderer.width, this._game.renderer.height);
+        this.world.spawnObjects();
+
+        this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
+
+        /* TODO: Autoplay music
+        if(this.world.properties.music) {
+            this.audio.play(this.world.properties.music, { loop: this.world.properties.music_loop === 'true' });
+        }*/
+
+        return this;
+    },
+    enable: function() {
+        this.visible = true;
+    },
+    disable: function() {
+        this.visible = false;
+    },
+    update: function(dt) {
+        //gather input from user
+        this.input.update(dt);
+
+        //update any camera effects
+        this.camera.update(dt);
+
+        //simulate physics and detect/resolve collisions
+        this.physics.update(dt);
+    }
+});
+/**
+ * The base Gui that holds GuiItems to be presented as a Gui
+ *
+ * @class Gui
+ * @extends DisplayObject
+ * @constructor
+ * @param pos {Array|Vector|Point} The starting position of the sprite
+ * @param settings {Object} Settings to override the defauls
+ */
+gf.Gui = function(pos, settings) {
+    /**
+     * The name of the Gui
+     *
+     * @property name
+     * @type String
+     * @default ''
+     */
+    this.name = '';
+
+    gf.DisplayObjectContainer.call(this, null, pos, settings);
+};
+
+gf.inherits(gf.Gui, gf.DisplayObjectContainer);
+
+/**
+ * The base GuiItem that represents an element of a gui on the screen.
+ *
+ * @class GuiItem
+ * @extends Sprite
+ * @constructor
+ * @param pos {Array|Vector|Point} The starting position of the sprite
+ * @param settings {Object} Settings to override the defauls
+ */
+gf.GuiItem = function(pos, settings) {
+    /**
+     * Whether or not the item needs an update
+     *
+     * @property dirty
+     * @type Boolean
+     * @default true
+     */
+    this.dirty = true;
+
+    //allow user to pass the sprite texture as "image" to a GuiItem.
+    settings.texture = settings.texture || settings.image;
+    gf.Sprite.call(this, null, pos, settings);
+};
+
+gf.inherits(gf.GuiItem, gf.Sprite, {
+});
+
+/**
+ * The Hud that holds HudItems to be presented as a Hud
+ *
+ * @class Hud
+ * @extends DisplayObject
+ * @constructor
+ * @param pos {Array|Vector|Point} The starting position of the sprite
+ * @param settings {Object} Settings to override the defauls
+ */
+gf.Hud = function(pos, settings) {
+    gf.Gui.call(this, pos, settings);
+};
+
+gf.inherits(gf.Hud, gf.Gui);
+
+/**
+ * The base HudItem that represents an element of a hud on the screen.
+ *
+ * @class HudItem
+ * @extends GuiItem
+ * @constructor
+ * @param pos {Array|Vector|Point} The starting position of the sprite
+ * @param settings {Object} Settings to override the defauls
+ */
+gf.HudItem = function(pos, settings) {
+    /**
+     * The value of the item
+     *
+     * @property name
+     * @type Mixed
+     * @default ''
+     */
+    this.value = '';
+
+    /**
+     * Sets whether or not you can drag the HudItem around
+     *
+     * @property draggable
+     * @type Boolean
+     * @default false
+     */
+    this.draggable = false;
+
+    /**
+     * [read only] Describes if the current item is being dragged or not
+     *
+     * @property dragging
+     * @type Boolean
+     * @default false
+     * @readOnly
+     */
+    this.dragging = false;
+
+    /**
+     * The font to use for text
+     *
+     * @property font
+     * @type Font
+     */
+    this.font = null;
+
+    gf.GuiItem.call(this, pos, settings);
+
+    /**
+     * The initial value of the item to reset to
+     *
+     * @property initialValue
+     * @type Mixed
+     */
+    this.initialValue = this.value;
+
+    if(this.font instanceof gf.Font)
+        this.addChild(this.font);
+    else {
+        this.font = new gf.Font();
+        this.addChild(this.font);
+    }
+
+    this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
+};
+
+gf.inherits(gf.HudItem, gf.GuiItem, {
+    /**
+     * Resets the value to the initialValue
+     *
+     * @method reset
+     * @return {HudItem} Returns itself for chainability
+     */
+    reset: function() {
+        return this.set(this.initialValue);
+    },
+    /**
+     * Sets the value of the item
+     *
+     * @method set
+     * @return {HudItem} Returns itself for chainability
+     */
+    set: function(val) {
+        this.font.setText(val);
+        this.value = val;
+        return this;
+    },
+
+    onDragStart: function() {},
+    onDragEnd: function() {},
+
+    click: function() {},
+    mousedown: function(e) {
+        if(!this.draggable) return;
+
+        this.dragging = {
+            x: e.clientX,
+            y: e.clientY
+        };
+        this.onDragStart(e);
+    },
+    mouseup: function(e) {
+        this.dragging = false;
+        this.onDragEnd(e);
+    },
+    mousemove: function(e) {
+        if(!this.draggable || !this.dragging) return;
+
+        var diffX = e.clientX - this.dragging.x,
+            diffY = e.clientY - this.dragging.y,
+            pos = gf.utils.getPosition(this.elm);
+
+        this.dragging.x = e.clientX;
+        this.dragging.y = e.clientY;
+
+        this.elm.style.top = pos.top + diffY;
+        this.elm.style.left = pos.left + diffX;
+    }
+});
+
+gf.InputManager = function(view) {
+    /**
+     * The dom element to bind events to
+     *
+     * @property view
+     * @type Game
+     */
+    this.view = view;
+
+    this.mouse = new gf.input.Mouse(view);
+    this.keyboard = new gf.input.Keyboard(view);
+    this.gamepad = new gf.input.Gamepad();
 };
 
 gf.inherits(gf.InputManager, Object, {
@@ -19744,22 +18605,14 @@ gf.input = {
  * @param manager {InputManager} The InputManager instance that this Input object is managed by
  * @param game {Game} The game this camera belongs to
  */
-gf.input.Input = function(man, game) {
+gf.input.Input = function(view) {
     /**
-     * The game instance this belongs to
+     * The dom element to bind events to
      *
-     * @property game
+     * @property view
      * @type Game
      */
-    this.game = game;
-
-    /**
-     * The input manager this belongs to
-     *
-     * @property manager
-     * @type InputManager
-     */
-    this.manager = man;
+    this.view = view;
 
     /**
      * The binds that map an action to an input value
@@ -19864,8 +18717,8 @@ gf.inherits(gf.input.Input, Object, {
         return this.status[action];
     }
 });
-gf.input.Mouse = function(man, game) {
-    gf.input.Input.call(this, man, game);
+gf.input.Mouse = function(view) {
+    gf.input.Input.call(this, view);
 
     /**
      * The current screen touches
@@ -19892,58 +18745,37 @@ gf.input.Mouse = function(man, game) {
      * @type Point
      * @readOnly
      */
-    this.offset = gf.utils.getOffset(game.renderer.view);
+    this.offset = gf.utils.getOffset(this.view);
 
     //bind touch events
-    game.renderer.view.addEventListener('touchmove', this.onMouseMove.bind(this), false);
+    this.view.addEventListener('touchmove', this.onMouse.bind(this), false);
     for(var t in gf.input.Mouse.TOUCH_EVENT) {
         if(gf.input.Mouse.TOUCH_EVENT[t] === 'touchmove') return;
-        game.renderer.view.addEventListener(gf.input.Mouse.TOUCH_EVENT[t], this.onTouch.bind(this), false);
+        this.view.addEventListener(gf.input.Mouse.TOUCH_EVENT[t], this.onTouch.bind(this), false);
     }
 
     //Bind mouse events
-    game.renderer.view.addEventListener('mousemove', this.onMouseMove.bind(this), false);
     document.addEventListener('mousewheel', this.onMouseWheel.bind(this), false); //needs to be document and check target?
-
     for(var k in gf.input.Mouse.EVENT) {
         var v = gf.input.Mouse.EVENT[k];
-        if(v === 'mousemove'|| v === 'mousewheel') return;
+        if(v === 'mousewheel') return;
 
-        game.renderer.view.addEventListener(v, this.onMouse.bind(this), false);
+        this.view.addEventListener(v, this.onMouse.bind(this), false);
     }
 };
 
 gf.inherits(gf.input.Mouse, gf.input.Input, {
-    //mouse/touch move event
-    onMouseMove: function(e) {
-        this.updateCoords(e);
-
-        if(this.dispatchMouseEvent(e))
-            return this.preventDefault(e);
-
-        return true;
-    },
-    //generic mouse event (click, down, up, etc)
+    //generic mouse event (click, down, up, mouve, touchmove, etc)
     onMouse: function(e) {
         this.updateCoords(e);
 
         if(this.dispatchMouseEvent(e))
             return this.preventDefault(e);
 
-        //incase touch event button is undefined
-        var keycode = this.binds[e.button || 0];
-
-        if(keycode) {
-            if(e.type === 'mousedown' || e.type === 'touchstart')
-                return this.manager.keyboard.onKeyDown(e, keycode);
-            else
-                return this.manager.keyboard.onKeyUp(e, keycode);
-        }
-
         return true;
     },
     onMouseWheel: function(e) {
-        if(e.target === this.game.renderer.view)
+        if(e.target === this.view)
             if(this.dispatchMouseEvent(e))
                 return this.preventDefault(e);
 
@@ -20020,8 +18852,8 @@ gf.input.Mouse.TOUCH_EVENT = {
     TAP: 'tap',
     DBLTAP: 'dbltap'
 };
-gf.input.Keyboard = function(man, game) {
-    gf.input.Input.call(this, man, game);
+gf.input.Keyboard = function(view) {
+    gf.input.Input.call(this, view);
 
     /**
      * Tracks if a key is already down, so we don't repeat
@@ -20060,10 +18892,12 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
     //on keydown event set gf.controls keycode's action as active
     //and call any registered callbacks
     onKeyDown: function(e, override) {
-        return this.modifyKey(e, override || e.keyCode || e.which, true);
+        if(e.target === this.view)
+            return this.modifyKey(e, override || e.keyCode || e.which, true);
     },
     onKeyUp: function(e, override) {
-        return this.modifyKey(e, override || e.keyCode || e.which, false);
+        if(e.target === this.view)
+            return this.modifyKey(e, override || e.keyCode || e.which, false);
     },
     modifyKey: function(e, key, val) {
         //process the single key
@@ -20104,8 +18938,8 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
         this.sequence.length = 0;
     }
 });
-gf.input.Gamepad = function(man, game) {
-    gf.input.Input.call(this, man, game);
+gf.input.Gamepad = function() {
+    gf.input.Input.call(this);
 
     //are we polling for status/connections?
     this.ticking = false;
@@ -20116,8 +18950,8 @@ gf.input.Gamepad = function(man, game) {
     //timestamp tracking for state changes
     this.prevTimestamps = [];
 
-    this.buttons = new gf.input.GamepadButtons(man, game);
-    this.sticks = new gf.input.GamepadSticks(man, game);
+    this.buttons = new gf.input.GamepadButtons();
+    this.sticks = new gf.input.GamepadSticks();
 
     //Firefox uses connect/disconnect events so listen to those
     window.addEventListener('MozGamepadConnected', this.onGamepadConnect.bind(this), false);
@@ -20221,8 +19055,8 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
         return this;
     }
 });
-gf.input.GamepadButtons = function(man, game) {
-    gf.input.Input.call(this, man, game);
+gf.input.GamepadButtons = function() {
+    gf.input.Input.call(this);
 
     /**
      * The threshold at which we consider a button "pressed"
@@ -20261,8 +19095,8 @@ gf.inherits(gf.input.GamepadButtons, gf.input.Input, {
         }
     }
 });
-gf.input.GamepadSticks = function(man, game) {
-    gf.input.Input.call(this, man, game);
+gf.input.GamepadSticks = function() {
+    gf.input.Input.call(this);
 
     /**
      * The threshold at which we consider a stick "moved"
@@ -20312,344 +19146,455 @@ gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
         }
     }
 });
-gf.Font = function(font, settings) {
-    this.align = 'left';
-    this.baseline = 'top';
-    this.lineWidth = 1;
-    this.lineHeight = 1;
+gf.Loader = function(name, url) {
+    gf.Emitter.call(this);
 
-    this.text = '';
+    this.type = 'hey';
 
-    gf.DisplayObject.call(this, null, 0, settings);
+    this.name = name;
+    this.url = url;
 };
 
-gf.inherits(gf.Font, gf.DisplayObject, {
-    setText: function(txt) {
-        this.text = txt;
-    }
-});
-gf.TextureFont = function(font, settings) {
-    this.ext = '';
+gf.inherits(gf.Loader, Object, {
+    load: function() {
+        var self = this;
 
-    this.map = {
-        '`': 'accent',
-        '~': 'tilde',
-        '!': 'exclamation',
-        '@': 'at',
-        '#': 'hash',
-        '$': 'dollar',
-        '%': 'percent',
-        '^': 'carret',
-        '&': 'ampersand',
-        '*': 'asterisk',
-        '(': 'open-parenthesis',
-        ')': 'close-parenthesis',
-        '-': 'dash',
-        '_': 'underscore',
-        '+': 'plus',
-        '=': 'equal',
-        '{': 'open-brace',
-        '}': 'close-brace',
-        '[': 'open-bracket',
-        ']': 'close-bracket',
-        '\\': 'backslash',
-        '|': 'pipe',
-        ':': 'colon',
-        ';': 'semicolon',
-        '"': 'quote',
-        '\'': 'single-quote',
-        '<': 'less-than',
-        '>': 'greater-than',
-        ',': 'comma',
-        '.': 'period',
-        '?': 'question',
-        '/': 'slash'
-    };
-
-    this.spaceSize = 15;
-
-    gf.Font.call(this, font, settings);
-
-    if(typeof font === 'string') {
-        if(gf.assetCache[font])
-            font = gf.assetCache[font];
-        else
-            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
-    }
-
-    this.textures = font;
-
-    if(this.ext && this.ext.charAt(0) !== '.')
-        this.ext = '.' + this.ext;
-
-    this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
-};
-
-gf.inherits(gf.TextureFont, gf.Font, {
-    _getSprite: function(ch) {
-        if(this.map[ch])
-            ch = this.map[ch];
-
-        //skips spaces
-        if(ch === '' || ch === ' ')
-            return null;
-
-        var texture = this.textures[ch + this.ext];
-
-        //try character code
-        if(!texture)
-            texture = this.textures['#' + ch.charCodeAt(0) + this.ext];
-
-        //if no match, error
-        if(!texture)
-            throw 'there is no texture for character "' + ch + '" with extension "' + this.ext + '"';
-
-        var spr = this.sprites.create(texture);
-
-        spr.setTexture(texture);
-        spr.visible = true;
-
-        return spr;
-    },
-    clone: function() {
-        return new gf.TextureFont(this.textures, {
-            ext: this.ext,
-            map: this.map,
-            text: this.text,
-            align: this.align,
-            baseline: this.baseline,
-            lineWidth: this.lineWidth,
-            lineHeight: this.lineHeight
-        });
-    },
-    setText: function(txt) {
-        this.text = txt;
-
-        //free all sprites
-        for(var c = 0, cl = this.children.length; c < cl; ++c) {
-            var child = this.children[c];
-            child.visible = false;
-            this.sprites.free(child);
+        if(gf.assetCache[this.name]) {
+            return setTimeout(function() {
+                self.done(gf.assetCache[self.name]);
+            }, 0);
         }
-
-        //add text sprites
-        var strs = this.text.toString().split('\n'),
-            h = 0,
-            x = 0,
-            y = 0;
-
-        for(var i = 0, il = strs.length; i < il; ++i) {
-            var str = strs[i];
-
-            //create the string sprites
-            for(var s = 0, sl = str.length; s < sl; ++s) {
-                var ch = str.charAt(s),
-                    spr = this._getSprite(ch);
-
-                if(spr !== null) {
-                    spr.position.x = x;
-                    spr.position.y = y;
-
-                    if(spr.texture.frame.height > h)
-                        h = spr.texture.frame.height;
-
-                    x += spr.texture.frame.width * this.lineWidth;
-                } else {
-                    x += this.spaceSize * this.lineWidth;
-                }
-
-            }
-
-            y += h * this.lineHeight;
+        else if(gf.assetCache[this.url]) {
+            return setTimeout(function() {
+                self.done(gf.assetCache[self.url]);
+            }, 0);
         }
+    },
+    done: function(data) {
+        gf.assetCache[this.name] = data;
+
+        //be async for sure
+        var self = this;
+        setTimeout(function() {
+            self.emit('load', {
+                name: self.name,
+                assetType: self.type,
+                url: self.url,
+                data: data
+            });
+        }, 0);
+    },
+    error: function(msg) {
+        //be async for sure
+        var self = this;
+        setTimeout(function() {
+            self.emit('error', {
+                name: self.name,
+                assetType: self.type,
+                url: self.url,
+                message: msg
+            });
+        }, 0);
     }
 });
 /**
- * The base Gui that holds GuiItems to be presented as a Gui
+ * The AssetLoader loads and parses different game assets, such as sounds, textures,
+ * TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
+ * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
  *
- * @class Gui
- * @extends DisplayObject
+ * @class AssetLoader
  * @constructor
- * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
+ * @param assets {Array} Array of assets to load when `.load()` is called
+ * @example
+ *      var loader = new AssetLoader(['/my/texture.png']);
+ *      loader.load();
+ *      //OR
+ *      var loader = new AssetLoader();
+ *      loader.load(['/my/texture.png']);
  */
-gf.Gui = function(pos, settings) {
+gf.AssetLoader = function() {
+    //mixin the Event Target methods
+    gf.Emitter.call(this);
+
     /**
-     * The name of the Gui
+     * The array of assets to load
      *
-     * @property name
-     * @type String
-     * @default ''
+     * @property assets
+     * @type Array
      */
-    this.name = '';
-
-    gf.DisplayObject.call(this, null, pos, settings);
-};
-
-gf.inherits(gf.Gui, gf.DisplayObject);
-
-/**
- * The base GuiItem that represents an element of a gui on the screen.
- *
- * @class GuiItem
- * @extends Sprite
- * @constructor
- * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
- */
-gf.GuiItem = function(pos, settings) {
-    /**
-     * Whether or not the item needs an update
-     *
-     * @property dirty
-     * @type Boolean
-     * @default true
-     */
-    this.dirty = true;
-
-    //allow user to pass the sprite texture as "image" to a GuiItem.
-    settings.texture = settings.texture || settings.image;
-    gf.Sprite.call(this, null, pos, settings);
-};
-
-gf.inherits(gf.GuiItem, gf.Sprite, {
-});
-
-/**
- * The Hud that holds HudItems to be presented as a Hud
- *
- * @class Hud
- * @extends DisplayObject
- * @constructor
- * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
- */
-gf.Hud = function(pos, settings) {
-    gf.Gui.call(this, pos, settings);
-};
-
-gf.inherits(gf.Hud, gf.Gui);
-
-/**
- * The base HudItem that represents an element of a hud on the screen.
- *
- * @class HudItem
- * @extends GuiItem
- * @constructor
- * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
- */
-gf.HudItem = function(pos, settings) {
-    /**
-     * The value of the item
-     *
-     * @property name
-     * @type Mixed
-     * @default ''
-     */
-    this.value = '';
+    this.assets = [];
 
     /**
-     * Sets whether or not you can drag the HudItem around
+     * The count of remaining assets to load
      *
-     * @property draggable
-     * @type Boolean
-     * @default false
-     */
-    this.draggable = false;
-
-    /**
-     * [read only] Describes if the current item is being dragged or not
-     *
-     * @property dragging
-     * @type Boolean
-     * @default false
+     * @property remaining
+     * @type Number
      * @readOnly
      */
-    this.dragging = false;
+    this.remaining = 0;
 
     /**
-     * The font to use for text
+     * A mapping of extensions to types
      *
-     * @property font
-     * @type Font
+     * @property loaders
+     * @type Object
+     * @readOnly
+     * @private
      */
-    this.font = null;
+    this.loaders = {
+        'texture': gf.TextureLoader,
+        'jpeg': gf.TextureLoader,
+        'jpg': gf.TextureLoader,
+        'png': gf.TextureLoader,
+        'gif': gf.TextureLoader,
 
-    gf.GuiItem.call(this, pos, settings);
+        'audio': gf.AudioLoader,
+        'music': gf.AudioLoader,
+        'mp3': gf.AudioLoader,
+        'ogg': gf.AudioLoader,
+        'wma': gf.AudioLoader,
+        'wav': gf.AudioLoader,
 
-    /**
-     * The initial value of the item to reset to
-     *
-     * @property initialValue
-     * @type Mixed
-     */
-    this.initialValue = this.value;
-
-    if(this.font instanceof gf.Font)
-        this.addChild(this.font);
-    else {
-        this.font = new gf.Font();
-        this.addChild(this.font);
-    }
-
-    this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
+        'json': gf.JsonLoader
+    };
 };
+/**
+ * Fired when an item has loaded
+ *
+ * @event onProgress
+ */
 
-gf.inherits(gf.HudItem, gf.GuiItem, {
+/**
+ * Fired when all the assets have loaded
+ *
+ * @event onComplete 
+ */
+
+gf.inherits(gf.AssetLoader, Object, {
     /**
-     * Resets the value to the initialValue
+     * Adds a resource to the assets array.
      *
-     * @method reset
-     * @return {HudItem} Returns itself for chainability
+     * @method add
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
      */
-    reset: function() {
-        return this.set(this.initialValue);
+    add: function(name, url) {
+        this.assets.push({
+            name: name,
+            src: url
+        });
     },
     /**
-     * Sets the value of the item
+     * Starts the loading festivities. If called without any arguments it will load
+     * the assets passed in at the ctor. If an array of assets are passed it will
+     * load those instead.
      *
-     * @method set
-     * @return {HudItem} Returns itself for chainability
+     * @method load
+     * @param items {Array} Array of resources to load instead of the object's resources
      */
-    set: function(val) {
-        this.font.setText(val);
-        this.value = val;
-        return this;
+    load: function(items) {
+        var assets = items || this.assets;
+
+        for(var i = 0, il = assets.length; i < il; ++i) {
+            var name = typeof assets[i] === 'string' ? assets[i] : assets[i].name,
+                url = typeof assets[i] === 'string' ? assets[i] : (assets[i].src || assets[i].url || assets[i].uri),
+                ext = assets[i].type || (url instanceof Array ? 'audio' : null) || url.split('.').pop().toLowerCase(), //assume arrays of urls are for audio
+                Loader = this.loaders[ext];
+
+            if(!Loader)
+                throw 'Unknown type "' + ext + '", unable to preload!';
+
+            this.remaining++;
+            var loader = new Loader(name, url);
+
+            loader.on('load', this.onAssetLoaded.bind(this));
+            loader.on('error', this.onAssetError.bind(this));
+            loader.load();
+        }
     },
+    /**
+     * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
+     *
+     * @method onAssetLoaded
+     * @private
+     * @param err {String} An option error if there was an issue loading that resource
+     * @param type {String} The type of asset loaded (texture, audio, world, or spritesheet)
+     * @param asset {Texture|Audio|Object} The actual asset that was loaded
+     */
+    onAssetLoaded: function(e) {
+        this.remaining--;
 
-    onDragStart: function() {},
-    onDragEnd: function() {},
+        this.emit({
+            type: 'progress',
+            assetType: e.assetType,
+            url: e.url,
+            data: e.data
+        });
 
-    click: function() {},
-    mousedown: function(e) {
-        if(!this.draggable) return;
-
-        this.dragging = {
-            x: e.clientX,
-            y: e.clientY
-        };
-        this.onDragStart(e);
+        if(this.remaining === 0) {
+            this.emit({ type: 'complete' });
+        }
     },
-    mouseup: function(e) {
-        this.dragging = false;
-        this.onDragEnd(e);
-    },
-    mousemove: function(e) {
-        if(!this.draggable || !this.dragging) return;
+    onAssetError: function(e) {
+        this.remaining--;
 
-        var diffX = e.clientX - this.dragging.x,
-            diffY = e.clientY - this.dragging.y,
-            pos = gf.utils.getPosition(this.elm);
+        this.emit({
+            type: 'error',
+            assetType: e.assetType,
+            message: e.message
+        });
 
-        this.dragging.x = e.clientX;
-        this.dragging.y = e.clientY;
-
-        this.elm.style.top = pos.top + diffY;
-        this.elm.style.left = pos.left + diffX;
+        if(this.remaining === 0) {
+            this.emit({ type: 'complete' });
+        }
     }
 });
 
+/**
+ * Loads an audio clip
+ *
+ * @class AudioLoader
+ * @constructor
+ */
+gf.AudioLoader = function(name, urls) {
+    gf.Loader.call(this, name, urls);
+
+    this.type = 'audio';
+    this.urls = typeof urls === 'string' ? [urls] : urls;
+};
+
+gf.inherits(gf.AudioLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var man = new gf.AudioManager(),
+            player = man.create(name, { urls: this.urls });
+
+        if(!player) {
+            this.error('Cannot find a url for an audio type supported by this browser.');
+        } else {
+            var self = this;
+            player.on('load', function() {
+                self.done(player);
+            });
+
+            player.on('error', function(e) {
+                self.error(e.message);
+            });
+        }
+    }
+});
+/**
+ * Loads json data
+ *
+ * @class JsonLoader
+ * @constructor
+ */
+gf.JsonLoader = function(name, url) {
+    gf.Loader.call(this, name, url);
+
+    this.type = 'json';
+};
+
+gf.inherits(gf.JsonLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var self = this,
+            baseUrl = this.url.replace(/[^\/]*$/, '');
+
+        gf.utils.ajax({
+            method: 'GET',
+            url: this.url,
+            dataType: 'json',
+            load: function(data) {
+                var loader;
+
+                //check some properties to see if this is a TiledMap Object
+                if(data.orientation && data.layers && data.tilesets && data.version) {
+                    loader = new gf.WorldLoader(self.name, baseUrl, data);
+                }
+                //this is a sprite sheet (published from TexturePacker)
+                else if(data.frames && data.meta) {
+                    loader = new gf.SpriteSheetLoader(self.name, baseUrl, data);
+                }
+
+                if(loader) {
+                    loader.on('load', function(e) {
+                        self.done(e.data);
+                    });
+                    loader.on('error', function(e) {
+                        self.error(e.message);
+                    });
+
+                    loader.load();
+                }
+                //just some json data
+                else {
+                    self.done(data);
+                }
+            },
+            error: function(err) {
+                self.error(err.message || err);
+            }
+        });
+    }
+});
+gf.SpriteSheetLoader = function(name, baseUrl, data) {
+    gf.Loader.call(this, name, baseUrl);
+
+    this.type = 'spritesheet';
+    this.data = data;
+};
+
+gf.inherits(gf.SpriteSheetLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var self = this,
+            data = this.data,
+            txLoader = new gf.TextureLoader(this.name, this.url + data.meta.image);
+
+        txLoader.on('load', function(e) {
+            var texture =  e.data.baseTexture,
+                frames = self.data.frames,
+                assets = {};
+
+            for(var f in frames) {
+                var rect = frames[f].frame;
+
+                if(rect) {
+                    assets[f] = PIXI.TextureCache[f] = new gf.Texture(texture, {
+                        x: rect.x,
+                        y: rect.y,
+                        width: rect.w,
+                        height: rect.h
+                    });
+
+                    if(frames[f].trimmed) {
+                        PIXI.TextureCache[f].realSize = frames[f].spriteSourceSize;
+                        PIXI.TextureCache[f].trim.x = 0;
+                    }
+                }
+            }
+
+            self.done(assets);
+        });
+
+        txLoader.on('error', function(e) {
+            self.error(e.message);
+        });
+
+        txLoader.load();
+    }
+});
+/**
+ * Loads a texture image
+ *
+ * @class TextureLoader
+ * @constructor
+ */
+ gf.TextureLoader = function(name, url) {
+    gf.Loader.call(this, name, url);
+
+    this.type = 'texture';
+};
+
+gf.inherits(gf.TextureLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var self = this,
+            texture = gf.Texture.fromImage(this.url);
+
+        if(!texture.baseTexture.hasLoaded) {
+            texture.baseTexture.on('loaded', function() {
+                self.done(texture);
+            });
+            texture.baseTexture.source.onerror = function() {
+                self.error('Unable to load texture');
+            };
+        } else {
+            this.done(texture);
+        }
+    }
+});
+gf.WorldLoader = function(name, baseUrl, data) {
+    gf.Loader.call(this, name, baseUrl);
+
+    this.type = 'world';
+    this.data = data;
+    this.numTextures = 0;
+    this.errors = [];
+};
+
+gf.inherits(gf.WorldLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        //loop through each layer and load the sprites (objectgroup types)
+        for(var i = 0, il = this.data.layers.length; i < il; ++i) {
+            var layer = this.data.layers[i];
+            if(layer.type !== 'objectgroup') continue;
+
+            //loop through each object, and load the textures
+            for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
+                var obj = layer.objects[o],
+                    txLoader;
+
+                if(!obj.properties.spritesheet) continue;
+                this.numTextures++;
+
+                txLoader = new gf.TextureLoader(layer.name + '_' + obj.name + '_texture', obj.properties.spritesheet);
+
+                txLoader.on('load', this.onTextLoad.bind(this));
+                txLoader.on('error', this.onTextError.bind(this));
+                txLoader.load();
+            }
+        }
+
+        //loop through each tileset and load the texture
+        for(var s = 0, sl = this.data.tilesets.length; s < sl; ++s) {
+            var set = this.data.tilesets[s],
+                txLoader2;
+
+            if(!set.image) continue;
+            this.numTextures++;
+
+            txLoader2 = new gf.TextureLoader(set.name + '_texture', this.url + set.image);
+
+            txLoader2.on('load', this.onTextLoad.bind(this));
+            txLoader2.on('error', this.onTextError.bind(this));
+            txLoader2.load();
+        }
+    },
+    onTextLoad: function() {
+        this.numTextures--;
+
+        if(this.numTextures === 0) {
+            this.done();
+        }
+    },
+    onTextError: function(e) {
+        this.numTextures--;
+        this.errors.push(e);
+
+        if(this.numTextures === 0) {
+            this.done();
+        }
+    },
+    done: function() {
+        if(this.errors.length)
+            gf.Loader.prototype.error.call(this, this.errors);
+        else
+            gf.Loader.prototype.done.call(this, this.data);
+    }
+});
 /**
  * Base Map implementation, provides common functions for all Map types
  *
@@ -20658,17 +19603,9 @@ gf.inherits(gf.HudItem, gf.GuiItem, {
  * @constructor
  * @param map {Object} All the settings for the map
  */
-gf.Map = function(game, pos, map) {
+gf.Map = function(map) {
     //mixin the Event Target methods
-    gf.EventTarget.call(this);
-
-    /**
-     * The game instance this belongs to
-     *
-     * @property game
-     * @type Game
-     */
-    this.game = game;
+    gf.Emitter.call(this);
 
     /**
      * The size of the map
@@ -20680,28 +19617,10 @@ gf.Map = function(game, pos, map) {
     this.size = new gf.Vector(map.width, map.height);
 
     //call base ctor
-    gf.DisplayObject.call(this, game, pos, map);
+    gf.DisplayObjectContainer.call(this, map);
 };
 
-gf.inherits(gf.Map, gf.DisplayObject, {
-    /**
-     * Gets a layer based on the layer's id or name
-     *
-     * @method getLayer
-     * @param id {Number|String} The layer's number id or string name.
-     * @return {Layer} Returns the found layer, or null if not found
-     */
-    getLayer: function(id) {
-        if(typeof id === 'number')
-            return this.layers[id] || null; //return null if not found
-
-        if(typeof id === 'string')
-            for(var i = 0, il = this.children.length; i < il; ++i)
-                if(this.children[i].name === id)
-                    return this.children[i];
-
-        return null;
-    },
+gf.inherits(gf.Map, gf.DisplayObjectContainer, {
     /**
      * Pans the map around
      *
@@ -20733,7 +19652,7 @@ gf.inherits(gf.Map, gf.DisplayObject, {
  * @constructor
  * @param layer {Object} All the settings for the layer
  */
-gf.Layer = function(game, pos, layer) {
+gf.Layer = function(layer) {
     /**
      * The name of the layer
      *
@@ -20753,10 +19672,10 @@ gf.Layer = function(game, pos, layer) {
     this.size = new gf.Vector(layer.width || 0, layer.height || 0);
 
     //call base ctor
-    gf.DisplayObject.call(this, game, pos, layer);
+    gf.DisplayObjectContainer.call(this, layer);
 };
 
-gf.inherits(gf.Layer, gf.DisplayObject, {
+gf.inherits(gf.Layer, gf.DisplayObjectContainer, {
     /**
      * Pans the layer around, rendering stuff if necessary
      *
@@ -20769,23 +19688,63 @@ gf.inherits(gf.Layer, gf.DisplayObject, {
     }
 });
 /**
+ * ImageLayer is a layer represented by a single image
+ *
+ * @class ImageLayer
+ * @extends Layer
+ * @constructor
+ * @param game {Game} The game the layer is in
+ * @param position {Point|Vector|Array|Number} The starting position of the layer
+ * @param layer {Object|Texture} All the settings for the layer, or the texture to use
+ */
+gf.ImageLayer = function(layer) {
+    this.sprite = new gf.Sprite(layer.image || layer.texture || layer);
+
+    this.addChild(this.sprite);
+
+    //call base ctor
+    gf.Layer.call(this, layer);
+};
+
+gf.inherits(gf.ImageLayer, gf.Layer);
+/**
  * Base Tile implementation, a tile is a single tile in a tilemap layer
  *
  * @class Tile
- * @extends Entity
+ * @extends Sprite
  * @constructor
  * @param tile {Object} All the settings for the tile
  */
-gf.Tile = function(game, pos, settings) {
+gf.Tile = function(texture) {
     this.collisionType = gf.Tile.TYPE.NONE;
 
     //call base ctor
-    gf.Entity.call(this, game, pos, settings);
+    gf.Sprite.call(this, texture);
 
-    this.type = gf.Entity.TYPE.TILE;
+    this.type = gf.Sprite.TYPE.TILE;
 };
 
-gf.inherits(gf.Tile, gf.Entity, {
+gf.inherits(gf.Tile, gf.Sprite, {
+    /**
+     * On Collision Event
+     *      called when this sprite collides into another, or is being collided into by another.
+     *      By default if something collides with a collectable sprite we remove the collectable
+     *      and if we collide with a solid tile we kill our velocity
+     *
+     * @method onCollision
+     * @param obj {Sprite} Colliding sprite
+     */
+    onCollision: function(obj) {
+        gf.Sprite.prototype.onCollision.call(this, obj);
+
+        //I did a switch-case here because I feel like I
+        //will be adding more defaults later
+        switch(this.collisionType) {
+            case gf.Tile.TYPE.SOLID:
+                obj.setVelocity(0);
+                break;
+        }
+    }
 });
 
 /**
@@ -20814,13 +19773,21 @@ gf.Tile.TYPE = {
  * @param position {Point|Vector|Array|Number} The starting position of the map
  * @param map {Object} All the settings for the map
  */
-gf.TiledMap = function(game, pos, map) {
-    gf.Map.call(this, game, pos, map);
-
-    this.scale.x = parseFloat(map.properties.scale, 10) || 1;
-    this.scale.y = parseFloat(map.properties.scale, 10) || 1;
+gf.TiledMap = function(map) {
+    gf.Map.call(this, map);
 
     //Tiled Editor properties
+
+    /**
+     * The user-defined properties
+     *
+     * @property properties
+     * @type Object
+     * @default {}
+     */
+    this.properties = map.properties || {};
+    this.scale.x = parseFloat(this.properties.scale, 10) || 1;
+    this.scale.y = parseFloat(this.properties.scale, 10) || 1;
 
     /**
      * The tile size
@@ -20856,15 +19823,6 @@ gf.TiledMap = function(game, pos, map) {
      * @type Number
      */
     this.backgroundColor = map.backgroundColor;
-
-    /**
-     * The user-defined properties
-     *
-     * @property properties
-     * @type Object
-     * @default {}
-     */
-    this.properties = map.properties || {};
 
     //Custom/Optional properties
 
@@ -20902,49 +19860,29 @@ gf.TiledMap = function(game, pos, map) {
         this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
     }
 
-    //create the layers
-    var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
-        numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
-
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr;
 
         switch(map.layers[i].type) {
             case 'tilelayer':
-                lyr = new gf.TiledLayer(this.game, 0, map.layers[i]);
-                this.addChild(lyr);
+                lyr = new gf.TiledLayer(map.layers[i]);
 
-                //lyr.scale = this.scale;
-                lyr.renderTiles(
-                    Math.floor(this.position.x / this.scaledTileSize.x),
-                    Math.floor(this.position.y / this.scaledTileSize.y),
-                    numX,
-                    numY
-                );
+                //due to the fact that we use top-left anchors for everything, but tiled uses bottom-left
+                //we need to move the position of the map down by a single tile
+                lyr.position.y += this.tileSize.y;
 
-                if(lyr.name.toLowerCase().indexOf('collision') === 0) {
-                    lyr.visible = false;
-                 }
                 break;
 
             case 'objectgroup':
-                lyr = new gf.TiledObjectGroup(this.game, 0, map.layers[i]);
-                this.addChild(lyr);
-
-                //auto spawn the player object group
-                if(lyr.name === 'player' && !lyr.properties.manual)
-                    lyr.spawn();
-
+                lyr = new gf.TiledObjectGroup(map.layers[i]);
                 break;
 
             case 'imagelayer':
-                lyr = new gf.ImageLayer(this.game, 0, {
-                    texture: map.layers[i]
-                });
-                this.addChild(lyr);
-
+                lyr = new gf.ImageLayer(map.layers[i]);
                 break;
         }
+
+        this.addChild(lyr);
     }
 
     //rotate for isometric maps
@@ -20974,9 +19912,9 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @method resize
      * @private
      */
-    resize: function() {
-        var numX = Math.ceil(this.game.renderer.view.width / this.scaledTileSize.x),
-            numY = Math.ceil(this.game.renderer.view.height / this.scaledTileSize.y);
+    resize: function(width, height) {
+        var numX = Math.ceil(width / this.scaledTileSize.x),
+            numY = Math.ceil(height / this.scaledTileSize.y);
 
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
@@ -20991,9 +19929,25 @@ gf.inherits(gf.TiledMap, gf.Map, {
             }
         }
     },
+    spawnObjects: function() {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o instanceof gf.TiledObjectGroup) {
+                o.spawn();
+            }
+        }
+    },
     onTileEvent: function(eventName, tile, data) {
         this.emit({
-            type: 'tile_' + eventName,
+            type: 'tile.' + eventName,
+            tile: tile,
+            data: data
+        });
+    },
+    onObjectEvent: function(eventName, tile, data) {
+        this.emit({
+            type: 'object.' + eventName,
             tile: tile,
             data: data
         });
@@ -21012,11 +19966,8 @@ gf.inherits(gf.TiledMap, gf.Map, {
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
-gf.TiledLayer = function(game, pos, layer) {
-    gf.Layer.call(this, game, pos, layer);
-
-    //Tiled Editor properties
-    var props = layer.properties || {};
+gf.TiledLayer = function(layer) {
+    gf.Layer.call(this, layer);
 
     /**
      * The tile IDs of the tilemap
@@ -21035,12 +19986,12 @@ gf.TiledLayer = function(game, pos, layer) {
     this.tiles = {};
 
     /**
-     * Whether or not the tiles are interactive
+     * The user-defined properties of this group. Usually defined in the TiledEditor
      *
-     * @property interactiveTiles
-     * @type Boolean
+     * @property properties
+     * @type Object
      */
-    this.interactiveTiles = props.interactive || props.interactiveTiles || false;
+    this.properties = layer.properties || {};
 
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
@@ -21111,6 +20062,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 if(tile) {
                     //hide/free the sprite
                     tile.visible = false;
+                    tile.disablePhysics();
                     this._tilePool.push(tile);
                 }
 
@@ -21141,7 +20093,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             iso = (this.parent.orientation === 'isometric'),
             texture,
             props,
-            position;
+            position,
+            hitArea,
+            interactive;
 
         //if no tileset, just ensure the "from" tile is put back in the pool
         if(!set) {
@@ -21155,8 +20109,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             return;
         }
 
+        //grab some values for the tile
         texture = set.getTileTexture(tileId);
         props = set.getTileProperties(tileId);
+        hitArea = props.hitArea || set.properties.tileHitArea;
+        interactive = this._getInteractive(set, props),
         position = iso ?
             // Isometric position
             [
@@ -21180,38 +20137,35 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tile = this._tilePool.pop();
         }
 
-        if(tile) {
-            tile.setTexture(texture);
-            tile.setPosition(position);
-            tile.setCollidable(props.isCollidable);
-            tile.collisionType = props.type;
-            tile.visible = true;
-        } else {
-            var hitArea = props.hitArea || set.properties.tileHitArea;
-
-            tile = new gf.Tile(this.game, position, {
-                texture: texture,
-                mass: Infinity,
-                width: set.tileSize.x,
-                height: set.tileSize.y,
-                hitArea: hitArea,
-                collidable: props.isCollidable,
-                collisionType: props.type,
-                interactive: this.interactiveTiles
-            });
-
-            //pass through all events
-            if(this.interactiveTiles) {
-                tile.click = this.onTileEvent.bind(this, 'click', tile);
-                tile.mousedown = this.onTileEvent.bind(this, 'mousedown', tile);
-                tile.mouseup = this.onTileEvent.bind(this, 'mouseup', tile);
-                tile.mousemove = this.onTileEvent.bind(this, 'mousemove', tile);
-                tile.mouseout = this.onTileEvent.bind(this, 'mouseout', tile);
-                tile.mouseover = this.onTileEvent.bind(this, 'mouseover', tile);
-                tile.mouseupoutside = this.onTileEvent.bind(this, 'mouseupoutside', tile);
-            }
-
+        //if we couldn't find a tile from the pool, or one to move
+        //then create a new tile
+        if(!tile) {
+            tile = new gf.Tile(texture);
+            tile.mass = Infinity;
+            tile.anchor.y = 1;
             this.addChild(tile);
+        }
+
+        if(props.isCollidable)
+            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
+
+        tile.setTexture(texture);
+        tile.setPosition(position[0], position[1]);
+        tile.setInteractive(interactive);
+
+        tile.collisionType = props.type;
+        tile.visible = true;
+        tile.hitArea = hitArea;
+
+        //pass through all events
+        if(interactive) {
+            tile.click = this.onTileEvent.bind(this, 'click', tile);
+            tile.mousedown = this.onTileEvent.bind(this, 'mousedown', tile);
+            tile.mouseup = this.onTileEvent.bind(this, 'mouseup', tile);
+            tile.mousemove = this.onTileEvent.bind(this, 'mousemove', tile);
+            tile.mouseout = this.onTileEvent.bind(this, 'mouseout', tile);
+            tile.mouseover = this.onTileEvent.bind(this, 'mouseover', tile);
+            tile.mouseupoutside = this.onTileEvent.bind(this, 'mouseupoutside', tile);
         }
 
         //update sprite position in the map
@@ -21224,6 +20178,30 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
     },
     onTileEvent: function(eventName, tile, data) {
         this.parent.onTileEvent(eventName, tile, data);
+    },
+    _getInteractive: function(set, o) {
+        var v;
+
+        //first check the lowest level value (on the tile iteself)
+        if(o.interactive !== undefined || o.interactiveTiles !== undefined)
+            v = o;
+        //next check if the tileset has the value
+        else if(set && (set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined))
+            v = set.properties;
+        //next check if this layer has interactive tiles
+        else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
+            v = this.properties;
+        //finally check if the map as a whole has interactive tiles
+        else if(this.parent.properties.interactive !== undefined || this.parent.properties.interactiveTiles !== undefined)
+            v = this.parent.properties;
+
+        //see if anything has a value to use
+        if(v) {
+            //if they do, lets grab what the interactive value is
+            return !!(v.interactive || v.interactiveTiles);
+        }
+
+        return false;
     },
     /**
      * Pans the layer around, rendering stuff if necessary
@@ -21425,8 +20403,8 @@ gf.TiledTileset = function(settings) {
      * @type Vector
      */
     this.numTiles = new gf.Vector(
-        ~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x + this.spacing)),
-        ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y + this.spacing))
+        ~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), //75 / 
+        ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing))
     );
 
     /**
@@ -21479,13 +20457,8 @@ gf.TiledTileset = function(settings) {
         }
 
         var hv = [];
-        for(var i = 0, il = h.length; i < il; i+=2) {
-            hv.push(
-                new gf.Point(
-                    parseFloat(h[i], 10),
-                    parseFloat(h[i + 1], 10)
-                )
-            );
+        for(var i = 0, il = h.length; i < il; ++i) {
+            hv.push(parseFloat(h[i], 10));
         }
         this.properties.tileHitArea = new gf.Polygon(hv);
     }
@@ -21587,14 +20560,15 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
 
 /**
  * Tiled object group is a special layer that contains entities
+ * TODO: This is all trash
  *
  * @class TiledObjectGroup
  * @extends Layer
  * @constructor
  * @param group {Object} All the settings for the layer
  */
- gf.TiledObjectGroup = function(game, pos, group) {
-    gf.Layer.call(this, game, pos, group);
+ gf.TiledObjectGroup = function(group) {
+    gf.Layer.call(this, group);
 
     /**
      * The color to display objects in this group
@@ -21621,8 +20595,6 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
     this.objects = group.objects;
 
     //translate some tiled properties to our inherited properties
-    this.position.x = group.x;
-    this.position.y = group.y;
     this.alpha = group.opacity;
     this.visible = group.visible;
 };
@@ -21635,46 +20607,163 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
      * @return {TiledObjectGroup} Returns itself for chainability
      */
     spawn: function() {
-        for(var i = 0, il = this.objects.length; i < il; ++i) {
+        var game = this.parent.parent.game; //this.TiledMap.GameState.Game
+
+        //we go through these backwards so that things that are higher in the
+        //list of object gets rendered on top.
+        for(var i = this.objects.length - 1; i >= 0; --i) {
             var o = this.objects[i],
-                props = o.properties || {};
+                props = o.properties || {},
+                set,
+                interactive,
+                obj;
 
-            /*
-             * Future Shape support
-             *
+            //define a hitArea
+            if(o.polyline)
+                props.hitArea = this._getPolyline(o);
+            else if(o.polygon)
+                props.hitArea = this._getPolygon(o);
+            else if(o.ellipse)
+                props.hitArea = this._getEllipse(o);
+            else
+                props.hitArea = this._getRectangle(o);
 
-            if(o.polyline) this.spawnPolyline(o);
-            else if(o.polygon) this.spawnPolygon(o);
-            else if(o.ellipse) this.spawnEllipse(o);
-            else this.spawnRectangle(o);
+            //create a sprite with that texture
+            if(o.gid) {
+                set = this.parent.getTileset(o.gid);
 
-             */
+                if(set) {
+                    props.texture = set.getTileTexture(o.gid);
+                }
+            }
 
-            props.name = o.name;
-            props.type = o.type;
-            props.width = o.width;
-            props.height = o.height;
-            props.zIndex = this.zIndex;
-            props.visible = o.visible !== undefined ? (o.visible === 1) : true; //recently added, default old versions to true
-            props.position = [o.x, o.y];
-            props.rotation = o.rotation;
-            props.gid = o.gid;
+            //a manually specified string texture
+            if(typeof props.texture === 'string') {
+                props.texture = gf.assetCache[props.texture];
+            }
 
-            //spawn from entity pool
-            this.addChild(this.game.entitypool.create(props.name, props));
-            this.game.players.push(this.children[i]);
+            //just a regular DisplayObject
+            if(!props.texture) {
+                obj = new gf.DisplayObjectContainer();
+
+                obj.width = o.width;
+                obj.height = o.height;
+                obj.name = o.name;
+                obj.hitArea = props.hitArea;
+                obj.rotation = o.rotation;
+            } else {
+                //some variable for the user if they want them
+                //these will be passed through to a custom sprite if wanted
+                props.width = o.width;
+                props.height = o.height;
+                props.zIndex = this.zIndex;
+
+                obj = game.spritepool.create(o.name, props.texture, props);
+
+                //assign some values
+                obj.name = o.name;
+                obj.type = o.type;
+                obj.hitArea = props.hitArea;
+                obj.anchor.y = 1;
+                obj.anchor.x = this.parent.orientation === 'isometric' ? 0.5 : 0;
+
+                if(props.physical === 'true' || props.physics === 'true')
+                    obj.enablePhysics(game.physics);
+
+                //set some more stuffz
+                obj.setRotation(o.rotation);
+            }
+
+            //visible was recently added to Tiled, default old versions to true
+            obj.visible = o.visible !== undefined ? !!o.visible : true;
+
+            if(this.parent.orientation === 'isometric') {
+                var toTileX = o.x / this.parent.tileSize.x,
+                    toTileY = o.y / this.parent.tileSize.y;
+
+                //This cannot be the simplest form of this...
+                o.x = (toTileX * this.parent.tileSize.x) - ((toTileY - 1) * (this.parent.tileSize.x / 2));
+                o.y = (toTileY * this.parent.tileSize.y / 2) + (toTileX * this.parent.tileSize.y);
+            }
+
+            interactive = this._getInteractive(set, o);
+
+            //pass through all events
+            if(interactive) {
+                obj.setInteractive(interactive);
+
+                obj.click = this.onObjectEvent.bind(this, 'click', obj);
+                obj.mousedown = this.onObjectEvent.bind(this, 'mousedown', obj);
+                obj.mouseup = this.onObjectEvent.bind(this, 'mouseup', obj);
+                obj.mousemove = this.onObjectEvent.bind(this, 'mousemove', obj);
+                obj.mouseout = this.onObjectEvent.bind(this, 'mouseout', obj);
+                obj.mouseover = this.onObjectEvent.bind(this, 'mouseover', obj);
+                obj.mouseupoutside = this.onObjectEvent.bind(this, 'mouseupoutside', obj);
+            }
+
+            obj.setPosition(o.x, o.y);
+            this.addChild(obj);
         }
 
         return this;
     },
+    onObjectEvent: function(eventName, obj, data) {
+        this.parent.onObjectEvent(eventName, obj, data);
+    },
+    _getPolygon: function(o) {
+        var points = [];
+        for(var i = 0, il = o.polygon.length; i < il; ++i) {
+            points.push(new gf.Point(o.polygon[i].x, o.polygon[i].y));
+        }
+
+        return new gf.Polygon(points);
+    },
+    _getPolyline: function(o) {
+        var points = [];
+        for(var i = 0, il = o.polyline.length; i < il; ++i) {
+            points.push(new gf.Point(o.polyline[i].x, o.polyline[i].y));
+        }
+
+        return new gf.Polygon(points);
+    },
+    _getEllipse: function(o) {
+        return new gf.Ellipse(0, 0, o.width, o.height);
+    },
+    _getRectangle: function(o) {
+        return new gf.Rectangle(0, 0, o.width, o.height);
+    },
+    _getInteractive: function(set, o) {
+        var v;
+
+        //first check the lowest level value (on the tile iteself)
+        if(o.interactive !== undefined || o.interactiveTiles !== undefined)
+            v = o;
+        //next check if the tileset has the value
+        else if(set && (set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined))
+            v = set.properties;
+        //next check if this layer has interactive tiles
+        else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
+            v = this.properties;
+        //finally check if the map as a whole has interactive tiles
+        else if(this.parent.properties.interactive !== undefined || this.parent.properties.interactiveTiles !== undefined)
+            v = this.parent.properties;
+
+        //see if anything has a value to use
+        if(v) {
+            //if they do, lets grab what the interactive value is
+            return !!(v.interactive || v.interactiveTiles);
+        }
+
+        return false;
+    },
     /**
-     * Despawns all the entities associated with this layer
+     * Despawns all the sprites associated with this layer
      *
      * @method despawn
      * @return {TiledObjectGroup} Returns itself for chainability
      */
     despawn: function() {
-        //remove each entity from the game
+        //remove each sprite from the game
         for(var i = this.children.length; i > -1; --i) {
             this.removeChild(this.children[i]);
         }
@@ -21684,13 +20773,12 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 });
 
 var COLLISION_TYPE = {
-    ENTITY: 0,
+    SPRITE: 0,
     TILE: 1
 };
 
-gf.PhysicsSystem = function(game, options) {
+gf.PhysicsSystem = function(options) {
     options = options || {};
-    this.game = game;
 
     this.space = new cp.Space();
     this.space.gravity = gf.utils.ensureVector(options.gravity !== undefined ? options.gravity : 9.87);
@@ -21706,81 +20794,72 @@ gf.PhysicsSystem = function(game, options) {
     //These two collision scenarios are separate because we don't
     //want tiles to collide with tiles all the time
 
-    //entity - entity collisions
+    //sprity - sprity collisions
     this.space.addCollisionHandler(
-        COLLISION_TYPE.ENTITY,
-        COLLISION_TYPE.ENTITY,
+        COLLISION_TYPE.SPRITE,
+        COLLISION_TYPE.SPRITE,
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         null, //postSolve
         null //separate
     );
 
-    //entity - tile collisions
+    //sprity - tile collisions
     this.space.addCollisionHandler(
-        COLLISION_TYPE.ENTITY,
+        COLLISION_TYPE.SPRITE,
         COLLISION_TYPE.TILE,
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         null, //postSolve
         null //separate
     );
-
-    //the entity/body pairs added to the physics world
-    this.entities = [];
 };
 
-gf.PhysicsSystem.prototype._createBody = function(ent) {
-    var b;
-
-    if(ent.mass === Infinity) {
-        b = this.space.staticBody;
-    } else {
-        b = this.space.addBody(new cp.Body(
-            ent.mass,
-            Infinity //cp.momentForBox(ent.mass, ent.width, ent.height)
-        ));
-    }
-
-    return b;
+gf.PhysicsSystem.prototype._createBody = function(spr) {
+    return this.space.addBody(new cp.Body(
+        spr.mass,
+        Infinity //cp.momsprForBox(spr.mass, spr.width, spr.height)
+    ));
 };
 
-gf.PhysicsSystem.prototype._createShape = function(ent, body) {
+gf.PhysicsSystem.prototype._createShape = function(spr, body) {
     var shape = this.space.addShape(
         new cp.BoxShape(
             body,
-            ent.width,
-            ent.height
+            spr.width,
+            spr.height
         )
     );
 
     shape.setElasticity(0);
-    shape.setFriction(ent.friction || 0.1);
-    shape.gfEntity = ent;
-    shape.setCollisionType(this.getCollisionType(ent));
+    shape.setFriction(spr.friction || 0.1);
+    shape.sprite = spr;
+    shape.setCollisionType(this.getCollisionType(spr));
 
     return shape;
 };
 
-gf.PhysicsSystem.prototype.getCollisionType = function(ent) {
-    if(ent instanceof gf.Tile) {
+gf.PhysicsSystem.prototype.getCollisionType = function(spr) {
+    if(spr instanceof gf.Tile) {
         return COLLISION_TYPE.TILE;
     } else {
-        return COLLISION_TYPE.ENTITY;
+        return COLLISION_TYPE.SPRITE;
     }
 };
 
-gf.PhysicsSystem.prototype.add = function(ent) {
-    var body = this._createBody(ent),
-        shape = this._createShape(ent, body);
+gf.PhysicsSystem.prototype.add = function(spr) {
+    if(!spr._phys)
+        spr._phys = {};
 
+    //already in system
+    if(spr._phys.body)
+        return;
 
-    if(!ent._phys)
-        ent._phys = {};
+    var body = this._createBody(spr),
+        shape = this._createShape(spr, body);
 
-    ent._phys.id = (this.entities.push(ent)) - 1;
-    ent._phys.body = body;
-    ent._phys.shape = shape;
+    spr._phys.body = body;
+    spr._phys.shape = shape;
 
     //add control body and constraints
     if(body.m !== Infinity) {
@@ -21795,63 +20874,62 @@ gf.PhysicsSystem.prototype.add = function(ent) {
         cgear.maxBias = 1.2; //but limit the angular correction
         cgear.maxForce = 50000; //emulate angular friction
 
-        if(!ent._phys.control)
-            ent._phys.control = {};
+        if(!spr._phys.control)
+            spr._phys.control = {};
 
-        ent._phys.control.body = cbody;
-        ent._phys.control.pivot = cpivot;
-        ent._phys.control.gear = cgear;
+        spr._phys.control.body = cbody;
+        spr._phys.control.pivot = cpivot;
+        spr._phys.control.gear = cgear;
     }
 };
 
-gf.PhysicsSystem.prototype.remove = function(ent) {
-    if(!ent || !ent._phys || !ent._phys.body || !ent._phys.shape)
+gf.PhysicsSystem.prototype.remove = function(spr) {
+    if(!spr || !spr._phys || !spr._phys.body || !spr._phys.shape)
         return;
 
-    this.space.remove(ent._phys.body);
-    this.space.remove(ent._phys.shape);
+    this.space.remove(spr._phys.body);
+    this.space.remove(spr._phys.shape);
 
-    ent._phys.shape.gfEntity = null;
+    spr._phys.shape.sprite = null;
 
     //remove references
-    ent._phys.id = null;
-    ent._phys.body = null;
-    ent._phys.shape = null;
+    spr._phys.body = null;
+    spr._phys.shape = null;
 };
 
-gf.PhysicsSystem.prototype.setMass = function(ent, mass) {
-    if(ent && ent._phys && ent._phys.body)
-        ent._phys.body.setMass(mass);
+gf.PhysicsSystem.prototype.setMass = function(spr, mass) {
+    if(spr && spr._phys && spr._phys.body)
+        spr._phys.body.setMass(mass);
 };
 
-gf.PhysicsSystem.prototype.setVelocity = function(ent, vel) {
+gf.PhysicsSystem.prototype.setVelocity = function(spr, vel) {
     //update control body velocity (and pivot contraint makes regular follow)
-    if(ent && ent._phys && ent._phys.control && ent._phys.control.body)
-        ent._phys.control.body.setVel(vel);
+    if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+        spr._phys.control.body.setVel(vel);
 
     //if no control body then update real body
-    else if(ent && ent._phys && ent._phys.body)
-        ent._phys.body.setVel(vel);
+    else if(spr && spr._phys && spr._phys.body)
+        spr._phys.body.setVel(vel);
 };
 
-gf.PhysicsSystem.prototype.setPosition = function(ent, pos) {
+gf.PhysicsSystem.prototype.setPosition = function(spr, pos) {
     //update body position
-    if(ent && ent._phys && ent._phys.body)
-        ent._phys.body.setPos(pos);
+    if(spr && spr._phys && spr._phys.body)
+        spr._phys.body.setPos(pos);
 
     //update control body position
-    if(ent && ent._phys && ent._phys.control && ent._phys.control.body)
-        ent._phys.control.body.setPos(pos);
+    if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+        spr._phys.control.body.setPos(pos);
 };
 
-gf.PhysicsSystem.prototype.setRotation = function(ent, rads) {
+gf.PhysicsSystem.prototype.setRotation = function(spr, rads) {
     //update control body rotation (and gear contraint makes regular follow)
-    if(ent && ent._phys && ent._phys.control && ent._phys.control.body)
-        ent._phys.control.body.setAngle(rads);
+    if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+        spr._phys.control.body.setAngle(rads);
 
     //if no control body then update real body
-    else if(ent && ent._phys && ent._phys.body)
-        ent._phys.body.setAngle(rads);
+    else if(spr && spr._phys && spr._phys.body)
+        spr._phys.body.setAngle(rads);
 
 };
 
@@ -21861,21 +20939,1108 @@ gf.PhysicsSystem.prototype.update = function(dt) {
 
     //go through each changed shape
     this.space.activeShapes.each(function(shape) {
-        shape.gfEntity.setPosition(shape.body.p.x, shape.body.p.y, true);
-        shape.gfEntity.rotation = shape.body.a;
+        shape.sprite.setPosition(shape.body.p.x, shape.body.p.y, true);
+        shape.sprite.setRotation(shape.body.a, true);
     });
 };
 
 gf.PhysicsSystem.prototype.onCollisionBegin = function(arbiter) {//, space) {
     var shapes = arbiter.getShapes(),
-        ent1 = shapes[0].gfEntity,
-        ent2 = shapes[1].gfEntity;
+        spr1 = shapes[0].sprite,
+        spr2 = shapes[1].sprite;
 
-    ent1.onCollision(ent2);
-    ent2.onCollision(ent1);
+    spr1.onCollision(spr2);
+    spr2.onCollision(spr1);
 
     //maintain the colliding state
     return true;
+};
+gf.ObjectPool = function(type, parent) {
+    this.type = type;
+    this.pool = [];
+    this.parent = parent;
+};
+
+gf.inherits(gf.ObjectPool, Object, {
+    create: function() {
+        var o = this.pool.pop();
+
+        if(!o) {
+            o = this._construct(this.type, arguments);
+            if(this.parent)
+                this.parent.addChild(o);
+        }
+
+        return o;
+    },
+    free: function(o) {
+        this.pool.push(o);
+    },
+    //have to do this hack around to be able to use
+    //apply and new together
+    _construct: function(ctor, args) {
+        function F() {
+            return ctor.apply(this, args);
+        }
+        F.prototype = ctor.prototype;
+        return new F();
+    }
+});
+/**
+ * Holds a pool of different Sprites that can be created, makes it very
+ * easy to quickly create different registered entities
+ *
+ * @class SpritePool
+ */
+gf.SpritePool = function() {
+    this.types = {};
+
+    this.add('_default', gf.Sprite);
+};
+
+gf.inherits(gf.SpritePool, Object, {
+    /**
+     * Adds an Sprite Type to the pool
+     *
+     * @method add
+     * @param name {String} The user-defined name of the Sprite Type to add
+     * @param obj {Sprite} The Sprite or decendant type to add to the pool
+     * @return {Sprite} Returns the passed sprite
+     */
+    add: function(name, obj) {
+        return this.types[name] = obj;
+    },
+    /**
+     * Checks if the Sprite Type exists in the pool
+     *
+     * @method has
+     * @param name {String} The user-defined name of the Sprite Type to check if is in the pool
+     * @return {Boolean}
+     */
+    has: function(name) {
+        return !!this.types[name];
+    },
+    /**
+     * Creates a new sprite from the pool
+     *
+     * @method create
+     * @param name {String} The user-defined name of the Sprite to check if is in the pool
+     * @param texture {Texture} The texture for the sprite
+     * @param props {Object} Extra object that will be passed along (for custom sprite options)
+     * @return {Sprite} Returns a new instance of the object from the pool
+     */
+    create: function(name, texture, props) {
+        if(!name || !this.types[name])
+            name = '_default';
+
+        return new this.types[name](texture, props);
+    },
+    //currently doesn't do any recycling unfortunately
+    free: function() {
+        return;
+    }
+});
+
+/**
+ * The grapefruit utility object, used for misc functions used throughout the code base
+ *
+ * @class utils
+ */
+ gf.utils = {
+    _arrayDelim: /[|,]/,
+    /**
+     * Ensures that some input is a vector, converts strings and arrays into vector objects
+     *
+     * @method ensureVector
+     * @param vec {Array|String|Vector} The object to ensure becomes a vector
+     * @return {Vector} The vector created with the passed values, if the values can't be made
+     *      into a Vector, then a new Vector with 0,0 is returned
+     */
+    ensureVector: function(vec) {
+        if(vec instanceof gf.Vector)
+            return vec;
+
+        var a = vec;
+        if(typeof vec === 'string')
+            a = vec.split(gf.utils._arrayDelim);
+
+        if(a instanceof Array) {
+            switch(a.length) {
+                case 1: return new gf.Vector(parseFloat(a[0], 10) || 0, parseFloat(a[0], 10) || 0);
+                case 2: return new gf.Vector(parseFloat(a[0], 10) || 0, parseFloat(a[1], 10) || 0);
+            }
+        }
+        else if(typeof a === 'number') {
+            return new gf.Vector(a, a);
+        }
+        else {
+            return new gf.Vector();
+        }
+    },
+    /**
+     * An empty function that performs no action
+     *
+     * @method noop
+     */
+    noop: function() {},
+    /**
+     * Performs an ajax request, and manages the callbacks passed in
+     *
+     * @method ajax
+     * @param settings {Object} The settings of the ajax request, similar to jQuery's ajax function
+     * @return {AjaxRequest} An XHR object
+     */
+    ajax: function(sets) {
+        //base settings
+        sets = sets || {};
+        sets.method = sets.method || 'GET';
+        sets.dataType = sets.dataType || 'text';
+
+        if(!sets.url)
+            throw 'No URL passed to ajax';
+
+        //callbacks
+        sets.progress = sets.progress || gf.utils.noop;
+        sets.load = sets.load || gf.utils.noop;
+        sets.error = sets.error || gf.utils.noop;
+        sets.abort = sets.abort || gf.utils.noop;
+        sets.complete = sets.complete || gf.utils.noop;
+
+        var xhr = new gf.utils.AjaxRequest();
+
+        xhr.onreadystatechange = function() {
+            if(xhr.readyState === 4) {
+                var res = xhr.response || xhr.responseText,
+                    err = null;
+
+                if(xhr.status !== 200)
+                    err = 'Non-200 status code returned: ' + xhr.status;
+
+                if(!err && typeof res === 'string' && sets.dataType === 'json') {
+                    try {
+                        res = JSON.parse(res);
+                    } catch(e) {
+                        err = e;
+                    }
+                }
+
+                if(err) {
+                    if(sets.error) sets.error.call(xhr, err);
+                } else {
+                    if(sets.load) sets.load.call(xhr, res);
+                }
+            }
+        };
+
+        //chrome doesn't support json responseType
+        if(sets.dataType !== 'json')
+            xhr.responseType = sets.dataType;
+
+        xhr.open(sets.method, sets.url, true);
+        xhr.send();
+
+        return xhr;
+    },
+    /**
+     * Wraps XMLHttpRequest in a cross-browser way.
+     *
+     * @method AjaxRequest
+     * @return {ActiveXObject|XMLHttpRequest}
+     */
+    //from pixi.js
+    AjaxRequest: function() {
+        //activeX versions to check for in IE
+        var activexmodes = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP'];
+
+        //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
+        if(window.ActiveXObject) {
+            for(var i=0; i<activexmodes.length; i++) {
+                try {
+                    return new window.ActiveXObject(activexmodes[i]);
+                }
+                catch(e) {
+                    //suppress error
+                }
+            }
+        }
+        // if Mozilla, Safari etc
+        else if(window.XMLHttpRequest) {
+            return new XMLHttpRequest();
+        }
+        else {
+            return false;
+        }
+    },
+    /**
+     * This will take values and override the passed obj's properties with those values.
+     * The difference from a normal object extend is that this will try to massage the passed
+     * value into the same type as the object's property. Also if the key for the value is not
+     * in the original object, it is not copied.
+     *
+     * @method setValues
+     * @param obj {Object} The object to extend the values into
+     * @param values {Object} The values to put into the object
+     * @return {Object} returns the updated object
+     * @example
+     *      var obj = { vec: new gf.Vector(), arr: [] },
+     *          vals = { vec: '2|5', arr: '5|10|11' };
+     *      gf.setValues(obj, vals);
+     *      //now obj is:
+     *      // { vec: gf.Vector(2, 5), arr: [5, 10, 11] }
+     *      
+     */
+    //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
+    setValues: function(obj, values) {
+        if(!values) return;
+
+        for(var key in values) {
+            var newVal = values[key];
+
+            if(newVal === undefined) {
+                //console.warn('Object parameter '' + key + '' is undefined.');
+                continue;
+            }
+            if(key in obj) {
+                var curVal = obj[key];
+
+                //massage strings into numbers
+                if(typeof curVal === 'number' && typeof newVal === 'string') {
+                    var n;
+                    if(newVal.indexOf('0x') === 0) n = parseInt(newVal, 16);
+                    else n = parseInt(newVal, 10);
+
+                    if(!isNaN(n))
+                        obj[key] = n;
+                    /*else
+                        console.warn('Object parameter '' + key + '' evaluated to NaN, using default. Value passed: ' + newVal);*/
+
+                }
+                //massage vectors
+                else if(curVal instanceof gf.Vector && newVal instanceof Array) {
+                    curVal.set(parseFloat(newVal[0], 10) || 0, parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0);
+                } else if(curVal instanceof gf.Vector && typeof newVal === 'string') {
+                    var a = newVal.split(gf.utils._arrayDelim, 2);
+                    curVal.set(parseFloat(a[0], 10) || 0, parseFloat(a[1], 10) || parseFloat(a[0], 10) || 0);
+                } else if(curVal instanceof gf.Vector && typeof newVal === 'number') {
+                    curVal.set(newVal, newVal);
+                }
+                //massage points
+                else if(curVal instanceof gf.Point && newVal instanceof Array) {
+                    curVal.x = parseFloat(newVal[0], 10) || 0;
+                    curVal.y = parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0;
+                } else if(curVal instanceof gf.Point && typeof newVal === 'string') {
+                    var a2 = newVal.split(gf.utils._arrayDelim, 2);
+                    curVal.x = parseFloat(a2[0], 10) || 0;
+                    curVal.y = parseFloat(a2[1], 10) || parseFloat(a2[0], 10) || 0;
+                } else if(curVal instanceof gf.Point && typeof newVal === 'number') {
+                    curVal.x = newVal;
+                    curVal.y = newVal;
+                }
+                //massage arrays
+                else if(curVal instanceof Array && typeof newVal === 'string') {
+                    obj[key] = newVal.split(gf.utils._arrayDelim);
+                    for(var i = 0, il = obj[key].length; i < il; ++i) {
+                        var val = obj[key][i];
+                        if(!isNaN(val)) obj[key][i] = parseFloat(val, 10);
+                    }
+                } else {
+                    obj[key] = newVal;
+                }
+            }
+        }
+
+        return obj;
+    },
+    getStyle: function(elm, prop) {
+        var style = window.getComputedStyle(elm),
+            val = style.getPropertyValue(prop).replace(/px|em|%|pt/, '');
+
+        if(!isNaN(val))
+            val = parseInt(val, 10);
+
+        return val;
+    },
+    //Some things stolen from jQuery, used for mouse input
+    getOffset: function(elem) {
+        var doc = elem && elem.ownerDocument,
+            docElem = doc.documentElement,
+            box;
+
+        try {
+            box = elem.getBoundingClientRect();
+        } catch(e) {}
+
+        // Make sure we're not dealing with a disconnected DOM node
+        if (!box || !(docElem !== elem && (docElem.contains ? docElem.contains(elem) : true))) {  //(!box || !jQuery.contains(docElem, elem)) {
+            return box ? {
+                top: box.top,
+                left: box.left
+            } : {
+                top: 0,
+                left: 0
+            };
+        }
+
+        var body = doc.body,
+            win = window,
+            clientTop = docElem.clientTop || body.clientTop || 0,
+            clientLeft = docElem.clientLeft || body.clientLeft || 0,
+            scrollTop = win.pageYOffset || docElem.scrollTop || body.scrollTop,
+            scrollLeft = win.pageXOffset || docElem.scrollLeft || body.scrollLeft,
+            top = box.top + scrollTop - clientTop,
+            left = box.left + scrollLeft - clientLeft;
+
+        return {
+            top: top,
+            left: left
+        };
+    },
+    ////////////////////////////////////////////////////////////////////////////////
+    // DOM Manipulation stuff will be removed with the GUI rewrite
+    getPosition: function(o) {
+        var l = o.offsetLeft,
+            t = o.offsetTop;
+
+        while(!!(o = o.offsetParent)) {
+            l += o.offsetLeft;
+            t += o.offsetTop;
+        }
+
+        return {
+            top: t,
+            left: l
+        };
+    }
+    /////////////////////////////////////////////////////////////////////////////
+};
+
+/**
+ * The grapefruit math library, used to abstract commonly used math operations
+ *
+ * @class math
+ */
+ gf.math = {
+    DEG_TO_RAD: Math.PI / 180,
+    RAD_TO_DEG: 180 / Math.PI,
+    SEED: Math.random(),
+    /**
+     * Quickly rounds a number. This is about twice as fast as Math.round()
+     *
+     * @method round
+     * @param num {Number} The number to round
+     * @return {Number} The rounded value
+     */
+    round: function(n) {
+        return ~~(n + (n > 0 ? 0.5 : -0.5));
+    },
+    /**
+     * Clamps a number between two values.
+     *
+     * @method clamp
+     * @param num {Number} The number to clamp
+     * @param min {Number} The minimum value the number is allowed to be
+     * @param max {Number} The maximum value the number is allowed to be
+     * @return {Number} The clamped value
+     */
+    clamp: function(n, min, max) {
+        return Math.max(min, Math.min(max, n));
+    },
+    /**
+     * Truncates the decimal from a number
+     *
+     * @method truncate
+     * @param num {Number} The number to truncate
+     * @return {Number} The truncated value
+     */
+    truncate: function(n) {
+        return (n > 0) ? Math.floor(n) : Math.ceil(n);
+    },
+    /**
+     * Snaps a number to a grid value.
+     * For example, if you have a grid with gaps the size of 10 horizontally, and
+     * a position of 11, it would snap to 10; a position of 18 would snap to 20
+     *
+     * @method snap
+     * @param num {Number} The number to snap
+     * @param gap {Number} The gap size of the grid (the tile size)
+     * @param offset {Number} The starting offset of a grid slice (aka tile)
+     * @return {Number} The snapped value
+     */
+    snap: function(n, gap, offset) {
+        if(gap === 0) return n;
+
+        n -= offset;
+        n = gap * Math.round(n / gap);
+
+        return offset + n;
+    },
+    /**
+     * Snaps a number to a grid value, using floor.
+     * For example, if you have a grid with gaps the size of 10 horizontally, and
+     * a position of 11, it would snap to 10; a position of 18 would also snap to 10
+     *
+     * @method snapFloor
+     * @param num {Number} The number to snap
+     * @param gap {Number} The gap size of the grid (the tile size)
+     * @param offset {Number} The starting offset of a grid slice (aka tile)
+     * @return {Number} The snapped value
+     */
+    snapFloor: function(n, gap, offset) {
+        if(gap === 0) return n;
+
+        n -= offset;
+        n = gap * Math.floor(n / gap);
+
+        return offset + n;
+    },
+    /**
+     * Snaps a number to a grid value, using ceiling.
+     * For example, if you have a grid with gaps the size of 10 horizontally, and
+     * a position of 11, it would snap to 20; a position of 18 would also snap to 20
+     *
+     * @method snapCeil
+     * @param num {Number} The number to snap
+     * @param gap {Number} The gap size of the grid (the tile size)
+     * @param offset {Number} The starting offset of a grid slice (aka tile)
+     * @return {Number} The snapped value
+     */
+    snapCeil: function(n, gap, offset) {
+        if(gap === 0) return n;
+
+        n -= offset;
+        n = gap * Math.ceil(n / gap);
+
+        return offset + n;
+    },
+    /**
+     * Convert radians to degrees
+     *
+     * @method radiansToDegrees
+     * @param angle {Number} The angle in radians to convert
+     * @return {Number} The angle in degrees
+     */
+    radiansToDegrees: function(angle) {
+        return angle * gf.math.RAD_TO_DEG;
+    },
+    /**
+     * Convert radians to degrees
+     *
+     * @method degreesToRadians
+     * @param angle {Number} The angle in degrees to convert
+     * @return {Number} The angle in radians
+     */
+    degreesToRadians: function(angle) {
+        return angle * gf.math.DEG_TO_RAD;
+    },
+    /**
+     * Calculates the angle between two points
+     *
+     * @method angleBetween
+     * @param pos1 {Vector|Point} The first position
+     * @param pos2 {Vector|Point} The second position
+     * @return {Number} The angle in radians
+     */
+    angleBetween: function(pos1, pos2) {
+        return Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x);
+    },
+    /**
+     * Returns a random boolean based on the provided chance. The chance represents the
+     * percentage chance of returning: true.
+     *
+     * @method randomBool
+     * @param chance {Number} The % chance of getting true (0 - 100), defaults to 50%
+     * @return {Boolean}
+     */
+    randomBool: function(chance) {
+        if(chance === undefined)
+            chance = 50;
+
+        //no chance of true
+        if(chance <= 0)
+            return false;
+
+        //must always be true
+        if(chance >= 100)
+            return true;
+
+        //if roll is larger than chance, return false
+        if(Math.random() * 100 >= chance)
+            return false;
+
+        //roll passed, return true
+        return true;
+    },
+    randomInt: function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    },
+    /**
+     * Returns a random sign based on the provided chance. The chance represents the
+     * percentage chance of returning 1 (positive).
+     *
+     * @method randomSign
+     * @param chance {Number} The % chance of getting true (0 - 100), defaults to 50%
+     * @return {Number} either 1 or -1
+     */
+    randomSign: function(chance) {
+        return gf.math.randomBool(chance) ? 1 : -1;
+    },
+    /**
+     * Returns a random element of an array.
+     *
+     * @method randomElement
+     * @param array {Array} The array to choose from
+     * @param start {Number} The index of the first element to include, defaults to 0
+     * @param length {Number} The number of elements from the start to include, defaults to the length of the array (minus the start index)
+     * @return {Number} either 1 or -1
+     */
+    randomElement: function(array, start, len) {
+        //default for start
+        if(!start || start < 0)
+            start = start || 0;
+
+        //default for len
+        if(!len || len < 1 || len > array.length - start)
+            len = array.length - start;
+
+        //ensure we have an array, and there are elements to check
+        if(!array || len < 1)
+            return null;
+
+        return array[start + Math.floor(Math.random() * len)];
+    }
+ };
+/**
+ * High performance clock, from mrdoob's Three.js
+ * https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js
+ *
+ * @class Clock
+ * @constructor
+ * @param autoStart {Boolean} Automatically start the counter or not
+ * @example
+ *      var clock = new gf.Clock(false);
+ *      //... some code ...
+ *      clock.start();
+ *      //... some long code ...
+ *      var delta = clock.getDelta();
+ */
+gf.Clock = function(autoStart) {
+    this.autoStart = (autoStart !== undefined) ? autoStart : true;
+
+    this.startTime = 0;
+    this.oldTime = 0;
+    this.elapsedTime = 0;
+
+    this.running = false;
+};
+
+gf.inherits(gf.Clock, Object, {
+    /**
+     * Starts the timer
+     *
+     * @method start
+     * @example
+     *      clock.start();
+     */
+    start: function() {
+        this.startTime = window.performance !== undefined && window.performance.now !== undefined ?
+                            window.performance.now() : Date.now();
+
+        this.oldTime = this.startTime;
+        this.running = true;
+    },
+    /**
+     * Stops the timer
+     *
+     * @method stop
+     * @example
+     *      clock.stop();
+     */
+    stop: function() {
+        this.getElapsedTime();
+        this.running = false;
+    },
+    /**
+     * Gets the total time that the timer has been running
+     *
+     * @method getElapsedTime
+     * @return {Number} Total ellapsed time in ms
+     * @example
+     *      clock.getElapsedTime();
+     */
+    getElapsedTime: function() {
+        this.getDelta();
+
+        return this.elapsedTime;
+    },
+    /**
+     * Gets the difference in time since getDelta() was called last
+     *
+     * @method getDelta
+     * @return {Number} Ellapsed time since last call in seconds
+     * @example
+     *      clock.getDelta();
+     */
+    getDelta: function() {
+        var diff = 0;
+
+        if(this.autoStart && !this.running) {
+            this.start();
+        }
+
+        if(this.running) {
+            var newTime = window.performance !== undefined && window.performance.now !== undefined ?
+                                window.performance.now() : Date.now();
+
+            diff = 0.001 * (newTime - this.oldTime);
+            this.oldTime = newTime;
+
+            this.elapsedTime += diff;
+        }
+
+        return diff;
+    }
+});
+
+/**
+ * A 2d Vector implementation stolen directly from mrdoob's THREE.js
+ * thanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js
+ *
+ * @class Vector
+ * @constructor
+ * @param x {Number} The x component of the vector
+ * @param y {Number} The y component of the vector
+ */
+gf.Vector = function(x, y) {
+    this.x = x || 0;
+    this.y = y || 0;
+};
+
+gf.inherits(gf.Vector, Object, {
+    /**
+     * Sets the value of the vector
+     *
+     * @method set
+     * @param x {Number} The x component of the vector
+     * @param y {Number} The y component of the vector
+     * @return {Vector} Returns itself
+     */
+    set: function(x, y) {
+        this.x = x;
+        this.y = y;
+
+        return this;
+    },
+    /**
+     * Sets the X value of the vector
+     *
+     * @method setX
+     * @param x {Number} The x component of the vector
+     * @return {Vector} Returns itself
+     */
+    setX: function(x) {
+        this.x = x;
+
+        return this;
+    },
+    /**
+     * Sets the Y value of the vector
+     *
+     * @method setY
+     * @param y {Number} The y component of the vector
+     * @return {Vector} Returns itself
+     */
+    setY: function(y) {
+        this.y = y;
+
+        return this;
+    },
+    /**
+     * Sets a component value of the vector
+     *
+     * @method setComponent
+     * @param index {Number} The index of the component to set (0 = x, 1 = y)
+     * @param value {Number} The value to set the component to
+     * @return {Vector} Returns itself
+     */
+    setComponent: function(index, value) {
+        switch(index) {
+            case 0: this.x = value; break;
+            case 1: this.y = value; break;
+            default: throw new Error('index is out of range: ' + index);
+        }
+
+        return this;
+    },
+    /**
+     * Gets a component value of the vector
+     *
+     * @method getComponent
+     * @param index {Number} The index of the component to set (0 = x, 1 = y)
+     * @return {Number} Returns the component value
+     */
+    getComponent: function(index) {
+        switch(index) {
+            case 0: return this.x;
+            case 1: return this.y;
+            default: throw new Error('index is out of range: ' + index);
+        }
+    },
+    /**
+     * Copies the passed vector's components to this vector
+     *
+     * @method copy
+     * @param vector {Vector} The vector to copy the values from
+     * @return {Vector} Returns itself
+     */
+    copy: function(v) {
+        this.x = v.x;
+        this.y = v.y;
+
+        return this;
+    },
+    /**
+     * Floors the vector components
+     *
+     * @method floor
+     * @return {Vector} Returns itself
+     */
+    floor: function () {
+        this.x = Math.floor(this.x);
+        this.y = Math.floor(this.y);
+
+        return this;
+    },
+    /**
+     * Ceils the vector components
+     *
+     * @method ceil
+     * @return {Vector} Returns itself
+     */
+    ceil: function () {
+        this.x = Math.ceil(this.x);
+        this.y = Math.ceil(this.y);
+
+        return this;
+    },
+    /**
+     * Adds a vector to this one
+     *
+     * @method add
+     * @param vector {Vector} The vector to add to this one
+     * @return {Vector} Returns itself
+     */
+    add: function(v) {
+        this.x += v.x;
+        this.y += v.y;
+
+        return this;
+    },
+    /**
+     * Adds two vectors to each other and stores the result in this vector
+     *
+     * @method addVectors
+     * @param vector1 {Vector}
+     * @param vector2 {Vector}
+     * @return {Vector} Returns itself
+     */
+    addVectors: function(a, b) {
+        this.x = a.x + b.x;
+        this.y = a.y + b.y;
+
+        return this;
+    },
+    /**
+     * Adds a scalar value to the x and y components of this vector
+     *
+     * @method addScalar
+     * @param scalar {Number} The scalar value to add
+     * @return {Vector} Returns itself
+     */
+    addScalar: function(s) {
+        this.x += s;
+        this.y += s;
+
+        return this;
+    },
+    /**
+     * Subtracts a vector from this one
+     *
+     * @method sub
+     * @param vector {Vector} The vector to subtract from this one
+     * @return {Vector} Returns itself
+     */
+    sub: function(v) {
+        this.x -= v.x;
+        this.y -= v.y;
+
+        return this;
+    },
+    /**
+     * Subtracts two vectors from each other and stores the result in this vector
+     *
+     * @method subVectors
+     * @param vector1 {Vector}
+     * @param vector2 {Vector}
+     * @return {Vector} Returns itself
+     */
+    subVectors: function(a, b) {
+        this.x = a.x - b.x;
+        this.y = a.y - b.y;
+
+        return this;
+    },
+    /**
+     * Multiplies the x and y components of this vector by a scalar value
+     *
+     * @method multiplyScalar
+     * @param scalar {Number} The value to multiply by
+     * @return {Vector} Returns itself
+     */
+    multiplyScalar: function(s) {
+        this.x *= s;
+        this.y *= s;
+
+        return this;
+    },
+    /**
+     * Divides the x and y components of this vector by a scalar value
+     *
+     * @method divideScalar
+     * @param scalar {Number} The value to divide by
+     * @return {Vector} Returns itself
+     */
+    divideScalar: function(s) {
+        if(s !== 0) {
+            this.x /= s;
+            this.y /= s;
+        } else {
+            this.set(0, 0);
+        }
+
+        return this;
+    },
+    /**
+     * Sets this vector components to the minimum value when compared to the passed vector's components
+     *
+     * @method min
+     * @param vector {Vector} The vector to compare to
+     * @return {Vector} Returns itself
+     */
+    min: function(v) {
+        if(this.x > v.x) {
+            this.x = v.x;
+        }
+
+        if(this.y > v.y) {
+            this.y = v.y;
+        }
+
+        return this;
+    },
+    /**
+     * Sets this vector components to the maximum value when compared to the passed vector's components
+     *
+     * @method max
+     * @param vector {Vector} The vector to compare to
+     * @return {Vector} Returns itself
+     */
+    max: function(v) {
+        if(this.x < v.x) {
+            this.x = v.x;
+        }
+
+        if(this.y < v.y) {
+            this.y = v.y;
+        }
+
+        return this;
+    },
+    /**
+     * Clamps the vectors components to be between min and max
+     *
+     * @method max
+     * @param min {Number} The minimum value a component can be
+     * @param max {Number} The maximum value a component can be
+     * @return {Vector} Returns itself
+     */
+    clamp: function(min, max) {
+        // This function assumes min < max, if this assumption
+        //isn't true it will not operate correctly
+        if(this.x < min.x) {
+            this.x = min.x;
+        } else if(this.x > max.x) {
+            this.x = max.x;
+        }
+
+        if(this.y < min.y) {
+            this.y = min.y;
+        } else if(this.y > max.y) {
+            this.y = max.y;
+        }
+
+        return this;
+    },
+    /**
+     * Negates this vector (multiplies by -1)
+     *
+     * @method negate
+     * @return {Vector} Returns itself
+     */
+    negate: function() {
+        return this.multiplyScalar(-1);
+    },
+    /**
+     * Performs the dot product between this vector and the passed one and returns the result
+     *
+     * @method dot
+     * @param vector {Vector}
+     * @return {Number} Returns the dot product
+     */
+    dot: function(v) {
+        return this.x * v.x + this.y * v.y;
+    },
+    /**
+     * Calculates the square length of the vector
+     *
+     * @method lengthSq
+     * @return {Number} Returns the square length of the vector
+     */
+    lengthSq: function() {
+        return this.x * this.x + this.y * this.y;
+    },
+    /**
+     * Calculates the length of the vector
+     *
+     * @method length
+     * @return {Number} Returns the length of the vector
+     */
+    length: function() {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    },
+    /**
+     * Normalizes this vector (divides by its length)
+     *
+     * @method normalize
+     * @return {Vector} Returns the normalized vector
+     */
+    normalize: function() {
+        return this.divideScalar(this.length());
+    },
+    /**
+     * Calculates the distance to the passed vector
+     *
+     * @method distanceTo
+     * @param vector {Vector}
+     * @return {Number} The distance
+     */
+    distanceTo: function(v) {
+        return Math.sqrt(this.distanceToSquared(v));
+    },
+    /**
+     * Calculates the square distance to the passed vector
+     *
+     * @method distanceToSquared
+     * @param vector {Vector}
+     * @return {Number} The square distance
+     */
+    distanceToSquared: function(v) {
+        var dx = this.x - v.x, dy = this.y - v.y;
+        return dx * dx + dy * dy;
+    },
+    /**
+     * Sets the length of the vector
+     *
+     * @method setLength
+     * @param length {Number}
+     * @return {Vector} Returns itself
+     */
+    setLength: function(l) {
+        var oldLength = this.length();
+
+        if(oldLength !== 0 && l !== oldLength) {
+            this.multiplyScalar(l / oldLength);
+        }
+
+        return this;
+    },
+    /**
+     * Performs a linear interpolation between this vector and the passed vector
+     *
+     * @method lerp
+     * @param vector {Vector}
+     * @param alpha {Number}
+     * @return {Vector} Returns itself
+     */
+    lerp: function(v, alpha) {
+        this.x += (v.x - this.x) * alpha;
+        this.y += (v.y - this.y) * alpha;
+
+        return this;
+    },
+    /**
+     * Checks if this vector is equal to another
+     *
+     * @method equals
+     * @param vector {Vector} The vector to compare with
+     * @return {Vector} Returns itself
+     */
+    equals: function(v) {
+        return ((v.x === this.x) && (v.y === this.y));
+    },
+    /**
+     * Returns an array with the components of this vector as the elements
+     *
+     * @method toArray
+     * @return {Vector} Returns an array of [x,y] form
+     */
+    toArray: function () {
+        return [this.x, this.y];
+    },
+    /**
+     * Creates a new instance of Vector, with the same components as this vector
+     *
+     * @method clone
+     * @return {Vector} Returns a new Vector with the same values
+     */
+    clone: function () {
+        return new gf.Vector(this.x, this.y);
+    }
+});
+
+gf.Emitter = function() {
+    var listeners = {};
+
+    this.addEventListener = this.on = function(type, listener) {
+        if(listeners[type] === undefined) {
+            listeners[type] = [];
+        }
+
+        if(listeners[type].indexOf(listener) === -1) {
+            listeners[type].push(listener);
+        }
+    };
+
+    this.dispatchEvent = this.emit = function(type, data) {
+        if(typeof type === 'object') {
+            data = type;
+            type = data.type;
+        }
+
+        if(!listeners[type])
+            return;
+
+        for(var i = 0, il = listeners[type].length; i < il; ++i) {
+            listeners[type][i].call(this, data);
+        }
+    };
+
+    this.removeEventListener = this.off = function(type, listener) {
+        var index = listeners[type].indexOf(listener);
+
+        if(index !== -1) {
+            listeners[type].splice(index, 1);
+        }
+    };
 };
 
 })(window);
