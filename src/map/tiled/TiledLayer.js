@@ -13,9 +13,6 @@
 gf.TiledLayer = function(layer) {
     gf.Layer.call(this, layer);
 
-    //Tiled Editor properties
-    var props = layer.properties || {};
-
     /**
      * The tile IDs of the tilemap
      *
@@ -31,6 +28,14 @@ gf.TiledLayer = function(layer) {
      * @type Object
      */
     this.tiles = {};
+
+    /**
+     * The user-defined properties of this group. Usually defined in the TiledEditor
+     *
+     * @property properties
+     * @type Object
+     */
+    this.properties = layer.properties || {};
 
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
@@ -156,8 +161,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         position = iso ?
             // Isometric position
             [
-                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + set.tileoffset.x,
-                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + set.tileoffset.y
+                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + (this.parent.tileSize.x - set.tileSize.x) + set.tileoffset.x,
+                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + (this.parent.tileSize.y - set.tileSize.y) + set.tileoffset.y
             ]
             :
             // Orthoganal position
@@ -224,7 +229,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(o.interactive !== undefined || o.interactiveTiles !== undefined)
             v = o;
         //next check if the tileset has the value
-        else if(set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined)
+        else if(set && (set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined))
             v = set.properties;
         //next check if this layer has interactive tiles
         else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
