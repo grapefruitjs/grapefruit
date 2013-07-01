@@ -182,10 +182,10 @@ gf.inherits(gf.TiledMap, gf.Map, {
             data: data
         });
     },
-    onObjectEvent: function(eventName, tile, data) {
+    onObjectEvent: function(eventName, obj, data) {
         this.emit({
             type: 'object.' + eventName,
-            tile: tile,
+            object: obj,
             data: data
         });
     }
