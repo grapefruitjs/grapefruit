@@ -126,20 +126,20 @@ gf.TiledTileset = function(settings) {
      */
     this.textures = [];
 
-    //ensure hitArea is an array of points
-    if(this.properties.tileHitArea) {
-        var h = this.properties.tileHitArea.split(gf.utils._arrayDelim);
+    //ensure hitArea is a polygon
+    if(this.properties.hitArea) {
+        var h = this.properties.hitArea.split(gf.utils._arrayDelim);
 
         //odd number of values
         if(h.length % 2 !== 0) {
-            throw 'Uneven number of values for tileHitArea on tileset! Should be a flat array of x/y values.';
+            throw 'Uneven number of values for hitArea on tileset! Should be a flat array of x/y values.';
         }
 
         var hv = [];
         for(var i = 0, il = h.length; i < il; ++i) {
             hv.push(parseFloat(h[i], 10));
         }
-        this.properties.tileHitArea = new gf.Polygon(hv);
+        this.properties.hitArea = new gf.Polygon(hv);
     }
 
     //massage tile properties
