@@ -58,23 +58,46 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 interactive,
                 obj;
 
-            //define a hitArea
-            if(o.polyline)
-                props.hitArea = this._getPolyline(o);
-            else if(o.polygon)
-                props.hitArea = this._getPolygon(o);
-            else if(o.ellipse)
-                props.hitArea = this._getEllipse(o);
-            else
-                props.hitArea = this._getRectangle(o);
-
             //create a sprite with that texture
             if(o.gid) {
+                //check for a custom object hitArea
+                if(props.hitArea) {
+                    var h = props.hitArea.split(gf.utils._arrayDelim);
+
+                    //odd number of values
+                    if(h.length % 2 !== 0) {
+                        throw 'Uneven number of values for hitArea on Tiled Object! Should be a flat array of x/y values.';
+                    }
+
+                    var hv = [];
+                    for(var x = 0, xl = h.length; x < xl; ++x) {
+                        hv.push(parseFloat(h[x], 10));
+                    }
+                    props.hitArea = new gf.Polygon(hv);
+                }
+
                 set = this.parent.getTileset(o.gid);
 
                 if(set) {
                     props.texture = set.getTileTexture(o.gid);
+
+                    //if no hitArea then use the tileset's if available
+                    if(!props.hitArea) {
+                        props.hitArea = set.properties.hitArea;
+                    }
                 }
+            }
+            //non-sprite object (usually to define an "area" on a map)
+            else {
+                //define a hitArea
+                if(o.polyline)
+                    props.hitArea = this._getPolyline(o);
+                else if(o.polygon)
+                    props.hitArea = this._getPolygon(o);
+                else if(o.ellipse)
+                    props.hitArea = this._getEllipse(o);
+                else
+                    props.hitArea = this._getRectangle(o);
             }
 
             //a manually specified string texture
