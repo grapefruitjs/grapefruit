@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Mat Groves
  * http://goodboydigital.com/
  *
- * Compiled: 2013-06-30
+ * Compiled: 2013-07-01
  *
  * Pixi.JS is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -126,7 +126,7 @@ PIXI.Rectangle.prototype.clone = function()
  * @param y {Number} The Y coord of the point to test
  * @return if the x/y coords are within this polygon
  */
-PIXI.Rectangle.contains = function(x, y)
+PIXI.Rectangle.prototype.contains = function(x, y)
 {
     if(this.width <= 0 || this.height <= 0)
         return false;
@@ -180,7 +180,7 @@ PIXI.Polygon = function(points)
  * @method clone
  * @return a copy of the polygon
  */
-PIXI.Polygon.clone = function()
+PIXI.Polygon.prototype.clone = function()
 {
 	var points = [];
 	for (var i=0; i<this.points.length; i++) {
@@ -196,7 +196,7 @@ PIXI.Polygon.clone = function()
  * @param y {Number} The Y coord of the point to test
  * @return if the x/y coords are within this polygon
  */
-PIXI.Polygon.contains = function(x, y)
+PIXI.Polygon.prototype.contains = function(x, y)
 {
     var inside = false;
 
@@ -255,7 +255,7 @@ PIXI.Circle = function(x, y, radius)
  * @method clone
  * @return a copy of the polygon
  */
-PIXI.Circle.clone = function()
+PIXI.Circle.prototype.clone = function()
 {
     return new PIXI.Circle(this.x, this.y, this.radius);
 }
@@ -266,7 +266,7 @@ PIXI.Circle.clone = function()
  * @param y {Number} The Y coord of the point to test
  * @return if the x/y coords are within this polygon
  */
-PIXI.Circle.contains = function(x, y)
+PIXI.Circle.prototype.contains = function(x, y)
 {
     if(this.radius <= 0)
         return false;
@@ -331,7 +331,7 @@ PIXI.Ellipse = function(x, y, width, height)
  * @method clone
  * @return a copy of the polygon
  */
-PIXI.Ellipse.clone = function()
+PIXI.Ellipse.prototype.clone = function()
 {
     return new PIXI.Ellipse(this.x, this.y, this.width, this.height);
 }
@@ -342,7 +342,7 @@ PIXI.Ellipse.clone = function()
  * @param y {Number} The Y coord of the point to test
  * @return if the x/y coords are within this polygon
  */
-PIXI.Ellipse.contains = function(x, y)
+PIXI.Ellipse.prototype.contains = function(x, y)
 {
     if(this.width <= 0 || this.height <= 0)
         return false;
@@ -2367,11 +2367,13 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 		y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
 
 	//a sprite or display object with a hit area defined
-	if(item.hitArea && item.hitArea.contains && item.hitArea.contains(x, y)) {
-		if(isSprite)
-			interactionData.target = item;
+	if(item.hitArea && item.hitArea.contains) {
+		if(item.hitArea.contains(x, y)) {
+			if(isSprite)
+				interactionData.target = item;
 
-		return true;
+			return true;
+		}
 	}
 	// a sprite with no hitarea defined
 	else if(isSprite)
