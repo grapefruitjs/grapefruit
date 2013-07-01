@@ -2,7 +2,7 @@
  * A basic Camera object that provides some effects. It also will contain the HUD and GUI
  * to ensure they are using "screen-coords".
  *
- * TODO: Currently fade/flash don't show the colors. How should I actually show them, a PIXI.Sprite?
+ * TODO: Currently fade/flash don't show the colors. How should I actually show them, a gf.Sprite?
  *
  * @class Camera
  * @extends DisplayObject
@@ -15,18 +15,18 @@ gf.Camera = function(game, settings) {
      * The bounds of that the camera can move to
      *
      * @property bounds
-     * @type PIXI.Rectangle
+     * @type Rectangle
      * @readOnly
      * @private
      */
-    this._bounds = new PIXI.Rectangle(0, 0, 0, 0);
+    this._bounds = new gf.Rectangle(0, 0, 0, 0);
 
     /**
      * When following a sprite this is the space within the camera that it can move around
      * before the camera moves to track it.
      *
      * @property _deadzone
-     * @type PIXI.Rectangle
+     * @type Rectangle
      * @readOnly
      * @private
      */
@@ -287,7 +287,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
             case gf.Camera.FOLLOW.PLATFORMER:
                 var w = this.size.x / 8;
                 var h = this.size.y / 3;
-                this._deadzone = new PIXI.Rectangle(
+                this._deadzone = new gf.Rectangle(
                     (this.size.x - w) / 2,
                     (this.size.y - h) / 2 - (h / 4),
                     w,
@@ -296,7 +296,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
                 break;
             case gf.Camera.FOLLOW.TOPDOWN:
                 var sq4 = Math.max(this.size.x, this.size.y) / 4;
-                this._deadzone = new PIXI.Rectangle(
+                this._deadzone = new gf.Rectangle(
                     (this.size.x - sq4) / 2,
                     (this.size.y - sq4) / 2,
                     sq4,
@@ -305,7 +305,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
                 break;
             case gf.Camera.FOLLOW.TOPDOWN_TIGHT:
                 var sq8 = Math.max(this.size.x, this.size.y) / 8;
-                this._deadzone = new PIXI.Rectangle(
+                this._deadzone = new gf.Rectangle(
                     (this.size.x - sq8) / 2,
                     (this.size.y - sq8) / 2,
                     sq8,

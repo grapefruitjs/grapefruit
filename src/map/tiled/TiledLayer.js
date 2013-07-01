@@ -156,8 +156,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //grab some values for the tile
         texture = set.getTileTexture(tileId);
         props = set.getTileProperties(tileId);
-        hitArea = props.hitArea || set.properties.tileHitArea;
-        interactive = this._getInteractive(set, props),
+        hitArea = props.hitArea || set.properties.hitArea;
+        interactive = this._getInteractive(set, props);
         position = iso ?
             // Isometric position
             [
