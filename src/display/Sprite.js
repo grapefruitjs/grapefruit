@@ -134,3 +134,89 @@ gf.Sprite.TYPE = {
     COLLECTABLE: 'collectable',
     TILE: 'tile'
 };
+
+//Add event echos
+['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'tap', 'touchstart', 'touchend', 'touchendoutside', 'mousemove'].forEach(function(evtname) {
+    gf.Sprite.prototype[evtname] = function(e) {
+        this.emit(evtname, e);
+    };
+});
+
+/*
+ * MOUSE Callbacks
+ */
+
+/**
+ * A callback that is used when the users clicks on the sprite with their mouse
+ * @event click
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user clicks the mouse down over the sprite
+ * @event mousedown
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the mouse that was over the sprite
+ * for this callback to be fired the mouse must have been pressed down over the sprite
+ * @event mouseup
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the mouse that was over the sprite but is no longer over the sprite
+ * for this callback to be fired, The touch must have started over the sprite
+ * @event mouseupoutside
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the users mouse rolls over the sprite
+ * @event mouseover
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the users mouse leaves the sprite
+ * @event mouseout
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user moves the mouse while over the sprite
+ * @event mousemove
+ * @param interactionData {InteractionData}
+ */
+
+
+/*
+ * TOUCH Callbacks
+ */
+
+/**
+ * A callback that is used when the users taps on the sprite with their finger
+ * basically a touch version of click
+ * @event tap
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user touch's over the displayObject
+ * @event touchstart
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases a touch over the displayObject
+ * @event touchend
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the touch that was over the displayObject
+ * for this callback to be fired, The touch must have started over the sprite
+ * @event touchendoutside
+ * @param interactionData {InteractionData}
+ */
