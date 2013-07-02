@@ -1,13 +1,11 @@
 /**
- * The base Gui that holds GuiItems to be presented as a Gui
+ * The base Gui that holds GuiItems to be added to the Camera
  *
  * @class Gui
  * @extends DisplayObject
  * @constructor
- * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
  */
-gf.Gui = function(pos, settings) {
+gf.Gui = function(name) {
     /**
      * The name of the Gui
      *
@@ -15,9 +13,9 @@ gf.Gui = function(pos, settings) {
      * @type String
      * @default ''
      */
-    this.name = '';
+    this.name = name || '';
 
-    gf.DisplayObjectContainer.call(this, null, pos, settings);
+    gf.DisplayObjectContainer.call(this);
 };
 
 gf.inherits(gf.Gui, gf.DisplayObjectContainer);
