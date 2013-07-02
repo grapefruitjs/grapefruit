@@ -171,6 +171,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 (toTileY * this.parent.tileSize.y) + set.tileoffset.y
             ];
 
+        //due to the fact that we use top-left anchors for everything, but tiled uses bottom-left
+        //we need to move the position of each tile down by a single map-tile height. That is why
+        //there is an addition of "this.parent.tileSize.y" to the coords
+        position[1] +=  this.parent.tileSize.y;
+
         //if there is one to move in the map, lets just move it
         if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
             tile = this.tiles[fromTileX][fromTileY];
@@ -195,6 +200,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);
+
         tile.setInteractive(interactive);
 
         tile.collisionType = props.type;
