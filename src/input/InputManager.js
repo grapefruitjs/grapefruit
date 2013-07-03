@@ -7,7 +7,7 @@ gf.InputManager = function(view) {
      */
     this.view = view;
 
-    this.mouse = new gf.input.Mouse(view);
+    //this.mouse = new gf.input.Mouse(view);
     this.keyboard = new gf.input.Keyboard(view);
     this.gamepad = new gf.input.Gamepad();
 };
