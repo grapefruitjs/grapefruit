@@ -26,7 +26,6 @@ define(function(require) {
 
         'input/InputManager',
         'input/Input',
-        'input/Mouse',
         'input/Keyboard',
         'input/Gamepad',
         'input/GamepadButtons',

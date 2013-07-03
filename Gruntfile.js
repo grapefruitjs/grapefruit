@@ -33,7 +33,6 @@ module.exports = function(grunt) {
 
         '<%= dirs.src %>/input/InputManager.js',
         '<%= dirs.src %>/input/Input.js',
-        '<%= dirs.src %>/input/Mouse.js',
         '<%= dirs.src %>/input/Keyboard.js',
         '<%= dirs.src %>/input/Gamepad.js',
         '<%= dirs.src %>/input/GamepadButtons.js',
