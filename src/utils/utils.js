@@ -45,7 +45,7 @@
      *
      * @method ajax
      * @param settings {Object} The settings of the ajax request, similar to jQuery's ajax function
-     * @return {AjaxRequest} An XHR object
+     * @return {XMLHttpRequest|ActiveXObject} An XHR object
      */
     ajax: function(sets) {
         //base settings
@@ -63,7 +63,7 @@
         sets.abort = sets.abort || gf.utils.noop;
         sets.complete = sets.complete || gf.utils.noop;
 
-        var xhr = new gf.utils.AjaxRequest();
+        var xhr = gf.utils.createAjaxRequest();
 
         xhr.onreadystatechange = function() {
             if(xhr.readyState === 4) {
@@ -102,10 +102,10 @@
      * Wraps XMLHttpRequest in a cross-browser way.
      *
      * @method AjaxRequest
-     * @return {ActiveXObject|XMLHttpRequest}
+     * @return {XMLHttpRequest|ActiveXObject}
      */
     //from pixi.js
-    AjaxRequest: function() {
+    createAjaxRequest: function() {
         //activeX versions to check for in IE
         var activexmodes = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP'];
 

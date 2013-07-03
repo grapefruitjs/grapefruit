@@ -4,6 +4,7 @@
  * <a href="https://github.com/goldfire/howler.js">Howler.js</a>
  *
  * @class AudoPlayer
+ * @uses Emitter
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
  */
