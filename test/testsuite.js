@@ -23,8 +23,6 @@ define(function(require) {
 
         'gui/Gui',
         'gui/GuiItem',
-        'gui/Hud',
-        'gui/HudItem',
 
         'input/InputManager',
         'input/Input',
