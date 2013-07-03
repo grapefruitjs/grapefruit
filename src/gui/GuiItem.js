@@ -55,7 +55,7 @@ gf.inherits(gf.GuiItem, gf.Sprite, {
 
         //current position + (new mouse position - old mouse position) == current position + mousemove delta
         this.setPosition(
-            this.position.x + (pos.x - this.dragging.x), 
+            this.position.x + (pos.x - this.dragging.x),
             this.position.y + (pos.y - this.dragging.y)
         );
 
