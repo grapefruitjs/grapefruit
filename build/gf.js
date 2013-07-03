@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-06-30
+ * Compiled: 2013-07-02
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -44,7 +44,7 @@ Object.freeze;Object.freeze=function(a){return typeof a=="function"?a:s(a)}}Obje
  * Copyright (c) 2012, Mat Groves
  * http://goodboydigital.com/
  *
- * Compiled: 2013-06-30
+ * Compiled: 2013-07-01
  *
  * Pixi.JS is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -166,7 +166,7 @@ PIXI.Rectangle.prototype.clone = function()
  * @param y {Number} The Y coord of the point to test
  * @return if the x/y coords are within this polygon
  */
-PIXI.Rectangle.contains = function(x, y)
+PIXI.Rectangle.prototype.contains = function(x, y)
 {
     if(this.width <= 0 || this.height <= 0)
         return false;
@@ -220,7 +220,7 @@ PIXI.Polygon = function(points)
  * @method clone
  * @return a copy of the polygon
  */
-PIXI.Polygon.clone = function()
+PIXI.Polygon.prototype.clone = function()
 {
 	var points = [];
 	for (var i=0; i<this.points.length; i++) {
@@ -236,7 +236,7 @@ PIXI.Polygon.clone = function()
  * @param y {Number} The Y coord of the point to test
  * @return if the x/y coords are within this polygon
  */
-PIXI.Polygon.contains = function(x, y)
+PIXI.Polygon.prototype.contains = function(x, y)
 {
     var inside = false;
 
@@ -295,7 +295,7 @@ PIXI.Circle = function(x, y, radius)
  * @method clone
  * @return a copy of the polygon
  */
-PIXI.Circle.clone = function()
+PIXI.Circle.prototype.clone = function()
 {
     return new PIXI.Circle(this.x, this.y, this.radius);
 }
@@ -306,7 +306,7 @@ PIXI.Circle.clone = function()
  * @param y {Number} The Y coord of the point to test
  * @return if the x/y coords are within this polygon
  */
-PIXI.Circle.contains = function(x, y)
+PIXI.Circle.prototype.contains = function(x, y)
 {
     if(this.radius <= 0)
         return false;
@@ -371,7 +371,7 @@ PIXI.Ellipse = function(x, y, width, height)
  * @method clone
  * @return a copy of the polygon
  */
-PIXI.Ellipse.clone = function()
+PIXI.Ellipse.prototype.clone = function()
 {
     return new PIXI.Ellipse(this.x, this.y, this.width, this.height);
 }
@@ -382,7 +382,7 @@ PIXI.Ellipse.clone = function()
  * @param y {Number} The Y coord of the point to test
  * @return if the x/y coords are within this polygon
  */
-PIXI.Ellipse.contains = function(x, y)
+PIXI.Ellipse.prototype.contains = function(x, y)
 {
     if(this.width <= 0 || this.height <= 0)
         return false;
@@ -2407,11 +2407,13 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 		y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
 
 	//a sprite or display object with a hit area defined
-	if(item.hitArea && item.hitArea.contains && item.hitArea.contains(x, y)) {
-		if(isSprite)
-			interactionData.target = item;
+	if(item.hitArea && item.hitArea.contains) {
+		if(item.hitArea.contains(x, y)) {
+			if(isSprite)
+				interactionData.target = item;
 
-		return true;
+			return true;
+		}
 	}
 	// a sprite with no hitarea defined
 	else if(isSprite)
@@ -3993,8 +3995,8 @@ PIXI.WebGLRenderer.updateTexture = function(texture)
 	 	gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 	 	
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 		
 		// reguler...
 		
@@ -15729,8 +15731,10 @@ gf.inherits(gf.AudioManager, Object, {
  * <a href="https://github.com/goldfire/howler.js">Howler.js</a>
  *
  * @class AudoPlayer
+ * @uses Emitter
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
+ * @param settings {Object} All the settings for this player instance
  */
 gf.AudioPlayer = function(manager, settings) {
     //mixin the Event Target methods
@@ -16208,9 +16212,23 @@ gf.inherits(gf.AudioPlayer, Object, {
             this._doFadeStep(vol, wait, to, id, cb);
         }
     },
+    /**
+     * Returns the current volume of the player
+     *
+     * @method getVolume
+     * @return {Number} The current volume
+     */
     getVolume: function() {
         return this._volume;
     },
+    /**
+     * Sets the current volume of the player
+     *
+     * @method setVolume
+     * @param vol {Number} The current volume
+     * @param id {String} (optional) The play instance ID.
+     * @return {AudioPlayer}
+     */
     setVolume: function(vol, id) {
         var self = this;
 
@@ -16699,6 +16717,11 @@ gf.DisplayObjectContainer = function(settings) {
 };
 
 gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
+    /**
+     * Base resize function, all this does is ensure that all children resize functions get called as well
+     *
+     * @method resize
+     */
     resize: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
@@ -16752,6 +16775,7 @@ gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
  *
  * @class Sprite
  * @extends PIXI.Sprite
+ * @uses Emitter
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
  * @param pos {Array|Vector|Point|Number} The starting position of the sprite
@@ -16883,6 +16907,92 @@ gf.Sprite.TYPE = {
     COLLECTABLE: 'collectable',
     TILE: 'tile'
 };
+
+//Add event echos
+['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'tap', 'touchstart', 'touchend', 'touchendoutside', 'mousemove'].forEach(function(evtname) {
+    gf.Sprite.prototype[evtname] = function(e) {
+        this.emit(evtname, e);
+    };
+});
+
+/*
+ * MOUSE Callbacks
+ */
+
+/**
+ * A callback that is used when the users clicks on the sprite with their mouse
+ * @event click
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user clicks the mouse down over the sprite
+ * @event mousedown
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the mouse that was over the sprite
+ * for this callback to be fired the mouse must have been pressed down over the sprite
+ * @event mouseup
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the mouse that was over the sprite but is no longer over the sprite
+ * for this callback to be fired, The touch must have started over the sprite
+ * @event mouseupoutside
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the users mouse rolls over the sprite
+ * @event mouseover
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the users mouse leaves the sprite
+ * @event mouseout
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user moves the mouse while over the sprite
+ * @event mousemove
+ * @param interactionData {InteractionData}
+ */
+
+
+/*
+ * TOUCH Callbacks
+ */
+
+/**
+ * A callback that is used when the users taps on the sprite with their finger
+ * basically a touch version of click
+ * @event tap
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user touch's over the displayObject
+ * @event touchstart
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases a touch over the displayObject
+ * @event touchend
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the touch that was over the displayObject
+ * for this callback to be fired, The touch must have started over the sprite
+ * @event touchendoutside
+ * @param interactionData {InteractionData}
+ */
 /**
  * The base AnimatedSprite class
  * @class AnimatedSprite
@@ -16983,7 +17093,7 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
  * A basic Camera object that provides some effects. It also will contain the HUD and GUI
  * to ensure they are using "screen-coords".
  *
- * TODO: Currently fade/flash don't show the colors. How should I actually show them, a PIXI.Sprite?
+ * TODO: Currently fade/flash don't show the colors. How should I actually show them, a gf.Sprite?
  *
  * @class Camera
  * @extends DisplayObject
@@ -16996,18 +17106,18 @@ gf.Camera = function(game, settings) {
      * The bounds of that the camera can move to
      *
      * @property bounds
-     * @type PIXI.Rectangle
+     * @type Rectangle
      * @readOnly
      * @private
      */
-    this._bounds = new PIXI.Rectangle(0, 0, 0, 0);
+    this._bounds = new gf.Rectangle(0, 0, 0, 0);
 
     /**
      * When following a sprite this is the space within the camera that it can move around
      * before the camera moves to track it.
      *
      * @property _deadzone
-     * @type PIXI.Rectangle
+     * @type Rectangle
      * @readOnly
      * @private
      */
@@ -17268,7 +17378,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
             case gf.Camera.FOLLOW.PLATFORMER:
                 var w = this.size.x / 8;
                 var h = this.size.y / 3;
-                this._deadzone = new PIXI.Rectangle(
+                this._deadzone = new gf.Rectangle(
                     (this.size.x - w) / 2,
                     (this.size.y - h) / 2 - (h / 4),
                     w,
@@ -17277,7 +17387,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
                 break;
             case gf.Camera.FOLLOW.TOPDOWN:
                 var sq4 = Math.max(this.size.x, this.size.y) / 4;
-                this._deadzone = new PIXI.Rectangle(
+                this._deadzone = new gf.Rectangle(
                     (this.size.x - sq4) / 2,
                     (this.size.y - sq4) / 2,
                     sq4,
@@ -17286,7 +17396,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
                 break;
             case gf.Camera.FOLLOW.TOPDOWN_TIGHT:
                 var sq8 = Math.max(this.size.x, this.size.y) / 8;
-                this._deadzone = new PIXI.Rectangle(
+                this._deadzone = new gf.Rectangle(
                     (this.size.x - sq8) / 2,
                     (this.size.y - sq8) / 2,
                     sq8,
@@ -17535,6 +17645,12 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
     }
 });
 
+/**
+ * Camera follow types (used for camera.follow())
+ *
+ * @property FOLLOW
+ * @type Object
+ */
 gf.Camera.FOLLOW = {
     PLATFORMER: 0,
     TOPDOWN: 1,
@@ -17542,6 +17658,12 @@ gf.Camera.FOLLOW = {
     LOCKON: 3
 };
 
+/**
+ * Camera shake directions (used for camera.shake())
+ *
+ * @property SHAKE
+ * @type Object
+ */
 gf.Camera.SHAKE = {
     BOTH: 0,
     HORIZONTAL: 1,
@@ -17704,6 +17826,7 @@ gf.inherits(gf.TextureFont, gf.Font, {
  * Main game object, controls the entire instance of the game
  *
  * @class Game
+ * @uses Emitter
  * @constructor
  * @param contId {String} The container for the new canvas we will create for the game
  * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)
@@ -17723,9 +17846,6 @@ gf.Game = function(contId, settings) {
 
     if(!this.container)
         this.container = document.body;
-
-    var w = settings.width || gf.utils.getStyle(this.container, 'width'),
-        h = settings.height || gf.utils.getStyle(this.container, 'height');
 
     /**
      * The method used to render values to the screen (either webgl, or canvas)
@@ -17792,9 +17912,9 @@ gf.Game = function(contId, settings) {
 
     //initialize the correct renderer
     if(this.renderMethod === 'webgl') {
-        this.renderer = new PIXI.WebGLRenderer(w, h, settings.view, settings.transparent);
+        this.renderer = new PIXI.WebGLRenderer(settings.width, settings.height, settings.view, settings.transparent);
     } else if(this.renderMethod === 'canvas') {
-        this.renderer = new PIXI.CanvasRenderer(w, h, settings.view, settings.transparent);
+        this.renderer = new PIXI.CanvasRenderer(settings.width, settings.height, settings.view, settings.transparent);
     }
 
     /**
@@ -17962,6 +18082,13 @@ gf.inherits(gf.Game, Object, {
 
         return this;
     },
+    /**
+     * Adds a new game state to this game to be later enabled
+     *
+     * @method addState
+     * @param state {GameState} The state to add to this game
+     * @return {Game} Returns itself for chainability
+     */
     addState: function(state) {
         var name = state.name;
 
@@ -17975,7 +18102,16 @@ gf.inherits(gf.Game, Object, {
 
             state.game = this;
         }
+
+        return this;
     },
+    /**
+     * Removes a game state from the game
+     *
+     * @method removeState
+     * @param state {GameState|String} The state to remove from the game, or the name of a state to remove
+     * @return {Game} Returns itself for chainability
+     */
     removeState: function(state) {
         var name = (typeof state === 'string') ? state : state.name;
 
@@ -17994,7 +18130,16 @@ gf.inherits(gf.Game, Object, {
 
             delete this.states[name];
         }
+
+        return this;
     },
+    /**
+     * Enables a state that has been added to the game
+     *
+     * @method enableState
+     * @param state {GameState|String} The state to enable, or the name of a state to enable
+     * @return {Game} Returns itself for chainability
+     */
     enableState: function(state) {
         var name = (typeof state === 'string') ? state : state.name;
 
@@ -18004,6 +18149,8 @@ gf.inherits(gf.Game, Object, {
         this.activeState = this.states[name];
 
         this.activeState.enable();
+
+        return this;
     },
     /**
      * Loads the world map into the game
@@ -18211,15 +18358,13 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
     }
 });
 /**
- * The base Gui that holds GuiItems to be presented as a Gui
+ * The base Gui that holds GuiItems to be added to the Camera
  *
  * @class Gui
  * @extends DisplayObject
  * @constructor
- * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
  */
-gf.Gui = function(pos, settings) {
+gf.Gui = function(name) {
     /**
      * The name of the Gui
      *
@@ -18227,9 +18372,9 @@ gf.Gui = function(pos, settings) {
      * @type String
      * @default ''
      */
-    this.name = '';
+    this.name = name || '';
 
-    gf.DisplayObjectContainer.call(this, null, pos, settings);
+    gf.DisplayObjectContainer.call(this);
 };
 
 gf.inherits(gf.Gui, gf.DisplayObjectContainer);
@@ -18240,63 +18385,11 @@ gf.inherits(gf.Gui, gf.DisplayObjectContainer);
  * @class GuiItem
  * @extends Sprite
  * @constructor
- * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
+ * @param texture {Texture} The texture to set the sprite to
  */
-gf.GuiItem = function(pos, settings) {
+gf.GuiItem = function(texture, interactive) {
     /**
-     * Whether or not the item needs an update
-     *
-     * @property dirty
-     * @type Boolean
-     * @default true
-     */
-    this.dirty = true;
-
-    //allow user to pass the sprite texture as "image" to a GuiItem.
-    settings.texture = settings.texture || settings.image;
-    gf.Sprite.call(this, null, pos, settings);
-};
-
-gf.inherits(gf.GuiItem, gf.Sprite, {
-});
-
-/**
- * The Hud that holds HudItems to be presented as a Hud
- *
- * @class Hud
- * @extends DisplayObject
- * @constructor
- * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
- */
-gf.Hud = function(pos, settings) {
-    gf.Gui.call(this, pos, settings);
-};
-
-gf.inherits(gf.Hud, gf.Gui);
-
-/**
- * The base HudItem that represents an element of a hud on the screen.
- *
- * @class HudItem
- * @extends GuiItem
- * @constructor
- * @param pos {Array|Vector|Point} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
- */
-gf.HudItem = function(pos, settings) {
-    /**
-     * The value of the item
-     *
-     * @property name
-     * @type Mixed
-     * @default ''
-     */
-    this.value = '';
-
-    /**
-     * Sets whether or not you can drag the HudItem around
+     * Sets whether or not you can drag the GuiItem around
      *
      * @property draggable
      * @type Boolean
@@ -18305,94 +18398,49 @@ gf.HudItem = function(pos, settings) {
     this.draggable = false;
 
     /**
-     * [read only] Describes if the current item is being dragged or not
+     * [read only] Describes if the current item is being dragged or not, if it is this
+     * object will hold the last local position of the mouse (relative to this object's parent)
      *
      * @property dragging
-     * @type Boolean
+     * @type Object
      * @default false
      * @readOnly
      */
     this.dragging = false;
 
-    /**
-     * The font to use for text
-     *
-     * @property font
-     * @type Font
-     */
-    this.font = null;
-
-    gf.GuiItem.call(this, pos, settings);
-
-    /**
-     * The initial value of the item to reset to
-     *
-     * @property initialValue
-     * @type Mixed
-     */
-    this.initialValue = this.value;
-
-    if(this.font instanceof gf.Font)
-        this.addChild(this.font);
-    else {
-        this.font = new gf.Font();
-        this.addChild(this.font);
-    }
-
-    this.sprites = new gf.ObjectPool(PIXI.Sprite, this);
+    gf.Sprite.call(this, texture);
+    this.setInteractive(interactive);
 };
 
-gf.inherits(gf.HudItem, gf.GuiItem, {
-    /**
-     * Resets the value to the initialValue
-     *
-     * @method reset
-     * @return {HudItem} Returns itself for chainability
-     */
-    reset: function() {
-        return this.set(this.initialValue);
-    },
-    /**
-     * Sets the value of the item
-     *
-     * @method set
-     * @return {HudItem} Returns itself for chainability
-     */
-    set: function(val) {
-        this.font.setText(val);
-        this.value = val;
-        return this;
-    },
-
-    onDragStart: function() {},
-    onDragEnd: function() {},
-
-    click: function() {},
+gf.inherits(gf.GuiItem, gf.Sprite, {
     mousedown: function(e) {
-        if(!this.draggable) return;
+        gf.Sprite.prototype.mousedown.call(this, e);
 
-        this.dragging = {
-            x: e.clientX,
-            y: e.clientY
-        };
-        this.onDragStart(e);
+        if(!this.draggable)
+            return;
+
+        this.dragging = e.data.getLocalPosition(e.object.parent);
     },
     mouseup: function(e) {
+        gf.Sprite.prototype.mouseup.call(this, e);
+
         this.dragging = false;
-        this.onDragEnd(e);
     },
     mousemove: function(e) {
-        if(!this.draggable || !this.dragging) return;
+        gf.Sprite.prototype.mousemove.call(this, e);
 
-        var diffX = e.clientX - this.dragging.x,
-            diffY = e.clientY - this.dragging.y,
-            pos = gf.utils.getPosition(this.elm);
+        if(!this.draggable || !this.dragging)
+            return;
 
-        this.dragging.x = e.clientX;
-        this.dragging.y = e.clientY;
+        var pos = e.data.getLocalPosition(this.parent);
 
-        this.elm.style.top = pos.top + diffY;
-        this.elm.style.left = pos.left + diffX;
+        //current position + (new mouse position - old mouse position) == current position + mousemove delta
+        this.setPosition(
+            this.position.x + (pos.x - this.dragging.x),
+            this.position.y + (pos.y - this.dragging.y)
+        );
+
+        this.dragging = pos;
     }
 });
 
@@ -18405,7 +18453,7 @@ gf.InputManager = function(view) {
      */
     this.view = view;
 
-    this.mouse = new gf.input.Mouse(view);
+    //this.mouse = new gf.input.Mouse(view);
     this.keyboard = new gf.input.Keyboard(view);
     this.gamepad = new gf.input.Gamepad();
 };
@@ -18717,141 +18765,6 @@ gf.inherits(gf.input.Input, Object, {
         return this.status[action];
     }
 });
-gf.input.Mouse = function(view) {
-    gf.input.Input.call(this, view);
-
-    /**
-     * The current screen touches
-     *
-     * @property touches
-     * @type Array
-     * @readOnly
-     */
-    this.touches = [{ x: 0, y: 0 }];
-
-    /**
-     * The current position of the mouse
-     *
-     * @property position
-     * @type Point
-     * @readOnly
-     */
-    this.position = new gf.Point(0, 0);
-
-    /**
-     * The current position of the mouse
-     *
-     * @property position
-     * @type Point
-     * @readOnly
-     */
-    this.offset = gf.utils.getOffset(this.view);
-
-    //bind touch events
-    this.view.addEventListener('touchmove', this.onMouse.bind(this), false);
-    for(var t in gf.input.Mouse.TOUCH_EVENT) {
-        if(gf.input.Mouse.TOUCH_EVENT[t] === 'touchmove') return;
-        this.view.addEventListener(gf.input.Mouse.TOUCH_EVENT[t], this.onTouch.bind(this), false);
-    }
-
-    //Bind mouse events
-    document.addEventListener('mousewheel', this.onMouseWheel.bind(this), false); //needs to be document and check target?
-    for(var k in gf.input.Mouse.EVENT) {
-        var v = gf.input.Mouse.EVENT[k];
-        if(v === 'mousewheel') return;
-
-        this.view.addEventListener(v, this.onMouse.bind(this), false);
-    }
-};
-
-gf.inherits(gf.input.Mouse, gf.input.Input, {
-    //generic mouse event (click, down, up, mouve, touchmove, etc)
-    onMouse: function(e) {
-        this.updateCoords(e);
-
-        if(this.dispatchMouseEvent(e))
-            return this.preventDefault(e);
-
-        return true;
-    },
-    onMouseWheel: function(e) {
-        if(e.target === this.view)
-            if(this.dispatchMouseEvent(e))
-                return this.preventDefault(e);
-
-        return true;
-    },
-    //generic touch event (tap, start, end, etc)
-    onTouch: function(e) {
-        this.updateCoords(e);
-
-        return this.onMouse(e);
-    },
-    //update the mouse coords
-    updateCoords: function(e) {
-        this.touches.length = 0;
-
-        var off = this.offset;
-
-        //mouse event
-        if(!e.touches) {
-            this.touches.push({
-                x: e.pageX - off.left,
-                y: e.pageY - off.top,
-                id: 0
-            });
-        }
-        //touch event
-        else {
-            for(var i = 0, il = e.changedTouches.length; i < il; ++i) {
-                var t = e.changedTouches[i];
-
-                this.touches.push({
-                    x: t.clientX - off.left,
-                    y: t.clientY - off.top
-                });
-            }
-        }
-        this.position.x = this.touches[0].x;
-        this.position.y = this.touches[0].y;
-    },
-    dispatchMouseEvent: function(e) {
-        if(this.binds[e.type]) {
-            //track that action is active
-            this.status[this.binds[e.type]] = true;
-
-            //for each touch
-            if(this.callbacks[this.binds[e.type]]) {
-                for(var t = 0, tl = this.touches.length; t < tl; ++t) {
-                    this.runCallbacks(e.type, [this.touches[t]]);
-                }
-
-                return this.preventDefault(e);
-            }
-
-            return true;
-        }
-    }
-});
-
-gf.input.Mouse.EVENT = {
-    WHEEL: 'mousewheel',
-    MOVE: 'mousemove',
-    DOWN: 'mousedown',
-    UP: 'mouseup',
-    CLICK: 'click',
-    DBLCLICK: 'dblclick',
-    RCLICK: 'contextmenu',
-    CONTEXTMENU: 'contextmenu'
-};
-
-gf.input.Mouse.TOUCH_EVENT = {
-    MOVE: 'touchmove',
-    START: 'touchstart',
-    END: 'touchend',
-    TAP: 'tap',
-    DBLTAP: 'dbltap'
-};
 gf.input.Keyboard = function(view) {
     gf.input.Input.call(this, view);
 
@@ -19146,6 +19059,15 @@ gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
         }
     }
 });
+/**
+ * The Base loader class that all other loaders inherit from
+ *
+ * @class Loader
+ * @uses Emitter
+ * @constructor
+ * @param name {String} The name of the resource to load, used as a key in the assetCache
+ * @param url {String} The url to load the resource from, also used as a key in the assetCache
+ */
 gf.Loader = function(name, url) {
     gf.Emitter.call(this);
 
@@ -19156,20 +19078,35 @@ gf.Loader = function(name, url) {
 };
 
 gf.inherits(gf.Loader, Object, {
+    /**
+     * Atempts to load a resource from the asset cache, if it finds the resource
+     * in the cache, it will return the value and asynchronously emit the 'load' event
+     *
+     * @method load
+     * @return {mixed} The cached value, or undefined if there is none cached
+     */
     load: function() {
         var self = this;
 
         if(gf.assetCache[this.name]) {
-            return setTimeout(function() {
+            setTimeout(function() {
                 self.done(gf.assetCache[self.name]);
             }, 0);
+            return gf.assetCache[this.name];
         }
         else if(gf.assetCache[this.url]) {
-            return setTimeout(function() {
+            setTimeout(function() {
                 self.done(gf.assetCache[self.url]);
             }, 0);
+            return gf.assetCache[this.url];
         }
     },
+    /**
+     * Emits the 'load' event, passing the properties of this instance and the data passed
+     *
+     * @method load
+     * @param data {mixed} The loaded data
+     */
     done: function(data) {
         gf.assetCache[this.name] = data;
 
@@ -19184,6 +19121,12 @@ gf.inherits(gf.Loader, Object, {
             });
         }, 0);
     },
+    /**
+     * Emits the 'error' event, passing the properties of this instance and the message passed
+     *
+     * @method error
+     * @param msg {String} The error message that occurred
+     */
     error: function(msg) {
         //be async for sure
         var self = this;
@@ -19203,6 +19146,7 @@ gf.inherits(gf.Loader, Object, {
  * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
  *
  * @class AssetLoader
+ * @uses Emitter
  * @constructor
  * @param assets {Array} Array of assets to load when `.load()` is called
  * @example
@@ -19599,6 +19543,7 @@ gf.inherits(gf.WorldLoader, gf.Loader, {
  * Base Map implementation, provides common functions for all Map types
  *
  * @class Map
+ * @uses Emitter
  * @extends DisplayObject
  * @constructor
  * @param map {Object} All the settings for the map
@@ -19866,11 +19811,6 @@ gf.TiledMap = function(map) {
         switch(map.layers[i].type) {
             case 'tilelayer':
                 lyr = new gf.TiledLayer(map.layers[i]);
-
-                //due to the fact that we use top-left anchors for everything, but tiled uses bottom-left
-                //we need to move the position of the map down by a single tile
-                lyr.position.y += this.tileSize.y;
-
                 break;
 
             case 'objectgroup':
@@ -19910,7 +19850,6 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * Notifies the map it needs to resize, re renders the viewport
      *
      * @method resize
-     * @private
      */
     resize: function(width, height) {
         var numX = Math.ceil(width / this.scaledTileSize.x),
@@ -19929,6 +19868,11 @@ gf.inherits(gf.TiledMap, gf.Map, {
             }
         }
     },
+    /**
+     * Spawns all the objects in the TiledObjectGroups of this map
+     *
+     * @method spawnObjects
+     */
     spawnObjects: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
@@ -19938,6 +19882,16 @@ gf.inherits(gf.TiledMap, gf.Map, {
             }
         }
     },
+    /**
+     * Called by a TiledLayer when a tile event occurs. This is so you can listen for
+     * the emitted events on the world instead of the tile itself.
+     *
+     * @method onTileEvent
+     * @param eventName {String} The event name to emit, the prefix 'tile.' will be added to it
+     * @param tile {Tile} The tile that has the event
+     * @param data {InteractionData} The raw interaction object for the event
+     * @private
+     */
     onTileEvent: function(eventName, tile, data) {
         this.emit({
             type: 'tile.' + eventName,
@@ -19945,10 +19899,20 @@ gf.inherits(gf.TiledMap, gf.Map, {
             data: data
         });
     },
-    onObjectEvent: function(eventName, tile, data) {
+    /**
+     * Called by a TiledObjectGroup when an object event occurs. This is so you can listen for
+     * the emitted events on the world instead of the tile itself.
+     *
+     * @method onObjectEvent
+     * @param eventName {String} The event name to emit, the prefix 'object.' will be added to it
+     * @param obj {Sprite|DisplayObjectContainer} The object that has the event
+     * @param data {InteractionData} The raw interaction object for the event
+     * @private
+     */
+    onObjectEvent: function(eventName, obj, data) {
         this.emit({
             type: 'object.' + eventName,
-            tile: tile,
+            object: obj,
             data: data
         });
     }
@@ -20112,8 +20076,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //grab some values for the tile
         texture = set.getTileTexture(tileId);
         props = set.getTileProperties(tileId);
-        hitArea = props.hitArea || set.properties.tileHitArea;
-        interactive = this._getInteractive(set, props),
+        hitArea = props.hitArea || set.properties.hitArea;
+        interactive = this._getInteractive(set, props);
         position = iso ?
             // Isometric position
             [
@@ -20126,6 +20090,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 (toTileX * this.parent.tileSize.x) + set.tileoffset.x,
                 (toTileY * this.parent.tileSize.y) + set.tileoffset.y
             ];
+
+        //due to the fact that we use top-left anchors for everything, but tiled uses bottom-left
+        //we need to move the position of each tile down by a single map-tile height. That is why
+        //there is an addition of "this.parent.tileSize.y" to the coords
+        position[1] +=  this.parent.tileSize.y;
 
         //if there is one to move in the map, lets just move it
         if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
@@ -20151,6 +20120,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);
+
         tile.setInteractive(interactive);
 
         tile.collisionType = props.type;
@@ -20447,20 +20417,20 @@ gf.TiledTileset = function(settings) {
      */
     this.textures = [];
 
-    //ensure hitArea is an array of points
-    if(this.properties.tileHitArea) {
-        var h = this.properties.tileHitArea.split(gf.utils._arrayDelim);
+    //ensure hitArea is a polygon
+    if(this.properties.hitArea) {
+        var h = this.properties.hitArea.split(gf.utils._arrayDelim);
 
         //odd number of values
         if(h.length % 2 !== 0) {
-            throw 'Uneven number of values for tileHitArea on tileset! Should be a flat array of x/y values.';
+            throw 'Uneven number of values for hitArea on tileset! Should be a flat array of x/y values.';
         }
 
         var hv = [];
         for(var i = 0, il = h.length; i < il; ++i) {
             hv.push(parseFloat(h[i], 10));
         }
-        this.properties.tileHitArea = new gf.Polygon(hv);
+        this.properties.hitArea = new gf.Polygon(hv);
     }
 
     //massage tile properties
@@ -20618,23 +20588,46 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 interactive,
                 obj;
 
-            //define a hitArea
-            if(o.polyline)
-                props.hitArea = this._getPolyline(o);
-            else if(o.polygon)
-                props.hitArea = this._getPolygon(o);
-            else if(o.ellipse)
-                props.hitArea = this._getEllipse(o);
-            else
-                props.hitArea = this._getRectangle(o);
-
             //create a sprite with that texture
             if(o.gid) {
+                //check for a custom object hitArea
+                if(props.hitArea) {
+                    var h = props.hitArea.split(gf.utils._arrayDelim);
+
+                    //odd number of values
+                    if(h.length % 2 !== 0) {
+                        throw 'Uneven number of values for hitArea on Tiled Object! Should be a flat array of x/y values.';
+                    }
+
+                    var hv = [];
+                    for(var x = 0, xl = h.length; x < xl; ++x) {
+                        hv.push(parseFloat(h[x], 10));
+                    }
+                    props.hitArea = new gf.Polygon(hv);
+                }
+
                 set = this.parent.getTileset(o.gid);
 
                 if(set) {
                     props.texture = set.getTileTexture(o.gid);
+
+                    //if no hitArea then use the tileset's if available
+                    if(!props.hitArea) {
+                        props.hitArea = set.properties.hitArea;
+                    }
                 }
+            }
+            //non-sprite object (usually to define an "area" on a map)
+            else {
+                //define a hitArea
+                if(o.polyline)
+                    props.hitArea = this._getPolyline(o);
+                else if(o.polygon)
+                    props.hitArea = this._getPolygon(o);
+                else if(o.ellipse)
+                    props.hitArea = this._getEllipse(o);
+                else
+                    props.hitArea = this._getRectangle(o);
             }
 
             //a manually specified string texture
@@ -20794,7 +20787,7 @@ gf.PhysicsSystem = function(options) {
     //These two collision scenarios are separate because we don't
     //want tiles to collide with tiles all the time
 
-    //sprity - sprity collisions
+    //sprite - sprite collisions
     this.space.addCollisionHandler(
         COLLISION_TYPE.SPRITE,
         COLLISION_TYPE.SPRITE,
@@ -20804,7 +20797,7 @@ gf.PhysicsSystem = function(options) {
         null //separate
     );
 
-    //sprity - tile collisions
+    //sprite - tile collisions
     this.space.addCollisionHandler(
         COLLISION_TYPE.SPRITE,
         COLLISION_TYPE.TILE,
@@ -21088,7 +21081,7 @@ gf.inherits(gf.SpritePool, Object, {
      *
      * @method ajax
      * @param settings {Object} The settings of the ajax request, similar to jQuery's ajax function
-     * @return {AjaxRequest} An XHR object
+     * @return {XMLHttpRequest|ActiveXObject} An XHR object
      */
     ajax: function(sets) {
         //base settings
@@ -21106,7 +21099,7 @@ gf.inherits(gf.SpritePool, Object, {
         sets.abort = sets.abort || gf.utils.noop;
         sets.complete = sets.complete || gf.utils.noop;
 
-        var xhr = new gf.utils.AjaxRequest();
+        var xhr = gf.utils.createAjaxRequest();
 
         xhr.onreadystatechange = function() {
             if(xhr.readyState === 4) {
@@ -21145,10 +21138,10 @@ gf.inherits(gf.SpritePool, Object, {
      * Wraps XMLHttpRequest in a cross-browser way.
      *
      * @method AjaxRequest
-     * @return {ActiveXObject|XMLHttpRequest}
+     * @return {XMLHttpRequest|ActiveXObject}
      */
     //from pixi.js
-    AjaxRequest: function() {
+    createAjaxRequest: function() {
         //activeX versions to check for in IE
         var activexmodes = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP'];
 
@@ -21250,68 +21243,7 @@ gf.inherits(gf.SpritePool, Object, {
         }
 
         return obj;
-    },
-    getStyle: function(elm, prop) {
-        var style = window.getComputedStyle(elm),
-            val = style.getPropertyValue(prop).replace(/px|em|%|pt/, '');
-
-        if(!isNaN(val))
-            val = parseInt(val, 10);
-
-        return val;
-    },
-    //Some things stolen from jQuery, used for mouse input
-    getOffset: function(elem) {
-        var doc = elem && elem.ownerDocument,
-            docElem = doc.documentElement,
-            box;
-
-        try {
-            box = elem.getBoundingClientRect();
-        } catch(e) {}
-
-        // Make sure we're not dealing with a disconnected DOM node
-        if (!box || !(docElem !== elem && (docElem.contains ? docElem.contains(elem) : true))) {  //(!box || !jQuery.contains(docElem, elem)) {
-            return box ? {
-                top: box.top,
-                left: box.left
-            } : {
-                top: 0,
-                left: 0
-            };
-        }
-
-        var body = doc.body,
-            win = window,
-            clientTop = docElem.clientTop || body.clientTop || 0,
-            clientLeft = docElem.clientLeft || body.clientLeft || 0,
-            scrollTop = win.pageYOffset || docElem.scrollTop || body.scrollTop,
-            scrollLeft = win.pageXOffset || docElem.scrollLeft || body.scrollLeft,
-            top = box.top + scrollTop - clientTop,
-            left = box.left + scrollLeft - clientLeft;
-
-        return {
-            top: top,
-            left: left
-        };
-    },
-    ////////////////////////////////////////////////////////////////////////////////
-    // DOM Manipulation stuff will be removed with the GUI rewrite
-    getPosition: function(o) {
-        var l = o.offsetLeft,
-            t = o.offsetTop;
-
-        while(!!(o = o.offsetParent)) {
-            l += o.offsetLeft;
-            t += o.offsetTop;
-        }
-
-        return {
-            top: t,
-            left: l
-        };
     }
-    /////////////////////////////////////////////////////////////////////////////
 };
 
 /**
@@ -21470,6 +21402,14 @@ gf.inherits(gf.SpritePool, Object, {
         //roll passed, return true
         return true;
     },
+    /**
+     * Returns a random int between min and max.
+     *
+     * @method randomInt
+     * @param min {Number} The minimun number that the result can be
+     * @param max {Number} The maximun number that the result can be
+     * @return {Number}
+     */
     randomInt: function(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
@@ -22007,9 +21947,42 @@ gf.inherits(gf.Vector, Object, {
     }
 });
 
-gf.Emitter = function() {
+/**
+ * Event emitter mixin. This will add emitter properties to an object
+ * so that it can emit events, and have others listen for them.
+ *
+ * @class Emitter
+ * @constructor
+ * @example
+ *      function MyObject(clr) {
+ *          gf.Emitter.call(this); //adds properties
+ *          this.color = clr;
+ *      }
+ *
+ *      gf.inherits(MyObject, Object, {
+ *          something: function(s) {
+ *              this.emit('hey', { some: s });
+ *          }
+ *      });
+ *
+ *      //then later
+ *      var o = new MyObject('red');
+ *      o.on('hey', function(e) {
+ *          console.log(this.color); //"this" refers to the instance, logs "red"
+ *          console.log(e.some); //e is the data passed to emit, logs "hello"
+ *      });
+ *      o.something('hello');
+ */
+ gf.Emitter = function() {
     var listeners = {};
 
+    /**
+     * Registers a listener function to be run on an event occurance
+     *
+     * @method on
+     * @param type {String} The event name to listen for
+     * @param listener {Function} The function to execute when the event happens
+     */
     this.addEventListener = this.on = function(type, listener) {
         if(listeners[type] === undefined) {
             listeners[type] = [];
@@ -22020,6 +21993,13 @@ gf.Emitter = function() {
         }
     };
 
+    /**
+     * Emits an event which will run all registered listeners for the event type
+     *
+     * @method emit
+     * @param type {String} The event name to emit
+     * @param data {mixed} Any data you want passed along with the event
+     */
     this.dispatchEvent = this.emit = function(type, data) {
         if(typeof type === 'object') {
             data = type;
@@ -22034,6 +22014,13 @@ gf.Emitter = function() {
         }
     };
 
+    /**
+     * Removes a listener function for an event type
+     *
+     * @method off
+     * @param type {String} The event name to emit
+     * @param listener {Function} The function to remove
+     */
     this.removeEventListener = this.off = function(type, listener) {
         var index = listeners[type].indexOf(listener);
 
