@@ -30,8 +30,6 @@ module.exports = function(grunt) {
 
         '<%= dirs.src %>/gui/Gui.js',
         '<%= dirs.src %>/gui/GuiItem.js',
-        '<%= dirs.src %>/gui/Hud.js',
-        '<%= dirs.src %>/gui/HudItem.js',
 
         '<%= dirs.src %>/input/InputManager.js',
         '<%= dirs.src %>/input/Input.js',
