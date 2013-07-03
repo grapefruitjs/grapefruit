@@ -554,6 +554,12 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
     }
 });
 
+/**
+ * Camera follow types (used for camera.follow())
+ *
+ * @property FOLLOW
+ * @type Object
+ */
 gf.Camera.FOLLOW = {
     PLATFORMER: 0,
     TOPDOWN: 1,
@@ -561,6 +567,12 @@ gf.Camera.FOLLOW = {
     LOCKON: 3
 };
 
+/**
+ * Camera shake directions (used for camera.shake())
+ *
+ * @property SHAKE
+ * @type Object
+ */
 gf.Camera.SHAKE = {
     BOTH: 0,
     HORIZONTAL: 1,

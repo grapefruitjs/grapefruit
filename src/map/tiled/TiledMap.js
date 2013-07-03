@@ -142,7 +142,6 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * Notifies the map it needs to resize, re renders the viewport
      *
      * @method resize
-     * @private
      */
     resize: function(width, height) {
         var numX = Math.ceil(width / this.scaledTileSize.x),
@@ -161,6 +160,11 @@ gf.inherits(gf.TiledMap, gf.Map, {
             }
         }
     },
+    /**
+     * Spawns all the objects in the TiledObjectGroups of this map
+     *
+     * @method spawnObjects
+     */
     spawnObjects: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
@@ -170,6 +174,16 @@ gf.inherits(gf.TiledMap, gf.Map, {
             }
         }
     },
+    /**
+     * Called by a TiledLayer when a tile event occurs. This is so you can listen for
+     * the emitted events on the world instead of the tile itself.
+     *
+     * @method onTileEvent
+     * @param eventName {String} The event name to emit, the prefix 'tile.' will be added to it
+     * @param tile {Tile} The tile that has the event
+     * @param data {InteractionData} The raw interaction object for the event
+     * @private
+     */
     onTileEvent: function(eventName, tile, data) {
         this.emit({
             type: 'tile.' + eventName,
@@ -177,6 +191,16 @@ gf.inherits(gf.TiledMap, gf.Map, {
             data: data
         });
     },
+    /**
+     * Called by a TiledObjectGroup when an object event occurs. This is so you can listen for
+     * the emitted events on the world instead of the tile itself.
+     *
+     * @method onObjectEvent
+     * @param eventName {String} The event name to emit, the prefix 'object.' will be added to it
+     * @param obj {Sprite|DisplayObjectContainer} The object that has the event
+     * @param data {InteractionData} The raw interaction object for the event
+     * @private
+     */
     onObjectEvent: function(eventName, obj, data) {
         this.emit({
             type: 'object.' + eventName,
