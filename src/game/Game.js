@@ -258,6 +258,13 @@ gf.inherits(gf.Game, Object, {
 
         return this;
     },
+    /**
+     * Adds a new game state to this game to be later enabled
+     *
+     * @method addState
+     * @param state {GameState} The state to add to this game
+     * @return {Game} Returns itself for chainability
+     */
     addState: function(state) {
         var name = state.name;
 
@@ -271,7 +278,16 @@ gf.inherits(gf.Game, Object, {
 
             state.game = this;
         }
+
+        return this;
     },
+    /**
+     * Removes a game state from the game
+     *
+     * @method removeState
+     * @param state {GameState|String} The state to remove from the game, or the name of a state to remove
+     * @return {Game} Returns itself for chainability
+     */
     removeState: function(state) {
         var name = (typeof state === 'string') ? state : state.name;
 
@@ -290,7 +306,16 @@ gf.inherits(gf.Game, Object, {
 
             delete this.states[name];
         }
+
+        return this;
     },
+    /**
+     * Enables a state that has been added to the game
+     *
+     * @method enableState
+     * @param state {GameState|String} The state to enable, or the name of a state to enable
+     * @return {Game} Returns itself for chainability
+     */
     enableState: function(state) {
         var name = (typeof state === 'string') ? state : state.name;
 
@@ -300,6 +325,8 @@ gf.inherits(gf.Game, Object, {
         this.activeState = this.states[name];
 
         this.activeState.enable();
+
+        return this;
     },
     /**
      * Loads the world map into the game

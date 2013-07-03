@@ -172,6 +172,11 @@ gf.DisplayObjectContainer = function(settings) {
 };
 
 gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
+    /**
+     * Base resize function, all this does is ensure that all children resize functions get called as well
+     *
+     * @method resize
+     */
     resize: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];

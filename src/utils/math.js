@@ -154,6 +154,14 @@
         //roll passed, return true
         return true;
     },
+    /**
+     * Returns a random int between min and max.
+     *
+     * @method randomInt
+     * @param min {Number} The minimun number that the result can be
+     * @param max {Number} The maximun number that the result can be
+     * @return {Number}
+     */
     randomInt: function(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     },

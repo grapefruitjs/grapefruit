@@ -7,6 +7,7 @@
  * @uses Emitter
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
+ * @param settings {Object} All the settings for this player instance
  */
 gf.AudioPlayer = function(manager, settings) {
     //mixin the Event Target methods
@@ -484,9 +485,23 @@ gf.inherits(gf.AudioPlayer, Object, {
             this._doFadeStep(vol, wait, to, id, cb);
         }
     },
+    /**
+     * Returns the current volume of the player
+     *
+     * @method getVolume
+     * @return {Number} The current volume
+     */
     getVolume: function() {
         return this._volume;
     },
+    /**
+     * Sets the current volume of the player
+     *
+     * @method setVolume
+     * @param vol {Number} The current volume
+     * @param id {String} (optional) The play instance ID.
+     * @return {AudioPlayer}
+     */
     setVolume: function(vol, id) {
         var self = this;
 
