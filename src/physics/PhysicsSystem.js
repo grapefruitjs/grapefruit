@@ -20,7 +20,7 @@ gf.PhysicsSystem = function(options) {
     //These two collision scenarios are separate because we don't
     //want tiles to collide with tiles all the time
 
-    //sprity - sprity collisions
+    //sprite - sprite collisions
     this.space.addCollisionHandler(
         COLLISION_TYPE.SPRITE,
         COLLISION_TYPE.SPRITE,
@@ -30,7 +30,7 @@ gf.PhysicsSystem = function(options) {
         null //separate
     );
 
-    //sprity - tile collisions
+    //sprite - tile collisions
     this.space.addCollisionHandler(
         COLLISION_TYPE.SPRITE,
         COLLISION_TYPE.TILE,
