@@ -3,6 +3,7 @@
  *
  * @class Sprite
  * @extends PIXI.Sprite
+ * @uses Emitter
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
  * @param pos {Array|Vector|Point|Number} The starting position of the sprite

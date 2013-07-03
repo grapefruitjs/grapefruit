@@ -2,6 +2,7 @@
  * Base Map implementation, provides common functions for all Map types
  *
  * @class Map
+ * @uses Emitter
  * @extends DisplayObject
  * @constructor
  * @param map {Object} All the settings for the map

@@ -2,6 +2,7 @@
  * Main game object, controls the entire instance of the game
  *
  * @class Game
+ * @uses Emitter
  * @constructor
  * @param contId {String} The container for the new canvas we will create for the game
  * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)

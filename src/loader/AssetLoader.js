@@ -4,6 +4,7 @@
  * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
  *
  * @class AssetLoader
+ * @uses Emitter
  * @constructor
  * @param assets {Array} Array of assets to load when `.load()` is called
  * @example
