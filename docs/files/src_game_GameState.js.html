@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\game\GameState.js - gf</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="gf"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.0.2</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AnimatedSprite.html">AnimatedSprite</a></li>
+            
+                <li><a href="../classes/AssetLoader.html">AssetLoader</a></li>
+            
+                <li><a href="../classes/AudioLoader.html">AudioLoader</a></li>
+            
+                <li><a href="../classes/AudioManager.html">AudioManager</a></li>
+            
+                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="../classes/Camera.html">Camera</a></li>
+            
+                <li><a href="../classes/Circle.html">Circle</a></li>
+            
+                <li><a href="../classes/Clock.html">Clock</a></li>
+            
+                <li><a href="../classes/DisplayObjectContainer.html">DisplayObjectContainer</a></li>
+            
+                <li><a href="../classes/Ellipse.html">Ellipse</a></li>
+            
+                <li><a href="../classes/Game.html">Game</a></li>
+            
+                <li><a href="../classes/GameState.html">GameState</a></li>
+            
+                <li><a href="../classes/Gui.html">Gui</a></li>
+            
+                <li><a href="../classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="../classes/ImageLayer.html">ImageLayer</a></li>
+            
+                <li><a href="../classes/Input.html">Input</a></li>
+            
+                <li><a href="../classes/JsonLoader.html">JsonLoader</a></li>
+            
+                <li><a href="../classes/Layer.html">Layer</a></li>
+            
+                <li><a href="../classes/Map.html">Map</a></li>
+            
+                <li><a href="../classes/math.html">math</a></li>
+            
+                <li><a href="../classes/plugin.html">plugin</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Polygon.html">Polygon</a></li>
+            
+                <li><a href="../classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/SpritePool.html">SpritePool</a></li>
+            
+                <li><a href="../classes/support.html">support</a></li>
+            
+                <li><a href="../classes/Texture.html">Texture</a></li>
+            
+                <li><a href="../classes/TextureLoader.html">TextureLoader</a></li>
+            
+                <li><a href="../classes/Tile.html">Tile</a></li>
+            
+                <li><a href="../classes/TiledLayer.html">TiledLayer</a></li>
+            
+                <li><a href="../classes/TiledMap.html">TiledMap</a></li>
+            
+                <li><a href="../classes/TiledObjectGroup.html">TiledObjectGroup</a></li>
+            
+                <li><a href="../classes/TiledTileset.html">TiledTileset</a></li>
+            
+                <li><a href="../classes/utils.html">utils</a></li>
+            
+                <li><a href="../classes/Vector.html">Vector</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src\game\GameState.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * GameStates are different , controls the entire instance of the game
+ *
+ * @class GameState
+ * @constructor
+ * @param game {Game} The game instance this GameState belongs to
+ * @param name {String} 
+ * @example
+ *      var state = new gf.GameState(game, &#x27;battle&#x27;);
+ *      state.addChild(battlePlayer);
+ *      state.addChild(enemy);
+ *
+ *      game.enableState(state); //or you can use the name from the ctor &#x27;battle&#x27;
+ */
+gf.GameState = function(name, settings) {
+    if(typeof name === &#x27;object&#x27;) {
+        settings = name;
+        name = Math.floor(Date.now() * Math.random()).toString();
+    }
+
+    settings = settings || {};
+
+    /**
+     * The name of this game state
+     *
+     * @property name
+     * @type String
+     */
+    this.name = name;
+
+    /**
+     * The audio player for this game instance
+     *
+     * @property audio
+     * @type AudioPlayer
+     * @readOnly
+     */
+    this.audio = new gf.AudioManager();
+
+    /**
+     * The physics system to simulate stuffs
+     *
+     * @property physics
+     * @type PhysicsSystem
+     * @readOnly
+     */
+    this.physics = new gf.PhysicsSystem({ gravity: settings.gravity });
+
+    /**
+     * The input instance for this game
+     *
+     * @property input
+     * @type InputManager
+     * @readOnly
+     */
+    this.input = null; //need to be added to a game first
+
+    /**
+     * The camera you view the scene through
+     *
+     * @property camera
+     * @type Camera
+     * @readOnly
+     */
+    this.camera = null; //need to be added to a game first
+
+    /**
+     * The world instance that holds all entites and the map
+     *
+     * @property world
+     * @type Map
+     * @readOnly
+     */
+    this.world = null;
+
+    /**
+     * The game instance that this state belongs too
+     *
+     * @property game
+     * @type Game
+     */
+    Object.defineProperty(this, &#x27;game&#x27;, {
+        get: function() { return this._game; },
+        set: this._setGame.bind(this),
+        enumerable: true
+    });
+
+    //call base ctor
+    gf.DisplayObjectContainer.call(this, settings);
+
+    //start disabled
+    this.disable();
+};
+
+gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
+    _setGame: function(game) {
+        this._game = game;
+
+        this.input = new gf.InputManager(game.renderer.view);
+
+        if(this.camera)
+            this.removeChild(this.camera);
+
+        this.camera = new gf.Camera(game);
+        this.addChild(this.camera);
+        this.camera.resize(game.renderer.width, game.renderer.height);
+    },
+    addChild: function(obj) {
+        if(obj) {
+            //we add the camera in the ctor and the map later when
+            //.loadWorld is called. This way the camera is always the
+            //last child of stage, so it is rendered on top!
+            if(obj instanceof gf.Camera || obj instanceof gf.Map)
+                this.addChildAt(obj, 0);
+            else if(obj instanceof gf.Gui)
+                this.camera.addChild(obj);
+            else
+                this.world.addChild(obj);
+        }
+    },
+    loadWorld: function(world) {
+        if(typeof world === &#x27;string&#x27;){
+            if(gf.assetCache[world]) {
+                world = gf.assetCache[world];
+            } else {
+                throw &#x27;World &quot;&#x27; + world + &#x27;&quot; needs to be preloaded before being added to a game!&#x27;;
+            }
+        }
+
+        this.world = new gf.TiledMap(world);
+        this.addChild(this.world);
+
+        this.world.resize(this._game.renderer.width, this._game.renderer.height);
+        this.world.spawnObjects();
+
+        this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
+
+        /* TODO: Autoplay music
+        if(this.world.properties.music) {
+            this.audio.play(this.world.properties.music, { loop: this.world.properties.music_loop === &#x27;true&#x27; });
+        }*/
+
+        return this;
+    },
+    enable: function() {
+        this.visible = true;
+    },
+    disable: function() {
+        this.visible = false;
+    },
+    update: function(dt) {
+        //gather input from user
+        this.input.update(dt);
+
+        //update any camera effects
+        this.camera.update(dt);
+
+        //simulate physics and detect/resolve collisions
+        this.physics.update(dt);
+    }
+});
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

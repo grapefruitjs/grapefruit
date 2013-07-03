@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\game\Game.js - gf</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="gf"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.0.2</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AnimatedSprite.html">AnimatedSprite</a></li>
+            
+                <li><a href="../classes/AssetLoader.html">AssetLoader</a></li>
+            
+                <li><a href="../classes/AudioLoader.html">AudioLoader</a></li>
+            
+                <li><a href="../classes/AudioManager.html">AudioManager</a></li>
+            
+                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+            
+                <li><a href="../classes/Camera.html">Camera</a></li>
+            
+                <li><a href="../classes/Circle.html">Circle</a></li>
+            
+                <li><a href="../classes/Clock.html">Clock</a></li>
+            
+                <li><a href="../classes/DisplayObjectContainer.html">DisplayObjectContainer</a></li>
+            
+                <li><a href="../classes/Ellipse.html">Ellipse</a></li>
+            
+                <li><a href="../classes/Game.html">Game</a></li>
+            
+                <li><a href="../classes/GameState.html">GameState</a></li>
+            
+                <li><a href="../classes/Gui.html">Gui</a></li>
+            
+                <li><a href="../classes/GuiItem.html">GuiItem</a></li>
+            
+                <li><a href="../classes/ImageLayer.html">ImageLayer</a></li>
+            
+                <li><a href="../classes/Input.html">Input</a></li>
+            
+                <li><a href="../classes/JsonLoader.html">JsonLoader</a></li>
+            
+                <li><a href="../classes/Layer.html">Layer</a></li>
+            
+                <li><a href="../classes/Map.html">Map</a></li>
+            
+                <li><a href="../classes/math.html">math</a></li>
+            
+                <li><a href="../classes/plugin.html">plugin</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Polygon.html">Polygon</a></li>
+            
+                <li><a href="../classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/SpritePool.html">SpritePool</a></li>
+            
+                <li><a href="../classes/support.html">support</a></li>
+            
+                <li><a href="../classes/Texture.html">Texture</a></li>
+            
+                <li><a href="../classes/TextureLoader.html">TextureLoader</a></li>
+            
+                <li><a href="../classes/Tile.html">Tile</a></li>
+            
+                <li><a href="../classes/TiledLayer.html">TiledLayer</a></li>
+            
+                <li><a href="../classes/TiledMap.html">TiledMap</a></li>
+            
+                <li><a href="../classes/TiledObjectGroup.html">TiledObjectGroup</a></li>
+            
+                <li><a href="../classes/TiledTileset.html">TiledTileset</a></li>
+            
+                <li><a href="../classes/utils.html">utils</a></li>
+            
+                <li><a href="../classes/Vector.html">Vector</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src\game\Game.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * Main game object, controls the entire instance of the game
+ *
+ * @class Game
+ * @constructor
+ * @param contId {String} The container for the new canvas we will create for the game
+ * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)
+ */
+gf.Game = function(contId, settings) {
+    //mixin the Event Target methods
+    gf.Emitter.call(this);
+
+    /**
+     * The domElement that we are putting our rendering canvas into (the container)
+     *
+     * @property container
+     * @type DOMELement
+     * @readOnly
+     */
+    this.container = document.getElementById(contId);
+
+    if(!this.container)
+        this.container = document.body;
+
+    var w = settings.width || gf.utils.getStyle(this.container, &#x27;width&#x27;),
+        h = settings.height || gf.utils.getStyle(this.container, &#x27;height&#x27;);
+
+    /**
+     * The method used to render values to the screen (either webgl, or canvas)
+     *
+     * @property renderMethod
+     * @type String
+     * @default &#x27;webgl&#x27;
+     */
+    this.renderMethod = &#x27;webgl&#x27;;
+
+    /**
+     * The player entities added into the game
+     *
+     * @property players
+     * @type {Array}
+     */
+    this.players = [];
+
+    /**
+     * Raw PIXI.stage instance
+     *
+     * @property stage
+     * @type PIXI.Stage
+     * @readOnly
+     */
+    this.stage = new PIXI.Stage(
+        settings.background,
+        settings.interactive !== undefined ? settings.interactive : true
+    );
+
+    /**
+     * Raw Clock instance for internal timing
+     *
+     * @property clock
+     * @type Clock
+     * @readOnly
+     */
+    this.clock = new gf.Clock(false);
+
+    /**
+     * Raw rendering engine
+     *
+     * @property renderer
+     * @type PIXI.WebGLRenderer|PIXI.CanvasRenderer
+     * @readOnly
+     */
+    this.renderer = null;
+
+    //if they speciy a method, check if it is available
+    if(settings.renderMethod) {
+        if(!gf.support[settings.renderMethod]) {
+            throw &#x27;Render method &#x27; + settings.renderMethod + &#x27; is not supported by this browser!&#x27;;
+        }
+        this.renderMethod = settings.renderMethod;
+    }
+    //if they don&#x27;t specify a method, guess the best to use
+    else {
+        if(gf.support.webgl) this.renderMethod = &#x27;webgl&#x27;;
+        else if(gf.support.canvas) this.renderMethod = &#x27;canvas&#x27;;
+        else {
+            throw &#x27;Neither WebGL nor Canvas is supported by this browser!&#x27;;
+        }
+    }
+
+    //initialize the correct renderer
+    if(this.renderMethod === &#x27;webgl&#x27;) {
+        this.renderer = new PIXI.WebGLRenderer(w, h, settings.view, settings.transparent);
+    } else if(this.renderMethod === &#x27;canvas&#x27;) {
+        this.renderer = new PIXI.CanvasRenderer(w, h, settings.view, settings.transparent);
+    }
+
+    /**
+     * Maximum Z value
+     *
+     * @property MAX_Z
+     * @type {Number}
+     * @default 500
+     * @private
+     * @readOnly
+     */
+    this.MAX_Z = 500;
+
+    /**
+     * The loader for this game instance
+     *
+     * @property loader
+     * @type AssetLoader
+     * @readOnly
+     */
+    this.loader = new gf.AssetLoader();
+
+    /**
+     * The sprite pool to use to create registered entities
+     *
+     * @property spritepool
+     * @type SpritePool
+     * @readOnly
+     */
+    this.spritepool = new gf.SpritePool();
+
+    /**
+     * The GameStates added to the game
+     *
+     * @property states
+     * @type Array
+     * @readOnly
+     */
+    this.states = {};
+
+    /**
+     * The currently active GameState
+     *
+     * @property activeState
+     * @type GameState
+     * @readOnly
+     */
+    this.activeState = null;
+    this._defaultState = new gf.GameState(&#x27;_default&#x27;);
+
+    //append the renderer view
+    //this.renderer.view.style[&#x27;z-index&#x27;] = opts.zIndex || 5;
+    this.container.appendChild(this.renderer.view);
+
+    //mixin user settings
+    gf.utils.setValues(this, settings);
+
+    //enable default state
+    this.addState(this._defaultState);
+    this.enableState(&#x27;_default&#x27;);
+
+    //define getters for common properties in GameState
+    var self = this;
+    [&#x27;audio&#x27;, &#x27;input&#x27;, &#x27;physics&#x27;, &#x27;camera&#x27;, &#x27;world&#x27;].forEach(function(prop) {
+        self.__defineGetter__(prop, function() {
+            return self.activeState[prop];
+        });
+    });
+
+    //some docs for the getters above
+
+    /**
+     * The audio player for this game instance
+     * (refers to the active GameState&#x27;s audio instance)
+     *
+     * @property audio
+     * @type AudioPlayer
+     * @readOnly
+     */
+
+    /**
+     * The input instance for this game
+     * (refers to the active GameState&#x27;s input instance)
+     *
+     * @property input
+     * @type InputManager
+     * @readOnly
+     */
+
+    /**
+     * The physics system to simulate stuffs
+     * (refers to the active GameState&#x27;s physics instance)
+     *
+     * @property physics
+     * @type PhysicsSystem
+     * @readOnly
+     */
+
+    /**
+     * The camera you view the scene through
+     * (refers to the active GameState&#x27;s camera instance)
+     *
+     * @property camera
+     * @type Camera
+     * @readOnly
+     */
+
+    /**
+     * The world instance that holds all sprites and the map
+     * (refers to the active GameState&#x27;s world instance)
+     *
+     * @property world
+     * @type Map
+     * @readOnly
+     */
+};
+
+gf.inherits(gf.Game, Object, {
+    /**
+     * Allows you to resize the game area
+     *
+     * @method resize
+     * @param width {Number} Width to resize to
+     * @param height {Number} Height to resize to
+     * @return {Game} Returns itself for chainability
+     */
+    resize: function(w, h) {
+        this.renderer.resize(w, h);
+
+        for(var i = 0, il = this.stage.children.length; i &lt; il; ++i) {
+            var o = this.stage.children[i];
+
+            if(o.resize)
+                o.resize(w, h);
+        }
+
+        return this;
+    },
+    /**
+     * Adds an object to the current stage
+     *
+     * @method addChild
+     * @param obj {Sprite} The sprite to the stage
+     * @return {Game} Returns itself for chainability
+     */
+    addChild: function(obj) {
+        this.activeState.addChild(obj);
+
+        return this;
+    },
+    /**
+     * Removes a sprite from the stage
+     *
+     * @method removeChild
+     * @param obj {Sprite} The sprite to the stage
+     * @return {Game} Returns itself for chainability
+     */
+    removeChild: function(obj) {
+        if(obj) {
+            if(obj instanceof gf.Gui)
+                this.camera.removeChild(obj);
+            else
+                this.world.removeChild(obj);
+        }
+
+        return this;
+    },
+    addState: function(state) {
+        var name = state.name;
+
+        if(!name) {
+            throw &#x27;No state name could be determined, did you give the state a name when you created it?&#x27;;
+        } else if(this.states[name]) {
+            throw &#x27;A state with the name &quot;&#x27; + name + &#x27;&quot; already exists, did you try to add it twice?&#x27;;
+        } else {
+            this.states[name] = state;
+            this.stage.addChild(state);
+
+            state.game = this;
+        }
+    },
+    removeState: function(state) {
+        var name = (typeof state === &#x27;string&#x27;) ? state : state.name;
+
+        if(!name) {
+            throw &#x27;No state name could be determined, are you sure you passed me a game state?&#x27;;
+        } else if(!this.states[name]) {
+            throw &#x27;A state with the name &quot;&#x27; + name + &#x27;&quot; does not exist, are you sure you added it?&#x27;;
+        } else {
+            //don&#x27;t remove the default state
+            if(name === &#x27;_default&#x27;) return;
+
+            //if this is the active state, revert to the default state
+            if(name === this.activeState.name) {
+                this.enableState(&#x27;_default&#x27;);
+            }
+
+            delete this.states[name];
+        }
+    },
+    enableState: function(state) {
+        var name = (typeof state === &#x27;string&#x27;) ? state : state.name;
+
+        if(this.activeState)
+            this.activeState.disable();
+
+        this.activeState = this.states[name];
+
+        this.activeState.enable();
+    },
+    /**
+     * Loads the world map into the game
+     *
+     * @method loadWorld
+     * @param world {String|Map} The map to load as the current world
+     * @return {Game} Returns itself for chainability
+     */
+    loadWorld: function(world) {
+        this.activeState.loadWorld(world);
+
+        return this;
+    },
+    /**
+     * Begins the render loop
+     *
+     * @method render
+     * @return {Game} Returns itself for chainability
+     */
+    render: function() {
+        this.clock.start();
+        this._tick();
+
+        return this;
+    },
+    /**
+     * The looping render tick
+     *
+     * @method _tick
+     * @private
+     */
+    _tick: function() {
+        this.emit({ type: &#x27;beforetick&#x27; });
+        //start render loop
+        window.requestAnimFrame(this._tick.bind(this));
+
+        //update this game state
+        this.activeState.update(this.clock.getDelta());
+
+        //render scene
+        this.renderer.render(this.stage);
+        this.emit({ type: &#x27;aftertick&#x27; });
+    }
+});
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
