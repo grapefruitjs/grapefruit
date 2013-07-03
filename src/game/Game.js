@@ -22,9 +22,6 @@ gf.Game = function(contId, settings) {
     if(!this.container)
         this.container = document.body;
 
-    var w = settings.width,
-        h = settings.height;
-
     /**
      * The method used to render values to the screen (either webgl, or canvas)
      *
@@ -90,9 +87,9 @@ gf.Game = function(contId, settings) {
 
     //initialize the correct renderer
     if(this.renderMethod === 'webgl') {
-        this.renderer = new PIXI.WebGLRenderer(w, h, settings.view, settings.transparent);
+        this.renderer = new PIXI.WebGLRenderer(settings.width, settings.height, settings.view, settings.transparent);
     } else if(this.renderMethod === 'canvas') {
-        this.renderer = new PIXI.CanvasRenderer(w, h, settings.view, settings.transparent);
+        this.renderer = new PIXI.CanvasRenderer(settings.width, settings.height, settings.view, settings.transparent);
     }
 
     /**
