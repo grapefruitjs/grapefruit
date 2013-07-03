@@ -22,8 +22,8 @@ gf.Game = function(contId, settings) {
     if(!this.container)
         this.container = document.body;
 
-    var w = settings.width || gf.utils.getStyle(this.container, 'width'),
-        h = settings.height || gf.utils.getStyle(this.container, 'height');
+    var w = settings.width,
+        h = settings.height;
 
     /**
      * The method used to render values to the screen (either webgl, or canvas)

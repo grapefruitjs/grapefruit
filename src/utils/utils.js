@@ -207,14 +207,5 @@
         }
 
         return obj;
-    },
-    getStyle: function(elm, prop) {
-        var style = window.getComputedStyle(elm),
-            val = style.getPropertyValue(prop).replace(/px|em|%|pt/, '');
-
-        if(!isNaN(val))
-            val = parseInt(val, 10);
-
-        return val;
     }
 };
