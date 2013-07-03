@@ -40,12 +40,9 @@ define(function() {
         Q.ok(gf.GameState, 'gf.GameState');
         Q.ok(gf.Gui, 'gf.Gui');
         Q.ok(gf.GuiItem, 'gf.GuiItem');
-        Q.ok(gf.Hud, 'gf.Hud');
-        Q.ok(gf.HudItem, 'gf.HudItem');
         Q.ok(gf.InputManager, 'gf.InputManager');
         Q.ok(gf.input.Input, 'gf.input.Input');
         Q.ok(gf.input.Keyboard, 'gf.input.Keyboard');
-        Q.ok(gf.input.Mouse, 'gf.input.Mouse');
         Q.ok(gf.input.Gamepad, 'gf.input.Gamepad');
         Q.ok(gf.input.GamepadButtons, 'gf.input.GamepadButtons');
         Q.ok(gf.input.GamepadSticks, 'gf.input.GamepadSticks');
