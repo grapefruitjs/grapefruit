@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>utils - gf</title>
+    <title>Emitter - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -156,7 +156,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>utils Class</h1>
+                        <h1>Emitter Class</h1>
 <div class="box meta">
     
 
@@ -164,7 +164,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l1"><code>src\utils\utils.js:1</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;src_utils_Emitter.js.html#l1"><code>src\utils\Emitter.js:1</code></a>
         </div>
     
 
@@ -176,9 +176,93 @@
 
 
 <div class="box intro">
-    <p>The grapefruit utility object, used for misc functions used throughout the code base</p>
+    <p>Event emitter mixin. This will add emitter properties to an object
+so that it can emit events, and have others listen for them.</p>
 </div>
 
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_Emitter" class="method item">
+    <h3 class="name"><code>Emitter</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;src_utils_Emitter.js.html#l1"><code>src\utils\Emitter.js:1</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code> function MyObject(clr) {
+     gf.Emitter.call(this); //adds properties
+     this.color = clr;
+ }
+
+ gf.inherits(MyObject, Object, {
+     something: function(s) {
+         this.emit('hey', { some: s });
+     }
+ });
+
+ //then later
+ var o = new MyObject('red');
+ o.on('hey', function(e) {
+     console.log(this.color); //"this" refers to the instance, logs "red"
+     console.log(e.some); //e is the data passed to emit, logs "hello"
+ });
+ o.something('hello');
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -204,35 +288,21 @@
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_ajax">ajax</a>
+                                <a href="#method_emit">emit</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_AjaxRequest">AjaxRequest</a>
+                                <a href="#method_off">off</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_ensureVector">ensureVector</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_noop">noop</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_setValues">setValues</a>
+                                <a href="#method_on">on</a>
 
                                 
                                 
@@ -254,8 +324,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_ajax" class="method item">
-    <h3 class="name"><code>ajax</code></h3>
+                    <div id="method_emit" class="method item">
+    <h3 class="name"><code>emit</code></h3>
 
     
         <div class="args">
@@ -263,7 +333,13 @@
             
                 <li class="arg">
                     
-                        <code>settings</code>
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>data</code>
                     
                 </li>
             
@@ -271,10 +347,6 @@
         </div>
     
 
-    
-        <span class="returns-inline">
-            <span class="type">XMLHttpRequest | ActiveXObject</span>
-        </span>
     
 
     
@@ -300,7 +372,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l43"><code>src\utils\utils.js:43</code></a>
+        <a href="..&#x2F;files&#x2F;src_utils_Emitter.js.html#l47"><code>src\utils\Emitter.js:47</code></a>
         
         </p>
 
@@ -311,7 +383,7 @@
     </div>
 
     <div class="description">
-        <p>Performs an ajax request, and manages the callbacks passed in</p>
+        <p>Emits an event which will run all registered listeners for the event type</p>
     </div>
 
     
@@ -322,14 +394,29 @@
             
                 <li class="param">
                     
-                        <code class="param-name">settings</code>
-                        <span class="type">Object</span>
+                        <code class="param-name">type</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The settings of the ajax request, similar to jQuery's ajax function</p>
+                        <p>The event name to emit</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">data</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Any data you want passed along with the event</p>
                     </div>
 
                     
@@ -340,96 +427,13 @@
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">XMLHttpRequest | ActiveXObject</span>:
-                    
-                    An XHR object
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_AjaxRequest" class="method item">
-    <h3 class="name"><code>AjaxRequest</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">XMLHttpRequest | ActiveXObject</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l101"><code>src\utils\utils.js:101</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Wraps XMLHttpRequest in a cross-browser way.</p>
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">XMLHttpRequest | ActiveXObject</span>:
-                    
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_ensureVector" class="method item">
-    <h3 class="name"><code>ensureVector</code></h3>
+                    <div id="method_off" class="method item">
+    <h3 class="name"><code>off</code></h3>
 
     
         <div class="args">
@@ -437,7 +441,13 @@
             
                 <li class="arg">
                     
-                        <code>vec</code>
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>listener</code>
                     
                 </li>
             
@@ -446,10 +456,6 @@
     
 
     
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
-        </span>
-    
 
     
 
@@ -474,7 +480,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l8"><code>src\utils\utils.js:8</code></a>
+        <a href="..&#x2F;files&#x2F;src_utils_Emitter.js.html#l68"><code>src\utils\Emitter.js:68</code></a>
         
         </p>
 
@@ -485,7 +491,7 @@
     </div>
 
     <div class="description">
-        <p>Ensures that some input is a vector, converts strings and arrays into vector objects</p>
+        <p>Removes a listener function for an event type</p>
     </div>
 
     
@@ -496,14 +502,29 @@
             
                 <li class="param">
                     
-                        <code class="param-name">vec</code>
-                        <span class="type">Array | String | <a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                        <code class="param-name">type</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The object to ensure becomes a vector</p>
+                        <p>The event name to emit</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">listener</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The function to remove</p>
                     </div>
 
                     
@@ -514,81 +535,13 @@
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>:
-                    
-                    The vector created with the passed values, if the values can't be made
-     into a Vector, then a new Vector with 0,0 is returned
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_noop" class="method item">
-    <h3 class="name"><code>noop</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l37"><code>src\utils\utils.js:37</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>An empty function that performs no action</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_setValues" class="method item">
-    <h3 class="name"><code>setValues</code></h3>
+                    <div id="method_on" class="method item">
+    <h3 class="name"><code>on</code></h3>
 
     
         <div class="args">
@@ -596,13 +549,13 @@
             
                 <li class="arg">
                     
-                        <code>obj</code>
+                        <code>type</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>values</code>
+                        <code>listener</code>
                     
                 </li>
             
@@ -611,10 +564,6 @@
     
 
     
-        <span class="returns-inline">
-            <span class="type">Object</span>
-        </span>
-    
 
     
 
@@ -639,7 +588,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;src_utils_utils.js.html#l131"><code>src\utils\utils.js:131</code></a>
+        <a href="..&#x2F;files&#x2F;src_utils_Emitter.js.html#l30"><code>src\utils\Emitter.js:30</code></a>
         
         </p>
 
@@ -650,10 +599,7 @@
     </div>
 
     <div class="description">
-        <p>This will take values and override the passed obj's properties with those values.
-The difference from a normal object extend is that this will try to massage the passed
-value into the same type as the object's property. Also if the key for the value is not
-in the original object, it is not copied.</p>
+        <p>Registers a listener function to be run on an event occurance</p>
     </div>
 
     
@@ -664,14 +610,14 @@ in the original object, it is not copied.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">obj</code>
-                        <span class="type">Object</span>
+                        <code class="param-name">type</code>
+                        <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The object to extend the values into</p>
+                        <p>The event name to listen for</p>
                     </div>
 
                     
@@ -679,14 +625,14 @@ in the original object, it is not copied.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">values</code>
-                        <span class="type">Object</span>
+                        <code class="param-name">listener</code>
+                        <span class="type">Function</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The values to put into the object</p>
+                        <p>The function to execute when the event happens</p>
                     </div>
 
                     
@@ -697,33 +643,7 @@ in the original object, it is not copied.</p>
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
 
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Object</span>:
-                    
-                    returns the updated object
-                
-            </div>
-        </div>
-    
-
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> var obj = { vec: new gf.Vector(), arr: [] },
-     vals = { vec: '2|5', arr: '5|10|11' };
- gf.setValues(obj, vals);
- //now obj is:
- // { vec: gf.Vector(2, 5), arr: [5, 10, 11] }
-</code></pre>
-            </div>
-        </div>
     
 </div>
 

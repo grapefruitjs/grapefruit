@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Ellipse - gf</title>
+    <title>src\loader\Loader.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -156,62 +156,92 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Ellipse Class</h1>
-<div class="box meta">
-    
+                        <h1 class="file-heading">File: src\loader\Loader.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;**
+ * The Base loader class that all other loaders inherit from
+ *
+ * @class Loader
+ * @uses Emitter
+ * @constructor
+ * @param name {String} The name of the resource to load, used as a key in the assetCache
+ * @param url {String} The url to load the resource from, also used as a key in the assetCache
+ *&#x2F;
+gf.Loader = function(name, url) {
+    gf.Emitter.call(this);
 
-    
-        <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l58"><code>src\core.js:58</code></a>
-        </div>
-    
+    this.type = &#x27;hey&#x27;;
 
-    
+    this.name = name;
+    this.url = url;
+};
 
-    
-</div>
+gf.inherits(gf.Loader, Object, {
+    &#x2F;**
+     * Atempts to load a resource from the asset cache, if it finds the resource
+     * in the cache, it will return the value and asynchronously emit the &#x27;load&#x27; event
+     *
+     * @method load
+     * @return {mixed} The cached value, or undefined if there is none cached
+     *&#x2F;
+    load: function() {
+        var self = this;
 
+        if(gf.assetCache[this.name]) {
+            setTimeout(function() {
+                self.done(gf.assetCache[self.name]);
+            }, 0);
+            return gf.assetCache[this.name];
+        }
+        else if(gf.assetCache[this.url]) {
+            setTimeout(function() {
+                self.done(gf.assetCache[self.url]);
+            }, 0);
+            return gf.assetCache[this.url];
+        }
+    },
+    &#x2F;**
+     * Emits the &#x27;load&#x27; event, passing the properties of this instance and the data passed
+     *
+     * @method load
+     * @param data {mixed} The loaded data
+     *&#x2F;
+    done: function(data) {
+        gf.assetCache[this.name] = data;
 
-
-<div class="box intro">
-    <p>Ellipse object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html">PIXI.Ellipse</a></p>
-</div>
-
-
-
-<div id="classdocs" class="tabview">
-    <ul class="api-class-tabs">
-        <li class="api-class-tab index"><a href="#index">Index</a></li>
-
-        
-        
-        
-        
-    </ul>
-
-    <div>
-        <div id="index" class="api-class-tabpanel index">
-            <h2 class="off-left">Item Index</h2>
-
-            
-
-            
-
-            
-
-            
-        </div>
-
-        
-
-        
-
-        
-
-        
-    </div>
+        &#x2F;&#x2F;be async for sure
+        var self = this;
+        setTimeout(function() {
+            self.emit(&#x27;load&#x27;, {
+                name: self.name,
+                assetType: self.type,
+                url: self.url,
+                data: data
+            });
+        }, 0);
+    },
+    &#x2F;**
+     * Emits the &#x27;error&#x27; event, passing the properties of this instance and the message passed
+     *
+     * @method error
+     * @param msg {String} The error message that occurred
+     *&#x2F;
+    error: function(msg) {
+        &#x2F;&#x2F;be async for sure
+        var self = this;
+        setTimeout(function() {
+            self.emit(&#x27;error&#x27;, {
+                name: self.name,
+                assetType: self.type,
+                url: self.url,
+                message: msg
+            });
+        }, 0);
+    }
+});
+    </pre>
 </div>
 
                     </div>

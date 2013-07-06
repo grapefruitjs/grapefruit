@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Ellipse - gf</title>
+    <title>src\utils\Emitter.js - gf</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -156,62 +156,93 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Ellipse Class</h1>
-<div class="box meta">
-    
+                        <h1 class="file-heading">File: src\utils\Emitter.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;**
+ * Event emitter mixin. This will add emitter properties to an object
+ * so that it can emit events, and have others listen for them.
+ *
+ * @class Emitter
+ * @constructor
+ * @example
+ *      function MyObject(clr) {
+ *          gf.Emitter.call(this); &#x2F;&#x2F;adds properties
+ *          this.color = clr;
+ *      }
+ *
+ *      gf.inherits(MyObject, Object, {
+ *          something: function(s) {
+ *              this.emit(&#x27;hey&#x27;, { some: s });
+ *          }
+ *      });
+ *
+ *      &#x2F;&#x2F;then later
+ *      var o = new MyObject(&#x27;red&#x27;);
+ *      o.on(&#x27;hey&#x27;, function(e) {
+ *          console.log(this.color); &#x2F;&#x2F;&quot;this&quot; refers to the instance, logs &quot;red&quot;
+ *          console.log(e.some); &#x2F;&#x2F;e is the data passed to emit, logs &quot;hello&quot;
+ *      });
+ *      o.something(&#x27;hello&#x27;);
+ *&#x2F;
+ gf.Emitter = function() {
+    var listeners = {};
 
-    
-        <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;src_core.js.html#l58"><code>src\core.js:58</code></a>
-        </div>
-    
+    &#x2F;**
+     * Registers a listener function to be run on an event occurance
+     *
+     * @method on
+     * @param type {String} The event name to listen for
+     * @param listener {Function} The function to execute when the event happens
+     *&#x2F;
+    this.addEventListener = this.on = function(type, listener) {
+        if(listeners[type] === undefined) {
+            listeners[type] = [];
+        }
 
-    
+        if(listeners[type].indexOf(listener) === -1) {
+            listeners[type].push(listener);
+        }
+    };
 
-    
-</div>
+    &#x2F;**
+     * Emits an event which will run all registered listeners for the event type
+     *
+     * @method emit
+     * @param type {String} The event name to emit
+     * @param data {mixed} Any data you want passed along with the event
+     *&#x2F;
+    this.dispatchEvent = this.emit = function(type, data) {
+        if(typeof type === &#x27;object&#x27;) {
+            data = type;
+            type = data.type;
+        }
 
+        if(!listeners[type])
+            return;
 
+        for(var i = 0, il = listeners[type].length; i &lt; il; ++i) {
+            listeners[type][i].call(this, data);
+        }
+    };
 
-<div class="box intro">
-    <p>Ellipse object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html">PIXI.Ellipse</a></p>
-</div>
+    &#x2F;**
+     * Removes a listener function for an event type
+     *
+     * @method off
+     * @param type {String} The event name to emit
+     * @param listener {Function} The function to remove
+     *&#x2F;
+    this.removeEventListener = this.off = function(type, listener) {
+        var index = listeners[type].indexOf(listener);
 
-
-
-<div id="classdocs" class="tabview">
-    <ul class="api-class-tabs">
-        <li class="api-class-tab index"><a href="#index">Index</a></li>
-
-        
-        
-        
-        
-    </ul>
-
-    <div>
-        <div id="index" class="api-class-tabpanel index">
-            <h2 class="off-left">Item Index</h2>
-
-            
-
-            
-
-            
-
-            
-        </div>
-
-        
-
-        
-
-        
-
-        
-    </div>
+        if(index !== -1) {
+            listeners[type].splice(index, 1);
+        }
+    };
+};
+    </pre>
 </div>
 
                     </div>

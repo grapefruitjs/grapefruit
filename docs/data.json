@@ -133,13 +133,6 @@
             "fors": {},
             "namespaces": {}
         },
-        "src\\input\\Mouse.js": {
-            "name": "src\\input\\Mouse.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
         "src\\loader\\AssetLoader.js": {
             "name": "src\\loader\\AssetLoader.js",
             "modules": {},
@@ -163,6 +156,15 @@
             "modules": {},
             "classes": {
                 "JsonLoader": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\loader\\Loader.js": {
+            "name": "src\\loader\\Loader.js",
+            "modules": {},
+            "classes": {
+                "Loader": 1
             },
             "fors": {},
             "namespaces": {}
@@ -266,6 +268,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "src\\utils\\Emitter.js": {
+            "name": "src\\utils\\Emitter.js",
+            "modules": {},
+            "classes": {
+                "Emitter": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "src\\utils\\Vector.js": {
             "name": "src\\utils\\Vector.js",
             "modules": {},
@@ -344,12 +355,20 @@
             "file": "src\\audio\\AudioPlayer.js",
             "line": 1,
             "description": "Grapefruit Audio API, provides an easy interface to use HTML5 Audio\nThe GF Audio API was based on\n<a href=\"https://github.com/goldfire/howler.js\">Howler.js</a>",
+            "uses": [
+                "Emitter"
+            ],
             "is_constructor": 1,
             "params": [
                 {
                     "name": "manager",
                     "description": "AudioManager instance for this audio player",
                     "type": "AudioManager"
+                },
+                {
+                    "name": "settings",
+                    "description": "All the settings for this player instance",
+                    "type": "Object"
                 }
             ]
         },
@@ -369,7 +388,7 @@
             "params": [
                 {
                     "name": "animations",
-                    "description": "An object of the form <code>{ animationName: [frame1, frame2] }</code> or you can also specify overrides on a per-animation basis:\n     <code>{ animationName: { frames: [frame1, frame2], speed: 2 } }. Each frame is a Texture object",
+                    "description": "An object of the form `{ animationName: [frame1, frame2] }` or you can also specify overrides on a per-animation basis:\n     `{ animationName: { frames: [frame1, frame2], speed: 2 } }`. Each frame is a Texture object",
                     "type": "Object"
                 },
                 {
@@ -436,6 +455,9 @@
             "line": 1,
             "description": "The base Sprite class. This class is the base for all images on the screen",
             "extends": "PIXI.Sprite",
+            "uses": [
+                "Emitter"
+            ],
             "is_constructor": 1,
             "params": [
                 {
@@ -469,6 +491,9 @@
             "file": "src\\game\\Game.js",
             "line": 1,
             "description": "Main game object, controls the entire instance of the game",
+            "uses": [
+                "Emitter"
+            ],
             "is_constructor": 1,
             "params": [
                 {
@@ -582,6 +607,9 @@
             "file": "src\\loader\\AssetLoader.js",
             "line": 1,
             "description": "The AssetLoader loads and parses different game assets, such as sounds, textures,\nTMX World JSON file (exported from the <a href=\"http://mapeditor.org\">Tiled Editor</a>),\nand Spritesheet JSON files (published from <a href=\"http://www.codeandweb.com/texturepacker\">Texture Packer</a>).",
+            "uses": [
+                "Emitter"
+            ],
             "is_constructor": 1,
             "params": [
                 {
@@ -619,6 +647,34 @@
             "line": 1,
             "description": "Loads json data",
             "is_constructor": 1
+        },
+        "Loader": {
+            "name": "Loader",
+            "shortname": "Loader",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\loader\\Loader.js",
+            "line": 1,
+            "description": "The Base loader class that all other loaders inherit from",
+            "uses": [
+                "Emitter"
+            ],
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The name of the resource to load, used as a key in the assetCache",
+                    "type": "String"
+                },
+                {
+                    "name": "url",
+                    "description": "The url to load the resource from, also used as a key in the assetCache",
+                    "type": "String"
+                }
+            ]
         },
         "TextureLoader": {
             "name": "TextureLoader",
@@ -790,6 +846,9 @@
             "file": "src\\map\\Map.js",
             "line": 1,
             "description": "Base Map implementation, provides common functions for all Map types",
+            "uses": [
+                "Emitter"
+            ],
             "extends": "DisplayObject",
             "is_constructor": 1,
             "params": [
@@ -854,6 +913,29 @@
             ],
             "example": [
                 "\n     var clock = new gf.Clock(false);\n     //... some code ...\n     clock.start();\n     //... some long code ...\n     var delta = clock.getDelta();"
+            ]
+        },
+        "Emitter": {
+            "name": "Emitter",
+            "shortname": "Emitter",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [
+                "AudoPlayer",
+                "Sprite",
+                "Game",
+                "AssetLoader",
+                "Loader",
+                "Map"
+            ],
+            "file": "src\\utils\\Emitter.js",
+            "line": 1,
+            "description": "Event emitter mixin. This will add emitter properties to an object\nso that it can emit events, and have others listen for them.",
+            "is_constructor": 1,
+            "example": [
+                "\n     function MyObject(clr) {\n         gf.Emitter.call(this); //adds properties\n         this.color = clr;\n     }\n\n     gf.inherits(MyObject, Object, {\n         something: function(s) {\n             this.emit('hey', { some: s });\n         }\n     });\n\n     //then later\n     var o = new MyObject('red');\n     o.on('hey', function(e) {\n         console.log(this.color); //\"this\" refers to the instance, logs \"red\"\n         console.log(e.some); //e is the data passed to emit, logs \"hello\"\n     });\n     o.something('hello');"
             ]
         },
         "Vector": {
@@ -1059,7 +1141,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 48,
+            "line": 50,
             "description": "Load the audio file for this player",
             "return": {
                 "description": "",
@@ -1069,7 +1151,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 101,
+            "line": 103,
             "description": "Play a sound from the current time (0 by default).",
             "params": [
                 {
@@ -1091,7 +1173,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 238,
+            "line": 240,
             "description": "Pause playback and save the current position.",
             "params": [
                 {
@@ -1113,7 +1195,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 289,
+            "line": 291,
             "description": "Stop playback and reset to start.",
             "params": [
                 {
@@ -1135,7 +1217,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 334,
+            "line": 336,
             "description": "Mute this sound.",
             "params": [
                 {
@@ -1152,7 +1234,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 343,
+            "line": 345,
             "description": "Unmute this sound.",
             "params": [
                 {
@@ -1169,7 +1251,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 352,
+            "line": 354,
             "description": "Set the muted state of this sound.",
             "params": [
                 {
@@ -1186,7 +1268,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 381,
+            "line": 383,
             "description": "Set the position of playback.",
             "params": [
                 {
@@ -1208,7 +1290,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 416,
+            "line": 418,
             "description": "Get the position of playback.",
             "params": [
                 {
@@ -1225,7 +1307,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 445,
+            "line": 447,
             "description": "Fade a currently playing sound between two volumes.",
             "params": [
                 {
@@ -1262,7 +1344,43 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 520,
+            "line": 488,
+            "description": "Returns the current volume of the player",
+            "itemtype": "method",
+            "name": "getVolume",
+            "return": {
+                "description": "The current volume",
+                "type": "Number"
+            },
+            "class": "AudoPlayer"
+        },
+        {
+            "file": "src\\audio\\AudioPlayer.js",
+            "line": 497,
+            "description": "Sets the current volume of the player",
+            "itemtype": "method",
+            "name": "setVolume",
+            "params": [
+                {
+                    "name": "vol",
+                    "description": "The current volume",
+                    "type": "Number"
+                },
+                {
+                    "name": "id",
+                    "description": "(optional) The play instance ID.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "AudioPlayer"
+            },
+            "class": "AudoPlayer"
+        },
+        {
+            "file": "src\\audio\\AudioPlayer.js",
+            "line": 536,
             "description": "Set the 3D position of the audio source.\nThe most common usage is to set the 'x' position\nto affect the left/right ear panning. Setting any value higher than\n1.0 will begin to decrease the volume of the sound as it moves further away.\nNOTE: This only works with Web Audio API, HTML5 Audio playback\nwill not be affected.",
             "params": [
                 {
@@ -1294,7 +1412,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 575,
+            "line": 591,
             "description": "Get an audio node by ID.",
             "return": {
                 "description": "Audio node.",
@@ -1304,7 +1422,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 593,
+            "line": 609,
             "description": "Get the first active audio node.",
             "return": {
                 "description": "Audio node.",
@@ -1314,7 +1432,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 614,
+            "line": 630,
             "description": "Get the first inactive audio node.\nIf there is none, create a new one and add it to the pool.",
             "params": [
                 {
@@ -1327,13 +1445,13 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 648,
+            "line": 664,
             "description": "If there are more than 5 inactive audio nodes in the pool, clear out the rest.",
             "class": "AudoPlayer"
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 673,
+            "line": 689,
             "description": "Clear 'onend' timeout before it ends.",
             "params": [
                 {
@@ -1346,7 +1464,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 688,
+            "line": 704,
             "description": "Setup the gain node and panner for a Web Audio instance.",
             "return": {
                 "description": "The new audio node.",
@@ -1356,7 +1474,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 715,
+            "line": 731,
             "description": "Buffer a sound from URL (or from cache) and decode to audio source (Web Audio API).",
             "params": [
                 {
@@ -1369,7 +1487,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 755,
+            "line": 771,
             "description": "Finishes loading the Web Audio API sound and fires the loaded event",
             "params": [
                 {
@@ -1382,7 +1500,7 @@
         },
         {
             "file": "src\\audio\\AudioPlayer.js",
-            "line": 782,
+            "line": 798,
             "description": "Load the sound back into the buffer source.",
             "params": [
                 {
@@ -1763,6 +1881,24 @@
             "class": "Camera"
         },
         {
+            "file": "src\\display\\Camera.js",
+            "line": 557,
+            "description": "Camera follow types (used for camera.follow())",
+            "itemtype": "property",
+            "name": "FOLLOW",
+            "type": "Object",
+            "class": "Camera"
+        },
+        {
+            "file": "src\\display\\Camera.js",
+            "line": 570,
+            "description": "Camera shake directions (used for camera.shake())",
+            "itemtype": "property",
+            "name": "SHAKE",
+            "type": "Object",
+            "class": "Camera"
+        },
+        {
             "file": "src\\display\\DisplayObjectContainer.js",
             "line": 18,
             "description": "[read-only] The of children of this object.",
@@ -2066,7 +2202,15 @@
         },
         {
             "file": "src\\display\\DisplayObjectContainer.js",
-            "line": 183,
+            "line": 175,
+            "description": "Base resize function, all this does is ensure that all children resize functions get called as well",
+            "itemtype": "method",
+            "name": "resize",
+            "class": "DisplayObjectContainer"
+        },
+        {
+            "file": "src\\display\\DisplayObjectContainer.js",
+            "line": 188,
             "description": "Convenience method for setting the position of the Object.",
             "itemtype": "method",
             "name": "setPosition",
@@ -2093,7 +2237,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 17,
+            "line": 18,
             "description": "The type of the sprite",
             "itemtype": "property",
             "name": "type",
@@ -2103,7 +2247,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 26,
+            "line": 27,
             "description": "Whether or not the sprite is \"alive\", advisory only",
             "itemtype": "property",
             "name": "alive",
@@ -2113,7 +2257,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 35,
+            "line": 36,
             "description": "The mass of this sprite (if using physics)",
             "itemtype": "property",
             "name": "mass",
@@ -2123,7 +2267,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 44,
+            "line": 45,
             "description": "The physics system that this sprite is a part of. This is advisory only\nplease use enablePhysics() or disablePhysics() and do not set this value\ndirectly.",
             "itemtype": "property",
             "name": "physics",
@@ -2134,7 +2278,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 106,
+            "line": 107,
             "description": "On Collision Event\n     called when this sprite collides into another, or is being collided into by another.\n     By default if something collides with a collectable sprite we remove the collectable\n     and if we collide with a solid tile we kill our velocity",
             "itemtype": "method",
             "name": "onCollision",
@@ -2149,7 +2293,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 123,
+            "line": 124,
             "description": "Sprite types",
             "itemtype": "property",
             "name": "TYPE",
@@ -2158,7 +2302,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 149,
+            "line": 150,
             "description": "A callback that is used when the users clicks on the sprite with their mouse",
             "itemtype": "event",
             "name": "click",
@@ -2173,7 +2317,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 155,
+            "line": 156,
             "description": "A callback that is used when the user clicks the mouse down over the sprite",
             "itemtype": "event",
             "name": "mousedown",
@@ -2188,7 +2332,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 161,
+            "line": 162,
             "description": "A callback that is used when the user releases the mouse that was over the sprite\nfor this callback to be fired the mouse must have been pressed down over the sprite",
             "itemtype": "event",
             "name": "mouseup",
@@ -2203,7 +2347,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 168,
+            "line": 169,
             "description": "A callback that is used when the user releases the mouse that was over the sprite but is no longer over the sprite\nfor this callback to be fired, The touch must have started over the sprite",
             "itemtype": "event",
             "name": "mouseupoutside",
@@ -2218,7 +2362,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 175,
+            "line": 176,
             "description": "A callback that is used when the users mouse rolls over the sprite",
             "itemtype": "event",
             "name": "mouseover",
@@ -2233,7 +2377,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 181,
+            "line": 182,
             "description": "A callback that is used when the users mouse leaves the sprite",
             "itemtype": "event",
             "name": "mouseout",
@@ -2248,7 +2392,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 187,
+            "line": 188,
             "description": "A callback that is used when the user moves the mouse while over the sprite",
             "itemtype": "event",
             "name": "mousemove",
@@ -2263,7 +2407,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 198,
+            "line": 199,
             "description": "A callback that is used when the users taps on the sprite with their finger\nbasically a touch version of click",
             "itemtype": "event",
             "name": "tap",
@@ -2278,7 +2422,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 205,
+            "line": 206,
             "description": "A callback that is used when the user touch's over the displayObject",
             "itemtype": "event",
             "name": "touchstart",
@@ -2293,7 +2437,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 211,
+            "line": 212,
             "description": "A callback that is used when the user releases a touch over the displayObject",
             "itemtype": "event",
             "name": "touchend",
@@ -2308,7 +2452,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 217,
+            "line": 218,
             "description": "A callback that is used when the user releases the touch that was over the displayObject\nfor this callback to be fired, The touch must have started over the sprite",
             "itemtype": "event",
             "name": "touchendoutside",
@@ -2323,7 +2467,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 13,
+            "line": 14,
             "description": "The domElement that we are putting our rendering canvas into (the container)",
             "itemtype": "property",
             "name": "container",
@@ -2333,7 +2477,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 28,
+            "line": 26,
             "description": "The method used to render values to the screen (either webgl, or canvas)",
             "itemtype": "property",
             "name": "renderMethod",
@@ -2343,7 +2487,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 37,
+            "line": 35,
             "description": "The player entities added into the game",
             "itemtype": "property",
             "name": "players",
@@ -2352,7 +2496,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 45,
+            "line": 43,
             "description": "Raw PIXI.stage instance",
             "itemtype": "property",
             "name": "stage",
@@ -2362,7 +2506,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 57,
+            "line": 55,
             "description": "Raw Clock instance for internal timing",
             "itemtype": "property",
             "name": "clock",
@@ -2372,7 +2516,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 66,
+            "line": 64,
             "description": "Raw rendering engine",
             "itemtype": "property",
             "name": "renderer",
@@ -2382,7 +2526,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 98,
+            "line": 96,
             "description": "Maximum Z value",
             "itemtype": "property",
             "name": "MAX_Z",
@@ -2395,7 +2539,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 109,
+            "line": 107,
             "description": "The loader for this game instance",
             "itemtype": "property",
             "name": "loader",
@@ -2405,7 +2549,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 118,
+            "line": 116,
             "description": "The sprite pool to use to create registered entities",
             "itemtype": "property",
             "name": "spritepool",
@@ -2415,7 +2559,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 127,
+            "line": 125,
             "description": "The GameStates added to the game",
             "itemtype": "property",
             "name": "states",
@@ -2425,7 +2569,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 136,
+            "line": 134,
             "description": "The currently active GameState",
             "itemtype": "property",
             "name": "activeState",
@@ -2435,7 +2579,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 167,
+            "line": 165,
             "description": "The audio player for this game instance\n(refers to the active GameState's audio instance)",
             "itemtype": "property",
             "name": "audio",
@@ -2445,7 +2589,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 176,
+            "line": 174,
             "description": "The input instance for this game\n(refers to the active GameState's input instance)",
             "itemtype": "property",
             "name": "input",
@@ -2455,7 +2599,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 185,
+            "line": 183,
             "description": "The physics system to simulate stuffs\n(refers to the active GameState's physics instance)",
             "itemtype": "property",
             "name": "physics",
@@ -2465,7 +2609,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 194,
+            "line": 192,
             "description": "The camera you view the scene through\n(refers to the active GameState's camera instance)",
             "itemtype": "property",
             "name": "camera",
@@ -2475,7 +2619,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 203,
+            "line": 201,
             "description": "The world instance that holds all sprites and the map\n(refers to the active GameState's world instance)",
             "itemtype": "property",
             "name": "world",
@@ -2485,7 +2629,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 214,
+            "line": 212,
             "description": "Allows you to resize the game area",
             "itemtype": "method",
             "name": "resize",
@@ -2509,7 +2653,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 234,
+            "line": 232,
             "description": "Adds an object to the current stage",
             "itemtype": "method",
             "name": "addChild",
@@ -2528,7 +2672,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 246,
+            "line": 244,
             "description": "Removes a sprite from the stage",
             "itemtype": "method",
             "name": "removeChild",
@@ -2547,7 +2691,64 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 306,
+            "line": 261,
+            "description": "Adds a new game state to this game to be later enabled",
+            "itemtype": "method",
+            "name": "addState",
+            "params": [
+                {
+                    "name": "state",
+                    "description": "The state to add to this game",
+                    "type": "GameState"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Game"
+            },
+            "class": "Game"
+        },
+        {
+            "file": "src\\game\\Game.js",
+            "line": 284,
+            "description": "Removes a game state from the game",
+            "itemtype": "method",
+            "name": "removeState",
+            "params": [
+                {
+                    "name": "state",
+                    "description": "The state to remove from the game, or the name of a state to remove",
+                    "type": "GameState|String"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Game"
+            },
+            "class": "Game"
+        },
+        {
+            "file": "src\\game\\Game.js",
+            "line": 312,
+            "description": "Enables a state that has been added to the game",
+            "itemtype": "method",
+            "name": "enableState",
+            "params": [
+                {
+                    "name": "state",
+                    "description": "The state to enable, or the name of a state to enable",
+                    "type": "GameState|String"
+                }
+            ],
+            "return": {
+                "description": "Returns itself for chainability",
+                "type": "Game"
+            },
+            "class": "Game"
+        },
+        {
+            "file": "src\\game\\Game.js",
+            "line": 331,
             "description": "Loads the world map into the game",
             "itemtype": "method",
             "name": "loadWorld",
@@ -2566,7 +2767,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 318,
+            "line": 343,
             "description": "Begins the render loop",
             "itemtype": "method",
             "name": "render",
@@ -2578,7 +2779,7 @@
         },
         {
             "file": "src\\game\\Game.js",
-            "line": 330,
+            "line": 355,
             "description": "The looping render tick",
             "itemtype": "method",
             "name": "_tick",
@@ -2845,38 +3046,8 @@
             "class": "AssetLoader"
         },
         {
-            "file": "src\\input\\Mouse.js",
-            "line": 4,
-            "description": "The current screen touches",
-            "itemtype": "property",
-            "name": "touches",
-            "type": "Array",
-            "readonly": "",
-            "class": "AssetLoader"
-        },
-        {
-            "file": "src\\input\\Mouse.js",
-            "line": 13,
-            "description": "The current position of the mouse",
-            "itemtype": "property",
-            "name": "position",
-            "type": "Point",
-            "readonly": "",
-            "class": "AssetLoader"
-        },
-        {
-            "file": "src\\input\\Mouse.js",
-            "line": 22,
-            "description": "The current position of the mouse",
-            "itemtype": "property",
-            "name": "position",
-            "type": "Point",
-            "readonly": "",
-            "class": "AssetLoader"
-        },
-        {
             "file": "src\\loader\\AssetLoader.js",
-            "line": 20,
+            "line": 21,
             "description": "The array of assets to load",
             "itemtype": "property",
             "name": "assets",
@@ -2885,7 +3056,7 @@
         },
         {
             "file": "src\\loader\\AssetLoader.js",
-            "line": 28,
+            "line": 29,
             "description": "The count of remaining assets to load",
             "itemtype": "property",
             "name": "remaining",
@@ -2895,7 +3066,7 @@
         },
         {
             "file": "src\\loader\\AssetLoader.js",
-            "line": 37,
+            "line": 38,
             "description": "A mapping of extensions to types",
             "itemtype": "property",
             "name": "loaders",
@@ -2907,7 +3078,7 @@
         },
         {
             "file": "src\\loader\\AssetLoader.js",
-            "line": 62,
+            "line": 63,
             "description": "Fired when an item has loaded",
             "itemtype": "event",
             "name": "onProgress",
@@ -2915,7 +3086,7 @@
         },
         {
             "file": "src\\loader\\AssetLoader.js",
-            "line": 68,
+            "line": 69,
             "description": "Fired when all the assets have loaded",
             "itemtype": "event",
             "name": "onComplete",
@@ -2923,7 +3094,7 @@
         },
         {
             "file": "src\\loader\\AssetLoader.js",
-            "line": 75,
+            "line": 76,
             "description": "Adds a resource to the assets array.",
             "itemtype": "method",
             "name": "add",
@@ -2943,7 +3114,7 @@
         },
         {
             "file": "src\\loader\\AssetLoader.js",
-            "line": 88,
+            "line": 89,
             "description": "Starts the loading festivities. If called without any arguments it will load\nthe assets passed in at the ctor. If an array of assets are passed it will\nload those instead.",
             "itemtype": "method",
             "name": "load",
@@ -2958,7 +3129,7 @@
         },
         {
             "file": "src\\loader\\AssetLoader.js",
-            "line": 116,
+            "line": 117,
             "description": "Called whenever an asset is loaded, to keep track of when to emit complete and progress.",
             "itemtype": "method",
             "name": "onAssetLoaded",
@@ -2982,6 +3153,48 @@
                 }
             ],
             "class": "AssetLoader"
+        },
+        {
+            "file": "src\\loader\\Loader.js",
+            "line": 20,
+            "description": "Atempts to load a resource from the asset cache, if it finds the resource\nin the cache, it will return the value and asynchronously emit the 'load' event",
+            "itemtype": "method",
+            "name": "load",
+            "return": {
+                "description": "The cached value, or undefined if there is none cached",
+                "type": "Mixed"
+            },
+            "class": "Loader"
+        },
+        {
+            "file": "src\\loader\\Loader.js",
+            "line": 43,
+            "description": "Emits the 'load' event, passing the properties of this instance and the data passed",
+            "itemtype": "method",
+            "name": "load",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "The loaded data",
+                    "type": "Mixed"
+                }
+            ],
+            "class": "Loader"
+        },
+        {
+            "file": "src\\loader\\Loader.js",
+            "line": 63,
+            "description": "Emits the 'error' event, passing the properties of this instance and the message passed",
+            "itemtype": "method",
+            "name": "error",
+            "params": [
+                {
+                    "name": "msg",
+                    "description": "The error message that occurred",
+                    "type": "String"
+                }
+            ],
+            "class": "Loader"
         },
         {
             "file": "src\\map\\tiled\\TiledLayer.js",
@@ -3204,6 +3417,66 @@
             "description": "Notifies the map it needs to resize, re renders the viewport",
             "itemtype": "method",
             "name": "resize",
+            "class": "TiledMap"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledMap.js",
+            "line": 163,
+            "description": "Spawns all the objects in the TiledObjectGroups of this map",
+            "itemtype": "method",
+            "name": "spawnObjects",
+            "class": "TiledMap"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledMap.js",
+            "line": 177,
+            "description": "Called by a TiledLayer when a tile event occurs. This is so you can listen for\nthe emitted events on the world instead of the tile itself.",
+            "itemtype": "method",
+            "name": "onTileEvent",
+            "params": [
+                {
+                    "name": "eventName",
+                    "description": "The event name to emit, the prefix 'tile.' will be added to it",
+                    "type": "String"
+                },
+                {
+                    "name": "tile",
+                    "description": "The tile that has the event",
+                    "type": "Tile"
+                },
+                {
+                    "name": "data",
+                    "description": "The raw interaction object for the event",
+                    "type": "InteractionData"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "TiledMap"
+        },
+        {
+            "file": "src\\map\\tiled\\TiledMap.js",
+            "line": 194,
+            "description": "Called by a TiledObjectGroup when an object event occurs. This is so you can listen for\nthe emitted events on the world instead of the tile itself.",
+            "itemtype": "method",
+            "name": "onObjectEvent",
+            "params": [
+                {
+                    "name": "eventName",
+                    "description": "The event name to emit, the prefix 'object.' will be added to it",
+                    "type": "String"
+                },
+                {
+                    "name": "obj",
+                    "description": "The object that has the event",
+                    "type": "Sprite|DisplayObjectContainer"
+                },
+                {
+                    "name": "data",
+                    "description": "The raw interaction object for the event",
+                    "type": "InteractionData"
+                }
+            ],
             "access": "private",
             "tagname": "",
             "class": "TiledMap"
@@ -3451,7 +3724,7 @@
         },
         {
             "file": "src\\map\\Map.js",
-            "line": 13,
+            "line": 14,
             "description": "The size of the map",
             "itemtype": "property",
             "name": "size",
@@ -3461,7 +3734,7 @@
         },
         {
             "file": "src\\map\\Map.js",
-            "line": 27,
+            "line": 28,
             "description": "Pans the map around",
             "itemtype": "method",
             "name": "pan",
@@ -3630,6 +3903,66 @@
                 "\n     clock.getDelta();"
             ],
             "class": "Clock"
+        },
+        {
+            "file": "src\\utils\\Emitter.js",
+            "line": 30,
+            "description": "Registers a listener function to be run on an event occurance",
+            "itemtype": "method",
+            "name": "on",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "The event name to listen for",
+                    "type": "String"
+                },
+                {
+                    "name": "listener",
+                    "description": "The function to execute when the event happens",
+                    "type": "Function"
+                }
+            ],
+            "class": "Emitter"
+        },
+        {
+            "file": "src\\utils\\Emitter.js",
+            "line": 47,
+            "description": "Emits an event which will run all registered listeners for the event type",
+            "itemtype": "method",
+            "name": "emit",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "The event name to emit",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "Any data you want passed along with the event",
+                    "type": "Mixed"
+                }
+            ],
+            "class": "Emitter"
+        },
+        {
+            "file": "src\\utils\\Emitter.js",
+            "line": 68,
+            "description": "Removes a listener function for an event type",
+            "itemtype": "method",
+            "name": "off",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "The event name to emit",
+                    "type": "String"
+                },
+                {
+                    "name": "listener",
+                    "description": "The function to remove",
+                    "type": "Function"
+                }
+            ],
+            "class": "Emitter"
         },
         {
             "file": "src\\utils\\Vector.js",
@@ -4412,7 +4745,31 @@
         },
         {
             "file": "src\\utils\\math.js",
-            "line": 160,
+            "line": 157,
+            "description": "Returns a random int between min and max.",
+            "itemtype": "method",
+            "name": "randomInt",
+            "params": [
+                {
+                    "name": "min",
+                    "description": "The minimun number that the result can be",
+                    "type": "Number"
+                },
+                {
+                    "name": "max",
+                    "description": "The maximun number that the result can be",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "math"
+        },
+        {
+            "file": "src\\utils\\math.js",
+            "line": 168,
             "description": "Returns a random sign based on the provided chance. The chance represents the\npercentage chance of returning 1 (positive).",
             "itemtype": "method",
             "name": "randomSign",
@@ -4431,7 +4788,7 @@
         },
         {
             "file": "src\\utils\\math.js",
-            "line": 171,
+            "line": 179,
             "description": "Returns a random element of an array.",
             "itemtype": "method",
             "name": "randomElement",
@@ -4500,7 +4857,7 @@
             ],
             "return": {
                 "description": "An XHR object",
-                "type": "AjaxRequest"
+                "type": "XMLHttpRequest|ActiveXObject"
             },
             "class": "utils"
         },
@@ -4512,7 +4869,7 @@
             "name": "AjaxRequest",
             "return": {
                 "description": "",
-                "type": "ActiveXObject|XMLHttpRequest"
+                "type": "XMLHttpRequest|ActiveXObject"
             },
             "class": "utils"
         },
@@ -4765,83 +5122,83 @@
         },
         {
             "message": "Missing item type\nLoad the audio file for this player",
-            "line": " src\\audio\\AudioPlayer.js:48"
+            "line": " src\\audio\\AudioPlayer.js:50"
         },
         {
             "message": "Missing item type\nPlay a sound from the current time (0 by default).",
-            "line": " src\\audio\\AudioPlayer.js:101"
+            "line": " src\\audio\\AudioPlayer.js:103"
         },
         {
             "message": "Missing item type\nPause playback and save the current position.",
-            "line": " src\\audio\\AudioPlayer.js:238"
+            "line": " src\\audio\\AudioPlayer.js:240"
         },
         {
             "message": "Missing item type\nStop playback and reset to start.",
-            "line": " src\\audio\\AudioPlayer.js:289"
+            "line": " src\\audio\\AudioPlayer.js:291"
         },
         {
             "message": "Missing item type\nMute this sound.",
-            "line": " src\\audio\\AudioPlayer.js:334"
+            "line": " src\\audio\\AudioPlayer.js:336"
         },
         {
             "message": "Missing item type\nUnmute this sound.",
-            "line": " src\\audio\\AudioPlayer.js:343"
+            "line": " src\\audio\\AudioPlayer.js:345"
         },
         {
             "message": "Missing item type\nSet the muted state of this sound.",
-            "line": " src\\audio\\AudioPlayer.js:352"
+            "line": " src\\audio\\AudioPlayer.js:354"
         },
         {
             "message": "Missing item type\nSet the position of playback.",
-            "line": " src\\audio\\AudioPlayer.js:381"
+            "line": " src\\audio\\AudioPlayer.js:383"
         },
         {
             "message": "Missing item type\nGet the position of playback.",
-            "line": " src\\audio\\AudioPlayer.js:416"
+            "line": " src\\audio\\AudioPlayer.js:418"
         },
         {
             "message": "Missing item type\nFade a currently playing sound between two volumes.",
-            "line": " src\\audio\\AudioPlayer.js:445"
+            "line": " src\\audio\\AudioPlayer.js:447"
         },
         {
             "message": "Missing item type\nSet the 3D position of the audio source.\nThe most common usage is to set the 'x' position\nto affect the left/right ear panning. Setting any value higher than\n1.0 will begin to decrease the volume of the sound as it moves further away.\nNOTE: This only works with Web Audio API, HTML5 Audio playback\nwill not be affected.",
-            "line": " src\\audio\\AudioPlayer.js:520"
+            "line": " src\\audio\\AudioPlayer.js:536"
         },
         {
             "message": "Missing item type\nGet an audio node by ID.",
-            "line": " src\\audio\\AudioPlayer.js:575"
+            "line": " src\\audio\\AudioPlayer.js:591"
         },
         {
             "message": "Missing item type\nGet the first active audio node.",
-            "line": " src\\audio\\AudioPlayer.js:593"
+            "line": " src\\audio\\AudioPlayer.js:609"
         },
         {
             "message": "Missing item type\nGet the first inactive audio node.\nIf there is none, create a new one and add it to the pool.",
-            "line": " src\\audio\\AudioPlayer.js:614"
+            "line": " src\\audio\\AudioPlayer.js:630"
         },
         {
             "message": "Missing item type\nIf there are more than 5 inactive audio nodes in the pool, clear out the rest.",
-            "line": " src\\audio\\AudioPlayer.js:648"
+            "line": " src\\audio\\AudioPlayer.js:664"
         },
         {
             "message": "Missing item type\nClear 'onend' timeout before it ends.",
-            "line": " src\\audio\\AudioPlayer.js:673"
+            "line": " src\\audio\\AudioPlayer.js:689"
         },
         {
             "message": "Missing item type\nSetup the gain node and panner for a Web Audio instance.",
-            "line": " src\\audio\\AudioPlayer.js:688"
+            "line": " src\\audio\\AudioPlayer.js:704"
         },
         {
             "message": "Missing item type\nBuffer a sound from URL (or from cache) and decode to audio source (Web Audio API).",
-            "line": " src\\audio\\AudioPlayer.js:715"
+            "line": " src\\audio\\AudioPlayer.js:731"
         },
         {
             "message": "Missing item type\nFinishes loading the Web Audio API sound and fires the loaded event",
-            "line": " src\\audio\\AudioPlayer.js:755"
+            "line": " src\\audio\\AudioPlayer.js:771"
         },
         {
             "message": "Missing item type\nLoad the sound back into the buffer source.",
-            "line": " src\\audio\\AudioPlayer.js:782"
+            "line": " src\\audio\\AudioPlayer.js:798"
         },
         {
             "message": "Missing item type\nInherited Methods",
