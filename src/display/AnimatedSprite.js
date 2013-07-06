@@ -3,8 +3,8 @@
  * @class AnimatedSprite
  * @extends Sprite
  * @constructor
- * @param animations {Object} An object of the form <code>{ animationName: [frame1, frame2] }</code> or you can also specify overrides on a per-animation basis:
- *      <code>{ animationName: { frames: [frame1, frame2], speed: 2 } }. Each frame is a Texture object
+ * @param animations {Object} An object of the form `{ animationName: [frame1, frame2] }` or you can also specify overrides on a per-animation basis:
+ *      `{ animationName: { frames: [frame1, frame2], speed: 2 } }`. Each frame is a Texture object
  * @param speed {Number} The speed of the animations (can be overriden on a specific animations)
  * @param start {String} The animation to start with, defaults to the first found key otherwise
  */
