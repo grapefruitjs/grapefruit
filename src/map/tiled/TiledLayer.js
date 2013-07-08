@@ -45,8 +45,8 @@ gf.TiledLayer = function(layer) {
 
     this._tilePool = [];
     this._buffered = { left: false, right: false, top: false, bottom: false };
-    this._panDelta = new gf.Vector(0, 0);
-    this._rendered = new gf.Rectangle(0, 0, 0, 0);
+    this._panDelta = new gf.Vector();
+    this._rendered = new gf.Rectangle();
 };
 
 gf.inherits(gf.TiledLayer, gf.Layer, {
@@ -66,6 +66,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //ensure we don't go below 0
         startX = startX < 0 ? 0 : startX;
         startY = startY < 0 ? 0 : startY;
+
+        if(this.parent.orientation === 'isometric')
+            return this._renderIsoTiles(startX, startY, numX, numY);
 
         //ensure we don't go outside the map size
         var endX = (startX + numX <= this.parent.size.x) ? startX + numX : (this.parent.size.x - startX);
@@ -92,6 +95,48 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
         this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
+    _renderIsoTiles: function(startX, startY, numX, numY) {
+        //use the start and num params (which describe the screen area) to determine
+        //the min (top-left) iso tile coord and the max (bottom-right) iso tile coord.
+        var min = new gf.Point(
+                ((startY / this.parent.tileSize.y) + (startX / this.parent.tileSize.x)) / 2,
+                ((startY / this.parent.tileSize.y) - (startX / this.parent.tileSize.x)) / 2
+            ),
+            max = new gf.Point(
+                (((startY + numY) / this.parent.tileSize.y) + ((startX + numX) / this.parent.tileSize.x)) / 2,
+                (((startY + numY) / this.parent.tileSize.y) - ((startX + numX) / this.parent.tileSize.x)) / 2,
+            );
+
+        //loop from min to max for each
+        for(var a = min.y; a <= max.y; a++) {
+            for(var b = min.x; b <= max.x; b++) {
+                //if a and b are not both odd or both even, skip this iteration
+                if((a&1) !== (b&1)) continue;
+
+                //calculate the isometric coords
+                var x = (a + b) / 2,
+                    y = (a - b) / 2;
+
+                //if anyhting is negative, ignore it
+                if(x < 0 || y < 0) continue;
+
+                //render the tile
+                this.moveTileSprite(x, y, x, y);
+            }
+        }
+    },
+    _freeTile: function(tx, ty) {
+        if(this.tiles[tx] && this.tiles[tx][ty]) {
+            var t = this.tiles[tx][ty];
+
+            if(t) {
+                t.visible = false;
+                t.disablePhysics();
+                this._tilePool.push(tile);
+                this.tiles[tx][ty] = null;
+            }
+        }
+    },
     /**
      * Clears all the tiles currently used to render the layer
      *
@@ -101,21 +146,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //hide/free each tile and remove from the memory map
         for(var x in this.tiles) {
             for(var y in this.tiles[x]) {
-                var tile = this.tiles[x][y];
-
-                if(tile) {
-                    //hide/free the sprite
-                    tile.visible = false;
-                    tile.disablePhysics();
-                    this._tilePool.push(tile);
-                }
-
-                //remove the Y key
-                delete this.tiles[x][y];
+                this._freeTile(x, y);
             }
-
-            //keep the X key so we dont have to recreate these objects
-            //delete this.tiles[x];
         }
     },
     /**
@@ -127,7 +159,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @param fromTileY {Number} The y coord of the tile in units of tiles (not pixels) to move from
      * @param toTileX {Number} The x coord of the tile in units of tiles (not pixels) to move to
      * @param toTileY {Number} The y coord of the tile in units of tiles (not pixels) to move to
-     * @return {PIXI.Sprite} The sprite to display
+     * @return {Tile} The sprite to display
      */
     moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
         var tile,
@@ -143,13 +175,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         //if no tileset, just ensure the "from" tile is put back in the pool
         if(!set) {
-            if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
-                var t = this.tiles[fromTileX][fromTileY];
-                this.tiles[fromTileX][fromTileY] = null;
-
-                t.visible = false;
-                this._tilePool.push(t);
-            }
+            this._freeTile(fromTileX, fromTileY);
             return;
         }
 
