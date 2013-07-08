@@ -47,9 +47,9 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/loader/WorldLoader.js',
 
         '<%= dirs.src %>/map/Map.js',
+        '<%= dirs.src %>/map/Tile.js',
         '<%= dirs.src %>/map/Layer.js',
         '<%= dirs.src %>/map/ImageLayer.js',
-        '<%= dirs.src %>/map/Tile.js',
         '<%= dirs.src %>/map/tiled/TiledMap.js',
         '<%= dirs.src %>/map/tiled/TiledLayer.js',
         '<%= dirs.src %>/map/tiled/TiledTileset.js',

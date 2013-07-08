@@ -54,9 +54,9 @@ define(function() {
         Q.ok(gf.TextureLoader, 'gf.TextureLoader');
         Q.ok(gf.WorldLoader, 'gf.WorldLoader');
         Q.ok(gf.Map, 'gf.Map');
+        Q.ok(gf.Tile, 'gf.Tile');
         Q.ok(gf.Layer, 'gf.Layer');
         Q.ok(gf.ImageLayer, 'gf.ImageLayer');
-        Q.ok(gf.Tile, 'gf.Tile');
         Q.ok(gf.TiledMap, 'gf.TiledMap');
         Q.ok(gf.TiledLayer, 'gf.TiledLayer');
         Q.ok(gf.TiledObjectGroup, 'gf.TiledObjectGroup');
