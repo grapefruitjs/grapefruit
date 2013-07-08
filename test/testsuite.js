@@ -35,9 +35,9 @@ define(function(require) {
         'loader/Loader',
         'loader/AudioLoader',
         'loader/JsonLoader',
-        'loader/SpriteSheetLoader',
         'loader/TextureLoader',
-        'loader/WorldLoader',
+        'loader/parse/SpriteSheetLoader',
+        'loader/parse/WorldLoader',
 
         'map/Map',
         'map/Layer',

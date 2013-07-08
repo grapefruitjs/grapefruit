@@ -42,9 +42,9 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/loader/AssetLoader.js',
         '<%= dirs.src %>/loader/AudioLoader.js',
         '<%= dirs.src %>/loader/JsonLoader.js',
-        '<%= dirs.src %>/loader/SpriteSheetLoader.js',
         '<%= dirs.src %>/loader/TextureLoader.js',
-        '<%= dirs.src %>/loader/WorldLoader.js',
+        '<%= dirs.src %>/loader/parse/SpriteSheetLoader.js',
+        '<%= dirs.src %>/loader/parse/WorldLoader.js',
 
         '<%= dirs.src %>/map/Map.js',
         '<%= dirs.src %>/map/Tile.js',
