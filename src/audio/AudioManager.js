@@ -70,7 +70,7 @@ gf.AudioManager = function() {
 
     //if we are using web audio, we need a master gain node
     if(gf.support.webAudio) {
-        this.masterGain = this.ctx.createGain ? this.ctx.createGainNode() : this.ctx.createGain();
+        this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
         this.masterGain.gain.value = 1;
         this.masterGain.connect(this.ctx.destination);
     }

@@ -104,7 +104,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             ),
             max = new gf.Point(
                 (((startY + numY) / this.parent.tileSize.y) + ((startX + numX) / this.parent.tileSize.x)) / 2,
-                (((startY + numY) / this.parent.tileSize.y) - ((startX + numX) / this.parent.tileSize.x)) / 2,
+                (((startY + numY) / this.parent.tileSize.y) - ((startX + numX) / this.parent.tileSize.x)) / 2
             );
 
         //loop from min to max for each
@@ -132,7 +132,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             if(t) {
                 t.visible = false;
                 t.disablePhysics();
-                this._tilePool.push(tile);
+                this._tilePool.push(t);
                 this.tiles[tx][ty] = null;
             }
         }
