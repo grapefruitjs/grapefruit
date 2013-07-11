@@ -118,10 +118,8 @@ gf.TiledMap = function(map) {
     }
 
     //rotate for isometric maps
-    this.offset = new gf.Point();
     if(this.orientation === 'isometric') {
-        this.offset.x = (this.realSize.x / 2) - (this.tileSize.x / 2);
-        this.position.x += this.offset.x;
+        this.position.x += (this.realSize.x / 2) - (this.tileSize.x / 2);
     }
 };
 
@@ -152,8 +150,8 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
             if(o instanceof gf.TiledLayer) {
                 o.renderTiles(
-                    Math.floor((Math.abs(this.position.x) - this.offset.x) / this.scaledTileSize.x),
-                    Math.floor((Math.abs(this.position.y) - this.offset.y) / this.scaledTileSize.y),
+                    Math.floor(this.position.x/*(Math.abs(this.position.x) - this.offset.x)*/ / this.scaledTileSize.x),
+                    Math.floor(this.position.y/*(Math.abs(this.position.y) - this.offset.y)*/ / this.scaledTileSize.y),
                     numX,
                     numY
                 );

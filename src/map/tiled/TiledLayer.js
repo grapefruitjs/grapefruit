@@ -63,18 +63,21 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //clear all the visual tiles
         this.clearTiles();
 
+        if(this.parent.orientation === 'isometric')
+            return this._renderIsoTiles(startX, startY, numX, numY);
+
         //ensure we don't go below 0
         startX = startX < 0 ? 0 : startX;
         startY = startY < 0 ? 0 : startY;
 
-        if(this.parent.orientation === 'isometric')
-            return this._renderIsoTiles(startX, startY, numX, numY);
-
         //ensure we don't go outside the map size
-        var endX = (startX + numX <= this.parent.size.x) ? startX + numX : (this.parent.size.x - startX);
-        var endY = (startY + numY <= this.parent.size.y) ? startY + numY : (this.parent.size.y - startY);
+        numX = (startX + numX <= this.parent.size.x) ? numX : (this.parent.size.x - startX);
+        numY = (startY + numY <= this.parent.size.y) ? numY : (this.parent.size.y - startY);
 
         //render new sprites
+        var endX = startX + numX,
+            endY = startY + numY;
+
         for(var x = startX; x < endX; ++x) {
             for(var y = startY; y < endY; ++y) {
                 this.moveTileSprite(x, y, x, y);
@@ -95,33 +98,77 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
         this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
-    _renderIsoTiles: function(startX, startY, numX, numY) {
-        //use the start and num params (which describe the screen area) to determine
-        //the min (top-left) iso tile coord and the max (bottom-right) iso tile coord.
-        var min = new gf.Point(
-                ((startY / this.parent.tileSize.y) + (startX / this.parent.tileSize.x)) / 2,
-                ((startY / this.parent.tileSize.y) - (startX / this.parent.tileSize.x)) / 2
-            ),
-            max = new gf.Point(
-                (((startY + numY) / this.parent.tileSize.y) + ((startX + numX) / this.parent.tileSize.x)) / 2,
-                (((startY + numY) / this.parent.tileSize.y) - ((startX + numX) / this.parent.tileSize.x)) / 2
-            );
+    _renderIsoTiles: function(sx, sy, sw, sh) {
+        //the view rect offset is opposite of what the world is
+        sx = -sx;
+        sy = -sy;
 
-        //loop from min to max for each
-        for(var a = min.y; a <= max.y; a++) {
-            for(var b = min.x; b <= max.x; b++) {
-                //if a and b are not both odd or both even, skip this iteration
-                if((a&1) !== (b&1)) continue;
+        //in this function i,j represents the coord system in the isometric plane
+        var iStart = this._isoToI(sx, sy) - 1,
+            jStart = this._isoToJ(sx, sy),
+            iMax = this._isoToI(sx + sw, sy + sh) + 1,
+            jMax = this._isoToJ(sx, sy + sh) + 2,
+            jMin = this._isoToJ(sx + sw, sy),
 
-                //calculate the isometric coords
-                var x = (a + b) / 2,
-                    y = (a - b) / 2;
+            iParentMax = this.parent.size.x,
+            jParentMax = this.parent.size.y,
 
-                //if anyhting is negative, ignore it
-                if(x < 0 || y < 0) continue;
+            nBump = false,
+            mBump = false,
+            n = 0, nBuffer = 1,
+            m = 1, mBuffer = 0;
 
-                //render the tile
-                this.moveTileSprite(x, y, x, y);
+        window.console.log('',
+            'Coord: (', sx, ',', sy, ')\n',
+            'Size : (', sw, ',', sh, ')\n',
+            'Start: (', iStart, ',', jStart, ')\n',
+            'Max  : (', iMax, ',', jMax, ')\n',
+            'jMin : ', jMin
+        );
+
+        for(var i = iStart; i < iMax; ++i) {
+            for(var j = jStart - n; j < jStart + m; ++j) {
+                if(i < 0 || j < 0 || i >= iParentMax || j >= jParentMax)
+                    continue;
+
+                this.moveTileSprite(i, j, i, j);
+            }
+
+            if(!nBump) {
+                //we have not reached lowest j point, increment n to go even lower next iteration
+                n++;
+
+                //check if we reached lowest j point
+                if((jStart - n) === jMin) {
+                    nBump = true;
+                }
+            } else {
+                //if we have reached deepest j start decreasing after the buffer is gone
+                if(nBuffer > 0) {
+                    nBuffer--;
+                }
+                //the buffer is gone, start decreasing n each iteration
+                else {
+                    n--;
+                }
+            }
+
+            if(!mBump) {
+                //we have not reached the highest j point, increase m to go even higher next iteration
+                m++;
+
+                if((jStart + m) === jMax) {
+                    mBump = true;
+                }
+            } else {
+                //we have reached max j, start decreasing m after the buffer is gone
+                if(mBuffer > 0) {
+                    mBuffer--;
+                }
+                //the buffer is gone, start decreasing m each iteration
+                else {
+                    m--;
+                }
             }
         }
     },
@@ -136,6 +183,14 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 this.tiles[tx][ty] = null;
             }
         }
+    },
+    _isoToI: function(x, y) {
+        // converts world isometric coordinates into the i position of the 2D-Array
+        return ((y + x) / 2);
+    },
+    _isoToJ: function(x, y) {
+        // converts world isometric coordinates into the j position of the 2D-Array
+        return ((y - x) / 2);
     },
     /**
      * Clears all the tiles currently used to render the layer
