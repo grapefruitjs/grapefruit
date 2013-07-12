@@ -119,7 +119,7 @@ gf.TiledMap = function(map) {
 
     //rotate for isometric maps
     if(this.orientation === 'isometric') {
-        this.position.x += (this.realSize.x / 2) - (this.tileSize.x / 2);
+        this.position.x += (this.realSize.x / 2) - (this.scaledTileSize.x / 2);
     }
 };
 
@@ -142,19 +142,11 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @method resize
      */
     resize: function(width, height) {
-        var numX = Math.ceil(width / this.scaledTileSize.x),
-            numY = Math.ceil(height / this.scaledTileSize.y);
-
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
             if(o instanceof gf.TiledLayer) {
-                o.renderTiles(
-                    Math.floor(this.position.x/*(Math.abs(this.position.x) - this.offset.x)*/ / this.scaledTileSize.x),
-                    Math.floor(this.position.y/*(Math.abs(this.position.y) - this.offset.y)*/ / this.scaledTileSize.y),
-                    numX,
-                    numY
-                );
+                o.resize(width, height);
             }
         }
     },

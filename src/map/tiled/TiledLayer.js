@@ -53,23 +53,42 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
     /**
      * Creates all the tile sprites needed to display the layer
      *
-     * @method renderTiles
-     * @param startX {Number} The starting x tile position
-     * @param startY {Number} The starting y tile position
-     * @param numX {Number} The number of tiles in the X direction to render
-     * @param numY {Number} The number of tiles in the Y direction to render
+     * @method resize
+     * @param width {Number} The number of tiles in the X direction to render
+     * @param height {Number} The number of tiles in the Y direction to render
      */
-    renderTiles: function(startX, startY, numX, numY) {
+    resize: function(width, height) {
         //clear all the visual tiles
         this.clearTiles();
 
-        if(this.parent.orientation === 'isometric')
-            return this._renderIsoTiles(startX, startY, numX, numY);
-
+        if(this.parent.orientation === 'isometric') {
+            return this._renderIsoTiles(
+                this.parent.position.x,
+                this.parent.position.y,
+                width,
+                height
+            );
+        }
+        else {
+            return this._renderOrthoTiles(
+                this.parent.position.x,
+                this.parent.position.y,
+                width,
+                height
+            );
+        }
+    },
+    _renderOrthoTiles: function(startX, startY, numX, numY) {
+        //convert to tile coords
+        startX = Math.floor(startX / this.parent.scaledTileSize.x);
+        startY = Math.floor(startY / this.parent.scaledTileSize.y);
         //ensure we don't go below 0
         startX = startX < 0 ? 0 : startX;
         startY = startY < 0 ? 0 : startY;
 
+        //convert to tile coords
+        numX = Math.floor(numX / this.parent.scaledTileSize.x);
+        numY = Math.floor(numY / this.parent.scaledTileSize.y);
         //ensure we don't go outside the map size
         numX = (startX + numX <= this.parent.size.x) ? numX : (this.parent.size.x - startX);
         numY = (startY + numY <= this.parent.size.y) ? numY : (this.parent.size.y - startY);
@@ -99,9 +118,20 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
     _renderIsoTiles: function(sx, sy, sw, sh) {
+        window.console.log('render', sx, sy, sw, sh);
+        var scaled = this.parent.scaledTileSize;
+
+        //convert to tile coords
+        sx = Math.floor(sx / (scaled.x / 2));
+        sy = Math.floor(sy / scaled.y);
+
         //the view rect offset is opposite of what the world is
         sx = -sx;
         sy = -sy;
+
+        //convert to tile units
+        sw = Math.ceil(sw / (scaled.x / 2));
+        sh = Math.ceil(sh / (scaled.y / 2));
 
         //in this function i,j represents the coord system in the isometric plane
         var iStart = this._isoToI(sx, sy) - 1,
@@ -113,8 +143,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             iParentMax = this.parent.size.x,
             jParentMax = this.parent.size.y,
 
-            nBump = false,
-            mBump = false,
+            nBump = false, //have we reached minimum j (the bump)
+            mBump = false, //have we reached maximum j (the bump)
             n = 0, nBuffer = 1,
             m = 1, mBuffer = 0;
 
