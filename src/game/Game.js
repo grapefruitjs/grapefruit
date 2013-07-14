@@ -258,6 +258,17 @@ gf.inherits(gf.Game, Object, {
 
         return this;
     },
+    requestFullscreen: function() {
+        var elem = this.renderer.view;
+
+        if(elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if(elem.mozRequestFullScreen) {
+          elem.mozRequestFullScreen();
+        } else if(elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen();
+        }
+    },
     /**
      * Adds a new game state to this game to be later enabled
      *
