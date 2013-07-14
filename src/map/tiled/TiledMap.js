@@ -116,11 +116,6 @@ gf.TiledMap = function(map) {
 
         this.addChild(lyr);
     }
-
-    //rotate for isometric maps
-    if(this.orientation === 'isometric') {
-        this.position.x += (this.realSize.x / 2) - (this.scaledTileSize.x / 2);
-    }
 };
 
 gf.inherits(gf.TiledMap, gf.Map, {

@@ -118,7 +118,12 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
     _renderIsoTiles: function(sx, sy, sw, sh) {
-        window.console.log('render', sx, sy, sw, sh);
+        //set rendered area
+        this._rendered.x = sx;
+        this._rendered.y = sy;
+        this._rendered.width = sw;
+        this._rendered.height = sh;
+
         var scaled = this.parent.scaledTileSize;
 
         //convert to tile coords
@@ -134,11 +139,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         sh = Math.ceil(sh / (scaled.y / 2));
 
         //in this function i,j represents the coord system in the isometric plane
-        var iStart = this._isoToI(sx, sy) - 1,
-            jStart = this._isoToJ(sx, sy),
-            iMax = this._isoToI(sx + sw, sy + sh) + 1,
-            jMax = this._isoToJ(sx, sy + sh) + 2,
-            jMin = this._isoToJ(sx + sw, sy),
+        var iStart = Math.floor(this._isoToI(sx, sy)) - 1,
+            jStart = Math.floor(this._isoToJ(sx, sy)),
+            iMax = Math.ceil(this._isoToI(sx + sw, sy + sh)) + 1,
+            jMax = Math.ceil(this._isoToJ(sx, sy + sh)) + 2,
+            jMin = Math.floor(this._isoToJ(sx + sw, sy)),
 
             iParentMax = this.parent.size.x,
             jParentMax = this.parent.size.y,
@@ -147,14 +152,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             mBump = false, //have we reached maximum j (the bump)
             n = 0, nBuffer = 1,
             m = 1, mBuffer = 0;
-
-        window.console.log('',
-            'Coord: (', sx, ',', sy, ')\n',
-            'Size : (', sw, ',', sh, ')\n',
-            'Start: (', iStart, ',', jStart, ')\n',
-            'Max  : (', iMax, ',', jMax, ')\n',
-            'jMin : ', jMin
-        );
 
         for(var i = iStart; i < iMax; ++i) {
             for(var j = jStart - n; j < jStart + m; ++j) {
@@ -211,8 +208,13 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 t.disablePhysics();
                 this._tilePool.push(t);
                 this.tiles[tx][ty] = null;
+                this.removeChild(t);
             }
         }
+
+        // make this first-in-first-out instead of a stack
+        // see: http://jsperf.com/queue-push-unshift-vs-shift-pop/3
+        //this._tilePool.reverse();
     },
     _isoToI: function(x, y) {
         // converts world isometric coordinates into the i position of the 2D-Array
@@ -303,8 +305,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tile = new gf.Tile(texture);
             tile.mass = Infinity;
             tile.anchor.y = 1;
-            this.addChild(tile);
         }
+        this.addChild(tile);
 
         if(props.isCollidable)
             tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
@@ -373,6 +375,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Layer} Returns itself for chainability
      */
     pan: function(dx, dy) {
+        if(this.parent.orientation === 'isometric')
+            this.resize(this._rendered.width, this._rendered.height);
+
         this._panDelta.x += dx;
         this._panDelta.y += dy;
 
