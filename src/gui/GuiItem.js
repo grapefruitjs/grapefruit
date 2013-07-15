@@ -5,6 +5,7 @@
  * @extends Sprite
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
+ * @param interactive {Boolean} Whether this item should repsond to mouse events
  */
 gf.GuiItem = function(texture, interactive) {
     /**
@@ -17,7 +18,7 @@ gf.GuiItem = function(texture, interactive) {
     this.draggable = false;
 
     /**
-     * [read only] Describes if the current item is being dragged or not, if it is this
+     * Describes if the current item is being dragged or not, if it is this
      * object will hold the last local position of the mouse (relative to this object's parent)
      *
      * @property dragging

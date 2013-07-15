@@ -2,7 +2,7 @@
  * The base Gui that holds GuiItems to be added to the Camera
  *
  * @class Gui
- * @extends DisplayObject
+ * @extends DisplayObjectContainer
  * @constructor
  */
 gf.Gui = function(name) {

@@ -59,18 +59,32 @@ gf.AssetLoader = function() {
 
         'json': gf.JsonLoader
     };
-};
-/**
- * Fired when an item has loaded
- *
- * @event onProgress
- */
 
-/**
- * Fired when all the assets have loaded
- *
- * @event onComplete 
- */
+    /**
+     * Fired if a loader encounters an error
+     *
+     * @event error
+     * @param eventData {Object}
+     * @param eventData.assetType {String} The type of asset (loader name)
+     * @param eventData.message {String} The message of the error
+     */
+
+    /**
+     * Fired when an item has loaded
+     *
+     * @event progress
+     * @param eventData {Object}
+     * @param eventData.assetType {String} The type of asset (loader name)
+     * @param eventData.url {String} The url the asset loaded from
+     * @param eventData.data {mixed} The data that was loaded
+     */
+
+    /**
+     * Fired when all the assets have loaded
+     *
+     * @event complete
+     */
+};
 
 gf.inherits(gf.AssetLoader, Object, {
     /**
@@ -92,7 +106,7 @@ gf.inherits(gf.AssetLoader, Object, {
      * load those instead.
      *
      * @method load
-     * @param items {Array} Array of resources to load instead of the object's resources
+     * @param items {Array<String>|Array<Object>} Array of resources to load instead of the object's resources
      */
     load: function(items) {
         var assets = items || this.assets;
@@ -118,36 +132,39 @@ gf.inherits(gf.AssetLoader, Object, {
      * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
      *
      * @method onAssetLoaded
+     * @param event {Object} The event object
      * @private
-     * @param err {String} An option error if there was an issue loading that resource
-     * @param type {String} The type of asset loaded (texture, audio, world, or spritesheet)
-     * @param asset {Texture|Audio|Object} The actual asset that was loaded
      */
     onAssetLoaded: function(e) {
         this.remaining--;
 
-        this.emit({
-            type: 'progress',
+        this.emit('progress', {
             assetType: e.assetType,
             url: e.url,
             data: e.data
         });
 
         if(this.remaining === 0) {
-            this.emit({ type: 'complete' });
+            this.emit('complete');
         }
     },
+    /**
+     * Called whenever an asset loader encounters an error
+     *
+     * @method onAssetError
+     * @param event {Object} The event object
+     * @private
+     */
     onAssetError: function(e) {
         this.remaining--;
 
-        this.emit({
-            type: 'error',
+        this.emit('error', {
             assetType: e.assetType,
             message: e.message
         });
 
         if(this.remaining === 0) {
-            this.emit({ type: 'complete' });
+            this.emit('complete');
         }
     }
 });

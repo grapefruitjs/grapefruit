@@ -5,7 +5,14 @@
  * @uses EventEmitter
  * @constructor
  * @param contId {String} The container for the new canvas we will create for the game
- * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)
+ * @param settings {Object} All the settings for the game instance
+ * @param settings.width {Number} The width of the viewport
+ * @param settings.height {Number} The height of the viewport
+ * @param [settings.view] {DOMElement} The canvas to render into
+ * @param [settings.transparent] {Boolean} Whether the viewport should be transparent or not
+ * @param [settings.renderMethod] {String} Can be 'canvas' or 'webgl' to force that render method
+ * @param [settings.background] {Number} The background color of the stage
+ * @param [settings.interactive] {Boolean} Whether the game will use mouse events or not
  */
 gf.Game = function(contId, settings) {
     //mixin the Event Target methods
@@ -37,6 +44,7 @@ gf.Game = function(contId, settings) {
      *
      * @property players
      * @type {Array}
+     * @readOnly
      */
     this.players = [];
 
@@ -141,9 +149,9 @@ gf.Game = function(contId, settings) {
     this.activeState = null;
     this._defaultState = new gf.GameState('_default');
 
-    //append the renderer view
-    //this.renderer.view.style['z-index'] = opts.zIndex || 5;
-    this.container.appendChild(this.renderer.view);
+    //append the renderer view only if the user didn't pass their own
+    if(!settings.view)
+        this.container.appendChild(this.renderer.view);
 
     //mixin user settings
     gf.utils.setValues(this, settings);
