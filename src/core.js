@@ -197,21 +197,20 @@ gf.support = {
 
 /**
  * Inherits the prototype of a parent object.
- * from: https://github.com/isaacs/inherits/blob/master/inherits.js
  *
  * @method inherits
  * @param child {Object} The Child to inherit the prototype
  * @param parent {Object} The Parent to inherit from
- * @param proto {Object} The prototype
+ * @param proto {Object} The prototype to apply to the child
  */
-gf.inherits = function(c, p, proto) {
-  proto = proto || {};
-  var e = {};
-  [c.prototype, proto].forEach(function (s) {
-    Object.getOwnPropertyNames(s).forEach(function (k) {
-      e[k] = Object.getOwnPropertyDescriptor(s, k);
+gf.inherits = function(child, parent, proto) {
+    proto = proto || {};
+    var desc = {};
+    [child.prototype, proto].forEach(function (s) {
+        Object.getOwnPropertyNames(s).forEach(function (k) {
+            desc[k] = Object.getOwnPropertyDescriptor(s, k);
+        });
     });
-  });
-  c.prototype = Object.create(p.prototype, e);
-  c['super'] = p;
+    child.prototype = Object.create(parent.prototype, desc);
+    child['super'] = parent;
 };
