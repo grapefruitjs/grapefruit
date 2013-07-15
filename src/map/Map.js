@@ -2,14 +2,14 @@
  * Base Map implementation, provides common functions for all Map types
  *
  * @class Map
- * @uses Emitter
+ * @uses EventEmitter
  * @extends DisplayObject
  * @constructor
  * @param map {Object} All the settings for the map
  */
 gf.Map = function(map) {
     //mixin the Event Target methods
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
     /**
      * The size of the map

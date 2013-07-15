@@ -1,3 +1,4 @@
+//you can only have 1 audio context on a page, so we store one for use in each manager
 gf.__AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
 gf.__audioctx = gf.support.webAudio ? new gf.__AudioCtx() : null;
 
@@ -29,6 +30,18 @@ gf.AudioManager = function() {
      * @private
      */
     this._volume = 1;
+
+    /**
+     * The master volume of all the audio playing
+     *
+     * @property volume
+     * @type Number
+     * @default 1
+     */
+    Object.defineProperty(this, 'volume', {
+        get: this.getVolume.bind(this),
+        set: this.setVolume.bind(this)
+    });
 
     /**
      * The Web Audio API context if we are using it
@@ -77,18 +90,23 @@ gf.AudioManager = function() {
 
     //map of elements to play audio with
     this.sounds = {};
-
-    //define volume getter/setter
-    Object.defineProperty(this, 'volume', {
-        get: this.getVolume.bind(this),
-        set: this.setVolume.bind(this)
-    });
 };
 
 gf.inherits(gf.AudioManager, Object, {
+    /**
+     * Returns the current master volume
+     *
+     * @method getVolume
+     */
     getVolume: function() {
         return this._volume;
     },
+    /**
+     * Sets the current master volume
+     *
+     * @method setVolume
+     * @param value {Number}
+     */
     setVolume: function(v) {
         v = parseFloat(v, 10);
 
@@ -110,12 +128,27 @@ gf.inherits(gf.AudioManager, Object, {
             }
         }
     },
+    /**
+     * Mutes all playing audio
+     *
+     * @method mute
+     */
     mute: function() {
         return this.setMuted(true);
     },
+    /**
+     * Unmutes all playing audio
+     *
+     * @method unmute
+     */
     unmute: function() {
         return this.setMuted(false);
     },
+    /**
+     * Sets whether or not this manager is muted
+     *
+     * @method setMuted
+     */
     setMuted: function(m) {
         this._muted = m = !!m;
 
@@ -135,6 +168,22 @@ gf.inherits(gf.AudioManager, Object, {
 
         return this;
     },
+    /**
+     * Creates a new audio player for a peice of audio
+     *
+     * @method create
+     * @param [name] {String} An name to uniquely identify this audio, if omitted one will be ranomly chosen
+     * @param settings {Object} All the settings for the audio player
+     * @param settings.urls {Array<String>} All the url possible for this audio (so we can choose the one this browser supports)
+     * @param [settings.volume] {Number} The volume of this audio clip
+     * @param [settings.autoplay] {Boolean} Automatically start playing after loaded
+     * @param [settings.loop] {Boolean} Replay the audio when it finishes
+     * @param [settings.sprite] {Object} A map of string names -> [start, duration] arrays. You can use it to put multiple sounds in one file
+     * @param [settings.pos3d] {Array<Number>} 3D coords of where the audio should sound as if it came from (only works with WebAudio)
+     * @param [settings.buffer] {Boolean} WebAudio will load the entire file before playing, making this true forces HTML5Audio which will buffer and play
+     * @param [settings.format] {String} Force an extension override
+     * @return {AudioPlayer} Will return the new audio player, or false if we couldn't determine a compatible url
+     */
     create: function(name, settings) {
         //if we can't play audio return false
         if(!this.canPlay) {

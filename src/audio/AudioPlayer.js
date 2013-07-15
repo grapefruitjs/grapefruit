@@ -4,23 +4,90 @@
  * <a href="https://github.com/goldfire/howler.js">Howler.js</a>
  *
  * @class AudoPlayer
- * @uses Emitter
+ * @uses EventEmitter
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
  * @param settings {Object} All the settings for this player instance
  */
 gf.AudioPlayer = function(manager, settings) {
     //mixin the Event Target methods
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
-    this.autoplay = false;
-    this.buffer = false;
-    this.format = null;
-    this.loop = false;
-    this.pos3d = [0, 0, -0.5];
-    this.sprite = {};
+    /**
+     * The source of the audio, the actual URL to load up
+     *
+     * @property src
+     * @type String
+     */
     this.src = '';
-    //volume is getter/setter
+
+    /**
+     * Play the audio immediately after loading
+     *
+     * @property autoplay
+     * @type Boolean
+     * @default false
+     */
+    this.autoplay = false;
+
+    /**
+     * Buffer forces use of HTML5Audio which will buffer and play
+     * instead of loading the entire file and then playing
+     *
+     * @property buffer
+     * @type Boolean
+     * @default false
+     */
+    this.buffer = false;
+
+    /**
+     * Override the format determined from the extension with this extension
+     *
+     * @property format
+     * @type String
+     * @default null
+     */
+    this.format = null;
+
+    /**
+     * Replay the audio immediately after finishing
+     *
+     * @property loop
+     * @type Boolean
+     * @default false
+     */
+    this.loop = false;
+
+    /**
+     * A 3D position where the audio should sound like it is coming from
+     *
+     * @property pos3d
+     * @type Array<Number>
+     * @default [0, 0, -0.5]
+     */
+    this.pos3d = [0, 0, -0.5];
+
+    /**
+     * A sound sprite that maps string keys to [start, duration] arrays. These can
+     * be used to put multiple sound bits in one file, and play them separately
+     *
+     * @property sprite
+     * @type Object
+     * @default {}
+     */
+    this.sprite = {};
+
+    /**
+     * The volume of the audio player
+     *
+     * @property volume
+     * @type Number
+     * @default 1
+     */
+    Object.defineProperty(this, 'volume', {
+        get: this.getVolume.bind(this),
+        set: this.setVolume.bind(this)
+    });
 
     this._volume = 1;
     this._duration = 0;
@@ -35,10 +102,6 @@ gf.AudioPlayer = function(manager, settings) {
     //mixin user's settings
     gf.utils.setValues(this, settings);
 
-    //define volume getter/setter
-    this.__defineGetter__('volume', this.getVolume.bind(this));
-    this.__defineSetter__('volume', this.setVolume.bind(this));
-
     if(this._webAudio) {
         this._setupAudioNode();
     }
@@ -48,9 +111,12 @@ gf.AudioPlayer = function(manager, settings) {
 
 gf.inherits(gf.AudioPlayer, Object, {
     /**
-     * Load the audio file for this player
+     * Load the audio file for this player, this is called from the ctor
+     * there is no reason to call it manually.
      *
+     * @method load
      * @return {AudioPlayer}
+     * @private
      */
     load: function() {
         //if using web audio, load up the buffer
@@ -103,8 +169,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Play a sound from the current time (0 by default).
      *
-     * @param sprite {String} (optional) Plays from the specified position in the sound sprite definition.
-     * @param callback {Function} (optional) Returns the unique playback id for this sound instance.
+     * @method play
+     * @param [sprite] {String} Plays from the specified position in the sound sprite definition.
+     * @param [callback] {Function} Returns the unique playback id for this sound instance.
      * @return {AudioPlayer}
      */
     play: function(sprite, cb) {
@@ -240,8 +307,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Pause playback and save the current position.
      *
-     * @param id {String} (optional) The play instance ID.
-     * @param timerId {String} (optional) Clear the correct timeout ID.
+     * @method pause
+     * @param [id] {String} The play instance ID.
+     * @param [timerId] {String} Clear the correct timeout ID.
      * @return {AudioPlayer}
      */
     pause: function(id, timerId) {
@@ -291,8 +359,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Stop playback and reset to start.
      *
-     * @param id {String} (optional) The play instance ID.
-     * @param timerId {String} (optional) Clear the correct timeout ID.
+     * @method stop
+     * @param [id] {String} The play instance ID.
+     * @param [timerId] {String} Clear the correct timeout ID.
      * @return {AudioPlayer}
      */
     stop: function(id, timerId) {
@@ -336,7 +405,8 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Mute this sound.
      *
-     * @param id {String} (optional) The play instance ID.
+     * @method mute
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     mute: function(id) {
@@ -345,7 +415,8 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Unmute this sound.
      *
-     * @param id {String} (optional) The play instance ID.
+     * @method unmute
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     unmute: function(id) {
@@ -354,7 +425,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Set the muted state of this sound.
      *
-     * @param id {String} (optional) The play instance ID.
+     * @method setMuted
+     * @param muted {Boolean}
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     setMuted: function(muted, id) {
@@ -383,8 +456,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Set the position of playback.
      *
+     * @method seek
      * @param pos {Number} The position to move current playback to.
-     * @param id {String} (optional) The play instance ID.
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     seek: function(pos, id) {
@@ -418,7 +492,8 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Get the position of playback.
      *
-     * @param id {String} (optional) The play instance ID.
+     * @method getPosition
+     * @param [id] {String} The play instance ID.
      * @return {Number}
      */
     getPosition: function(id) {
@@ -447,11 +522,12 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Fade a currently playing sound between two volumes.
      *
+     * @method fade
      * @param from {Number} The volume to fade from (0.0 to 1.0).
      * @param to {Number} The volume to fade to (0.0 to 1.0).
      * @param len {Number} Time in milliseconds to fade.
-     * @param id {String} (optional) The play instance ID.
-     * @param callback {Function} (optional) Fired when the fade is complete.
+     * @param [id] {String} The play instance ID.
+     * @param [callback] {Function} Fired when the fade is complete.
      * @return {AudioPlayer}
      */
     fade: function(from, to, len, id, cb) {
@@ -499,7 +575,7 @@ gf.inherits(gf.AudioPlayer, Object, {
      *
      * @method setVolume
      * @param vol {Number} The current volume
-     * @param id {String} (optional) The play instance ID.
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     setVolume: function(vol, id) {
@@ -541,10 +617,11 @@ gf.inherits(gf.AudioPlayer, Object, {
      * NOTE: This only works with Web Audio API, HTML5 Audio playback
      * will not be affected.
      *
+     * @method setPosition
      * @param x {Number} The x-position of the playback from -1000.0 to 1000.0
      * @param y {Number} The y-position of the playback from -1000.0 to 1000.0
      * @param z {Number} The z-position of the playback from -1000.0 to 1000.0
-     * @param id {String} (optional) The play instance ID.
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     setPosition: function(x, y, z, id) {
@@ -576,6 +653,12 @@ gf.inherits(gf.AudioPlayer, Object, {
 
         return this;
     },
+    /**
+     * Performs a step in the fade transition
+     *
+     * @method _doFadeStep
+     * @private
+     */
     _doFadeStep: function(vol, wait, end, id, cb) {
         var self = this;
 
@@ -591,7 +674,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Get an audio node by ID.
      *
+     * @method _nodeById
      * @return {AudioPlayer} Audio node.
+     * @private
      */
     _nodeById: function(id) {
         var node = this._nodes[0]; //default return value
@@ -609,7 +694,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Get the first active audio node.
      *
-     * @return {Howl} Audio node.
+     * @method _activeNode
+     * @return {AudioPlayer} Audio node.
+     * @private
      */
     _activeNode: function() {
         var node;
@@ -631,7 +718,9 @@ gf.inherits(gf.AudioPlayer, Object, {
      * Get the first inactive audio node.
      * If there is none, create a new one and add it to the pool.
      *
-     * @param  {Function} callback Function to call when the audio node is ready.
+     * @method _inactiveNode
+     * @param cb {Function} callback Function to call when the audio node is ready.
+     * @private
      */
     _inactiveNode: function(cb) {
         var node;
@@ -663,6 +752,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     },
     /**
      * If there are more than 5 inactive audio nodes in the pool, clear out the rest.
+     *
+     * @method _drainPool
+     * @private
      */
     _drainPool: function() {
         var inactive = 0,
@@ -688,7 +780,10 @@ gf.inherits(gf.AudioPlayer, Object, {
     },
     /**
      * Clear 'onend' timeout before it ends.
-     * @param  {Number} timerId The ID of the sound to be cancelled.
+     *
+     * @method _clearEndTimer
+     * @param timerId {Number} timerId The ID of the sound to be cancelled.
+     * @private
      */
     _clearEndTimer: function(timerId) {
         var timer = this._onendTimer.indexOf(timerId);
@@ -703,7 +798,10 @@ gf.inherits(gf.AudioPlayer, Object, {
     },
     /**
      * Setup the gain node and panner for a Web Audio instance.
+     *
+     * @method _setupAudioNode
      * @return {Object} The new audio node.
+     * @private
      */
     _setupAudioNode: function() {
         var node = this._nodes,
@@ -731,7 +829,9 @@ if(gf.support.webAudio) {
     /**
      * Buffer a sound from URL (or from cache) and decode to audio source (Web Audio API).
      *
+     * @method loadBuffer
      * @param url {String} The path to the sound file.
+     * @private
      */
     gf.AudioPlayer.prototype.loadBuffer = function(url) {
         //load from cache
@@ -771,7 +871,9 @@ if(gf.support.webAudio) {
     /**
      * Finishes loading the Web Audio API sound and fires the loaded event
      *
+     * @method loadSound
      * @param buffer {Object} The decoded buffer sound source.
+     * @private
      */
     gf.AudioPlayer.prototype.loadSound = function(buffer) {
         this._duration = buffer ? buffer.duration : this._duration;
@@ -798,8 +900,10 @@ if(gf.support.webAudio) {
     /**
      * Load the sound back into the buffer source.
      *
-     * @param  {Array}  loop  Loop boolean, pos, and duration.
-     * @param  {String} id    (optional) The play instance ID.
+     * @method refreshBuffer
+     * @param loop {Array} Loop boolean, pos, and duration.
+     * @param [id] {String} The play instance ID.
+     * @private
      */
     gf.AudioPlayer.prototype.refreshBuffer = function(loop, id) {
         var node = this._nodeById(id);

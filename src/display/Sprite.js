@@ -3,7 +3,7 @@
  *
  * @class Sprite
  * @extends PIXI.Sprite
- * @uses Emitter
+ * @uses EventEmitter
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
  * @param pos {Array|Vector|Point|Number} The starting position of the sprite
@@ -13,7 +13,7 @@
  */
 gf.Sprite = function(tx) {
     PIXI.Sprite.call(this, tx);
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
     /**
      * The type of the sprite
