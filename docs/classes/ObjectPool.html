@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/input/Keyboard.js - gf</title>
+    <title>ObjectPool - gf</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -160,97 +160,314 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/input/Keyboard.js</h1>
+                        <h1>ObjectPool Class</h1>
+<div class="box meta">
+    
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-gf.input.Keyboard = function(view) {
-    gf.input.Input.call(this, view);
+    
 
-    /**
-     * Tracks if a key is already down, so we don&#x27;t repeat
-     *
-     * @property keydown
-     * @type Object
-     * @readOnly
-     */
-    this.keydown = {};
+    
+        <div class="foundat">
+            Defined in: <a href="../files/src_pool_ObjectPool.js.html#l1"><code>src&#x2F;pool&#x2F;ObjectPool.js:1</code></a>
+        </div>
+    
 
-    /**
-     * The current sequence of keys that have been pressed
-     *
-     * @property sequence
-     * @type Array&lt;Number&gt;
-     * @readOnly
-     */
-    this.sequence = [];
+    
 
-    /**
-     * The amount of time it takes for the sequence to clear out, in ms
-     *
-     * @property sequenceTimeout
-     * @type Number
-     * @default 500
-     */
-    this.sequenceTimeout = 500;
+    
+</div>
 
-    this._clearSq = null;
 
-    document.addEventListener(&#x27;keydown&#x27;, this.onKeyDown.bind(this), false);
-    document.addEventListener(&#x27;keyup&#x27;, this.onKeyUp.bind(this), false);
-};
 
-gf.inherits(gf.input.Keyboard, gf.input.Input, {
-    //on keydown event set gf.controls keycode&#x27;s action as active
-    //and call any registered callbacks
-    onKeyDown: function(e, override) {
-        if(e.target === this.view)
-            return this.modifyKey(e, override || e.keyCode || e.which, true);
-    },
-    onKeyUp: function(e, override) {
-        if(e.target === this.view)
-            return this.modifyKey(e, override || e.keyCode || e.which, false);
-    },
-    modifyKey: function(e, key, val) {
-        //process the single key
-        var pkey = this.processKey(e, key, val);
+<div class="box intro">
+    <p>Holds a pool of different Objects to help reduce the number times
+an object is created and destroyed.</p>
+</div>
 
-        //update the key sequence
-        this.sequence.push(key);
 
-        //process current sequence
-        var pseq = this.processKey(e, this.sequence.toString(), val);
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_ObjectPool" class="method item">
+    <h3 class="name"><code>ObjectPool</code></h3>
 
-        //set timeout to clear sequence
-        clearTimeout(this._clearSq);
-        this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>parent</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
 
-        //if either is false, then return false
-        return pkey &amp;&amp; pseq;
-    },
-    processKey: function(e, key, val) {
-        if(this.binds[key]) {
-            //Don&#x27;t fire events for repeats
-            if(this.keydown[key] === val)
-                return this.preventDefault(e);
+    
 
-            //track that the action has changed state
-            this.keydown[key] = val;
-            this.status[this.binds[key]] = val;
+    
 
-            //call each callback
-            this.runCallbacks(key, [val]);
+    
 
-            return this.preventDefault(e);
-        }
+    
 
-        return true;
-    },
-    _clearSequence: function() {
-        this.sequence.length = 0;
-    }
-});
-    </pre>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_pool_ObjectPool.js.html#l1"><code>src&#x2F;pool&#x2F;ObjectPool.js:1</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">type</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The object type that this pool will hold (like gf.Sprite, or gf.Tile)</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">parent</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The parent that the objects will be added to. Passing this in will
+     make the pool add any newly created objects as children to this object.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+    </div>
+
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+        
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+        
+        
+        
+        
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+            
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods">
+                        
+                            <li class="index-item method">
+                                <a href="#method_create">create</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_free">free</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+
+            
+
+            
+        </div>
+
+        
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_create" class="method item">
+    <h3 class="name"><code>create</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_pool_ObjectPool.js.html#l18"><code>src&#x2F;pool&#x2F;ObjectPool.js:18</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Creates a new instance of the pool's object type, or if available
+pulls one that is already created out of the pool</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_free" class="method item">
+    <h3 class="name"><code>free</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_pool_ObjectPool.js.html#l35"><code>src&#x2F;pool&#x2F;ObjectPool.js:35</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Frees an object back into the pool to be recycled</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+
+        
+
+        
+    </div>
 </div>
 
                     </div>

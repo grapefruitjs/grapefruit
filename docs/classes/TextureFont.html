@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Gui - gf</title>
+    <title>TextureFont - gf</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -160,7 +160,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Gui Class</h1>
+                        <h1>TextureFont Class</h1>
 <div class="box meta">
     
 
@@ -172,7 +172,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/src_gui_Gui.js.html#l1"><code>src&#x2F;gui&#x2F;Gui.js:1</code></a>
+            Defined in: <a href="../files/src_font_TextureFont.js.html#l1"><code>src&#x2F;font&#x2F;TextureFont.js:1</code></a>
         </div>
     
 
@@ -184,17 +184,43 @@
 
 
 <div class="box intro">
-    <p>The base Gui that holds GuiItems to be added to the Camera</p>
+    <p>A texture font makes it easy to use a texture for writing generic text. Basically
+this holds an array of textures each one representing a character, that all share
+the same base texture (image). It is the same way a spritesheet works except you
+use the textures for text instead of animation frames.</p>
+
+<p>For special characters, you can either use the <code>.map</code> property to map a character
+to a texture name like <code>font.map['~'] = 'tilde'</code> so that any <code>~</code> uses the texture named
+<code>tilde + font.ext</code> for rendering; or you can make the texture name be the character code
+prefixed with <code>#</code>. So, for <code>~</code>, naming the texture <code>#126.png</code> with <code>font.ext = 'png'</code>
+would just work automagically. There is a default map already that you can view in the source,
+and if you follow that naming convention, it will work without modification as well.</p>
 </div>
 
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_Gui" class="method item">
-    <h3 class="name"><code>Gui</code></h3>
+        <div id="method_TextureFont" class="method item">
+    <h3 class="name"><code>TextureFont</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>texture</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[settings]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -222,7 +248,7 @@
             
         
         
-        <a href="../files/src_gui_Gui.js.html#l1"><code>src&#x2F;gui&#x2F;Gui.js:1</code></a>
+        <a href="../files/src_font_TextureFont.js.html#l1"><code>src&#x2F;font&#x2F;TextureFont.js:1</code></a>
         
         </p>
 
@@ -236,6 +262,133 @@
         
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">texture</code>
+                        <span class="type"><a href="../classes/Texture.html" class="crosslink">Texture</a> | String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite sheet to use, if you pass a string make sure to preload it first</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[settings]</code>
+                        <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>All the settings for the font</p>
+                    </div>
+
+                    
+                        <ul class="params-list">
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[ext]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>The extension used for the different texture names</p>
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[map]</code>
+                                    <span class="type">Object</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>Maps a special character to a string name</p>
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[spaceSize]</code>
+                                    <span class="type">Number</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>The size of a space character in pixels</p>
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[lineWidth]</code>
+                                    <span class="type">Number</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>The width factor of characters, default is 1 which is normal spacing</p>
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[lineHeight]</code>
+                                    <span class="type">Number</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>The height factor of characters, default is 1 which is normal spacing</p>
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[text]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>Starting text of the font</p>
+                                </div>
+
+                                
+                            </li>
+                            
+                        </ul>
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -272,6 +425,13 @@
 
                     <ul class="index-list methods extends">
                         
+                            <li class="index-item method">
+                                <a href="#method__getSprite">_getSprite</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method inherited">
                                 <a href="#method_addChild">addChild</a>
 
@@ -281,6 +441,13 @@
                         
                             <li class="index-item method inherited">
                                 <a href="#method_addChildAt">addChildAt</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_clone">clone</a>
 
                                 
                                 
@@ -302,6 +469,13 @@
                         
                             <li class="index-item method inherited">
                                 <a href="#method_setPosition">setPosition</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setText">setText</a>
 
                                 
                                 
@@ -331,6 +505,13 @@
                                 
                             </li>
                         
+                            <li class="index-item property">
+                                <a href="#property_ext">ext</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property inherited">
                                 <a href="#property_hitArea">hitArea</a>
 
@@ -346,7 +527,21 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_name">name</a>
+                                <a href="#property_lineHeight">lineHeight</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_lineWidth">lineWidth</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_map">map</a>
 
                                 
                                 
@@ -380,8 +575,29 @@
                                 
                             </li>
                         
+                            <li class="index-item property">
+                                <a href="#property_spaceSize">spaceSize</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_sprites">sprites</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property inherited">
                                 <a href="#property_stage">stage</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_textures">textures</a>
 
                                 
                                 
@@ -493,6 +709,108 @@
                 <h2 class="off-left">Methods</h2>
 
                 
+                    <div id="method__getSprite" class="method item">
+    <h3 class="name"><code>_getSprite</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>character</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_font_TextureFont.js.html#l139"><code>src&#x2F;font&#x2F;TextureFont.js:139</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Gets a sprite from the pool for the character pased</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">character</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The character to get a sprite for</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    Sprite
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_addChild" class="method item inherited">
     <h3 class="name"><code>addChild</code></h3>
 
@@ -561,7 +879,7 @@
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -651,7 +969,7 @@
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -666,7 +984,7 @@
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -676,6 +994,75 @@
         </div>
     
 
+    
+
+    
+</div>
+
+                
+                    <div id="method_clone" class="method item">
+    <h3 class="name"><code>clone</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_font_TextureFont.js.html#l171"><code>src&#x2F;font&#x2F;TextureFont.js:171</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Clones this font to get another just like it</p>
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                    TextureFont
+                
+            </div>
+        </div>
     
 
     
@@ -750,7 +1137,7 @@
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -953,6 +1340,93 @@
 </div>
 
                 
+                    <div id="method_setText" class="method item">
+    <h3 class="name"><code>setText</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>text</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_font_TextureFont.js.html#l186"><code>src&#x2F;font&#x2F;TextureFont.js:186</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the text of this font to the string passed</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">text</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The text to display</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
             </div>
         
 
@@ -1035,6 +1509,52 @@
         <p>[read-only] The of children of this object.</p>
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_ext" class="property item">
+    <h3 class="name"><code>ext</code></h3>
+    <span class="type">String</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_font_TextureFont.js.html#l34"><code>src&#x2F;font&#x2F;TextureFont.js:34</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The extension to use with texture names</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> &#x27;&#x27;</p>
     
 
     
@@ -1129,9 +1649,9 @@ will use (as it will not need to hit test all the children)</p>
 </div>
 
                 
-                    <div id="property_name" class="property item">
-    <h3 class="name"><code>name</code></h3>
-    <span class="type">String</span>
+                    <div id="property_lineHeight" class="property item">
+    <h3 class="name"><code>lineHeight</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -1152,7 +1672,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_gui_Gui.js.html#l9"><code>src&#x2F;gui&#x2F;Gui.js:9</code></a>
+        <a href="../files/src_font_TextureFont.js.html#l100"><code>src&#x2F;font&#x2F;TextureFont.js:100</code></a>
         
         </p>
 
@@ -1162,11 +1682,97 @@ will use (as it will not need to hit test all the children)</p>
     </div>
 
     <div class="description">
-        <p>The name of the Gui</p>
+        <p>The height factor of characters, default is 1 which is normal spacing</p>
     </div>
 
     
-        <p><strong>Default:</strong> &#x27;&#x27;</p>
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_lineWidth" class="property item">
+    <h3 class="name"><code>lineWidth</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_font_TextureFont.js.html#l92"><code>src&#x2F;font&#x2F;TextureFont.js:92</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The width factor of characters, default is 1 which is normal spacing</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_map" class="property item">
+    <h3 class="name"><code>map</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_font_TextureFont.js.html#l43"><code>src&#x2F;font&#x2F;TextureFont.js:43</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Maps a special character to a string name</p>
+    </div>
+
     
 
     
@@ -1339,6 +1945,96 @@ will use (as it will not need to hit test all the children)</p>
 </div>
 
                 
+                    <div id="property_spaceSize" class="property item">
+    <h3 class="name"><code>spaceSize</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_font_TextureFont.js.html#l84"><code>src&#x2F;font&#x2F;TextureFont.js:84</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The size of a space character in pixels</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_sprites" class="property item private">
+    <h3 class="name"><code>sprites</code></h3>
+    <span class="type"><a href="../classes/ObjectPool.html" class="crosslink">ObjectPool</a></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_font_TextureFont.js.html#l118"><code>src&#x2F;font&#x2F;TextureFont.js:118</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The sprite pool to grab character sprites from</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_stage" class="property item inherited">
     <h3 class="name"><code>stage</code></h3>
     <span class="type">Stage</span>
@@ -1370,6 +2066,52 @@ will use (as it will not need to hit test all the children)</p>
 
     <div class="description">
         <p>[read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_textures" class="property item private">
+    <h3 class="name"><code>textures</code></h3>
+    <span class="type">Object<Texture></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_font_TextureFont.js.html#l108"><code>src&#x2F;font&#x2F;TextureFont.js:108</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The textures for all the characters in the alphabet</p>
     </div>
 
     
@@ -1479,7 +2221,7 @@ will use (as it will not need to hit test all the children)</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1542,7 +2284,7 @@ will use (as it will not need to hit test all the children)</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1605,7 +2347,7 @@ will use (as it will not need to hit test all the children)</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1668,7 +2410,7 @@ will use (as it will not need to hit test all the children)</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1731,7 +2473,7 @@ will use (as it will not need to hit test all the children)</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1795,7 +2537,7 @@ for this callback to be fired the mouse must have been pressed down over the dis
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1859,7 +2601,7 @@ for this callback to be fired, The touch must have started over the displayObjec
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1923,7 +2665,7 @@ basically a touch version of click</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1986,7 +2728,7 @@ basically a touch version of click</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -2050,7 +2792,7 @@ for this callback to be fired, The touch must have started over the displayObjec
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -2113,7 +2855,7 @@ for this callback to be fired, The touch must have started over the displayObjec
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
