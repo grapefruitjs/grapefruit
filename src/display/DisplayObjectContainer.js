@@ -18,55 +18,75 @@ gf.DisplayObjectContainer = function(settings) {
     /**
      * [read-only] The of children of this object.
      * @property children {Array}
+     * @readOnly
      */
 
     /**
      * The coordinate of the object relative to the local coordinates of the parent.
+     *
      * @property position
      * @type Point
      */
 
     /**
      * The scale factor of the object.
+     *
      * @property scale
      * @type Point
      */
 
     /**
      * The rotation of the object in radians.
+     *
      * @property rotation
      * @type Number
      */
 
     /**
      * The opacity of the object.
+     *
      * @property alpha
      * @type Number
      */
 
     /**
      * The visibility of the object.
+     *
      * @property visible
      * @type Boolean
      */
 
     /**
      * [read-only] The display object that contains this display object.
+     *
      * @property parent
      * @type DisplayObject
+     * @readOnly
      */
 
     /**
      * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
+     *
      * @property stage
      * @type Stage
+     * @readOnly
      */
 
     /**
      * This is the defined area that will pick up mouse / touch events. It is null by default.
-     * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
+     * Setting it is a neat way of optimising the hitTest function that the interactionManager
+     * will use (as it will not need to hit test all the children)
+     *
      * @property hitArea
-     * @type Rectangle
+     * @type Rectangle|Polygon|Circle|Ellipse
+     */
+
+    /**
+     * Wether or not the object will handle mouse events
+     *
+     * @property interactive
+     * @type Boolean
+     * @default false
      */
 
     /*
@@ -75,12 +95,14 @@ gf.DisplayObjectContainer = function(settings) {
 
     /**
      * A callback that is used when the users clicks on the displayObject with their mouse
+     *
      * @method click
      * @param interactionData {InteractionData}
      */
 
     /**
      * A callback that is used when the user clicks the mouse down over the sprite
+     *
      * @method mousedown
      * @param interactionData {InteractionData}
      */
@@ -88,6 +110,7 @@ gf.DisplayObjectContainer = function(settings) {
     /**
      * A callback that is used when the user releases the mouse that was over the displayObject
      * for this callback to be fired the mouse must have been pressed down over the displayObject
+     *
      * @method mouseup
      * @param interactionData {InteractionData}
      */
@@ -95,18 +118,21 @@ gf.DisplayObjectContainer = function(settings) {
     /**
      * A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject
      * for this callback to be fired, The touch must have started over the displayObject
+     *
      * @method mouseupoutside
      * @param interactionData {InteractionData}
      */
 
     /**
      * A callback that is used when the users mouse rolls over the displayObject
+     *
      * @method mouseover
      * @param interactionData {InteractionData}
      */
 
     /**
      * A callback that is used when the users mouse leaves the displayObject
+     *
      * @method mouseout
      * @param interactionData {InteractionData}
      */
@@ -118,18 +144,21 @@ gf.DisplayObjectContainer = function(settings) {
     /**
      * A callback that is used when the users taps on the sprite with their finger
      * basically a touch version of click
+     *
      * @method tap
      * @param interactionData {InteractionData}
      */
 
     /**
      * A callback that is used when the user touch's over the displayObject
+     *
      * @method touchstart
      * @param interactionData {InteractionData}
      */
 
     /**
      * A callback that is used when the user releases a touch over the displayObject
+     *
      * @method touchend
      * @param interactionData {InteractionData}
      */
@@ -137,6 +166,7 @@ gf.DisplayObjectContainer = function(settings) {
     /**
      * A callback that is used when the user releases the touch that was over the displayObject
      * for this callback to be fired, The touch must have started over the sprite
+     *
      * @method touchendoutside
      * @param interactionData {InteractionData}
      */
@@ -146,19 +176,15 @@ gf.DisplayObjectContainer = function(settings) {
      */
 
     /**
-     * Indicates if the sprite will have touch and mouse interactivity. It is false by default
-     * @method setInteractive
-     * @param interactive {Boolean}
-     */
-
-    /**
      * Adds a child to the object.
+     *
      * @method addChild
      * @param child {DisplayObject}
      */
 
     /**
      * Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown
+     *
      * @method addChildAt
      * @param child {DisplayObject}
      * @param index {Number}
@@ -166,6 +192,7 @@ gf.DisplayObjectContainer = function(settings) {
 
     /**
      * Removes a child from the object.
+     *
      * @method removeChild
      * @param child {DisplayObject}
      */

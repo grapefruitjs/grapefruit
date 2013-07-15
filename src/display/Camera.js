@@ -334,6 +334,19 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
         return this;
     },
     /**
+     * Focuses the camera on a sprite.
+     *
+     * @method focusSprite
+     * @param sprite {Sprite} The sprite to focus on
+     * @return {Camera} Returns iteself for chainability
+     */
+    focusSprite: function(spr) {
+        return this.focus(
+            gf.math.round(spr.position.x) * this.game.world.scale.x,
+            gf.math.round(spr.position.y) * this.game.world.scale.y
+        );
+    },
+    /**
      * Focuses the camera on an x,y position. Ensures that the camera does
      * not go outside the bounds set with setBounds()
      *
@@ -355,12 +368,6 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
             dy = goToY + this.game.world.position.y;
 
         return this.pan(dx, dy);
-    },
-    focusSprite: function(spr) {
-        this.focus(
-            gf.math.round(spr.position.x) * this.game.world.scale.x,
-            gf.math.round(spr.position.y) * this.game.world.scale.y
-        );
     },
     /**
      * Pans the camera around by the x,y amount. Ensures that the camera does
@@ -454,7 +461,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * Called internally every frame. Updates all effects and the follow
      *
      * @method update
+     * @param dt {Number} The delta time (in seconds) since the last update
      * @return {Camera} Returns iteself for chainability
+     * @private
      */
     update: function(dt) {
         //follow sprite
@@ -559,6 +568,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
  *
  * @property FOLLOW
  * @type Object
+ * @static
  */
 gf.Camera.FOLLOW = {
     PLATFORMER: 0,
@@ -572,6 +582,7 @@ gf.Camera.FOLLOW = {
  *
  * @property SHAKE
  * @type Object
+ * @static
  */
 gf.Camera.SHAKE = {
     BOTH: 0,
