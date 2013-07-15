@@ -6,10 +6,8 @@
  * @uses EventEmitter
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
- * @param pos {Array|Vector|Point|Number} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
  * @example
- *      var spr = new gf.Sprite(texture, [10, 1], { name: 'MySprite' });
+ *      var spr = new gf.Sprite(texture);
  */
 gf.Sprite = function(tx) {
     PIXI.Sprite.call(this, tx);
@@ -34,11 +32,12 @@ gf.Sprite = function(tx) {
     this.alive = true;
 
     /**
-     * The mass of this sprite (if using physics)
+     * The mass of this sprite (if using physics), please use setMass to set this value
      *
      * @property mass
      * @type Number
      * @default 0
+     * @readOnly
      */
     this.mass = 0;
 
@@ -56,6 +55,12 @@ gf.Sprite = function(tx) {
 };
 
 gf.inherits(gf.Sprite, PIXI.Sprite, {
+    /**
+     * Enables physics for this sprite
+     *
+     * @method enablePhysics
+     * @param system {PhysicsSystem} The system for the sprite to be in
+     */
     enablePhysics: function(sys) {
         if(sys && this.physics !== sys) {
             if(this.physics)
@@ -66,21 +71,44 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
 
         this.physics.add(this);
     },
+    /**
+     * Disbales physics for this sprite
+     *
+     * @method disablePhysics
+     */
     disablePhysics: function() {
         if(this.physics) {
             this.physics.remove(this);
         }
     },
+    /**
+     * Sets the mass of this sprite
+     *
+     * @method setMass
+     * @param mass {Number} The new mass of the object
+     */
     setMass: function(mass) {
         if(this.physics) {
             this.physics.setMass(this, mass);
         }
     },
+    /**
+     * Sets the velocity of this sprite
+     *
+     * @method setVelocity
+     * @param velocity {Vector} The new velocity of the object
+     */
     setVelocity: function(vel) {
         if(this.physics) {
             this.physics.setVelocity(this, gf.utils.ensureVector(vel));
         }
     },
+    /**
+     * Sets the rotation of this sprite
+     *
+     * @method setRotation
+     * @param rotation {Number} The new rotation of the object in radians
+     */
     setRotation: function(rads, skipPhysics) {
         this.rotation = rads;
 
@@ -88,6 +116,13 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
             this.physics.setRotation(this, rads);
         }
     },
+    /**
+     * Sets the position of this sprite
+     *
+     * @method setPosition
+     * @param x {Number}
+     * @param y {Number}
+     */
     setPosition: function(x, y, skipPhysics) {
         this.position.x = x;
         this.position.y = y;
@@ -96,6 +131,11 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
             this.physics.setPosition(this, this.position);
         }
     },
+    /**
+     * Removes this sprite from the stage and the physics system
+     *
+     * @method destroy
+     */
     destroy: function() {
         if(this.parent)
             this.parent.removeChild(this);
@@ -107,8 +147,9 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
     /**
      * On Collision Event
      *      called when this sprite collides into another, or is being collided into by another.
-     *      By default if something collides with a collectable sprite we remove the collectable
-     *      and if we collide with a solid tile we kill our velocity
+     *      By default if something collides with a collectable sprite we destroy the collectable
+     *      and if we collide with a solid tile we kill our velocity. This method will emit a
+     *      'collision' event that you can listen for
      *
      * @method onCollision
      * @param obj {Sprite} Colliding sprite
