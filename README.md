@@ -23,26 +23,15 @@ This project is under heavy development, and the API is subject to change at any
 
 The following classes need documentation:
 
- - gf.AudioManager (methods)
- - gf.AnimatedSprite
- - gf.Sprite (methods, change onCollision to new events)
- - gf.Font (actually do generic font as well)
- - gf.TextureFont
- - gf.GuiItem (methods)
  - gf.InputManager
  - gf.input.Input
  - gf.input.Gamepad
  - gf.input.GamepadButtons
  - gf.input.GamepadSticks
  - gf.input.Keyboard
- - gf.AssetLoader
- - gf.AudioLoader
- - gf.TextureLoader
- - gf.JsonLoader
  - gf.SpriteSheetLoader
  - gf.WorldLoader
- - gf.PhysicsSystem (why is this using a different inherit method?!?!)
- - gf.ObjectPool
+ - gf.PhysicsSystem
 
 ugh...
 
