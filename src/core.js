@@ -112,7 +112,7 @@ gf.support = {
      * @property canvas
      * @type Boolean
      */
-    canvas: !!window.CanvasRenderingContext2D,
+    canvas: (function () { try { return !!window.CanvasRenderingContext2D && !!document.createElement('canvas').getContext('2d'); } catch(e) { return false; } })(),
 
     /**
      * Whether or not webgl is supported
@@ -155,12 +155,12 @@ gf.support = {
     fileapi: !!window.File && !!window.FileReader && !!window.FileList && !!window.Blob,
 
     /**
-     * Whether or not tje Web Audio API is supported
+     * Whether or not the Web Audio API is supported
      *
      * @property webAudio
      * @type Boolean
      */
-    webAudio: !!window.AudioContext || !!window.webkitAudioContext,
+    webAudio: !!window.AudioContext || !!window.webkitAudioContext || !!window.mozAudioContext,
 
     /**
      * Whether html Audio is supported in this browser
@@ -199,18 +199,29 @@ gf.support = {
  * Inherits the prototype of a parent object.
  *
  * @method inherits
- * @param child {Object} The Child to inherit the prototype
- * @param parent {Object} The Parent to inherit from
+ * @param child {Function} The Child to inherit the prototype
+ * @param parent {Function} The Parent to inherit from
  * @param proto {Object} The prototype to apply to the child
  */
 gf.inherits = function(child, parent, proto) {
     proto = proto || {};
+
+    //get the property descriptors from the child proto and the passed proto
     var desc = {};
     [child.prototype, proto].forEach(function (s) {
         Object.getOwnPropertyNames(s).forEach(function (k) {
             desc[k] = Object.getOwnPropertyDescriptor(s, k);
         });
     });
+
+    //set the constructor descriptor
+    desc.constructor = {
+        value: child,
+        enumerable: false,
+        writable: true,
+        configurable: true
+    };
+
+    //create the prototype
     child.prototype = Object.create(parent.prototype, desc);
-    child['super'] = parent;
 };
