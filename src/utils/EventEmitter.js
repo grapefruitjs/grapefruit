@@ -2,11 +2,11 @@
  * Event emitter mixin. This will add emitter properties to an object
  * so that it can emit events, and have others listen for them.
  *
- * @class Emitter
+ * @class EventEmitter
  * @constructor
  * @example
  *      function MyObject(clr) {
- *          gf.Emitter.call(this); //adds properties
+ *          gf.EventEmitter.call(this); //adds properties
  *          this.color = clr;
  *      }
  *
@@ -24,7 +24,7 @@
  *      });
  *      o.something('hello');
  */
- gf.Emitter = function() {
+ gf.EventEmitter = function() {
     var listeners = {};
 
     /**

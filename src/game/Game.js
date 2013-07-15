@@ -2,14 +2,14 @@
  * Main game object, controls the entire instance of the game
  *
  * @class Game
- * @uses Emitter
+ * @uses EventEmitter
  * @constructor
  * @param contId {String} The container for the new canvas we will create for the game
  * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)
  */
 gf.Game = function(contId, settings) {
     //mixin the Event Target methods
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
     /**
      * The domElement that we are putting our rendering canvas into (the container)

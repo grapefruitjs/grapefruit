@@ -4,7 +4,7 @@
  * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
  *
  * @class AssetLoader
- * @uses Emitter
+ * @uses EventEmitter
  * @constructor
  * @param assets {Array} Array of assets to load when `.load()` is called
  * @example
@@ -16,7 +16,7 @@
  */
 gf.AssetLoader = function() {
     //mixin the Event Target methods
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
     /**
      * The array of assets to load
