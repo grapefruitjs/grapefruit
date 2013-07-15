@@ -1,7 +1,51 @@
+/**
+ * A texture font makes it easy to use a texture for writing generic text. Basically
+ * this holds an array of textures each one representing a character, that all share
+ * the same base texture (image). It is the same way a spritesheet works except you
+ * use the textures for text instead of animation frames.
+ *
+ * For special characters, you can either use the `.map` property to map a character
+ * to a texture name like `font.map['~'] = 'tilde'` so that any `~` uses the texture named
+ * `tilde + font.ext` for rendering; or you can make the texture name be the character code
+ * prefixed with `#`. So, for `~`, naming the texture `#126.png` with `font.ext = 'png'`
+ * would just work automagically. There is a default map already that you can view in the source,
+ * and if you follow that naming convention, it will work without modification as well.
+ *
+ * @class TextureFont
+ * @extends DisplayObjectContainer
+ * @constructor
+ * @param texture {Texture|String} The sprite sheet to use, if you pass a string make sure to preload it first
+ * @param [settings] {Object} All the settings for the font
+ * @param [settings.ext] {String} The extension used for the different texture names
+ * @param [settings.map] {Object} Maps a special character to a string name
+ * @param [settings.spaceSize] {Number} The size of a space character in pixels
+ * @param [settings.lineWidth] {Number} The width factor of characters, default is 1 which is normal spacing
+ * @param [settings.lineHeight] {Number} The height factor of characters, default is 1 which is normal spacing
+ * @param [settings.text] {String} Starting text of the font
+ */
 gf.TextureFont = function(font, settings) {
+    if(typeof font === 'string') {
+        if(gf.assetCache[font])
+            font = gf.assetCache[font];
+        else
+            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
+    }
+
+    /**
+     * The extension to use with texture names
+     *
+     * @property ext
+     * @type String
+     * @default ''
+     */
     this.ext = '';
 
-    //default map up
+    /**
+     * Maps a special character to a string name
+     *
+     * @property map
+     * @type Object
+     */
     this.map = {
         '`': 'accent',
         '~': 'tilde',
@@ -37,26 +81,68 @@ gf.TextureFont = function(font, settings) {
         '/': 'slash'
     };
 
+    /**
+     * The size of a space character in pixels
+     *
+     * @property spaceSize
+     * @type Number
+     */
     this.spaceSize = 15;
 
-    gf.Font.call(this, font, settings);
+    /**
+     * The width factor of characters, default is 1 which is normal spacing
+     *
+     * @property lineWidth
+     * @type Number
+     */
+    this.lineWidth = 1;
 
-    if(typeof font === 'string') {
-        if(gf.assetCache[font])
-            font = gf.assetCache[font];
-        else
-            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
-    }
+    /**
+     * The height factor of characters, default is 1 which is normal spacing
+     *
+     * @property lineHeight
+     * @type Number
+     */
+    this.lineHeight = 1;
 
+    /**
+     * The textures for all the characters in the alphabet
+     *
+     * @property textures
+     * @type Object<Texture>
+     * @readOnly
+     * @private
+     */
     this.textures = font;
+
+    /**
+     * The sprite pool to grab character sprites from
+     *
+     * @property sprites
+     * @type ObjectPool
+     * @readOnly
+     * @private
+     */
+    this.sprites = new gf.ObjectPool(gf.Sprite, this);
+
+    //call base ctor
+    gf.DisplayObjectContainer.call(this, settings);
 
     if(this.ext && this.ext.charAt(0) !== '.')
         this.ext = '.' + this.ext;
 
-    this.sprites = new gf.ObjectPool(gf.Sprite, this);
+    if(settings.text)
+        this.setText(settings.text);
 };
 
-gf.inherits(gf.TextureFont, gf.Font, {
+gf.inherits(gf.TextureFont, gf.DisplayObjectContainer, {
+    /**
+     * Gets a sprite from the pool for the character pased
+     *
+     * @method _getSprite
+     * @param character {String} The character to get a sprite for
+     * @return Sprite
+     */
     _getSprite: function(ch) {
         if(this.map[ch])
             ch = this.map[ch];
@@ -73,7 +159,7 @@ gf.inherits(gf.TextureFont, gf.Font, {
 
         //if no match, error
         if(!texture)
-            throw 'there is no texture for character "' + ch + '" with extension "' + this.ext + '"';
+            throw 'There is no texture for character "' + ch + '" with extension "' + this.ext + '"';
 
         var spr = this.sprites.create(texture);
 
@@ -82,17 +168,27 @@ gf.inherits(gf.TextureFont, gf.Font, {
 
         return spr;
     },
+    /**
+     * Clones this font to get another just like it
+     *
+     * @method clone
+     * @return TextureFont
+     */
     clone: function() {
         return new gf.TextureFont(this.textures, {
             ext: this.ext,
             map: this.map,
             text: this.text,
-            align: this.align,
-            baseline: this.baseline,
             lineWidth: this.lineWidth,
             lineHeight: this.lineHeight
         });
     },
+    /**
+     * Sets the text of this font to the string passed
+     *
+     * @method setText
+     * @param text {String} The text to display
+     */
     setText: function(txt) {
         this.text = txt;
 
