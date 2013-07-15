@@ -3,6 +3,7 @@
  * easy to quickly create different registered entities
  *
  * @class SpritePool
+ * @constructor
  */
 gf.SpritePool = function() {
     this.types = {};

@@ -3,6 +3,8 @@
  *
  * @class JsonLoader
  * @constructor
+ * @param name {String} The name of the resource to load, used as a key in the assetCache
+ * @param url {String} The url to load the resource from, also used as a key in the assetCache
  */
 gf.JsonLoader = function(name, url) {
     gf.Loader.call(this, name, url);
@@ -11,6 +13,11 @@ gf.JsonLoader = function(name, url) {
 };
 
 gf.inherits(gf.JsonLoader, gf.Loader, {
+    /**
+     * Loads the json data
+     *
+     * @method load
+     */
     load: function() {
         //pull from cache
         if(gf.Loader.prototype.load.call(this)) return;

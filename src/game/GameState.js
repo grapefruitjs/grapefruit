@@ -3,8 +3,9 @@
  *
  * @class GameState
  * @constructor
- * @param game {Game} The game instance this GameState belongs to
- * @param name {String} 
+ * @param [name] {String} The name of this state
+ * @param [settings] {Object} All the settings for this game state
+ * @param [settings.gravity] {Number} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
  * @example
  *      var state = new gf.GameState(game, 'battle');
  *      state.addChild(battlePlayer);
@@ -93,6 +94,13 @@ gf.GameState = function(name, settings) {
 };
 
 gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
+    /**
+     * The setter for the game property, sets up the input and camera objects
+     *
+     * @method _setGame
+     * @param game {Game}
+     * @private
+     */
     _setGame: function(game) {
         this._game = game;
 
@@ -105,6 +113,14 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
         this.addChild(this.camera);
         this.camera.resize(game.renderer.width, game.renderer.height);
     },
+    /**
+     * Adds a child object to the GameState, this will add objects to either
+     * the Camera or the Map depending on the type. Anything inheriting from
+     * gf.Gui will be put to the camera, everything else goes in the world.
+     *
+     * @method addChild
+     * @param obj {DisplayObject} Any generic object to add to the game state
+     */
     addChild: function(obj) {
         if(obj) {
             //we add the camera in the ctor and the map later when
@@ -118,6 +134,12 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
                 this.world.addChild(obj);
         }
     },
+    /**
+     * Loads a game world into the state
+     *
+     * @method loadWorld
+     * @param world {String|Object} The world to load, if you pass a string be sure to preload it first
+     */
     loadWorld: function(world) {
         if(typeof world === 'string'){
             if(gf.assetCache[world]) {
@@ -142,12 +164,28 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
 
         return this;
     },
+    /**
+     * Enables (shows) the game state
+     *
+     * @method enable
+     */
     enable: function() {
         this.visible = true;
     },
+    /**
+     * Disables (hides) the game state
+     *
+     * @method disable
+     */
     disable: function() {
         this.visible = false;
     },
+    /**
+     * Called by the game each frame to update the input, camera, and physics objects
+     *
+     * @method update
+     * @private
+     */
     update: function(dt) {
         //gather input from user
         this.input.update(dt);
