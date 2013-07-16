@@ -1,3 +1,11 @@
+/**
+ * Controls keyboard input
+ *
+ * @class Keyboard
+ * @namespace input
+ * @constructor
+ * @param view {DOMElement} The DOMElement to bind input events to
+ */
 gf.input.Keyboard = function(view) {
     gf.input.Input.call(this, view);
 
@@ -28,6 +36,13 @@ gf.input.Keyboard = function(view) {
      */
     this.sequenceTimeout = 500;
 
+    /**
+     * The timeout ID for the wait to clear the input sequence
+     *
+     * @property _clearSq
+     * @type Number
+     * @private
+     */
     this._clearSq = null;
 
     document.addEventListener('keydown', this.onKeyDown.bind(this), false);

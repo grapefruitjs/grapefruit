@@ -1,4 +1,11 @@
-gf.input.GamepadButtons = function() {
+/**
+ * Controls gamepad button input
+ *
+ * @class GamepadButtons
+ * @namespace input
+ * @constructor
+ */
+ gf.input.GamepadButtons = function() {
     gf.input.Input.call(this);
 
     /**
@@ -10,7 +17,13 @@ gf.input.GamepadButtons = function() {
      */
     this.threshold = 0.4;
 
-    //track the status of each button
+    /**
+     * Track the status of each button
+     *
+     * @property buttons
+     * @type Object
+     * @private
+     */
     this.buttons = {};
 };
 

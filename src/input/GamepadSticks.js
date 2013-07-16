@@ -1,4 +1,11 @@
-gf.input.GamepadSticks = function() {
+/**
+ * Controls gamepad stick input
+ *
+ * @class GamepadSticks
+ * @namespace input
+ * @constructor
+ */
+ gf.input.GamepadSticks = function() {
     gf.input.Input.call(this);
 
     /**
@@ -10,7 +17,13 @@ gf.input.GamepadSticks = function() {
      */
     this.threshold = 0.5;
 
-    //track the status of the axes
+    /**
+     * Track the status of each of the axes
+     *
+     * @property axes
+     * @type Object
+     * @private
+     */
     this.axes = {};
 };
 

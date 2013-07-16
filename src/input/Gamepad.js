@@ -1,16 +1,56 @@
+/**
+ * Controls input from gamepads
+ *
+ * @class Gamepad
+ * @namespace input
+ * @constructor
+ */
 gf.input.Gamepad = function() {
     gf.input.Input.call(this);
 
-    //are we polling for status/connections?
+    /**
+     * Tracks if we are polling for status/connections
+     *
+     * @property ticking
+     * @type Boolean
+     * @readOnly
+     */
     this.ticking = false;
 
-    //the currently activated gamepads list
+    /**
+     * The currently activated gamepads list
+     *
+     * @property pads
+     * @type Array<Gamepad>
+     * @readOnly
+     */
     this.pads = [];
 
-    //timestamp tracking for state changes
+    /**
+     * Timestamp tracking for state changes
+     *
+     * @property prevTimestamps
+     * @type Array<Number>
+     * @private
+     */
     this.prevTimestamps = [];
 
+    /**
+     * Holds the button handler for gamepad button events
+     *
+     * @property buttons
+     * @type GamepadButtons
+     * @private
+     */
     this.buttons = new gf.input.GamepadButtons();
+
+    /**
+     * Holds the stick handler for gamepad stick events
+     *
+     * @property sticks
+     * @type GamepadSticks
+     * @private
+     */
     this.sticks = new gf.input.GamepadSticks();
 
     //Firefox uses connect/disconnect events so listen to those

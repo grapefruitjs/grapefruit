@@ -179,11 +179,14 @@ gf.input = {
  * The base Input object, holds common functions and properties between input types
  *
  * @class Input
+ * @uses EventEmitter
+ * @namespace input
  * @constructor
- * @param manager {InputManager} The InputManager instance that this Input object is managed by
- * @param game {Game} The game this camera belongs to
+ * @param view {DOMElement} The DOMElement to bind input events to
  */
 gf.input.Input = function(view) {
+    gf.EventEmitter.call(this);
+
     /**
      * The dom element to bind events to
      *

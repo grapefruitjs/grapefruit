@@ -1,3 +1,10 @@
+/**
+ * Manages all input handlers in a unified way
+ *
+ * @class InputManager
+ * @constructor
+ * @param view {DOMElement} The DOMElement to bind input events to
+ */
 gf.InputManager = function(view) {
     /**
      * The dom element to bind events to
@@ -7,8 +14,22 @@ gf.InputManager = function(view) {
      */
     this.view = view;
 
-    //this.mouse = new gf.input.Mouse(view);
+    /**
+     * Holds the keyboard handler for keyboard events
+     *
+     * @property keyboard
+     * @type Keyboard
+     * @private
+     */
     this.keyboard = new gf.input.Keyboard(view);
+
+    /**
+     * Holds the gamepad handler for gamepad events
+     *
+     * @property gamepad
+     * @type Keyboard
+     * @private
+     */
     this.gamepad = new gf.input.Gamepad();
 };
 
