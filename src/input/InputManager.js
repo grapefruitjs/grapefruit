@@ -19,7 +19,7 @@ gf.InputManager = function(view) {
      *
      * @property keyboard
      * @type Keyboard
-     * @private
+     * @readOnly
      */
     this.keyboard = new gf.input.Keyboard(view);
 
@@ -28,7 +28,7 @@ gf.InputManager = function(view) {
      *
      * @property gamepad
      * @type Keyboard
-     * @private
+     * @readOnly
      */
     this.gamepad = new gf.input.Gamepad();
 };

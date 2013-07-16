@@ -1,4 +1,37 @@
 /**
+ * Bindable Gamepad Buttons
+ *
+ * @property GP_BUTTON
+ * @type Object
+ */
+gf.input.GP_BUTTON = {
+    FACE_1: 0, // Face (main) buttons
+    FACE_2: 1,
+    FACE_3: 2,
+    FACE_4: 3,
+    LEFT_SHOULDER: 4, // Top shoulder buttons
+    RIGHT_SHOULDER: 5,
+    LEFT_TRIGGER: 6, // Bottom shoulder buttons
+    RIGHT_TRIGGER: 7,
+    SELECT: 8,
+    START: 9,
+    LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
+    RIGHT_ANALOGUE_STICK: 11,
+    PAD_TOP: 12, // Directional (discrete) pad
+    PAD_BOTTOM: 13,
+    PAD_LEFT: 14,
+    PAD_RIGHT: 15
+};
+gf.input.getGpButtonName = function(i) {
+    for(var k in gf.input.GP_BUTTON) {
+        if(gf.input.GP_BUTTON[k] === i) {
+            return k;
+        }
+    }
+
+    return '';
+};
+/**
  * Controls gamepad button input
  *
  * @class GamepadButtons
@@ -25,28 +58,30 @@
      * @private
      */
     this.buttons = {};
+
+    //setup default objects for each axis
+    for(var bt in gf.input.GP_BUTTON) {
+        this.buttons[bt] = {
+            code: bt,
+            pressed: false,
+            value: 0
+        };
+    }
 };
 
 gf.inherits(gf.input.GamepadButtons, gf.input.Input, {
     pollStatus: function(pad) {
-        //I would like to be able to emit events when something updates, but for now
-        //just update the status of bound keys in controls; controls only has 1 "gamepad"
-        //so this loop will blow away the changes each iteration (only the "last" gamepad is supported)
         for(var b = 0, bl = pad.buttons.length; b < bl; ++b) {
-            if(!this.binds[b]) continue;
+            var pressed = (pad.buttons[b] > this.threshold),
+                status = this.buttons[b];
 
-            var pressed = (pad.buttons[b] > this.threshold);
+            status.value = pad.buttons[b];
 
-            if(!this.buttons[b])
-                this.buttons[b] = { pressed: false, code: b };
+            //pressed state changed
+            if(status.pressed !== pressed) {
+                status.pressed = pressed;
 
-            this.buttons[b].val = pad.buttons[b];
-
-            //state changed
-            if(this.buttons[b].pressed !== pressed) {
-                this.buttons[b].pressed = pressed;
-                this.status[this.binds[b]] = pressed;
-                this.runCallbacks(b, [pressed]);
+                this.emit(b, status);
             }
         }
     }

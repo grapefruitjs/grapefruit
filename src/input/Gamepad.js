@@ -40,7 +40,7 @@ gf.input.Gamepad = function() {
      *
      * @property buttons
      * @type GamepadButtons
-     * @private
+     * @readOnly
      */
     this.buttons = new gf.input.GamepadButtons();
 
@@ -49,7 +49,7 @@ gf.input.Gamepad = function() {
      *
      * @property sticks
      * @type GamepadSticks
-     * @private
+     * @readOnly
      */
     this.sticks = new gf.input.GamepadSticks();
 
@@ -129,29 +129,10 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
     update: function() {
         if(!this.ticking) return;
 
-        //DAMN YOU CHROME!
+        //pollin' fo' pads
         this.pollGamepads();
 
         //poll for the status of our gamepads
         this.pollStatus();
-    },
-    bindButton: function(code, action, cb) {
-        this.buttons.bind(code, action, cb);
-        return this;
-    },
-    //bind an action to a stick movement
-    bindStick: function(code, negative, action, cb) {
-        this.sticks.bind(code, negative, action, cb);
-        return this;
-    },
-    //unbind an action from a gamepad button
-    unbindButton: function(code, action) {
-        this.buttons.unbind(code, action);
-        return this;
-    },
-    //bind an action to a stick movement
-    unbindStick: function(code, negative, action) {
-        this.sticks.unbind(code, negative, action);
-        return this;
     }
 });

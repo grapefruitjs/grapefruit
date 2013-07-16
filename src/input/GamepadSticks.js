@@ -1,4 +1,25 @@
 /**
+ * Bindable Gamepad Axes
+ *
+ * @property GP_AXIS
+ * @type Object
+ */
+ gf.input.GP_AXIS = {
+    LEFT_ANALOGUE_HOR: 0,
+    LEFT_ANALOGUE_VERT: 1,
+    RIGHT_ANALOGUE_HOR: 2,
+    RIGHT_ANALOGUE_VERT: 3
+};
+gf.input.getGpAxisName = function(i) {
+    for(var k in gf.input.GP_AXIS) {
+        if(gf.input.GP_AXIS[k] === i) {
+            return k;
+        }
+    }
+
+    return '';
+}
+/**
  * Controls gamepad stick input
  *
  * @class GamepadSticks
@@ -25,6 +46,15 @@
      * @private
      */
     this.axes = {};
+
+    //setup default objects for each axis
+    for(var ax in gf.input.GP_AXIS) {
+        this.axes[ax] = {
+            code: ax,
+            negative: false,
+            value: 0
+        };
+    }
 };
 
 gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
@@ -40,24 +70,19 @@ gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
     },
     pollStatus: function(pad) {
         for(var a = 0, al = pad.axes.length; a < al; ++a) {
-            var neg = ['true', 'false'];
-            for(var i = 0, il = neg.length; i < il; ++i) {
-                var v = neg[i];
-                if(!this.binds[a + v]) continue;
+            var ax = pad.axes[a],
+                neg = (ax < 0),
+                status = this.axes[a];
 
-                var moved = v === 'true' ? (pad.axes[a] < -gf.gamepad.AXIS_THRESHOLD) : (pad.axes[a] > gf.gamepad.AXIS_THRESHOLD);
+            //if the difference between the last value and the new one is greater
+            //than the threashold set, call the event for that axis.
+            //We also always emit 0 because if your threshold is too high, it will
+            //never reset to 0
+            if(Math.abs(status.value - ax) >= this.threshold || (status.value !== 0 && ax === 0)) {
+                status.negative = neg;
+                status.value = ax;
 
-                if(!this.axes[a + v])
-                    this.axes[a + v] = { moved: false, code: a, negative: v === 'true' };
-
-                this.axes[a + v].val = pad.axes[a];
-
-                //movement state updated
-                if(this.axes[a + v].moved !== moved) {
-                    this.axes[a + v].moved = moved;
-                    this.status[this.binds[a + v]] = moved;
-                    this.runCallbacks(a + v, [pad.axes[a]]);
-                }
+                this.emit(a, status);
             }
         }
     }
