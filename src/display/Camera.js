@@ -5,7 +5,8 @@
  * TODO: Currently fade/flash don't show the colors. How should I actually show them, a gf.Sprite?
  *
  * @class Camera
- * @extends DisplayObject
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
  * @constructor
  * @param game {Game} The game this camera belongs to
  * @param settings {Object} Any settings you want to override the default properties with

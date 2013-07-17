@@ -2,8 +2,9 @@
  * Base Map implementation, provides common functions for all Map types
  *
  * @class Map
- * @uses EventEmitter
- * @extends DisplayObject
+ * @extends gf.DisplayObjectContainer
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param map {Object} All the settings for the map
  */

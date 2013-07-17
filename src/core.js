@@ -35,44 +35,50 @@
 window.gf = window.gf || {};
 
 /**
- * Point object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Point.html">PIXI.Point</a>
+ * Point object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Point.html">PIXI.Point</a>
  *
  * @class Point
+ * @namespace gf
  */
 gf.Point = PIXI.Point;
 
 /**
- * Rectangle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html">PIXI.Rectangle</a>
+ * Rectangle object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html">PIXI.Rectangle</a>
  *
  * @class Rectangle
+ * @namespace gf
  */
 gf.Rectangle = PIXI.Rectangle;
 
 /**
- * Circle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Circle.html">PIXI.Circle</a>
+ * Circle object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Circle.html">PIXI.Circle</a>
  *
  * @class Circle
+ * @namespace gf
  */
 gf.Circle = PIXI.Circle;
 
 /**
- * Ellipse object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html">PIXI.Ellipse</a>
+ * Ellipse object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html">PIXI.Ellipse</a>
  *
  * @class Ellipse
+ * @namespace gf
  */
 gf.Ellipse = PIXI.Ellipse;
 
 /**
- * Polygon object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Polygon.html">PIXI.Polygon</a>
+ * Polygon object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Polygon.html">PIXI.Polygon</a>
  *
  * @class Polygon
+ * @namespace gf
  */
 gf.Polygon = PIXI.Polygon;
 
 /**
- * Texture object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
+ * Texture object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
  *
  * @class Texture
+ * @namespace gf
  */
 gf.Texture = PIXI.Texture;
 
@@ -96,6 +102,7 @@ gf.assetCache = {};
  * Feature detection so we cans witch between renderers, play audio correctly, and other things.
  *
  * @class support
+ * @namespace gf
  */
 gf.support = {
     /**

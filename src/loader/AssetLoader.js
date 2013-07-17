@@ -1,10 +1,12 @@
 /**
  * The AssetLoader loads and parses different game assets, such as sounds, textures,
- * TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
- * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
+ * TMX World JSON file (exported from the <a target="_blank" href="http://mapeditor.org">Tiled Editor</a>),
+ * and Spritesheet JSON files (published from <a target="_blank" href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
  *
  * @class AssetLoader
- * @uses EventEmitter
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param assets {Array} Array of assets to load when `.load()` is called
  * @example

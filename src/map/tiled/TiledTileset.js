@@ -3,7 +3,8 @@
  * There can be multiple Tilesets in a map
  *
  * @class TiledTileset
- * @extends Texture
+ * @extends gf.Texture
+ * @namespace gf
  * @constructor
  * @param settings {Object} All the settings for the tileset
  */

@@ -2,7 +2,9 @@
  * The Base loader class that all other loaders inherit from
  *
  * @class Loader
- * @uses EventEmitter
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param name {String} The name of the resource to load, used as a key in the assetCache
  * @param url {String} The url to load the resource from, also used as a key in the assetCache
@@ -43,7 +45,7 @@ gf.inherits(gf.Loader, Object, {
     /**
      * Emits the 'load' event, passing the properties of this instance and the data passed
      *
-     * @method load
+     * @method done
      * @param data {mixed} The loaded data
      */
     done: function(data) {

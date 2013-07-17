@@ -3,6 +3,7 @@
  *
  * @property GP_BUTTON
  * @type Object
+ * @static
  */
 gf.input.GP_BUTTON = {
     FACE_1: 0, // Face (main) buttons
@@ -35,7 +36,8 @@ gf.input.getGpButtonName = function(i) {
  * Controls gamepad button input
  *
  * @class GamepadButtons
- * @namespace input
+ * @extends gf.input.Input
+ * @namespace gf.input
  * @constructor
  */
  gf.input.GamepadButtons = function() {

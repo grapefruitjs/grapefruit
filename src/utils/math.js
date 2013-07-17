@@ -2,6 +2,8 @@
  * The grapefruit math library, used to abstract commonly used math operations
  *
  * @class math
+ * @extends Object
+ * @namespace gf
  */
  gf.math = {
     DEG_TO_RAD: Math.PI / 180,

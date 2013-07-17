@@ -3,6 +3,8 @@
  * an object is created and destroyed.
  *
  * @class ObjectPool
+ * @extends Object
+ * @namespace gf
  * @constructor
  * @param type {mixed} The object type that this pool will hold (like gf.Sprite, or gf.Tile)
  * @param parent {mixed} The parent that the objects will be added to. Passing this in will

@@ -3,6 +3,7 @@
  * so that it can emit events, and have others listen for them.
  *
  * @class EventEmitter
+ * @namespace gf
  * @constructor
  * @example
  *      function MyObject(clr) {

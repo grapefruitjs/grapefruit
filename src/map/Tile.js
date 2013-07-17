@@ -2,7 +2,8 @@
  * Base Tile implementation, a tile is a single tile in a tilemap layer
  *
  * @class Tile
- * @extends Sprite
+ * @extends gf.Sprite
+ * @namespace gf
  * @constructor
  * @param tile {Object} All the settings for the tile
  */
@@ -43,6 +44,7 @@ gf.inherits(gf.Tile, gf.Sprite, {
  *
  * @property COLLISION
  * @type Object
+ * @static
  */
 gf.Tile.TYPE = {
     NONE: 'none',

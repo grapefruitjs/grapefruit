@@ -5,7 +5,8 @@
  * create an instance on your own.
  *
  * @class TiledLayer
- * @extends Layer
+ * @extends gf.Layer
+ * @namespace gf
  * @constructor
  * @param layer {Object} All the settings for the layer
  */

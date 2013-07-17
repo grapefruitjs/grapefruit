@@ -2,7 +2,8 @@
  * The base GuiItem that represents an element of a gui on the screen.
  *
  * @class GuiItem
- * @extends Sprite
+ * @extends gf.Sprite
+ * @namespace gf
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
  * @param interactive {Boolean} Whether this item should repsond to mouse events

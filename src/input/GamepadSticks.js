@@ -3,6 +3,7 @@
  *
  * @property GP_AXIS
  * @type Object
+ * @static
  */
  gf.input.GP_AXIS = {
     LEFT_ANALOGUE_HOR: 0,
@@ -23,7 +24,8 @@ gf.input.getGpAxisName = function(i) {
  * Controls gamepad stick input
  *
  * @class GamepadSticks
- * @namespace input
+ * @extends gf.input.Input
+ * @namespace gf.input
  * @constructor
  */
  gf.input.GamepadSticks = function() {

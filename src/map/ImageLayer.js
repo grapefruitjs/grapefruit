@@ -2,7 +2,8 @@
  * ImageLayer is a layer represented by a single image
  *
  * @class ImageLayer
- * @extends Layer
+ * @extends gf.Layer
+ * @namespace gf
  * @constructor
  * @param game {Game} The game the layer is in
  * @param position {Point|Vector|Array|Number} The starting position of the layer

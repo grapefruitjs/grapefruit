@@ -2,7 +2,8 @@
  * The base display object, that anything being put on the screen inherits from
  *
  * @class DisplayObjectContainer
- * @extends PIXI.DisplayObjectContainer
+ * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a>
+ * @namespace gf
  * @constructor
  */
 gf.DisplayObjectContainer = function(settings) {
