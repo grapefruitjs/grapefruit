@@ -2,6 +2,8 @@
  * Manages all input handlers in a unified way
  *
  * @class InputManager
+ * @extends Object
+ * @namespace gf
  * @constructor
  * @param view {DOMElement} The DOMElement to bind input events to
  */

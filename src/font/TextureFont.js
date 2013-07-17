@@ -12,7 +12,8 @@
  * and if you follow that naming convention, it will work without modification as well.
  *
  * @class TextureFont
- * @extends DisplayObjectContainer
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
  * @constructor
  * @param texture {Texture|String} The sprite sheet to use, if you pass a string make sure to preload it first
  * @param [settings] {Object} All the settings for the font

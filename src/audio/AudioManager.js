@@ -5,9 +5,11 @@ gf.__audioctx = gf.support.webAudio ? new gf.__AudioCtx() : null;
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
  * The GF Audio API was based on
- * <a href="https://github.com/goldfire/howler.js">Howler.js</a>
+ * <a target="_blank" href="https://github.com/goldfire/howler.js">Howler.js</a>
  *
  * @class AudioManager
+ * @extends Object
+ * @namespace gf
  * @constructor
  */
 gf.AudioManager = function() {

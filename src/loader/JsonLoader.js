@@ -2,6 +2,8 @@
  * Loads json data
  *
  * @class JsonLoader
+ * @extends gf.Loader
+ * @namespace gf
  * @constructor
  * @param name {String} The name of the resource to load, used as a key in the assetCache
  * @param url {String} The url to load the resource from, also used as a key in the assetCache

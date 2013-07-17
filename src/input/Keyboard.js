@@ -3,6 +3,7 @@
  *
  * @property KEY
  * @type Object
+ * @static
  */
 gf.input.KEY = {
     BACKSPACE: 8,
@@ -88,7 +89,8 @@ gf.input.KEY = {
  * Controls keyboard input
  *
  * @class Keyboard
- * @namespace input
+ * @extends gf.input.Input
+ * @namespace gf.input
  * @constructor
  * @param view {DOMElement} The DOMElement to bind input events to
  */

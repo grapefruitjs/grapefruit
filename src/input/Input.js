@@ -7,8 +7,9 @@ gf.input = {};
  * The base Input object, holds common functions and properties between input types
  *
  * @class Input
- * @uses EventEmitter
- * @namespace input
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf.input
  * @constructor
  * @param view {DOMElement} The DOMElement to bind input events to
  */

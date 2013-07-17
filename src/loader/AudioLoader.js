@@ -2,6 +2,8 @@
  * Loads an audio clip
  *
  * @class AudioLoader
+ * @extends gf.Loader
+ * @namespace gf
  * @constructor
  * @param name {String} The name of the resource to load, used as a key in the assetCache
  * @param urls {Array<String>} All the urls for the different formats of this audio file

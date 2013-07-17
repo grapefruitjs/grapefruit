@@ -2,7 +2,9 @@
  * Main game object, controls the entire instance of the game
  *
  * @class Game
- * @uses EventEmitter
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param contId {String} The container for the new canvas we will create for the game
  * @param settings {Object} All the settings for the game instance

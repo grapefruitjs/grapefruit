@@ -2,6 +2,8 @@
  * GameStates are different , controls the entire instance of the game
  *
  * @class GameState
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
  * @constructor
  * @param [name] {String} The name of this state
  * @param [settings] {Object} All the settings for this game state

@@ -1,10 +1,12 @@
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
  * The GF Audio API was based on
- * <a href="https://github.com/goldfire/howler.js">Howler.js</a>
+ * <a target="_blank" href="https://github.com/goldfire/howler.js">Howler.js</a>
  *
  * @class AudoPlayer
- * @uses EventEmitter
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
  * @param settings {Object} All the settings for this player instance

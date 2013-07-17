@@ -4,6 +4,8 @@
  * core functions, and registering plugins.
  *
  * @class plugin
+ * @extends Object
+ * @namespace gf
  */
 gf.plugin = {
     /**

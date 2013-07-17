@@ -3,6 +3,8 @@
  * thanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js
  *
  * @class Vector
+ * @extends Object
+ * @namespace gf
  * @constructor
  * @param x {Number} The x component of the vector
  * @param y {Number} The y component of the vector

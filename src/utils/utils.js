@@ -2,6 +2,8 @@
  * The grapefruit utility object, used for misc functions used throughout the code base
  *
  * @class utils
+ * @extends Object
+ * @namespace gf
  */
  gf.utils = {
     _arrayDelim: /[|,]/,

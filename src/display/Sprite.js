@@ -2,8 +2,9 @@
  * The base Sprite class. This class is the base for all images on the screen
  *
  * @class Sprite
- * @extends PIXI.Sprite
- * @uses EventEmitter
+ * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html">PIXI.Sprite</a>
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
  * @example
@@ -167,6 +168,7 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
  *
  * @property TYPE
  * @type Object
+ * @static
  */
 gf.Sprite.TYPE = {
     PLAYER: 'player',

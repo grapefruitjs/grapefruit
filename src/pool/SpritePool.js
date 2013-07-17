@@ -3,6 +3,8 @@
  * easy to quickly create different registered entities
  *
  * @class SpritePool
+ * @extends Object
+ * @namespace gf
  * @constructor
  */
 gf.SpritePool = function() {

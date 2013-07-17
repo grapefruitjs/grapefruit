@@ -2,7 +2,8 @@
  * The base AnimatedSprite class
  *
  * @class AnimatedSprite
- * @extends Sprite
+ * @extends gf.Sprite
+ * @namespace gf
  * @constructor
  * @param animations {Object} An object of the form `{ animationName: [frame1, frame2] }` or you can also specify overrides on a per-animation basis:
  *      `{ animationName: { frames: [frame1, frame2], speed: 2 } }`. Each frame is a Texture object
@@ -104,7 +105,7 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
     /**
      * Goes to a frame and starts playing the animation from there
      *
-     * @method addAnimation
+     * @method gotoAndPlay
      * @param [name] {String} The string name of the animation to play
      * @param frame {Number} The index of the frame to start on
      */
@@ -121,7 +122,7 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
     /**
      * Goes to a frame and stops playing the animation
      *
-     * @method addAnimation
+     * @method gotoAndStop
      * @param [name] {String} The string name of the animation to go to
      * @param frame {Number} The index of the frame to stop on
      */
@@ -147,7 +148,7 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
     /**
      * Stops playing the currently active animation
      *
-     * @method play
+     * @method stop
      */
     stop: function() {
         this.playing = false;

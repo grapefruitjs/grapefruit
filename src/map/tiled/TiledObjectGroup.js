@@ -3,7 +3,8 @@
  * TODO: This is all trash
  *
  * @class TiledObjectGroup
- * @extends Layer
+ * @extends gf.Layer
+ * @namespace gf
  * @constructor
  * @param group {Object} All the settings for the layer
  */

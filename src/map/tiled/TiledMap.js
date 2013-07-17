@@ -4,7 +4,8 @@
  * file, and this expets that to already be done.
  *
  * @class TiledMap
- * @extends Map
+ * @extends gf.Map
+ * @namespace gf
  * @constructor
  * @param game {Game} The game the map is in
  * @param position {Point|Vector|Array|Number} The starting position of the map

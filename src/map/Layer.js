@@ -2,7 +2,8 @@
  * Base Layer implementation, provides common functions for all Layer types
  *
  * @class Layer
- * @extends DisplayObject
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
  * @constructor
  * @param layer {Object} All the settings for the layer
  */

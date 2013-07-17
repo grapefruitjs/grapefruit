@@ -2,7 +2,8 @@
  * Controls input from gamepads
  *
  * @class Gamepad
- * @namespace input
+ * @extends gf.input.Input
+ * @namespace gf.input
  * @constructor
  */
 gf.input.Gamepad = function() {
