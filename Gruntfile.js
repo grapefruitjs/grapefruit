@@ -225,6 +225,7 @@ module.exports = function(grunt) {
                 description: '<%= pkg.description %>',
                 version: '<%= pkg.version %>',
                 url: '<%= pkg.homepage %>',
+                logo: 'https://en.gravatar.com/userimage/49218683/8654d0c767f327312ebb1ace7f5a8d8d.png',
                 options: {
                     paths: '<%= dirs.src %>',
                     outdir: '<%= dirs.docs %>'
