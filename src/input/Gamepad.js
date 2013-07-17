@@ -64,7 +64,13 @@ gf.input.Gamepad = function() {
 };
 
 gf.inherits(gf.input.Gamepad, gf.input.Input, {
-    //When a gamepad is connected (currently FF only)
+    /**
+     * Called when a gamepad connects (FF Only)
+     *
+     * @method onGamepadDisconnect
+     * @param event {GamepadConnectEvent}
+     * @private
+     */
     onGamepadConnect: function(event) {
         //add the gamepad to our list
         this.pads.push(event.gamepad);
@@ -72,6 +78,13 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
         //start polling
         this.startPolling();
     },
+    /**
+     * Called when a gamepad disconnects (FF Only)
+     *
+     * @method onGamepadDisconnect
+     * @param event {GamepadDisconnectEvent}
+     * @private
+     */
     onGamepadDisconnect: function(event) {
         //remove the gamepad from our list
         for(var i = 0, il = this.pads.length; i < il; ++i) {
@@ -85,15 +98,30 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
         if(this.pads.length === 0)
             this.stopPolling();
     },
+    /**
+     * Stats polling for new gamepads and status updates
+     *
+     * @method startPolling
+     */
     startPolling: function() {
         if(this.ticking) return;
 
         this.ticking = true;
         this.update();
     },
+    /**
+     * Stops polling for new gamepads and status updates
+     *
+     * @method stopPolling
+     */
     stopPolling: function() {
         this.ticking = false;
     },
+    /**
+     * Polls for newly connected gamepads (Chrome Only)
+     *
+     * @method pollGamepads
+     */
     //called on Chrome, which doesn't do the connect/disconnect events
     pollGamepads: function() {
         //get a list of connected gamepads
@@ -112,6 +140,12 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
             }
         }
     },
+    /**
+     * Polls the gamepad object for status updates and emits events when they occur
+     *
+     * @method pollStatus
+     * @param pad {Gamepad} The gamepad object to check
+     */
     pollStatus: function() {
         for(var i = 0, il = this.pads.length; i < il; ++i) {
             var pad = this.pads[i];
@@ -126,6 +160,11 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
             this.sticks.pollStatus(pad);
         }
     },
+    /**
+     * Called each frame to update polling mechanisms
+     *
+     * @method update
+     */
     update: function() {
         if(!this.ticking) return;
 

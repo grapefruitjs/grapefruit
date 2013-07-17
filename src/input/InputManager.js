@@ -34,12 +34,13 @@ gf.InputManager = function(view) {
 };
 
 gf.inherits(gf.InputManager, Object, {
+    /**
+     * Called each frame to update state info for some input methods
+     *
+     * @method update
+     * @private
+     */
     update: function(dt) {
         this.gamepad.update(dt);
-    },
-    isActionActive: function(action) {
-        return this.mouse.isActionActive(action) ||
-            this.keyboard.isActionActive(action) ||
-            this.gamepad.isActionActive(action);
     }
 });

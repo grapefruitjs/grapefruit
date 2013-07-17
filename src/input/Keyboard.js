@@ -127,16 +127,39 @@ gf.input.Keyboard = function(view) {
 };
 
 gf.inherits(gf.input.Keyboard, gf.input.Input, {
-    //on keydown event set gf.controls keycode's action as active
-    //and call any registered callbacks
+    /**
+     * Called when a key is pressed down
+     *
+     * @method onKeyDown
+     * @param event {DOMEvent}
+     * @param override {Number} The key code to use instead of checking event data
+     * @private
+     */
     onKeyDown: function(e, override) {
         if(e.target === this.view)
             return this.modifyKey(e, override || e.keyCode || e.which, true);
     },
+    /**
+     * Called when a key is released
+     *
+     * @method onKeyUp
+     * @param event {DOMEvent}
+     * @param override {Number} The key code to use instead of checking event data
+     * @private
+     */
     onKeyUp: function(e, override) {
         if(e.target === this.view)
             return this.modifyKey(e, override || e.keyCode || e.which, false);
     },
+    /**
+     * Called when a key state has changed, updates current sequence and emits events
+     *
+     * @method modifyKey
+     * @param event {DOMEvent}
+     * @param key {Number} The key code that has changed
+     * @param down {Boolean} Whether the key has been pressed or not
+     * @private
+     */
     modifyKey: function(e, key, down) {
         //emit single key event
         this.emit(key, {
@@ -160,6 +183,12 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
             this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
         }
     },
+    /**
+     * Clears the current sequence so that a new one can start
+     *
+     * @method _clearSequence
+     * @private
+     */
     _clearSequence: function() {
         this.sequence.length = 0;
     }

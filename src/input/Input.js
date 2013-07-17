@@ -33,7 +33,13 @@ gf.input.Input = function(view) {
 };
 
 gf.inherits(gf.input.Input, Object, {
-    //helper to prevent default stuffs accross different browsers
+    /**
+     * Prevents the default action of an event, and prevents it from bubbling up
+     * the DOM.
+     *
+     * @method preventDefault
+     * @param event {DOMEvent} The event to prevent default actions for
+     */
     preventDefault: function(e) {
         if(e.stopPropagation) e.stopPropagation();
         else e.cancelBubble = true;
