@@ -70,6 +70,12 @@ gf.input.getGpButtonName = function(i) {
 };
 
 gf.inherits(gf.input.GamepadButtons, gf.input.Input, {
+    /**
+     * Polls the gamepad object for status updates and emits events when they occur
+     *
+     * @method pollStatus
+     * @param pad {Gamepad} The gamepad object to check
+     */
     pollStatus: function(pad) {
         for(var b = 0, bl = pad.buttons.length; b < bl; ++b) {
             var pressed = (pad.buttons[b] > this.threshold),

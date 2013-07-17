@@ -58,16 +58,12 @@ gf.input.getGpAxisName = function(i) {
 };
 
 gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
-    bind: function(code, negative, action, cb) {
-        negative = !!negative; //I want negative to be true/false, not truthy or falsey
-
-        return this._doBind(code + negative, action, cb);
-    },
-    unbind: function(code, negative, action) {
-        negative = !!negative; //I want negative to be true/false, not truthy or falsey
-
-        return this._doUnbind(code + negative, action);
-    },
+    /**
+     * Polls the gamepad object for status updates and emits events when they occur
+     *
+     * @method pollStatus
+     * @param pad {Gamepad} The gamepad object to check
+     */
     pollStatus: function(pad) {
         for(var a = 0, al = pad.axes.length; a < al; ++a) {
             var ax = pad.axes[a],
