@@ -66,7 +66,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._rendered.y = this.parent.position.y;
         this._rendered.width = width;
         this._rendered.height = height;
-        window.console.log(width, height);
 
         if(this.parent.orientation === 'isometric') {
             return this._renderIsoTiles(
