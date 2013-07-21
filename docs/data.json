@@ -1,13 +1,14 @@
 {
     "project": {
-        "name": "gf",
+        "name": "GrapeFruit Game Engine",
         "description": "A fun and easy WebGL-enabled JavaScript Game Engine",
-        "version": "0.0.2",
-        "url": "https://github.com/englercj/grapefruit"
+        "version": "v0.0.2",
+        "url": "https://github.com/englercj/grapefruit",
+        "logo": "https://en.gravatar.com/userimage/49218683/8654d0c767f327312ebb1ace7f5a8d8d.png"
     },
     "files": {
-        "src\\audio\\AudioManager.js": {
-            "name": "src\\audio\\AudioManager.js",
+        "src/audio/AudioManager.js": {
+            "name": "src/audio/AudioManager.js",
             "modules": {},
             "classes": {
                 "gf.AudioManager": 1
@@ -17,8 +18,8 @@
                 "gf": 1
             }
         },
-        "src\\audio\\AudioPlayer.js": {
-            "name": "src\\audio\\AudioPlayer.js",
+        "src/audio/AudioPlayer.js": {
+            "name": "src/audio/AudioPlayer.js",
             "modules": {},
             "classes": {
                 "gf.AudoPlayer": 1
@@ -28,8 +29,8 @@
                 "gf": 1
             }
         },
-        "src\\display\\AnimatedSprite.js": {
-            "name": "src\\display\\AnimatedSprite.js",
+        "src/display/AnimatedSprite.js": {
+            "name": "src/display/AnimatedSprite.js",
             "modules": {},
             "classes": {
                 "gf.AnimatedSprite": 1
@@ -39,8 +40,8 @@
                 "gf": 1
             }
         },
-        "src\\display\\Camera.js": {
-            "name": "src\\display\\Camera.js",
+        "src/display/Camera.js": {
+            "name": "src/display/Camera.js",
             "modules": {},
             "classes": {
                 "gf.Camera": 1
@@ -50,8 +51,8 @@
                 "gf": 1
             }
         },
-        "src\\display\\DisplayObjectContainer.js": {
-            "name": "src\\display\\DisplayObjectContainer.js",
+        "src/display/DisplayObjectContainer.js": {
+            "name": "src/display/DisplayObjectContainer.js",
             "modules": {},
             "classes": {
                 "gf.DisplayObjectContainer": 1
@@ -61,8 +62,8 @@
                 "gf": 1
             }
         },
-        "src\\display\\Sprite.js": {
-            "name": "src\\display\\Sprite.js",
+        "src/display/Sprite.js": {
+            "name": "src/display/Sprite.js",
             "modules": {},
             "classes": {
                 "gf.Sprite": 1
@@ -72,8 +73,8 @@
                 "gf": 1
             }
         },
-        "src\\font\\TextureFont.js": {
-            "name": "src\\font\\TextureFont.js",
+        "src/font/TextureFont.js": {
+            "name": "src/font/TextureFont.js",
             "modules": {},
             "classes": {
                 "gf.TextureFont": 1
@@ -83,8 +84,8 @@
                 "gf": 1
             }
         },
-        "src\\game\\Game.js": {
-            "name": "src\\game\\Game.js",
+        "src/game/Game.js": {
+            "name": "src/game/Game.js",
             "modules": {},
             "classes": {
                 "gf.Game": 1
@@ -94,8 +95,8 @@
                 "gf": 1
             }
         },
-        "src\\game\\GameState.js": {
-            "name": "src\\game\\GameState.js",
+        "src/game/GameState.js": {
+            "name": "src/game/GameState.js",
             "modules": {},
             "classes": {
                 "gf.GameState": 1
@@ -105,8 +106,8 @@
                 "gf": 1
             }
         },
-        "src\\gui\\Gui.js": {
-            "name": "src\\gui\\Gui.js",
+        "src/gui/Gui.js": {
+            "name": "src/gui/Gui.js",
             "modules": {},
             "classes": {
                 "gf.Gui": 1
@@ -116,8 +117,8 @@
                 "gf": 1
             }
         },
-        "src\\gui\\GuiItem.js": {
-            "name": "src\\gui\\GuiItem.js",
+        "src/gui/GuiItem.js": {
+            "name": "src/gui/GuiItem.js",
             "modules": {},
             "classes": {
                 "gf.GuiItem": 1
@@ -127,8 +128,8 @@
                 "gf": 1
             }
         },
-        "src\\input\\Gamepad.js": {
-            "name": "src\\input\\Gamepad.js",
+        "src/input/Gamepad.js": {
+            "name": "src/input/Gamepad.js",
             "modules": {},
             "classes": {
                 "gf.input.Gamepad": 1
@@ -138,8 +139,8 @@
                 "gf.input": 1
             }
         },
-        "src\\input\\GamepadButtons.js": {
-            "name": "src\\input\\GamepadButtons.js",
+        "src/input/GamepadButtons.js": {
+            "name": "src/input/GamepadButtons.js",
             "modules": {},
             "classes": {
                 "gf.input.GamepadButtons": 1
@@ -149,8 +150,8 @@
                 "gf.input": 1
             }
         },
-        "src\\input\\GamepadSticks.js": {
-            "name": "src\\input\\GamepadSticks.js",
+        "src/input/GamepadSticks.js": {
+            "name": "src/input/GamepadSticks.js",
             "modules": {},
             "classes": {
                 "gf.input.GamepadSticks": 1
@@ -160,8 +161,8 @@
                 "gf.input": 1
             }
         },
-        "src\\input\\Input.js": {
-            "name": "src\\input\\Input.js",
+        "src/input/Input.js": {
+            "name": "src/input/Input.js",
             "modules": {},
             "classes": {
                 "gf.input.Input": 1
@@ -171,8 +172,8 @@
                 "gf.input": 1
             }
         },
-        "src\\input\\InputManager.js": {
-            "name": "src\\input\\InputManager.js",
+        "src/input/InputManager.js": {
+            "name": "src/input/InputManager.js",
             "modules": {},
             "classes": {
                 "gf.InputManager": 1
@@ -182,8 +183,8 @@
                 "gf": 1
             }
         },
-        "src\\input\\Keyboard.js": {
-            "name": "src\\input\\Keyboard.js",
+        "src/input/Keyboard.js": {
+            "name": "src/input/Keyboard.js",
             "modules": {},
             "classes": {
                 "gf.input.Keyboard": 1
@@ -193,8 +194,8 @@
                 "gf.input": 1
             }
         },
-        "src\\loader\\AssetLoader.js": {
-            "name": "src\\loader\\AssetLoader.js",
+        "src/loader/AssetLoader.js": {
+            "name": "src/loader/AssetLoader.js",
             "modules": {},
             "classes": {
                 "gf.AssetLoader": 1
@@ -204,8 +205,8 @@
                 "gf": 1
             }
         },
-        "src\\loader\\AudioLoader.js": {
-            "name": "src\\loader\\AudioLoader.js",
+        "src/loader/AudioLoader.js": {
+            "name": "src/loader/AudioLoader.js",
             "modules": {},
             "classes": {
                 "gf.AudioLoader": 1
@@ -215,8 +216,8 @@
                 "gf": 1
             }
         },
-        "src\\loader\\JsonLoader.js": {
-            "name": "src\\loader\\JsonLoader.js",
+        "src/loader/JsonLoader.js": {
+            "name": "src/loader/JsonLoader.js",
             "modules": {},
             "classes": {
                 "gf.JsonLoader": 1
@@ -226,8 +227,8 @@
                 "gf": 1
             }
         },
-        "src\\loader\\Loader.js": {
-            "name": "src\\loader\\Loader.js",
+        "src/loader/Loader.js": {
+            "name": "src/loader/Loader.js",
             "modules": {},
             "classes": {
                 "gf.Loader": 1
@@ -237,8 +238,8 @@
                 "gf": 1
             }
         },
-        "src\\loader\\TextureLoader.js": {
-            "name": "src\\loader\\TextureLoader.js",
+        "src/loader/TextureLoader.js": {
+            "name": "src/loader/TextureLoader.js",
             "modules": {},
             "classes": {
                 "gf.TextureLoader": 1
@@ -248,8 +249,8 @@
                 "gf": 1
             }
         },
-        "src\\map\\tiled\\TiledLayer.js": {
-            "name": "src\\map\\tiled\\TiledLayer.js",
+        "src/map/tiled/TiledLayer.js": {
+            "name": "src/map/tiled/TiledLayer.js",
             "modules": {},
             "classes": {
                 "gf.TiledLayer": 1
@@ -259,8 +260,8 @@
                 "gf": 1
             }
         },
-        "src\\map\\tiled\\TiledMap.js": {
-            "name": "src\\map\\tiled\\TiledMap.js",
+        "src/map/tiled/TiledMap.js": {
+            "name": "src/map/tiled/TiledMap.js",
             "modules": {},
             "classes": {
                 "gf.TiledMap": 1
@@ -270,8 +271,8 @@
                 "gf": 1
             }
         },
-        "src\\map\\tiled\\TiledObjectGroup.js": {
-            "name": "src\\map\\tiled\\TiledObjectGroup.js",
+        "src/map/tiled/TiledObjectGroup.js": {
+            "name": "src/map/tiled/TiledObjectGroup.js",
             "modules": {},
             "classes": {
                 "gf.TiledObjectGroup": 1
@@ -281,8 +282,8 @@
                 "gf": 1
             }
         },
-        "src\\map\\tiled\\TiledTileset.js": {
-            "name": "src\\map\\tiled\\TiledTileset.js",
+        "src/map/tiled/TiledTileset.js": {
+            "name": "src/map/tiled/TiledTileset.js",
             "modules": {},
             "classes": {
                 "gf.TiledTileset": 1
@@ -292,8 +293,8 @@
                 "gf": 1
             }
         },
-        "src\\map\\ImageLayer.js": {
-            "name": "src\\map\\ImageLayer.js",
+        "src/map/ImageLayer.js": {
+            "name": "src/map/ImageLayer.js",
             "modules": {},
             "classes": {
                 "gf.ImageLayer": 1
@@ -303,8 +304,8 @@
                 "gf": 1
             }
         },
-        "src\\map\\Layer.js": {
-            "name": "src\\map\\Layer.js",
+        "src/map/Layer.js": {
+            "name": "src/map/Layer.js",
             "modules": {},
             "classes": {
                 "gf.Layer": 1
@@ -314,8 +315,8 @@
                 "gf": 1
             }
         },
-        "src\\map\\Map.js": {
-            "name": "src\\map\\Map.js",
+        "src/map/Map.js": {
+            "name": "src/map/Map.js",
             "modules": {},
             "classes": {
                 "gf.Map": 1
@@ -325,8 +326,8 @@
                 "gf": 1
             }
         },
-        "src\\map\\Tile.js": {
-            "name": "src\\map\\Tile.js",
+        "src/map/Tile.js": {
+            "name": "src/map/Tile.js",
             "modules": {},
             "classes": {
                 "gf.Tile": 1
@@ -336,8 +337,8 @@
                 "gf": 1
             }
         },
-        "src\\pool\\ObjectPool.js": {
-            "name": "src\\pool\\ObjectPool.js",
+        "src/pool/ObjectPool.js": {
+            "name": "src/pool/ObjectPool.js",
             "modules": {},
             "classes": {
                 "gf.ObjectPool": 1
@@ -347,8 +348,8 @@
                 "gf": 1
             }
         },
-        "src\\pool\\SpritePool.js": {
-            "name": "src\\pool\\SpritePool.js",
+        "src/pool/SpritePool.js": {
+            "name": "src/pool/SpritePool.js",
             "modules": {},
             "classes": {
                 "gf.SpritePool": 1
@@ -358,8 +359,8 @@
                 "gf": 1
             }
         },
-        "src\\utils\\Clock.js": {
-            "name": "src\\utils\\Clock.js",
+        "src/utils/Clock.js": {
+            "name": "src/utils/Clock.js",
             "modules": {},
             "classes": {
                 "gf.Clock": 1
@@ -369,8 +370,8 @@
                 "gf": 1
             }
         },
-        "src\\utils\\EventEmitter.js": {
-            "name": "src\\utils\\EventEmitter.js",
+        "src/utils/EventEmitter.js": {
+            "name": "src/utils/EventEmitter.js",
             "modules": {},
             "classes": {
                 "gf.EventEmitter": 1
@@ -380,8 +381,8 @@
                 "gf": 1
             }
         },
-        "src\\utils\\Vector.js": {
-            "name": "src\\utils\\Vector.js",
+        "src/utils/Vector.js": {
+            "name": "src/utils/Vector.js",
             "modules": {},
             "classes": {
                 "gf.Vector": 1
@@ -391,8 +392,8 @@
                 "gf": 1
             }
         },
-        "src\\utils\\math.js": {
-            "name": "src\\utils\\math.js",
+        "src/utils/math.js": {
+            "name": "src/utils/math.js",
             "modules": {},
             "classes": {
                 "gf.math": 1
@@ -402,8 +403,8 @@
                 "gf": 1
             }
         },
-        "src\\utils\\utils.js": {
-            "name": "src\\utils\\utils.js",
+        "src/utils/utils.js": {
+            "name": "src/utils/utils.js",
             "modules": {},
             "classes": {
                 "gf.utils": 1
@@ -413,8 +414,8 @@
                 "gf": 1
             }
         },
-        "src\\core.js": {
-            "name": "src\\core.js",
+        "src/core.js": {
+            "name": "src/core.js",
             "modules": {},
             "classes": {
                 "gf.Point": 1,
@@ -430,8 +431,8 @@
                 "gf": 1
             }
         },
-        "src\\plugin.js": {
-            "name": "src\\plugin.js",
+        "src/plugin.js": {
+            "name": "src/plugin.js",
             "modules": {},
             "classes": {
                 "gf.plugin": 1
@@ -453,7 +454,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 5,
             "description": "Grapefruit Audio API, provides an easy interface to use HTML5 Audio\nThe GF Audio API was based on\n<a target=\"_blank\" href=\"https://github.com/goldfire/howler.js\">Howler.js</a>",
             "extends": "Object",
@@ -468,7 +469,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 1,
             "description": "Grapefruit Audio API, provides an easy interface to use HTML5 Audio\nThe GF Audio API was based on\n<a target=\"_blank\" href=\"https://github.com/goldfire/howler.js\">Howler.js</a>",
             "extends": "Object",
@@ -498,7 +499,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 1,
             "description": "The base AnimatedSprite class",
             "extends": "gf.Sprite",
@@ -532,7 +533,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 1,
             "description": "A basic Camera object that provides some effects. It also will contain the HUD and GUI\nto ensure they are using \"screen-coords\".\n\nTODO: Currently fade/flash don't show the colors. How should I actually show them, a gf.Sprite?",
             "extends": "gf.DisplayObjectContainer",
@@ -559,7 +560,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 1,
             "description": "The base display object, that anything being put on the screen inherits from",
             "extends": "<a target=\"_blank\" href=\"http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html\">PIXI.DisplayObjectContainer</a>",
@@ -574,7 +575,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 1,
             "description": "The base Sprite class. This class is the base for all images on the screen",
             "extends": "<a target=\"_blank\" href=\"http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html\">PIXI.Sprite</a>",
@@ -602,7 +603,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 1,
             "description": "A texture font makes it easy to use a texture for writing generic text. Basically\nthis holds an array of textures each one representing a character, that all share\nthe same base texture (image). It is the same way a spritesheet works except you\nuse the textures for text instead of animation frames.\n\nFor special characters, you can either use the `.map` property to map a character\nto a texture name like `font.map['~'] = 'tilde'` so that any `~` uses the texture named\n`tilde + font.ext` for rendering; or you can make the texture name be the character code\nprefixed with `#`. So, for `~`, naming the texture `#126.png` with `font.ext = 'png'`\nwould just work automagically. There is a default map already that you can view in the source,\nand if you follow that naming convention, it will work without modification as well.",
             "extends": "gf.DisplayObjectContainer",
@@ -668,7 +669,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 1,
             "description": "Main game object, controls the entire instance of the game",
             "extends": "Object",
@@ -740,7 +741,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 1,
             "description": "GameStates are different , controls the entire instance of the game",
             "extends": "gf.DisplayObjectContainer",
@@ -780,7 +781,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\gui\\Gui.js",
+            "file": "src/gui/Gui.js",
             "line": 1,
             "description": "The base Gui that holds GuiItems to be added to the Camera",
             "extends": "gf.DisplayObjectContainer",
@@ -795,7 +796,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\gui\\GuiItem.js",
+            "file": "src/gui/GuiItem.js",
             "line": 1,
             "description": "The base GuiItem that represents an element of a gui on the screen.",
             "extends": "gf.Sprite",
@@ -822,7 +823,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf.input",
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 1,
             "description": "Controls input from gamepads",
             "extends": "gf.input.Input",
@@ -837,7 +838,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf.input",
-            "file": "src\\input\\GamepadButtons.js",
+            "file": "src/input/GamepadButtons.js",
             "line": 35,
             "description": "Controls gamepad button input",
             "extends": "gf.input.Input",
@@ -852,7 +853,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf.input",
-            "file": "src\\input\\GamepadSticks.js",
+            "file": "src/input/GamepadSticks.js",
             "line": 23,
             "description": "Controls gamepad stick input",
             "extends": "gf.input.Input",
@@ -867,7 +868,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf.input",
-            "file": "src\\input\\Input.js",
+            "file": "src/input/Input.js",
             "line": 6,
             "description": "The base Input object, holds common functions and properties between input types",
             "extends": "Object",
@@ -892,7 +893,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\input\\InputManager.js",
+            "file": "src/input/InputManager.js",
             "line": 1,
             "description": "Manages all input handlers in a unified way",
             "extends": "Object",
@@ -914,7 +915,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf.input",
-            "file": "src\\input\\Keyboard.js",
+            "file": "src/input/Keyboard.js",
             "line": 88,
             "description": "Controls keyboard input",
             "extends": "gf.input.Input",
@@ -936,7 +937,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 1,
             "description": "The AssetLoader loads and parses different game assets, such as sounds, textures,\nTMX World JSON file (exported from the <a target=\"_blank\" href=\"http://mapeditor.org\">Tiled Editor</a>),\nand Spritesheet JSON files (published from <a target=\"_blank\" href=\"http://www.codeandweb.com/texturepacker\">Texture Packer</a>).",
             "extends": "Object",
@@ -964,7 +965,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\loader\\AudioLoader.js",
+            "file": "src/loader/AudioLoader.js",
             "line": 1,
             "description": "Loads an audio clip",
             "extends": "gf.Loader",
@@ -991,7 +992,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\loader\\JsonLoader.js",
+            "file": "src/loader/JsonLoader.js",
             "line": 1,
             "description": "Loads json data",
             "extends": "gf.Loader",
@@ -1018,7 +1019,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\loader\\Loader.js",
+            "file": "src/loader/Loader.js",
             "line": 1,
             "description": "The Base loader class that all other loaders inherit from",
             "extends": "Object",
@@ -1048,7 +1049,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\loader\\TextureLoader.js",
+            "file": "src/loader/TextureLoader.js",
             "line": 1,
             "description": "Loads a texture image",
             "extends": "gf.Loader",
@@ -1075,7 +1076,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\map\\tiled\\TiledLayer.js",
+            "file": "src/map/tiled/TiledLayer.js",
             "line": 1,
             "description": "The TiledLayer is the visual tiled layer that actually displays on the screen\n\nThis class will be created by the TiledMap, there shouldn't be a reason to\ncreate an instance on your own.",
             "extends": "gf.Layer",
@@ -1097,7 +1098,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 1,
             "description": "Tiled map, expects a Tiled TMX file loaded by the gf.loader as the argument.\nThe loader knows to load all textures and other resources when loading a world TMX\nfile, and this expets that to already be done.",
             "extends": "gf.Map",
@@ -1129,7 +1130,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "file": "src/map/tiled/TiledObjectGroup.js",
             "line": 1,
             "description": "Tiled object group is a special layer that contains entities\nTODO: This is all trash",
             "extends": "gf.Layer",
@@ -1151,7 +1152,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 1,
             "description": "This object represents a tileset used by a TiledMap.\nThere can be multiple Tilesets in a map",
             "extends": "gf.Texture",
@@ -1173,7 +1174,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\map\\ImageLayer.js",
+            "file": "src/map/ImageLayer.js",
             "line": 1,
             "description": "ImageLayer is a layer represented by a single image",
             "extends": "gf.Layer",
@@ -1205,7 +1206,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\map\\Layer.js",
+            "file": "src/map/Layer.js",
             "line": 1,
             "description": "Base Layer implementation, provides common functions for all Layer types",
             "extends": "gf.DisplayObjectContainer",
@@ -1227,7 +1228,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\map\\Map.js",
+            "file": "src/map/Map.js",
             "line": 1,
             "description": "Base Map implementation, provides common functions for all Map types",
             "extends": "gf.DisplayObjectContainer",
@@ -1252,7 +1253,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\map\\Tile.js",
+            "file": "src/map/Tile.js",
             "line": 1,
             "description": "Base Tile implementation, a tile is a single tile in a tilemap layer",
             "extends": "gf.Sprite",
@@ -1274,7 +1275,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\pool\\ObjectPool.js",
+            "file": "src/pool/ObjectPool.js",
             "line": 1,
             "description": "Holds a pool of different Objects to help reduce the number times\nan object is created and destroyed.",
             "extends": "Object",
@@ -1301,7 +1302,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\pool\\SpritePool.js",
+            "file": "src/pool/SpritePool.js",
             "line": 1,
             "description": "Holds a pool of different Sprites that can be created, makes it very\neasy to quickly create different registered entities",
             "extends": "Object",
@@ -1316,7 +1317,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\utils\\Clock.js",
+            "file": "src/utils/Clock.js",
             "line": 1,
             "description": "High performance clock, from mrdoob's Three.js:\n<a target=\"_blank\" href=\"https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js\">/src/core/Clock.js</a>",
             "extends": "Object",
@@ -1349,7 +1350,7 @@
                 "gf.Map"
             ],
             "namespace": "gf",
-            "file": "src\\utils\\EventEmitter.js",
+            "file": "src/utils/EventEmitter.js",
             "line": 1,
             "description": "Event emitter mixin. This will add emitter properties to an object\nso that it can emit events, and have others listen for them.",
             "is_constructor": 1,
@@ -1366,7 +1367,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 1,
             "description": "A 2d Vector implementation stolen directly from mrdoob's THREE.js\nthanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js",
             "extends": "Object",
@@ -1393,7 +1394,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 1,
             "description": "The grapefruit math library, used to abstract commonly used math operations",
             "extends": "Object"
@@ -1407,7 +1408,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\utils\\utils.js",
+            "file": "src/utils/utils.js",
             "line": 1,
             "description": "The grapefruit utility object, used for misc functions used throughout the code base",
             "extends": "Object"
@@ -1421,7 +1422,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 37,
             "description": "Point object, please see <a target=\"_blank\" href=\"http://www.goodboydigital.com/pixijs/docs/classes/Point.html\">PIXI.Point</a>"
         },
@@ -1434,7 +1435,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 45,
             "description": "Rectangle object, please see <a target=\"_blank\" href=\"http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html\">PIXI.Rectangle</a>"
         },
@@ -1447,7 +1448,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 53,
             "description": "Circle object, please see <a target=\"_blank\" href=\"http://www.goodboydigital.com/pixijs/docs/classes/Circle.html\">PIXI.Circle</a>"
         },
@@ -1460,7 +1461,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 61,
             "description": "Ellipse object, please see <a target=\"_blank\" href=\"http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html\">PIXI.Ellipse</a>"
         },
@@ -1473,7 +1474,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 69,
             "description": "Polygon object, please see <a target=\"_blank\" href=\"http://www.goodboydigital.com/pixijs/docs/classes/Polygon.html\">PIXI.Polygon</a>"
         },
@@ -1486,7 +1487,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 77,
             "description": "Texture object, please see <a target=\"_blank\" href=\"http://www.goodboydigital.com/pixijs/docs/classes/Texture.html\">PIXI.Texture</a>"
         },
@@ -1499,7 +1500,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 101,
             "description": "Feature detection so we cans witch between renderers, play audio correctly, and other things."
         },
@@ -1512,7 +1513,7 @@
             "plugin_for": [],
             "extension_for": [],
             "namespace": "gf",
-            "file": "src\\plugin.js",
+            "file": "src/plugin.js",
             "line": 2,
             "description": "Namespace for all plugins, it also provides methods for patching\ncore functions, and registering plugins.",
             "extends": "Object"
@@ -1520,7 +1521,7 @@
     },
     "classitems": [
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 16,
             "description": "Whether the player is muted or not",
             "itemtype": "property",
@@ -1533,7 +1534,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 26,
             "description": "The master volume of the player",
             "itemtype": "property",
@@ -1546,7 +1547,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 36,
             "description": "The master volume of all the audio playing",
             "itemtype": "property",
@@ -1557,7 +1558,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 48,
             "description": "The Web Audio API context if we are using it",
             "itemtype": "property",
@@ -1568,7 +1569,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 57,
             "description": "If we have some way of playing audio",
             "itemtype": "property",
@@ -1579,7 +1580,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 66,
             "description": "The codecs that the browser supports",
             "itemtype": "property",
@@ -1590,7 +1591,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 98,
             "description": "Returns the current master volume",
             "itemtype": "method",
@@ -1599,7 +1600,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 106,
             "description": "Sets the current master volume",
             "itemtype": "method",
@@ -1615,7 +1616,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 133,
             "description": "Mutes all playing audio",
             "itemtype": "method",
@@ -1624,7 +1625,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 141,
             "description": "Unmutes all playing audio",
             "itemtype": "method",
@@ -1633,7 +1634,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 149,
             "description": "Sets whether or not this manager is muted",
             "itemtype": "method",
@@ -1642,7 +1643,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioManager.js",
+            "file": "src/audio/AudioManager.js",
             "line": 173,
             "description": "Creates a new audio player for a peice of audio",
             "itemtype": "method",
@@ -1717,7 +1718,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 18,
             "description": "The source of the audio, the actual URL to load up",
             "itemtype": "property",
@@ -1727,7 +1728,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 26,
             "description": "Play the audio immediately after loading",
             "itemtype": "property",
@@ -1738,7 +1739,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 35,
             "description": "Buffer forces use of HTML5Audio which will buffer and play\ninstead of loading the entire file and then playing",
             "itemtype": "property",
@@ -1749,7 +1750,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 45,
             "description": "Override the format determined from the extension with this extension",
             "itemtype": "property",
@@ -1760,7 +1761,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 54,
             "description": "Replay the audio immediately after finishing",
             "itemtype": "property",
@@ -1771,7 +1772,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 63,
             "description": "A 3D position where the audio should sound like it is coming from",
             "itemtype": "property",
@@ -1782,7 +1783,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 72,
             "description": "A sound sprite that maps string keys to [start, duration] arrays. These can\nbe used to put multiple sound bits in one file, and play them separately",
             "itemtype": "property",
@@ -1793,7 +1794,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 82,
             "description": "The volume of the audio player",
             "itemtype": "property",
@@ -1804,7 +1805,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 115,
             "description": "Load the audio file for this player, this is called from the ctor\nthere is no reason to call it manually.",
             "itemtype": "method",
@@ -1819,7 +1820,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 171,
             "description": "Play a sound from the current time (0 by default).",
             "itemtype": "method",
@@ -1846,7 +1847,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 309,
             "description": "Pause playback and save the current position.",
             "itemtype": "method",
@@ -1873,7 +1874,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 361,
             "description": "Stop playback and reset to start.",
             "itemtype": "method",
@@ -1900,7 +1901,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 407,
             "description": "Mute this sound.",
             "itemtype": "method",
@@ -1921,7 +1922,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 417,
             "description": "Unmute this sound.",
             "itemtype": "method",
@@ -1942,7 +1943,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 427,
             "description": "Set the muted state of this sound.",
             "itemtype": "method",
@@ -1968,7 +1969,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 458,
             "description": "Set the position of playback.",
             "itemtype": "method",
@@ -1994,7 +1995,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 494,
             "description": "Get the position of playback.",
             "itemtype": "method",
@@ -2015,7 +2016,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 524,
             "description": "Fade a currently playing sound between two volumes.",
             "itemtype": "method",
@@ -2057,7 +2058,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 566,
             "description": "Returns the current volume of the player",
             "itemtype": "method",
@@ -2070,7 +2071,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 575,
             "description": "Sets the current volume of the player",
             "itemtype": "method",
@@ -2096,7 +2097,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 614,
             "description": "Set the 3D position of the audio source.\nThe most common usage is to set the 'x' position\nto affect the left/right ear panning. Setting any value higher than\n1.0 will begin to decrease the volume of the sound as it moves further away.\nNOTE: This only works with Web Audio API, HTML5 Audio playback\nwill not be affected.",
             "itemtype": "method",
@@ -2132,7 +2133,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 658,
             "description": "Performs a step in the fade transition",
             "itemtype": "method",
@@ -2143,7 +2144,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 676,
             "description": "Get an audio node by ID.",
             "itemtype": "method",
@@ -2158,7 +2159,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 696,
             "description": "Get the first active audio node.",
             "itemtype": "method",
@@ -2173,7 +2174,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 719,
             "description": "Get the first inactive audio node.\nIf there is none, create a new one and add it to the pool.",
             "itemtype": "method",
@@ -2191,7 +2192,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 755,
             "description": "If there are more than 5 inactive audio nodes in the pool, clear out the rest.",
             "itemtype": "method",
@@ -2202,7 +2203,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 783,
             "description": "Clear 'onend' timeout before it ends.",
             "itemtype": "method",
@@ -2220,7 +2221,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 801,
             "description": "Setup the gain node and panner for a Web Audio instance.",
             "itemtype": "method",
@@ -2235,7 +2236,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 831,
             "description": "Buffer a sound from URL (or from cache) and decode to audio source (Web Audio API).",
             "itemtype": "method",
@@ -2253,7 +2254,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 873,
             "description": "Finishes loading the Web Audio API sound and fires the loaded event",
             "itemtype": "method",
@@ -2271,7 +2272,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\audio\\AudioPlayer.js",
+            "file": "src/audio/AudioPlayer.js",
             "line": 902,
             "description": "Load the sound back into the buffer source.",
             "itemtype": "method",
@@ -2295,7 +2296,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 27,
             "description": "The animation speed for this sprite",
             "itemtype": "property",
@@ -2306,7 +2307,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 36,
             "description": "Whether or not to loop the animations. This can be overriden\non a per-animation level",
             "itemtype": "property",
@@ -2317,7 +2318,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 46,
             "description": "The registerd animations for this AnimatedSprite",
             "itemtype": "property",
@@ -2328,7 +2329,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 55,
             "description": "The currently playing animation",
             "itemtype": "property",
@@ -2339,7 +2340,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 64,
             "description": "The current frame being shown",
             "itemtype": "property",
@@ -2350,7 +2351,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 73,
             "description": "Whether or not the animation is currently playing",
             "itemtype": "property",
@@ -2361,7 +2362,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 84,
             "description": "Adds a new animation to this animated sprite",
             "itemtype": "method",
@@ -2394,7 +2395,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 105,
             "description": "Goes to a frame and starts playing the animation from there",
             "itemtype": "method",
@@ -2416,7 +2417,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 122,
             "description": "Goes to a frame and stops playing the animation",
             "itemtype": "method",
@@ -2438,7 +2439,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 140,
             "description": "Starts playing the currently active animation",
             "itemtype": "method",
@@ -2447,7 +2448,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 148,
             "description": "Stops playing the currently active animation",
             "itemtype": "method",
@@ -2456,7 +2457,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\AnimatedSprite.js",
+            "file": "src/display/AnimatedSprite.js",
             "line": 156,
             "description": "Called by PIXI to update our textures and do the actual animation",
             "itemtype": "method",
@@ -2467,7 +2468,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 15,
             "description": "The bounds of that the camera can move to",
             "itemtype": "property",
@@ -2480,7 +2481,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 25,
             "description": "When following a sprite this is the space within the camera that it can move around\nbefore the camera moves to track it.",
             "itemtype": "property",
@@ -2493,7 +2494,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 36,
             "description": "The target that the camera will follow",
             "itemtype": "property",
@@ -2506,7 +2507,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 46,
             "description": "The size of the camera",
             "itemtype": "property",
@@ -2517,7 +2518,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 55,
             "description": "Half of the size of the camera",
             "itemtype": "property",
@@ -2528,7 +2529,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 64,
             "description": "The _fx namespace has all the instance variables for all the fx",
             "itemtype": "property",
@@ -2541,7 +2542,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 94,
             "description": "Makes the camera flash with a certain color",
             "itemtype": "method",
@@ -2571,7 +2572,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 134,
             "description": "Stops a running flash, instantly hiding it",
             "itemtype": "method",
@@ -2584,7 +2585,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 145,
             "description": "Makes the camera fade into a color",
             "itemtype": "method",
@@ -2614,7 +2615,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 185,
             "description": "Stops a running fade, instantly hiding it",
             "itemtype": "method",
@@ -2627,7 +2628,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 196,
             "description": "Shakes the camera around a bit, to show it who is boss.",
             "itemtype": "method",
@@ -2662,7 +2663,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 243,
             "description": "Stops a running shake effect",
             "itemtype": "method",
@@ -2675,7 +2676,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 258,
             "description": "Stops all currently running effects (flash, fade, shake)",
             "itemtype": "method",
@@ -2688,7 +2689,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 271,
             "description": "Follows an sprite with the camera, ensuring they are always center view. You can\npass a follow style to change the area an sprite can move around in before we start\nto move with them.",
             "itemtype": "method",
@@ -2713,7 +2714,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 327,
             "description": "Stops following any sprites",
             "itemtype": "method",
@@ -2726,7 +2727,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 337,
             "description": "Focuses the camera on a sprite.",
             "itemtype": "method",
@@ -2746,7 +2747,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 350,
             "description": "Focuses the camera on an x,y position. Ensures that the camera does\nnot go outside the bounds set with setBounds()",
             "itemtype": "method",
@@ -2771,7 +2772,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 373,
             "description": "Pans the camera around by the x,y amount. Ensures that the camera does\nnot go outside the bounds set with setBounds()",
             "itemtype": "method",
@@ -2796,7 +2797,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 417,
             "description": "Resizes the viewing area, this is called internally by your game instance\nwhen you call mygame.resize(). DO NOT CALL THIS DIRECTLY",
             "itemtype": "method",
@@ -2823,7 +2824,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 436,
             "description": "Sets the bounds the camera is allowed to go. Usually this is the world's\nmin and max, and is set for you.",
             "itemtype": "method",
@@ -2858,7 +2859,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 461,
             "description": "Called internally every frame. Updates all effects and the follow",
             "itemtype": "method",
@@ -2880,7 +2881,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 567,
             "description": "Camera follow types (used for camera.follow())",
             "itemtype": "property",
@@ -2891,7 +2892,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Camera.js",
+            "file": "src/display/Camera.js",
             "line": 581,
             "description": "Camera shake directions (used for camera.shake())",
             "itemtype": "property",
@@ -2902,7 +2903,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 19,
             "description": "[read-only] The of children of this object.",
             "itemtype": "property",
@@ -2913,7 +2914,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 25,
             "description": "The coordinate of the object relative to the local coordinates of the parent.",
             "itemtype": "property",
@@ -2923,7 +2924,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 32,
             "description": "The scale factor of the object.",
             "itemtype": "property",
@@ -2933,7 +2934,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 39,
             "description": "The rotation of the object in radians.",
             "itemtype": "property",
@@ -2943,7 +2944,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 46,
             "description": "The opacity of the object.",
             "itemtype": "property",
@@ -2953,7 +2954,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 53,
             "description": "The visibility of the object.",
             "itemtype": "property",
@@ -2963,7 +2964,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 60,
             "description": "[read-only] The display object that contains this display object.",
             "itemtype": "property",
@@ -2974,7 +2975,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 68,
             "description": "[read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.",
             "itemtype": "property",
@@ -2985,7 +2986,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 76,
             "description": "This is the defined area that will pick up mouse / touch events. It is null by default.\nSetting it is a neat way of optimising the hitTest function that the interactionManager\nwill use (as it will not need to hit test all the children)",
             "itemtype": "property",
@@ -2995,7 +2996,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 85,
             "description": "Wether or not the object will handle mouse events",
             "itemtype": "property",
@@ -3006,14 +3007,14 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 93,
             "description": "Inherited Methods",
             "class": "gf.DisplayObjectContainer",
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 97,
             "description": "Adds a child to the object.",
             "itemtype": "method",
@@ -3029,7 +3030,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 104,
             "description": "Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown",
             "itemtype": "method",
@@ -3050,7 +3051,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 112,
             "description": "Removes a child from the object.",
             "itemtype": "method",
@@ -3066,7 +3067,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 121,
             "description": "Base resize function, all this does is ensure that all children resize functions get called as well",
             "itemtype": "method",
@@ -3075,7 +3076,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 134,
             "description": "Convenience method for setting the position of the Object.",
             "itemtype": "method",
@@ -3103,7 +3104,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 186,
             "description": "A callback that is used when the users clicks on the displayObject with their mouse",
             "itemtype": "event",
@@ -3119,7 +3120,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 193,
             "description": "A callback that is used when the user clicks the mouse down over the displayObject",
             "itemtype": "event",
@@ -3135,7 +3136,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 200,
             "description": "A callback that is used when the user releases the mouse that was over the displayObject\nfor this callback to be fired the mouse must have been pressed down over the displayObject",
             "itemtype": "event",
@@ -3151,7 +3152,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 208,
             "description": "A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject\nfor this callback to be fired, The touch must have started over the displayObject",
             "itemtype": "event",
@@ -3167,7 +3168,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 216,
             "description": "A callback that is used when the users mouse rolls over the displayObject",
             "itemtype": "event",
@@ -3183,7 +3184,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 223,
             "description": "A callback that is used when the users mouse leaves the displayObject",
             "itemtype": "event",
@@ -3199,7 +3200,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 230,
             "description": "A callback that is used when the user moves the mouse while over the displayObject",
             "itemtype": "event",
@@ -3215,7 +3216,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 241,
             "description": "A callback that is used when the users taps on the displayObject with their finger\nbasically a touch version of click",
             "itemtype": "event",
@@ -3231,7 +3232,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 249,
             "description": "A callback that is used when the user touch's over the displayObject",
             "itemtype": "event",
@@ -3247,7 +3248,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 256,
             "description": "A callback that is used when the user releases a touch over the displayObject",
             "itemtype": "event",
@@ -3263,7 +3264,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\DisplayObjectContainer.js",
+            "file": "src/display/DisplayObjectContainer.js",
             "line": 263,
             "description": "A callback that is used when the user releases the touch that was over the displayObject\nfor this callback to be fired, The touch must have started over the displayObject",
             "itemtype": "event",
@@ -3279,7 +3280,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 17,
             "description": "The type of the sprite",
             "itemtype": "property",
@@ -3290,7 +3291,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 26,
             "description": "Whether or not the sprite is \"alive\", advisory only",
             "itemtype": "property",
@@ -3301,7 +3302,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 35,
             "description": "The mass of this sprite (if using physics), please use setMass to set this value",
             "itemtype": "property",
@@ -3313,7 +3314,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 45,
             "description": "The physics system that this sprite is a part of. This is advisory only\nplease use enablePhysics() or disablePhysics() and do not set this value\ndirectly.",
             "itemtype": "property",
@@ -3325,7 +3326,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 59,
             "description": "Enables physics for this sprite",
             "itemtype": "method",
@@ -3341,7 +3342,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 75,
             "description": "Disbales physics for this sprite",
             "itemtype": "method",
@@ -3350,7 +3351,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 85,
             "description": "Sets the mass of this sprite",
             "itemtype": "method",
@@ -3366,7 +3367,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 96,
             "description": "Sets the velocity of this sprite",
             "itemtype": "method",
@@ -3382,7 +3383,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 107,
             "description": "Sets the rotation of this sprite",
             "itemtype": "method",
@@ -3398,7 +3399,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 120,
             "description": "Sets the position of this sprite",
             "itemtype": "method",
@@ -3419,7 +3420,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 135,
             "description": "Removes this sprite from the stage and the physics system",
             "itemtype": "method",
@@ -3428,7 +3429,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 148,
             "description": "On Collision Event\n     called when this sprite collides into another, or is being collided into by another.\n     By default if something collides with a collectable sprite we destroy the collectable\n     and if we collide with a solid tile we kill our velocity. This method will emit a\n     'collision' event that you can listen for",
             "itemtype": "method",
@@ -3444,7 +3445,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 166,
             "description": "Sprite types",
             "itemtype": "property",
@@ -3455,7 +3456,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 193,
             "description": "A callback that is used when the users clicks on the sprite with their mouse",
             "itemtype": "event",
@@ -3471,7 +3472,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 200,
             "description": "A callback that is used when the user clicks the mouse down over the sprite",
             "itemtype": "event",
@@ -3487,7 +3488,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 207,
             "description": "A callback that is used when the user releases the mouse that was over the sprite\nfor this callback to be fired the mouse must have been pressed down over the sprite",
             "itemtype": "event",
@@ -3503,7 +3504,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 215,
             "description": "A callback that is used when the user releases the mouse that was over the sprite but is no longer over the sprite\nfor this callback to be fired, The touch must have started over the sprite",
             "itemtype": "event",
@@ -3519,7 +3520,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 223,
             "description": "A callback that is used when the users mouse rolls over the sprite",
             "itemtype": "event",
@@ -3535,7 +3536,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 230,
             "description": "A callback that is used when the users mouse leaves the sprite",
             "itemtype": "event",
@@ -3551,7 +3552,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 237,
             "description": "A callback that is used when the user moves the mouse while over the sprite",
             "itemtype": "event",
@@ -3567,7 +3568,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 248,
             "description": "A callback that is used when the users taps on the sprite with their finger\nbasically a touch version of click",
             "itemtype": "event",
@@ -3583,7 +3584,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 256,
             "description": "A callback that is used when the user touch's over the sprite",
             "itemtype": "event",
@@ -3599,7 +3600,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 263,
             "description": "A callback that is used when the user releases a touch over the sprite",
             "itemtype": "event",
@@ -3615,7 +3616,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\display\\Sprite.js",
+            "file": "src/display/Sprite.js",
             "line": 270,
             "description": "A callback that is used when the user releases the touch that was over the sprite\nfor this callback to be fired, The touch must have started over the sprite",
             "itemtype": "event",
@@ -3631,7 +3632,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 35,
             "description": "The extension to use with texture names",
             "itemtype": "property",
@@ -3642,7 +3643,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 44,
             "description": "Maps a special character to a string name",
             "itemtype": "property",
@@ -3652,7 +3653,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 85,
             "description": "The size of a space character in pixels",
             "itemtype": "property",
@@ -3662,7 +3663,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 93,
             "description": "The width factor of characters, default is 1 which is normal spacing",
             "itemtype": "property",
@@ -3672,7 +3673,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 101,
             "description": "The height factor of characters, default is 1 which is normal spacing",
             "itemtype": "property",
@@ -3682,7 +3683,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 109,
             "description": "The textures for all the characters in the alphabet",
             "itemtype": "property",
@@ -3695,7 +3696,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 119,
             "description": "The sprite pool to grab character sprites from",
             "itemtype": "property",
@@ -3708,7 +3709,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 140,
             "description": "Gets a sprite from the pool for the character pased",
             "itemtype": "method",
@@ -3727,7 +3728,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 172,
             "description": "Clones this font to get another just like it",
             "itemtype": "method",
@@ -3739,7 +3740,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\font\\TextureFont.js",
+            "file": "src/font/TextureFont.js",
             "line": 187,
             "description": "Sets the text of this font to the string passed",
             "itemtype": "method",
@@ -3755,7 +3756,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 23,
             "description": "The domElement that we are putting our rendering canvas into (the container)",
             "itemtype": "property",
@@ -3766,7 +3767,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 35,
             "description": "The method used to render values to the screen (either webgl, or canvas)",
             "itemtype": "property",
@@ -3777,7 +3778,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 44,
             "description": "The player entities added into the game",
             "itemtype": "property",
@@ -3788,7 +3789,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 53,
             "description": "Raw PIXI.stage instance",
             "itemtype": "property",
@@ -3799,7 +3800,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 65,
             "description": "Raw Clock instance for internal timing",
             "itemtype": "property",
@@ -3810,7 +3811,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 74,
             "description": "Raw rendering engine",
             "itemtype": "property",
@@ -3821,7 +3822,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 106,
             "description": "Maximum Z value",
             "itemtype": "property",
@@ -3835,7 +3836,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 117,
             "description": "The loader for this game instance",
             "itemtype": "property",
@@ -3846,7 +3847,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 126,
             "description": "The sprite pool to use to create registered entities",
             "itemtype": "property",
@@ -3857,7 +3858,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 135,
             "description": "The GameStates added to the game",
             "itemtype": "property",
@@ -3868,7 +3869,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 144,
             "description": "The currently active GameState",
             "itemtype": "property",
@@ -3879,7 +3880,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 175,
             "description": "The audio player for this game instance\n(refers to the active GameState's audio instance)",
             "itemtype": "property",
@@ -3890,7 +3891,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 184,
             "description": "The input instance for this game\n(refers to the active GameState's input instance)",
             "itemtype": "property",
@@ -3901,7 +3902,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 193,
             "description": "The physics system to simulate stuffs\n(refers to the active GameState's physics instance)",
             "itemtype": "property",
@@ -3912,7 +3913,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 202,
             "description": "The camera you view the scene through\n(refers to the active GameState's camera instance)",
             "itemtype": "property",
@@ -3923,7 +3924,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 211,
             "description": "The world instance that holds all sprites and the map\n(refers to the active GameState's world instance)",
             "itemtype": "property",
@@ -3934,7 +3935,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 222,
             "description": "Allows you to resize the game area",
             "itemtype": "method",
@@ -3959,7 +3960,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 242,
             "description": "Adds an object to the current stage",
             "itemtype": "method",
@@ -3979,7 +3980,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 254,
             "description": "Removes a sprite from the stage",
             "itemtype": "method",
@@ -3999,7 +4000,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 282,
             "description": "Adds a new game state to this game to be later enabled",
             "itemtype": "method",
@@ -4019,7 +4020,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 305,
             "description": "Removes a game state from the game",
             "itemtype": "method",
@@ -4039,7 +4040,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 333,
             "description": "Enables a state that has been added to the game",
             "itemtype": "method",
@@ -4059,7 +4060,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 352,
             "description": "Loads the world map into the game",
             "itemtype": "method",
@@ -4079,7 +4080,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 364,
             "description": "Begins the render loop",
             "itemtype": "method",
@@ -4092,7 +4093,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\Game.js",
+            "file": "src/game/Game.js",
             "line": 376,
             "description": "The looping render tick",
             "itemtype": "method",
@@ -4103,7 +4104,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 26,
             "description": "The name of this game state",
             "itemtype": "property",
@@ -4113,7 +4114,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 34,
             "description": "The audio player for this game instance",
             "itemtype": "property",
@@ -4124,7 +4125,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 43,
             "description": "The physics system to simulate stuffs",
             "itemtype": "property",
@@ -4135,7 +4136,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 52,
             "description": "The input instance for this game",
             "itemtype": "property",
@@ -4146,7 +4147,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 61,
             "description": "The camera you view the scene through",
             "itemtype": "property",
@@ -4157,7 +4158,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 70,
             "description": "The world instance that holds all entites and the map",
             "itemtype": "property",
@@ -4168,7 +4169,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 79,
             "description": "The game instance that this state belongs too",
             "itemtype": "property",
@@ -4178,7 +4179,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 99,
             "description": "The setter for the game property, sets up the input and camera objects",
             "itemtype": "method",
@@ -4196,7 +4197,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 118,
             "description": "Adds a child object to the GameState, this will add objects to either\nthe Camera or the Map depending on the type. Anything inheriting from\ngf.Gui will be put to the camera, everything else goes in the world.",
             "itemtype": "method",
@@ -4212,7 +4213,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 139,
             "description": "Loads a game world into the state",
             "itemtype": "method",
@@ -4228,7 +4229,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 169,
             "description": "Enables (shows) the game state",
             "itemtype": "method",
@@ -4237,7 +4238,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 177,
             "description": "Disables (hides) the game state",
             "itemtype": "method",
@@ -4246,7 +4247,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\game\\GameState.js",
+            "file": "src/game/GameState.js",
             "line": 185,
             "description": "Called by the game each frame to update the input, camera, and physics objects",
             "itemtype": "method",
@@ -4257,7 +4258,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\gui\\Gui.js",
+            "file": "src/gui/Gui.js",
             "line": 10,
             "description": "The name of the Gui",
             "itemtype": "property",
@@ -4268,7 +4269,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\gui\\GuiItem.js",
+            "file": "src/gui/GuiItem.js",
             "line": 12,
             "description": "Sets whether or not you can drag the GuiItem around",
             "itemtype": "property",
@@ -4279,7 +4280,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\gui\\GuiItem.js",
+            "file": "src/gui/GuiItem.js",
             "line": 21,
             "description": "Describes if the current item is being dragged or not, if it is this\nobject will hold the last local position of the mouse (relative to this object's parent)",
             "itemtype": "property",
@@ -4291,7 +4292,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 12,
             "description": "Tracks if we are polling for status/connections",
             "itemtype": "property",
@@ -4302,7 +4303,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 21,
             "description": "The currently activated gamepads list",
             "itemtype": "property",
@@ -4313,7 +4314,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 30,
             "description": "Timestamp tracking for state changes",
             "itemtype": "property",
@@ -4325,7 +4326,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 39,
             "description": "Holds the button handler for gamepad button events",
             "itemtype": "property",
@@ -4336,7 +4337,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 48,
             "description": "Holds the stick handler for gamepad stick events",
             "itemtype": "property",
@@ -4347,7 +4348,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 68,
             "description": "Called when a gamepad connects (FF Only)",
             "itemtype": "method",
@@ -4365,7 +4366,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 82,
             "description": "Called when a gamepad disconnects (FF Only)",
             "itemtype": "method",
@@ -4383,7 +4384,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 102,
             "description": "Stats polling for new gamepads and status updates",
             "itemtype": "method",
@@ -4392,7 +4393,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 113,
             "description": "Stops polling for new gamepads and status updates",
             "itemtype": "method",
@@ -4401,7 +4402,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 121,
             "description": "Polls for newly connected gamepads (Chrome Only)",
             "itemtype": "method",
@@ -4410,7 +4411,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 144,
             "description": "Polls the gamepad object for status updates and emits events when they occur",
             "itemtype": "method",
@@ -4426,7 +4427,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Gamepad.js",
+            "file": "src/input/Gamepad.js",
             "line": 164,
             "description": "Called each frame to update polling mechanisms",
             "itemtype": "method",
@@ -4435,7 +4436,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\GamepadButtons.js",
+            "file": "src/input/GamepadButtons.js",
             "line": 1,
             "description": "Bindable Gamepad Buttons",
             "itemtype": "property",
@@ -4446,7 +4447,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\GamepadButtons.js",
+            "file": "src/input/GamepadButtons.js",
             "line": 46,
             "description": "The threshold at which we consider a button \"pressed\"",
             "itemtype": "property",
@@ -4457,7 +4458,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\GamepadButtons.js",
+            "file": "src/input/GamepadButtons.js",
             "line": 55,
             "description": "Track the status of each button",
             "itemtype": "property",
@@ -4469,7 +4470,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\GamepadButtons.js",
+            "file": "src/input/GamepadButtons.js",
             "line": 75,
             "description": "Polls the gamepad object for status updates and emits events when they occur",
             "itemtype": "method",
@@ -4485,7 +4486,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\GamepadSticks.js",
+            "file": "src/input/GamepadSticks.js",
             "line": 1,
             "description": "Bindable Gamepad Axes",
             "itemtype": "property",
@@ -4496,7 +4497,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\GamepadSticks.js",
+            "file": "src/input/GamepadSticks.js",
             "line": 34,
             "description": "The threshold at which we consider a stick \"moved\"",
             "itemtype": "property",
@@ -4507,7 +4508,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\GamepadSticks.js",
+            "file": "src/input/GamepadSticks.js",
             "line": 43,
             "description": "Track the status of each of the axes",
             "itemtype": "property",
@@ -4519,7 +4520,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\GamepadSticks.js",
+            "file": "src/input/GamepadSticks.js",
             "line": 63,
             "description": "Polls the gamepad object for status updates and emits events when they occur",
             "itemtype": "method",
@@ -4535,14 +4536,14 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Input.js",
+            "file": "src/input/Input.js",
             "line": 1,
             "description": "input object",
             "class": "gf.input.Input",
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Input.js",
+            "file": "src/input/Input.js",
             "line": 19,
             "description": "For backwards compatibility",
             "itemtype": "method",
@@ -4553,7 +4554,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Input.js",
+            "file": "src/input/Input.js",
             "line": 27,
             "description": "The dom element to bind events to",
             "itemtype": "property",
@@ -4563,7 +4564,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Input.js",
+            "file": "src/input/Input.js",
             "line": 37,
             "description": "Prevents the default action of an event, and prevents it from bubbling up\nthe DOM.",
             "itemtype": "method",
@@ -4579,7 +4580,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\InputManager.js",
+            "file": "src/input/InputManager.js",
             "line": 11,
             "description": "The dom element to bind events to",
             "itemtype": "property",
@@ -4589,7 +4590,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\input\\InputManager.js",
+            "file": "src/input/InputManager.js",
             "line": 19,
             "description": "Holds the keyboard handler for keyboard events",
             "itemtype": "property",
@@ -4600,7 +4601,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\input\\InputManager.js",
+            "file": "src/input/InputManager.js",
             "line": 28,
             "description": "Holds the gamepad handler for gamepad events",
             "itemtype": "property",
@@ -4611,7 +4612,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\input\\InputManager.js",
+            "file": "src/input/InputManager.js",
             "line": 39,
             "description": "Called each frame to update state info for some input methods",
             "itemtype": "method",
@@ -4622,7 +4623,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\input\\Keyboard.js",
+            "file": "src/input/Keyboard.js",
             "line": 1,
             "description": "Bindable keycodes",
             "itemtype": "property",
@@ -4633,7 +4634,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\input\\Keyboard.js",
+            "file": "src/input/Keyboard.js",
             "line": 100,
             "description": "The current sequence of keys that have been pressed",
             "itemtype": "property",
@@ -4644,7 +4645,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Keyboard.js",
+            "file": "src/input/Keyboard.js",
             "line": 109,
             "description": "The amount of time it takes for the sequence to clear out, in ms",
             "itemtype": "property",
@@ -4655,7 +4656,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Keyboard.js",
+            "file": "src/input/Keyboard.js",
             "line": 118,
             "description": "The timeout ID for the wait to clear the input sequence",
             "itemtype": "property",
@@ -4667,7 +4668,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Keyboard.js",
+            "file": "src/input/Keyboard.js",
             "line": 132,
             "description": "Called when a key is pressed down",
             "itemtype": "method",
@@ -4690,7 +4691,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Keyboard.js",
+            "file": "src/input/Keyboard.js",
             "line": 144,
             "description": "Called when a key is released",
             "itemtype": "method",
@@ -4713,7 +4714,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Keyboard.js",
+            "file": "src/input/Keyboard.js",
             "line": 156,
             "description": "Called when a key state has changed, updates current sequence and emits events",
             "itemtype": "method",
@@ -4741,7 +4742,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\input\\Keyboard.js",
+            "file": "src/input/Keyboard.js",
             "line": 188,
             "description": "Clears the current sequence so that a new one can start",
             "itemtype": "method",
@@ -4752,7 +4753,7 @@
             "namespace": "gf.input"
         },
         {
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 23,
             "description": "The array of assets to load",
             "itemtype": "property",
@@ -4762,7 +4763,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 31,
             "description": "The count of remaining assets to load",
             "itemtype": "property",
@@ -4773,7 +4774,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 40,
             "description": "A mapping of extensions to types",
             "itemtype": "property",
@@ -4786,7 +4787,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 65,
             "description": "Fired if a loader encounters an error",
             "itemtype": "event",
@@ -4814,7 +4815,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 74,
             "description": "Fired when an item has loaded",
             "itemtype": "event",
@@ -4847,7 +4848,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 84,
             "description": "Fired when all the assets have loaded",
             "itemtype": "event",
@@ -4856,7 +4857,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 92,
             "description": "Adds a resource to the assets array.",
             "itemtype": "method",
@@ -4877,7 +4878,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 105,
             "description": "Starts the loading festivities. If called without any arguments it will load\nthe assets passed in at the ctor. If an array of assets are passed it will\nload those instead.",
             "itemtype": "method",
@@ -4893,7 +4894,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 133,
             "description": "Called whenever an asset is loaded, to keep track of when to emit complete and progress.",
             "itemtype": "method",
@@ -4911,7 +4912,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\AssetLoader.js",
+            "file": "src/loader/AssetLoader.js",
             "line": 153,
             "description": "Called whenever an asset loader encounters an error",
             "itemtype": "method",
@@ -4929,7 +4930,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\AudioLoader.js",
+            "file": "src/loader/AudioLoader.js",
             "line": 19,
             "description": "Loads the audio file described by the urls passed in to the ctor. Will intelligently\ndetermine which url is supported by this browser.",
             "itemtype": "method",
@@ -4938,7 +4939,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\JsonLoader.js",
+            "file": "src/loader/JsonLoader.js",
             "line": 18,
             "description": "Loads the json data",
             "itemtype": "method",
@@ -4947,7 +4948,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\Loader.js",
+            "file": "src/loader/Loader.js",
             "line": 22,
             "description": "Atempts to load a resource from the asset cache, if it finds the resource\nin the cache, it will return the value and asynchronously emit the 'load' event",
             "itemtype": "method",
@@ -4960,7 +4961,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\Loader.js",
+            "file": "src/loader/Loader.js",
             "line": 45,
             "description": "Emits the 'load' event, passing the properties of this instance and the data passed",
             "itemtype": "method",
@@ -4976,7 +4977,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\Loader.js",
+            "file": "src/loader/Loader.js",
             "line": 65,
             "description": "Emits the 'error' event, passing the properties of this instance and the message passed",
             "itemtype": "method",
@@ -4992,7 +4993,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\loader\\TextureLoader.js",
+            "file": "src/loader/TextureLoader.js",
             "line": 18,
             "description": "Loads the texture data",
             "itemtype": "method",
@@ -5001,7 +5002,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledLayer.js",
+            "file": "src/map/tiled/TiledLayer.js",
             "line": 17,
             "description": "The tile IDs of the tilemap",
             "itemtype": "property",
@@ -5011,7 +5012,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledLayer.js",
+            "file": "src/map/tiled/TiledLayer.js",
             "line": 25,
             "description": "The current map of all tiles on the screen",
             "itemtype": "property",
@@ -5021,7 +5022,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledLayer.js",
+            "file": "src/map/tiled/TiledLayer.js",
             "line": 33,
             "description": "The user-defined properties of this group. Usually defined in the TiledEditor",
             "itemtype": "property",
@@ -5031,7 +5032,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledLayer.js",
+            "file": "src/map/tiled/TiledLayer.js",
             "line": 54,
             "description": "Creates all the tile sprites needed to display the layer",
             "itemtype": "method",
@@ -5052,7 +5053,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledLayer.js",
+            "file": "src/map/tiled/TiledLayer.js",
             "line": 228,
             "description": "Clears all the tiles currently used to render the layer",
             "itemtype": "method",
@@ -5061,7 +5062,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledLayer.js",
+            "file": "src/map/tiled/TiledLayer.js",
             "line": 241,
             "description": "Moves a tile sprite from one position to another, and creates a new tile\nif the old position didn't have a sprite",
             "itemtype": "method",
@@ -5096,7 +5097,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledLayer.js",
+            "file": "src/map/tiled/TiledLayer.js",
             "line": 370,
             "description": "Pans the layer around, rendering stuff if necessary",
             "itemtype": "method",
@@ -5121,7 +5122,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 19,
             "description": "The user-defined properties",
             "itemtype": "property",
@@ -5132,7 +5133,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 30,
             "description": "The tile size",
             "itemtype": "property",
@@ -5142,7 +5143,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 41,
             "description": "The orientation of the map",
             "itemtype": "property",
@@ -5152,7 +5153,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 49,
             "description": "The version of the TMX format",
             "itemtype": "property",
@@ -5162,7 +5163,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 57,
             "description": "The background color of the map (since Tiled 0.9.0)",
             "itemtype": "property",
@@ -5172,7 +5173,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 67,
             "description": "The tilesets used by this map",
             "itemtype": "property",
@@ -5182,7 +5183,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 75,
             "description": "The scaled tile size",
             "itemtype": "property",
@@ -5192,7 +5193,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 86,
             "description": "The real size (size * scaledTileSize)",
             "itemtype": "property",
@@ -5202,7 +5203,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 123,
             "description": "Gets the tileset that an ID is associated with",
             "itemtype": "method",
@@ -5222,7 +5223,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 135,
             "description": "Notifies the map it needs to resize, re renders the viewport",
             "itemtype": "method",
@@ -5231,7 +5232,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 149,
             "description": "Spawns all the objects in the TiledObjectGroups of this map",
             "itemtype": "method",
@@ -5240,7 +5241,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 163,
             "description": "Called by a TiledLayer when a tile event occurs. This is so you can listen for\nthe emitted events on the world instead of the tile itself.",
             "itemtype": "method",
@@ -5268,7 +5269,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledMap.js",
+            "file": "src/map/tiled/TiledMap.js",
             "line": 180,
             "description": "Called by a TiledObjectGroup when an object event occurs. This is so you can listen for\nthe emitted events on the world instead of the tile itself.",
             "itemtype": "method",
@@ -5296,7 +5297,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "file": "src/map/tiled/TiledObjectGroup.js",
             "line": 14,
             "description": "The color to display objects in this group",
             "itemtype": "property",
@@ -5306,7 +5307,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "file": "src/map/tiled/TiledObjectGroup.js",
             "line": 22,
             "description": "The user-defined properties of this group. Usually defined in the TiledEditor",
             "itemtype": "property",
@@ -5316,7 +5317,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "file": "src/map/tiled/TiledObjectGroup.js",
             "line": 30,
             "description": "The objects in this group that can be spawned",
             "itemtype": "property",
@@ -5326,7 +5327,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "file": "src/map/tiled/TiledObjectGroup.js",
             "line": 44,
             "description": "Spawns all the entities associated with this layer, and properly sets their attributes",
             "itemtype": "method",
@@ -5339,7 +5340,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledObjectGroup.js",
+            "file": "src/map/tiled/TiledObjectGroup.js",
             "line": 223,
             "description": "Despawns all the sprites associated with this layer",
             "itemtype": "method",
@@ -5352,7 +5353,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 23,
             "description": "The first tileId in the tileset",
             "itemtype": "property",
@@ -5362,7 +5363,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 31,
             "description": "The name of the tileset",
             "itemtype": "property",
@@ -5372,7 +5373,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 39,
             "description": "The size of a tile in the tileset",
             "itemtype": "property",
@@ -5382,7 +5383,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 47,
             "description": "The spacing around a tile in the tileset",
             "itemtype": "property",
@@ -5392,7 +5393,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 55,
             "description": "The margin around a tile in the tileset",
             "itemtype": "property",
@@ -5402,7 +5403,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 63,
             "description": "The offset of tile positions when rendered",
             "itemtype": "property",
@@ -5412,7 +5413,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 79,
             "description": "The number of tiles calculated based on size, margin, and spacing",
             "itemtype": "property",
@@ -5422,7 +5423,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 90,
             "description": "The last tileId in the tileset",
             "itemtype": "property",
@@ -5432,7 +5433,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 98,
             "description": "The properties of the tileset",
             "itemtype": "property",
@@ -5442,7 +5443,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 106,
             "description": "The properties of the tiles in the tileset (like collision stuff)",
             "itemtype": "property",
@@ -5452,7 +5453,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 114,
             "description": "The size of the tileset",
             "itemtype": "property",
@@ -5462,7 +5463,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 122,
             "description": "The texture instances for each tile in the set",
             "itemtype": "property",
@@ -5472,7 +5473,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 196,
             "description": "Gets the tile properties for a tile based on it's ID",
             "itemtype": "method",
@@ -5492,7 +5493,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\tiled\\TiledTileset.js",
+            "file": "src/map/tiled/TiledTileset.js",
             "line": 221,
             "description": "Gets the tile texture for a tile based on it's ID",
             "itemtype": "method",
@@ -5512,7 +5513,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\Layer.js",
+            "file": "src/map/Layer.js",
             "line": 11,
             "description": "The name of the layer",
             "itemtype": "property",
@@ -5523,7 +5524,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\Layer.js",
+            "file": "src/map/Layer.js",
             "line": 20,
             "description": "The size of the layer",
             "itemtype": "property",
@@ -5534,7 +5535,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\Layer.js",
+            "file": "src/map/Layer.js",
             "line": 34,
             "description": "Pans the layer around, rendering stuff if necessary",
             "itemtype": "method",
@@ -5559,7 +5560,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\Map.js",
+            "file": "src/map/Map.js",
             "line": 15,
             "description": "The size of the map",
             "itemtype": "property",
@@ -5570,7 +5571,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\Map.js",
+            "file": "src/map/Map.js",
             "line": 29,
             "description": "Pans the map around",
             "itemtype": "method",
@@ -5595,7 +5596,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\Tile.js",
+            "file": "src/map/Tile.js",
             "line": 20,
             "description": "On Collision Event\n     called when this sprite collides into another, or is being collided into by another.\n     By default if something collides with a collectable sprite we remove the collectable\n     and if we collide with a solid tile we kill our velocity",
             "itemtype": "method",
@@ -5611,7 +5612,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\map\\Tile.js",
+            "file": "src/map/Tile.js",
             "line": 42,
             "description": "Tile collision types",
             "itemtype": "property",
@@ -5622,7 +5623,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\pool\\ObjectPool.js",
+            "file": "src/pool/ObjectPool.js",
             "line": 20,
             "description": "Creates a new instance of the pool's object type, or if available\npulls one that is already created out of the pool",
             "itemtype": "method",
@@ -5631,7 +5632,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\pool\\ObjectPool.js",
+            "file": "src/pool/ObjectPool.js",
             "line": 37,
             "description": "Frees an object back into the pool to be recycled",
             "itemtype": "method",
@@ -5640,7 +5641,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\pool\\SpritePool.js",
+            "file": "src/pool/SpritePool.js",
             "line": 17,
             "description": "Adds an Sprite Type to the pool",
             "itemtype": "method",
@@ -5665,7 +5666,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\pool\\SpritePool.js",
+            "file": "src/pool/SpritePool.js",
             "line": 28,
             "description": "Checks if the Sprite Type exists in the pool",
             "itemtype": "method",
@@ -5685,7 +5686,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\pool\\SpritePool.js",
+            "file": "src/pool/SpritePool.js",
             "line": 38,
             "description": "Creates a new sprite from the pool",
             "itemtype": "method",
@@ -5715,7 +5716,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Clock.js",
+            "file": "src/utils/Clock.js",
             "line": 28,
             "description": "Starts the timer",
             "itemtype": "method",
@@ -5727,7 +5728,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Clock.js",
+            "file": "src/utils/Clock.js",
             "line": 42,
             "description": "Stops the timer",
             "itemtype": "method",
@@ -5739,7 +5740,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Clock.js",
+            "file": "src/utils/Clock.js",
             "line": 53,
             "description": "Gets the total time that the timer has been running",
             "itemtype": "method",
@@ -5755,7 +5756,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Clock.js",
+            "file": "src/utils/Clock.js",
             "line": 66,
             "description": "Gets the difference in time since getDelta() was called last",
             "itemtype": "method",
@@ -5771,7 +5772,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\EventEmitter.js",
+            "file": "src/utils/EventEmitter.js",
             "line": 31,
             "description": "Registers a listener function to be run on an event occurance",
             "itemtype": "method",
@@ -5792,7 +5793,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\EventEmitter.js",
+            "file": "src/utils/EventEmitter.js",
             "line": 48,
             "description": "Emits an event which will run all registered listeners for the event type",
             "itemtype": "method",
@@ -5813,7 +5814,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\EventEmitter.js",
+            "file": "src/utils/EventEmitter.js",
             "line": 69,
             "description": "Removes a listener function for an event type",
             "itemtype": "method",
@@ -5834,7 +5835,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 18,
             "description": "Sets the value of the vector",
             "itemtype": "method",
@@ -5859,7 +5860,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 32,
             "description": "Sets the X value of the vector",
             "itemtype": "method",
@@ -5879,7 +5880,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 44,
             "description": "Sets the Y value of the vector",
             "itemtype": "method",
@@ -5899,7 +5900,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 56,
             "description": "Sets a component value of the vector",
             "itemtype": "method",
@@ -5924,7 +5925,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 73,
             "description": "Gets a component value of the vector",
             "itemtype": "method",
@@ -5944,7 +5945,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 87,
             "description": "Copies the passed vector's components to this vector",
             "itemtype": "method",
@@ -5964,7 +5965,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 100,
             "description": "Floors the vector components",
             "itemtype": "method",
@@ -5977,7 +5978,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 112,
             "description": "Ceils the vector components",
             "itemtype": "method",
@@ -5990,7 +5991,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 124,
             "description": "Adds a vector to this one",
             "itemtype": "method",
@@ -6010,7 +6011,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 137,
             "description": "Adds two vectors to each other and stores the result in this vector",
             "itemtype": "method",
@@ -6035,7 +6036,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 151,
             "description": "Adds a scalar value to the x and y components of this vector",
             "itemtype": "method",
@@ -6055,7 +6056,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 164,
             "description": "Subtracts a vector from this one",
             "itemtype": "method",
@@ -6075,7 +6076,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 177,
             "description": "Subtracts two vectors from each other and stores the result in this vector",
             "itemtype": "method",
@@ -6100,7 +6101,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 191,
             "description": "Multiplies the x and y components of this vector by a scalar value",
             "itemtype": "method",
@@ -6120,7 +6121,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 204,
             "description": "Divides the x and y components of this vector by a scalar value",
             "itemtype": "method",
@@ -6140,7 +6141,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 221,
             "description": "Sets this vector components to the minimum value when compared to the passed vector's components",
             "itemtype": "method",
@@ -6160,7 +6161,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 239,
             "description": "Sets this vector components to the maximum value when compared to the passed vector's components",
             "itemtype": "method",
@@ -6180,7 +6181,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 257,
             "description": "Clamps the vectors components to be between min and max",
             "itemtype": "method",
@@ -6205,7 +6206,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 282,
             "description": "Negates this vector (multiplies by -1)",
             "itemtype": "method",
@@ -6218,7 +6219,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 291,
             "description": "Performs the dot product between this vector and the passed one and returns the result",
             "itemtype": "method",
@@ -6238,7 +6239,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 301,
             "description": "Calculates the square length of the vector",
             "itemtype": "method",
@@ -6251,7 +6252,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 310,
             "description": "Calculates the length of the vector",
             "itemtype": "method",
@@ -6264,7 +6265,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 319,
             "description": "Normalizes this vector (divides by its length)",
             "itemtype": "method",
@@ -6277,7 +6278,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 328,
             "description": "Calculates the distance to the passed vector",
             "itemtype": "method",
@@ -6297,7 +6298,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 338,
             "description": "Calculates the square distance to the passed vector",
             "itemtype": "method",
@@ -6317,7 +6318,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 349,
             "description": "Sets the length of the vector",
             "itemtype": "method",
@@ -6337,7 +6338,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 365,
             "description": "Performs a linear interpolation between this vector and the passed vector",
             "itemtype": "method",
@@ -6362,7 +6363,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 379,
             "description": "Checks if this vector is equal to another",
             "itemtype": "method",
@@ -6382,7 +6383,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 389,
             "description": "Returns an array with the components of this vector as the elements",
             "itemtype": "method",
@@ -6395,7 +6396,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\Vector.js",
+            "file": "src/utils/Vector.js",
             "line": 398,
             "description": "Creates a new instance of Vector, with the same components as this vector",
             "itemtype": "method",
@@ -6408,7 +6409,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 12,
             "description": "Quickly rounds a number. This is about twice as fast as Math.round()",
             "itemtype": "method",
@@ -6428,7 +6429,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 22,
             "description": "Clamps a number between two values.",
             "itemtype": "method",
@@ -6458,7 +6459,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 34,
             "description": "Truncates the decimal from a number",
             "itemtype": "method",
@@ -6478,7 +6479,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 44,
             "description": "Snaps a number to a grid value.\nFor example, if you have a grid with gaps the size of 10 horizontally, and\na position of 11, it would snap to 10; a position of 18 would snap to 20",
             "itemtype": "method",
@@ -6508,7 +6509,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 63,
             "description": "Snaps a number to a grid value, using floor.\nFor example, if you have a grid with gaps the size of 10 horizontally, and\na position of 11, it would snap to 10; a position of 18 would also snap to 10",
             "itemtype": "method",
@@ -6538,7 +6539,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 82,
             "description": "Snaps a number to a grid value, using ceiling.\nFor example, if you have a grid with gaps the size of 10 horizontally, and\na position of 11, it would snap to 20; a position of 18 would also snap to 20",
             "itemtype": "method",
@@ -6568,7 +6569,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 101,
             "description": "Convert radians to degrees",
             "itemtype": "method",
@@ -6588,7 +6589,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 111,
             "description": "Convert radians to degrees",
             "itemtype": "method",
@@ -6608,7 +6609,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 121,
             "description": "Calculates the angle between two points",
             "itemtype": "method",
@@ -6633,7 +6634,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 132,
             "description": "Returns a random boolean based on the provided chance. The chance represents the\npercentage chance of returning: true.",
             "itemtype": "method",
@@ -6653,7 +6654,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 159,
             "description": "Returns a random int between min and max.",
             "itemtype": "method",
@@ -6678,7 +6679,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 170,
             "description": "Returns a random sign based on the provided chance. The chance represents the\npercentage chance of returning 1 (positive).",
             "itemtype": "method",
@@ -6698,7 +6699,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\math.js",
+            "file": "src/utils/math.js",
             "line": 181,
             "description": "Returns a random element of an array.",
             "itemtype": "method",
@@ -6728,7 +6729,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\utils.js",
+            "file": "src/utils/utils.js",
             "line": 10,
             "description": "Ensures that some input is a vector, converts strings and arrays into vector objects",
             "itemtype": "method",
@@ -6748,7 +6749,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\utils.js",
+            "file": "src/utils/utils.js",
             "line": 39,
             "description": "An empty function that performs no action",
             "itemtype": "method",
@@ -6757,7 +6758,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\utils.js",
+            "file": "src/utils/utils.js",
             "line": 45,
             "description": "Performs an ajax request, and manages the callbacks passed in",
             "itemtype": "method",
@@ -6777,7 +6778,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\utils.js",
+            "file": "src/utils/utils.js",
             "line": 103,
             "description": "Wraps XMLHttpRequest in a cross-browser way.",
             "itemtype": "method",
@@ -6790,7 +6791,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\utils\\utils.js",
+            "file": "src/utils/utils.js",
             "line": 133,
             "description": "This will take values and override the passed obj's properties with those values.\nThe difference from a normal object extend is that this will try to massage the passed\nvalue into the same type as the object's property. Also if the key for the value is not\nin the original object, it is not copied.",
             "itemtype": "method",
@@ -6818,21 +6819,21 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 1,
             "license": "GrapeFruit Game Engine\nCopyright (c) 2012, Chad Engler\n\nGrapeFruit is licensed under the MIT License.\nhttp://www.opensource.org/licenses/mit-license.php\n\nKnown Limiting Features:\n  - Canvas\n      - IE 9+\n      - FF 2+\n      - Chrome 4+\n      - Safari 3.1+\n      - Opera 9+\n\n  - WebGL\n      - IE 11+\n      - FF 4+\n      - Chrome 8+\n      - Safari 6+\n      - Opera 12+\n\n  - Object.create\n      - IE 9+\n      - FF 4+\n      - Chrome 7+\n      - Safari 5+\n      - Opera 12+",
             "class": "gf.Point",
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 31,
             "description": "The base grapefruit object",
             "class": "gf.Point",
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 85,
             "description": "The current grapefruit version",
             "itemtype": "property",
@@ -6842,7 +6843,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 93,
             "description": "The cached assets loaded by any loader",
             "itemtype": "property",
@@ -6852,7 +6853,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 108,
             "description": "The current user agent string",
             "itemtype": "property",
@@ -6862,7 +6863,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 116,
             "description": "Whether or not canvas is supported",
             "itemtype": "property",
@@ -6872,7 +6873,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 124,
             "description": "Whether or not webgl is supported",
             "itemtype": "property",
@@ -6882,7 +6883,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 132,
             "description": "Whether or not web workers are supported",
             "itemtype": "property",
@@ -6892,7 +6893,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 140,
             "description": "Whether or not Blob URLs are supported",
             "itemtype": "property",
@@ -6902,7 +6903,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 148,
             "description": "Whether or not typed arrays are supported",
             "itemtype": "property",
@@ -6912,7 +6913,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 156,
             "description": "Whether or not the filesystem API is supported",
             "itemtype": "property",
@@ -6922,7 +6923,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 164,
             "description": "Whether or not the Web Audio API is supported",
             "itemtype": "property",
@@ -6932,7 +6933,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 172,
             "description": "Whether html Audio is supported in this browser",
             "itemtype": "property",
@@ -6942,7 +6943,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 180,
             "description": "Whether or not local storage is supported",
             "itemtype": "property",
@@ -6952,7 +6953,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 188,
             "description": "Whether or not touch is supported",
             "itemtype": "property",
@@ -6962,7 +6963,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 196,
             "description": "Whether or not the gamepad API is supported",
             "itemtype": "property",
@@ -6972,7 +6973,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\core.js",
+            "file": "src/core.js",
             "line": 205,
             "description": "Inherits the prototype of a parent object.",
             "itemtype": "method",
@@ -6998,7 +6999,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\plugin.js",
+            "file": "src/plugin.js",
             "line": 11,
             "description": "Patches a core function with a new one. The function you override with has a special property\ncalled `this._super` which is a reference to the function you are overriding.",
             "itemtype": "method",
@@ -7027,7 +7028,7 @@
             "namespace": "gf"
         },
         {
-            "file": "src\\plugin.js",
+            "file": "src/plugin.js",
             "line": 54,
             "description": "Registers a plugin into the gf namespace.",
             "itemtype": "method",
@@ -7054,23 +7055,23 @@
     "warnings": [
         {
             "message": "unknown tag: license",
-            "line": " src\\core.js:1"
+            "line": " src/core.js:1"
         },
         {
             "message": "Missing item type\nInherited Methods",
-            "line": " src\\display\\DisplayObjectContainer.js:93"
+            "line": " src/display/DisplayObjectContainer.js:93"
         },
         {
             "message": "Missing item type\ninput object",
-            "line": " src\\input\\Input.js:1"
+            "line": " src/input/Input.js:1"
         },
         {
             "message": "Missing item type",
-            "line": " src\\core.js:1"
+            "line": " src/core.js:1"
         },
         {
             "message": "Missing item type\nThe base grapefruit object",
-            "line": " src\\core.js:31"
+            "line": " src/core.js:31"
         }
     ]
 }
