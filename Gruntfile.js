@@ -64,7 +64,7 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/utils/math.js',
         '<%= dirs.src %>/utils/Clock.js',
         '<%= dirs.src %>/utils/Vector.js',
-        '<%= dirs.src %>/utils/Emitter.js'
+        '<%= dirs.src %>/utils/EventEmitter.js'
     ],
     vendorFiles = [
         '<%= dirs.vendor %>/es5-shim.min.js',
