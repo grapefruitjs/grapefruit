@@ -39,7 +39,7 @@ gf.PhysicsSystem = function(options) {
 gf.inherits(gf.PhysicsSystem, Object, {
     _createBody: function(spr) {
         return this.space.addBody(new cp.Body(
-            spr.mass,
+            spr.mass || 1,
             Infinity //cp.momsprForBox(spr.mass, spr.width, spr.height)
         ));
     },

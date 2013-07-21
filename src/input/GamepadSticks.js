@@ -19,7 +19,7 @@ gf.input.getGpAxisName = function(i) {
     }
 
     return '';
-}
+};
 /**
  * Controls gamepad stick input
  *

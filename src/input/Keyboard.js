@@ -138,7 +138,7 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
      * @private
      */
     onKeyDown: function(e, override) {
-        if(e.target === this.view)
+        //if(e.target === this.view.parentElement)
             return this.modifyKey(e, override || e.keyCode || e.which, true);
     },
     /**
@@ -150,7 +150,7 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
      * @private
      */
     onKeyUp: function(e, override) {
-        if(e.target === this.view)
+        //if(e.target === this.view.parentElement)
             return this.modifyKey(e, override || e.keyCode || e.which, false);
     },
     /**
