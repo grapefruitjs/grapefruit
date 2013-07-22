@@ -111,9 +111,9 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
      */
     gotoAndPlay: function(anim, frame) {
         if(typeof anim === 'number') {
-            this.currenFrame = anim;
+            this.currentFrame = anim;
         } else {
-            this.currenFrame = frame || 0;
+            this.currentFrame = frame || 0;
             this.currentAnimation = anim;
         }
 
