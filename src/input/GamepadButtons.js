@@ -65,7 +65,7 @@ gf.input.getGpButtonName = function(i) {
     for(var bt in gf.input.GP_BUTTON) {
         this.buttons[bt] = {
             code: bt,
-            pressed: false,
+            down: false,
             value: 0
         };
     }
@@ -80,14 +80,14 @@ gf.inherits(gf.input.GamepadButtons, gf.input.Input, {
      */
     pollStatus: function(pad) {
         for(var b = 0, bl = pad.buttons.length; b < bl; ++b) {
-            var pressed = (pad.buttons[b] > this.threshold),
+            var down = (pad.buttons[b] > this.threshold),
                 status = this.buttons[b];
 
             status.value = pad.buttons[b];
 
-            //pressed state changed
-            if(status.pressed !== pressed) {
-                status.pressed = pressed;
+            //down state changed
+            if(status.down !== down) {
+                status.down = down;
 
                 this.emit(b, status);
             }

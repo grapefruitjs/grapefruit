@@ -165,6 +165,7 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
     modifyKey: function(e, key, down) {
         //emit single key event
         this.emit(key, {
+            input: this,
             originalEvent: e,
             down: down
         });
@@ -175,10 +176,14 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
             this.sequence.push(key);
 
             //process current sequence
-            this.emit(this.sequence.toString(), {
-                originalEvent: e,
-                down: down
-            });
+            var s = this.sequence.toString();
+            if(s !== key.toString()) {
+                this.emit(s, {
+                    input: this,
+                    originalEvent: e,
+                    down: down
+                });
+            }
 
             //set timeout to clear sequence
             clearTimeout(this._clearSq);
