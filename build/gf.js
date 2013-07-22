@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-07-02
+ * Compiled: 2013-07-22
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -15240,6 +15240,7 @@ SimpleMotor.prototype.getImpulse = function()
 
 })();
 
+!function(e){if(typeof module==="object"&&module.exports===e)e=module.exports=O;e.SEMVER_SPEC_VERSION="2.0.0";var r=e.re=[];var t=e.src=[];var n=0;var i=n++;t[i]="0|[1-9]\\d*";var s=n++;t[s]="[0-9]+";var o=n++;t[o]="\\d*[a-zA-Z-][a-zA-Z0-9-]*";var a=n++;t[a]="("+t[i]+")\\."+"("+t[i]+")\\."+"("+t[i]+")";var u=n++;t[u]="("+t[s]+")\\."+"("+t[s]+")\\."+"("+t[s]+")";var f=n++;t[f]="(?:"+t[i]+"|"+t[o]+")";var c=n++;t[c]="(?:"+t[s]+"|"+t[o]+")";var l=n++;t[l]="(?:-("+t[f]+"(?:\\."+t[f]+")*))";var p=n++;t[p]="(?:-?("+t[c]+"(?:\\."+t[c]+")*))";var h=n++;t[h]="[0-9A-Za-z-]+";var v=n++;t[v]="(?:\\+("+t[h]+"(?:\\."+t[h]+")*))";var m=n++;var g="v?"+t[a]+t[l]+"?"+t[v]+"?";t[m]="^"+g+"$";var d="[v=\\s]*"+t[u]+t[p]+"?"+t[v]+"?";var w=n++;t[w]="^"+d+"$";var y=n++;t[y]="((?:<|>)?=?)";var $=n++;t[$]=t[s]+"|x|X|\\*";var j=n++;t[j]=t[i]+"|x|X|\\*";var b=n++;t[b]="[v=\\s]*("+t[j]+")"+"(?:\\.("+t[j]+")"+"(?:\\.("+t[j]+")"+"(?:("+t[l]+")"+")?)?)?";var S=n++;t[S]="[v=\\s]*("+t[$]+")"+"(?:\\.("+t[$]+")"+"(?:\\.("+t[$]+")"+"(?:("+t[p]+")"+")?)?)?";var E=n++;t[E]="^"+t[y]+"\\s*"+t[b]+"$";var k=n++;t[k]="^"+t[y]+"\\s*"+t[S]+"$";var x=n++;t[x]="(?:~>?)";var R=n++;t[R]=t[x]+"s+";var V="$1";var I=n++;t[I]="^"+t[x]+t[b]+"$";var C=n++;t[C]="^"+t[x]+t[S]+"$";var A=n++;t[A]="^"+t[y]+"\\s*("+d+")$|^$";var T=n++;t[T]="^"+t[y]+"\\s*("+g+")$|^$";var z=n++;t[z]=t[y]+"\\s*("+d+"|"+t[b]+")";r[z]=new RegExp(t[z],"g");var M="$1$2 ";var P=n++;t[P]="^\\s*("+t[b]+")"+"\\s+-\\s+"+"("+t[b]+")"+"\\s*$";var Z=n++;t[Z]="^\\s*("+t[S]+")"+"\\s+-\\s+"+"("+t[S]+")"+"\\s*$";var q=n++;t[q]="(<|>)?=?\\s*\\*";for(var L=0;L<n;L++){if(!r[L])r[L]=new RegExp(t[L])}e.parse=X;function X(e,t){var n=t?r[w]:r[m];return n.test(e)?new O(e,t):null}e.valid=_;function _(e,r){var t=X(e,r);return t?t.version:null}e.clean=N;function N(e,r){var t=X(e,r);return t?t.version:null}e.SemVer=O;function O(e,t){if(e instanceof O){if(e.loose===t)return e;else e=e.version}if(!(this instanceof O))return new O(e,t);this.loose=t;var n=e.trim().match(t?r[w]:r[m]);if(!n)throw new TypeError("Invalid Version: "+e);this.raw=e;this.major=+n[1];this.minor=+n[2];this.patch=+n[3];if(!n[4])this.prerelease=[];else this.prerelease=n[4].split(".").map(function(e){return/^[0-9]+$/.test(e)?+e:e});this.build=n[5]?n[5].split("."):[];this.format()}O.prototype.format=function(){this.version=this.major+"."+this.minor+"."+this.patch;if(this.prerelease.length)this.version+="-"+this.prerelease.join(".");return this.version};O.prototype.inspect=function(){return'<SemVer "'+this+'">'};O.prototype.toString=function(){return this.version};O.prototype.compare=function(e){if(!(e instanceof O))e=new O(e,this.loose);return this.compareMain(e)||this.comparePre(e)};O.prototype.compareMain=function(e){if(!(e instanceof O))e=new O(e,this.loose);return F(this.major,e.major)||F(this.minor,e.minor)||F(this.patch,e.patch)};O.prototype.comparePre=function(e){if(!(e instanceof O))e=new O(e,this.loose);if(this.prerelease.length&&!e.prerelease.length)return-1;else if(!this.prerelease.length&&e.prerelease.length)return 1;else if(!this.prerelease.lenth&&!e.prerelease.length)return 0;var r=0;do{var t=this.prerelease[r];var n=e.prerelease[r];if(t===undefined&&n===undefined)return 0;else if(n===undefined)return 1;else if(t===undefined)return-1;else if(t===n)continue;else return F(t,n)}while(++r)};O.prototype.inc=function(e){switch(e){case"major":this.major++;this.minor=-1;case"minor":this.minor++;this.patch=-1;case"patch":this.patch++;this.prerelease=[];break;case"prerelease":if(this.prerelease.length===0)this.prerelease=[0];else{var r=this.prerelease.length;while(--r>=0){if(typeof this.prerelease[r]==="number"){this.prerelease[r]++;r=-2}}if(r===-1)this.prerelease.push(0)}break;default:throw new Error("invalid increment argument: "+e)}this.format();return this};e.inc=B;function B(e,r,t){try{return new O(e,t).inc(r).version}catch(n){return null}}e.compareIdentifiers=F;var D=/^[0-9]+$/;function F(e,r){var t=D.test(e);var n=D.test(r);if(t&&n){e=+e;r=+r}return t&&!n?-1:n&&!t?1:e<r?-1:e>r?1:0}e.rcompareIdentifiers=G;function G(e,r){return F(r,e)}e.compare=H;function H(e,r,t){return new O(e,t).compare(r)}e.compareLoose=J;function J(e,r){return H(e,r,true)}e.rcompare=K;function K(e,r,t){return H(r,e,t)}e.sort=Q;function Q(r,t){return r.sort(function(r,n){return e.compare(r,n,t)})}e.rsort=U;function U(r,t){return r.sort(function(r,n){return e.rcompare(r,n,t)})}e.gt=W;function W(e,r,t){return H(e,r,t)>0}e.lt=Y;function Y(e,r,t){return H(e,r,t)<0}e.eq=er;function er(e,r,t){return H(e,r,t)===0}e.neq=rr;function rr(e,r,t){return H(e,r,t)!==0}e.gte=tr;function tr(e,r,t){return H(e,r,t)>=0}e.lte=nr;function nr(e,r,t){return H(e,r,t)<=0}e.cmp=ir;function ir(e,r,t,n){var i;switch(r){case"===":i=e===t;break;case"!==":i=e!==t;break;case"":case"=":case"==":i=er(e,t,n);break;case"!=":i=rr(e,t,n);break;case">":i=W(e,t,n);break;case">=":i=tr(e,t,n);break;case"<":i=Y(e,t,n);break;case"<=":i=nr(e,t,n);break;default:throw new TypeError("Invalid operator: "+r)}return i}e.Comparator=sr;function sr(e,r){if(e instanceof sr){if(e.loose===r)return e;else e=e.value}if(!(this instanceof sr))return new sr(e,r);this.loose=r;this.parse(e);if(this.semver===or)this.value="";else this.value=this.operator+this.semver.version}var or={};sr.prototype.parse=function(e){var t=this.loose?r[A]:r[T];var n=e.match(t);if(!n)throw new TypeError("Invalid comparator: "+e);this.operator=n[1];if(!n[2])this.semver=or;else{this.semver=new O(n[2],this.loose);if(this.operator==="<"&&!this.semver.prerelease.length){this.semver.prerelease=["0"];this.semver.format()}}};sr.prototype.inspect=function(){return'<SemVer Comparator "'+this+'">'};sr.prototype.toString=function(){return this.value};sr.prototype.test=function(e){return this.semver===or?true:ir(e,this.operator,this.semver,this.loose)};e.Range=ar;function ar(e,r){if(e instanceof ar&&e.loose===r)return e;if(!(this instanceof ar))return new ar(e,r);this.loose=r;this.raw=e;this.set=e.split(/\s*\|\|\s*/).map(function(e){return this.parseRange(e.trim())},this).filter(function(e){return e.length});if(!this.set.length){throw new TypeError("Invalid SemVer Range: "+e)}this.format()}ar.prototype.inspect=function(){return'<SemVer Range "'+this.range+'">'};ar.prototype.format=function(){this.range=this.set.map(function(e){return e.join(" ").trim()}).join("||").trim();return this.range};ar.prototype.toString=function(){return this.range};ar.prototype.parseRange=function(e){var t=this.loose;e=e.trim();var n=t?r[Z]:r[P];e=e.replace(n,gr);e=e.replace(r[z],M);e=e.replace(r[R],V);e=e.split(/\s+/).join(" ");var i=t?r[A]:r[T];var s=e.split(" ").map(function(e){return fr(e,t)}).join(" ").split(/\s+/);if(this.loose){s=s.filter(function(e){return!!e.match(i)})}s=s.map(function(e){return new sr(e,t)});return s};e.toComparators=ur;function ur(e,r){return new ar(e,r).set.map(function(e){return e.map(function(e){return e.value}).join(" ").trim().split(" ")})}function fr(e,r){e=lr(e,r);e=hr(e,r);e=mr(e,r);return e}function cr(e){return!e||e.toLowerCase()==="x"||e==="*"}function lr(e,r){return e.trim().split(/\s+/).map(function(e){return pr(e,r)}).join(" ")}function pr(e,t){var n=t?r[C]:r[I];return e.replace(n,function(e,r,t,n,i){var s;if(cr(r))s="";else if(cr(t))s=">="+r+".0.0-0 <"+(+r+1)+".0.0-0";else if(cr(n))s=">="+r+"."+t+".0-0 <"+r+"."+(+t+1)+".0-0";else if(i){if(i.charAt(0)!=="-")i="-"+i;s=">="+r+"."+t+"."+n+i+" <"+r+"."+(+t+1)+".0-0"}else s=">="+r+"."+t+"."+n+"-0"+" <"+r+"."+(+t+1)+".0-0";return s})}function hr(e,r){return e.split(/\s+/).map(function(e){return vr(e,r)}).join(" ")}function vr(e,t){e=e.trim();var n=t?r[k]:r[E];return e.replace(n,function(e,r,t,n,i,s){var o=cr(t);var a=o||cr(n);var u=a||cr(i);var f=u;if(r==="="&&f)r="";if(r&&f){if(o)t=0;if(a)n=0;if(u)i=0;if(r===">"){r=">=";if(o){}else if(a){t=+t+1;n=0;i=0}else if(u){n=+n+1;i=0}}e=r+t+"."+n+"."+i+"-0"}else if(o){e="*"}else if(a){e=">="+t+".0.0-0 <"+(+t+1)+".0.0-0"}else if(u){e=">="+t+"."+n+".0-0 <"+t+"."+(+n+1)+".0-0"}return e})}function mr(e,t){return e.trim().replace(r[q],"")}function gr(e,r,t,n,i,s,o,a,u,f,c,l,p){if(cr(t))r="";else if(cr(n))r=">="+t+".0.0-0";else if(cr(i))r=">="+t+"."+n+".0-0";else r=">="+r;if(cr(u))a="";else if(cr(f))a="<"+(+u+1)+".0.0-0";else if(cr(c))a="<"+u+"."+(+f+1)+".0-0";else if(l)a="<="+u+"."+f+"."+c+"-"+l;else a="<="+a;return(r+" "+a).trim()}ar.prototype.test=function(e){if(!e)return false;for(var r=0;r<this.set.length;r++){if(dr(this.set[r],e))return true}return false};function dr(e,r){for(var t=0;t<e.length;t++){if(!e[t].test(r))return false}return true}e.satisfies=wr;function wr(e,r,t){try{r=new ar(r,t)}catch(n){return false}return r.test(e)}e.maxSatisfying=yr;function yr(e,r,t){return e.filter(function(e){return wr(e,r,t)}).sort(H)[0]||null}e.validRange=$r;function $r(e,r){try{return new ar(e,r).range||"*"}catch(t){return null}}if(typeof define==="function"&&define.amd)define(e)}(typeof exports==="object"?exports:typeof define==="function"&&define.amd?{}:semver={});
 /**
 * @license GrapeFruit Game Engine
 * Copyright (c) 2012, Chad Engler
@@ -15277,44 +15278,50 @@ SimpleMotor.prototype.getImpulse = function()
 window.gf = window.gf || {};
 
 /**
- * Point object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Point.html">PIXI.Point</a>
+ * Point object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Point.html">PIXI.Point</a>
  *
  * @class Point
+ * @namespace gf
  */
 gf.Point = PIXI.Point;
 
 /**
- * Rectangle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html">PIXI.Rectangle</a>
+ * Rectangle object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Rectangle.html">PIXI.Rectangle</a>
  *
  * @class Rectangle
+ * @namespace gf
  */
 gf.Rectangle = PIXI.Rectangle;
 
 /**
- * Circle object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Circle.html">PIXI.Circle</a>
+ * Circle object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Circle.html">PIXI.Circle</a>
  *
  * @class Circle
+ * @namespace gf
  */
 gf.Circle = PIXI.Circle;
 
 /**
- * Ellipse object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html">PIXI.Ellipse</a>
+ * Ellipse object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html">PIXI.Ellipse</a>
  *
  * @class Ellipse
+ * @namespace gf
  */
 gf.Ellipse = PIXI.Ellipse;
 
 /**
- * Polygon object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Polygon.html">PIXI.Polygon</a>
+ * Polygon object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Polygon.html">PIXI.Polygon</a>
  *
  * @class Polygon
+ * @namespace gf
  */
 gf.Polygon = PIXI.Polygon;
 
 /**
- * Texture object, please see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
+ * Texture object, please see <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
  *
  * @class Texture
+ * @namespace gf
  */
 gf.Texture = PIXI.Texture;
 
@@ -15338,6 +15345,7 @@ gf.assetCache = {};
  * Feature detection so we cans witch between renderers, play audio correctly, and other things.
  *
  * @class support
+ * @namespace gf
  */
 gf.support = {
     /**
@@ -15354,7 +15362,7 @@ gf.support = {
      * @property canvas
      * @type Boolean
      */
-    canvas: !!window.CanvasRenderingContext2D,
+    canvas: (function () { try { return !!window.CanvasRenderingContext2D && !!document.createElement('canvas').getContext('2d'); } catch(e) { return false; } })(),
 
     /**
      * Whether or not webgl is supported
@@ -15397,12 +15405,12 @@ gf.support = {
     fileapi: !!window.File && !!window.FileReader && !!window.FileList && !!window.Blob,
 
     /**
-     * Whether or not tje Web Audio API is supported
+     * Whether or not the Web Audio API is supported
      *
      * @property webAudio
      * @type Boolean
      */
-    webAudio: !!window.AudioContext || !!window.webkitAudioContext,
+    webAudio: !!window.AudioContext || !!window.webkitAudioContext || !!window.mozAudioContext,
 
     /**
      * Whether html Audio is supported in this browser
@@ -15439,23 +15447,33 @@ gf.support = {
 
 /**
  * Inherits the prototype of a parent object.
- * from: https://github.com/isaacs/inherits/blob/master/inherits.js
  *
  * @method inherits
- * @param child {Object} The Child to inherit the prototype
- * @param parent {Object} The Parent to inherit from
- * @param proto {Object} The prototype
+ * @param child {Function} The Child to inherit the prototype
+ * @param parent {Function} The Parent to inherit from
+ * @param proto {Object} The prototype to apply to the child
  */
-gf.inherits = function(c, p, proto) {
-  proto = proto || {};
-  var e = {};
-  [c.prototype, proto].forEach(function (s) {
-    Object.getOwnPropertyNames(s).forEach(function (k) {
-      e[k] = Object.getOwnPropertyDescriptor(s, k);
+gf.inherits = function(child, parent, proto) {
+    proto = proto || {};
+
+    //get the property descriptors from the child proto and the passed proto
+    var desc = {};
+    [child.prototype, proto].forEach(function (s) {
+        Object.getOwnPropertyNames(s).forEach(function (k) {
+            desc[k] = Object.getOwnPropertyDescriptor(s, k);
+        });
     });
-  });
-  c.prototype = Object.create(p.prototype, e);
-  c['super'] = p;
+
+    //set the constructor descriptor
+    desc.constructor = {
+        value: child,
+        enumerable: false,
+        writable: true,
+        configurable: true
+    };
+
+    //create the prototype
+    child.prototype = Object.create(parent.prototype, desc);
 };
 
 //Great ideas taken from: https://github.com/obiot/melonJS/blob/master/src/plugin/plugin.js
@@ -15464,6 +15482,8 @@ gf.inherits = function(c, p, proto) {
  * core functions, and registering plugins.
  *
  * @class plugin
+ * @extends Object
+ * @namespace gf
  */
 gf.plugin = {
     /**
@@ -15535,15 +15555,18 @@ gf.plugin = {
     }
 };
 
+//you can only have 1 audio context on a page, so we store one for use in each manager
 gf.__AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
 gf.__audioctx = gf.support.webAudio ? new gf.__AudioCtx() : null;
 
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
  * The GF Audio API was based on
- * <a href="https://github.com/goldfire/howler.js">Howler.js</a>
+ * <a target="_blank" href="https://github.com/goldfire/howler.js">Howler.js</a>
  *
  * @class AudioManager
+ * @extends Object
+ * @namespace gf
  * @constructor
  */
 gf.AudioManager = function() {
@@ -15566,6 +15589,18 @@ gf.AudioManager = function() {
      * @private
      */
     this._volume = 1;
+
+    /**
+     * The master volume of all the audio playing
+     *
+     * @property volume
+     * @type Number
+     * @default 1
+     */
+    Object.defineProperty(this, 'volume', {
+        get: this.getVolume.bind(this),
+        set: this.setVolume.bind(this)
+    });
 
     /**
      * The Web Audio API context if we are using it
@@ -15607,25 +15642,30 @@ gf.AudioManager = function() {
 
     //if we are using web audio, we need a master gain node
     if(gf.support.webAudio) {
-        this.masterGain = this.ctx.createGain ? this.ctx.createGainNode() : this.ctx.createGain();
+        this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
         this.masterGain.gain.value = 1;
         this.masterGain.connect(this.ctx.destination);
     }
 
     //map of elements to play audio with
     this.sounds = {};
-
-    //define volume getter/setter
-    Object.defineProperty(this, 'volume', {
-        get: this.getVolume.bind(this),
-        set: this.setVolume.bind(this)
-    });
 };
 
 gf.inherits(gf.AudioManager, Object, {
+    /**
+     * Returns the current master volume
+     *
+     * @method getVolume
+     */
     getVolume: function() {
         return this._volume;
     },
+    /**
+     * Sets the current master volume
+     *
+     * @method setVolume
+     * @param value {Number}
+     */
     setVolume: function(v) {
         v = parseFloat(v, 10);
 
@@ -15647,12 +15687,27 @@ gf.inherits(gf.AudioManager, Object, {
             }
         }
     },
+    /**
+     * Mutes all playing audio
+     *
+     * @method mute
+     */
     mute: function() {
         return this.setMuted(true);
     },
+    /**
+     * Unmutes all playing audio
+     *
+     * @method unmute
+     */
     unmute: function() {
         return this.setMuted(false);
     },
+    /**
+     * Sets whether or not this manager is muted
+     *
+     * @method setMuted
+     */
     setMuted: function(m) {
         this._muted = m = !!m;
 
@@ -15672,6 +15727,22 @@ gf.inherits(gf.AudioManager, Object, {
 
         return this;
     },
+    /**
+     * Creates a new audio player for a peice of audio
+     *
+     * @method create
+     * @param [name] {String} An name to uniquely identify this audio, if omitted one will be ranomly chosen
+     * @param settings {Object} All the settings for the audio player
+     * @param settings.urls {Array<String>} All the url possible for this audio (so we can choose the one this browser supports)
+     * @param [settings.volume] {Number} The volume of this audio clip
+     * @param [settings.autoplay] {Boolean} Automatically start playing after loaded
+     * @param [settings.loop] {Boolean} Replay the audio when it finishes
+     * @param [settings.sprite] {Object} A map of string names -> [start, duration] arrays. You can use it to put multiple sounds in one file
+     * @param [settings.pos3d] {Array<Number>} 3D coords of where the audio should sound as if it came from (only works with WebAudio)
+     * @param [settings.buffer] {Boolean} WebAudio will load the entire file before playing, making this true forces HTML5Audio which will buffer and play
+     * @param [settings.format] {String} Force an extension override
+     * @return {AudioPlayer} Will return the new audio player, or false if we couldn't determine a compatible url
+     */
     create: function(name, settings) {
         //if we can't play audio return false
         if(!this.canPlay) {
@@ -15728,26 +15799,95 @@ gf.inherits(gf.AudioManager, Object, {
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
  * The GF Audio API was based on
- * <a href="https://github.com/goldfire/howler.js">Howler.js</a>
+ * <a target="_blank" href="https://github.com/goldfire/howler.js">Howler.js</a>
  *
  * @class AudoPlayer
- * @uses Emitter
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
  * @param settings {Object} All the settings for this player instance
  */
 gf.AudioPlayer = function(manager, settings) {
     //mixin the Event Target methods
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
-    this.autoplay = false;
-    this.buffer = false;
-    this.format = null;
-    this.loop = false;
-    this.pos3d = [0, 0, -0.5];
-    this.sprite = {};
+    /**
+     * The source of the audio, the actual URL to load up
+     *
+     * @property src
+     * @type String
+     */
     this.src = '';
-    //volume is getter/setter
+
+    /**
+     * Play the audio immediately after loading
+     *
+     * @property autoplay
+     * @type Boolean
+     * @default false
+     */
+    this.autoplay = false;
+
+    /**
+     * Buffer forces use of HTML5Audio which will buffer and play
+     * instead of loading the entire file and then playing
+     *
+     * @property buffer
+     * @type Boolean
+     * @default false
+     */
+    this.buffer = false;
+
+    /**
+     * Override the format determined from the extension with this extension
+     *
+     * @property format
+     * @type String
+     * @default null
+     */
+    this.format = null;
+
+    /**
+     * Replay the audio immediately after finishing
+     *
+     * @property loop
+     * @type Boolean
+     * @default false
+     */
+    this.loop = false;
+
+    /**
+     * A 3D position where the audio should sound like it is coming from
+     *
+     * @property pos3d
+     * @type Array<Number>
+     * @default [0, 0, -0.5]
+     */
+    this.pos3d = [0, 0, -0.5];
+
+    /**
+     * A sound sprite that maps string keys to [start, duration] arrays. These can
+     * be used to put multiple sound bits in one file, and play them separately
+     *
+     * @property sprite
+     * @type Object
+     * @default {}
+     */
+    this.sprite = {};
+
+    /**
+     * The volume of the audio player
+     *
+     * @property volume
+     * @type Number
+     * @default 1
+     */
+    Object.defineProperty(this, 'volume', {
+        get: this.getVolume.bind(this),
+        set: this.setVolume.bind(this)
+    });
 
     this._volume = 1;
     this._duration = 0;
@@ -15762,10 +15902,6 @@ gf.AudioPlayer = function(manager, settings) {
     //mixin user's settings
     gf.utils.setValues(this, settings);
 
-    //define volume getter/setter
-    this.__defineGetter__('volume', this.getVolume.bind(this));
-    this.__defineSetter__('volume', this.setVolume.bind(this));
-
     if(this._webAudio) {
         this._setupAudioNode();
     }
@@ -15775,9 +15911,12 @@ gf.AudioPlayer = function(manager, settings) {
 
 gf.inherits(gf.AudioPlayer, Object, {
     /**
-     * Load the audio file for this player
+     * Load the audio file for this player, this is called from the ctor
+     * there is no reason to call it manually.
      *
+     * @method load
      * @return {AudioPlayer}
+     * @private
      */
     load: function() {
         //if using web audio, load up the buffer
@@ -15830,8 +15969,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Play a sound from the current time (0 by default).
      *
-     * @param sprite {String} (optional) Plays from the specified position in the sound sprite definition.
-     * @param callback {Function} (optional) Returns the unique playback id for this sound instance.
+     * @method play
+     * @param [sprite] {String} Plays from the specified position in the sound sprite definition.
+     * @param [callback] {Function} Returns the unique playback id for this sound instance.
      * @return {AudioPlayer}
      */
     play: function(sprite, cb) {
@@ -15967,8 +16107,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Pause playback and save the current position.
      *
-     * @param id {String} (optional) The play instance ID.
-     * @param timerId {String} (optional) Clear the correct timeout ID.
+     * @method pause
+     * @param [id] {String} The play instance ID.
+     * @param [timerId] {String} Clear the correct timeout ID.
      * @return {AudioPlayer}
      */
     pause: function(id, timerId) {
@@ -16018,8 +16159,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Stop playback and reset to start.
      *
-     * @param id {String} (optional) The play instance ID.
-     * @param timerId {String} (optional) Clear the correct timeout ID.
+     * @method stop
+     * @param [id] {String} The play instance ID.
+     * @param [timerId] {String} Clear the correct timeout ID.
      * @return {AudioPlayer}
      */
     stop: function(id, timerId) {
@@ -16063,7 +16205,8 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Mute this sound.
      *
-     * @param id {String} (optional) The play instance ID.
+     * @method mute
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     mute: function(id) {
@@ -16072,7 +16215,8 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Unmute this sound.
      *
-     * @param id {String} (optional) The play instance ID.
+     * @method unmute
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     unmute: function(id) {
@@ -16081,7 +16225,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Set the muted state of this sound.
      *
-     * @param id {String} (optional) The play instance ID.
+     * @method setMuted
+     * @param muted {Boolean}
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     setMuted: function(muted, id) {
@@ -16110,8 +16256,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Set the position of playback.
      *
+     * @method seek
      * @param pos {Number} The position to move current playback to.
-     * @param id {String} (optional) The play instance ID.
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     seek: function(pos, id) {
@@ -16145,7 +16292,8 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Get the position of playback.
      *
-     * @param id {String} (optional) The play instance ID.
+     * @method getPosition
+     * @param [id] {String} The play instance ID.
      * @return {Number}
      */
     getPosition: function(id) {
@@ -16174,11 +16322,12 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Fade a currently playing sound between two volumes.
      *
+     * @method fade
      * @param from {Number} The volume to fade from (0.0 to 1.0).
      * @param to {Number} The volume to fade to (0.0 to 1.0).
      * @param len {Number} Time in milliseconds to fade.
-     * @param id {String} (optional) The play instance ID.
-     * @param callback {Function} (optional) Fired when the fade is complete.
+     * @param [id] {String} The play instance ID.
+     * @param [callback] {Function} Fired when the fade is complete.
      * @return {AudioPlayer}
      */
     fade: function(from, to, len, id, cb) {
@@ -16226,7 +16375,7 @@ gf.inherits(gf.AudioPlayer, Object, {
      *
      * @method setVolume
      * @param vol {Number} The current volume
-     * @param id {String} (optional) The play instance ID.
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     setVolume: function(vol, id) {
@@ -16268,10 +16417,11 @@ gf.inherits(gf.AudioPlayer, Object, {
      * NOTE: This only works with Web Audio API, HTML5 Audio playback
      * will not be affected.
      *
+     * @method setPosition
      * @param x {Number} The x-position of the playback from -1000.0 to 1000.0
      * @param y {Number} The y-position of the playback from -1000.0 to 1000.0
      * @param z {Number} The z-position of the playback from -1000.0 to 1000.0
-     * @param id {String} (optional) The play instance ID.
+     * @param [id] {String} The play instance ID.
      * @return {AudioPlayer}
      */
     setPosition: function(x, y, z, id) {
@@ -16303,6 +16453,12 @@ gf.inherits(gf.AudioPlayer, Object, {
 
         return this;
     },
+    /**
+     * Performs a step in the fade transition
+     *
+     * @method _doFadeStep
+     * @private
+     */
     _doFadeStep: function(vol, wait, end, id, cb) {
         var self = this;
 
@@ -16318,7 +16474,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Get an audio node by ID.
      *
+     * @method _nodeById
      * @return {AudioPlayer} Audio node.
+     * @private
      */
     _nodeById: function(id) {
         var node = this._nodes[0]; //default return value
@@ -16336,7 +16494,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     /**
      * Get the first active audio node.
      *
-     * @return {Howl} Audio node.
+     * @method _activeNode
+     * @return {AudioPlayer} Audio node.
+     * @private
      */
     _activeNode: function() {
         var node;
@@ -16358,7 +16518,9 @@ gf.inherits(gf.AudioPlayer, Object, {
      * Get the first inactive audio node.
      * If there is none, create a new one and add it to the pool.
      *
-     * @param  {Function} callback Function to call when the audio node is ready.
+     * @method _inactiveNode
+     * @param cb {Function} callback Function to call when the audio node is ready.
+     * @private
      */
     _inactiveNode: function(cb) {
         var node;
@@ -16390,6 +16552,9 @@ gf.inherits(gf.AudioPlayer, Object, {
     },
     /**
      * If there are more than 5 inactive audio nodes in the pool, clear out the rest.
+     *
+     * @method _drainPool
+     * @private
      */
     _drainPool: function() {
         var inactive = 0,
@@ -16415,7 +16580,10 @@ gf.inherits(gf.AudioPlayer, Object, {
     },
     /**
      * Clear 'onend' timeout before it ends.
-     * @param  {Number} timerId The ID of the sound to be cancelled.
+     *
+     * @method _clearEndTimer
+     * @param timerId {Number} timerId The ID of the sound to be cancelled.
+     * @private
      */
     _clearEndTimer: function(timerId) {
         var timer = this._onendTimer.indexOf(timerId);
@@ -16430,7 +16598,10 @@ gf.inherits(gf.AudioPlayer, Object, {
     },
     /**
      * Setup the gain node and panner for a Web Audio instance.
+     *
+     * @method _setupAudioNode
      * @return {Object} The new audio node.
+     * @private
      */
     _setupAudioNode: function() {
         var node = this._nodes,
@@ -16458,7 +16629,9 @@ if(gf.support.webAudio) {
     /**
      * Buffer a sound from URL (or from cache) and decode to audio source (Web Audio API).
      *
+     * @method loadBuffer
      * @param url {String} The path to the sound file.
+     * @private
      */
     gf.AudioPlayer.prototype.loadBuffer = function(url) {
         //load from cache
@@ -16498,7 +16671,9 @@ if(gf.support.webAudio) {
     /**
      * Finishes loading the Web Audio API sound and fires the loaded event
      *
+     * @method loadSound
      * @param buffer {Object} The decoded buffer sound source.
+     * @private
      */
     gf.AudioPlayer.prototype.loadSound = function(buffer) {
         this._duration = buffer ? buffer.duration : this._duration;
@@ -16525,8 +16700,10 @@ if(gf.support.webAudio) {
     /**
      * Load the sound back into the buffer source.
      *
-     * @param  {Array}  loop  Loop boolean, pos, and duration.
-     * @param  {String} id    (optional) The play instance ID.
+     * @method refreshBuffer
+     * @param loop {Array} Loop boolean, pos, and duration.
+     * @param [id] {String} The play instance ID.
+     * @private
      */
     gf.AudioPlayer.prototype.refreshBuffer = function(loop, id) {
         var node = this._nodeById(id);
@@ -16547,7 +16724,8 @@ if(gf.support.webAudio) {
  * The base display object, that anything being put on the screen inherits from
  *
  * @class DisplayObjectContainer
- * @extends PIXI.DisplayObjectContainer
+ * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a>
+ * @namespace gf
  * @constructor
  */
 gf.DisplayObjectContainer = function(settings) {
@@ -16563,127 +16741,75 @@ gf.DisplayObjectContainer = function(settings) {
     /**
      * [read-only] The of children of this object.
      * @property children {Array}
+     * @readOnly
      */
 
     /**
      * The coordinate of the object relative to the local coordinates of the parent.
+     *
      * @property position
      * @type Point
      */
 
     /**
      * The scale factor of the object.
+     *
      * @property scale
      * @type Point
      */
 
     /**
      * The rotation of the object in radians.
+     *
      * @property rotation
      * @type Number
      */
 
     /**
      * The opacity of the object.
+     *
      * @property alpha
      * @type Number
      */
 
     /**
      * The visibility of the object.
+     *
      * @property visible
      * @type Boolean
      */
 
     /**
      * [read-only] The display object that contains this display object.
+     *
      * @property parent
      * @type DisplayObject
+     * @readOnly
      */
 
     /**
      * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
+     *
      * @property stage
      * @type Stage
+     * @readOnly
      */
 
     /**
      * This is the defined area that will pick up mouse / touch events. It is null by default.
-     * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
+     * Setting it is a neat way of optimising the hitTest function that the interactionManager
+     * will use (as it will not need to hit test all the children)
+     *
      * @property hitArea
-     * @type Rectangle
-     */
-
-    /*
-     * MOUSE Callbacks
+     * @type Rectangle|Polygon|Circle|Ellipse
      */
 
     /**
-     * A callback that is used when the users clicks on the displayObject with their mouse
-     * @method click
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user clicks the mouse down over the sprite
-     * @method mousedown
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user releases the mouse that was over the displayObject
-     * for this callback to be fired the mouse must have been pressed down over the displayObject
-     * @method mouseup
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject
-     * for this callback to be fired, The touch must have started over the displayObject
-     * @method mouseupoutside
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the users mouse rolls over the displayObject
-     * @method mouseover
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the users mouse leaves the displayObject
-     * @method mouseout
-     * @param interactionData {InteractionData}
-     */
-
-    /*
-     * TOUCH Callbacks
-     */
-
-    /**
-     * A callback that is used when the users taps on the sprite with their finger
-     * basically a touch version of click
-     * @method tap
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user touch's over the displayObject
-     * @method touchstart
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user releases a touch over the displayObject
-     * @method touchend
-     * @param interactionData {InteractionData}
-     */
-
-    /**
-     * A callback that is used when the user releases the touch that was over the displayObject
-     * for this callback to be fired, The touch must have started over the sprite
-     * @method touchendoutside
-     * @param interactionData {InteractionData}
+     * Wether or not the object will handle mouse events
+     *
+     * @property interactive
+     * @type Boolean
+     * @default false
      */
 
     /**
@@ -16691,19 +16817,15 @@ gf.DisplayObjectContainer = function(settings) {
      */
 
     /**
-     * Indicates if the sprite will have touch and mouse interactivity. It is false by default
-     * @method setInteractive
-     * @param interactive {Boolean}
-     */
-
-    /**
      * Adds a child to the object.
+     *
      * @method addChild
      * @param child {DisplayObject}
      */
 
     /**
      * Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown
+     *
      * @method addChildAt
      * @param child {DisplayObject}
      * @param index {Number}
@@ -16711,6 +16833,7 @@ gf.DisplayObjectContainer = function(settings) {
 
     /**
      * Removes a child from the object.
+     *
      * @method removeChild
      * @param child {DisplayObject}
      */
@@ -16770,22 +16893,117 @@ gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
         return this;
     }
 });
+
+//Add event echos
+['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
+    gf.DisplayObjectContainer.prototype[evtname] = function(e) {
+        this.emit(evtname, e);
+    };
+});
+
+/*
+ * MOUSE Callbacks
+ */
+
+/**
+ * A callback that is used when the users clicks on the displayObject with their mouse
+ *
+ * @event click
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user clicks the mouse down over the displayObject
+ *
+ * @event mousedown
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the mouse that was over the displayObject
+ * for this callback to be fired the mouse must have been pressed down over the displayObject
+ *
+ * @event mouseup
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject
+ * for this callback to be fired, The touch must have started over the displayObject
+ *
+ * @event mouseupoutside
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the users mouse rolls over the displayObject
+ *
+ * @event mouseover
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the users mouse leaves the displayObject
+ *
+ * @event mouseout
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user moves the mouse while over the displayObject
+ *
+ * @event mousemove
+ * @param interactionData {InteractionData}
+ */
+
+/*
+ * TOUCH Callbacks
+ */
+
+/**
+ * A callback that is used when the users taps on the displayObject with their finger
+ * basically a touch version of click
+ *
+ * @event tap
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user touch's over the displayObject
+ *
+ * @event touchstart
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases a touch over the displayObject
+ *
+ * @event touchend
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the touch that was over the displayObject
+ * for this callback to be fired, The touch must have started over the displayObject
+ *
+ * @event touchendoutside
+ * @param interactionData {InteractionData}
+ */
 /**
  * The base Sprite class. This class is the base for all images on the screen
  *
  * @class Sprite
- * @extends PIXI.Sprite
- * @uses Emitter
+ * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html">PIXI.Sprite</a>
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
- * @param pos {Array|Vector|Point|Number} The starting position of the sprite
- * @param settings {Object} Settings to override the defauls
  * @example
- *      var spr = new gf.Sprite(texture, [10, 1], { name: 'MySprite' });
+ *      var spr = new gf.Sprite(texture);
  */
 gf.Sprite = function(tx) {
     PIXI.Sprite.call(this, tx);
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
     /**
      * The type of the sprite
@@ -16806,11 +17024,12 @@ gf.Sprite = function(tx) {
     this.alive = true;
 
     /**
-     * The mass of this sprite (if using physics)
+     * The mass of this sprite (if using physics), please use setMass to set this value
      *
      * @property mass
      * @type Number
      * @default 0
+     * @readOnly
      */
     this.mass = 0;
 
@@ -16828,6 +17047,12 @@ gf.Sprite = function(tx) {
 };
 
 gf.inherits(gf.Sprite, PIXI.Sprite, {
+    /**
+     * Enables physics for this sprite
+     *
+     * @method enablePhysics
+     * @param system {PhysicsSystem} The system for the sprite to be in
+     */
     enablePhysics: function(sys) {
         if(sys && this.physics !== sys) {
             if(this.physics)
@@ -16838,21 +17063,44 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
 
         this.physics.add(this);
     },
+    /**
+     * Disbales physics for this sprite
+     *
+     * @method disablePhysics
+     */
     disablePhysics: function() {
         if(this.physics) {
             this.physics.remove(this);
         }
     },
+    /**
+     * Sets the mass of this sprite
+     *
+     * @method setMass
+     * @param mass {Number} The new mass of the object
+     */
     setMass: function(mass) {
         if(this.physics) {
             this.physics.setMass(this, mass);
         }
     },
+    /**
+     * Sets the velocity of this sprite
+     *
+     * @method setVelocity
+     * @param velocity {Vector} The new velocity of the object
+     */
     setVelocity: function(vel) {
         if(this.physics) {
             this.physics.setVelocity(this, gf.utils.ensureVector(vel));
         }
     },
+    /**
+     * Sets the rotation of this sprite
+     *
+     * @method setRotation
+     * @param rotation {Number} The new rotation of the object in radians
+     */
     setRotation: function(rads, skipPhysics) {
         this.rotation = rads;
 
@@ -16860,6 +17108,13 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
             this.physics.setRotation(this, rads);
         }
     },
+    /**
+     * Sets the position of this sprite
+     *
+     * @method setPosition
+     * @param x {Number}
+     * @param y {Number}
+     */
     setPosition: function(x, y, skipPhysics) {
         this.position.x = x;
         this.position.y = y;
@@ -16868,6 +17123,11 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
             this.physics.setPosition(this, this.position);
         }
     },
+    /**
+     * Removes this sprite from the stage and the physics system
+     *
+     * @method destroy
+     */
     destroy: function() {
         if(this.parent)
             this.parent.removeChild(this);
@@ -16879,8 +17139,9 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
     /**
      * On Collision Event
      *      called when this sprite collides into another, or is being collided into by another.
-     *      By default if something collides with a collectable sprite we remove the collectable
-     *      and if we collide with a solid tile we kill our velocity
+     *      By default if something collides with a collectable sprite we destroy the collectable
+     *      and if we collide with a solid tile we kill our velocity. This method will emit a
+     *      'collision' event that you can listen for
      *
      * @method onCollision
      * @param obj {Sprite} Colliding sprite
@@ -16898,6 +17159,7 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
  *
  * @property TYPE
  * @type Object
+ * @static
  */
 gf.Sprite.TYPE = {
     PLAYER: 'player',
@@ -16909,7 +17171,7 @@ gf.Sprite.TYPE = {
 };
 
 //Add event echos
-['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'tap', 'touchstart', 'touchend', 'touchendoutside', 'mousemove'].forEach(function(evtname) {
+['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
     gf.Sprite.prototype[evtname] = function(e) {
         this.emit(evtname, e);
     };
@@ -16921,12 +17183,14 @@ gf.Sprite.TYPE = {
 
 /**
  * A callback that is used when the users clicks on the sprite with their mouse
+ *
  * @event click
  * @param interactionData {InteractionData}
  */
 
 /**
  * A callback that is used when the user clicks the mouse down over the sprite
+ *
  * @event mousedown
  * @param interactionData {InteractionData}
  */
@@ -16934,6 +17198,7 @@ gf.Sprite.TYPE = {
 /**
  * A callback that is used when the user releases the mouse that was over the sprite
  * for this callback to be fired the mouse must have been pressed down over the sprite
+ *
  * @event mouseup
  * @param interactionData {InteractionData}
  */
@@ -16941,28 +17206,31 @@ gf.Sprite.TYPE = {
 /**
  * A callback that is used when the user releases the mouse that was over the sprite but is no longer over the sprite
  * for this callback to be fired, The touch must have started over the sprite
+ *
  * @event mouseupoutside
  * @param interactionData {InteractionData}
  */
 
 /**
  * A callback that is used when the users mouse rolls over the sprite
+ *
  * @event mouseover
  * @param interactionData {InteractionData}
  */
 
 /**
  * A callback that is used when the users mouse leaves the sprite
+ *
  * @event mouseout
  * @param interactionData {InteractionData}
  */
 
 /**
  * A callback that is used when the user moves the mouse while over the sprite
+ *
  * @event mousemove
  * @param interactionData {InteractionData}
  */
-
 
 /*
  * TOUCH Callbacks
@@ -16971,40 +17239,46 @@ gf.Sprite.TYPE = {
 /**
  * A callback that is used when the users taps on the sprite with their finger
  * basically a touch version of click
+ *
  * @event tap
  * @param interactionData {InteractionData}
  */
 
 /**
- * A callback that is used when the user touch's over the displayObject
+ * A callback that is used when the user touch's over the sprite
+ *
  * @event touchstart
  * @param interactionData {InteractionData}
  */
 
 /**
- * A callback that is used when the user releases a touch over the displayObject
+ * A callback that is used when the user releases a touch over the sprite
+ *
  * @event touchend
  * @param interactionData {InteractionData}
  */
 
 /**
- * A callback that is used when the user releases the touch that was over the displayObject
+ * A callback that is used when the user releases the touch that was over the sprite
  * for this callback to be fired, The touch must have started over the sprite
+ *
  * @event touchendoutside
  * @param interactionData {InteractionData}
  */
 /**
  * The base AnimatedSprite class
+ *
  * @class AnimatedSprite
- * @extends Sprite
+ * @extends gf.Sprite
+ * @namespace gf
  * @constructor
- * @param animations {Object} An object of the form <code>{ animationName: [frame1, frame2] }</code> or you can also specify overrides on a per-animation basis:
- *      <code>{ animationName: { frames: [frame1, frame2], speed: 2 } }. Each frame is a Texture object
- * @param speed {Number} The speed of the animations (can be overriden on a specific animations)
- * @param start {String} The animation to start with, defaults to the first found key otherwise
+ * @param animations {Object} An object of the form `{ animationName: [frame1, frame2] }` or you can also specify overrides on a per-animation basis:
+ *      `{ animationName: { frames: [frame1, frame2], speed: 2 } }`. Each frame is a Texture object
+ * @param [speed] {Number} The speed of the animations (can be overriden on a specific animations)
+ * @param [start] {String} The animation to start with, defaults to the first found key otherwise
  */
 gf.AnimatedSprite = function(anims, speed, start) {
-    //massage animations into proper format
+    //massage animations into full format
     for(var a in anims) {
         if(start === undefined)
             start = a;
@@ -17017,15 +17291,72 @@ gf.AnimatedSprite = function(anims, speed, start) {
 
     gf.Sprite.call(this, anims[start].frames[0]);
 
-    this.animations = anims;
+    /**
+     * The animation speed for this sprite
+     *
+     * @property speed
+     * @type Number
+     * @default 1
+     */
     this.speed = speed || 1;
-    this.currentAnimation = start;
-    this.currentFrame = 0;
-    this.playing = false;
+
+    /**
+     * Whether or not to loop the animations. This can be overriden
+     * on a per-animation level
+     *
+     * @property loop
+     * @type Boolean
+     * @default false
+     */
     this.loop = false;
+
+    /**
+     * The registerd animations for this AnimatedSprite
+     *
+     * @property animations
+     * @type Object
+     * @readOnly
+     */
+    this.animations = anims;
+
+    /**
+     * The currently playing animation
+     *
+     * @property currentAnimation
+     * @type String
+     * @readOnly
+     */
+    this.currentAnimation = start;
+
+    /**
+     * The current frame being shown
+     *
+     * @property currentFrame
+     * @type Number
+     * @readOnly
+     */
+    this.currentFrame = 0;
+
+    /**
+     * Whether or not the animation is currently playing
+     *
+     * @property playing
+     * @type Boolean
+     * @readOnly
+     */
+    this.playing = false;
 };
 
 gf.inherits(gf.AnimatedSprite, gf.Sprite, {
+    /**
+     * Adds a new animation to this animated sprite
+     *
+     * @method addAnimation
+     * @param name {String} The string name of the animation
+     * @param frames {Array<Texture>} The array of texture frames
+     * @param [speed] {Number} The animation speed
+     * @param [loop] {Boolean} Loop the animation or not
+     */
     addAnimation: function(name, frames, speed, loop) {
         if(typeof name === 'object') {
             this.animations[name.name] = name;
@@ -17038,16 +17369,30 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
             };
         }
     },
+    /**
+     * Goes to a frame and starts playing the animation from there
+     *
+     * @method gotoAndPlay
+     * @param [name] {String} The string name of the animation to play
+     * @param frame {Number} The index of the frame to start on
+     */
     gotoAndPlay: function(anim, frame) {
         if(typeof anim === 'number') {
-            this.currenFrame = anim;
+            this.currentFrame = anim;
         } else {
-            this.currenFrame = frame || 0;
+            this.currentFrame = frame || 0;
             this.currentAnimation = anim;
         }
 
         this.playing = true;
     },
+    /**
+     * Goes to a frame and stops playing the animation
+     *
+     * @method gotoAndStop
+     * @param [name] {String} The string name of the animation to go to
+     * @param frame {Number} The index of the frame to stop on
+     */
     gotoAndStop: function(anim, frame) {
         if(typeof anim === 'number') {
             this.currentFrame = anim;
@@ -17059,19 +17404,36 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
         this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
         this.playing = false;
     },
+    /**
+     * Starts playing the currently active animation
+     *
+     * @method play
+     */
     play: function() {
         this.playing = true;
     },
+    /**
+     * Stops playing the currently active animation
+     *
+     * @method stop
+     */
     stop: function() {
         this.playing = false;
     },
+    /**
+     * Called by PIXI to update our textures and do the actual animation
+     *
+     * @method updateTransform
+     * @private
+     */
     updateTransform: function() {
         gf.Sprite.prototype.updateTransform.call(this);
 
         if(!this.playing) return;
 
         var anim = this.animations[this.currentAnimation],
-            round;
+            round,
+            loop = anim.loop !== undefined ? anim.loop : this.loop;
 
         this.currentFrame += anim.speed || this.speed;
         round = gf.math.round(this.currentFrame);
@@ -17080,7 +17442,7 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
             this.setTexture(anim.frames[round]);
         }
         else {
-            if(anim.loop || this.loop) {
+            if(loop) {
                 this.gotoAndPlay(0);
             } else {
                 this.stop();
@@ -17096,7 +17458,8 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
  * TODO: Currently fade/flash don't show the colors. How should I actually show them, a gf.Sprite?
  *
  * @class Camera
- * @extends DisplayObject
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
  * @constructor
  * @param game {Game} The game this camera belongs to
  * @param settings {Object} Any settings you want to override the default properties with
@@ -17425,6 +17788,19 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
         return this;
     },
     /**
+     * Focuses the camera on a sprite.
+     *
+     * @method focusSprite
+     * @param sprite {Sprite} The sprite to focus on
+     * @return {Camera} Returns iteself for chainability
+     */
+    focusSprite: function(spr) {
+        return this.focus(
+            gf.math.round(spr.position.x) * this.game.world.scale.x,
+            gf.math.round(spr.position.y) * this.game.world.scale.y
+        );
+    },
+    /**
      * Focuses the camera on an x,y position. Ensures that the camera does
      * not go outside the bounds set with setBounds()
      *
@@ -17446,12 +17822,6 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
             dy = goToY + this.game.world.position.y;
 
         return this.pan(dx, dy);
-    },
-    focusSprite: function(spr) {
-        this.focus(
-            gf.math.round(spr.position.x) * this.game.world.scale.x,
-            gf.math.round(spr.position.y) * this.game.world.scale.y
-        );
     },
     /**
      * Pans the camera around by the x,y amount. Ensures that the camera does
@@ -17545,7 +17915,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * Called internally every frame. Updates all effects and the follow
      *
      * @method update
+     * @param dt {Number} The delta time (in seconds) since the last update
      * @return {Camera} Returns iteself for chainability
+     * @private
      */
     update: function(dt) {
         //follow sprite
@@ -17650,6 +18022,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
  *
  * @property FOLLOW
  * @type Object
+ * @static
  */
 gf.Camera.FOLLOW = {
     PLATFORMER: 0,
@@ -17663,32 +18036,62 @@ gf.Camera.FOLLOW = {
  *
  * @property SHAKE
  * @type Object
+ * @static
  */
 gf.Camera.SHAKE = {
     BOTH: 0,
     HORIZONTAL: 1,
     VERTICAL: 2
 };
-gf.Font = function(font, settings) {
-    this.align = 'left';
-    this.baseline = 'top';
-    this.lineWidth = 1;
-    this.lineHeight = 1;
-
-    this.text = '';
-
-    gf.DisplayObjectContainer.call(this, settings);
-};
-
-gf.inherits(gf.Font, gf.DisplayObjectContainer, {
-    setText: function(txt) {
-        this.text = txt;
-    }
-});
+/**
+ * A texture font makes it easy to use a texture for writing generic text. Basically
+ * this holds an array of textures each one representing a character, that all share
+ * the same base texture (image). It is the same way a spritesheet works except you
+ * use the textures for text instead of animation frames.
+ *
+ * For special characters, you can either use the `.map` property to map a character
+ * to a texture name like `font.map['~'] = 'tilde'` so that any `~` uses the texture named
+ * `tilde + font.ext` for rendering; or you can make the texture name be the character code
+ * prefixed with `#`. So, for `~`, naming the texture `#126.png` with `font.ext = 'png'`
+ * would just work automagically. There is a default map already that you can view in the source,
+ * and if you follow that naming convention, it will work without modification as well.
+ *
+ * @class TextureFont
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
+ * @constructor
+ * @param texture {Texture|String} The sprite sheet to use, if you pass a string make sure to preload it first
+ * @param [settings] {Object} All the settings for the font
+ * @param [settings.ext] {String} The extension used for the different texture names
+ * @param [settings.map] {Object} Maps a special character to a string name
+ * @param [settings.spaceSize] {Number} The size of a space character in pixels
+ * @param [settings.lineWidth] {Number} The width factor of characters, default is 1 which is normal spacing
+ * @param [settings.lineHeight] {Number} The height factor of characters, default is 1 which is normal spacing
+ * @param [settings.text] {String} Starting text of the font
+ */
 gf.TextureFont = function(font, settings) {
+    if(typeof font === 'string') {
+        if(gf.assetCache[font])
+            font = gf.assetCache[font];
+        else
+            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
+    }
+
+    /**
+     * The extension to use with texture names
+     *
+     * @property ext
+     * @type String
+     * @default ''
+     */
     this.ext = '';
 
-    //default map up
+    /**
+     * Maps a special character to a string name
+     *
+     * @property map
+     * @type Object
+     */
     this.map = {
         '`': 'accent',
         '~': 'tilde',
@@ -17724,26 +18127,68 @@ gf.TextureFont = function(font, settings) {
         '/': 'slash'
     };
 
+    /**
+     * The size of a space character in pixels
+     *
+     * @property spaceSize
+     * @type Number
+     */
     this.spaceSize = 15;
 
-    gf.Font.call(this, font, settings);
+    /**
+     * The width factor of characters, default is 1 which is normal spacing
+     *
+     * @property lineWidth
+     * @type Number
+     */
+    this.lineWidth = 1;
 
-    if(typeof font === 'string') {
-        if(gf.assetCache[font])
-            font = gf.assetCache[font];
-        else
-            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
-    }
+    /**
+     * The height factor of characters, default is 1 which is normal spacing
+     *
+     * @property lineHeight
+     * @type Number
+     */
+    this.lineHeight = 1;
 
+    /**
+     * The textures for all the characters in the alphabet
+     *
+     * @property textures
+     * @type Object<Texture>
+     * @readOnly
+     * @private
+     */
     this.textures = font;
+
+    /**
+     * The sprite pool to grab character sprites from
+     *
+     * @property sprites
+     * @type ObjectPool
+     * @readOnly
+     * @private
+     */
+    this.sprites = new gf.ObjectPool(gf.Sprite, this);
+
+    //call base ctor
+    gf.DisplayObjectContainer.call(this, settings);
 
     if(this.ext && this.ext.charAt(0) !== '.')
         this.ext = '.' + this.ext;
 
-    this.sprites = new gf.ObjectPool(gf.Sprite, this);
+    if(settings.text)
+        this.setText(settings.text);
 };
 
-gf.inherits(gf.TextureFont, gf.Font, {
+gf.inherits(gf.TextureFont, gf.DisplayObjectContainer, {
+    /**
+     * Gets a sprite from the pool for the character pased
+     *
+     * @method _getSprite
+     * @param character {String} The character to get a sprite for
+     * @return Sprite
+     */
     _getSprite: function(ch) {
         if(this.map[ch])
             ch = this.map[ch];
@@ -17760,7 +18205,7 @@ gf.inherits(gf.TextureFont, gf.Font, {
 
         //if no match, error
         if(!texture)
-            throw 'there is no texture for character "' + ch + '" with extension "' + this.ext + '"';
+            throw 'There is no texture for character "' + ch + '" with extension "' + this.ext + '"';
 
         var spr = this.sprites.create(texture);
 
@@ -17769,17 +18214,27 @@ gf.inherits(gf.TextureFont, gf.Font, {
 
         return spr;
     },
+    /**
+     * Clones this font to get another just like it
+     *
+     * @method clone
+     * @return TextureFont
+     */
     clone: function() {
         return new gf.TextureFont(this.textures, {
             ext: this.ext,
             map: this.map,
             text: this.text,
-            align: this.align,
-            baseline: this.baseline,
             lineWidth: this.lineWidth,
             lineHeight: this.lineHeight
         });
     },
+    /**
+     * Sets the text of this font to the string passed
+     *
+     * @method setText
+     * @param text {String} The text to display
+     */
     setText: function(txt) {
         this.text = txt;
 
@@ -17826,14 +18281,23 @@ gf.inherits(gf.TextureFont, gf.Font, {
  * Main game object, controls the entire instance of the game
  *
  * @class Game
- * @uses Emitter
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param contId {String} The container for the new canvas we will create for the game
- * @param settings {Object} Options such as renderMethod and interactive (whether the stage can be clicked)
+ * @param settings {Object} All the settings for the game instance
+ * @param settings.width {Number} The width of the viewport
+ * @param settings.height {Number} The height of the viewport
+ * @param [settings.view] {DOMElement} The canvas to render into
+ * @param [settings.transparent] {Boolean} Whether the viewport should be transparent or not
+ * @param [settings.renderMethod] {String} Can be 'canvas' or 'webgl' to force that render method
+ * @param [settings.background] {Number} The background color of the stage
+ * @param [settings.interactive] {Boolean} Whether the game will use mouse events or not
  */
 gf.Game = function(contId, settings) {
     //mixin the Event Target methods
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
     /**
      * The domElement that we are putting our rendering canvas into (the container)
@@ -17861,6 +18325,7 @@ gf.Game = function(contId, settings) {
      *
      * @property players
      * @type {Array}
+     * @readOnly
      */
     this.players = [];
 
@@ -17965,9 +18430,9 @@ gf.Game = function(contId, settings) {
     this.activeState = null;
     this._defaultState = new gf.GameState('_default');
 
-    //append the renderer view
-    //this.renderer.view.style['z-index'] = opts.zIndex || 5;
-    this.container.appendChild(this.renderer.view);
+    //append the renderer view only if the user didn't pass their own
+    if(!settings.view)
+        this.container.appendChild(this.renderer.view);
 
     //mixin user settings
     gf.utils.setValues(this, settings);
@@ -18081,6 +18546,17 @@ gf.inherits(gf.Game, Object, {
         }
 
         return this;
+    },
+    requestFullscreen: function() {
+        var elem = this.renderer.view;
+
+        if(elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if(elem.mozRequestFullScreen) {
+          elem.mozRequestFullScreen();
+        } else if(elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen();
+        }
     },
     /**
      * Adds a new game state to this game to be later enabled
@@ -18200,9 +18676,12 @@ gf.inherits(gf.Game, Object, {
  * GameStates are different , controls the entire instance of the game
  *
  * @class GameState
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
  * @constructor
- * @param game {Game} The game instance this GameState belongs to
- * @param name {String} 
+ * @param [name] {String} The name of this state
+ * @param [settings] {Object} All the settings for this game state
+ * @param [settings.gravity] {Number} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
  * @example
  *      var state = new gf.GameState(game, 'battle');
  *      state.addChild(battlePlayer);
@@ -18291,6 +18770,13 @@ gf.GameState = function(name, settings) {
 };
 
 gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
+    /**
+     * The setter for the game property, sets up the input and camera objects
+     *
+     * @method _setGame
+     * @param game {Game}
+     * @private
+     */
     _setGame: function(game) {
         this._game = game;
 
@@ -18303,6 +18789,14 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
         this.addChild(this.camera);
         this.camera.resize(game.renderer.width, game.renderer.height);
     },
+    /**
+     * Adds a child object to the GameState, this will add objects to either
+     * the Camera or the Map depending on the type. Anything inheriting from
+     * gf.Gui will be put to the camera, everything else goes in the world.
+     *
+     * @method addChild
+     * @param obj {DisplayObject} Any generic object to add to the game state
+     */
     addChild: function(obj) {
         if(obj) {
             //we add the camera in the ctor and the map later when
@@ -18316,6 +18810,12 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
                 this.world.addChild(obj);
         }
     },
+    /**
+     * Loads a game world into the state
+     *
+     * @method loadWorld
+     * @param world {String|Object} The world to load, if you pass a string be sure to preload it first
+     */
     loadWorld: function(world) {
         if(typeof world === 'string'){
             if(gf.assetCache[world]) {
@@ -18340,12 +18840,28 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
 
         return this;
     },
+    /**
+     * Enables (shows) the game state
+     *
+     * @method enable
+     */
     enable: function() {
         this.visible = true;
     },
+    /**
+     * Disables (hides) the game state
+     *
+     * @method disable
+     */
     disable: function() {
         this.visible = false;
     },
+    /**
+     * Called by the game each frame to update the input, camera, and physics objects
+     *
+     * @method update
+     * @private
+     */
     update: function(dt) {
         //gather input from user
         this.input.update(dt);
@@ -18361,7 +18877,8 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
  * The base Gui that holds GuiItems to be added to the Camera
  *
  * @class Gui
- * @extends DisplayObject
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
  * @constructor
  */
 gf.Gui = function(name) {
@@ -18383,9 +18900,11 @@ gf.inherits(gf.Gui, gf.DisplayObjectContainer);
  * The base GuiItem that represents an element of a gui on the screen.
  *
  * @class GuiItem
- * @extends Sprite
+ * @extends gf.Sprite
+ * @namespace gf
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
+ * @param interactive {Boolean} Whether this item should repsond to mouse events
  */
 gf.GuiItem = function(texture, interactive) {
     /**
@@ -18398,7 +18917,7 @@ gf.GuiItem = function(texture, interactive) {
     this.draggable = false;
 
     /**
-     * [read only] Describes if the current item is being dragged or not, if it is this
+     * Describes if the current item is being dragged or not, if it is this
      * object will hold the last local position of the mouse (relative to this object's parent)
      *
      * @property dragging
@@ -18444,6 +18963,15 @@ gf.inherits(gf.GuiItem, gf.Sprite, {
     }
 });
 
+/**
+ * Manages all input handlers in a unified way
+ *
+ * @class InputManager
+ * @extends Object
+ * @namespace gf
+ * @constructor
+ * @param view {DOMElement} The DOMElement to bind input events to
+ */
 gf.InputManager = function(view) {
     /**
      * The dom element to bind events to
@@ -18453,207 +18981,62 @@ gf.InputManager = function(view) {
      */
     this.view = view;
 
-    //this.mouse = new gf.input.Mouse(view);
+    /**
+     * Holds the keyboard handler for keyboard events
+     *
+     * @property keyboard
+     * @type Keyboard
+     * @readOnly
+     */
     this.keyboard = new gf.input.Keyboard(view);
+
+    /**
+     * Holds the gamepad handler for gamepad events
+     *
+     * @property gamepad
+     * @type Keyboard
+     * @readOnly
+     */
     this.gamepad = new gf.input.Gamepad();
 };
 
 gf.inherits(gf.InputManager, Object, {
+    /**
+     * Called each frame to update state info for some input methods
+     *
+     * @method update
+     * @private
+     */
     update: function(dt) {
         this.gamepad.update(dt);
-    },
-    isActionActive: function(action) {
-        return this.mouse.isActionActive(action) ||
-            this.keyboard.isActionActive(action) ||
-            this.gamepad.isActionActive(action);
     }
 });
 /**
  * input object
  */
-gf.input = {
-    /**
-     * Bindable keycodes
-     *
-     * @property KEY
-     * @type Object
-     */
-    KEY: {
-        BACKSPACE: 8,
-        TAB: 9,
-        ENTER: 13,
-        SHIFT: 16,
-        CTRL: 17,
-        ALT: 18,
-        PAUSE: 19,
-        ESC: 27,
-        SPACE: 32,
-        PAGE_UP: 33,
-        PAGE_DOWN: 34,
-        END: 35,
-        HOME: 36,
-        LEFT: 37,
-        UP: 38,
-        RIGHT: 39,
-        DOWN: 40,
-        INSERT: 45,
-        DELETE: 46,
-        NUM0: 48,
-        NUM1: 49,
-        NUM2: 50,
-        NUM3: 51,
-        NUM4: 52,
-        NUM5: 53,
-        NUM6: 54,
-        NUM7: 55,
-        NUM8: 56,
-        NUM9: 57,
-        PLUS: 61,
-        A : 65,
-        B : 66,
-        C : 67,
-        D : 68,
-        E : 69,
-        F : 70,
-        G : 71,
-        H : 72,
-        I : 73,
-        J : 74,
-        K : 75,
-        L : 76,
-        M : 77,
-        N : 78,
-        O : 79,
-        P : 80,
-        Q : 81,
-        R : 82,
-        S : 83,
-        T : 84,
-        U : 85,
-        V : 86,
-        W : 87,
-        X : 88,
-        Y : 89,
-        Z : 90,
-        NUMPAD0: 96,
-        NUMPAD1: 97,
-        NUMPAD2: 98,
-        NUMPAD3: 99,
-        NUMPAD4: 100,
-        NUMPAD5: 101,
-        NUMPAD6: 102,
-        NUMPAD7: 103,
-        NUMPAD8: 104,
-        NUMPAD9: 105,
-        NUMPAD_STAR: 106,
-        NUMPAD_PLUS: 107,
-        NUMPAD_MINUS: 109,
-        NUMPAD_DOT: 110,
-        NUMPAD_SLASH: 111,
-        F1: 112,
-        F2: 113,
-        F3: 114,
-        F4: 115,
-        MINUS: 173,
-        TILDE: 192
-    },
-    /**
-     * Bindable Mouse Events
-     *
-     * @property MOUSE
-     * @type Object
-     */
-    MOUSE: {
-        WHEEL: 'mousewheel',
-        MOVE: 'mousemove',
-        DOWN: 'mousedown',
-        UP: 'mouseup',
-        CLICK: 'click',
-        DBLCLICK: 'dblclick',
-        RCLICK: 'contextmenu',
-        CONTEXTMENU: 'contextmenu'
-    },
-    /**
-     * Bindable Touch Events
-     *
-     * @property TOUCH
-     * @type Object
-     */
-    TOUCH: {
-        //WHEEL: undefined,
-        MOVE: 'touchmove',
-        START: 'touchstart',
-        END: 'touchend',
-        TAP: 'tap',
-        DBLTAP: 'dbltap'
-        //RCLICK: undefined,
-        //CONTEXTMENU: undefined
-    },
-    /**
-     * Bindable Gamepad Buttons
-     *
-     * @property GP_BUTTON
-     * @type Object
-     */
-    GP_BUTTON: {
-        FACE_1: 0, // Face (main) buttons
-        FACE_2: 1,
-        FACE_3: 2,
-        FACE_4: 3,
-        LEFT_SHOULDER: 4, // Top shoulder buttons
-        RIGHT_SHOULDER: 5,
-        LEFT_TRIGGER: 6, // Bottom shoulder buttons
-        RIGHT_TRIGGER: 7,
-        SELECT: 8,
-        START: 9,
-        LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
-        RIGHT_ANALOGUE_STICK: 11,
-        PAD_TOP: 12, // Directional (discrete) pad
-        PAD_BOTTOM: 13,
-        PAD_LEFT: 14,
-        PAD_RIGHT: 15
-    },
-    getGpButtonName: function(i) {
-        for(var k in gf.input.GP_BUTTON) {
-            if(gf.input.GP_BUTTON[k] === i) {
-                return k;
-            }
-        }
-
-        return '';
-    },
-    /**
-     * Bindable Gamepad Axes
-     *
-     * @property GP_AXIS
-     * @type Object
-     */
-    GP_AXIS: {
-        LEFT_ANALOGUE_HOR: 0,
-        LEFT_ANALOGUE_VERT: 1,
-        RIGHT_ANALOGUE_HOR: 2,
-        RIGHT_ANALOGUE_VERT: 3
-    },
-    getGpAxisName: function(i) {
-        for(var k in gf.input.GP_AXIS) {
-            if(gf.input.GP_AXIS[k] === i) {
-                return k;
-            }
-        }
-
-        return '';
-    }
-};
+gf.input = {};
 
 /**
  * The base Input object, holds common functions and properties between input types
  *
  * @class Input
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf.input
  * @constructor
- * @param manager {InputManager} The InputManager instance that this Input object is managed by
- * @param game {Game} The game this camera belongs to
+ * @param view {DOMElement} The DOMElement to bind input events to
  */
 gf.input.Input = function(view) {
+    gf.EventEmitter.call(this);
+
+    /**
+     * For backwards compatibility
+     *
+     * @method bind
+     * @deprecated use on
+     */
+    this.bind = this.on;
+
     /**
      * The dom element to bind events to
      *
@@ -18661,80 +19044,16 @@ gf.input.Input = function(view) {
      * @type Game
      */
     this.view = view;
-
-    /**
-     * The binds that map an action to an input value
-     *
-     * @property binds
-     * @type Object
-     * @readOnly
-     */
-    this.binds = {};
-
-    /**
-     * The callbacks that map from an action
-     *
-     * @property callbacks
-     * @type Object
-     * @readOnly
-     */
-    this.callbacks = {};
-
-    /**
-     * The count of how many actions an input value is bound to
-     *
-     * @property callbacks
-     * @type Object
-     * @readOnly
-     */
-    this.bindCount = {};
-
-    /**
-     * Tracks the status of each action
-     *
-     * @property status
-     * @type Object
-     * @readOnly
-     */
-    this.status = {};
 };
 
 gf.inherits(gf.input.Input, Object, {
-    _doBind: function(code, action, cb) {
-        this.binds[code] = action;
-        this.status[action] = false;
-
-        if(!this.bindCount[action])
-            this.bindCount[action] = 1;
-        else
-            this.bindCount[action]++;
-
-        if(cb) {
-            if(this.callbacks[action])
-                this.callbacks[action].push({ code: code, cb: cb });
-            else
-                this.callbacks[action] = [{ code: code, cb: cb }];
-        }
-
-        return this;
-    },
-    _doUnbind: function(code, action) {
-        //remove the bind (code -> action)
-        delete this.binds[code];
-
-        //reduce bind count
-        this.bindCount[action]--;
-
-        //if this action isn't bound anymore clean it up
-        if(this.bindCount[action] <= 0) {
-            this.bindCount[action] = 0;
-            delete this.status[action];
-            delete this.callbacks[action];
-        }
-
-        return gf.controls;
-    },
-    //helper to prevent default stuffs accross different browsers
+    /**
+     * Prevents the default action of an event, and prevents it from bubbling up
+     * the DOM.
+     *
+     * @method preventDefault
+     * @param event {DOMEvent} The event to prevent default actions for
+     */
     preventDefault: function(e) {
         if(e.stopPropagation) e.stopPropagation();
         else e.cancelBubble = true;
@@ -18743,39 +19062,107 @@ gf.inherits(gf.input.Input, Object, {
         else e.returnValue = false;
 
         return false;
-    },
-    bind: function(code, action, cb) {
-        return this._doBind(code, action, cb);
-    },
-    unbind: function(code, action) {
-        return this._doUnbind(code, action);
-    },
-    runCallbacks: function(code, args) {
-        args = args || [];
-        args.unshift(this.binds[code]);
-
-        var cbs = this.callbacks[this.binds[code]];
-
-        if(cbs)
-            for(var i = 0, il = cbs.length; i < il; ++i)
-                if(cbs[i].code === code)
-                    cbs[i].cb.apply(this, args);
-    },
-    isActionActive: function(action) {
-        return this.status[action];
     }
 });
+
+/**
+ * Bindable keycodes
+ *
+ * @property KEY
+ * @type Object
+ * @static
+ */
+gf.input.KEY = {
+    BACKSPACE: 8,
+    TAB: 9,
+    ENTER: 13,
+    SHIFT: 16,
+    CTRL: 17,
+    ALT: 18,
+    PAUSE: 19,
+    ESC: 27,
+    SPACE: 32,
+    PAGE_UP: 33,
+    PAGE_DOWN: 34,
+    END: 35,
+    HOME: 36,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    INSERT: 45,
+    DELETE: 46,
+    NUM0: 48,
+    NUM1: 49,
+    NUM2: 50,
+    NUM3: 51,
+    NUM4: 52,
+    NUM5: 53,
+    NUM6: 54,
+    NUM7: 55,
+    NUM8: 56,
+    NUM9: 57,
+    PLUS: 61,
+    A : 65,
+    B : 66,
+    C : 67,
+    D : 68,
+    E : 69,
+    F : 70,
+    G : 71,
+    H : 72,
+    I : 73,
+    J : 74,
+    K : 75,
+    L : 76,
+    M : 77,
+    N : 78,
+    O : 79,
+    P : 80,
+    Q : 81,
+    R : 82,
+    S : 83,
+    T : 84,
+    U : 85,
+    V : 86,
+    W : 87,
+    X : 88,
+    Y : 89,
+    Z : 90,
+    NUMPAD0: 96,
+    NUMPAD1: 97,
+    NUMPAD2: 98,
+    NUMPAD3: 99,
+    NUMPAD4: 100,
+    NUMPAD5: 101,
+    NUMPAD6: 102,
+    NUMPAD7: 103,
+    NUMPAD8: 104,
+    NUMPAD9: 105,
+    NUMPAD_STAR: 106,
+    NUMPAD_PLUS: 107,
+    NUMPAD_MINUS: 109,
+    NUMPAD_DOT: 110,
+    NUMPAD_SLASH: 111,
+    F1: 112,
+    F2: 113,
+    F3: 114,
+    F4: 115,
+    MINUS: 173,
+    TILDE: 192
+};
+
+/**
+ * Controls keyboard input
+ *
+ * @class Keyboard
+ * @extends gf.input.Input
+ * @namespace gf.input
+ * @constructor
+ * @param view {DOMElement} The DOMElement to bind input events to
+ */
 gf.input.Keyboard = function(view) {
     gf.input.Input.call(this, view);
-
-    /**
-     * Tracks if a key is already down, so we don't repeat
-     *
-     * @property keydown
-     * @type Object
-     * @readOnly
-     */
-    this.keydown = {};
 
     /**
      * The current sequence of keys that have been pressed
@@ -18795,6 +19182,13 @@ gf.input.Keyboard = function(view) {
      */
     this.sequenceTimeout = 500;
 
+    /**
+     * The timeout ID for the wait to clear the input sequence
+     *
+     * @property _clearSq
+     * @type Number
+     * @private 
+     */
     this._clearSq = null;
 
     document.addEventListener('keydown', this.onKeyDown.bind(this), false);
@@ -18802,68 +19196,131 @@ gf.input.Keyboard = function(view) {
 };
 
 gf.inherits(gf.input.Keyboard, gf.input.Input, {
-    //on keydown event set gf.controls keycode's action as active
-    //and call any registered callbacks
+    /**
+     * Called when a key is pressed down
+     *
+     * @method onKeyDown
+     * @param event {DOMEvent}
+     * @param override {Number} The key code to use instead of checking event data
+     * @private
+     */
     onKeyDown: function(e, override) {
-        if(e.target === this.view)
+        //if(e.target === this.view.parentElement)
             return this.modifyKey(e, override || e.keyCode || e.which, true);
     },
+    /**
+     * Called when a key is released
+     *
+     * @method onKeyUp
+     * @param event {DOMEvent}
+     * @param override {Number} The key code to use instead of checking event data
+     * @private
+     */
     onKeyUp: function(e, override) {
-        if(e.target === this.view)
+        //if(e.target === this.view.parentElement)
             return this.modifyKey(e, override || e.keyCode || e.which, false);
     },
-    modifyKey: function(e, key, val) {
-        //process the single key
-        var pkey = this.processKey(e, key, val);
+    /**
+     * Called when a key state has changed, updates current sequence and emits events
+     *
+     * @method modifyKey
+     * @param event {DOMEvent}
+     * @param key {Number} The key code that has changed
+     * @param down {Boolean} Whether the key has been pressed or not
+     * @private
+     */
+    modifyKey: function(e, key, down) {
+        //emit single key event
+        this.emit(key, {
+            input: this,
+            originalEvent: e,
+            down: down
+        });
 
-        //update the key sequence
-        this.sequence.push(key);
+        //when pressed is when we process a key for a sequence
+        if(down) {
+            //update the key sequence
+            this.sequence.push(key);
 
-        //process current sequence
-        var pseq = this.processKey(e, this.sequence.toString(), val);
+            //process current sequence
+            var s = this.sequence.toString();
+            if(s !== key.toString()) {
+                this.emit(s, {
+                    input: this,
+                    originalEvent: e,
+                    down: down
+                });
+            }
 
-        //set timeout to clear sequence
-        clearTimeout(this._clearSq);
-        this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
-
-        //if either is false, then return false
-        return pkey && pseq;
-    },
-    processKey: function(e, key, val) {
-        if(this.binds[key]) {
-            //Don't fire events for repeats
-            if(this.keydown[key] === val)
-                return this.preventDefault(e);
-
-            //track that the action has changed state
-            this.keydown[key] = val;
-            this.status[this.binds[key]] = val;
-
-            //call each callback
-            this.runCallbacks(key, [val]);
-
-            return this.preventDefault(e);
+            //set timeout to clear sequence
+            clearTimeout(this._clearSq);
+            this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
         }
-
-        return true;
     },
+    /**
+     * Clears the current sequence so that a new one can start
+     *
+     * @method _clearSequence
+     * @private
+     */
     _clearSequence: function() {
         this.sequence.length = 0;
     }
 });
+/**
+ * Controls input from gamepads
+ *
+ * @class Gamepad
+ * @extends gf.input.Input
+ * @namespace gf.input
+ * @constructor
+ */
 gf.input.Gamepad = function() {
     gf.input.Input.call(this);
 
-    //are we polling for status/connections?
+    /**
+     * Tracks if we are polling for status/connections
+     *
+     * @property ticking
+     * @type Boolean
+     * @readOnly
+     */
     this.ticking = false;
 
-    //the currently activated gamepads list
+    /**
+     * The currently activated gamepads list
+     *
+     * @property pads
+     * @type Array<Gamepad>
+     * @readOnly
+     */
     this.pads = [];
 
-    //timestamp tracking for state changes
+    /**
+     * Timestamp tracking for state changes
+     *
+     * @property prevTimestamps
+     * @type Array<Number>
+     * @private
+     */
     this.prevTimestamps = [];
 
+    /**
+     * Holds the button handler for gamepad button events
+     *
+     * @property buttons
+     * @type GamepadButtons
+     * @readOnly
+     */
     this.buttons = new gf.input.GamepadButtons();
+
+    /**
+     * Holds the stick handler for gamepad stick events
+     *
+     * @property sticks
+     * @type GamepadSticks
+     * @readOnly
+     */
     this.sticks = new gf.input.GamepadSticks();
 
     //Firefox uses connect/disconnect events so listen to those
@@ -18877,7 +19334,13 @@ gf.input.Gamepad = function() {
 };
 
 gf.inherits(gf.input.Gamepad, gf.input.Input, {
-    //When a gamepad is connected (currently FF only)
+    /**
+     * Called when a gamepad connects (FF Only)
+     *
+     * @method onGamepadDisconnect
+     * @param event {GamepadConnectEvent}
+     * @private
+     */
     onGamepadConnect: function(event) {
         //add the gamepad to our list
         this.pads.push(event.gamepad);
@@ -18885,6 +19348,13 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
         //start polling
         this.startPolling();
     },
+    /**
+     * Called when a gamepad disconnects (FF Only)
+     *
+     * @method onGamepadDisconnect
+     * @param event {GamepadDisconnectEvent}
+     * @private
+     */
     onGamepadDisconnect: function(event) {
         //remove the gamepad from our list
         for(var i = 0, il = this.pads.length; i < il; ++i) {
@@ -18898,15 +19368,30 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
         if(this.pads.length === 0)
             this.stopPolling();
     },
+    /**
+     * Stats polling for new gamepads and status updates
+     *
+     * @method startPolling
+     */
     startPolling: function() {
         if(this.ticking) return;
 
         this.ticking = true;
         this.update();
     },
+    /**
+     * Stops polling for new gamepads and status updates
+     *
+     * @method stopPolling
+     */
     stopPolling: function() {
         this.ticking = false;
     },
+    /**
+     * Polls for newly connected gamepads (Chrome Only)
+     *
+     * @method pollGamepads
+     */
     //called on Chrome, which doesn't do the connect/disconnect events
     pollGamepads: function() {
         //get a list of connected gamepads
@@ -18925,6 +19410,12 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
             }
         }
     },
+    /**
+     * Polls the gamepad object for status updates and emits events when they occur
+     *
+     * @method pollStatus
+     * @param pad {Gamepad} The gamepad object to check
+     */
     pollStatus: function() {
         for(var i = 0, il = this.pads.length; i < il; ++i) {
             var pad = this.pads[i];
@@ -18939,36 +19430,64 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
             this.sticks.pollStatus(pad);
         }
     },
+    /**
+     * Called each frame to update polling mechanisms
+     *
+     * @method update
+     */
     update: function() {
         if(!this.ticking) return;
 
-        //DAMN YOU CHROME!
+        //pollin' fo' pads
         this.pollGamepads();
 
         //poll for the status of our gamepads
         this.pollStatus();
-    },
-    bindButton: function(code, action, cb) {
-        this.buttons.bind(code, action, cb);
-        return this;
-    },
-    //bind an action to a stick movement
-    bindStick: function(code, negative, action, cb) {
-        this.sticks.bind(code, negative, action, cb);
-        return this;
-    },
-    //unbind an action from a gamepad button
-    unbindButton: function(code, action) {
-        this.buttons.unbind(code, action);
-        return this;
-    },
-    //bind an action to a stick movement
-    unbindStick: function(code, negative, action) {
-        this.sticks.unbind(code, negative, action);
-        return this;
     }
 });
-gf.input.GamepadButtons = function() {
+/**
+ * Bindable Gamepad Buttons
+ *
+ * @property GP_BUTTON
+ * @type Object
+ * @static
+ */
+gf.input.GP_BUTTON = {
+    FACE_1: 0, // Face (main) buttons
+    FACE_2: 1,
+    FACE_3: 2,
+    FACE_4: 3,
+    LEFT_SHOULDER: 4, // Top shoulder buttons
+    RIGHT_SHOULDER: 5,
+    LEFT_TRIGGER: 6, // Bottom shoulder buttons
+    RIGHT_TRIGGER: 7,
+    SELECT: 8,
+    START: 9,
+    LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
+    RIGHT_ANALOGUE_STICK: 11,
+    PAD_TOP: 12, // Directional (discrete) pad
+    PAD_BOTTOM: 13,
+    PAD_LEFT: 14,
+    PAD_RIGHT: 15
+};
+gf.input.getGpButtonName = function(i) {
+    for(var k in gf.input.GP_BUTTON) {
+        if(gf.input.GP_BUTTON[k] === i) {
+            return k;
+        }
+    }
+
+    return '';
+};
+/**
+ * Controls gamepad button input
+ *
+ * @class GamepadButtons
+ * @extends gf.input.Input
+ * @namespace gf.input
+ * @constructor
+ */
+ gf.input.GamepadButtons = function() {
     gf.input.Input.call(this);
 
     /**
@@ -18980,35 +19499,79 @@ gf.input.GamepadButtons = function() {
      */
     this.threshold = 0.4;
 
-    //track the status of each button
+    /**
+     * Track the status of each button
+     *
+     * @property buttons
+     * @type Object
+     * @private
+     */
     this.buttons = {};
+
+    //setup default objects for each axis
+    for(var bt in gf.input.GP_BUTTON) {
+        this.buttons[bt] = {
+            code: bt,
+            down: false,
+            value: 0
+        };
+    }
 };
 
 gf.inherits(gf.input.GamepadButtons, gf.input.Input, {
+    /**
+     * Polls the gamepad object for status updates and emits events when they occur
+     *
+     * @method pollStatus
+     * @param pad {Gamepad} The gamepad object to check
+     */
     pollStatus: function(pad) {
-        //I would like to be able to emit events when something updates, but for now
-        //just update the status of bound keys in controls; controls only has 1 "gamepad"
-        //so this loop will blow away the changes each iteration (only the "last" gamepad is supported)
         for(var b = 0, bl = pad.buttons.length; b < bl; ++b) {
-            if(!this.binds[b]) continue;
+            var down = (pad.buttons[b] > this.threshold),
+                status = this.buttons[b];
 
-            var pressed = (pad.buttons[b] > this.threshold);
+            status.value = pad.buttons[b];
 
-            if(!this.buttons[b])
-                this.buttons[b] = { pressed: false, code: b };
+            //down state changed
+            if(status.down !== down) {
+                status.down = down;
 
-            this.buttons[b].val = pad.buttons[b];
-
-            //state changed
-            if(this.buttons[b].pressed !== pressed) {
-                this.buttons[b].pressed = pressed;
-                this.status[this.binds[b]] = pressed;
-                this.runCallbacks(b, [pressed]);
+                this.emit(b, status);
             }
         }
     }
 });
-gf.input.GamepadSticks = function() {
+/**
+ * Bindable Gamepad Axes
+ *
+ * @property GP_AXIS
+ * @type Object
+ * @static
+ */
+ gf.input.GP_AXIS = {
+    LEFT_ANALOGUE_HOR: 0,
+    LEFT_ANALOGUE_VERT: 1,
+    RIGHT_ANALOGUE_HOR: 2,
+    RIGHT_ANALOGUE_VERT: 3
+};
+gf.input.getGpAxisName = function(i) {
+    for(var k in gf.input.GP_AXIS) {
+        if(gf.input.GP_AXIS[k] === i) {
+            return k;
+        }
+    }
+
+    return '';
+};
+/**
+ * Controls gamepad stick input
+ *
+ * @class GamepadSticks
+ * @extends gf.input.Input
+ * @namespace gf.input
+ * @constructor
+ */
+ gf.input.GamepadSticks = function() {
     gf.input.Input.call(this);
 
     /**
@@ -19020,41 +19583,47 @@ gf.input.GamepadSticks = function() {
      */
     this.threshold = 0.5;
 
-    //track the status of the axes
+    /**
+     * Track the status of each of the axes
+     *
+     * @property axes
+     * @type Object
+     * @private
+     */
     this.axes = {};
+
+    //setup default objects for each axis
+    for(var ax in gf.input.GP_AXIS) {
+        this.axes[ax] = {
+            code: ax,
+            negative: false,
+            value: 0
+        };
+    }
 };
 
 gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
-    bind: function(code, negative, action, cb) {
-        negative = !!negative; //I want negative to be true/false, not truthy or falsey
-
-        return this._doBind(code + negative, action, cb);
-    },
-    unbind: function(code, negative, action) {
-        negative = !!negative; //I want negative to be true/false, not truthy or falsey
-
-        return this._doUnbind(code + negative, action);
-    },
+    /**
+     * Polls the gamepad object for status updates and emits events when they occur
+     *
+     * @method pollStatus
+     * @param pad {Gamepad} The gamepad object to check
+     */
     pollStatus: function(pad) {
         for(var a = 0, al = pad.axes.length; a < al; ++a) {
-            var neg = ['true', 'false'];
-            for(var i = 0, il = neg.length; i < il; ++i) {
-                var v = neg[i];
-                if(!this.binds[a + v]) continue;
+            var ax = pad.axes[a],
+                neg = (ax < 0),
+                status = this.axes[a];
 
-                var moved = v === 'true' ? (pad.axes[a] < -gf.gamepad.AXIS_THRESHOLD) : (pad.axes[a] > gf.gamepad.AXIS_THRESHOLD);
+            //if the difference between the last value and the new one is greater
+            //than the threashold set, call the event for that axis.
+            //We also always emit 0 because if your threshold is too high, it will
+            //never reset to 0
+            if(Math.abs(status.value - ax) >= this.threshold || (status.value !== 0 && ax === 0)) {
+                status.negative = neg;
+                status.value = ax;
 
-                if(!this.axes[a + v])
-                    this.axes[a + v] = { moved: false, code: a, negative: v === 'true' };
-
-                this.axes[a + v].val = pad.axes[a];
-
-                //movement state updated
-                if(this.axes[a + v].moved !== moved) {
-                    this.axes[a + v].moved = moved;
-                    this.status[this.binds[a + v]] = moved;
-                    this.runCallbacks(a + v, [pad.axes[a]]);
-                }
+                this.emit(a, status);
             }
         }
     }
@@ -19063,13 +19632,15 @@ gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
  * The Base loader class that all other loaders inherit from
  *
  * @class Loader
- * @uses Emitter
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param name {String} The name of the resource to load, used as a key in the assetCache
  * @param url {String} The url to load the resource from, also used as a key in the assetCache
  */
 gf.Loader = function(name, url) {
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
     this.type = 'hey';
 
@@ -19104,7 +19675,7 @@ gf.inherits(gf.Loader, Object, {
     /**
      * Emits the 'load' event, passing the properties of this instance and the data passed
      *
-     * @method load
+     * @method done
      * @param data {mixed} The loaded data
      */
     done: function(data) {
@@ -19142,11 +19713,13 @@ gf.inherits(gf.Loader, Object, {
 });
 /**
  * The AssetLoader loads and parses different game assets, such as sounds, textures,
- * TMX World JSON file (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
- * and Spritesheet JSON files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
+ * TMX World JSON file (exported from the <a target="_blank" href="http://mapeditor.org">Tiled Editor</a>),
+ * and Spritesheet JSON files (published from <a target="_blank" href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
  *
  * @class AssetLoader
- * @uses Emitter
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param assets {Array} Array of assets to load when `.load()` is called
  * @example
@@ -19158,7 +19731,7 @@ gf.inherits(gf.Loader, Object, {
  */
 gf.AssetLoader = function() {
     //mixin the Event Target methods
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
     /**
      * The array of assets to load
@@ -19201,18 +19774,32 @@ gf.AssetLoader = function() {
 
         'json': gf.JsonLoader
     };
-};
-/**
- * Fired when an item has loaded
- *
- * @event onProgress
- */
 
-/**
- * Fired when all the assets have loaded
- *
- * @event onComplete 
- */
+    /**
+     * Fired if a loader encounters an error
+     *
+     * @event error
+     * @param eventData {Object}
+     * @param eventData.assetType {String} The type of asset (loader name)
+     * @param eventData.message {String} The message of the error
+     */
+
+    /**
+     * Fired when an item has loaded
+     *
+     * @event progress
+     * @param eventData {Object}
+     * @param eventData.assetType {String} The type of asset (loader name)
+     * @param eventData.url {String} The url the asset loaded from
+     * @param eventData.data {mixed} The data that was loaded
+     */
+
+    /**
+     * Fired when all the assets have loaded
+     *
+     * @event complete
+     */
+};
 
 gf.inherits(gf.AssetLoader, Object, {
     /**
@@ -19234,7 +19821,7 @@ gf.inherits(gf.AssetLoader, Object, {
      * load those instead.
      *
      * @method load
-     * @param items {Array} Array of resources to load instead of the object's resources
+     * @param items {Array<String>|Array<Object>} Array of resources to load instead of the object's resources
      */
     load: function(items) {
         var assets = items || this.assets;
@@ -19260,36 +19847,39 @@ gf.inherits(gf.AssetLoader, Object, {
      * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
      *
      * @method onAssetLoaded
+     * @param event {Object} The event object
      * @private
-     * @param err {String} An option error if there was an issue loading that resource
-     * @param type {String} The type of asset loaded (texture, audio, world, or spritesheet)
-     * @param asset {Texture|Audio|Object} The actual asset that was loaded
      */
     onAssetLoaded: function(e) {
         this.remaining--;
 
-        this.emit({
-            type: 'progress',
+        this.emit('progress', {
             assetType: e.assetType,
             url: e.url,
             data: e.data
         });
 
         if(this.remaining === 0) {
-            this.emit({ type: 'complete' });
+            this.emit('complete');
         }
     },
+    /**
+     * Called whenever an asset loader encounters an error
+     *
+     * @method onAssetError
+     * @param event {Object} The event object
+     * @private
+     */
     onAssetError: function(e) {
         this.remaining--;
 
-        this.emit({
-            type: 'error',
+        this.emit('error', {
             assetType: e.assetType,
             message: e.message
         });
 
         if(this.remaining === 0) {
-            this.emit({ type: 'complete' });
+            this.emit('complete');
         }
     }
 });
@@ -19298,7 +19888,11 @@ gf.inherits(gf.AssetLoader, Object, {
  * Loads an audio clip
  *
  * @class AudioLoader
+ * @extends gf.Loader
+ * @namespace gf
  * @constructor
+ * @param name {String} The name of the resource to load, used as a key in the assetCache
+ * @param urls {Array<String>} All the urls for the different formats of this audio file
  */
 gf.AudioLoader = function(name, urls) {
     gf.Loader.call(this, name, urls);
@@ -19308,6 +19902,12 @@ gf.AudioLoader = function(name, urls) {
 };
 
 gf.inherits(gf.AudioLoader, gf.Loader, {
+    /**
+     * Loads the audio file described by the urls passed in to the ctor. Will intelligently
+     * determine which url is supported by this browser.
+     *
+     * @method load
+     */
     load: function() {
         //pull from cache
         if(gf.Loader.prototype.load.call(this)) return;
@@ -19333,7 +19933,11 @@ gf.inherits(gf.AudioLoader, gf.Loader, {
  * Loads json data
  *
  * @class JsonLoader
+ * @extends gf.Loader
+ * @namespace gf
  * @constructor
+ * @param name {String} The name of the resource to load, used as a key in the assetCache
+ * @param url {String} The url to load the resource from, also used as a key in the assetCache
  */
 gf.JsonLoader = function(name, url) {
     gf.Loader.call(this, name, url);
@@ -19342,6 +19946,11 @@ gf.JsonLoader = function(name, url) {
 };
 
 gf.inherits(gf.JsonLoader, gf.Loader, {
+    /**
+     * Loads the json data
+     *
+     * @method load
+     */
     load: function() {
         //pull from cache
         if(gf.Loader.prototype.load.call(this)) return;
@@ -19384,6 +19993,47 @@ gf.inherits(gf.JsonLoader, gf.Loader, {
                 self.error(err.message || err);
             }
         });
+    }
+});
+/**
+ * Loads a texture image
+ *
+ * @class TextureLoader
+ * @extends gf.Loader
+ * @namespace gf
+ * @constructor
+ * @param name {String} The name of the resource to load, used as a key in the assetCache
+ * @param url {String} The url to load the resource from, also used as a key in the assetCache
+ */
+ gf.TextureLoader = function(name, url) {
+    gf.Loader.call(this, name, url);
+
+    this.type = 'texture';
+};
+
+gf.inherits(gf.TextureLoader, gf.Loader, {
+    /**
+     * Loads the texture data
+     *
+     * @method load
+     */
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var self = this,
+            texture = gf.Texture.fromImage(this.url);
+
+        if(!texture.baseTexture.hasLoaded) {
+            texture.baseTexture.on('loaded', function() {
+                self.done(texture);
+            });
+            texture.baseTexture.source.onerror = function() {
+                self.error('Unable to load texture');
+            };
+        } else {
+            this.done(texture);
+        }
     }
 });
 gf.SpriteSheetLoader = function(name, baseUrl, data) {
@@ -19433,38 +20083,6 @@ gf.inherits(gf.SpriteSheetLoader, gf.Loader, {
         });
 
         txLoader.load();
-    }
-});
-/**
- * Loads a texture image
- *
- * @class TextureLoader
- * @constructor
- */
- gf.TextureLoader = function(name, url) {
-    gf.Loader.call(this, name, url);
-
-    this.type = 'texture';
-};
-
-gf.inherits(gf.TextureLoader, gf.Loader, {
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
-
-        var self = this,
-            texture = gf.Texture.fromImage(this.url);
-
-        if(!texture.baseTexture.hasLoaded) {
-            texture.baseTexture.on('loaded', function() {
-                self.done(texture);
-            });
-            texture.baseTexture.source.onerror = function() {
-                self.error('Unable to load texture');
-            };
-        } else {
-            this.done(texture);
-        }
     }
 });
 gf.WorldLoader = function(name, baseUrl, data) {
@@ -19543,14 +20161,15 @@ gf.inherits(gf.WorldLoader, gf.Loader, {
  * Base Map implementation, provides common functions for all Map types
  *
  * @class Map
- * @uses Emitter
- * @extends DisplayObject
+ * @extends gf.DisplayObjectContainer
+ * @uses gf.EventEmitter
+ * @namespace gf
  * @constructor
  * @param map {Object} All the settings for the map
  */
 gf.Map = function(map) {
     //mixin the Event Target methods
-    gf.Emitter.call(this);
+    gf.EventEmitter.call(this);
 
     /**
      * The size of the map
@@ -19590,10 +20209,67 @@ gf.inherits(gf.Map, gf.DisplayObjectContainer, {
     }
 });
 /**
+ * Base Tile implementation, a tile is a single tile in a tilemap layer
+ *
+ * @class Tile
+ * @extends gf.Sprite
+ * @namespace gf
+ * @constructor
+ * @param tile {Object} All the settings for the tile
+ */
+gf.Tile = function(texture) {
+    this.collisionType = gf.Tile.TYPE.NONE;
+
+    //call base ctor
+    gf.Sprite.call(this, texture);
+
+    this.type = gf.Sprite.TYPE.TILE;
+};
+
+gf.inherits(gf.Tile, gf.Sprite, {
+    /**
+     * On Collision Event
+     *      called when this sprite collides into another, or is being collided into by another.
+     *      By default if something collides with a collectable sprite we remove the collectable
+     *      and if we collide with a solid tile we kill our velocity
+     *
+     * @method onCollision
+     * @param obj {Sprite} Colliding sprite
+     */
+    onCollision: function(obj) {
+        gf.Sprite.prototype.onCollision.call(this, obj);
+
+        //I did a switch-case here because I feel like I
+        //will be adding more defaults later
+        switch(this.collisionType) {
+            case gf.Tile.TYPE.SOLID:
+                obj.setVelocity(0);
+                break;
+        }
+    }
+});
+
+/**
+ * Tile collision types
+ *
+ * @property COLLISION
+ * @type Object
+ * @static
+ */
+gf.Tile.TYPE = {
+    NONE: 'none',
+    SOLID: 'solid',
+    CLIFF: 'cliff',
+    LADDER: 'ladder',
+    WATER: 'water',
+    DEEP_WATER: 'deep_water'
+};
+/**
  * Base Layer implementation, provides common functions for all Layer types
  *
  * @class Layer
- * @extends DisplayObject
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
  * @constructor
  * @param layer {Object} All the settings for the layer
  */
@@ -19636,7 +20312,8 @@ gf.inherits(gf.Layer, gf.DisplayObjectContainer, {
  * ImageLayer is a layer represented by a single image
  *
  * @class ImageLayer
- * @extends Layer
+ * @extends gf.Layer
+ * @namespace gf
  * @constructor
  * @param game {Game} The game the layer is in
  * @param position {Point|Vector|Array|Number} The starting position of the layer
@@ -19653,66 +20330,13 @@ gf.ImageLayer = function(layer) {
 
 gf.inherits(gf.ImageLayer, gf.Layer);
 /**
- * Base Tile implementation, a tile is a single tile in a tilemap layer
- *
- * @class Tile
- * @extends Sprite
- * @constructor
- * @param tile {Object} All the settings for the tile
- */
-gf.Tile = function(texture) {
-    this.collisionType = gf.Tile.TYPE.NONE;
-
-    //call base ctor
-    gf.Sprite.call(this, texture);
-
-    this.type = gf.Sprite.TYPE.TILE;
-};
-
-gf.inherits(gf.Tile, gf.Sprite, {
-    /**
-     * On Collision Event
-     *      called when this sprite collides into another, or is being collided into by another.
-     *      By default if something collides with a collectable sprite we remove the collectable
-     *      and if we collide with a solid tile we kill our velocity
-     *
-     * @method onCollision
-     * @param obj {Sprite} Colliding sprite
-     */
-    onCollision: function(obj) {
-        gf.Sprite.prototype.onCollision.call(this, obj);
-
-        //I did a switch-case here because I feel like I
-        //will be adding more defaults later
-        switch(this.collisionType) {
-            case gf.Tile.TYPE.SOLID:
-                obj.setVelocity(0);
-                break;
-        }
-    }
-});
-
-/**
- * Tile collision types
- *
- * @property COLLISION
- * @type Object
- */
-gf.Tile.TYPE = {
-    NONE: 'none',
-    SOLID: 'solid',
-    CLIFF: 'cliff',
-    LADDER: 'ladder',
-    WATER: 'water',
-    DEEP_WATER: 'deep_water'
-};
-/**
  * Tiled map, expects a Tiled TMX file loaded by the gf.loader as the argument.
  * The loader knows to load all textures and other resources when loading a world TMX
  * file, and this expets that to already be done.
  *
  * @class TiledMap
- * @extends Map
+ * @extends gf.Map
+ * @namespace gf
  * @constructor
  * @param game {Game} The game the map is in
  * @param position {Point|Vector|Array|Number} The starting position of the map
@@ -19824,13 +20448,6 @@ gf.TiledMap = function(map) {
 
         this.addChild(lyr);
     }
-
-    //rotate for isometric maps
-    this.offset = new gf.Point();
-    if(this.orientation === 'isometric') {
-        this.offset.x = (this.realSize.x / 2) - (this.tileSize.x / 2);
-        this.position.x += this.offset.x;
-    }
 };
 
 gf.inherits(gf.TiledMap, gf.Map, {
@@ -19852,19 +20469,11 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @method resize
      */
     resize: function(width, height) {
-        var numX = Math.ceil(width / this.scaledTileSize.x),
-            numY = Math.ceil(height / this.scaledTileSize.y);
-
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
             if(o instanceof gf.TiledLayer) {
-                o.renderTiles(
-                    Math.floor((Math.abs(this.position.x) - this.offset.x) / this.scaledTileSize.x),
-                    Math.floor((Math.abs(this.position.y) - this.offset.y) / this.scaledTileSize.y),
-                    numX,
-                    numY
-                );
+                o.resize(width, height);
             }
         }
     },
@@ -19925,7 +20534,8 @@ gf.inherits(gf.TiledMap, gf.Map, {
  * create an instance on your own.
  *
  * @class TiledLayer
- * @extends Layer
+ * @extends gf.Layer
+ * @namespace gf
  * @constructor
  * @param layer {Object} All the settings for the layer
  */
@@ -19965,44 +20575,74 @@ gf.TiledLayer = function(layer) {
 
     this._tilePool = [];
     this._buffered = { left: false, right: false, top: false, bottom: false };
-    this._panDelta = new gf.Vector(0, 0);
-    this._rendered = new gf.Rectangle(0, 0, 0, 0);
+    this._panDelta = new gf.Vector();
+    this._rendered = new gf.Rectangle();
 };
 
 gf.inherits(gf.TiledLayer, gf.Layer, {
     /**
      * Creates all the tile sprites needed to display the layer
      *
-     * @method renderTiles
-     * @param startX {Number} The starting x tile position
-     * @param startY {Number} The starting y tile position
-     * @param numX {Number} The number of tiles in the X direction to render
-     * @param numY {Number} The number of tiles in the Y direction to render
+     * @method resize
+     * @param width {Number} The number of tiles in the X direction to render
+     * @param height {Number} The number of tiles in the Y direction to render
      */
-    renderTiles: function(startX, startY, numX, numY) {
+    resize: function(width, height) {
         //clear all the visual tiles
         this.clearTiles();
+        //set rendered area
+        this._rendered.x = this.parent.position.x;
+        this._rendered.y = this.parent.position.y;
+        this._rendered.width = width;
+        this._rendered.height = height;
 
+        if(this.parent.orientation === 'isometric') {
+            return this._renderIsoTiles(
+                this.parent.position.x,
+                this.parent.position.y,
+                width,
+                height
+            );
+        }
+        else {
+            return this._renderOrthoTiles(
+                -this.parent.position.x,
+                -this.parent.position.y,
+                width,
+                height
+            );
+        }
+    },
+    _renderOrthoTiles: function(sx, sy, sw, sh) {
+        //convert to tile coords
+        sx = Math.floor(sx / this.parent.scaledTileSize.x);
+        sy = Math.floor(sy / this.parent.scaledTileSize.y);
         //ensure we don't go below 0
-        startX = startX < 0 ? 0 : startX;
-        startY = startY < 0 ? 0 : startY;
+        sx = sx < 0 ? 0 : sx;
+        sy = sy < 0 ? 0 : sy;
 
+        //convert to tile coords
+        sw = Math.ceil(sw / this.parent.scaledTileSize.x) + 1;
+        sh = Math.ceil(sh / this.parent.scaledTileSize.y) + 1;
         //ensure we don't go outside the map size
-        var endX = (startX + numX <= this.parent.size.x) ? startX + numX : (this.parent.size.x - startX);
-        var endY = (startY + numY <= this.parent.size.y) ? startY + numY : (this.parent.size.y - startY);
+        sw = (sx + sw > this.parent.size.x) ? (this.parent.size.x - sx) : sw;
+        sh = (sy + sh > this.parent.size.y) ? (this.parent.size.y - sy) : sh;
 
         //render new sprites
-        for(var x = startX; x < endX; ++x) {
-            for(var y = startY; y < endY; ++y) {
+        var endX = sx + sw,
+            endY = sy + sh;
+
+        for(var x = sx; x < endX; ++x) {
+            for(var y = sy; y < endY; ++y) {
                 this.moveTileSprite(x, y, x, y);
             }
         }
 
-        //set rendered area
-        this._rendered.x = startX;
-        this._rendered.y = startY;
-        this._rendered.width = endX - startX;
-        this._rendered.height = endY - startY;
+        /*//set rendered area
+        this._rendered.x = sx;
+        this._rendered.y = sy;
+        this._rendered.width = sw;
+        this._rendered.height = sh;
         this._updateRenderSq();
 
         //reset buffered status
@@ -20010,7 +20650,108 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         //reset panDelta
         this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
-        this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
+        this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;*/
+    },
+    _renderIsoTiles: function(sx, sy, sw, sh) {
+        var scaled = this.parent.scaledTileSize;
+
+        //convert to tile coords
+        sx = Math.floor(sx / (scaled.x / 2));
+        sy = Math.floor(sy / scaled.y);
+
+        //the view rect offset is opposite of what the world is
+        sx = -sx;
+        sy = -sy;
+
+        //convert to tile units
+        sw = Math.ceil(sw / (scaled.x / 2));
+        sh = Math.ceil(sh / (scaled.y / 2));
+
+        //in this function i,j represents the coord system in the isometric plane
+        var iStart = Math.floor(this._isoToI(sx, sy)) - 1,
+            jStart = Math.floor(this._isoToJ(sx, sy)),
+            iMax = Math.ceil(this._isoToI(sx + sw, sy + sh)) + 1,
+            jMax = Math.ceil(this._isoToJ(sx, sy + sh)) + 2,
+            jMin = Math.floor(this._isoToJ(sx + sw, sy)),
+
+            iParentMax = this.parent.size.x,
+            jParentMax = this.parent.size.y,
+
+            nBump = false, //have we reached minimum j (the bump)
+            mBump = false, //have we reached maximum j (the bump)
+            n = 0, nBuffer = 1,
+            m = 1, mBuffer = 0;
+
+        for(var i = iStart; i < iMax; ++i) {
+            for(var j = jStart - n; j < jStart + m; ++j) {
+                if(i < 0 || j < 0 || i >= iParentMax || j >= jParentMax)
+                    continue;
+
+                this.moveTileSprite(i, j, i, j);
+            }
+
+            if(!nBump) {
+                //we have not reached lowest j point, increment n to go even lower next iteration
+                n++;
+
+                //check if we reached lowest j point
+                if((jStart - n) === jMin) {
+                    nBump = true;
+                }
+            } else {
+                //if we have reached deepest j start decreasing after the buffer is gone
+                if(nBuffer > 0) {
+                    nBuffer--;
+                }
+                //the buffer is gone, start decreasing n each iteration
+                else {
+                    n--;
+                }
+            }
+
+            if(!mBump) {
+                //we have not reached the highest j point, increase m to go even higher next iteration
+                m++;
+
+                if((jStart + m) === jMax) {
+                    mBump = true;
+                }
+            } else {
+                //we have reached max j, start decreasing m after the buffer is gone
+                if(mBuffer > 0) {
+                    mBuffer--;
+                }
+                //the buffer is gone, start decreasing m each iteration
+                else {
+                    m--;
+                }
+            }
+        }
+    },
+    _freeTile: function(tx, ty) {
+        if(this.tiles[tx] && this.tiles[tx][ty]) {
+            var t = this.tiles[tx][ty];
+
+            if(t) {
+                t.visible = false;
+                t.disablePhysics();
+                this._tilePool.push(t);
+                this.tiles[tx][ty] = null;
+                this.removeChild(t);
+            }
+        }
+
+        // make this first-in-first-out instead of a stack
+        // see: http://jsperf.com/queue-push-unshift-vs-shift-pop/3
+        //this._tilePool.reverse();
+    },
+    _isoToI: function(x, y) {
+        // converts world isometric coordinates into the i position of the 2D-Array
+        return ((y + x) / 2);
+    },
+    _isoToJ: function(x, y) {
+        // converts world isometric coordinates into the j position of the 2D-Array
+        return ((y - x) / 2);
     },
     /**
      * Clears all the tiles currently used to render the layer
@@ -20021,21 +20762,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //hide/free each tile and remove from the memory map
         for(var x in this.tiles) {
             for(var y in this.tiles[x]) {
-                var tile = this.tiles[x][y];
-
-                if(tile) {
-                    //hide/free the sprite
-                    tile.visible = false;
-                    tile.disablePhysics();
-                    this._tilePool.push(tile);
-                }
-
-                //remove the Y key
-                delete this.tiles[x][y];
+                this._freeTile(x, y);
             }
-
-            //keep the X key so we dont have to recreate these objects
-            //delete this.tiles[x];
         }
     },
     /**
@@ -20047,7 +20775,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @param fromTileY {Number} The y coord of the tile in units of tiles (not pixels) to move from
      * @param toTileX {Number} The x coord of the tile in units of tiles (not pixels) to move to
      * @param toTileY {Number} The y coord of the tile in units of tiles (not pixels) to move to
-     * @return {PIXI.Sprite} The sprite to display
+     * @return {Tile} The sprite to display
      */
     moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
         var tile,
@@ -20063,13 +20791,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         //if no tileset, just ensure the "from" tile is put back in the pool
         if(!set) {
-            if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
-                var t = this.tiles[fromTileX][fromTileY];
-                this.tiles[fromTileX][fromTileY] = null;
-
-                t.visible = false;
-                this._tilePool.push(t);
-            }
+            this._freeTile(fromTileX, fromTileY);
             return;
         }
 
@@ -20112,8 +20834,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tile = new gf.Tile(texture);
             tile.mass = Infinity;
             tile.anchor.y = 1;
-            this.addChild(tile);
         }
+        this.addChild(tile);
 
         if(props.isCollidable)
             tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
@@ -20182,8 +20904,10 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Layer} Returns itself for chainability
      */
     pan: function(dx, dy) {
+        this.resize(this._rendered.width, this._rendered.height);
+
         this._panDelta.x += dx;
-        this._panDelta.y += dy;
+        this._panDelta.y += dy;/*
 
         //check if we need to build a buffer around the viewport
         //usually this happens on the first pan after a full render
@@ -20223,7 +20947,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         while(this._panDelta.y <= -this.parent.scaledTileSize.y) {
             this._renderDown();
             this._panDelta.y += this.parent.scaledTileSize.y;
-        }
+        }*/
     },
     _renderLeft: function(forceNew) {
         //move all the far right tiles to the left side
@@ -20294,7 +21018,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
  * There can be multiple Tilesets in a map
  *
  * @class TiledTileset
- * @extends Texture
+ * @extends gf.Texture
+ * @namespace gf
  * @constructor
  * @param settings {Object} All the settings for the tileset
  */
@@ -20533,7 +21258,8 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
  * TODO: This is all trash
  *
  * @class TiledObjectGroup
- * @extends Layer
+ * @extends gf.Layer
+ * @namespace gf
  * @constructor
  * @param group {Object} All the settings for the layer
  */
@@ -20765,11 +21491,6 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
     }
 });
 
-var COLLISION_TYPE = {
-    SPRITE: 0,
-    TILE: 1
-};
-
 gf.PhysicsSystem = function(options) {
     options = options || {};
 
@@ -20789,8 +21510,8 @@ gf.PhysicsSystem = function(options) {
 
     //sprite - sprite collisions
     this.space.addCollisionHandler(
-        COLLISION_TYPE.SPRITE,
-        COLLISION_TYPE.SPRITE,
+        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
+        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         null, //postSolve
@@ -20799,8 +21520,8 @@ gf.PhysicsSystem = function(options) {
 
     //sprite - tile collisions
     this.space.addCollisionHandler(
-        COLLISION_TYPE.SPRITE,
-        COLLISION_TYPE.TILE,
+        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
+        gf.PhysicsSystem.COLLISION_TYPE.TILE,
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         null, //postSolve
@@ -20808,146 +21529,155 @@ gf.PhysicsSystem = function(options) {
     );
 };
 
-gf.PhysicsSystem.prototype._createBody = function(spr) {
-    return this.space.addBody(new cp.Body(
-        spr.mass,
-        Infinity //cp.momsprForBox(spr.mass, spr.width, spr.height)
-    ));
-};
+gf.inherits(gf.PhysicsSystem, Object, {
+    _createBody: function(spr) {
+        return this.space.addBody(new cp.Body(
+            spr.mass || 1,
+            Infinity //cp.momsprForBox(spr.mass, spr.width, spr.height)
+        ));
+    },
+    _createShape: function(spr, body) {
+        var shape = this.space.addShape(
+            new cp.BoxShape(
+                body,
+                spr.width,
+                spr.height
+            )
+        );
 
-gf.PhysicsSystem.prototype._createShape = function(spr, body) {
-    var shape = this.space.addShape(
-        new cp.BoxShape(
-            body,
-            spr.width,
-            spr.height
-        )
-    );
+        shape.setElasticity(0);
+        shape.setFriction(spr.friction || 0.1);
+        shape.sprite = spr;
+        shape.setCollisionType(this.getCollisionType(spr));
 
-    shape.setElasticity(0);
-    shape.setFriction(spr.friction || 0.1);
-    shape.sprite = spr;
-    shape.setCollisionType(this.getCollisionType(spr));
+        return shape;
+    },
+    getCollisionType: function(spr) {
+        if(spr instanceof gf.Tile) {
+            return gf.PhysicsSystem.COLLISION_TYPE.TILE;
+        } else {
+            return gf.PhysicsSystem.COLLISION_TYPE.SPRITE;
+        }
+    },
+    add: function(spr) {
+        if(!spr._phys)
+            spr._phys = {};
 
-    return shape;
-};
+        //already in system
+        if(spr._phys.body)
+            return;
 
-gf.PhysicsSystem.prototype.getCollisionType = function(spr) {
-    if(spr instanceof gf.Tile) {
-        return COLLISION_TYPE.TILE;
-    } else {
-        return COLLISION_TYPE.SPRITE;
+        var body = this._createBody(spr),
+            shape = this._createShape(spr, body);
+
+        spr._phys.body = body;
+        spr._phys.shape = shape;
+
+        //add control body and constraints
+        if(body.m !== Infinity) {
+            var cbody = new cp.Body(Infinity, Infinity), //control body
+                cpivot = this.space.addConstraint(new cp.PivotJoint(cbody, body, cp.vzero, cp.vzero)),
+                cgear = this.space.addConstraint(new cp.GearJoint(cbody, body, 0, 1));
+
+            cpivot.maxBias = 0; //disable join correction
+            cpivot.maxForce = 10000; //emulate linear friction
+
+            cgear.errorBias = 0; //attempt to fully correct the joint each step
+            cgear.maxBias = 1.2; //but limit the angular correction
+            cgear.maxForce = 50000; //emulate angular friction
+
+            if(!spr._phys.control)
+                spr._phys.control = {};
+
+            spr._phys.control.body = cbody;
+            spr._phys.control.pivot = cpivot;
+            spr._phys.control.gear = cgear;
+        }
+    },
+    remove: function(spr) {
+        if(!spr || !spr._phys || !spr._phys.body || !spr._phys.shape)
+            return;
+
+        this.space.remove(spr._phys.body);
+        this.space.remove(spr._phys.shape);
+
+        spr._phys.shape.sprite = null;
+
+        //remove references
+        spr._phys.body = null;
+        spr._phys.shape = null;
+    },
+    setMass: function(spr, mass) {
+        if(spr && spr._phys && spr._phys.body)
+            spr._phys.body.setMass(mass);
+    },
+    setVelocity: function(spr, vel) {
+        //update control body velocity (and pivot contraint makes regular follow)
+        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+            spr._phys.control.body.setVel(vel);
+
+        //if no control body then update real body
+        else if(spr && spr._phys && spr._phys.body)
+            spr._phys.body.setVel(vel);
+    },
+    setPosition: function(spr, pos) {
+        //update body position
+        if(spr && spr._phys && spr._phys.body)
+            spr._phys.body.setPos(pos);
+
+        //update control body position
+        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+            spr._phys.control.body.setPos(pos);
+    },
+    setRotation: function(spr, rads) {
+        //update control body rotation (and gear contraint makes regular follow)
+        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+            spr._phys.control.body.setAngle(rads);
+
+        //if no control body then update real body
+        else if(spr && spr._phys && spr._phys.body)
+            spr._phys.body.setAngle(rads);
+
+    },
+    update: function(dt) {
+        //execute the physics step
+        this.space.step(dt);
+
+        //go through each changed shape
+        this.space.activeShapes.each(function(shape) {
+            shape.sprite.setPosition(shape.body.p.x, shape.body.p.y, true);
+            shape.sprite.setRotation(shape.body.a, true);
+        });
+    },
+    onCollisionBegin: function(arbiter) {//, space) {
+        var shapes = arbiter.getShapes(),
+            spr1 = shapes[0].sprite,
+            spr2 = shapes[1].sprite;
+
+        spr1.onCollision(spr2);
+        spr2.onCollision(spr1);
+
+        //maintain the colliding state
+        return true;
     }
+});
+
+gf.PhysicsSystem.COLLISION_TYPE = {
+    SPRITE: 0,
+    TILE: 1
 };
-
-gf.PhysicsSystem.prototype.add = function(spr) {
-    if(!spr._phys)
-        spr._phys = {};
-
-    //already in system
-    if(spr._phys.body)
-        return;
-
-    var body = this._createBody(spr),
-        shape = this._createShape(spr, body);
-
-    spr._phys.body = body;
-    spr._phys.shape = shape;
-
-    //add control body and constraints
-    if(body.m !== Infinity) {
-        var cbody = new cp.Body(Infinity, Infinity), //control body
-            cpivot = this.space.addConstraint(new cp.PivotJoint(cbody, body, cp.vzero, cp.vzero)),
-            cgear = this.space.addConstraint(new cp.GearJoint(cbody, body, 0, 1));
-
-        cpivot.maxBias = 0; //disable join correction
-        cpivot.maxForce = 10000; //emulate linear friction
-
-        cgear.errorBias = 0; //attempt to fully correct the joint each step
-        cgear.maxBias = 1.2; //but limit the angular correction
-        cgear.maxForce = 50000; //emulate angular friction
-
-        if(!spr._phys.control)
-            spr._phys.control = {};
-
-        spr._phys.control.body = cbody;
-        spr._phys.control.pivot = cpivot;
-        spr._phys.control.gear = cgear;
-    }
-};
-
-gf.PhysicsSystem.prototype.remove = function(spr) {
-    if(!spr || !spr._phys || !spr._phys.body || !spr._phys.shape)
-        return;
-
-    this.space.remove(spr._phys.body);
-    this.space.remove(spr._phys.shape);
-
-    spr._phys.shape.sprite = null;
-
-    //remove references
-    spr._phys.body = null;
-    spr._phys.shape = null;
-};
-
-gf.PhysicsSystem.prototype.setMass = function(spr, mass) {
-    if(spr && spr._phys && spr._phys.body)
-        spr._phys.body.setMass(mass);
-};
-
-gf.PhysicsSystem.prototype.setVelocity = function(spr, vel) {
-    //update control body velocity (and pivot contraint makes regular follow)
-    if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
-        spr._phys.control.body.setVel(vel);
-
-    //if no control body then update real body
-    else if(spr && spr._phys && spr._phys.body)
-        spr._phys.body.setVel(vel);
-};
-
-gf.PhysicsSystem.prototype.setPosition = function(spr, pos) {
-    //update body position
-    if(spr && spr._phys && spr._phys.body)
-        spr._phys.body.setPos(pos);
-
-    //update control body position
-    if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
-        spr._phys.control.body.setPos(pos);
-};
-
-gf.PhysicsSystem.prototype.setRotation = function(spr, rads) {
-    //update control body rotation (and gear contraint makes regular follow)
-    if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
-        spr._phys.control.body.setAngle(rads);
-
-    //if no control body then update real body
-    else if(spr && spr._phys && spr._phys.body)
-        spr._phys.body.setAngle(rads);
-
-};
-
-gf.PhysicsSystem.prototype.update = function(dt) {
-    //execute the physics step
-    this.space.step(dt);
-
-    //go through each changed shape
-    this.space.activeShapes.each(function(shape) {
-        shape.sprite.setPosition(shape.body.p.x, shape.body.p.y, true);
-        shape.sprite.setRotation(shape.body.a, true);
-    });
-};
-
-gf.PhysicsSystem.prototype.onCollisionBegin = function(arbiter) {//, space) {
-    var shapes = arbiter.getShapes(),
-        spr1 = shapes[0].sprite,
-        spr2 = shapes[1].sprite;
-
-    spr1.onCollision(spr2);
-    spr2.onCollision(spr1);
-
-    //maintain the colliding state
-    return true;
-};
+/**
+ * Holds a pool of different Objects to help reduce the number times
+ * an object is created and destroyed.
+ *
+ * @class ObjectPool
+ * @extends Object
+ * @namespace gf
+ * @constructor
+ * @param type {mixed} The object type that this pool will hold (like gf.Sprite, or gf.Tile)
+ * @param parent {mixed} The parent that the objects will be added to. Passing this in will
+ *      make the pool add any newly created objects as children to this object.
+ */
 gf.ObjectPool = function(type, parent) {
     this.type = type;
     this.pool = [];
@@ -20955,6 +21685,12 @@ gf.ObjectPool = function(type, parent) {
 };
 
 gf.inherits(gf.ObjectPool, Object, {
+    /**
+     * Creates a new instance of the pool's object type, or if available
+     * pulls one that is already created out of the pool
+     *
+     * @method create
+     */
     create: function() {
         var o = this.pool.pop();
 
@@ -20966,6 +21702,11 @@ gf.inherits(gf.ObjectPool, Object, {
 
         return o;
     },
+    /**
+     * Frees an object back into the pool to be recycled
+     *
+     * @method free
+     */
     free: function(o) {
         this.pool.push(o);
     },
@@ -20984,6 +21725,9 @@ gf.inherits(gf.ObjectPool, Object, {
  * easy to quickly create different registered entities
  *
  * @class SpritePool
+ * @extends Object
+ * @namespace gf
+ * @constructor
  */
 gf.SpritePool = function() {
     this.types = {};
@@ -21038,6 +21782,8 @@ gf.inherits(gf.SpritePool, Object, {
  * The grapefruit utility object, used for misc functions used throughout the code base
  *
  * @class utils
+ * @extends Object
+ * @namespace gf
  */
  gf.utils = {
     _arrayDelim: /[|,]/,
@@ -21250,6 +21996,8 @@ gf.inherits(gf.SpritePool, Object, {
  * The grapefruit math library, used to abstract commonly used math operations
  *
  * @class math
+ * @extends Object
+ * @namespace gf
  */
  gf.math = {
     DEG_TO_RAD: Math.PI / 180,
@@ -21450,10 +22198,12 @@ gf.inherits(gf.SpritePool, Object, {
     }
  };
 /**
- * High performance clock, from mrdoob's Three.js
- * https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js
+ * High performance clock, from mrdoob's Three.js:
+ * <a target="_blank" href="https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js">/src/core/Clock.js</a>
  *
  * @class Clock
+ * @extends Object
+ * @namespace gf
  * @constructor
  * @param autoStart {Boolean} Automatically start the counter or not
  * @example
@@ -21546,6 +22296,8 @@ gf.inherits(gf.Clock, Object, {
  * thanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js
  *
  * @class Vector
+ * @extends Object
+ * @namespace gf
  * @constructor
  * @param x {Number} The x component of the vector
  * @param y {Number} The y component of the vector
@@ -21948,14 +22700,17 @@ gf.inherits(gf.Vector, Object, {
 });
 
 /**
- * Event emitter mixin. This will add emitter properties to an object
- * so that it can emit events, and have others listen for them.
+ * Event emitter mixin. This will add emitter properties to an object so that
+ * it can emit events, and have others listen for them. Based on
+ * <a target="_blank" href="https://github.com/joyent/node/blob/master/lib/events.js">node.js event emitter</a>
+ * 
  *
- * @class Emitter
+ * @class EventEmitter
+ * @namespace gf
  * @constructor
  * @example
  *      function MyObject(clr) {
- *          gf.Emitter.call(this); //adds properties
+ *          gf.EventEmitter.call(this); //adds properties
  *          this.color = clr;
  *      }
  *
@@ -21973,8 +22728,8 @@ gf.inherits(gf.Vector, Object, {
  *      });
  *      o.something('hello');
  */
- gf.Emitter = function() {
-    var listeners = {};
+ gf.EventEmitter = function() {
+    this._events = this._events || {};
 
     /**
      * Registers a listener function to be run on an event occurance
@@ -21984,13 +22739,23 @@ gf.inherits(gf.Vector, Object, {
      * @param listener {Function} The function to execute when the event happens
      */
     this.addEventListener = this.on = function(type, listener) {
-        if(listeners[type] === undefined) {
-            listeners[type] = [];
-        }
+        if(typeof listener !== 'function')
+            throw new TypeError('listener must be a function');
 
-        if(listeners[type].indexOf(listener) === -1) {
-            listeners[type].push(listener);
-        }
+        if(!this._events)
+            this._events = {};
+
+        // Optimize the case of one listener. Don't need the extra array object.
+        if (!this._events[type])
+            this._events[type] = listener;
+        // If we've already got an array, just append.
+        else if (typeof this._events[type] === 'object')
+            this._events[type].push(listener);
+        // Adding the second element, need to change to array.
+        else
+            this._events[type] = [this._events[type], listener];
+
+        return this;
     };
 
     /**
@@ -22000,18 +22765,51 @@ gf.inherits(gf.Vector, Object, {
      * @param type {String} The event name to emit
      * @param data {mixed} Any data you want passed along with the event
      */
-    this.dispatchEvent = this.emit = function(type, data) {
-        if(typeof type === 'object') {
-            data = type;
-            type = data.type;
+    this.dispatchEvent = this.emit = function(type) {
+        var handler, len, args, i, listeners;
+
+        if(!this._events)
+            this._events = {};
+
+        handler = this._events[type];
+
+        if(typeof handler === 'undefined')
+            return false;
+
+        if(typeof handler === 'function') {
+            switch(arguments.length) {
+              // fast cases
+              case 1:
+                handler.call(this);
+                break;
+              case 2:
+                handler.call(this, arguments[1]);
+                break;
+              case 3:
+                handler.call(this, arguments[1], arguments[2]);
+                break;
+              // slower
+              default:
+                len = arguments.length;
+                args = new Array(len - 1);
+                for (i = 1; i < len; i++)
+                  args[i - 1] = arguments[i];
+
+                handler.apply(this, args);
+            }
+        } else if (typeof handler === 'object') {
+            len = arguments.length;
+            args = new Array(len - 1);
+            for (i = 1; i < len; i++)
+                args[i - 1] = arguments[i];
+
+            listeners = handler.slice();
+            len = listeners.length;
+            for (i = 0; i < len; i++)
+                listeners[i].apply(this, args);
         }
 
-        if(!listeners[type])
-            return;
-
-        for(var i = 0, il = listeners[type].length; i < il; ++i) {
-            listeners[type][i].call(this, data);
-        }
+        return this;
     };
 
     /**
@@ -22022,11 +22820,61 @@ gf.inherits(gf.Vector, Object, {
      * @param listener {Function} The function to remove
      */
     this.removeEventListener = this.off = function(type, listener) {
-        var index = listeners[type].indexOf(listener);
+        var list, position, length, i;
 
-        if(index !== -1) {
-            listeners[type].splice(index, 1);
+        if(typeof listener !== 'function')
+            throw new TypeError('listener must be a function');
+
+        if(!this._events[type])
+            return this;
+
+        list = this._events[type];
+        length = list.length;
+        position = -1;
+
+        if(list === listener || (typeof list.listener === 'function' && list.listener === listener)) {
+            this._events[type] = undefined;
+
+        } else if(typeof list === 'object') {
+            for(i = length; i-- > 0;) {
+                if(list[i] === listener || (list[i].listener && list[i].listener === listener)) {
+                    position = i;
+                    break;
+                }
+            }
+
+            if(position < 0)
+                return this;
+
+            if(list.length === 1) {
+                list.length = 0;
+                this._events[type] = undefined;
+            } else {
+                list.splice(position, 1);
+            }
         }
+    };
+
+    /**
+     * Registers a one-time callback for an event
+     *
+     * @method once
+     * @param type {String} The event name to listen for
+     * @param listener {Function} the callback to call when the event occurs
+     */
+    this.once = function(type, listener) {
+        if(typeof listener !== 'function')
+            throw new TypeError('listener must be a function');
+
+        function g() {
+            this.off(type, g);
+            listener.apply(this, arguments);
+        }
+
+        g.listener = listener;
+        this.on(type, g);
+
+        return this;
     };
 };
 
