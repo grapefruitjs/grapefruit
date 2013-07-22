@@ -57,7 +57,7 @@ define(function(require) {
         'utils/math',
         'utils/Clock',
         'utils/Vector',
-        'utils/Emitter'
+        'utils/EventEmitter'
     ];
 
     // Resolve all testModules and then start the Test Runner.

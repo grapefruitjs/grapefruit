@@ -34,7 +34,6 @@ define(function() {
         Q.ok(gf.AnimatedSprite, 'gf.AnimatedSprite');
         Q.ok(gf.Camera, 'gf.Camera');
         Q.ok(gf.DisplayObjectContainer, 'gf.DisplayObjectContainer');
-        Q.ok(gf.Font, 'gf.Font');
         Q.ok(gf.TextureFont, 'gf.TextureFont');
         Q.ok(gf.Game, 'gf.Game');
         Q.ok(gf.GameState, 'gf.GameState');
@@ -65,7 +64,7 @@ define(function() {
         Q.ok(gf.ObjectPool, 'gf.ObjectPool');
         Q.ok(gf.SpritePool, 'gf.SpritePool');
         Q.ok(gf.Clock, 'gf.Clock');
-        Q.ok(gf.Emitter, 'gf.Emitter');
+        Q.ok(gf.EventEmitter, 'gf.EventEmitter');
         Q.ok(gf.Vector, 'gf.Vector');
     });
 });
