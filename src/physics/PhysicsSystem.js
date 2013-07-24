@@ -38,9 +38,13 @@ gf.PhysicsSystem = function(options) {
 
 gf.inherits(gf.PhysicsSystem, Object, {
     _createBody: function(spr) {
+        if(spr.mass === Infinity) {
+            return this.space.staticBody;
+        }
+
         return this.space.addBody(new cp.Body(
             spr.mass || 1,
-            Infinity //cp.momsprForBox(spr.mass, spr.width, spr.height)
+            cp.momentForBox(spr.mass || 1, spr.width, spr.height)
         ));
     },
     _createShape: function(spr, body) {
@@ -105,8 +109,11 @@ gf.inherits(gf.PhysicsSystem, Object, {
         if(!spr || !spr._phys || !spr._phys.body || !spr._phys.shape)
             return;
 
-        this.space.remove(spr._phys.body);
-        this.space.remove(spr._phys.shape);
+        if(spr._phys.body.space)
+            this.space.removeBody(spr._phys.body);
+
+        if(spr._phys.shape.space)
+            this.space.removeShape(spr._phys.shape);
 
         spr._phys.shape.sprite = null;
 

@@ -62,6 +62,15 @@ gf.Camera = function(game, settings) {
     this.hSize = new gf.Vector(0, 0);
 
     /**
+     * The game this camera views
+     *
+     * @property game
+     * @type Game
+     * @readOnly
+     */
+    this.game = game;
+
+    /**
      * The _fx namespace has all the instance variables for all the fx
      *
      * @property _fx
