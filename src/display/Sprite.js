@@ -110,10 +110,10 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
      * @method setRotation
      * @param rotation {Number} The new rotation of the object in radians
      */
-    setRotation: function(rads, skipPhysics) {
+    setRotation: function(rads) {
         this.rotation = rads;
 
-        if(!skipPhysics && this.physics) {
+        if(this.physics) {
             this.physics.setRotation(this, rads);
         }
     },
@@ -124,11 +124,11 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
      * @param x {Number}
      * @param y {Number}
      */
-    setPosition: function(x, y, skipPhysics) {
+    setPosition: function(x, y) {
         this.position.x = x;
         this.position.y = y;
 
-        if(!skipPhysics && this.physics) {
+        if(this.physics) {
             this.physics.setPosition(this, this.position);
         }
     },
