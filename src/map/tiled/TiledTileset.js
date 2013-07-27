@@ -128,7 +128,7 @@ gf.TiledTileset = function(settings) {
     this.textures = [];
 
     //ensure hitArea is a polygon
-    parseHitArea(this.properties);
+    gf.utils.parseHitArea(this.properties);
 
     //massage tile properties
     for(var k in this.tileproperties) {
@@ -139,7 +139,7 @@ gf.TiledTileset = function(settings) {
         if(v.isCollidable === 'true') v.isCollidable = true;
         if(v.isBreakable === 'true') v.isBreakable = true;
 
-        parseHitArea(v);
+        gf.utils.parseHitArea(v);
     }
 
     //generate tile textures
@@ -206,33 +206,3 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
         return this.textures[tileId];
     }
 });
-
-function parseHitArea(obj) {
-    if(!obj || !obj.hitArea)
-        return;
-
-    var h = obj.hitArea.replace(/\[\]/g, '').split(gf.utils._arrayDelim);
-
-    //odd number of values
-    if(h.length % 2 !== 0 && h.length !== 3) {
-        throw 'Strange number of values for hitArea on tileset! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.';
-    }
-
-    var hv = [];
-    for(var i = 0, il = h.length; i < il; ++i) {
-        hv.push(parseFloat(h[i], 10));
-    }
-
-    //a circle x,y,r
-    if(hv.length === 3) {
-        obj.hitArea = new gf.Circle(hv[0], hv[1], hv[2]);
-    }
-    //a rectangle x,y,w,h
-    else if(hv.length === 4) {
-        obj.hitArea = new gf.Rectangle(hv[0], hv[1], hv[2], hv[3]);
-    }
-    //generic polygon
-    else {
-        obj.hitArea = new gf.Polygon(hv);
-    }
-}
