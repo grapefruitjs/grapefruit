@@ -47,5 +47,20 @@ gf.inherits(gf.Map, gf.DisplayObjectContainer, {
             if(o.pan)
                 o.pan(x, y);
         }
+    },
+    /**
+     * Finds a layer based on the string name
+     *
+     * @method findLayer
+     * @param name {String} The name of the layer to find
+     * @return {Layer}
+     */
+    findLayer: function(name) {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.name === name)
+                return o;
+        }
     }
 });
