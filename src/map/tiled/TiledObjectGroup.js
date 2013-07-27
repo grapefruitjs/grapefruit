@@ -128,14 +128,15 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.name = o.name;
                 obj.type = o.type;
                 obj.hitArea = props.hitArea;
-                obj.anchor.y = 1;
+                obj.anchor.y = o.gid !== undefined ? 1 : 0;
                 obj.anchor.x = this.parent.orientation === 'isometric' ? 0.5 : 0;
 
                 if(props.physical === 'true' || props.physics === 'true')
                     obj.enablePhysics(game.physics);
 
                 //set some more stuffz
-                obj.setRotation(o.rotation);
+                if(typeof o.rotation === 'number')
+                    obj.setRotation(o.rotation);
             }
 
             //visible was recently added to Tiled, default old versions to true

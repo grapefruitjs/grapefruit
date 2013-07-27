@@ -304,6 +304,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(!tile) {
             tile = new gf.Tile(texture);
             tile.mass = Infinity;
+            tile.inertia = Infinity;
             tile.anchor.y = 1;
         }
         this.addChild(tile);
