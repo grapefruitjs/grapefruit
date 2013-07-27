@@ -48,13 +48,51 @@ gf.inherits(gf.PhysicsSystem, Object, {
         ));
     },
     _createShape: function(spr, body) {
-        var shape = this.space.addShape(
-            new cp.BoxShape(
+        var shape,
+            hit = spr.hitArea,
+            hw = spr.width / 2,
+            hh = spr.height / 2;
+
+        //specified shape
+        if(hit) {
+            if(hit instanceof gf.Rectangle) {
+                //cp shape anchors are 0.5,0.5 but a rect is 0,0 so we must convert
+                var l = hit.x - hw,
+                    r = hit.x + hit.width - hw,
+                    t = -(hit.y - hh),
+                    b = -(hit.y + hit.height - hh);
+
+                shape = new cp.BoxShape2(body, new cp.BB(l, b, r, t));
+            }
+            else if(hit instanceof gf.Circle) {
+                shape = new cp.CircleShape(body, hit.radius, cp.vzero);
+            }
+            else if(hit instanceof gf.Polygon) {
+                //cp shapes anchors are 0.5,0.5, but a polygon uses 0,0 as the topleft
+                //of the bounding rect so we have to convert
+                var points = [];
+
+                for(var i = 0; i < hit.points.length; ++i) {
+                    var p = hit.points[i];
+
+                    points.push(p.x - hw);
+                    points.push(-(p.y - hh));
+                }
+
+                shape = new cp.PolyShape(body, points, cp.vzero);
+            }
+        }
+
+        //default box shape
+        if(!shape) {
+            shape = new cp.BoxShape(
                 body,
                 spr.width,
                 spr.height
-            )
-        );
+            );
+        }
+
+        this.space.addShape(shape);
 
         shape.width = spr.width;
         shape.height = spr.height;
