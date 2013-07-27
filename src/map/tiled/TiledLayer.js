@@ -61,28 +61,25 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
     resize: function(width, height) {
         //clear all the visual tiles
         this.clearTiles();
-        //set rendered area
-        this._rendered.x = this.parent.position.x;
-        this._rendered.y = this.parent.position.y;
-        this._rendered.width = width;
-        this._rendered.height = height;
 
         if(this.parent.orientation === 'isometric') {
-            return this._renderIsoTiles(
-                this.parent.position.x,
-                this.parent.position.y,
-                width,
-                height
-            );
-        }
-        else {
-            return this._renderOrthoTiles(
+            this._renderIsoTiles(
                 -this.parent.position.x,
                 -this.parent.position.y,
                 width,
                 height
             );
         }
+        else {
+            this._renderOrthoTiles(
+                -this.parent.position.x,
+                -this.parent.position.y,
+                width,
+                height
+            );
+        }
+
+        this._updateRenderSq();
     },
     _renderOrthoTiles: function(sx, sy, sw, sh) {
         //convert to tile coords
@@ -109,30 +106,30 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             }
         }
 
-        /*//set rendered area
+        //set rendered area
         this._rendered.x = sx;
         this._rendered.y = sy;
         this._rendered.width = sw;
         this._rendered.height = sh;
-        this._updateRenderSq();
 
         //reset buffered status
         this._buffered.left = this._buffered.right = this._buffered.top = this._buffered.bottom = false;
 
         //reset panDelta
         this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
-        this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;*/
+        this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
     _renderIsoTiles: function(sx, sy, sw, sh) {
+        this._rendered.x = sx;
+        this._rendered.y = sx;
+        this._rendered.width = sw;
+        this._rendered.height = sh;
+
         var scaled = this.parent.scaledTileSize;
 
         //convert to tile coords
         sx = Math.floor(sx / (scaled.x / 2));
         sy = Math.floor(sy / scaled.y);
-
-        //the view rect offset is opposite of what the world is
-        sx = -sx;
-        sy = -sy;
 
         //convert to tile units
         sw = Math.ceil(sw / (scaled.x / 2));
@@ -376,10 +373,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Layer} Returns itself for chainability
      */
     pan: function(dx, dy) {
-        this.resize(this._rendered.width, this._rendered.height);
+        if(this.parent.orientation === 'isometric')
+            return this.resize(this._rendered.width, this._rendered.height);
 
         this._panDelta.x += dx;
-        this._panDelta.y += dy;/*
+        this._panDelta.y += dy;
 
         //check if we need to build a buffer around the viewport
         //usually this happens on the first pan after a full render
@@ -419,7 +417,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         while(this._panDelta.y <= -this.parent.scaledTileSize.y) {
             this._renderDown();
             this._panDelta.y += this.parent.scaledTileSize.y;
-        }*/
+        }
     },
     _renderLeft: function(forceNew) {
         //move all the far right tiles to the left side
