@@ -413,7 +413,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
             //if we move a lot, then just force a re render (less expensive then panning all the way there)
             if(Math.abs(dx) > this.hSize.x || Math.abs(dy) > this.hSize.y) {
                 this.game.world.setPosition(this.game.world.position.x - dx, this.game.world.position.y - dy);
-                this.game.world.resize();
+                this.game.world.resize(this.size.x, this.size.y);
             }
             //otherwise just pan
             else {
@@ -485,7 +485,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
                     dx, dy,
                     //get the x,y of the sprite on the screen
                     camX = (this._target.position.x + (this.game.world.position.x / this.game.world.scale.x)) * this.game.world.scale.x,
-                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * this.game.world.scale.x;
+                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * this.game.world.scale.y;
 
                 moveX = moveY = dx = dy = 0;
 
