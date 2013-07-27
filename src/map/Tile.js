@@ -42,7 +42,7 @@ gf.inherits(gf.Tile, gf.Sprite, {
 /**
  * Tile collision types
  *
- * @property COLLISION
+ * @property TYPE
  * @type Object
  * @static
  */
