@@ -20,6 +20,8 @@ gf.AnimatedSprite = function(anims, speed, start) {
 
         if(anim instanceof Array)
             anims[a] = { frames: anim };
+        else if(anim instanceof gf.Texture)
+            anims[a] = { frames: [anim] };
     }
 
     gf.Sprite.call(this, anims[start].frames[0]);
