@@ -44,7 +44,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
         return this.space.addBody(new cp.Body(
             spr.mass || 1,
-            cp.momentForBox(spr.mass || 1, spr.width, spr.height)
+            spr.inertia || cp.momentForBox(spr.mass || 1, spr.width, spr.height)
         ));
     },
     _createShape: function(spr, body) {
@@ -57,7 +57,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
         );
 
         shape.setElasticity(0);
-        shape.setFriction(spr.friction || 0.1);
+        shape.setFriction(spr.friction !== undefined ? spr.friction : 0.1);
         shape.sprite = spr;
         shape.setCollisionType(this.getCollisionType(spr));
 
