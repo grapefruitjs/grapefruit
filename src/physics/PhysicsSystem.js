@@ -56,6 +56,8 @@ gf.inherits(gf.PhysicsSystem, Object, {
             )
         );
 
+        shape.width = spr.width;
+        shape.height = spr.height;
         shape.setElasticity(0);
         shape.setFriction(spr.friction !== undefined ? spr.friction : 0.1);
         shape.sprite = spr;
@@ -159,8 +161,12 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
         //go through each changed shape
         this.space.activeShapes.each(function(shape) {
-            shape.sprite.setPosition(shape.body.p.x, shape.body.p.y, true);
-            shape.sprite.setRotation(shape.body.a, true);
+            //since the anchor for a cp shape is 0.5 0.5, we have to modify the pos a bit
+            //to make it match the sprite's anchor point
+            var spr = shape.sprite;
+            spr.position.x = shape.body.p.x;// + ((spr.anchor.x * shape.width) - (shape.width / 2));
+            spr.position.y = shape.body.p.y;// + ((spr.anchor.y * shape.height) - (shape.height / 2));
+            spr.rotation = shape.body.a;
         });
     },
     onCollisionBegin: function(arbiter) {//, space) {
