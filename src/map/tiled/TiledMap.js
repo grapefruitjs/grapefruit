@@ -171,8 +171,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @private
      */
     onTileEvent: function(eventName, tile, data) {
-        this.emit({
-            type: 'tile.' + eventName,
+        this.emit('tile.' + eventName, {
             tile: tile,
             data: data
         });
@@ -188,8 +187,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @private
      */
     onObjectEvent: function(eventName, obj, data) {
-        this.emit({
-            type: 'object.' + eventName,
+        this.emit('object.' + eventName, {
             object: obj,
             data: data
         });

@@ -380,7 +380,7 @@ gf.inherits(gf.Game, Object, {
      * @private
      */
     _tick: function() {
-        this.emit({ type: 'beforetick' });
+        this.emit('beforetick');
         //start render loop
         window.requestAnimFrame(this._tick.bind(this));
 
@@ -389,6 +389,6 @@ gf.inherits(gf.Game, Object, {
 
         //render scene
         this.renderer.render(this.stage);
-        this.emit({ type: 'aftertick' });
+        this.emit('aftertick');
     }
 });

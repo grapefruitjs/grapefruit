@@ -147,8 +147,7 @@ gf.inherits(gf.AudioPlayer, Object, {
                 //check if loaded
                 if(!self._loaded) {
                     self._loaded = true;
-                    self.emit({
-                        type: 'load',
+                    self.emit('load', {
                         message: 'Audio file loaded.',
                         data: self.src
                     });
@@ -233,8 +232,7 @@ gf.inherits(gf.AudioPlayer, Object, {
                     }
 
                     //fire off the end event
-                    self.emit({
-                        type: 'end',
+                    self.emit('end', {
                         message: 'Audio has finished playing',
                         data: o.id
                     });
@@ -294,8 +292,7 @@ gf.inherits(gf.AudioPlayer, Object, {
                 }
             }
 
-            self.emit({
-                type: 'play',
+            self.emit('play', {
                 message: 'Playing audio file',
                 data: soundId
             });
@@ -350,8 +347,7 @@ gf.inherits(gf.AudioPlayer, Object, {
             }
         }
 
-        this.emit({
-            type: 'pause',
+        this.emit('pause', {
             message: 'Audio file paused',
             data: id
         });
@@ -886,8 +882,7 @@ if(gf.support.webAudio) {
         //fire the load event
         if(!this._loaded) {
             this._loaded = true;
-            this.emit({
-                type: 'load',
+            this.emit('load', {
                 message: 'Audio file loaded.',
                 data: this.src
             });
