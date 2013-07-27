@@ -129,18 +129,30 @@ gf.TiledTileset = function(settings) {
 
     //ensure hitArea is a polygon
     if(this.properties.hitArea) {
-        var h = this.properties.hitArea.split(gf.utils._arrayDelim);
+        var h = this.properties.hitArea.replace(/\[\]/g, '').split(gf.utils._arrayDelim);
 
         //odd number of values
-        if(h.length % 2 !== 0) {
-            throw 'Uneven number of values for hitArea on tileset! Should be a flat array of x/y values.';
+        if(h.length % 2 !== 0 && h.length !== 3) {
+            throw 'Strange number of values for hitArea on tileset! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.';
         }
 
         var hv = [];
         for(var i = 0, il = h.length; i < il; ++i) {
             hv.push(parseFloat(h[i], 10));
         }
-        this.properties.hitArea = new gf.Polygon(hv);
+
+        //a circle x,y,r
+        if(hv.length === 3) {
+            this.properties.hitArea = new gf.Circle(hv[0], hv[1], hv[2]);
+        }
+        //a rectangle x,y,w,h
+        else if(hv.length === 4) {
+            this.properties.hitArea = new gf.Rectangle(hv[0], hv[1], hv[2], hv[3]);
+        }
+        //generic polygon
+        else {
+            this.properties.hitArea = new gf.Polygon(hv);
+        }
     }
 
     //massage tile properties
