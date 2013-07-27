@@ -128,7 +128,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.name = o.name;
                 obj.type = o.type;
                 obj.hitArea = props.hitArea;
-                obj.anchor.y = o.gid !== undefined ? 1 : 0;
+                obj.anchor.y = 1;
                 obj.anchor.x = this.parent.orientation === 'isometric' ? 0.5 : 0;
 
                 if(props.physical === 'true' || props.physics === 'true')
