@@ -77,14 +77,14 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             //non-sprite object (usually to define an "area" on a map)
             else {
                 //define a hitArea
-                if(o.polyline)
+                if(props.hitArea)
+                    gf.utils.parseHitArea(props);
+                else if(o.polyline)
                     props.hitArea = this._getPolyline(o);
                 else if(o.polygon)
                     props.hitArea = this._getPolygon(o);
                 else if(o.ellipse)
                     props.hitArea = this._getEllipse(o);
-                else if(props.hitArea)
-                    gf.utils.parseHitArea(props);
                 else
                     props.hitArea = this._getRectangle(o);
             }

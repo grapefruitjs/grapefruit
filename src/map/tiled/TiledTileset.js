@@ -136,8 +136,8 @@ gf.TiledTileset = function(settings) {
 
         if(v.normal) v.normal = gf.utils.ensureVector(v.normal);
 
-        if(v.isCollidable === 'true') v.isCollidable = true;
-        if(v.isBreakable === 'true') v.isBreakable = true;
+        v.collidable = (v.collidable === 'true');
+        v.breakable = (v.breakable === 'true');
 
         gf.utils.parseHitArea(v);
     }
@@ -182,8 +182,8 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
                 this.tileproperties[tileId] :
                 //set this id to default values and cache
                 this.tileproperties[tileId] = {
-                    isCollidable: false,
-                    isBreakable: false,
+                    collidable: false,
+                    breakable: false,
                     type: gf.Tile.TYPE.NONE
                 };
     },
