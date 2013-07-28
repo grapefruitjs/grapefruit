@@ -70,7 +70,13 @@ gf.inherits(gf.PhysicsSystem, Object, {
                 shape = new cp.BoxShape2(body, new cp.BB(l, b, r, t));
             }
             else if(hit instanceof gf.Circle) {
-                shape = new cp.CircleShape(body, hit.radius, cp.vzero);
+                //the offset needs to move the circle to the sprite center based on the sprite's anchor (bottom-left)
+                var offset = new gf.Vector(
+                    spr.width / 4,
+                    -spr.height / 4
+                );
+
+                shape = new cp.CircleShape(body, hit.radius, offset);
             }
             else if(hit instanceof gf.Polygon) {
                 //cp shapes anchors are 0.5,0.5, but a polygon uses 0,0 as the topleft
