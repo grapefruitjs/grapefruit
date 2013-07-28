@@ -38,29 +38,34 @@ gf.PhysicsSystem = function(options) {
 
 gf.inherits(gf.PhysicsSystem, Object, {
     _createBody: function(spr) {
-        if(spr.mass === Infinity) {
-            return this.space.staticBody;
-        }
-
-        return this.space.addBody(new cp.Body(
+        var body = new cp.Body(
             spr.mass || 1,
             spr.inertia || cp.momentForBox(spr.mass || 1, spr.width, spr.height)
-        ));
+        );
+
+        if(spr.mass === Infinity) {
+            //inifinite mass means it is static, so make it static
+            //and do not add it to the world (no need to simulate it)
+            body.nodeIdleTime = Infinity;
+        } else {
+            this.space.addBody(body);
+        }
+
+        return body;
     },
     _createShape: function(spr, body) {
         var shape,
-            hit = spr.hitArea,
-            hw = spr.width / 2,
-            hh = spr.height / 2;
+            hit = spr.hitArea;
 
         //specified shape
         if(hit) {
             if(hit instanceof gf.Rectangle) {
-                //cp shape anchors are 0.5,0.5 but a rect is 0,0 so we must convert
-                var l = hit.x - hw,
-                    r = hit.x + hit.width - hw,
-                    t = -(hit.y - hh),
-                    b = -(hit.y + hit.height - hh);
+                //convert the top-left anchored rectangle to left,right,bottom,top values
+                //for chipmunk space that will corospond to our own
+                var l = hit.x,
+                    r = hit.x + hit.width,
+                    b = hit.y - spr.height,
+                    t = b + hit.height;
 
                 shape = new cp.BoxShape2(body, new cp.BB(l, b, r, t));
             }
@@ -70,13 +75,14 @@ gf.inherits(gf.PhysicsSystem, Object, {
             else if(hit instanceof gf.Polygon) {
                 //cp shapes anchors are 0.5,0.5, but a polygon uses 0,0 as the topleft
                 //of the bounding rect so we have to convert
-                var points = [];
+                var points = [],
+                    ps = hit.points.slice().reverse();
 
-                for(var i = 0; i < hit.points.length; ++i) {
-                    var p = hit.points[i];
+                for(var i = 0; i < ps.length; ++i) {
+                    var p = ps[i];
 
-                    points.push(p.x - hw);
-                    points.push(-(p.y - hh));
+                    points.push(p.x);
+                    points.push(p.y - spr.height);
                 }
 
                 shape = new cp.PolyShape(body, points, cp.vzero);
@@ -85,11 +91,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
         //default box shape
         if(!shape) {
-            shape = new cp.BoxShape(
-                body,
-                spr.width,
-                spr.height
-            );
+            shape = new cp.BoxShape2(body, new cp.BB(0, -spr.height, spr.width, 0));
         }
 
         this.space.addShape(shape);
@@ -102,6 +104,9 @@ gf.inherits(gf.PhysicsSystem, Object, {
         shape.setCollisionType(this.getCollisionType(spr));
 
         return shape;
+    },
+    invalidCollisions: function() {
+        this.space.reindexStatic();
     },
     getCollisionType: function(spr) {
         if(spr instanceof gf.Tile) {
@@ -205,6 +210,10 @@ gf.inherits(gf.PhysicsSystem, Object, {
             spr.position.x = shape.body.p.x;// + ((spr.anchor.x * shape.width) - (shape.width / 2));
             spr.position.y = shape.body.p.y;// + ((spr.anchor.y * shape.height) - (shape.height / 2));
             spr.rotation = shape.body.a;
+
+            if(spr._showHit) {
+                spr.showPhysics();
+            }
         });
     },
     onCollisionBegin: function(arbiter) {//, space) {
