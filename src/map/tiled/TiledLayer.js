@@ -80,6 +80,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         }
 
         this._updateRenderSq();
+        if(this.hasPhysics) {
+            this.parent.parent.physics.invalidCollisions();
+        }
     },
     _renderOrthoTiles: function(sx, sy, sw, sh) {
         //convert to tile coords
@@ -290,6 +293,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
             tile = this.tiles[fromTileX][fromTileY];
             this.tiles[fromTileX][fromTileY] = null;
+
+            tile.disablePhysics();
         }
         //otherwise grab a new tile from the pool
         else {
@@ -306,17 +311,18 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         }
         this.addChild(tile);
 
-        if(props.isCollidable)
-            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
-
-        tile.setTexture(texture);
-        tile.setPosition(position[0], position[1]);
-
-        tile.setInteractive(interactive);
-
         tile.collisionType = props.type;
         tile.visible = true;
         tile.hitArea = hitArea;
+        tile.interactive = interactive;
+
+        if(props.collidable) {
+            this.hasPhysics = true;
+            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
+        }
+
+        tile.setTexture(texture);
+        tile.setPosition(position[0], position[1]);
 
         //pass through all events
         if(interactive) {
@@ -373,9 +379,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Layer} Returns itself for chainability
      */
     pan: function(dx, dy) {
+        //isometric pan (just re render everything)
         if(this.parent.orientation === 'isometric')
             return this.resize(this._rendered.width, this._rendered.height);
 
+        //optimized ortho pan, move only what is needed to move
         this._panDelta.x += dx;
         this._panDelta.y += dy;
 
@@ -417,6 +425,10 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         while(this._panDelta.y <= -this.parent.scaledTileSize.y) {
             this._renderDown();
             this._panDelta.y += this.parent.scaledTileSize.y;
+        }
+
+        if(this.hasPhysics) {
+            this.parent.parent.physics.invalidCollisions();
         }
     },
     _renderLeft: function(forceNew) {
