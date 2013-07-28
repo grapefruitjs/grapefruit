@@ -80,6 +80,12 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
     disablePhysics: function() {
         if(this.physics) {
             this.physics.remove(this);
+
+            if(this._hit) {
+                this._showHit = false;
+                this.parent.removeChild(this._hit);
+                this._hit = null;
+            }
         }
     },
     /**
@@ -138,12 +144,11 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
      * @method destroy
      */
     destroy: function() {
+        if(this.physics)
+            this.disablePhysics();
+
         if(this.parent)
             this.parent.removeChild(this);
-
-        if(this.physics)
-            this.physics.remove(this);
-
     },
     /**
      * On Collision Event
@@ -182,7 +187,6 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
 
         if(!this._hit) {
             this._hit = new PIXI.Graphics();
-            this._hit.lastPos = new gf.Point();
             this._hit.style = {
                 size: size,
                 color: color,
@@ -196,11 +200,6 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
             p = this._phys.body.p,
             g = this._hit;
 
-        //if(g.lastPos && g.lastPos.x === p.x && g.lastPos.y === p.y)
-            //return;
-
-        g.lastPos.x = p.x;
-        g.lastPos.y = p.y;
         g.clear();
         g.lineStyle(g.style.size, g.style.color, g.style.alpha);
 
