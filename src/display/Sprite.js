@@ -203,19 +203,29 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
         g.clear();
         g.lineStyle(g.style.size, g.style.color, g.style.alpha);
 
-        var sx = shape.verts[0],
-            sy = shape.verts[1];
+        //circle
+        if(shape.type === 'circle') {
+            var cx = shape.bb_l + ((shape.bb_r - shape.bb_l) / 2) + shape.c.x,
+                cy = shape.bb_t + ((shape.bb_b - shape.bb_t) / 2) + shape.c.y;
 
-        g.moveTo(p.x + sx, p.y + sy);
-
-        for(var i = 2; i < shape.verts.length; i+=2) {
-            g.lineTo(
-                p.x + shape.verts[i],
-                p.y + shape.verts[i + 1]
-            );
+            g.drawCircle(cx, cy, shape.r);
         }
+        //polygon
+        else {
+            var sx = shape.verts[0],
+                sy = shape.verts[1];
 
-        g.lineTo(p.x + sx, p.y + sy);
+            g.moveTo(p.x + sx, p.y + sy);
+
+            for(var i = 2; i < shape.verts.length; i+=2) {
+                g.lineTo(
+                    p.x + shape.verts[i],
+                    p.y + shape.verts[i + 1]
+                );
+            }
+
+            g.lineTo(p.x + sx, p.y + sy);
+        }
     },
     /**
      * Hides the physics body for the sprite
