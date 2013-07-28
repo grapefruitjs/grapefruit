@@ -54,10 +54,12 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
         //list of object gets rendered on top.
         for(var i = this.objects.length - 1; i >= 0; --i) {
             var o = this.objects[i],
-                props = o.properties || {},
+                props = gf.utils.parseTiledProperties(o.properties) || {},
                 set,
                 interactive,
                 obj;
+
+            props.tileprops = {};
 
             //create a sprite with that texture
             if(o.gid) {
@@ -67,6 +69,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
                 if(set) {
                     props.texture = set.getTileTexture(o.gid);
+                    props.tileprops = set.getTileProperties(o.gid);
 
                     //if no hitArea then use the tileset's if available
                     if(!props.hitArea) {
@@ -76,17 +79,17 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             }
             //non-sprite object (usually to define an "area" on a map)
             else {
-                //define a hitArea
-                if(props.hitArea)
-                    gf.utils.parseHitArea(props);
-                else if(o.polyline)
-                    props.hitArea = this._getPolyline(o);
-                else if(o.polygon)
-                    props.hitArea = this._getPolygon(o);
-                else if(o.ellipse)
-                    props.hitArea = this._getEllipse(o);
-                else
-                    props.hitArea = this._getRectangle(o);
+                if(!props.hitArea) {
+                    //define a hitArea
+                    if(o.polyline)
+                        props.hitArea = this._getPolyline(o);
+                    else if(o.polygon)
+                        props.hitArea = this._getPolygon(o);
+                    else if(o.ellipse)
+                        props.hitArea = this._getEllipse(o);
+                    else
+                        props.hitArea = this._getRectangle(o);
+                }
             }
 
             //a manually specified string texture
@@ -109,6 +112,8 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 props.width = o.width;
                 props.height = o.height;
                 props.zIndex = this.zIndex;
+                props.mass = props.mass || props.tileprops.mass;
+                props.inertia = props.inertia || props.tileprops.inertia;
 
                 obj = game.spritepool.create(o.name, props.texture, props);
 
@@ -119,7 +124,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.anchor.y = 1;
                 obj.anchor.x = this.parent.orientation === 'isometric' ? 0.5 : 0;
 
-                if(props.physical === 'true' || props.physics === 'true')
+                if(props.mass || props.tileprops.mass)
                     obj.enablePhysics(game.physics);
 
                 //set some more stuffz
@@ -139,7 +144,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 o.y = (toTileY * this.parent.tileSize.y / 2) + (toTileX * this.parent.tileSize.y);
             }
 
-            interactive = this._getInteractive(set, o);
+            interactive = this._getInteractive(set, props);
 
             //pass through all events
             if(interactive) {
@@ -185,29 +190,13 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
     _getRectangle: function(o) {
         return new gf.Rectangle(0, 0, o.width, o.height);
     },
-    _getInteractive: function(set, o) {
-        var v;
-
+    _getInteractive: function(set, props) {
         //first check the lowest level value (on the tile iteself)
-        if(o.interactive !== undefined || o.interactiveTiles !== undefined)
-            v = o;
-        //next check if the tileset has the value
-        else if(set && (set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined))
-            v = set.properties;
-        //next check if this layer has interactive tiles
-        else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
-            v = this.properties;
-        //finally check if the map as a whole has interactive tiles
-        else if(this.parent.properties.interactive !== undefined || this.parent.properties.interactiveTiles !== undefined)
-            v = this.parent.properties;
-
-        //see if anything has a value to use
-        if(v) {
-            //if they do, lets grab what the interactive value is
-            return !!(v.interactive || v.interactiveTiles);
-        }
-
-        return false;
+        return props.interactive || //obj interactive
+                props.tileprops.interactive || //tile object interactive
+                (set && set.properties.interactive) || //tileset interactive
+                this.properties.interactive || //layer interactive
+                this.parent.properties.interactive; //map interactive
     },
     /**
      * Despawns all the sprites associated with this layer

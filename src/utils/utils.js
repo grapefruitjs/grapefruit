@@ -210,33 +210,62 @@
 
         return obj;
     },
-    parseHitArea: function(obj) {
-        if(!obj || !obj.hitArea)
-            return;
-
-        var h = obj.hitArea.replace(/\[\]/g, '').split(gf.utils._arrayDelim);
+    parseHitArea: function(hv) {
+        var ha;
 
         //odd number of values
-        if(h.length % 2 !== 0 && h.length !== 3) {
-            throw 'Strange number of values for hitArea on tileset! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.';
-        }
-
-        var hv = [];
-        for(var i = 0, il = h.length; i < il; ++i) {
-            hv.push(parseFloat(h[i], 10));
+        if(hv.length % 2 !== 0 && hv.length !== 3) {
+            throw 'Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.';
         }
 
         //a circle x,y,r
         if(hv.length === 3) {
-            obj.hitArea = new gf.Circle(hv[0], hv[1], hv[2]);
+            ha = new gf.Circle(hv[0], hv[1], hv[2]);
         }
         //a rectangle x,y,w,h
         else if(hv.length === 4) {
-            obj.hitArea = new gf.Rectangle(hv[0], hv[1], hv[2], hv[3]);
+            ha = new gf.Rectangle(hv[0], hv[1], hv[2], hv[3]);
         }
         //generic polygon
         else {
-            obj.hitArea = new gf.Polygon(hv);
+            ha = new gf.Polygon(hv);
         }
+
+        return ha;
+    },
+    parseTiledProperties: function(obj) {
+        if(!obj) return;
+
+        for(var k in obj) {
+            var v = obj[k];
+
+            //try to massage numbers
+            if(!isNaN(v))
+                obj[k] = parseFloat(v, 10);
+            //true values
+            else if(v === 'true')
+                obj[k] = true;
+            //false values
+            else if(v === 'false')
+                obj[k] = false;
+            //anything else is either a string or json, try json
+            else {
+                try{
+                    v = JSON.parse(v);
+                    obj[k] = v;
+                } catch(e) {}
+            }
+        }
+
+        //after parsing, check some other things
+        if(obj.hitArea)
+            obj.hitArea = gf.utils.parseHitArea(obj.hitArea);
+
+        if(obj['static']) {
+            obj.mass = Infinity;
+            obj.inertia = Infinity;
+        }
+
+        return obj;
     }
 };

@@ -23,9 +23,9 @@ gf.TiledMap = function(map) {
      * @type Object
      * @default {}
      */
-    this.properties = map.properties || {};
-    this.scale.x = parseFloat(this.properties.scale, 10) || 1;
-    this.scale.y = parseFloat(this.properties.scale, 10) || 1;
+    this.properties = gf.utils.parseTiledProperties(map.properties) || {};
+    this.scale.x = this.properties.scale || 1;
+    this.scale.y = this.properties.scale || 1;
 
     /**
      * The tile size
