@@ -30,7 +30,7 @@ gf.GuiItem = function(texture, interactive) {
     this.dragging = false;
 
     gf.Sprite.call(this, texture);
-    this.setInteractive(interactive);
+    this.interactive = interactive;
 };
 
 gf.inherits(gf.GuiItem, gf.Sprite, {

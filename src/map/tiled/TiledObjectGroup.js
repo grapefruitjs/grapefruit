@@ -143,7 +143,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
             //pass through all events
             if(interactive) {
-                obj.setInteractive(interactive);
+                obj.interactive = interactive;
 
                 obj.click = this.onObjectEvent.bind(this, 'click', obj);
                 obj.mousedown = this.onObjectEvent.bind(this, 'mousedown', obj);
