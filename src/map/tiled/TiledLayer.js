@@ -324,6 +324,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);
 
+        if(props.collidable && this.parent._showPhysics)
+            tile.showPhysics();
+
         //pass through all events
         if(interactive) {
             tile.click = this.onTileEvent.bind(this, 'click', tile);

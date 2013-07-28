@@ -117,6 +117,8 @@ gf.TiledMap = function(map) {
 
         this.addChild(lyr);
     }
+
+    this._showPhysics = false;
 };
 
 gf.inherits(gf.TiledMap, gf.Map, {
