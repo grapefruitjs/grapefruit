@@ -63,8 +63,6 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
             //create a sprite with that texture
             if(o.gid) {
-                gf.utils.parseHitArea(props);
-
                 set = this.parent.getTileset(o.gid);
 
                 if(set) {
@@ -73,7 +71,10 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
                     //if no hitArea then use the tileset's if available
                     if(!props.hitArea) {
-                        props.hitArea = set.properties.hitArea;
+                        if(props.tileprops.hitArea)
+                            props.hitArea = props.tileprops.hitArea;
+                        else
+                            props.hitArea = set.properties.hitArea;
                     }
                 }
             }
@@ -112,8 +113,6 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 props.width = o.width;
                 props.height = o.height;
                 props.zIndex = this.zIndex;
-                props.mass = props.mass || props.tileprops.mass;
-                props.inertia = props.inertia || props.tileprops.inertia;
 
                 obj = game.spritepool.create(o.name, props.texture, props);
 
@@ -121,6 +120,8 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.name = o.name;
                 obj.type = o.type;
                 obj.hitArea = props.hitArea;
+                obj.mass = props.mass || props.tileprops.mass;
+                obj.inertia = props.inertia || props.tileprops.inertia;
                 obj.anchor.y = 1;
                 obj.anchor.x = this.parent.orientation === 'isometric' ? 0.5 : 0;
 

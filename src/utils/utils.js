@@ -261,7 +261,7 @@
         if(obj.hitArea)
             obj.hitArea = gf.utils.parseHitArea(obj.hitArea);
 
-        if(obj['static']) {
+        if(obj.static) {
             obj.mass = Infinity;
             obj.inertia = Infinity;
         }
