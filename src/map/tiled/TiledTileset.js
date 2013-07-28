@@ -127,19 +127,13 @@ gf.TiledTileset = function(settings) {
      */
     this.textures = [];
 
-    //ensure hitArea is a polygon
-    gf.utils.parseHitArea(this.properties);
+    //massages strings into the values they should be
+    //i.e. "true" becomes the value: true
+    this.properties = gf.utils.parseTiledProperties(this.properties);
 
     //massage tile properties
     for(var k in this.tileproperties) {
-        var v = this.tileproperties[k];
-
-        if(v.normal) v.normal = gf.utils.ensureVector(v.normal);
-
-        v.collidable = (v.collidable === 'true');
-        v.breakable = (v.breakable === 'true');
-
-        gf.utils.parseHitArea(v);
+        this.tileproperties[k] = gf.utils.parseTiledProperties(this.tileproperties[k]);
     }
 
     //generate tile textures

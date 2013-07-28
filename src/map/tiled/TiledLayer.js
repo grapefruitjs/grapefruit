@@ -36,7 +36,7 @@ gf.TiledLayer = function(layer) {
      * @property properties
      * @type Object
      */
-    this.properties = layer.properties || {};
+    this.properties = gf.utils.parseTiledProperties(layer.properties) || {};
 
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
@@ -305,8 +305,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //then create a new tile
         if(!tile) {
             tile = new gf.Tile(texture);
-            tile.mass = Infinity;
-            tile.inertia = Infinity;
+            tile.mass = props.mass;
+            tile.inertia = props.inertia;
             tile.anchor.y = 1;
         }
         this.addChild(tile);
@@ -316,7 +316,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         tile.hitArea = hitArea;
         tile.interactive = interactive;
 
-        if(props.collidable) {
+        if(props.mass) {
             this.hasPhysics = true;
             tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
         }
@@ -324,7 +324,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);
 
-        if(props.collidable && this.parent._showPhysics)
+        if(props.mass && this.parent._showPhysics)
             tile.showPhysics();
 
         //pass through all events
@@ -349,29 +349,12 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
     onTileEvent: function(eventName, tile, data) {
         this.parent.onTileEvent(eventName, tile, data);
     },
-    _getInteractive: function(set, o) {
-        var v;
-
+    _getInteractive: function(set, props) {
         //first check the lowest level value (on the tile iteself)
-        if(o.interactive !== undefined || o.interactiveTiles !== undefined)
-            v = o;
-        //next check if the tileset has the value
-        else if(set && (set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined))
-            v = set.properties;
-        //next check if this layer has interactive tiles
-        else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
-            v = this.properties;
-        //finally check if the map as a whole has interactive tiles
-        else if(this.parent.properties.interactive !== undefined || this.parent.properties.interactiveTiles !== undefined)
-            v = this.parent.properties;
-
-        //see if anything has a value to use
-        if(v) {
-            //if they do, lets grab what the interactive value is
-            return !!(v.interactive || v.interactiveTiles);
-        }
-
-        return false;
+        return props.interactive || //obj interactive
+                (set && set.properties.interactive) || //tileset interactive
+                this.properties.interactive || //layer interactive
+                this.parent.properties.interactive; //map interactive
     },
     /**
      * Pans the layer around, rendering stuff if necessary
