@@ -160,6 +160,73 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
             obj.destroy();
 
         this.emit('collision', obj);
+    },
+    /**
+     * Shows the physics body for the sprite
+     *
+     * @method showPhysics
+     */
+    showPhysics: function(size, color, alpha) {
+        this._showHit = true;
+        if(!this._phys || !this._phys.body || !this._phys.shape)
+            return;
+
+        if(size === undefined)
+            size = 1;
+
+        if(color === undefined)
+            color = 0xFF00FF;
+
+        if(alpha === undefined)
+            alpha = 1;
+
+        if(!this._hit) {
+            this._hit = new PIXI.Graphics();
+            this._hit.lastPos = new gf.Point();
+            this._hit.style = {
+                size: size,
+                color: color,
+                alpha: alpha
+            };
+
+            this.parent.addChild(this._hit);
+        }
+
+        var shape = this._phys.shape,
+            p = this._phys.body.p,
+            g = this._hit;
+
+        //if(g.lastPos && g.lastPos.x === p.x && g.lastPos.y === p.y)
+            //return;
+
+        g.lastPos.x = p.x;
+        g.lastPos.y = p.y;
+        g.clear();
+        g.lineStyle(g.style.size, g.style.color, g.style.alpha);
+
+        var sx = shape.verts[0],
+            sy = shape.verts[1];
+
+        g.moveTo(p.x + sx, p.y + sy);
+
+        for(var i = 2; i < shape.verts.length; i+=2) {
+            g.lineTo(
+                p.x + shape.verts[i],
+                p.y + shape.verts[i + 1]
+            );
+        }
+
+        g.lineTo(p.x + sx, p.y + sy);
+    },
+    /**
+     * Hides the physics body for the sprite
+     *
+     * @method hidePhysics
+     */
+    hidePhysics: function() {
+        this._showHit = false;
+        if(this._hit)
+            this._hit.visible = false;
     }
 });
 
