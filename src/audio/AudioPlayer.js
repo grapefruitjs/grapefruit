@@ -12,9 +12,6 @@
  * @param settings {Object} All the settings for this player instance
  */
 gf.AudioPlayer = function(manager, settings) {
-    //mixin the Event Target methods
-    gf.EventEmitter.call(this);
-
     /**
      * The source of the audio, the actual URL to load up
      *
@@ -821,6 +818,7 @@ gf.inherits(gf.AudioPlayer, Object, {
         return node[i];
     }
 });
+gf.EventEmitter.call(gf.AudioPlayer.prototype);
 
 //define some prototype functions that are only available when using the WebAudio API
 if(gf.support.webAudio) {

@@ -63,7 +63,7 @@ gf.input.getGpButtonName = function(i) {
 
     //setup default objects for each axis
     for(var bt in gf.input.GP_BUTTON) {
-        this.buttons[bt] = {
+        this.buttons[gf.input.GP_BUTTON[bt]] = {
             code: bt,
             down: false,
             value: 0

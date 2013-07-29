@@ -105,8 +105,13 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.width = o.width;
                 obj.height = o.height;
                 obj.name = o.name;
+                obj.type = o.type;
                 obj.hitArea = props.hitArea;
                 obj.rotation = o.rotation;
+                obj.sensor = true;
+
+                game.physics.add(obj);
+                game.physics.setPosition(obj, new gf.Point(o.x, o.y));
             } else {
                 //some variable for the user if they want them
                 //these will be passed through to a custom sprite if wanted
@@ -122,6 +127,8 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.hitArea = props.hitArea;
                 obj.mass = props.mass || props.tileprops.mass;
                 obj.inertia = props.inertia || props.tileprops.inertia;
+                obj.friction = props.friction || props.tileprops.friction;
+                obj.sensor = props.sensor || props.tileprops.sensor;
                 obj.anchor.y = 1;
                 obj.anchor.x = this.parent.orientation === 'isometric' ? 0.5 : 0;
 

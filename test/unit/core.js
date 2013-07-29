@@ -61,6 +61,7 @@ define(function() {
         Q.ok(gf.TiledObjectGroup, 'gf.TiledObjectGroup');
         Q.ok(gf.TiledTileset, 'gf.TiledTileset');
         Q.ok(gf.PhysicsSystem, 'gf.PhysicsSystem');
+        Q.ok(gf.PhysicsTarget, 'gf.PhysicsTarget');
         Q.ok(gf.ObjectPool, 'gf.ObjectPool');
         Q.ok(gf.SpritePool, 'gf.SpritePool');
         Q.ok(gf.Clock, 'gf.Clock');

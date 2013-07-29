@@ -51,7 +51,7 @@ gf.input.getGpAxisName = function(i) {
 
     //setup default objects for each axis
     for(var ax in gf.input.GP_AXIS) {
-        this.axes[ax] = {
+        this.axes[gf.input.GP_AXIS[ax]] = {
             code: ax,
             negative: false,
             value: 0

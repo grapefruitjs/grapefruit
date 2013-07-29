@@ -49,6 +49,7 @@ define(function(require) {
         'map/tiled/TiledObjectGroup',
 
         'physics/PhysicsSystem',
+        'physics/PhysicsTarget.js',
 
         'pool/SpritePool',
         'pool/ObjectPool',

@@ -17,9 +17,6 @@
  *      loader.load(['/my/texture.png']);
  */
 gf.AssetLoader = function() {
-    //mixin the Event Target methods
-    gf.EventEmitter.call(this);
-
     /**
      * The array of assets to load
      *
@@ -170,3 +167,4 @@ gf.inherits(gf.AssetLoader, Object, {
         }
     }
 });
+gf.EventEmitter.call(gf.AssetLoader.prototype);
