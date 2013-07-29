@@ -258,17 +258,24 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
             switch(act) {
                 case 'add':
-                    if(!data.body.isStatic())
+                    data.body.setPos(data.spr.position);
+                    if(!data.body.isStatic()) {
                         this.space.addBody(data.body);
+                    }
 
                     this.space.addShape(data.shape);
 
                     if(data.control) {
+                        data.control.body.setPos(data.spr.position);
                         this.space.addConstraint(data.control.pivot);
                         this.space.addConstraint(data.control.gear);
                     }
 
                     data.spr._phys = data;
+
+                    if(data.spr._showHit) {
+                        data.spr.showPhysics();
+                    }
                     break;
 
                 case 'remove':
