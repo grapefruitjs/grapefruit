@@ -316,16 +316,16 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         tile.hitArea = hitArea;
         tile.interactive = interactive;
 
-        if(props.mass) {
-            this.hasPhysics = true;
-            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
-        }
-
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);
 
-        if(props.mass && this.parent._showPhysics)
-            tile.showPhysics();
+        if(props.mass) {
+            this.hasPhysics = true;
+            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
+
+            if(this.parent._showPhysics)
+                tile.showPhysics();
+        }
 
         //pass through all events
         if(interactive) {

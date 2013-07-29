@@ -109,9 +109,11 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.hitArea = props.hitArea;
                 obj.rotation = o.rotation;
                 obj.sensor = true;
+                obj.setPosition(o.x, o.y);
 
-                game.physics.add(obj);
-                game.physics.setPosition(obj, new gf.Point(o.x, o.y));
+                obj.enablePhysics(game.physics);
+                if(this.parent._showPhysics)
+                    obj.showPhysics();
             } else {
                 //some variable for the user if they want them
                 //these will be passed through to a custom sprite if wanted
@@ -131,9 +133,14 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.sensor = props.sensor || props.tileprops.sensor;
                 obj.anchor.y = 1;
                 obj.anchor.x = this.parent.orientation === 'isometric' ? 0.5 : 0;
+                obj.setPosition(o.x, o.y);
 
-                if(props.mass || props.tileprops.mass)
+                if(props.mass || props.tileprops.mass) {
                     obj.enablePhysics(game.physics);
+
+                    if(this.parent._showPhysics)
+                        obj.showPhysics();
+                }
 
                 //set some more stuffz
                 if(typeof o.rotation === 'number')
@@ -167,7 +174,6 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.mouseupoutside = this.onObjectEvent.bind(this, 'mouseupoutside', obj);
             }
 
-            obj.setPosition(o.x, o.y);
             this.addChild(obj);
         }
 
