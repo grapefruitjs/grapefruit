@@ -17,6 +17,8 @@
  * @param [settings.interactive] {Boolean} Whether the game will use mouse events or not
  */
 gf.Game = function(contId, settings) {
+    gf.EventEmitter.call(this);
+
     /**
      * The domElement that we are putting our rendering canvas into (the container)
      *
@@ -389,4 +391,3 @@ gf.inherits(gf.Game, Object, {
         this.emit('aftertick');
     }
 });
-gf.EventEmitter.call(gf.Game.prototype);

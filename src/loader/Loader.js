@@ -10,6 +10,8 @@
  * @param url {String} The url to load the resource from, also used as a key in the assetCache
  */
 gf.Loader = function(name, url) {
+    gf.EventEmitter.call(this);
+
     this.type = 'hey';
 
     this.name = name;
@@ -79,4 +81,3 @@ gf.inherits(gf.Loader, Object, {
         }, 0);
     }
 });
-gf.EventEmitter.call(gf.Loader.prototype);

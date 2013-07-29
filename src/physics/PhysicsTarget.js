@@ -6,7 +6,6 @@
  * @constructor
  * @example
  *      function MyObject(clr) {
- *          gf.PhysicsTarget.call(this); //adds properties
  *          this.color = clr;
  *      }
  *
@@ -14,6 +13,7 @@
  *          something: function(s) {
  *          }
  *      });
+ *      gf.PhysicsTarget.call(MyObject.prototype); //adds properties
  *
  *      //then later
  *      var o = new MyObject('red');

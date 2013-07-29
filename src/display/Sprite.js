@@ -13,6 +13,8 @@
  */
 gf.Sprite = function(tx) {
     PIXI.Sprite.call(this, tx);
+    gf.PhysicsTarget.call(this);
+    gf.EventEmitter.call(this);
 
     /**
      * The type of the sprite
@@ -38,8 +40,6 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
             this.parent.removeChild(this);
     }
 });
-gf.PhysicsTarget.call(gf.Sprite.prototype);
-gf.EventEmitter.call(gf.Sprite.prototype);
 
 /**
  * Sprite types
