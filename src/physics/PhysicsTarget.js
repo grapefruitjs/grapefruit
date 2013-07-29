@@ -150,11 +150,11 @@
      * @method onCollision
      * @param obj {Sprite} Colliding sprite
      */
-    this.onCollision = function(obj) {
+    this.onCollision = function(obj, vec) {
         if(obj.type === gf.Sprite.TYPE.COLLECTABLE)
             obj.destroy();
 
-        this.emit('collision', obj);
+        this.emit('collision', obj, vec);
     };
 
 
