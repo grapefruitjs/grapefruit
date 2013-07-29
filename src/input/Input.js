@@ -14,6 +14,8 @@ gf.input = {};
  * @param view {DOMElement} The DOMElement to bind input events to
  */
 gf.input.Input = function(view) {
+    gf.EventEmitter.call(this);
+
     /**
      * For backwards compatibility
      *
@@ -49,4 +51,3 @@ gf.inherits(gf.input.Input, Object, {
         return false;
     }
 });
-gf.EventEmitter.call(gf.Input.prototype);

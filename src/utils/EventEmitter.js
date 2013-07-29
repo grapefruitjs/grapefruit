@@ -8,7 +8,6 @@
  * @constructor
  * @example
  *      function MyObject(clr) {
- *          gf.EventEmitter.call(this); //adds properties
  *          this.color = clr;
  *      }
  *
@@ -17,6 +16,7 @@
  *              this.emit('hey', { some: s });
  *          }
  *      });
+ *      gf.EventEmitter.call(MyObject.prototype); //adds properties
  *
  *      //then later
  *      var o = new MyObject('red');
@@ -26,7 +26,7 @@
  *      });
  *      o.something('hello');
  */
- gf.EventEmitter = function() {
+gf.EventEmitter = function() {
     this._events = this._events || {};
 
     /**

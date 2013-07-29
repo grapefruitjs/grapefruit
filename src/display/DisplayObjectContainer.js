@@ -10,6 +10,8 @@
  */
 gf.DisplayObjectContainer = function(settings) {
     PIXI.DisplayObjectContainer.call(this);
+    gf.PhysicsTarget.call(this);
+    gf.EventEmitter.call(this);
 
     //mixin user's settings
     gf.utils.setValues(this, settings);
@@ -147,8 +149,6 @@ gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
             this.parent.removeChild(this);
     }
 });
-gf.PhysicsTarget.call(gf.DisplayObjectContainer.prototype);
-gf.EventEmitter.call(gf.DisplayObjectContainer.prototype);
 
 //Add event echos
 ['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
