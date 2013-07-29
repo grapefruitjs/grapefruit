@@ -214,8 +214,13 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
      */
     despawn: function() {
         //remove each sprite from the game
-        for(var i = this.children.length; i > -1; --i) {
-            this.removeChild(this.children[i]);
+        for(var i = this.children.length - 1; i > -1; --i) {
+            var c = this.children[i];
+
+            if(c.destroy)
+                c.destroy();
+            else
+                this.removeChild(c);
         }
 
         return this;

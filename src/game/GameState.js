@@ -155,7 +155,6 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
         this.addChild(this.world);
 
         this.world.resize(this._game.renderer.width, this._game.renderer.height);
-        this.world.spawnObjects();
 
         this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
 
