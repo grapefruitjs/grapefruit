@@ -40,7 +40,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
     _createBody: function(spr) {
         var body = new cp.Body(
             spr.mass || 1,
-            spr.inertia || cp.momentForBox(spr.mass || 1, spr.width, spr.height)
+            spr.inertia || cp.momentForBox(spr.mass || 1, spr.width, spr.height) || Infinity
         );
 
         if(spr.mass === Infinity) {
@@ -91,7 +91,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
                 //cp shapes anchors are 0.5,0.5, but a polygon uses 0,0 as the topleft
                 //of the bounding rect so we have to convert
                 var points = [],
-                    ps = hit.points.slice().reverse();
+                    ps = hit.points;//.slice().reverse();
 
                 for(var i = 0; i < ps.length; ++i) {
                     var p = ps[i];
@@ -100,7 +100,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
                     points.push(p.y - spr.height);
                 }
 
-                shape = new cp.PolyShape(body, points, cp.vzero);
+                shape = new cp.PolyShape(body, cp.convexHull(points, null, 0), cp.vzero);
             }
         }
 
