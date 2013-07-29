@@ -72,10 +72,6 @@ gf.inherits(gf.PhysicsSystem, Object, {
                 b += bias;
                 t += bias;
 
-                if(spr.type === 'zone' || spr.type === 'player') {
-                    window.console.log(spr.anchor, l, r, t, b, spr);
-                }
-
                 shape = new cp.BoxShape2(body, new cp.BB(l, b, r, t));
             }
             else if(hit instanceof gf.Circle) {
