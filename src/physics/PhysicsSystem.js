@@ -34,6 +34,8 @@ gf.PhysicsSystem = function(options) {
         null, //postSolve
         null //separate
     );
+
+    this.actionQueue = [];
 };
 
 gf.inherits(gf.PhysicsSystem, Object, {
@@ -47,9 +49,9 @@ gf.inherits(gf.PhysicsSystem, Object, {
             //inifinite mass means it is static, so make it static
             //and do not add it to the world (no need to simulate it)
             body.nodeIdleTime = Infinity;
-        } else {
-            this.space.addBody(body);
-        }
+        }// else {
+            //this.space.addBody(body);
+        //}
 
         return body;
     },
@@ -105,7 +107,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
             shape = new cp.BoxShape2(body, new cp.BB(0, -spr.height, spr.width, 0));
         }
 
-        this.space.addShape(shape);
+        //this.space.addShape(shape);
 
         shape.width = spr.width;
         shape.height = spr.height;
@@ -118,7 +120,13 @@ gf.inherits(gf.PhysicsSystem, Object, {
         return shape;
     },
     invalidCollisions: function() {
-        this.space.reindexStatic();
+        this.actionQueue.push(['reindexStatic']);
+
+        if(this.space.locked) {
+            this.space.addPostStepCallback(this.onPostStep.bind(this));
+        } else {
+            this.onPostStep();
+        }
     },
     getCollisionType: function(spr) {
         if(spr instanceof gf.Tile) {
@@ -128,24 +136,19 @@ gf.inherits(gf.PhysicsSystem, Object, {
         }
     },
     add: function(spr) {
-        if(!spr._phys)
-            spr._phys = {};
-
         //already in system
-        if(spr._phys.body)
+        if(spr._phys && spr._phys.body)
             return;
 
         var body = this._createBody(spr),
-            shape = this._createShape(spr, body);
-
-        spr._phys.body = body;
-        spr._phys.shape = shape;
+            shape = this._createShape(spr, body),
+            control;
 
         //add control body and constraints
-        if(body.m !== Infinity) {
+        if(!body.isStatic()) {
             var cbody = new cp.Body(Infinity, Infinity), //control body
-                cpivot = this.space.addConstraint(new cp.PivotJoint(cbody, body, cp.vzero, cp.vzero)),
-                cgear = this.space.addConstraint(new cp.GearJoint(cbody, body, 0, 1));
+                cpivot = new cp.PivotJoint(cbody, body, cp.vzero, cp.vzero),
+                cgear = new cp.GearJoint(cbody, body, 0, 1);
 
             cpivot.maxBias = 0; //disable join correction
             cpivot.maxForce = 10000; //emulate linear friction
@@ -154,29 +157,36 @@ gf.inherits(gf.PhysicsSystem, Object, {
             cgear.maxBias = 1.2; //but limit the angular correction
             cgear.maxForce = 50000; //emulate angular friction
 
-            if(!spr._phys.control)
-                spr._phys.control = {};
+            control = {};
+            control.body = cbody;
+            control.pivot = cpivot;
+            control.gear = cgear;
+        }
 
-            spr._phys.control.body = cbody;
-            spr._phys.control.pivot = cpivot;
-            spr._phys.control.gear = cgear;
+        this.actionQueue.push(['add', {
+            spr: spr,
+            body: body,
+            shape: shape,
+            control: control
+        }]);
+
+        if(this.space.locked) {
+            this.space.addPostStepCallback(this.onPostStep.bind(this));
+        } else {
+            this.onPostStep();
         }
     },
     remove: function(spr) {
         if(!spr || !spr._phys || !spr._phys.body || !spr._phys.shape)
             return;
 
-        if(spr._phys.body.space)
-            this.space.removeBody(spr._phys.body);
+        this.actionQueue.push(['remove', spr._phys]);
 
-        if(spr._phys.shape.space)
-            this.space.removeShape(spr._phys.shape);
-
-        spr._phys.shape.sprite = null;
-
-        //remove references
-        spr._phys.body = null;
-        spr._phys.shape = null;
+        if(this.space.locked) {
+            this.space.addPostStepCallback(this.onPostStep.bind(this));
+        } else {
+            this.onPostStep();
+        }
     },
     setMass: function(spr, mass) {
         if(spr && spr._phys && spr._phys.body)
@@ -238,6 +248,47 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
         //maintain the colliding state
         return true;
+    },
+    onPostStep: function() {
+        //remove items
+        while(this.actionQueue.length) {
+            var a = this.actionQueue.pop(),
+                act = a[0],
+                data = a[1];
+
+            switch(act) {
+                case 'add':
+                    if(!data.body.isStatic())
+                        this.space.addBody(data.body);
+
+                    this.space.addShape(data.shape);
+
+                    if(data.control) {
+                        this.space.addConstraint(data.control.pivot);
+                        this.space.addConstraint(data.control.gear);
+                    }
+
+                    data.spr._phys = data;
+                    break;
+
+                case 'remove':
+                    if(data.body.space)
+                        this.space.removeBody(data.body);
+
+                    if(data.shape.space)
+                        this.space.removeShape(data.shape);
+
+                    //remove references
+                    data.body = null;
+                    data.shape.sprite = null;
+                    data.shape = null;
+                    break;
+
+                case 'reindex':
+                    this.space.reindexStatic();
+                    break;
+            }
+        }
     }
 });
 
