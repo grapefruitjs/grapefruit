@@ -156,7 +156,7 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
 
         this.world.resize(this._game.renderer.width, this._game.renderer.height);
 
-        this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
+        this.camera.constrain(new gf.Rectangle(0, 0, this.world.realSize.x, this.world.realSize.y), true);
 
         /* TODO: Autoplay music
         if(this.world.properties.music) {

@@ -394,20 +394,16 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
 
         if(!dx && !dy) return;
 
-        var newX = this.game.world.position.x - dx,
-            newY = this.game.world.position.y - dy;
+        var pos = this.game.world.position,
+            newX = pos.x - dx,
+            newY = pos.y - dy;
 
-        //move only the difference that puts us at 0
-        if(newX > 0)
-            dx = 0 + this.game.world.position.x;
-        //move only the difference that puts us at max (remember that position is negative)
-        else if(newX < -this._bounds.maxPanX)
-            dx = this._bounds.maxPanX + this.game.world.position.x;
-
-        if(newY > 0)
-            dy = 0 - Math.abs(this.game.world.position.y);
-        else if(newY < -this._bounds.maxPanY)
-            dy = this._bounds.maxPanY + this.game.world.position.y;
+        if(this._bounds) {
+            if(this._outsideBounds(-newX, -pos.y))
+                dx = 0;
+            if(this._outsideBounds(-pos.x, -newY))
+                dy = 0;
+        }
 
         if(dx || dy) {
             //if we move a lot, then just force a re render (less expensive then panning all the way there)
@@ -422,6 +418,14 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
         }
 
         return this;
+    },
+    _outsideBounds: function(x, y) {
+        return (
+            !this._bounds.contains(x, y) || //top left
+            !this._bounds.contains(x, y + this.size.y) || //bottom left
+            !this._bounds.contains(x + this.size.x, y) || //top right
+            !this._bounds.contains(x + this.size.x, y + this.size.y) //bottom right
+        );
     },
     /**
      * Resizes the viewing area, this is called internally by your game instance
@@ -446,26 +450,37 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * Sets the bounds the camera is allowed to go. Usually this is the world's
      * min and max, and is set for you.
      *
-     * @method setBounds
-     * @param x {Number} The minimum x coord (usually 0)
-     * @param y {Number} The minimum y coord (usually 0)
-     * @param width {Number} The maximum x coord (usually map width)
-     * @param height {Number} The maximum y coord (usually map height)
+     * @method constrain
+     * @param shape {Rectangle|Polygon|Circle|Ellipse} The shape to constrain the camera into
      * @return {Camera} Returns iteself for chainability
      */
-    setBounds: function(x, y, width, height) {
-        this._bounds.x = x;
-        this._bounds.y = y;
-        this._bounds.width = width;
-        this._bounds.height = height;
+    constrain: function(shape, scaled) {
+        this._bounds = shape;
 
-        this._bounds.maxX = this._bounds.x + this._bounds.width;
-        this._bounds.maxY = this._bounds.y + this._bounds.height;
+        //scale the points
+        if(!scaled) {
+            if(shape instanceof gf.Rectangle) {
+                shape.x *= this.game.world.scale.x;
+                shape.y *= this.game.world.scale.y;
+                shape.width *= this.game.world.scale.x;
+                shape.height *= this.game.world.scale.y;
+            } else if(shape instanceof gf.Polygon) {
+                for(var i = 0; i < shape.points.length; ++i) {
+                    var p = shape.points[i];
 
-        this._bounds.maxPanX = width - this.size.x;
-        this._bounds.maxPanY = height - this.size.y;
+                    p.x *= this.game.world.scale.x;
+                    p.y *= this.game.world.scale.y;
+                }
+            } else {
+                shape.x *= this.game.world.scale.x;
+                shape.y *= this.game.world.scale.y;
+            }
+        }
 
         return this;
+    },
+    unconstrain: function() {
+        this._bounds = null;
     },
     /**
      * Called internally every frame. Updates all effects and the follow
