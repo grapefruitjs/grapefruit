@@ -14,6 +14,15 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/core.js',
         '<%= dirs.src %>/plugin.js',
 
+        '<%= dirs.src %>/utils/utils.js',
+        '<%= dirs.src %>/utils/math.js',
+        '<%= dirs.src %>/utils/Clock.js',
+        '<%= dirs.src %>/utils/Vector.js',
+        '<%= dirs.src %>/utils/EventEmitter.js',
+
+        '<%= dirs.src %>/physics/PhysicsSystem.js',
+        '<%= dirs.src %>/physics/PhysicsTarget.js',
+
         '<%= dirs.src %>/audio/AudioManager.js',
         '<%= dirs.src %>/audio/AudioPlayer.js',
 
@@ -55,16 +64,8 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/map/tiled/TiledTileset.js',
         '<%= dirs.src %>/map/tiled/TiledObjectGroup.js',
 
-        '<%= dirs.src %>/physics/PhysicsSystem.js',
-
         '<%= dirs.src %>/pool/ObjectPool.js',
-        '<%= dirs.src %>/pool/SpritePool.js',
-
-        '<%= dirs.src %>/utils/utils.js',
-        '<%= dirs.src %>/utils/math.js',
-        '<%= dirs.src %>/utils/Clock.js',
-        '<%= dirs.src %>/utils/Vector.js',
-        '<%= dirs.src %>/utils/EventEmitter.js'
+        '<%= dirs.src %>/pool/SpritePool.js'
     ],
     vendorFiles = [
         '<%= dirs.vendor %>/es5-shim.min.js',

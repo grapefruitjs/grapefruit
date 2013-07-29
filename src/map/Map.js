@@ -3,15 +3,11 @@
  *
  * @class Map
  * @extends gf.DisplayObjectContainer
- * @uses gf.EventEmitter
  * @namespace gf
  * @constructor
  * @param map {Object} All the settings for the map
  */
 gf.Map = function(map) {
-    //mixin the Event Target methods
-    gf.EventEmitter.call(this);
-
     /**
      * The size of the map
      *

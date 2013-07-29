@@ -65,7 +65,16 @@ gf.inherits(gf.PhysicsSystem, Object, {
                 var l = hit.x,
                     r = hit.x + hit.width,
                     b = hit.y - spr.height,
-                    t = b + hit.height;
+                    t = b + hit.height,
+                    a = spr.anchor ? spr.anchor.y : 0,
+                    bias = hit.height - (hit.height * a);
+
+                b += bias;
+                t += bias;
+
+                if(spr.type === 'zone' || spr.type === 'player') {
+                    window.console.log(spr.anchor, l, r, t, b, spr);
+                }
 
                 shape = new cp.BoxShape2(body, new cp.BB(l, b, r, t));
             }
@@ -104,10 +113,11 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
         shape.width = spr.width;
         shape.height = spr.height;
-        shape.setElasticity(0);
-        shape.setFriction(spr.friction !== undefined ? spr.friction : 0.1);
         shape.sprite = spr;
+        shape.setElasticity(0);
+        shape.setSensor(spr.sensor);
         shape.setCollisionType(this.getCollisionType(spr));
+        shape.setFriction(spr.friction !== undefined ? spr.friction : 0.1);
 
         return shape;
     },

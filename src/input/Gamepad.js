@@ -153,7 +153,7 @@ gf.inherits(gf.input.Gamepad, gf.input.Input, {
             //don't do anything if the current timestamp is the same as the previous one
             //(meaning the state has not changed). This is a chrome-only feature right now,
             //so first we have to check if it is empty as well
-            if(pad.timestamp && (pad.timestamp === gf.gamepad.prevTimestamps[i]))
+            if(pad.timestamp && (pad.timestamp === this.prevTimestamps[i]))
                 continue;
 
             this.prevTimestamps[i] = pad.timestamp;

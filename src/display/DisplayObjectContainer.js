@@ -3,6 +3,8 @@
  *
  * @class DisplayObjectContainer
  * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a>
+ * @uses gf.EventEmitter
+ * @uses gf.PhysicsTarget
  * @namespace gf
  * @constructor
  */
@@ -131,46 +133,22 @@ gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
                 o.resize.apply(o, arguments);
         }
     },
-    /**
-     * Convenience method for setting the position of the Object.
-     *
-     * @method setPosition
-     * @param x {Number|Array<Number>|Vector|Point} X coord to put the object at.
-     *       If an Array, Vector, or Point is passed then the y parameter is ignored
-     * @param y {Number} Y coord to put the object at
-     * @return {DisplayObjectContainer} Returns itself for chainability
-     * @example
-     *      obj.setPosition(0) //will set to (0, 0)
-     *          .setPosition(1, 1)
-     *          .setPosition([5, 5])
-     *          .setPosition(new gf.Point(10, 10))
-     *          .setPosition(new gf.Vector(20, 20));
-     */
-    setPosition: function(x, y) {
-        //passed in a vector or point object
-        if(x instanceof gf.Vector || x instanceof gf.Point) {
-            this.position.x = x.x;
-            this.position.y = x.y;
-        }
-        //passed in an array of form [x, y]
-        else if(x instanceof Array) {
-            this.position.x = x[0];
-            this.position.y = x[1];
-        }
-        //passed in a single number, that will apply to both
-        else if(typeof x === 'number' && y === undefined) {
-            this.position.x = x;
-            this.position.y = x;
-        }
-        //passed in something else, lets try to massage it into numbers
-        else {
-            this.position.x = parseFloat(x, 10) || 0;
-            this.position.y = parseFloat(y, 10) || 0;
-        }
 
-        return this;
+    /**
+     * Removes this object from the stage and the physics system
+     *
+     * @method destroy
+     */
+    destroy: function() {
+        if(this.physics)
+            this.disablePhysics();
+
+        if(this.parent)
+            this.parent.removeChild(this);
     }
 });
+gf.PhysicsTarget.call(gf.DisplayObjectContainer.prototype);
+gf.EventEmitter.call(gf.DisplayObjectContainer.prototype);
 
 //Add event echos
 ['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
