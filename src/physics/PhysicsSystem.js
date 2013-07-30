@@ -120,7 +120,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
         shape.setElasticity(0);
         shape.setSensor(spr.sensor);
         shape.setCollisionType(this.getCollisionType(spr));
-        shape.setFriction(spr.friction !== undefined ? spr.friction : 0.1);
+        shape.setFriction(spr.friction || 0);
 
         return shape;
     },
@@ -183,6 +183,14 @@ gf.inherits(gf.PhysicsSystem, Object, {
             var s = this._createShape(spr, spr._phys.body, poly);
 
             s.setSensor(sensor);
+            s.width = spr.width;
+            s.height = spr.height;
+            s.sprite = spr;
+            s.setElasticity(0);
+            s.setSensor(sensor !== undefined ? sensor : spr.sensor);
+            s.setCollisionType(this.getCollisionType(spr));
+            s.setFriction(spr.friction || 0);
+
             this.actionQueue.push(['addCustomShape', { spr: spr, shape: s }]);
             this.act();
 
