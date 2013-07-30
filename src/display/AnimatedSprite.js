@@ -11,17 +11,22 @@
  * @param [start] {String} The animation to start with, defaults to the first found key otherwise
  */
 gf.AnimatedSprite = function(anims, speed, start) {
-    //massage animations into full format
-    for(var a in anims) {
-        if(start === undefined)
-            start = a;
+    if(anims instanceof Array) {
+        anims = { _default: { frames: [anims] } };
+        start = '_default';
+    } else {
+        //massage animations into full format
+        for(var a in anims) {
+            if(start === undefined)
+                start = a;
 
-        var anim = anims[a];
+            var anim = anims[a];
 
-        if(anim instanceof Array)
-            anims[a] = { frames: anim };
-        else if(anim instanceof gf.Texture)
-            anims[a] = { frames: [anim] };
+            if(anim instanceof Array)
+                anims[a] = { frames: anim };
+            else if(anim instanceof gf.Texture)
+                anims[a] = { frames: [anim] };
+        }
     }
 
     gf.Sprite.call(this, anims[start].frames[0]);
