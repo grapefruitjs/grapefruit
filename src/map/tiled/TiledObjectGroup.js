@@ -177,6 +177,14 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.mouseupoutside = this.onObjectEvent.bind(this, 'mouseupoutside', obj);
             }
 
+            //set custom properties
+            obj.properties = {};
+            for(var t in props.tileprops)
+                obj.properties[t] = props.tileprops[t];
+            for(var k in props)
+                if(k !== 'tileprops')
+                    obj.properties[k] = props[k];
+
             this.addChild(obj);
         }
 
