@@ -189,12 +189,18 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
      */
     update: function(dt) {
         //gather input from user
+        this.game.timings.inputStart = this.game.timings._timer.now();
         this.input.update(dt);
+        this.game.timings.inputEnd = this.game.timings._timer.now();
 
         //update any camera effects
+        this.game.timings.cameraStart = this.game.timings._timer.now();
         this.camera.update(dt);
+        this.game.timings.cameraEnd = this.game.timings._timer.now();
 
         //simulate physics and detect/resolve collisions
+        this.game.timings.physicsStart = this.game.timings._timer.now();
         this.physics.update(dt);
+        this.game.timings.physicsEnd = this.game.timings._timer.now();
     }
 });
