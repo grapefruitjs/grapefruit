@@ -33,8 +33,7 @@ gf.inherits(gf.Sprite, PIXI.Sprite, {
      * @method destroy
      */
     destroy: function() {
-        if(this.physics)
-            this.disablePhysics();
+        this.disablePhysics();
 
         if(this.parent)
             this.parent.removeChild(this);
