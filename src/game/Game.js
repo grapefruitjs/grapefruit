@@ -150,6 +150,17 @@ gf.Game = function(contId, settings) {
     this.activeState = null;
     this._defaultState = new gf.GameState('_default');
 
+    /**
+     * Holds timing data for the previous loop
+     *
+     * @property timings
+     * @type Object
+     * @readOnly
+     */
+    this.timings = {
+        _timer: window.performance && window.performance.now ? window.performance : Date
+    };
+
     //append the renderer view only if the user didn't pass their own
     if(!settings.view)
         this.container.appendChild(this.renderer.view);
@@ -384,10 +395,14 @@ gf.inherits(gf.Game, Object, {
         window.requestAnimFrame(this._tick.bind(this));
 
         //update this game state
+        this.timings.stateStart = this.timings._timer.now();
         this.activeState.update(this.clock.getDelta());
+        this.timings.stateEnd = this.timings._timer.now();
 
         //render scene
+        this.timings.renderStart = this.timings._timer.now();
         this.renderer.render(this.stage);
+        this.timings.renderEnd = this.timings._timer.now();
         this.emit('aftertick');
     }
 });
