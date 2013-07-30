@@ -55,9 +55,9 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
         return body;
     },
-    _createShape: function(spr, body) {
+    _createShape: function(spr, body, poly) {
         var shape,
-            hit = spr.hitArea,
+            hit = poly || spr.hitArea,
             ax = spr.anchor ? spr.anchor.x : 0,
             ay = spr.anchor ? spr.anchor.y : 0,
             aw = spr.width * ax,
@@ -84,8 +84,8 @@ gf.inherits(gf.PhysicsSystem, Object, {
             else if(hit instanceof gf.Circle) {
                 //the offset needs to move the circle to the sprite center based on the sprite's anchor (bottom-left)
                 var offset = new gf.Vector(
-                    ((spr.width / 2) - aw),
-                    ((spr.height / 2) - ah)
+                    ((spr.width / 2) - aw) + hit.x,
+                    ((spr.height / 2) - ah) + hit.y
                 );
 
                 shape = new cp.CircleShape(body, hit.radius, offset);
@@ -126,12 +126,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
     },
     invalidCollisions: function() {
         this.actionQueue.push(['reindexStatic']);
-
-        if(this.space.locked) {
-            this.space.addPostStepCallback(this.onPostStep.bind(this));
-        } else {
-            this.onPostStep();
-        }
+        this.act();
     },
     getCollisionType: function(spr) {
         if(spr instanceof gf.Tile) {
@@ -174,23 +169,24 @@ gf.inherits(gf.PhysicsSystem, Object, {
             shape: shape,
             control: control
         }]);
-
-        if(this.space.locked) {
-            this.space.addPostStepCallback(this.onPostStep.bind(this));
-        } else {
-            this.onPostStep();
-        }
+        this.act();
     },
     remove: function(spr) {
         if(!spr || !spr._phys || !spr._phys.body || !spr._phys.shape)
             return;
 
         this.actionQueue.push(['remove', spr._phys]);
+        this.act();
+    },
+    addCustomShape: function(spr, poly, sensor) {
+        if(spr && spr._phys && spr._phys.body) {
+            var s = this._createShape(spr, spr._phys.body, poly);
 
-        if(this.space.locked) {
-            this.space.addPostStepCallback(this.onPostStep.bind(this));
-        } else {
-            this.onPostStep();
+            s.setSensor(sensor);
+            this.actionQueue.push(['addCustomShape', { spr: spr, shape: s }]);
+            this.act();
+
+            return s;
         }
     },
     setMass: function(spr, mass) {
@@ -270,6 +266,13 @@ gf.inherits(gf.PhysicsSystem, Object, {
         //maintain the colliding state
         return true;
     },
+    act: function() {
+        if(this.space.locked) {
+            this.space.addPostStepCallback(this.onPostStep.bind(this));
+        } else {
+            this.onPostStep();
+        }
+    },
     onPostStep: function() {
         //remove items
         while(this.actionQueue.length) {
@@ -315,6 +318,15 @@ gf.inherits(gf.PhysicsSystem, Object, {
                 case 'reindex':
                     this.space.reindexStatic();
                     break;
+
+                case 'addCustomShape':
+                    if(!data.spr._phys.customShapes)
+                        data.spr._phys.customShapes = [];
+
+                    data.spr._phys.customShapes.push(data.shape);
+                    this.space.addShape(data.shape);
+                    break;
+
             }
         }
     }

@@ -188,9 +188,9 @@
             this.parent.addChild(this._hit);
         }
 
-        var shape = this._phys.shape,
-            p = this._phys.body.p,
-            g = this._hit;
+        var p = this._phys.body.p,
+            g = this._hit,
+            c = this._phys.customShapes;
 
         if(!this._hit.lastPos)
             this._hit.lastPos = new gf.Point();
@@ -201,6 +201,16 @@
         this._hit.lastPos.y = p.y;
 
         g.clear();
+        this._drawPhysicsShape(this._phys.shape, g, p);
+
+        if(c) {
+            for(var i = 0; i < c.length; ++i) {
+                this._drawPhysicsShape(c[i], g, p);
+            }
+        }
+    };
+
+    this._drawPhysicsShape = function(shape, g, p) {
         g.lineStyle(g.style.size, g.style.color, g.style.alpha);
 
         //circle
