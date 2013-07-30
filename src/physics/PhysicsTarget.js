@@ -149,14 +149,32 @@
      *
      * @method onCollision
      * @param obj {Sprite} Colliding sprite
+     * @param vec {Vector} Collision vector (for sensors this is normalized)
+     * @param colShape {cp.Shape} The colliding physics shape
+     * @param myShape {Sprite} Your physics shape that caused the collision
      */
-    this.onCollision = function(obj, vec) {
+    this.onCollision = function(obj, vec, colShape, myShape) {
         if(obj.type === gf.Sprite.TYPE.COLLECTABLE)
             obj.destroy();
 
-        this.emit('collision', obj, vec);
+        this.emit('collision', obj, vec, colShape, myShape);
     };
 
+    /**
+     * On Seperate Event
+     *      called when this sprite collides into another, or is being collided into by another.
+     *      By default if something collides with a collectable sprite we destroy the collectable
+     *      and if we collide with a solid tile we kill our velocity. This method will emit a
+     *      'collision' event that you can listen for
+     *
+     * @method onCollision
+     * @param obj {Sprite} Colliding sprite
+     * @param colShape {cp.Shape} The colliding physics shape
+     * @param myShape {Sprite} Your physics shape that caused the collision
+     */
+    this.onSeparate = function(obj, colShape, myShape) {
+        this.emit('separate', obj, colShape, myShape);
+    };
 
     /**
      * Shows the physics body for the sprite

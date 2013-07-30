@@ -22,7 +22,7 @@ gf.PhysicsSystem = function(options) {
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         this.onCollisionPostSolve.bind(this), //postSolve
-        null //separate
+        this.onCollisionEnd.bind(this) //separate
     );
 
     //sprite - tile collisions
@@ -32,7 +32,7 @@ gf.PhysicsSystem = function(options) {
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         this.onCollisionPostSolve.bind(this), //postSolve
-        null //separate
+        this.onCollisionEnd.bind(this) //separate
     );
 
     this.actionQueue = [];
@@ -253,9 +253,9 @@ gf.inherits(gf.PhysicsSystem, Object, {
             spr2 = shapes[1].sprite;
 
         //only call the sensor collisions here
-        if(arbiter.isFirstContact() && (shapes[0].sensor || shapes[1].sensor)) {
-            spr1.onCollision(spr2, arbiter.getNormal(0));
-            spr2.onCollision(spr1, arbiter.getNormal(0));
+        if(shapes[0].sensor || shapes[1].sensor) {
+            spr1.onCollision(spr2, arbiter.getNormal(0), shapes[1], shapes[0]);
+            spr2.onCollision(spr1, arbiter.getNormal(0), shapes[0], shapes[1]);
         }
 
         //maintain the colliding state
@@ -267,9 +267,20 @@ gf.inherits(gf.PhysicsSystem, Object, {
             spr2 = shapes[1].sprite;
 
         if(arbiter.isFirstContact()) {
-            spr1.onCollision(spr2, arbiter.totalImpulse());
-            spr2.onCollision(spr1, arbiter.totalImpulse());
+            spr1.onCollision(spr2, arbiter.totalImpulse(), shapes[1], shapes[0]);
+            spr2.onCollision(spr1, arbiter.totalImpulse(), shapes[0], shapes[1]);
         }
+
+        //maintain the colliding state
+        return true;
+    },
+    onCollisionEnd: function(arbiter) {//, space) {
+        var shapes = arbiter.getShapes(),
+            spr1 = shapes[0].sprite,
+            spr2 = shapes[1].sprite;
+
+        spr1.onSeparate(spr2, shapes[1], shapes[0]);
+        spr2.onSeparate(spr1, shapes[0], shapes[1]);
 
         //maintain the colliding state
         return true;
