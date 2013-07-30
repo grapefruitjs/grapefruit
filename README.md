@@ -23,12 +23,6 @@ This project is under heavy development, and the API is subject to change at any
 
 The following classes need documentation:
 
- - gf.InputManager
- - gf.input.Input
- - gf.input.Gamepad
- - gf.input.GamepadButtons
- - gf.input.GamepadSticks
- - gf.input.Keyboard
  - gf.SpriteSheetLoader
  - gf.WorldLoader
  - gf.PhysicsSystem
