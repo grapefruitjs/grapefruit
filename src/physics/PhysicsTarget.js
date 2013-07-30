@@ -192,13 +192,21 @@
             p = this._phys.body.p,
             g = this._hit;
 
+        if(!this._hit.lastPos)
+            this._hit.lastPos = new gf.Point();
+        else if(this._hit.lastPos.x === p.x && this._hit.lastPos.y === p.y)
+            return;
+
+        this._hit.lastPos.x = p.x;
+        this._hit.lastPos.y = p.y;
+
         g.clear();
         g.lineStyle(g.style.size, g.style.color, g.style.alpha);
 
         //circle
         if(shape.type === 'circle') {
-            var cx = shape.bb_l + ((shape.bb_r - shape.bb_l) / 2) + shape.c.x,
-                cy = shape.bb_t + ((shape.bb_b - shape.bb_t) / 2) + shape.c.y;
+            var cx = shape.bb_l + ((shape.bb_r - shape.bb_l) / 2),
+                cy = shape.bb_t + ((shape.bb_b - shape.bb_t) / 2);
 
             g.drawCircle(cx, cy, shape.r);
         }
