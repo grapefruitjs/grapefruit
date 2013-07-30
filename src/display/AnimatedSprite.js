@@ -116,10 +116,13 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
             this.currentFrame = anim;
         } else {
             this.currentFrame = frame || 0;
+            this.lastRound = gf.math.round(frame || 0);
             this.currentAnimation = anim;
         }
-
         this.playing = true;
+
+        this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
+        this.emit('frame', this.currentAnimation, this.lastRound);
     },
     /**
      * Goes to a frame and stops playing the animation
@@ -133,11 +136,13 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
             this.currentFrame = anim;
         } else {
             this.currentFrame = frame || 0;
+            this.lastRound = gf.math.round(frame || 0);
             this.currentAnimation = anim;
         }
+        this.playing = false;
 
         this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
-        this.playing = false;
+        this.emit('frame', this.currentAnimation, this.lastRound);
     },
     /**
      * Starts playing the currently active animation
@@ -174,7 +179,11 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
         round = gf.math.round(this.currentFrame);
 
         if(round < anim.frames.length) {
-            this.setTexture(anim.frames[round]);
+            if(round !== this.lastRound) {
+                this.lastRound = round;
+                this.setTexture(anim.frames[round]);
+                this.emit('frame', this.currentAnimation, round);
+            }
         }
         else {
             if(loop) {
