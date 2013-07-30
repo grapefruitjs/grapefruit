@@ -109,8 +109,13 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.hitArea = props.hitArea;
                 obj.rotation = o.rotation;
                 obj.sensor = true;
-                obj.setPosition(o.x, o.y);
 
+                var a = props.anchor || props.tileprops.anchor;
+                obj.anchor.y = a ? a[1] : 0;
+                obj.anchor.x = a ? a[0] : 0;
+
+                //these are treated as sensor bodies, so always enable physics
+                obj.setPosition(o.x, o.y);
                 obj.enablePhysics(game.physics);
                 if(this.parent._showPhysics)
                     obj.showPhysics();
