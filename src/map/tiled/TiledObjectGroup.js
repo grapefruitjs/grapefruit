@@ -131,9 +131,11 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.inertia = props.inertia || props.tileprops.inertia;
                 obj.friction = props.friction || props.tileprops.friction;
                 obj.sensor = props.sensor || props.tileprops.sensor;
-                obj.anchor.y = 1;
-                obj.anchor.x = this.parent.orientation === 'isometric' ? 0.5 : 0;
                 obj.setPosition(o.x, o.y);
+
+                var a = props.anchor || props.tileprops.anchor;
+                obj.anchor.y = a ? a[1] : 1;
+                obj.anchor.x = a ? a[0] : (this.parent.orientation === 'isometric' ? 0.5 : 0);
 
                 if(props.mass || props.tileprops.mass) {
                     obj.enablePhysics(game.physics);
