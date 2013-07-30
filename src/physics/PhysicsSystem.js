@@ -57,7 +57,11 @@ gf.inherits(gf.PhysicsSystem, Object, {
     },
     _createShape: function(spr, body) {
         var shape,
-            hit = spr.hitArea;
+            hit = spr.hitArea,
+            ax = spr.anchor ? spr.anchor.x : 0,
+            ay = spr.anchor ? spr.anchor.y : 0,
+            aw = spr.width * ax,
+            ah = spr.height * ay;
 
         //specified shape
         if(hit) {
@@ -67,20 +71,21 @@ gf.inherits(gf.PhysicsSystem, Object, {
                 var l = hit.x,
                     r = hit.x + hit.width,
                     b = hit.y - spr.height,
-                    t = b + hit.height,
-                    a = spr.anchor ? spr.anchor.y : 0,
-                    bias = hit.height - (hit.height * a);
+                    t = b + hit.height;
 
-                b += bias;
-                t += bias;
+                l -= aw;
+                r -= aw;
+
+                b += spr.height - ah;
+                t += spr.height - ah;
 
                 shape = new cp.BoxShape2(body, new cp.BB(l, b, r, t));
             }
             else if(hit instanceof gf.Circle) {
                 //the offset needs to move the circle to the sprite center based on the sprite's anchor (bottom-left)
                 var offset = new gf.Vector(
-                    spr.width / 4,
-                    -spr.height / 4
+                    ((spr.width / 2) - aw),
+                    ((spr.height / 2) - ah)
                 );
 
                 shape = new cp.CircleShape(body, hit.radius, offset);
@@ -89,13 +94,13 @@ gf.inherits(gf.PhysicsSystem, Object, {
                 //cp shapes anchors are 0.5,0.5, but a polygon uses 0,0 as the topleft
                 //of the bounding rect so we have to convert
                 var points = [],
-                    ps = hit.points;//.slice().reverse();
+                    ps = hit.points;
 
                 for(var i = 0; i < ps.length; ++i) {
                     var p = ps[i];
 
-                    points.push(p.x);
-                    points.push(p.y - spr.height);
+                    points.push(p.x - aw);
+                    points.push(p.y - ah);
                 }
 
                 shape = new cp.PolyShape(body, cp.convexHull(points, null, 0), cp.vzero);
