@@ -35,19 +35,25 @@ gf.input.Input = function(view) {
 
 gf.inherits(gf.input.Input, Object, {
     /**
-     * Prevents the default action of an event, and prevents it from bubbling up
-     * the DOM.
+     * Prevents the default action of an event
      *
      * @method preventDefault
      * @param event {DOMEvent} The event to prevent default actions for
      */
     preventDefault: function(e) {
-        if(e.stopPropagation) e.stopPropagation();
-        else e.cancelBubble = true;
-
         if(e.preventDefault) e.preventDefault();
         else e.returnValue = false;
 
         return false;
+    },
+    /**
+     * Prevents an event from bubbling up the DOM.
+     *
+     * @method stopPropogation
+     * @param event {DOMEvent} The event to prevent bubbling for
+     */
+    stopPropogation: function(e) {
+        if(e.stopPropagation) e.stopPropagation();
+        else e.cancelBubble = true;
     }
 });
