@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -188,7 +190,6 @@
  * @param settings {Object} All the settings for this player instance
  */
 gf.AudioPlayer = function(manager, settings) {
-    //mixin the Event Target methods
     gf.EventEmitter.call(this);
 
     /**
@@ -323,8 +324,7 @@ gf.inherits(gf.AudioPlayer, Object, {
                 //check if loaded
                 if(!self._loaded) {
                     self._loaded = true;
-                    self.emit({
-                        type: &#x27;load&#x27;,
+                    self.emit(&#x27;load&#x27;, {
                         message: &#x27;Audio file loaded.&#x27;,
                         data: self.src
                     });
@@ -409,8 +409,7 @@ gf.inherits(gf.AudioPlayer, Object, {
                     }
 
                     //fire off the end event
-                    self.emit({
-                        type: &#x27;end&#x27;,
+                    self.emit(&#x27;end&#x27;, {
                         message: &#x27;Audio has finished playing&#x27;,
                         data: o.id
                     });
@@ -470,8 +469,7 @@ gf.inherits(gf.AudioPlayer, Object, {
                 }
             }
 
-            self.emit({
-                type: &#x27;play&#x27;,
+            self.emit(&#x27;play&#x27;, {
                 message: &#x27;Playing audio file&#x27;,
                 data: soundId
             });
@@ -526,8 +524,7 @@ gf.inherits(gf.AudioPlayer, Object, {
             }
         }
 
-        this.emit({
-            type: &#x27;pause&#x27;,
+        this.emit(&#x27;pause&#x27;, {
             message: &#x27;Audio file paused&#x27;,
             data: id
         });
@@ -1062,8 +1059,7 @@ if(gf.support.webAudio) {
         //fire the load event
         if(!this._loaded) {
             this._loaded = true;
-            this.emit({
-                type: &#x27;load&#x27;,
+            this.emit(&#x27;load&#x27;, {
                 message: &#x27;Audio file loaded.&#x27;,
                 data: this.src
             });

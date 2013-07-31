@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -310,6 +312,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method inherited">
+                                <a href="#method_once">once</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
                                 <a href="#method_pollStatus">pollStatus</a>
 
@@ -319,6 +328,13 @@
                         
                             <li class="index-item method inherited">
                                 <a href="#method_preventDefault">preventDefault</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_stopPropogation">stopPropogation</a>
 
                                 
                                 
@@ -478,7 +494,7 @@
             
         
         
-        <a href="../files/src_utils_EventEmitter.js.html#l48"><code>src&#x2F;utils&#x2F;EventEmitter.js:48</code></a>
+        <a href="../files/src_utils_EventEmitter.js.html#l59"><code>src&#x2F;utils&#x2F;EventEmitter.js:59</code></a>
         
         </p>
 
@@ -583,7 +599,7 @@
             
         
         
-        <a href="../files/src_utils_EventEmitter.js.html#l69"><code>src&#x2F;utils&#x2F;EventEmitter.js:69</code></a>
+        <a href="../files/src_utils_EventEmitter.js.html#l113"><code>src&#x2F;utils&#x2F;EventEmitter.js:113</code></a>
         
         </p>
 
@@ -688,7 +704,7 @@
             
         
         
-        <a href="../files/src_utils_EventEmitter.js.html#l31"><code>src&#x2F;utils&#x2F;EventEmitter.js:31</code></a>
+        <a href="../files/src_utils_EventEmitter.js.html#l32"><code>src&#x2F;utils&#x2F;EventEmitter.js:32</code></a>
         
         </p>
 
@@ -748,6 +764,111 @@
 </div>
 
                 
+                    <div id="method_once" class="method item inherited">
+    <h3 class="name"><code>once</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>listener</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.EventEmitter.html#method_once">gf.EventEmitter</a>:
+            
+        
+        
+        <a href="../files/src_utils_EventEmitter.js.html#l156"><code>src&#x2F;utils&#x2F;EventEmitter.js:156</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Registers a one-time callback for an event</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">type</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The event name to listen for</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">listener</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the callback to call when the event occurs</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_pollStatus" class="method item">
     <h3 class="name"><code>pollStatus</code></h3>
 
@@ -790,7 +911,7 @@
             
         
         
-        <a href="../files/src_input_GamepadButtons.js.html#l75"><code>src&#x2F;input&#x2F;GamepadButtons.js:75</code></a>
+        <a href="../files/src_input_GamepadButtons.js.html#l76"><code>src&#x2F;input&#x2F;GamepadButtons.js:76</code></a>
         
         </p>
 
@@ -885,8 +1006,7 @@
     </div>
 
     <div class="description">
-        <p>Prevents the default action of an event, and prevents it from bubbling up
-the DOM.</p>
+        <p>Prevents the default action of an event</p>
     </div>
 
     
@@ -905,6 +1025,90 @@ the DOM.</p>
 
                     <div class="param-description">
                         <p>The event to prevent default actions for</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_stopPropogation" class="method item inherited">
+    <h3 class="name"><code>stopPropogation</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>event</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.input.Input.html#method_stopPropogation">gf.input.Input</a>:
+            
+        
+        
+        <a href="../files/src_input_Input.js.html#l49"><code>src&#x2F;input&#x2F;Input.js:49</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Prevents an event from bubbling up the DOM.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">event</code>
+                        <span class="type">DOMEvent</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The event to prevent bubbling for</p>
                     </div>
 
                     

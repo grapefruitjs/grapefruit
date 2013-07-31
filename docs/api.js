@@ -23,6 +23,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "gf.Loader",
         "gf.Map",
         "gf.ObjectPool",
+        "gf.PhysicsTarget",
         "gf.Point",
         "gf.Polygon",
         "gf.Rectangle",

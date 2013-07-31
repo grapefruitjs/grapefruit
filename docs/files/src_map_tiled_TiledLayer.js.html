@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -212,7 +214,7 @@ gf.TiledLayer = function(layer) {
      * @property properties
      * @type Object
      */
-    this.properties = layer.properties || {};
+    this.properties = gf.utils.parseTiledProperties(layer.properties) || {};
 
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x;
@@ -237,28 +239,27 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
     resize: function(width, height) {
         //clear all the visual tiles
         this.clearTiles();
-        //set rendered area
-        this._rendered.x = this.parent.position.x;
-        this._rendered.y = this.parent.position.y;
-        this._rendered.width = width;
-        this._rendered.height = height;
-        window.console.log(width, height);
 
         if(this.parent.orientation === &#x27;isometric&#x27;) {
-            return this._renderIsoTiles(
-                this.parent.position.x,
-                this.parent.position.y,
-                width,
-                height
-            );
-        }
-        else {
-            return this._renderOrthoTiles(
+            this._renderIsoTiles(
                 -this.parent.position.x,
                 -this.parent.position.y,
                 width,
                 height
             );
+        }
+        else {
+            this._renderOrthoTiles(
+                -this.parent.position.x,
+                -this.parent.position.y,
+                width,
+                height
+            );
+        }
+
+        this._updateRenderSq();
+        if(this.hasPhysics) {
+            this.parent.parent.physics.invalidCollisions();
         }
     },
     _renderOrthoTiles: function(sx, sy, sw, sh) {
@@ -286,30 +287,30 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             }
         }
 
-        /*//set rendered area
+        //set rendered area
         this._rendered.x = sx;
         this._rendered.y = sy;
         this._rendered.width = sw;
         this._rendered.height = sh;
-        this._updateRenderSq();
 
         //reset buffered status
         this._buffered.left = this._buffered.right = this._buffered.top = this._buffered.bottom = false;
 
         //reset panDelta
         this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
-        this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;*/
+        this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
     _renderIsoTiles: function(sx, sy, sw, sh) {
+        this._rendered.x = sx;
+        this._rendered.y = sx;
+        this._rendered.width = sw;
+        this._rendered.height = sh;
+
         var scaled = this.parent.scaledTileSize;
 
         //convert to tile coords
         sx = Math.floor(sx / (scaled.x / 2));
         sy = Math.floor(sy / scaled.y);
-
-        //the view rect offset is opposite of what the world is
-        sx = -sx;
-        sy = -sy;
 
         //convert to tile units
         sw = Math.ceil(sw / (scaled.x / 2));
@@ -470,6 +471,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(this.tiles[fromTileX] &amp;&amp; this.tiles[fromTileX][fromTileY]) {
             tile = this.tiles[fromTileX][fromTileY];
             this.tiles[fromTileX][fromTileY] = null;
+
+            tile.disablePhysics();
         }
         //otherwise grab a new tile from the pool
         else {
@@ -480,22 +483,27 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //then create a new tile
         if(!tile) {
             tile = new gf.Tile(texture);
-            tile.mass = Infinity;
+            tile.mass = props.mass;
+            tile.inertia = props.inertia;
             tile.anchor.y = 1;
         }
         this.addChild(tile);
 
-        if(props.isCollidable)
-            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
+        tile.collisionType = props.type;
+        tile.visible = true;
+        tile.hitArea = hitArea;
+        tile.interactive = interactive;
 
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);
 
-        tile.setInteractive(interactive);
+        if(props.mass) {
+            this.hasPhysics = true;
+            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
 
-        tile.collisionType = props.type;
-        tile.visible = true;
-        tile.hitArea = hitArea;
+            if(this.parent._showPhysics)
+                tile.showPhysics();
+        }
 
         //pass through all events
         if(interactive) {
@@ -519,29 +527,12 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
     onTileEvent: function(eventName, tile, data) {
         this.parent.onTileEvent(eventName, tile, data);
     },
-    _getInteractive: function(set, o) {
-        var v;
-
+    _getInteractive: function(set, props) {
         //first check the lowest level value (on the tile iteself)
-        if(o.interactive !== undefined || o.interactiveTiles !== undefined)
-            v = o;
-        //next check if the tileset has the value
-        else if(set &amp;&amp; (set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined))
-            v = set.properties;
-        //next check if this layer has interactive tiles
-        else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
-            v = this.properties;
-        //finally check if the map as a whole has interactive tiles
-        else if(this.parent.properties.interactive !== undefined || this.parent.properties.interactiveTiles !== undefined)
-            v = this.parent.properties;
-
-        //see if anything has a value to use
-        if(v) {
-            //if they do, lets grab what the interactive value is
-            return !!(v.interactive || v.interactiveTiles);
-        }
-
-        return false;
+        return props.interactive || //obj interactive
+                (set &amp;&amp; set.properties.interactive) || //tileset interactive
+                this.properties.interactive || //layer interactive
+                this.parent.properties.interactive; //map interactive
     },
     /**
      * Pans the layer around, rendering stuff if necessary
@@ -552,10 +543,13 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Layer} Returns itself for chainability
      */
     pan: function(dx, dy) {
-        this.resize(this._rendered.width, this._rendered.height);
+        //isometric pan (just re render everything)
+        if(this.parent.orientation === &#x27;isometric&#x27;)
+            return this.resize(this._rendered.width, this._rendered.height);
 
+        //optimized ortho pan, move only what is needed to move
         this._panDelta.x += dx;
-        this._panDelta.y += dy;/*
+        this._panDelta.y += dy;
 
         //check if we need to build a buffer around the viewport
         //usually this happens on the first pan after a full render
@@ -595,7 +589,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         while(this._panDelta.y &lt;= -this.parent.scaledTileSize.y) {
             this._renderDown();
             this._panDelta.y += this.parent.scaledTileSize.y;
-        }*/
+        }
+
+        if(this.hasPhysics) {
+            this.parent.parent.physics.invalidCollisions();
+        }
     },
     _renderLeft: function(forceNew) {
         //move all the far right tiles to the left side

@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -199,9 +201,9 @@ gf.TiledMap = function(map) {
      * @type Object
      * @default {}
      */
-    this.properties = map.properties || {};
-    this.scale.x = parseFloat(this.properties.scale, 10) || 1;
-    this.scale.y = parseFloat(this.properties.scale, 10) || 1;
+    this.properties = gf.utils.parseTiledProperties(map.properties) || {};
+    this.scale.x = this.properties.scale || 1;
+    this.scale.y = this.properties.scale || 1;
 
     /**
      * The tile size
@@ -293,6 +295,8 @@ gf.TiledMap = function(map) {
 
         this.addChild(lyr);
     }
+
+    this._showPhysics = false;
 };
 
 gf.inherits(gf.TiledMap, gf.Map, {
@@ -347,8 +351,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @private
      */
     onTileEvent: function(eventName, tile, data) {
-        this.emit({
-            type: &#x27;tile.&#x27; + eventName,
+        this.emit(&#x27;tile.&#x27; + eventName, {
             tile: tile,
             data: data
         });
@@ -364,8 +367,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
      * @private
      */
     onObjectEvent: function(eventName, obj, data) {
-        this.emit({
-            type: &#x27;object.&#x27; + eventName,
+        this.emit(&#x27;object.&#x27; + eventName, {
             object: obj,
             data: data
         });

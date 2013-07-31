@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -230,51 +232,43 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
         //list of object gets rendered on top.
         for(var i = this.objects.length - 1; i &gt;= 0; --i) {
             var o = this.objects[i],
-                props = o.properties || {},
+                props = gf.utils.parseTiledProperties(o.properties) || {},
                 set,
                 interactive,
                 obj;
 
+            props.tileprops = {};
+
             //create a sprite with that texture
             if(o.gid) {
-                //check for a custom object hitArea
-                if(props.hitArea) {
-                    var h = props.hitArea.split(gf.utils._arrayDelim);
-
-                    //odd number of values
-                    if(h.length % 2 !== 0) {
-                        throw &#x27;Uneven number of values for hitArea on Tiled Object! Should be a flat array of x/y values.&#x27;;
-                    }
-
-                    var hv = [];
-                    for(var x = 0, xl = h.length; x &lt; xl; ++x) {
-                        hv.push(parseFloat(h[x], 10));
-                    }
-                    props.hitArea = new gf.Polygon(hv);
-                }
-
                 set = this.parent.getTileset(o.gid);
 
                 if(set) {
                     props.texture = set.getTileTexture(o.gid);
+                    props.tileprops = set.getTileProperties(o.gid);
 
                     //if no hitArea then use the tileset&#x27;s if available
                     if(!props.hitArea) {
-                        props.hitArea = set.properties.hitArea;
+                        if(props.tileprops.hitArea)
+                            props.hitArea = props.tileprops.hitArea;
+                        else
+                            props.hitArea = set.properties.hitArea;
                     }
                 }
             }
             //non-sprite object (usually to define an &quot;area&quot; on a map)
             else {
-                //define a hitArea
-                if(o.polyline)
-                    props.hitArea = this._getPolyline(o);
-                else if(o.polygon)
-                    props.hitArea = this._getPolygon(o);
-                else if(o.ellipse)
-                    props.hitArea = this._getEllipse(o);
-                else
-                    props.hitArea = this._getRectangle(o);
+                if(!props.hitArea) {
+                    //define a hitArea
+                    if(o.polyline)
+                        props.hitArea = this._getPolyline(o);
+                    else if(o.polygon)
+                        props.hitArea = this._getPolygon(o);
+                    else if(o.ellipse)
+                        props.hitArea = this._getEllipse(o);
+                    else
+                        props.hitArea = this._getRectangle(o);
+                }
             }
 
             //a manually specified string texture
@@ -289,8 +283,16 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.width = o.width;
                 obj.height = o.height;
                 obj.name = o.name;
+                obj.type = o.type;
                 obj.hitArea = props.hitArea;
                 obj.rotation = o.rotation;
+                obj.sensor = true;
+
+                //these are treated as sensor bodies, so always enable physics
+                obj.setPosition(o.x, o.y);
+                obj.enablePhysics(game.physics);
+                if(this.parent._showPhysics)
+                    obj.showPhysics();
             } else {
                 //some variable for the user if they want them
                 //these will be passed through to a custom sprite if wanted
@@ -304,14 +306,26 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.name = o.name;
                 obj.type = o.type;
                 obj.hitArea = props.hitArea;
-                obj.anchor.y = 1;
-                obj.anchor.x = this.parent.orientation === &#x27;isometric&#x27; ? 0.5 : 0;
+                obj.mass = props.mass || props.tileprops.mass;
+                obj.inertia = props.inertia || props.tileprops.inertia;
+                obj.friction = props.friction || props.tileprops.friction;
+                obj.sensor = props.sensor || props.tileprops.sensor;
+                obj.setPosition(o.x, o.y);
 
-                if(props.physical === &#x27;true&#x27; || props.physics === &#x27;true&#x27;)
+                var a = props.anchor || props.tileprops.anchor;
+                obj.anchor.y = a ? a[1] : 1;
+                obj.anchor.x = a ? a[0] : (this.parent.orientation === &#x27;isometric&#x27; ? 0.5 : 0);
+
+                if(props.mass || props.tileprops.mass) {
                     obj.enablePhysics(game.physics);
 
+                    if(this.parent._showPhysics)
+                        obj.showPhysics();
+                }
+
                 //set some more stuffz
-                obj.setRotation(o.rotation);
+                if(typeof o.rotation === &#x27;number&#x27;)
+                    obj.setRotation(o.rotation);
             }
 
             //visible was recently added to Tiled, default old versions to true
@@ -326,11 +340,11 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 o.y = (toTileY * this.parent.tileSize.y / 2) + (toTileX * this.parent.tileSize.y);
             }
 
-            interactive = this._getInteractive(set, o);
+            interactive = this._getInteractive(set, props);
 
             //pass through all events
             if(interactive) {
-                obj.setInteractive(interactive);
+                obj.interactive = interactive;
 
                 obj.click = this.onObjectEvent.bind(this, &#x27;click&#x27;, obj);
                 obj.mousedown = this.onObjectEvent.bind(this, &#x27;mousedown&#x27;, obj);
@@ -341,7 +355,14 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 obj.mouseupoutside = this.onObjectEvent.bind(this, &#x27;mouseupoutside&#x27;, obj);
             }
 
-            obj.setPosition(o.x, o.y);
+            //set custom properties
+            obj.properties = {};
+            for(var t in props.tileprops)
+                obj.properties[t] = props.tileprops[t];
+            for(var k in props)
+                if(k !== &#x27;tileprops&#x27;)
+                    obj.properties[k] = props[k];
+
             this.addChild(obj);
         }
 
@@ -372,29 +393,13 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
     _getRectangle: function(o) {
         return new gf.Rectangle(0, 0, o.width, o.height);
     },
-    _getInteractive: function(set, o) {
-        var v;
-
+    _getInteractive: function(set, props) {
         //first check the lowest level value (on the tile iteself)
-        if(o.interactive !== undefined || o.interactiveTiles !== undefined)
-            v = o;
-        //next check if the tileset has the value
-        else if(set &amp;&amp; (set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined))
-            v = set.properties;
-        //next check if this layer has interactive tiles
-        else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
-            v = this.properties;
-        //finally check if the map as a whole has interactive tiles
-        else if(this.parent.properties.interactive !== undefined || this.parent.properties.interactiveTiles !== undefined)
-            v = this.parent.properties;
-
-        //see if anything has a value to use
-        if(v) {
-            //if they do, lets grab what the interactive value is
-            return !!(v.interactive || v.interactiveTiles);
-        }
-
-        return false;
+        return props.interactive || //obj interactive
+                props.tileprops.interactive || //tile object interactive
+                (set &amp;&amp; set.properties.interactive) || //tileset interactive
+                this.properties.interactive || //layer interactive
+                this.parent.properties.interactive; //map interactive
     },
     /**
      * Despawns all the sprites associated with this layer
@@ -404,8 +409,13 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
      */
     despawn: function() {
         //remove each sprite from the game
-        for(var i = this.children.length; i &gt; -1; --i) {
-            this.removeChild(this.children[i]);
+        for(var i = this.children.length - 1; i &gt; -1; --i) {
+            var c = this.children[i];
+
+            if(c.destroy)
+                c.destroy();
+            else
+                this.removeChild(c);
         }
 
         return this;

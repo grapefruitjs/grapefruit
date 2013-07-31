@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>gf.input.Gamepad - GrapeFruit Game Engine</title>
+    <title>gf.PhysicsTarget - GrapeFruit Game Engine</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -172,19 +172,15 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>gf.input.Gamepad Class</h1>
+                        <h1>gf.PhysicsTarget Class</h1>
 <div class="box meta">
     
 
     
-        <div class="extends">
-            Extends <a href="../classes/gf.input.Input.html" class="crosslink">gf.input.Input</a>
-        </div>
-    
 
     
         <div class="foundat">
-            Defined in: <a href="../files/src_input_Gamepad.js.html#l1"><code>src&#x2F;input&#x2F;Gamepad.js:1</code></a>
+            Defined in: <a href="../files/src_physics_PhysicsTarget.js.html#l1"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:1</code></a>
         </div>
     
 
@@ -196,14 +192,14 @@
 
 
 <div class="box intro">
-    <p>Controls input from gamepads</p>
+    <p>Physics mixin. This will add physics capabilities to the class it mixes into.</p>
 </div>
 
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_gf.input.Gamepad" class="method item">
-    <h3 class="name"><code>gf.input.Gamepad</code></h3>
+        <div id="method_gf.PhysicsTarget" class="method item">
+    <h3 class="name"><code>gf.PhysicsTarget</code></h3>
 
     
         <span class="paren">()</span>
@@ -234,7 +230,7 @@
             
         
         
-        <a href="../files/src_input_Gamepad.js.html#l1"><code>src&#x2F;input&#x2F;Gamepad.js:1</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l1"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:1</code></a>
         
         </p>
 
@@ -252,6 +248,27 @@
 
     
 
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code> function MyObject(clr) {
+     this.color = clr;
+ }
+
+ gf.inherits(MyObject, Object, {
+     something: function(s) {
+     }
+ });
+ gf.PhysicsTarget.call(MyObject.prototype); //adds properties
+
+ //then later
+ var o = new MyObject('red');
+ o.enablePhysics(game.physics);
+</code></pre>
+            </div>
+        </div>
     
 </div>
 
@@ -280,103 +297,73 @@
                 <div class="index-section methods">
                     <h3>Methods</h3>
 
-                    <ul class="index-list methods extends">
+                    <ul class="index-list methods">
                         
-                            <li class="index-item method deprecated inherited">
-                                <a href="#method_bind">bind</a>
-
-                                
-                                
-                                    <span class="flag deprecated">deprecated</span>
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
-                                <a href="#method_emit">emit</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
-                                <a href="#method_off">off</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
-                                <a href="#method_on">on</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
-                                <a href="#method_once">once</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_onGamepadDisconnect">onGamepadDisconnect</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_onGamepadDisconnect">onGamepadDisconnect</a>
+                            <li class="index-item method">
+                                <a href="#method_disablePhysics">disablePhysics</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_pollGamepads">pollGamepads</a>
+                                <a href="#method_enablePhysics">enablePhysics</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_pollStatus">pollStatus</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
-                                <a href="#method_preventDefault">preventDefault</a>
+                                <a href="#method_hidePhysics">hidePhysics</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_startPolling">startPolling</a>
+                                <a href="#method_onCollision">onCollision</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_stopPolling">stopPolling</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method inherited">
-                                <a href="#method_stopPropogation">stopPropogation</a>
+                                <a href="#method_onCollision">onCollision</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_update">update</a>
+                                <a href="#method_setMass">setMass</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setPosition">setPosition</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setRotation">setRotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setVelocity">setVelocity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_showPhysics">showPhysics</a>
 
                                 
                                 
@@ -390,45 +377,24 @@
                 <div class="index-section properties">
                     <h3>Properties</h3>
 
-                    <ul class="index-list properties extends">
-                        
-                            <li class="index-item property">
-                                <a href="#property_buttons">buttons</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_pads">pads</a>
-
-                                
-                                
-                            </li>
+                    <ul class="index-list properties">
                         
                             <li class="index-item property private">
-                                <a href="#property_prevTimestamps">prevTimestamps</a>
+                                <a href="#property__psystem">_psystem</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_sticks">sticks</a>
+                                <a href="#property_inertia">inertia</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_ticking">ticking</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property inherited">
-                                <a href="#property_view">view</a>
+                                <a href="#property_mass">mass</a>
 
                                 
                                 
@@ -448,8 +414,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_bind" class="method item deprecated inherited">
-    <h3 class="name"><code>bind</code></h3>
+                    <div id="method_disablePhysics" class="method item">
+    <h3 class="name"><code>disablePhysics</code></h3>
 
     
         <span class="paren">()</span>
@@ -458,494 +424,7 @@
     
 
     
-        <span class="flag deprecated" title="use on">deprecated</span>
-    
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/gf.input.Input.html#method_bind">gf.input.Input</a>:
-            
-        
-        
-        <a href="../files/src_input_Input.js.html#l19"><code>src&#x2F;input&#x2F;Input.js:19</code></a>
-        
-        </p>
-
-
-        
-            <p>Deprecated: use on</p>
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>For backwards compatibility</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_emit" class="method item inherited">
-    <h3 class="name"><code>emit</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>type</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>data</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/gf.EventEmitter.html#method_emit">gf.EventEmitter</a>:
-            
-        
-        
-        <a href="../files/src_utils_EventEmitter.js.html#l59"><code>src&#x2F;utils&#x2F;EventEmitter.js:59</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Emits an event which will run all registered listeners for the event type</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">type</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The event name to emit</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">data</code>
-                        <span class="type">Mixed</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Any data you want passed along with the event</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_off" class="method item inherited">
-    <h3 class="name"><code>off</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>type</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>listener</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/gf.EventEmitter.html#method_off">gf.EventEmitter</a>:
-            
-        
-        
-        <a href="../files/src_utils_EventEmitter.js.html#l113"><code>src&#x2F;utils&#x2F;EventEmitter.js:113</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Removes a listener function for an event type</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">type</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The event name to emit</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">listener</code>
-                        <span class="type">Function</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The function to remove</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_on" class="method item inherited">
-    <h3 class="name"><code>on</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>type</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>listener</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/gf.EventEmitter.html#method_on">gf.EventEmitter</a>:
-            
-        
-        
-        <a href="../files/src_utils_EventEmitter.js.html#l32"><code>src&#x2F;utils&#x2F;EventEmitter.js:32</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Registers a listener function to be run on an event occurance</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">type</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The event name to listen for</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">listener</code>
-                        <span class="type">Function</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The function to execute when the event happens</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_once" class="method item inherited">
-    <h3 class="name"><code>once</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>type</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>listener</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/gf.EventEmitter.html#method_once">gf.EventEmitter</a>:
-            
-        
-        
-        <a href="../files/src_utils_EventEmitter.js.html#l156"><code>src&#x2F;utils&#x2F;EventEmitter.js:156</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Registers a one-time callback for an event</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">type</code>
-                        <span class="type">String</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The event name to listen for</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">listener</code>
-                        <span class="type">Function</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>the callback to call when the event occurs</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_onGamepadDisconnect" class="method item private">
-    <h3 class="name"><code>onGamepadDisconnect</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>event</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
     
 
     
@@ -967,7 +446,7 @@
             
         
         
-        <a href="../files/src_input_Gamepad.js.html#l82"><code>src&#x2F;input&#x2F;Gamepad.js:82</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l72"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:72</code></a>
         
         </p>
 
@@ -978,32 +457,9 @@
     </div>
 
     <div class="description">
-        <p>Called when a gamepad disconnects (FF Only)</p>
+        <p>Disbales physics for this sprite</p>
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">event</code>
-                        <span class="type">GamepadDisconnectEvent</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -1012,8 +468,8 @@
 </div>
 
                 
-                    <div id="method_onGamepadDisconnect" class="method item private">
-    <h3 class="name"><code>onGamepadDisconnect</code></h3>
+                    <div id="method_enablePhysics" class="method item">
+    <h3 class="name"><code>enablePhysics</code></h3>
 
     
         <div class="args">
@@ -1021,7 +477,7 @@
             
                 <li class="arg">
                     
-                        <code>event</code>
+                        <code>system</code>
                     
                 </li>
             
@@ -1033,8 +489,6 @@
 
     
 
-    
-        <span class="flag private">private</span>
     
 
     
@@ -1056,7 +510,7 @@
             
         
         
-        <a href="../files/src_input_Gamepad.js.html#l68"><code>src&#x2F;input&#x2F;Gamepad.js:68</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l55"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:55</code></a>
         
         </p>
 
@@ -1067,7 +521,7 @@
     </div>
 
     <div class="description">
-        <p>Called when a gamepad connects (FF Only)</p>
+        <p>Enables physics for this sprite</p>
     </div>
 
     
@@ -1078,14 +532,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">event</code>
-                        <span class="type">GamepadConnectEvent</span>
+                        <code class="param-name">system</code>
+                        <span class="type">PhysicsSystem</span>
                     
 
                     
 
                     <div class="param-description">
-                         
+                        <p>The system for the sprite to be in</p>
                     </div>
 
                     
@@ -1101,8 +555,8 @@
 </div>
 
                 
-                    <div id="method_pollGamepads" class="method item">
-    <h3 class="name"><code>pollGamepads</code></h3>
+                    <div id="method_hidePhysics" class="method item">
+    <h3 class="name"><code>hidePhysics</code></h3>
 
     
         <span class="paren">()</span>
@@ -1133,7 +587,7 @@
             
         
         
-        <a href="../files/src_input_Gamepad.js.html#l121"><code>src&#x2F;input&#x2F;Gamepad.js:121</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l268"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:268</code></a>
         
         </p>
 
@@ -1144,7 +598,7 @@
     </div>
 
     <div class="description">
-        <p>Polls for newly connected gamepads (Chrome Only)</p>
+        <p>Hides the physics body for the sprite</p>
     </div>
 
     
@@ -1155,8 +609,8 @@
 </div>
 
                 
-                    <div id="method_pollStatus" class="method item">
-    <h3 class="name"><code>pollStatus</code></h3>
+                    <div id="method_onCollision" class="method item">
+    <h3 class="name"><code>onCollision</code></h3>
 
     
         <div class="args">
@@ -1164,7 +618,25 @@
             
                 <li class="arg">
                     
-                        <code>pad</code>
+                        <code>obj</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>vec</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>colShape</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>myShape</code>
                     
                 </li>
             
@@ -1197,7 +669,7 @@
             
         
         
-        <a href="../files/src_input_Gamepad.js.html#l144"><code>src&#x2F;input&#x2F;Gamepad.js:144</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l143"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:143</code></a>
         
         </p>
 
@@ -1208,7 +680,11 @@
     </div>
 
     <div class="description">
-        <p>Polls the gamepad object for status updates and emits events when they occur</p>
+        <p>On Collision Event
+     called when this sprite collides into another, or is being collided into by another.
+     By default if something collides with a collectable sprite we destroy the collectable
+     and if we collide with a solid tile we kill our velocity. This method will emit a
+     'collision' event that you can listen for</p>
     </div>
 
     
@@ -1219,14 +695,59 @@
             
                 <li class="param">
                     
-                        <code class="param-name">pad</code>
-                        <span class="type">Gamepad</span>
+                        <code class="param-name">obj</code>
+                        <span class="type">Sprite</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The gamepad object to check</p>
+                        <p>Colliding sprite</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">vec</code>
+                        <span class="type">Vector</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Collision vector (for sensors this is normalized)</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">colShape</code>
+                        <span class="type">cp.Shape</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The colliding physics shape</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">myShape</code>
+                        <span class="type">Sprite</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Your physics shape that caused the collision</p>
                     </div>
 
                     
@@ -1242,8 +763,8 @@
 </div>
 
                 
-                    <div id="method_preventDefault" class="method item inherited">
-    <h3 class="name"><code>preventDefault</code></h3>
+                    <div id="method_onCollision" class="method item">
+    <h3 class="name"><code>onCollision</code></h3>
 
     
         <div class="args">
@@ -1251,7 +772,19 @@
             
                 <li class="arg">
                     
-                        <code>event</code>
+                        <code>obj</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>colShape</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>myShape</code>
                     
                 </li>
             
@@ -1276,12 +809,15 @@
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/gf.input.Input.html#method_preventDefault">gf.input.Input</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/src_input_Input.js.html#l37"><code>src&#x2F;input&#x2F;Input.js:37</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l163"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:163</code></a>
         
         </p>
 
@@ -1292,7 +828,11 @@
     </div>
 
     <div class="description">
-        <p>Prevents the default action of an event</p>
+        <p>On Seperate Event
+     called when this sprite collides into another, or is being collided into by another.
+     By default if something collides with a collectable sprite we destroy the collectable
+     and if we collide with a solid tile we kill our velocity. This method will emit a
+     'collision' event that you can listen for</p>
     </div>
 
     
@@ -1303,14 +843,44 @@
             
                 <li class="param">
                     
-                        <code class="param-name">event</code>
-                        <span class="type">DOMEvent</span>
+                        <code class="param-name">obj</code>
+                        <span class="type">Sprite</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The event to prevent default actions for</p>
+                        <p>Colliding sprite</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">colShape</code>
+                        <span class="type">cp.Shape</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The colliding physics shape</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">myShape</code>
+                        <span class="type">Sprite</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Your physics shape that caused the collision</p>
                     </div>
 
                     
@@ -1326,116 +896,8 @@
 </div>
 
                 
-                    <div id="method_startPolling" class="method item">
-    <h3 class="name"><code>startPolling</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_input_Gamepad.js.html#l102"><code>src&#x2F;input&#x2F;Gamepad.js:102</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stats polling for new gamepads and status updates</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_stopPolling" class="method item">
-    <h3 class="name"><code>stopPolling</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_input_Gamepad.js.html#l113"><code>src&#x2F;input&#x2F;Gamepad.js:113</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stops polling for new gamepads and status updates</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_stopPropogation" class="method item inherited">
-    <h3 class="name"><code>stopPropogation</code></h3>
+                    <div id="method_setMass" class="method item">
+    <h3 class="name"><code>setMass</code></h3>
 
     
         <div class="args">
@@ -1443,7 +905,7 @@
             
                 <li class="arg">
                     
-                        <code>event</code>
+                        <code>mass</code>
                     
                 </li>
             
@@ -1468,12 +930,15 @@
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/gf.input.Input.html#method_stopPropogation">gf.input.Input</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
-        <a href="../files/src_input_Input.js.html#l49"><code>src&#x2F;input&#x2F;Input.js:49</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l89"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:89</code></a>
         
         </p>
 
@@ -1484,7 +949,7 @@
     </div>
 
     <div class="description">
-        <p>Prevents an event from bubbling up the DOM.</p>
+        <p>Sets the mass of this sprite</p>
     </div>
 
     
@@ -1495,14 +960,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">event</code>
-                        <span class="type">DOMEvent</span>
+                        <code class="param-name">mass</code>
+                        <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The event to prevent bubbling for</p>
+                        <p>The new mass of the object</p>
                     </div>
 
                     
@@ -1518,8 +983,290 @@
 </div>
 
                 
-                    <div id="method_update" class="method item">
-    <h3 class="name"><code>update</code></h3>
+                    <div id="method_setPosition" class="method item">
+    <h3 class="name"><code>setPosition</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>x</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>y</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l127"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:127</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the position of this sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">x</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">y</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setRotation" class="method item">
+    <h3 class="name"><code>setRotation</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>rotation</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l113"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:113</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the rotation of this sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">rotation</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new rotation of the object in radians</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setVelocity" class="method item">
+    <h3 class="name"><code>setVelocity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>velocity</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l101"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:101</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the velocity of this sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">velocity</code>
+                        <span class="type">Vector</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new velocity of the object</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_showPhysics" class="method item">
+    <h3 class="name"><code>showPhysics</code></h3>
 
     
         <span class="paren">()</span>
@@ -1550,7 +1297,7 @@
             
         
         
-        <a href="../files/src_input_Gamepad.js.html#l164"><code>src&#x2F;input&#x2F;Gamepad.js:164</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l179"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:179</code></a>
         
         </p>
 
@@ -1561,7 +1308,7 @@
     </div>
 
     <div class="description">
-        <p>Called each frame to update polling mechanisms</p>
+        <p>Shows the physics body for the sprite</p>
     </div>
 
     
@@ -1580,97 +1327,9 @@
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_buttons" class="property item">
-    <h3 class="name"><code>buttons</code></h3>
-    <span class="type">GamepadButtons</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_input_Gamepad.js.html#l39"><code>src&#x2F;input&#x2F;Gamepad.js:39</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Holds the button handler for gamepad button events</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_pads" class="property item">
-    <h3 class="name"><code>pads</code></h3>
-    <span class="type">Array<Gamepad></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_input_Gamepad.js.html#l21"><code>src&#x2F;input&#x2F;Gamepad.js:21</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The currently activated gamepads list</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_prevTimestamps" class="property item private">
-    <h3 class="name"><code>prevTimestamps</code></h3>
-    <span class="type">Array<Number></span>
+                    <div id="property__psystem" class="property item private">
+    <h3 class="name"><code>_psystem</code></h3>
+    <span class="type">PhysicsSystem</span>
 
     
 
@@ -1693,7 +1352,7 @@
             
         
         
-        <a href="../files/src_input_Gamepad.js.html#l30"><code>src&#x2F;input&#x2F;Gamepad.js:30</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l23"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:23</code></a>
         
         </p>
 
@@ -1703,9 +1362,13 @@
     </div>
 
     <div class="description">
-        <p>Timestamp tracking for state changes</p>
+        <p>The physics system that this object is a part of. This is advisory only
+please use enablePhysics() or disablePhysics() and do not set this value
+directly.</p>
     </div>
 
+    
+        <p><strong>Default:</strong> null</p>
     
 
     
@@ -1714,9 +1377,9 @@
 </div>
 
                 
-                    <div id="property_sticks" class="property item">
-    <h3 class="name"><code>sticks</code></h3>
-    <span class="type">GamepadSticks</span>
+                    <div id="property_inertia" class="property item">
+    <h3 class="name"><code>inertia</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -1737,7 +1400,7 @@
             
         
         
-        <a href="../files/src_input_Gamepad.js.html#l48"><code>src&#x2F;input&#x2F;Gamepad.js:48</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l46"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:46</code></a>
         
         </p>
 
@@ -1747,9 +1410,11 @@
     </div>
 
     <div class="description">
-        <p>Holds the stick handler for gamepad stick events</p>
+        <p>The moment of inertia of this object, only set this before enabling physics (has no effect after enabling)</p>
     </div>
 
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -1758,9 +1423,9 @@
 </div>
 
                 
-                    <div id="property_ticking" class="property item">
-    <h3 class="name"><code>ticking</code></h3>
-    <span class="type">Boolean</span>
+                    <div id="property_mass" class="property item">
+    <h3 class="name"><code>mass</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -1781,7 +1446,7 @@
             
         
         
-        <a href="../files/src_input_Gamepad.js.html#l12"><code>src&#x2F;input&#x2F;Gamepad.js:12</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l36"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:36</code></a>
         
         </p>
 
@@ -1791,50 +1456,11 @@
     </div>
 
     <div class="description">
-        <p>Tracks if we are polling for status/connections</p>
+        <p>The mass of this object, please use setMass to set this value</p>
     </div>
 
     
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_view" class="property item inherited">
-    <h3 class="name"><code>view</code></h3>
-    <span class="type">Game</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="../classes/gf.input.Input.html#property_view">gf.input.Input</a>:
-            
-        
-        
-        <a href="../files/src_input_Input.js.html#l27"><code>src&#x2F;input&#x2F;Input.js:27</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The dom element to bind events to</p>
-    </div>
-
+        <p><strong>Default:</strong> 0</p>
     
 
     

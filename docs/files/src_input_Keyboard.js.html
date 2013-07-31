@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -300,8 +302,8 @@ gf.input.Keyboard = function(view) {
      */
     this._clearSq = null;
 
-    document.addEventListener(&#x27;keydown&#x27;, this.onKeyDown.bind(this), false);
-    document.addEventListener(&#x27;keyup&#x27;, this.onKeyUp.bind(this), false);
+    view.addEventListener(&#x27;keydown&#x27;, this.onKeyDown.bind(this), false);
+    view.addEventListener(&#x27;keyup&#x27;, this.onKeyUp.bind(this), false);
 };
 
 gf.inherits(gf.input.Keyboard, gf.input.Input, {
@@ -314,7 +316,7 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
      * @private
      */
     onKeyDown: function(e, override) {
-        if(e.target === this.view)
+        //if(e.target === this.view.parentElement)
             return this.modifyKey(e, override || e.keyCode || e.which, true);
     },
     /**
@@ -326,7 +328,7 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
      * @private
      */
     onKeyUp: function(e, override) {
-        if(e.target === this.view)
+        //if(e.target === this.view.parentElement)
             return this.modifyKey(e, override || e.keyCode || e.which, false);
     },
     /**
@@ -341,6 +343,7 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
     modifyKey: function(e, key, down) {
         //emit single key event
         this.emit(key, {
+            input: this,
             originalEvent: e,
             down: down
         });
@@ -351,10 +354,14 @@ gf.inherits(gf.input.Keyboard, gf.input.Input, {
             this.sequence.push(key);
 
             //process current sequence
-            this.emit(this.sequence.toString(), {
-                originalEvent: e,
-                down: down
-            });
+            var s = this.sequence.toString();
+            if(s !== key.toString()) {
+                this.emit(s, {
+                    input: this,
+                    originalEvent: e,
+                    down: down
+                });
+            }
 
             //set timeout to clear sequence
             clearTimeout(this._clearSq);

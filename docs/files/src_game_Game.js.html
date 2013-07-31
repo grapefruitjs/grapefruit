@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -193,7 +195,6 @@
  * @param [settings.interactive] {Boolean} Whether the game will use mouse events or not
  */
 gf.Game = function(contId, settings) {
-    //mixin the Event Target methods
     gf.EventEmitter.call(this);
 
     /**
@@ -327,6 +328,17 @@ gf.Game = function(contId, settings) {
     this.activeState = null;
     this._defaultState = new gf.GameState(&#x27;_default&#x27;);
 
+    /**
+     * Holds timing data for the previous loop
+     *
+     * @property timings
+     * @type Object
+     * @readOnly
+     */
+    this.timings = {
+        _timer: window.performance &amp;&amp; window.performance.now ? window.performance : Date
+    };
+
     //append the renderer view only if the user didn&#x27;t pass their own
     if(!settings.view)
         this.container.appendChild(this.renderer.view);
@@ -392,6 +404,20 @@ gf.Game = function(contId, settings) {
      * @type Map
      * @readOnly
      */
+
+     //pixi does some prevent default on mousedown, so we need to
+     //make sure mousedown will focus the canvas or keyboard events break
+
+
+    //ensure that key events will work
+    var view = this.renderer.view;
+    if(!view.getAttribute(&#x27;tabindex&#x27;))
+        view.setAttribute(&#x27;tabindex&#x27;,&#x27;1&#x27;);
+
+    view.focus();
+    view.addEventListener(&#x27;click&#x27;, function() {
+        view.focus();
+    }, false);
 };
 
 gf.inherits(gf.Game, Object, {
@@ -556,16 +582,20 @@ gf.inherits(gf.Game, Object, {
      * @private
      */
     _tick: function() {
-        this.emit({ type: &#x27;beforetick&#x27; });
+        this.emit(&#x27;beforetick&#x27;);
         //start render loop
         window.requestAnimFrame(this._tick.bind(this));
 
         //update this game state
+        this.timings.stateStart = this.timings._timer.now();
         this.activeState.update(this.clock.getDelta());
+        this.timings.stateEnd = this.timings._timer.now();
 
         //render scene
+        this.timings.renderStart = this.timings._timer.now();
         this.renderer.render(this.stage);
-        this.emit({ type: &#x27;aftertick&#x27; });
+        this.timings.renderEnd = this.timings._timer.now();
+        this.emit(&#x27;aftertick&#x27;);
     }
 });
 

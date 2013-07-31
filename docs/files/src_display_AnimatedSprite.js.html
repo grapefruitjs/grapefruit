@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -187,15 +189,22 @@
  * @param [start] {String} The animation to start with, defaults to the first found key otherwise
  */
 gf.AnimatedSprite = function(anims, speed, start) {
-    //massage animations into full format
-    for(var a in anims) {
-        if(start === undefined)
-            start = a;
+    if(anims instanceof Array) {
+        anims = { _default: { frames: [anims] } };
+        start = &#x27;_default&#x27;;
+    } else {
+        //massage animations into full format
+        for(var a in anims) {
+            if(start === undefined)
+                start = a;
 
-        var anim = anims[a];
+            var anim = anims[a];
 
-        if(anim instanceof Array)
-            anims[a] = { frames: anim };
+            if(anim instanceof Array)
+                anims[a] = { frames: anim };
+            else if(anim instanceof gf.Texture)
+                anims[a] = { frames: [anim] };
+        }
     }
 
     gf.Sprite.call(this, anims[start].frames[0]);
@@ -287,13 +296,16 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
      */
     gotoAndPlay: function(anim, frame) {
         if(typeof anim === &#x27;number&#x27;) {
-            this.currenFrame = anim;
+            this.currentFrame = anim;
         } else {
-            this.currenFrame = frame || 0;
+            this.currentFrame = frame || 0;
+            this.lastRound = gf.math.round(frame || 0);
             this.currentAnimation = anim;
         }
-
         this.playing = true;
+
+        this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
+        this.emit(&#x27;frame&#x27;, this.currentAnimation, this.lastRound);
     },
     /**
      * Goes to a frame and stops playing the animation
@@ -307,11 +319,13 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
             this.currentFrame = anim;
         } else {
             this.currentFrame = frame || 0;
+            this.lastRound = gf.math.round(frame || 0);
             this.currentAnimation = anim;
         }
+        this.playing = false;
 
         this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
-        this.playing = false;
+        this.emit(&#x27;frame&#x27;, this.currentAnimation, this.lastRound);
     },
     /**
      * Starts playing the currently active animation
@@ -348,7 +362,11 @@ gf.inherits(gf.AnimatedSprite, gf.Sprite, {
         round = gf.math.round(this.currentFrame);
 
         if(round &lt; anim.frames.length) {
-            this.setTexture(anim.frames[round]);
+            if(round !== this.lastRound) {
+                this.lastRound = round;
+                this.setTexture(anim.frames[round]);
+                this.emit(&#x27;frame&#x27;, this.currentAnimation, round);
+            }
         }
         else {
             if(loop) {

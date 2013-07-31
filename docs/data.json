@@ -337,6 +337,17 @@
                 "gf": 1
             }
         },
+        "src/physics/PhysicsTarget.js": {
+            "name": "src/physics/PhysicsTarget.js",
+            "modules": {},
+            "classes": {
+                "gf.PhysicsTarget": 1
+            },
+            "fors": {},
+            "namespaces": {
+                "gf": 1
+            }
+        },
         "src/pool/ObjectPool.js": {
             "name": "src/pool/ObjectPool.js",
             "modules": {},
@@ -564,6 +575,10 @@
             "line": 1,
             "description": "The base display object, that anything being put on the screen inherits from",
             "extends": "<a target=\"_blank\" href=\"http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html\">PIXI.DisplayObjectContainer</a>",
+            "uses": [
+                "gf.EventEmitter",
+                "gf.PhysicsTarget"
+            ],
             "is_constructor": 1
         },
         "gf.Sprite": {
@@ -580,7 +595,8 @@
             "description": "The base Sprite class. This class is the base for all images on the screen",
             "extends": "<a target=\"_blank\" href=\"http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html\">PIXI.Sprite</a>",
             "uses": [
-                "gf.EventEmitter"
+                "gf.EventEmitter",
+                "gf.PhysicsTarget"
             ],
             "is_constructor": 1,
             "params": [
@@ -1232,9 +1248,6 @@
             "line": 1,
             "description": "Base Map implementation, provides common functions for all Map types",
             "extends": "gf.DisplayObjectContainer",
-            "uses": [
-                "gf.EventEmitter"
-            ],
             "is_constructor": 1,
             "params": [
                 {
@@ -1264,6 +1277,26 @@
                     "description": "All the settings for the tile",
                     "type": "Object"
                 }
+            ]
+        },
+        "gf.PhysicsTarget": {
+            "name": "gf.PhysicsTarget",
+            "shortname": "gf.PhysicsTarget",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [
+                "gf.DisplayObjectContainer",
+                "gf.Sprite"
+            ],
+            "namespace": "gf",
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 1,
+            "description": "Physics mixin. This will add physics capabilities to the class it mixes into.",
+            "is_constructor": 1,
+            "example": [
+                "\n     function MyObject(clr) {\n         this.color = clr;\n     }\n\n     gf.inherits(MyObject, Object, {\n         something: function(s) {\n         }\n     });\n     gf.PhysicsTarget.call(MyObject.prototype); //adds properties\n\n     //then later\n     var o = new MyObject('red');\n     o.enablePhysics(game.physics);"
             ]
         },
         "gf.ObjectPool": {
@@ -1342,20 +1375,20 @@
             "plugin_for": [],
             "extension_for": [
                 "gf.AudoPlayer",
+                "gf.DisplayObjectContainer",
                 "gf.Sprite",
                 "gf.Game",
                 "gf.input.Input",
                 "gf.AssetLoader",
-                "gf.Loader",
-                "gf.Map"
+                "gf.Loader"
             ],
             "namespace": "gf",
             "file": "src/utils/EventEmitter.js",
             "line": 1,
-            "description": "Event emitter mixin. This will add emitter properties to an object\nso that it can emit events, and have others listen for them.",
+            "description": "Event emitter mixin. This will add emitter properties to an object so that\nit can emit events, and have others listen for them. Based on\n<a target=\"_blank\" href=\"https://github.com/joyent/node/blob/master/lib/events.js\">node.js event emitter</a>",
             "is_constructor": 1,
             "example": [
-                "\n     function MyObject(clr) {\n         gf.EventEmitter.call(this); //adds properties\n         this.color = clr;\n     }\n\n     gf.inherits(MyObject, Object, {\n         something: function(s) {\n             this.emit('hey', { some: s });\n         }\n     });\n\n     //then later\n     var o = new MyObject('red');\n     o.on('hey', function(e) {\n         console.log(this.color); //\"this\" refers to the instance, logs \"red\"\n         console.log(e.some); //e is the data passed to emit, logs \"hello\"\n     });\n     o.something('hello');"
+                "\n     function MyObject(clr) {\n         this.color = clr;\n     }\n\n     gf.inherits(MyObject, Object, {\n         something: function(s) {\n             this.emit('hey', { some: s });\n         }\n     });\n     gf.EventEmitter.call(MyObject.prototype); //adds properties\n\n     //then later\n     var o = new MyObject('red');\n     o.on('hey', function(e) {\n         console.log(this.color); //\"this\" refers to the instance, logs \"red\"\n         console.log(e.some); //e is the data passed to emit, logs \"hello\"\n     });\n     o.something('hello');"
             ]
         },
         "gf.Vector": {
@@ -1719,7 +1752,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 18,
+            "line": 17,
             "description": "The source of the audio, the actual URL to load up",
             "itemtype": "property",
             "name": "src",
@@ -1729,7 +1762,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 26,
+            "line": 25,
             "description": "Play the audio immediately after loading",
             "itemtype": "property",
             "name": "autoplay",
@@ -1740,7 +1773,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 35,
+            "line": 34,
             "description": "Buffer forces use of HTML5Audio which will buffer and play\ninstead of loading the entire file and then playing",
             "itemtype": "property",
             "name": "buffer",
@@ -1751,7 +1784,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 45,
+            "line": 44,
             "description": "Override the format determined from the extension with this extension",
             "itemtype": "property",
             "name": "format",
@@ -1762,7 +1795,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 54,
+            "line": 53,
             "description": "Replay the audio immediately after finishing",
             "itemtype": "property",
             "name": "loop",
@@ -1773,7 +1806,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 63,
+            "line": 62,
             "description": "A 3D position where the audio should sound like it is coming from",
             "itemtype": "property",
             "name": "pos3d",
@@ -1784,7 +1817,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 72,
+            "line": 71,
             "description": "A sound sprite that maps string keys to [start, duration] arrays. These can\nbe used to put multiple sound bits in one file, and play them separately",
             "itemtype": "property",
             "name": "sprite",
@@ -1795,7 +1828,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 82,
+            "line": 81,
             "description": "The volume of the audio player",
             "itemtype": "property",
             "name": "volume",
@@ -1806,7 +1839,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 115,
+            "line": 114,
             "description": "Load the audio file for this player, this is called from the ctor\nthere is no reason to call it manually.",
             "itemtype": "method",
             "name": "load",
@@ -1821,7 +1854,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 171,
+            "line": 169,
             "description": "Play a sound from the current time (0 by default).",
             "itemtype": "method",
             "name": "play",
@@ -1848,7 +1881,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 309,
+            "line": 305,
             "description": "Pause playback and save the current position.",
             "itemtype": "method",
             "name": "pause",
@@ -1875,7 +1908,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 361,
+            "line": 356,
             "description": "Stop playback and reset to start.",
             "itemtype": "method",
             "name": "stop",
@@ -1902,7 +1935,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 407,
+            "line": 402,
             "description": "Mute this sound.",
             "itemtype": "method",
             "name": "mute",
@@ -1923,7 +1956,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 417,
+            "line": 412,
             "description": "Unmute this sound.",
             "itemtype": "method",
             "name": "unmute",
@@ -1944,7 +1977,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 427,
+            "line": 422,
             "description": "Set the muted state of this sound.",
             "itemtype": "method",
             "name": "setMuted",
@@ -1970,7 +2003,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 458,
+            "line": 453,
             "description": "Set the position of playback.",
             "itemtype": "method",
             "name": "seek",
@@ -1996,7 +2029,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 494,
+            "line": 489,
             "description": "Get the position of playback.",
             "itemtype": "method",
             "name": "getPosition",
@@ -2017,7 +2050,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 524,
+            "line": 519,
             "description": "Fade a currently playing sound between two volumes.",
             "itemtype": "method",
             "name": "fade",
@@ -2059,7 +2092,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 566,
+            "line": 561,
             "description": "Returns the current volume of the player",
             "itemtype": "method",
             "name": "getVolume",
@@ -2072,7 +2105,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 575,
+            "line": 570,
             "description": "Sets the current volume of the player",
             "itemtype": "method",
             "name": "setVolume",
@@ -2098,7 +2131,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 614,
+            "line": 609,
             "description": "Set the 3D position of the audio source.\nThe most common usage is to set the 'x' position\nto affect the left/right ear panning. Setting any value higher than\n1.0 will begin to decrease the volume of the sound as it moves further away.\nNOTE: This only works with Web Audio API, HTML5 Audio playback\nwill not be affected.",
             "itemtype": "method",
             "name": "setPosition",
@@ -2134,7 +2167,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 658,
+            "line": 653,
             "description": "Performs a step in the fade transition",
             "itemtype": "method",
             "name": "_doFadeStep",
@@ -2145,7 +2178,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 676,
+            "line": 671,
             "description": "Get an audio node by ID.",
             "itemtype": "method",
             "name": "_nodeById",
@@ -2160,7 +2193,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 696,
+            "line": 691,
             "description": "Get the first active audio node.",
             "itemtype": "method",
             "name": "_activeNode",
@@ -2175,7 +2208,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 719,
+            "line": 714,
             "description": "Get the first inactive audio node.\nIf there is none, create a new one and add it to the pool.",
             "itemtype": "method",
             "name": "_inactiveNode",
@@ -2193,7 +2226,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 755,
+            "line": 750,
             "description": "If there are more than 5 inactive audio nodes in the pool, clear out the rest.",
             "itemtype": "method",
             "name": "_drainPool",
@@ -2204,7 +2237,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 783,
+            "line": 778,
             "description": "Clear 'onend' timeout before it ends.",
             "itemtype": "method",
             "name": "_clearEndTimer",
@@ -2222,7 +2255,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 801,
+            "line": 796,
             "description": "Setup the gain node and panner for a Web Audio instance.",
             "itemtype": "method",
             "name": "_setupAudioNode",
@@ -2237,7 +2270,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 831,
+            "line": 826,
             "description": "Buffer a sound from URL (or from cache) and decode to audio source (Web Audio API).",
             "itemtype": "method",
             "name": "loadBuffer",
@@ -2255,7 +2288,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 873,
+            "line": 868,
             "description": "Finishes loading the Web Audio API sound and fires the loaded event",
             "itemtype": "method",
             "name": "loadSound",
@@ -2273,7 +2306,7 @@
         },
         {
             "file": "src/audio/AudioPlayer.js",
-            "line": 902,
+            "line": 896,
             "description": "Load the sound back into the buffer source.",
             "itemtype": "method",
             "name": "refreshBuffer",
@@ -2297,7 +2330,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 27,
+            "line": 34,
             "description": "The animation speed for this sprite",
             "itemtype": "property",
             "name": "speed",
@@ -2308,7 +2341,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 36,
+            "line": 43,
             "description": "Whether or not to loop the animations. This can be overriden\non a per-animation level",
             "itemtype": "property",
             "name": "loop",
@@ -2319,7 +2352,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 46,
+            "line": 53,
             "description": "The registerd animations for this AnimatedSprite",
             "itemtype": "property",
             "name": "animations",
@@ -2330,7 +2363,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 55,
+            "line": 62,
             "description": "The currently playing animation",
             "itemtype": "property",
             "name": "currentAnimation",
@@ -2341,7 +2374,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 64,
+            "line": 71,
             "description": "The current frame being shown",
             "itemtype": "property",
             "name": "currentFrame",
@@ -2352,7 +2385,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 73,
+            "line": 80,
             "description": "Whether or not the animation is currently playing",
             "itemtype": "property",
             "name": "playing",
@@ -2363,7 +2396,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 84,
+            "line": 91,
             "description": "Adds a new animation to this animated sprite",
             "itemtype": "method",
             "name": "addAnimation",
@@ -2396,7 +2429,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 105,
+            "line": 112,
             "description": "Goes to a frame and starts playing the animation from there",
             "itemtype": "method",
             "name": "gotoAndPlay",
@@ -2418,7 +2451,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 122,
+            "line": 132,
             "description": "Goes to a frame and stops playing the animation",
             "itemtype": "method",
             "name": "gotoAndStop",
@@ -2440,7 +2473,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 140,
+            "line": 152,
             "description": "Starts playing the currently active animation",
             "itemtype": "method",
             "name": "play",
@@ -2449,7 +2482,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 148,
+            "line": 160,
             "description": "Stops playing the currently active animation",
             "itemtype": "method",
             "name": "stop",
@@ -2458,7 +2491,7 @@
         },
         {
             "file": "src/display/AnimatedSprite.js",
-            "line": 156,
+            "line": 168,
             "description": "Called by PIXI to update our textures and do the actual animation",
             "itemtype": "method",
             "name": "updateTransform",
@@ -2531,6 +2564,17 @@
         {
             "file": "src/display/Camera.js",
             "line": 64,
+            "description": "The game this camera views",
+            "itemtype": "property",
+            "name": "game",
+            "type": "Game",
+            "readonly": "",
+            "class": "gf.Camera",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/display/Camera.js",
+            "line": 73,
             "description": "The _fx namespace has all the instance variables for all the fx",
             "itemtype": "property",
             "name": "_fx",
@@ -2543,7 +2587,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 94,
+            "line": 103,
             "description": "Makes the camera flash with a certain color",
             "itemtype": "method",
             "name": "flash",
@@ -2573,7 +2617,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 134,
+            "line": 143,
             "description": "Stops a running flash, instantly hiding it",
             "itemtype": "method",
             "name": "stopFlash",
@@ -2586,7 +2630,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 145,
+            "line": 154,
             "description": "Makes the camera fade into a color",
             "itemtype": "method",
             "name": "fade",
@@ -2616,7 +2660,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 185,
+            "line": 194,
             "description": "Stops a running fade, instantly hiding it",
             "itemtype": "method",
             "name": "stopFade",
@@ -2629,7 +2673,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 196,
+            "line": 205,
             "description": "Shakes the camera around a bit, to show it who is boss.",
             "itemtype": "method",
             "name": "shake",
@@ -2664,7 +2708,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 243,
+            "line": 252,
             "description": "Stops a running shake effect",
             "itemtype": "method",
             "name": "stopShake",
@@ -2677,7 +2721,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 258,
+            "line": 267,
             "description": "Stops all currently running effects (flash, fade, shake)",
             "itemtype": "method",
             "name": "stopAll",
@@ -2690,7 +2734,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 271,
+            "line": 280,
             "description": "Follows an sprite with the camera, ensuring they are always center view. You can\npass a follow style to change the area an sprite can move around in before we start\nto move with them.",
             "itemtype": "method",
             "name": "follow",
@@ -2715,7 +2759,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 327,
+            "line": 336,
             "description": "Stops following any sprites",
             "itemtype": "method",
             "name": "unfollow",
@@ -2728,7 +2772,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 337,
+            "line": 346,
             "description": "Focuses the camera on a sprite.",
             "itemtype": "method",
             "name": "focusSprite",
@@ -2748,7 +2792,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 350,
+            "line": 359,
             "description": "Focuses the camera on an x,y position. Ensures that the camera does\nnot go outside the bounds set with setBounds()",
             "itemtype": "method",
             "name": "focus",
@@ -2773,7 +2817,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 373,
+            "line": 382,
             "description": "Pans the camera around by the x,y amount. Ensures that the camera does\nnot go outside the bounds set with setBounds()",
             "itemtype": "method",
             "name": "pan",
@@ -2798,7 +2842,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 417,
+            "line": 430,
             "description": "Resizes the viewing area, this is called internally by your game instance\nwhen you call mygame.resize(). DO NOT CALL THIS DIRECTLY",
             "itemtype": "method",
             "name": "resize",
@@ -2825,30 +2869,15 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 436,
+            "line": 449,
             "description": "Sets the bounds the camera is allowed to go. Usually this is the world's\nmin and max, and is set for you.",
             "itemtype": "method",
-            "name": "setBounds",
+            "name": "constrain",
             "params": [
                 {
-                    "name": "x",
-                    "description": "The minimum x coord (usually 0)",
-                    "type": "Number"
-                },
-                {
-                    "name": "y",
-                    "description": "The minimum y coord (usually 0)",
-                    "type": "Number"
-                },
-                {
-                    "name": "width",
-                    "description": "The maximum x coord (usually map width)",
-                    "type": "Number"
-                },
-                {
-                    "name": "height",
-                    "description": "The maximum y coord (usually map height)",
-                    "type": "Number"
+                    "name": "shape",
+                    "description": "The shape to constrain the camera into",
+                    "type": "Rectangle|Polygon|Circle|Ellipse"
                 }
             ],
             "return": {
@@ -2860,7 +2889,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 461,
+            "line": 485,
             "description": "Called internally every frame. Updates all effects and the follow",
             "itemtype": "method",
             "name": "update",
@@ -2882,7 +2911,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 567,
+            "line": 591,
             "description": "Camera follow types (used for camera.follow())",
             "itemtype": "property",
             "name": "FOLLOW",
@@ -2893,7 +2922,7 @@
         },
         {
             "file": "src/display/Camera.js",
-            "line": 581,
+            "line": 605,
             "description": "Camera shake directions (used for camera.shake())",
             "itemtype": "property",
             "name": "SHAKE",
@@ -2904,7 +2933,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 19,
+            "line": 23,
             "description": "[read-only] The of children of this object.",
             "itemtype": "property",
             "name": "children",
@@ -2915,7 +2944,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 25,
+            "line": 29,
             "description": "The coordinate of the object relative to the local coordinates of the parent.",
             "itemtype": "property",
             "name": "position",
@@ -2925,7 +2954,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 32,
+            "line": 36,
             "description": "The scale factor of the object.",
             "itemtype": "property",
             "name": "scale",
@@ -2935,7 +2964,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 39,
+            "line": 43,
             "description": "The rotation of the object in radians.",
             "itemtype": "property",
             "name": "rotation",
@@ -2945,7 +2974,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 46,
+            "line": 50,
             "description": "The opacity of the object.",
             "itemtype": "property",
             "name": "alpha",
@@ -2955,7 +2984,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 53,
+            "line": 57,
             "description": "The visibility of the object.",
             "itemtype": "property",
             "name": "visible",
@@ -2965,7 +2994,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 60,
+            "line": 64,
             "description": "[read-only] The display object that contains this display object.",
             "itemtype": "property",
             "name": "parent",
@@ -2976,7 +3005,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 68,
+            "line": 72,
             "description": "[read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.",
             "itemtype": "property",
             "name": "stage",
@@ -2987,7 +3016,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 76,
+            "line": 80,
             "description": "This is the defined area that will pick up mouse / touch events. It is null by default.\nSetting it is a neat way of optimising the hitTest function that the interactionManager\nwill use (as it will not need to hit test all the children)",
             "itemtype": "property",
             "name": "hitArea",
@@ -2997,7 +3026,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 85,
+            "line": 89,
             "description": "Wether or not the object will handle mouse events",
             "itemtype": "property",
             "name": "interactive",
@@ -3008,14 +3037,14 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 93,
+            "line": 97,
             "description": "Inherited Methods",
             "class": "gf.DisplayObjectContainer",
             "namespace": "gf"
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 97,
+            "line": 101,
             "description": "Adds a child to the object.",
             "itemtype": "method",
             "name": "addChild",
@@ -3031,7 +3060,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 104,
+            "line": 108,
             "description": "Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown",
             "itemtype": "method",
             "name": "addChildAt",
@@ -3052,7 +3081,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 112,
+            "line": 116,
             "description": "Removes a child from the object.",
             "itemtype": "method",
             "name": "removeChild",
@@ -3068,7 +3097,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 121,
+            "line": 125,
             "description": "Base resize function, all this does is ensure that all children resize functions get called as well",
             "itemtype": "method",
             "name": "resize",
@@ -3077,35 +3106,16 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 134,
-            "description": "Convenience method for setting the position of the Object.",
+            "line": 139,
+            "description": "Removes this object from the stage and the physics system",
             "itemtype": "method",
-            "name": "setPosition",
-            "params": [
-                {
-                    "name": "x",
-                    "description": "X coord to put the object at.\n      If an Array, Vector, or Point is passed then the y parameter is ignored",
-                    "type": "Number|Array<Number>|Vector|Point"
-                },
-                {
-                    "name": "y",
-                    "description": "Y coord to put the object at",
-                    "type": "Number"
-                }
-            ],
-            "return": {
-                "description": "Returns itself for chainability",
-                "type": "DisplayObjectContainer"
-            },
-            "example": [
-                "\n     obj.setPosition(0) //will set to (0, 0)\n         .setPosition(1, 1)\n         .setPosition([5, 5])\n         .setPosition(new gf.Point(10, 10))\n         .setPosition(new gf.Vector(20, 20));"
-            ],
+            "name": "destroy",
             "class": "gf.DisplayObjectContainer",
             "namespace": "gf"
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 186,
+            "line": 164,
             "description": "A callback that is used when the users clicks on the displayObject with their mouse",
             "itemtype": "event",
             "name": "click",
@@ -3121,7 +3131,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 193,
+            "line": 171,
             "description": "A callback that is used when the user clicks the mouse down over the displayObject",
             "itemtype": "event",
             "name": "mousedown",
@@ -3137,7 +3147,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 200,
+            "line": 178,
             "description": "A callback that is used when the user releases the mouse that was over the displayObject\nfor this callback to be fired the mouse must have been pressed down over the displayObject",
             "itemtype": "event",
             "name": "mouseup",
@@ -3153,7 +3163,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 208,
+            "line": 186,
             "description": "A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject\nfor this callback to be fired, The touch must have started over the displayObject",
             "itemtype": "event",
             "name": "mouseupoutside",
@@ -3169,7 +3179,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 216,
+            "line": 194,
             "description": "A callback that is used when the users mouse rolls over the displayObject",
             "itemtype": "event",
             "name": "mouseover",
@@ -3185,7 +3195,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 223,
+            "line": 201,
             "description": "A callback that is used when the users mouse leaves the displayObject",
             "itemtype": "event",
             "name": "mouseout",
@@ -3201,7 +3211,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 230,
+            "line": 208,
             "description": "A callback that is used when the user moves the mouse while over the displayObject",
             "itemtype": "event",
             "name": "mousemove",
@@ -3217,7 +3227,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 241,
+            "line": 219,
             "description": "A callback that is used when the users taps on the displayObject with their finger\nbasically a touch version of click",
             "itemtype": "event",
             "name": "tap",
@@ -3233,7 +3243,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 249,
+            "line": 227,
             "description": "A callback that is used when the user touch's over the displayObject",
             "itemtype": "event",
             "name": "touchstart",
@@ -3249,7 +3259,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 256,
+            "line": 234,
             "description": "A callback that is used when the user releases a touch over the displayObject",
             "itemtype": "event",
             "name": "touchend",
@@ -3265,7 +3275,7 @@
         },
         {
             "file": "src/display/DisplayObjectContainer.js",
-            "line": 263,
+            "line": 241,
             "description": "A callback that is used when the user releases the touch that was over the displayObject\nfor this callback to be fired, The touch must have started over the displayObject",
             "itemtype": "event",
             "name": "touchendoutside",
@@ -3281,7 +3291,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 17,
+            "line": 19,
             "description": "The type of the sprite",
             "itemtype": "property",
             "name": "type",
@@ -3292,136 +3302,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 26,
-            "description": "Whether or not the sprite is \"alive\", advisory only",
-            "itemtype": "property",
-            "name": "alive",
-            "type": "Boolean",
-            "default": "true",
-            "class": "gf.Sprite",
-            "namespace": "gf"
-        },
-        {
-            "file": "src/display/Sprite.js",
-            "line": 35,
-            "description": "The mass of this sprite (if using physics), please use setMass to set this value",
-            "itemtype": "property",
-            "name": "mass",
-            "type": "Number",
-            "default": "0",
-            "readonly": "",
-            "class": "gf.Sprite",
-            "namespace": "gf"
-        },
-        {
-            "file": "src/display/Sprite.js",
-            "line": 45,
-            "description": "The physics system that this sprite is a part of. This is advisory only\nplease use enablePhysics() or disablePhysics() and do not set this value\ndirectly.",
-            "itemtype": "property",
-            "name": "physics",
-            "type": "PhysicsSystem",
-            "default": "null",
-            "readonly": "",
-            "class": "gf.Sprite",
-            "namespace": "gf"
-        },
-        {
-            "file": "src/display/Sprite.js",
-            "line": 59,
-            "description": "Enables physics for this sprite",
-            "itemtype": "method",
-            "name": "enablePhysics",
-            "params": [
-                {
-                    "name": "system",
-                    "description": "The system for the sprite to be in",
-                    "type": "PhysicsSystem"
-                }
-            ],
-            "class": "gf.Sprite",
-            "namespace": "gf"
-        },
-        {
-            "file": "src/display/Sprite.js",
-            "line": 75,
-            "description": "Disbales physics for this sprite",
-            "itemtype": "method",
-            "name": "disablePhysics",
-            "class": "gf.Sprite",
-            "namespace": "gf"
-        },
-        {
-            "file": "src/display/Sprite.js",
-            "line": 85,
-            "description": "Sets the mass of this sprite",
-            "itemtype": "method",
-            "name": "setMass",
-            "params": [
-                {
-                    "name": "mass",
-                    "description": "The new mass of the object",
-                    "type": "Number"
-                }
-            ],
-            "class": "gf.Sprite",
-            "namespace": "gf"
-        },
-        {
-            "file": "src/display/Sprite.js",
-            "line": 96,
-            "description": "Sets the velocity of this sprite",
-            "itemtype": "method",
-            "name": "setVelocity",
-            "params": [
-                {
-                    "name": "velocity",
-                    "description": "The new velocity of the object",
-                    "type": "Vector"
-                }
-            ],
-            "class": "gf.Sprite",
-            "namespace": "gf"
-        },
-        {
-            "file": "src/display/Sprite.js",
-            "line": 107,
-            "description": "Sets the rotation of this sprite",
-            "itemtype": "method",
-            "name": "setRotation",
-            "params": [
-                {
-                    "name": "rotation",
-                    "description": "The new rotation of the object in radians",
-                    "type": "Number"
-                }
-            ],
-            "class": "gf.Sprite",
-            "namespace": "gf"
-        },
-        {
-            "file": "src/display/Sprite.js",
-            "line": 120,
-            "description": "Sets the position of this sprite",
-            "itemtype": "method",
-            "name": "setPosition",
-            "params": [
-                {
-                    "name": "x",
-                    "description": "",
-                    "type": "Number"
-                },
-                {
-                    "name": "y",
-                    "description": "",
-                    "type": "Number"
-                }
-            ],
-            "class": "gf.Sprite",
-            "namespace": "gf"
-        },
-        {
-            "file": "src/display/Sprite.js",
-            "line": 135,
+            "line": 30,
             "description": "Removes this sprite from the stage and the physics system",
             "itemtype": "method",
             "name": "destroy",
@@ -3430,23 +3311,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 148,
-            "description": "On Collision Event\n     called when this sprite collides into another, or is being collided into by another.\n     By default if something collides with a collectable sprite we destroy the collectable\n     and if we collide with a solid tile we kill our velocity. This method will emit a\n     'collision' event that you can listen for",
-            "itemtype": "method",
-            "name": "onCollision",
-            "params": [
-                {
-                    "name": "obj",
-                    "description": "Colliding sprite",
-                    "type": "Sprite"
-                }
-            ],
-            "class": "gf.Sprite",
-            "namespace": "gf"
-        },
-        {
-            "file": "src/display/Sprite.js",
-            "line": 166,
+            "line": 43,
             "description": "Sprite types",
             "itemtype": "property",
             "name": "TYPE",
@@ -3457,7 +3322,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 193,
+            "line": 70,
             "description": "A callback that is used when the users clicks on the sprite with their mouse",
             "itemtype": "event",
             "name": "click",
@@ -3473,7 +3338,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 200,
+            "line": 77,
             "description": "A callback that is used when the user clicks the mouse down over the sprite",
             "itemtype": "event",
             "name": "mousedown",
@@ -3489,7 +3354,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 207,
+            "line": 84,
             "description": "A callback that is used when the user releases the mouse that was over the sprite\nfor this callback to be fired the mouse must have been pressed down over the sprite",
             "itemtype": "event",
             "name": "mouseup",
@@ -3505,7 +3370,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 215,
+            "line": 92,
             "description": "A callback that is used when the user releases the mouse that was over the sprite but is no longer over the sprite\nfor this callback to be fired, The touch must have started over the sprite",
             "itemtype": "event",
             "name": "mouseupoutside",
@@ -3521,7 +3386,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 223,
+            "line": 100,
             "description": "A callback that is used when the users mouse rolls over the sprite",
             "itemtype": "event",
             "name": "mouseover",
@@ -3537,7 +3402,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 230,
+            "line": 107,
             "description": "A callback that is used when the users mouse leaves the sprite",
             "itemtype": "event",
             "name": "mouseout",
@@ -3553,7 +3418,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 237,
+            "line": 114,
             "description": "A callback that is used when the user moves the mouse while over the sprite",
             "itemtype": "event",
             "name": "mousemove",
@@ -3569,7 +3434,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 248,
+            "line": 125,
             "description": "A callback that is used when the users taps on the sprite with their finger\nbasically a touch version of click",
             "itemtype": "event",
             "name": "tap",
@@ -3585,7 +3450,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 256,
+            "line": 133,
             "description": "A callback that is used when the user touch's over the sprite",
             "itemtype": "event",
             "name": "touchstart",
@@ -3601,7 +3466,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 263,
+            "line": 140,
             "description": "A callback that is used when the user releases a touch over the sprite",
             "itemtype": "event",
             "name": "touchend",
@@ -3617,7 +3482,7 @@
         },
         {
             "file": "src/display/Sprite.js",
-            "line": 270,
+            "line": 147,
             "description": "A callback that is used when the user releases the touch that was over the sprite\nfor this callback to be fired, The touch must have started over the sprite",
             "itemtype": "event",
             "name": "touchendoutside",
@@ -3757,7 +3622,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 23,
+            "line": 22,
             "description": "The domElement that we are putting our rendering canvas into (the container)",
             "itemtype": "property",
             "name": "container",
@@ -3768,7 +3633,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 35,
+            "line": 34,
             "description": "The method used to render values to the screen (either webgl, or canvas)",
             "itemtype": "property",
             "name": "renderMethod",
@@ -3779,7 +3644,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 44,
+            "line": 43,
             "description": "The player entities added into the game",
             "itemtype": "property",
             "name": "players",
@@ -3790,7 +3655,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 53,
+            "line": 52,
             "description": "Raw PIXI.stage instance",
             "itemtype": "property",
             "name": "stage",
@@ -3801,7 +3666,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 65,
+            "line": 64,
             "description": "Raw Clock instance for internal timing",
             "itemtype": "property",
             "name": "clock",
@@ -3812,7 +3677,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 74,
+            "line": 73,
             "description": "Raw rendering engine",
             "itemtype": "property",
             "name": "renderer",
@@ -3823,7 +3688,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 106,
+            "line": 105,
             "description": "Maximum Z value",
             "itemtype": "property",
             "name": "MAX_Z",
@@ -3837,7 +3702,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 117,
+            "line": 116,
             "description": "The loader for this game instance",
             "itemtype": "property",
             "name": "loader",
@@ -3848,7 +3713,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 126,
+            "line": 125,
             "description": "The sprite pool to use to create registered entities",
             "itemtype": "property",
             "name": "spritepool",
@@ -3859,7 +3724,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 135,
+            "line": 134,
             "description": "The GameStates added to the game",
             "itemtype": "property",
             "name": "states",
@@ -3870,7 +3735,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 144,
+            "line": 143,
             "description": "The currently active GameState",
             "itemtype": "property",
             "name": "activeState",
@@ -3881,7 +3746,18 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 175,
+            "line": 153,
+            "description": "Holds timing data for the previous loop",
+            "itemtype": "property",
+            "name": "timings",
+            "type": "Object",
+            "readonly": "",
+            "class": "gf.Game",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/game/Game.js",
+            "line": 185,
             "description": "The audio player for this game instance\n(refers to the active GameState's audio instance)",
             "itemtype": "property",
             "name": "audio",
@@ -3892,7 +3768,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 184,
+            "line": 194,
             "description": "The input instance for this game\n(refers to the active GameState's input instance)",
             "itemtype": "property",
             "name": "input",
@@ -3903,7 +3779,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 193,
+            "line": 203,
             "description": "The physics system to simulate stuffs\n(refers to the active GameState's physics instance)",
             "itemtype": "property",
             "name": "physics",
@@ -3914,7 +3790,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 202,
+            "line": 212,
             "description": "The camera you view the scene through\n(refers to the active GameState's camera instance)",
             "itemtype": "property",
             "name": "camera",
@@ -3925,7 +3801,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 211,
+            "line": 221,
             "description": "The world instance that holds all sprites and the map\n(refers to the active GameState's world instance)",
             "itemtype": "property",
             "name": "world",
@@ -3936,7 +3812,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 222,
+            "line": 246,
             "description": "Allows you to resize the game area",
             "itemtype": "method",
             "name": "resize",
@@ -3961,7 +3837,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 242,
+            "line": 266,
             "description": "Adds an object to the current stage",
             "itemtype": "method",
             "name": "addChild",
@@ -3981,7 +3857,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 254,
+            "line": 278,
             "description": "Removes a sprite from the stage",
             "itemtype": "method",
             "name": "removeChild",
@@ -4001,7 +3877,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 282,
+            "line": 306,
             "description": "Adds a new game state to this game to be later enabled",
             "itemtype": "method",
             "name": "addState",
@@ -4021,7 +3897,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 305,
+            "line": 329,
             "description": "Removes a game state from the game",
             "itemtype": "method",
             "name": "removeState",
@@ -4041,7 +3917,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 333,
+            "line": 357,
             "description": "Enables a state that has been added to the game",
             "itemtype": "method",
             "name": "enableState",
@@ -4061,7 +3937,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 352,
+            "line": 376,
             "description": "Loads the world map into the game",
             "itemtype": "method",
             "name": "loadWorld",
@@ -4081,7 +3957,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 364,
+            "line": 388,
             "description": "Begins the render loop",
             "itemtype": "method",
             "name": "render",
@@ -4094,7 +3970,7 @@
         },
         {
             "file": "src/game/Game.js",
-            "line": 376,
+            "line": 400,
             "description": "The looping render tick",
             "itemtype": "method",
             "name": "_tick",
@@ -4230,7 +4106,7 @@
         },
         {
             "file": "src/game/GameState.js",
-            "line": 169,
+            "line": 168,
             "description": "Enables (shows) the game state",
             "itemtype": "method",
             "name": "enable",
@@ -4239,7 +4115,7 @@
         },
         {
             "file": "src/game/GameState.js",
-            "line": 177,
+            "line": 176,
             "description": "Disables (hides) the game state",
             "itemtype": "method",
             "name": "disable",
@@ -4248,7 +4124,7 @@
         },
         {
             "file": "src/game/GameState.js",
-            "line": 185,
+            "line": 184,
             "description": "Called by the game each frame to update the input, camera, and physics objects",
             "itemtype": "method",
             "name": "update",
@@ -4471,7 +4347,7 @@
         },
         {
             "file": "src/input/GamepadButtons.js",
-            "line": 75,
+            "line": 76,
             "description": "Polls the gamepad object for status updates and emits events when they occur",
             "itemtype": "method",
             "name": "pollStatus",
@@ -4499,7 +4375,7 @@
         {
             "file": "src/input/GamepadSticks.js",
             "line": 34,
-            "description": "The threshold at which we consider a stick \"moved\"",
+            "description": "The threshold at which we consider a stick moved from center",
             "itemtype": "property",
             "name": "threshold",
             "type": "Number",
@@ -4566,13 +4442,29 @@
         {
             "file": "src/input/Input.js",
             "line": 37,
-            "description": "Prevents the default action of an event, and prevents it from bubbling up\nthe DOM.",
+            "description": "Prevents the default action of an event",
             "itemtype": "method",
             "name": "preventDefault",
             "params": [
                 {
                     "name": "event",
                     "description": "The event to prevent default actions for",
+                    "type": "DOMEvent"
+                }
+            ],
+            "class": "gf.input.Input",
+            "namespace": "gf.input"
+        },
+        {
+            "file": "src/input/Input.js",
+            "line": 49,
+            "description": "Prevents an event from bubbling up the DOM.",
+            "itemtype": "method",
+            "name": "stopPropogation",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The event to prevent bubbling for",
                     "type": "DOMEvent"
                 }
             ],
@@ -4743,7 +4635,7 @@
         },
         {
             "file": "src/input/Keyboard.js",
-            "line": 188,
+            "line": 193,
             "description": "Clears the current sequence so that a new one can start",
             "itemtype": "method",
             "name": "_clearSequence",
@@ -4754,7 +4646,7 @@
         },
         {
             "file": "src/loader/AssetLoader.js",
-            "line": 23,
+            "line": 22,
             "description": "The array of assets to load",
             "itemtype": "property",
             "name": "assets",
@@ -4764,7 +4656,7 @@
         },
         {
             "file": "src/loader/AssetLoader.js",
-            "line": 31,
+            "line": 30,
             "description": "The count of remaining assets to load",
             "itemtype": "property",
             "name": "remaining",
@@ -4775,7 +4667,7 @@
         },
         {
             "file": "src/loader/AssetLoader.js",
-            "line": 40,
+            "line": 39,
             "description": "A mapping of extensions to types",
             "itemtype": "property",
             "name": "loaders",
@@ -4788,7 +4680,7 @@
         },
         {
             "file": "src/loader/AssetLoader.js",
-            "line": 65,
+            "line": 64,
             "description": "Fired if a loader encounters an error",
             "itemtype": "event",
             "name": "error",
@@ -4816,7 +4708,7 @@
         },
         {
             "file": "src/loader/AssetLoader.js",
-            "line": 74,
+            "line": 73,
             "description": "Fired when an item has loaded",
             "itemtype": "event",
             "name": "progress",
@@ -4849,7 +4741,7 @@
         },
         {
             "file": "src/loader/AssetLoader.js",
-            "line": 84,
+            "line": 83,
             "description": "Fired when all the assets have loaded",
             "itemtype": "event",
             "name": "complete",
@@ -4858,7 +4750,7 @@
         },
         {
             "file": "src/loader/AssetLoader.js",
-            "line": 92,
+            "line": 91,
             "description": "Adds a resource to the assets array.",
             "itemtype": "method",
             "name": "add",
@@ -4879,7 +4771,7 @@
         },
         {
             "file": "src/loader/AssetLoader.js",
-            "line": 105,
+            "line": 104,
             "description": "Starts the loading festivities. If called without any arguments it will load\nthe assets passed in at the ctor. If an array of assets are passed it will\nload those instead.",
             "itemtype": "method",
             "name": "load",
@@ -4895,7 +4787,7 @@
         },
         {
             "file": "src/loader/AssetLoader.js",
-            "line": 133,
+            "line": 132,
             "description": "Called whenever an asset is loaded, to keep track of when to emit complete and progress.",
             "itemtype": "method",
             "name": "onAssetLoaded",
@@ -4913,7 +4805,7 @@
         },
         {
             "file": "src/loader/AssetLoader.js",
-            "line": 153,
+            "line": 152,
             "description": "Called whenever an asset loader encounters an error",
             "itemtype": "method",
             "name": "onAssetError",
@@ -5054,7 +4946,7 @@
         },
         {
             "file": "src/map/tiled/TiledLayer.js",
-            "line": 228,
+            "line": 227,
             "description": "Clears all the tiles currently used to render the layer",
             "itemtype": "method",
             "name": "clearTiles",
@@ -5063,7 +4955,7 @@
         },
         {
             "file": "src/map/tiled/TiledLayer.js",
-            "line": 241,
+            "line": 240,
             "description": "Moves a tile sprite from one position to another, and creates a new tile\nif the old position didn't have a sprite",
             "itemtype": "method",
             "name": "moveTileSprite",
@@ -5098,7 +4990,7 @@
         },
         {
             "file": "src/map/tiled/TiledLayer.js",
-            "line": 370,
+            "line": 359,
             "description": "Pans the layer around, rendering stuff if necessary",
             "itemtype": "method",
             "name": "pan",
@@ -5204,7 +5096,7 @@
         },
         {
             "file": "src/map/tiled/TiledMap.js",
-            "line": 123,
+            "line": 125,
             "description": "Gets the tileset that an ID is associated with",
             "itemtype": "method",
             "name": "getTileset",
@@ -5224,7 +5116,7 @@
         },
         {
             "file": "src/map/tiled/TiledMap.js",
-            "line": 135,
+            "line": 137,
             "description": "Notifies the map it needs to resize, re renders the viewport",
             "itemtype": "method",
             "name": "resize",
@@ -5233,7 +5125,7 @@
         },
         {
             "file": "src/map/tiled/TiledMap.js",
-            "line": 149,
+            "line": 151,
             "description": "Spawns all the objects in the TiledObjectGroups of this map",
             "itemtype": "method",
             "name": "spawnObjects",
@@ -5242,7 +5134,7 @@
         },
         {
             "file": "src/map/tiled/TiledMap.js",
-            "line": 163,
+            "line": 165,
             "description": "Called by a TiledLayer when a tile event occurs. This is so you can listen for\nthe emitted events on the world instead of the tile itself.",
             "itemtype": "method",
             "name": "onTileEvent",
@@ -5270,7 +5162,7 @@
         },
         {
             "file": "src/map/tiled/TiledMap.js",
-            "line": 180,
+            "line": 181,
             "description": "Called by a TiledObjectGroup when an object event occurs. This is so you can listen for\nthe emitted events on the world instead of the tile itself.",
             "itemtype": "method",
             "name": "onObjectEvent",
@@ -5341,7 +5233,7 @@
         },
         {
             "file": "src/map/tiled/TiledObjectGroup.js",
-            "line": 223,
+            "line": 226,
             "description": "Despawns all the sprites associated with this layer",
             "itemtype": "method",
             "name": "despawn",
@@ -5474,7 +5366,7 @@
         },
         {
             "file": "src/map/tiled/TiledTileset.js",
-            "line": 196,
+            "line": 159,
             "description": "Gets the tile properties for a tile based on it's ID",
             "itemtype": "method",
             "name": "getTileProperties",
@@ -5494,7 +5386,7 @@
         },
         {
             "file": "src/map/tiled/TiledTileset.js",
-            "line": 221,
+            "line": 184,
             "description": "Gets the tile texture for a tile based on it's ID",
             "itemtype": "method",
             "name": "getTileTexture",
@@ -5561,7 +5453,7 @@
         },
         {
             "file": "src/map/Map.js",
-            "line": 15,
+            "line": 11,
             "description": "The size of the map",
             "itemtype": "property",
             "name": "size",
@@ -5572,7 +5464,7 @@
         },
         {
             "file": "src/map/Map.js",
-            "line": 29,
+            "line": 25,
             "description": "Pans the map around",
             "itemtype": "method",
             "name": "pan",
@@ -5591,6 +5483,26 @@
             "return": {
                 "description": "Returns itself for chainability",
                 "type": "Map"
+            },
+            "class": "gf.Map",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/map/Map.js",
+            "line": 47,
+            "description": "Finds a layer based on the string name",
+            "itemtype": "method",
+            "name": "findLayer",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The name of the layer to find",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Layer"
             },
             "class": "gf.Map",
             "namespace": "gf"
@@ -5616,10 +5528,216 @@
             "line": 42,
             "description": "Tile collision types",
             "itemtype": "property",
-            "name": "COLLISION",
+            "name": "TYPE",
             "type": "Object",
             "static": 1,
             "class": "gf.Tile",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 23,
+            "description": "The physics system that this object is a part of. This is advisory only\nplease use enablePhysics() or disablePhysics() and do not set this value\ndirectly.",
+            "itemtype": "property",
+            "name": "_psystem",
+            "type": "PhysicsSystem",
+            "default": "null",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 36,
+            "description": "The mass of this object, please use setMass to set this value",
+            "itemtype": "property",
+            "name": "mass",
+            "type": "Number",
+            "default": "0",
+            "readonly": "",
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 46,
+            "description": "The moment of inertia of this object, only set this before enabling physics (has no effect after enabling)",
+            "itemtype": "property",
+            "name": "inertia",
+            "type": "Number",
+            "default": "0",
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 55,
+            "description": "Enables physics for this sprite",
+            "itemtype": "method",
+            "name": "enablePhysics",
+            "params": [
+                {
+                    "name": "system",
+                    "description": "The system for the sprite to be in",
+                    "type": "PhysicsSystem"
+                }
+            ],
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 72,
+            "description": "Disbales physics for this sprite",
+            "itemtype": "method",
+            "name": "disablePhysics",
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 89,
+            "description": "Sets the mass of this sprite",
+            "itemtype": "method",
+            "name": "setMass",
+            "params": [
+                {
+                    "name": "mass",
+                    "description": "The new mass of the object",
+                    "type": "Number"
+                }
+            ],
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 101,
+            "description": "Sets the velocity of this sprite",
+            "itemtype": "method",
+            "name": "setVelocity",
+            "params": [
+                {
+                    "name": "velocity",
+                    "description": "The new velocity of the object",
+                    "type": "Vector"
+                }
+            ],
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 113,
+            "description": "Sets the rotation of this sprite",
+            "itemtype": "method",
+            "name": "setRotation",
+            "params": [
+                {
+                    "name": "rotation",
+                    "description": "The new rotation of the object in radians",
+                    "type": "Number"
+                }
+            ],
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 127,
+            "description": "Sets the position of this sprite",
+            "itemtype": "method",
+            "name": "setPosition",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 143,
+            "description": "On Collision Event\n     called when this sprite collides into another, or is being collided into by another.\n     By default if something collides with a collectable sprite we destroy the collectable\n     and if we collide with a solid tile we kill our velocity. This method will emit a\n     'collision' event that you can listen for",
+            "itemtype": "method",
+            "name": "onCollision",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "Colliding sprite",
+                    "type": "Sprite"
+                },
+                {
+                    "name": "vec",
+                    "description": "Collision vector (for sensors this is normalized)",
+                    "type": "Vector"
+                },
+                {
+                    "name": "colShape",
+                    "description": "The colliding physics shape",
+                    "type": "cp.Shape"
+                },
+                {
+                    "name": "myShape",
+                    "description": "Your physics shape that caused the collision",
+                    "type": "Sprite"
+                }
+            ],
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 163,
+            "description": "On Seperate Event\n     called when this sprite collides into another, or is being collided into by another.\n     By default if something collides with a collectable sprite we destroy the collectable\n     and if we collide with a solid tile we kill our velocity. This method will emit a\n     'collision' event that you can listen for",
+            "itemtype": "method",
+            "name": "onCollision",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "Colliding sprite",
+                    "type": "Sprite"
+                },
+                {
+                    "name": "colShape",
+                    "description": "The colliding physics shape",
+                    "type": "cp.Shape"
+                },
+                {
+                    "name": "myShape",
+                    "description": "Your physics shape that caused the collision",
+                    "type": "Sprite"
+                }
+            ],
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 179,
+            "description": "Shows the physics body for the sprite",
+            "itemtype": "method",
+            "name": "showPhysics",
+            "class": "gf.PhysicsTarget",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/physics/PhysicsTarget.js",
+            "line": 268,
+            "description": "Hides the physics body for the sprite",
+            "itemtype": "method",
+            "name": "hidePhysics",
+            "class": "gf.PhysicsTarget",
             "namespace": "gf"
         },
         {
@@ -5773,7 +5891,7 @@
         },
         {
             "file": "src/utils/EventEmitter.js",
-            "line": 31,
+            "line": 32,
             "description": "Registers a listener function to be run on an event occurance",
             "itemtype": "method",
             "name": "on",
@@ -5794,7 +5912,7 @@
         },
         {
             "file": "src/utils/EventEmitter.js",
-            "line": 48,
+            "line": 59,
             "description": "Emits an event which will run all registered listeners for the event type",
             "itemtype": "method",
             "name": "emit",
@@ -5815,7 +5933,7 @@
         },
         {
             "file": "src/utils/EventEmitter.js",
-            "line": 69,
+            "line": 113,
             "description": "Removes a listener function for an event type",
             "itemtype": "method",
             "name": "off",
@@ -5828,6 +5946,27 @@
                 {
                     "name": "listener",
                     "description": "The function to remove",
+                    "type": "Function"
+                }
+            ],
+            "class": "gf.EventEmitter",
+            "namespace": "gf"
+        },
+        {
+            "file": "src/utils/EventEmitter.js",
+            "line": 156,
+            "description": "Registers a one-time callback for an event",
+            "itemtype": "method",
+            "name": "once",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "The event name to listen for",
+                    "type": "String"
+                },
+                {
+                    "name": "listener",
+                    "description": "the callback to call when the event occurs",
                     "type": "Function"
                 }
             ],
@@ -7059,7 +7198,7 @@
         },
         {
             "message": "Missing item type\nInherited Methods",
-            "line": " src/display/DisplayObjectContainer.js:93"
+            "line": " src/display/DisplayObjectContainer.js:97"
         },
         {
             "message": "Missing item type\ninput object",

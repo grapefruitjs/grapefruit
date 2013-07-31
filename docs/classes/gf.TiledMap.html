@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -374,7 +376,35 @@ file, and this expets that to already be done.</p>
                             </li>
                         
                             <li class="index-item method inherited">
+                                <a href="#method_destroy">destroy</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_disablePhysics">disablePhysics</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
                                 <a href="#method_emit">emit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_enablePhysics">enablePhysics</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_findLayer">findLayer</a>
 
                                 
                                 
@@ -382,6 +412,13 @@ file, and this expets that to already be done.</p>
                         
                             <li class="index-item method">
                                 <a href="#method_getTileset">getTileset</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_hidePhysics">hidePhysics</a>
 
                                 
                                 
@@ -396,6 +433,20 @@ file, and this expets that to already be done.</p>
                         
                             <li class="index-item method inherited">
                                 <a href="#method_on">on</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_once">once</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited inherited">
+                                <a href="#method_onCollision">onCollision</a>
 
                                 
                                 
@@ -437,7 +488,35 @@ file, and this expets that to already be done.</p>
                             </li>
                         
                             <li class="index-item method inherited">
+                                <a href="#method_setMass">setMass</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
                                 <a href="#method_setPosition">setPosition</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setRotation">setRotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setVelocity">setVelocity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_showPhysics">showPhysics</a>
 
                                 
                                 
@@ -459,6 +538,13 @@ file, and this expets that to already be done.</p>
                     <h3>Properties</h3>
 
                     <ul class="index-list properties extends">
+                        
+                            <li class="index-item property private inherited">
+                                <a href="#property__psystem">_psystem</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item property inherited">
                                 <a href="#property_alpha">alpha</a>
@@ -489,7 +575,21 @@ file, and this expets that to already be done.</p>
                             </li>
                         
                             <li class="index-item property inherited">
+                                <a href="#property_inertia">inertia</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
                                 <a href="#property_interactive">interactive</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_mass">mass</a>
 
                                 
                                 
@@ -731,7 +831,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l97"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:97</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l101"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:101</code></a>
         
         </p>
 
@@ -821,7 +921,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l104"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:104</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l108"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:108</code></a>
         
         </p>
 
@@ -881,6 +981,108 @@ file, and this expets that to already be done.</p>
 </div>
 
                 
+                    <div id="method_destroy" class="method item inherited">
+    <h3 class="name"><code>destroy</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.DisplayObjectContainer.html#method_destroy">gf.DisplayObjectContainer</a>:
+            
+        
+        
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l139"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:139</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Removes this object from the stage and the physics system</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_disablePhysics" class="method item inherited">
+    <h3 class="name"><code>disablePhysics</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.PhysicsTarget.html#method_disablePhysics">gf.PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l72"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:72</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Disbales physics for this sprite</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_emit" class="method item inherited">
     <h3 class="name"><code>emit</code></h3>
 
@@ -926,7 +1128,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="../files/src_utils_EventEmitter.js.html#l48"><code>src&#x2F;utils&#x2F;EventEmitter.js:48</code></a>
+        <a href="../files/src_utils_EventEmitter.js.html#l59"><code>src&#x2F;utils&#x2F;EventEmitter.js:59</code></a>
         
         </p>
 
@@ -986,6 +1188,190 @@ file, and this expets that to already be done.</p>
 </div>
 
                 
+                    <div id="method_enablePhysics" class="method item inherited">
+    <h3 class="name"><code>enablePhysics</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>system</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.PhysicsTarget.html#method_enablePhysics">gf.PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l55"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:55</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Enables physics for this sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">system</code>
+                        <span class="type">PhysicsSystem</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The system for the sprite to be in</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_findLayer" class="method item inherited">
+    <h3 class="name"><code>findLayer</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Layer</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.Map.html#method_findLayer">gf.Map</a>:
+            
+        
+        
+        <a href="../files/src_map_Map.js.html#l47"><code>src&#x2F;map&#x2F;Map.js:47</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Finds a layer based on the string name</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the layer to find</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Layer</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_getTileset" class="method item">
     <h3 class="name"><code>getTileset</code></h3>
 
@@ -1032,7 +1418,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="../files/src_map_tiled_TiledMap.js.html#l123"><code>src&#x2F;map&#x2F;tiled&#x2F;TiledMap.js:123</code></a>
+        <a href="../files/src_map_tiled_TiledMap.js.html#l125"><code>src&#x2F;map&#x2F;tiled&#x2F;TiledMap.js:125</code></a>
         
         </p>
 
@@ -1089,6 +1475,57 @@ file, and this expets that to already be done.</p>
 </div>
 
                 
+                    <div id="method_hidePhysics" class="method item inherited">
+    <h3 class="name"><code>hidePhysics</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.PhysicsTarget.html#method_hidePhysics">gf.PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l268"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:268</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Hides the physics body for the sprite</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_off" class="method item inherited">
     <h3 class="name"><code>off</code></h3>
 
@@ -1134,7 +1571,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="../files/src_utils_EventEmitter.js.html#l69"><code>src&#x2F;utils&#x2F;EventEmitter.js:69</code></a>
+        <a href="../files/src_utils_EventEmitter.js.html#l113"><code>src&#x2F;utils&#x2F;EventEmitter.js:113</code></a>
         
         </p>
 
@@ -1239,7 +1676,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="../files/src_utils_EventEmitter.js.html#l31"><code>src&#x2F;utils&#x2F;EventEmitter.js:31</code></a>
+        <a href="../files/src_utils_EventEmitter.js.html#l32"><code>src&#x2F;utils&#x2F;EventEmitter.js:32</code></a>
         
         </p>
 
@@ -1284,6 +1721,265 @@ file, and this expets that to already be done.</p>
 
                     <div class="param-description">
                         <p>The function to execute when the event happens</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_once" class="method item inherited">
+    <h3 class="name"><code>once</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>listener</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.EventEmitter.html#method_once">gf.EventEmitter</a>:
+            
+        
+        
+        <a href="../files/src_utils_EventEmitter.js.html#l156"><code>src&#x2F;utils&#x2F;EventEmitter.js:156</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Registers a one-time callback for an event</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">type</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The event name to listen for</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">listener</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>the callback to call when the event occurs</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_onCollision" class="method item inherited">
+    <h3 class="name"><code>onCollision</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>obj</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>vec</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>colShape</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>myShape</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="../classes/gf.PhysicsTarget.html#method_onCollision">
+                gf.PhysicsTarget
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l143"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:143</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>On Collision Event
+     called when this sprite collides into another, or is being collided into by another.
+     By default if something collides with a collectable sprite we destroy the collectable
+     and if we collide with a solid tile we kill our velocity. This method will emit a
+     'collision' event that you can listen for</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">obj</code>
+                        <span class="type">Sprite</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Colliding sprite</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">vec</code>
+                        <span class="type">Vector</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Collision vector (for sensors this is normalized)</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">colShape</code>
+                        <span class="type">cp.Shape</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The colliding physics shape</p>
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">myShape</code>
+                        <span class="type">Sprite</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Your physics shape that caused the collision</p>
                     </div>
 
                     
@@ -1355,7 +2051,7 @@ file, and this expets that to already be done.</p>
             
         
         
-        <a href="../files/src_map_tiled_TiledMap.js.html#l180"><code>src&#x2F;map&#x2F;tiled&#x2F;TiledMap.js:180</code></a>
+        <a href="../files/src_map_tiled_TiledMap.js.html#l181"><code>src&#x2F;map&#x2F;tiled&#x2F;TiledMap.js:181</code></a>
         
         </p>
 
@@ -1487,7 +2183,7 @@ the emitted events on the world instead of the tile itself.</p>
             
         
         
-        <a href="../files/src_map_tiled_TiledMap.js.html#l163"><code>src&#x2F;map&#x2F;tiled&#x2F;TiledMap.js:163</code></a>
+        <a href="../files/src_map_tiled_TiledMap.js.html#l165"><code>src&#x2F;map&#x2F;tiled&#x2F;TiledMap.js:165</code></a>
         
         </p>
 
@@ -1612,7 +2308,7 @@ the emitted events on the world instead of the tile itself.</p>
             
         
         
-        <a href="../files/src_map_Map.js.html#l29"><code>src&#x2F;map&#x2F;Map.js:29</code></a>
+        <a href="../files/src_map_Map.js.html#l25"><code>src&#x2F;map&#x2F;Map.js:25</code></a>
         
         </p>
 
@@ -1724,7 +2420,7 @@ the emitted events on the world instead of the tile itself.</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l112"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:112</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l116"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:116</code></a>
         
         </p>
 
@@ -1801,7 +2497,7 @@ the emitted events on the world instead of the tile itself.</p>
             
         
         
-        <a href="../files/src_map_tiled_TiledMap.js.html#l135"><code>src&#x2F;map&#x2F;tiled&#x2F;TiledMap.js:135</code></a>
+        <a href="../files/src_map_tiled_TiledMap.js.html#l137"><code>src&#x2F;map&#x2F;tiled&#x2F;TiledMap.js:137</code></a>
         
         </p>
 
@@ -1815,6 +2511,90 @@ the emitted events on the world instead of the tile itself.</p>
         <p>Notifies the map it needs to resize, re renders the viewport</p>
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setMass" class="method item inherited">
+    <h3 class="name"><code>setMass</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>mass</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.PhysicsTarget.html#method_setMass">gf.PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l89"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:89</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the mass of this sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">mass</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new mass of the object</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -1847,9 +2627,104 @@ the emitted events on the world instead of the tile itself.</p>
     
 
     
-        <span class="returns-inline">
-            <span class="type">DisplayObjectContainer</span>
-        </span>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.PhysicsTarget.html#method_setPosition">gf.PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l127"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:127</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the position of this sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">x</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">y</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setRotation" class="method item inherited">
+    <h3 class="name"><code>setRotation</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>rotation</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
     
 
     
@@ -1868,11 +2743,11 @@ the emitted events on the world instead of the tile itself.</p>
         
             
                 <p>Inherited from
-                <a href="../classes/gf.DisplayObjectContainer.html#method_setPosition">gf.DisplayObjectContainer</a>:
+                <a href="../classes/gf.PhysicsTarget.html#method_setRotation">gf.PhysicsTarget</a>:
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l134"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:134</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l113"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:113</code></a>
         
         </p>
 
@@ -1883,7 +2758,7 @@ the emitted events on the world instead of the tile itself.</p>
     </div>
 
     <div class="description">
-        <p>Convenience method for setting the position of the Object.</p>
+        <p>Sets the rotation of this sprite</p>
     </div>
 
     
@@ -1894,30 +2769,14 @@ the emitted events on the world instead of the tile itself.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">x</code>
-                        <span class="type">Number | Array<Number> | Vector | Point</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>X coord to put the object at.
-      If an Array, Vector, or Point is passed then the y parameter is ignored</p>
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">y</code>
+                        <code class="param-name">rotation</code>
                         <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Y coord to put the object at</p>
+                        <p>The new rotation of the object in radians</p>
                     </div>
 
                     
@@ -1928,33 +2787,142 @@ the emitted events on the world instead of the tile itself.</p>
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
 
-            <div class="returns-description">
+    
+</div>
+
                 
+                    <div id="method_setVelocity" class="method item inherited">
+    <h3 class="name"><code>setVelocity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
                     
-                        <span class="type">DisplayObjectContainer</span>:
+                        <code>velocity</code>
                     
-                    Returns itself for chainability
-                
-            </div>
+                </li>
+            
+            </ul><span class="paren">)</span>
         </div>
     
 
     
-        <div class="example">
-            <h4>Example:</h4>
 
-            <div class="example-content">
-                <pre class="code prettyprint"><code> obj.setPosition(0) //will set to (0, 0)
-     .setPosition(1, 1)
-     .setPosition([5, 5])
-     .setPosition(new gf.Point(10, 10))
-     .setPosition(new gf.Vector(20, 20));
-</code></pre>
-            </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.PhysicsTarget.html#method_setVelocity">gf.PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l101"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:101</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the velocity of this sprite</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">velocity</code>
+                        <span class="type">Vector</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new velocity of the object</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
         </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_showPhysics" class="method item inherited">
+    <h3 class="name"><code>showPhysics</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.PhysicsTarget.html#method_showPhysics">gf.PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l179"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:179</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Shows the physics body for the sprite</p>
+    </div>
+
+    
+
+    
+
     
 </div>
 
@@ -1991,7 +2959,7 @@ the emitted events on the world instead of the tile itself.</p>
             
         
         
-        <a href="../files/src_map_tiled_TiledMap.js.html#l149"><code>src&#x2F;map&#x2F;tiled&#x2F;TiledMap.js:149</code></a>
+        <a href="../files/src_map_tiled_TiledMap.js.html#l151"><code>src&#x2F;map&#x2F;tiled&#x2F;TiledMap.js:151</code></a>
         
         </p>
 
@@ -2021,6 +2989,53 @@ the emitted events on the world instead of the tile itself.</p>
                 <h2 class="off-left">Properties</h2>
 
                 
+                    <div id="property__psystem" class="property item private inherited">
+    <h3 class="name"><code>_psystem</code></h3>
+    <span class="type">PhysicsSystem</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.PhysicsTarget.html#property__psystem">gf.PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l23"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:23</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The physics system that this object is a part of. This is advisory only
+please use enablePhysics() or disablePhysics() and do not set this value
+directly.</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> null</p>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_alpha" class="property item inherited">
     <h3 class="name"><code>alpha</code></h3>
     <span class="type">Number</span>
@@ -2041,7 +3056,7 @@ the emitted events on the world instead of the tile itself.</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l46"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:46</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l50"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:50</code></a>
         
         </p>
 
@@ -2126,7 +3141,7 @@ the emitted events on the world instead of the tile itself.</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l19"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:19</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l23"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:23</code></a>
         
         </p>
 
@@ -2167,7 +3182,7 @@ the emitted events on the world instead of the tile itself.</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l76"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:76</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l80"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:80</code></a>
         
         </p>
 
@@ -2182,6 +3197,49 @@ Setting it is a neat way of optimising the hitTest function that the interaction
 will use (as it will not need to hit test all the children)</p>
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_inertia" class="property item inherited">
+    <h3 class="name"><code>inertia</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.PhysicsTarget.html#property_inertia">gf.PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l46"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:46</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The moment of inertia of this object, only set this before enabling physics (has no effect after enabling)</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -2210,7 +3268,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l85"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:85</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l89"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:89</code></a>
         
         </p>
 
@@ -2225,6 +3283,49 @@ will use (as it will not need to hit test all the children)</p>
 
     
         <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_mass" class="property item inherited">
+    <h3 class="name"><code>mass</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/gf.PhysicsTarget.html#property_mass">gf.PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l36"><code>src&#x2F;physics&#x2F;PhysicsTarget.js:36</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The mass of this object, please use setMass to set this value</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -2297,7 +3398,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l60"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:60</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l64"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:64</code></a>
         
         </p>
 
@@ -2338,7 +3439,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l25"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:25</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l29"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:29</code></a>
         
         </p>
 
@@ -2469,7 +3570,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l39"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:39</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l43"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:43</code></a>
         
         </p>
 
@@ -2510,7 +3611,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l32"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:32</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l36"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:36</code></a>
         
         </p>
 
@@ -2595,7 +3696,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_map_Map.js.html#l15"><code>src&#x2F;map&#x2F;Map.js:15</code></a>
+        <a href="../files/src_map_Map.js.html#l11"><code>src&#x2F;map&#x2F;Map.js:11</code></a>
         
         </p>
 
@@ -2638,7 +3739,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l68"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:68</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l72"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:72</code></a>
         
         </p>
 
@@ -2811,7 +3912,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l53"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:53</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l57"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:57</code></a>
         
         </p>
 
@@ -2862,7 +3963,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l186"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:186</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l164"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:164</code></a>
         
         </p>
 
@@ -2925,7 +4026,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l193"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:193</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l171"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:171</code></a>
         
         </p>
 
@@ -2988,7 +4089,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l230"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:230</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l208"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:208</code></a>
         
         </p>
 
@@ -3051,7 +4152,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l223"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:223</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l201"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:201</code></a>
         
         </p>
 
@@ -3114,7 +4215,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l216"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:216</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l194"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:194</code></a>
         
         </p>
 
@@ -3177,7 +4278,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l200"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:200</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l178"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:178</code></a>
         
         </p>
 
@@ -3241,7 +4342,7 @@ for this callback to be fired the mouse must have been pressed down over the dis
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l208"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:208</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l186"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:186</code></a>
         
         </p>
 
@@ -3305,7 +4406,7 @@ for this callback to be fired, The touch must have started over the displayObjec
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l241"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:241</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l219"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:219</code></a>
         
         </p>
 
@@ -3369,7 +4470,7 @@ basically a touch version of click</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l256"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:256</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l234"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:234</code></a>
         
         </p>
 
@@ -3432,7 +4533,7 @@ basically a touch version of click</p>
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l263"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:263</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l241"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:241</code></a>
         
         </p>
 
@@ -3496,7 +4597,7 @@ for this callback to be fired, The touch must have started over the displayObjec
             
         
         
-        <a href="../files/src_display_DisplayObjectContainer.js.html#l249"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:249</code></a>
+        <a href="../files/src_display_DisplayObjectContainer.js.html#l227"><code>src&#x2F;display&#x2F;DisplayObjectContainer.js:227</code></a>
         
         </p>
 

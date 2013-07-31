@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -382,6 +384,64 @@
                     obj[key] = newVal;
                 }
             }
+        }
+
+        return obj;
+    },
+    parseHitArea: function(hv) {
+        var ha;
+
+        //odd number of values
+        if(hv.length % 2 !== 0 &amp;&amp; hv.length !== 3) {
+            throw &#x27;Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.&#x27;;
+        }
+
+        //a circle x,y,r
+        if(hv.length === 3) {
+            ha = new gf.Circle(hv[0], hv[1], hv[2]);
+        }
+        //a rectangle x,y,w,h
+        else if(hv.length === 4) {
+            ha = new gf.Rectangle(hv[0], hv[1], hv[2], hv[3]);
+        }
+        //generic polygon
+        else {
+            ha = new gf.Polygon(hv);
+        }
+
+        return ha;
+    },
+    parseTiledProperties: function(obj) {
+        if(!obj) return;
+
+        for(var k in obj) {
+            var v = obj[k];
+
+            //try to massage numbers
+            if(!isNaN(v))
+                obj[k] = parseFloat(v, 10);
+            //true values
+            else if(v === &#x27;true&#x27;)
+                obj[k] = true;
+            //false values
+            else if(v === &#x27;false&#x27;)
+                obj[k] = false;
+            //anything else is either a string or json, try json
+            else {
+                try{
+                    v = JSON.parse(v);
+                    obj[k] = v;
+                } catch(e) {}
+            }
+        }
+
+        //after parsing, check some other things
+        if(obj.hitArea)
+            obj.hitArea = gf.utils.parseHitArea(obj.hitArea);
+
+        if(obj.static || obj.sensor) {
+            obj.mass = Infinity;
+            obj.inertia = Infinity;
         }
 
         return obj;

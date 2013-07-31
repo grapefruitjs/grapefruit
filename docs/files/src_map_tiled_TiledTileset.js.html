@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -303,50 +305,13 @@ gf.TiledTileset = function(settings) {
      */
     this.textures = [];
 
-    //ensure hitArea is a polygon
-    if(this.properties.hitArea) {
-        var h = this.properties.hitArea.split(gf.utils._arrayDelim);
-
-        //odd number of values
-        if(h.length % 2 !== 0) {
-            throw &#x27;Uneven number of values for hitArea on tileset! Should be a flat array of x/y values.&#x27;;
-        }
-
-        var hv = [];
-        for(var i = 0, il = h.length; i &lt; il; ++i) {
-            hv.push(parseFloat(h[i], 10));
-        }
-        this.properties.hitArea = new gf.Polygon(hv);
-    }
+    //massages strings into the values they should be
+    //i.e. &quot;true&quot; becomes the value: true
+    this.properties = gf.utils.parseTiledProperties(this.properties);
 
     //massage tile properties
     for(var k in this.tileproperties) {
-        var v = this.tileproperties[k];
-
-        if(v.normal) v.normal = gf.utils.ensureVector(v.normal);
-
-        if(v.isCollidable === &#x27;true&#x27;) v.isCollidable = true;
-        if(v.isBreakable === &#x27;true&#x27;) v.isBreakable = true;
-
-        if(v.hitArea) {
-            var ha = v.hitArea.split(gf.utils._arrayDelim);
-
-            //odd number of values
-            if(ha.length % 2 !== 0) {
-                throw &#x27;Uneven number of values for hitArea on a tile of a tileset! Should be a flat array of x/y values.&#x27;;
-            }
-
-            var hav = [];
-            for(var p = 0, pl = ha.length; p &lt; pl; p+=2) {
-                hav.push(
-                    new gf.Point(
-                        parseFloat(ha[p], 10),
-                        parseFloat(ha[p + 1], 10)
-                    )
-                );
-            }
-            v.hitArea = new gf.Polygon(hav);
-        }
+        this.tileproperties[k] = gf.utils.parseTiledProperties(this.tileproperties[k]);
     }
 
     //generate tile textures
@@ -389,8 +354,8 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
                 this.tileproperties[tileId] :
                 //set this id to default values and cache
                 this.tileproperties[tileId] = {
-                    isCollidable: false,
-                    isBreakable: false,
+                    collidable: false,
+                    breakable: false,
                     type: gf.Tile.TYPE.NONE
                 };
     },

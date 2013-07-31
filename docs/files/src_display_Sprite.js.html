@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -180,6 +182,7 @@
  * @class Sprite
  * @extends &lt;a target=&quot;_blank&quot; href=&quot;http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html&quot;&gt;PIXI.Sprite&lt;/a&gt;
  * @uses gf.EventEmitter
+ * @uses gf.PhysicsTarget
  * @namespace gf
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
@@ -188,6 +191,7 @@
  */
 gf.Sprite = function(tx) {
     PIXI.Sprite.call(this, tx);
+    gf.PhysicsTarget.call(this);
     gf.EventEmitter.call(this);
 
     /**
@@ -198,144 +202,19 @@ gf.Sprite = function(tx) {
      * @default &#x27;neutral&#x27;
      */
     this.type = gf.Sprite.TYPE.NEUTRAL;
-
-    /**
-     * Whether or not the sprite is &quot;alive&quot;, advisory only
-     *
-     * @property alive
-     * @type Boolean
-     * @default true
-     */
-    this.alive = true;
-
-    /**
-     * The mass of this sprite (if using physics), please use setMass to set this value
-     *
-     * @property mass
-     * @type Number
-     * @default 0
-     * @readOnly
-     */
-    this.mass = 0;
-
-    /**
-     * The physics system that this sprite is a part of. This is advisory only
-     * please use enablePhysics() or disablePhysics() and do not set this value
-     * directly.
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @default null
-     * @readOnly
-     */
-    this.physics = null;
 };
 
 gf.inherits(gf.Sprite, PIXI.Sprite, {
-    /**
-     * Enables physics for this sprite
-     *
-     * @method enablePhysics
-     * @param system {PhysicsSystem} The system for the sprite to be in
-     */
-    enablePhysics: function(sys) {
-        if(sys &amp;&amp; this.physics !== sys) {
-            if(this.physics)
-                this.physics.remove(this);
-
-            this.physics = sys;
-        }
-
-        this.physics.add(this);
-    },
-    /**
-     * Disbales physics for this sprite
-     *
-     * @method disablePhysics
-     */
-    disablePhysics: function() {
-        if(this.physics) {
-            this.physics.remove(this);
-        }
-    },
-    /**
-     * Sets the mass of this sprite
-     *
-     * @method setMass
-     * @param mass {Number} The new mass of the object
-     */
-    setMass: function(mass) {
-        if(this.physics) {
-            this.physics.setMass(this, mass);
-        }
-    },
-    /**
-     * Sets the velocity of this sprite
-     *
-     * @method setVelocity
-     * @param velocity {Vector} The new velocity of the object
-     */
-    setVelocity: function(vel) {
-        if(this.physics) {
-            this.physics.setVelocity(this, gf.utils.ensureVector(vel));
-        }
-    },
-    /**
-     * Sets the rotation of this sprite
-     *
-     * @method setRotation
-     * @param rotation {Number} The new rotation of the object in radians
-     */
-    setRotation: function(rads, skipPhysics) {
-        this.rotation = rads;
-
-        if(!skipPhysics &amp;&amp; this.physics) {
-            this.physics.setRotation(this, rads);
-        }
-    },
-    /**
-     * Sets the position of this sprite
-     *
-     * @method setPosition
-     * @param x {Number}
-     * @param y {Number}
-     */
-    setPosition: function(x, y, skipPhysics) {
-        this.position.x = x;
-        this.position.y = y;
-
-        if(!skipPhysics &amp;&amp; this.physics) {
-            this.physics.setPosition(this, this.position);
-        }
-    },
     /**
      * Removes this sprite from the stage and the physics system
      *
      * @method destroy
      */
     destroy: function() {
+        this.disablePhysics();
+
         if(this.parent)
             this.parent.removeChild(this);
-
-        if(this.physics)
-            this.physics.remove(this);
-
-    },
-    /**
-     * On Collision Event
-     *      called when this sprite collides into another, or is being collided into by another.
-     *      By default if something collides with a collectable sprite we destroy the collectable
-     *      and if we collide with a solid tile we kill our velocity. This method will emit a
-     *      &#x27;collision&#x27; event that you can listen for
-     *
-     * @method onCollision
-     * @param obj {Sprite} Colliding sprite
-     */
-    onCollision: function(obj) {
-        if(obj.type === gf.Sprite.TYPE.COLLECTABLE)
-            obj.destroy();
-
-        this.emit(&#x27;collision&#x27;, obj);
     }
 });
 

@@ -97,6 +97,8 @@
             
                 <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
             
+                <li><a href="../classes/gf.PhysicsTarget.html">gf.PhysicsTarget</a></li>
+            
                 <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
             
                 <li><a href="../classes/gf.Point.html">gf.Point</a></li>
@@ -206,7 +208,7 @@ gf.GuiItem = function(texture, interactive) {
     this.dragging = false;
 
     gf.Sprite.call(this, texture);
-    this.setInteractive(interactive);
+    this.interactive = interactive;
 };
 
 gf.inherits(gf.GuiItem, gf.Sprite, {
