@@ -124,8 +124,8 @@ gf.input.Keyboard = function(view) {
      */
     this._clearSq = null;
 
-    document.addEventListener('keydown', this.onKeyDown.bind(this), false);
-    document.addEventListener('keyup', this.onKeyUp.bind(this), false);
+    view.addEventListener('keydown', this.onKeyDown.bind(this), false);
+    view.addEventListener('keyup', this.onKeyUp.bind(this), false);
 };
 
 gf.inherits(gf.input.Keyboard, gf.input.Input, {

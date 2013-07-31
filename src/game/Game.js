@@ -226,6 +226,20 @@ gf.Game = function(contId, settings) {
      * @type Map
      * @readOnly
      */
+
+     //pixi does some prevent default on mousedown, so we need to
+     //make sure mousedown will focus the canvas or keyboard events break
+
+
+    //ensure that key events will work
+    var view = this.renderer.view;
+    if(!view.getAttribute('tabindex'))
+        view.setAttribute('tabindex','1');
+
+    view.focus();
+    view.addEventListener('click', function() {
+        view.focus();
+    }, false);
 };
 
 gf.inherits(gf.Game, Object, {
