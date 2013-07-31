@@ -195,10 +195,8 @@
 
         //pass a new style, or haven't defined one yet
         if(style || !this._hit.style) {
-            style = style || {}
-            style.sensor = style.sensor || {};
-            this._setStyleDefaults(style);
-            this._setStyleDefaults(style.sensor);
+            style = this._setStyleDefaults(style);
+            style.sensor = this._setStyleDefaults(style.sensor);
 
             this._hit.style = style;
         }
@@ -226,9 +224,12 @@
     };
 
     this._setStyleDefaults = function(style) {
+        style = style || {};
         style.size = style.size || 1;
         style.color = style.color || 0xff00ff;
         style.alpha = style.alpha || 1;
+
+        return style;
     };
 
     this._drawPhysicsShape = function(shape, g, p) {
