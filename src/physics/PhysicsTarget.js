@@ -186,17 +186,21 @@
         if(!this._phys || !this._phys.body || !this._phys.shape)
             return;
 
+        //no graphics object created yet
         if(!this._hit) {
             this._hit = new PIXI.Graphics();
 
+            this.parent.addChild(this._hit);
+        }
+
+        //pass a new style, or haven't defined one yet
+        if(style || !this._hit.style) {
             style = style || {}
             style.sensor = style.sensor || {};
             this._setStyleDefaults(style);
             this._setStyleDefaults(style.sensor);
 
             this._hit.style = style;
-
-            this.parent.addChild(this._hit);
         }
 
         var p = this._phys.body.p,
@@ -267,7 +271,8 @@
      */
     this.hidePhysics = function() {
         this._showHit = false;
-        if(this._hit)
+        if(this._hit) {
             this._hit.visible = false;
+        }
     };
 };
