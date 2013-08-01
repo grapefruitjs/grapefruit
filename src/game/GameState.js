@@ -158,11 +158,6 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
 
         this.camera.constrain(new gf.Rectangle(0, 0, this.world.realSize.x, this.world.realSize.y), true);
 
-        /* TODO: Autoplay music
-        if(this.world.properties.music) {
-            this.audio.play(this.world.properties.music, { loop: this.world.properties.music_loop === 'true' });
-        }*/
-
         return this;
     },
     /**
