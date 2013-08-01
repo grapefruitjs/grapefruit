@@ -85,6 +85,29 @@ gf.Camera = function(game, settings) {
     };
 
     gf.DisplayObjectContainer.call(this, settings);
+
+    /*
+     * Dynamic addition of fx shortcuts
+    var self = this;
+    Object.keys(this.fxpools).forEach(function(key) {
+        self[key] = function() {
+            var e = self.fxpools[key].create(),
+                args = Array.prototype.slice.call(arguments),
+                cb = args.pop();
+
+            if(typeof cb !== 'function')
+                args.push(cb);
+
+            args.push(function() {
+                self.fxpools[key].free(e);
+                if(typeof cb === 'function')
+                    cb();
+            });
+
+            return e.start.apply(e, args);
+        };
+    });
+    */
 };
 
 gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
@@ -92,10 +115,10 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * Makes the camera flash with a certain color
      *
      * @method flash
-     * @param color {Number} The color to flash the screen with
-     * @param duration {Number} The time in milliseconds to fade away
-     * @param callback {Function} The callback to call when the flash has completed
-     * @return {Camera} Returns iteself for chainability
+     * @param [color=0xffffff] {Number} The color to flash the screen with
+     * @param [duration=1000] {Number} The time in milliseconds to fade away
+     * @param [callback] {Function} The callback to call when the flash has completed
+     * @return {gf.Camera.fx.Flash} Returns the effect object
      */
     flash: function(color, duration, cb) {
         var flash = this.fxpools.flash.create(),
@@ -111,10 +134,10 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * Makes the camera fade into a color
      *
      * @method fade
-     * @param color {Number} The color to fade into
-     * @param duration {Number} The time in milliseconds to take to fade in
-     * @param callback {Function} The callback to call when the fade has completed
-     * @return {Camera} Returns iteself for chainability
+     * @param [color=0xffffff] {Number} The color to fade into
+     * @param [duration=1000] {Number} The time in milliseconds to take to fade in
+     * @param [callback] {Function} The callback to call when the fade has completed
+     * @return {gf.Camera.fx.Fade} Returns the effect object
      */
     fade: function(color, duration, cb) {
         var fade = this.fxpools.fade.create(),
@@ -130,11 +153,11 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * Shakes the camera around a bit, to show it who is boss.
      *
      * @method shake
-     * @param intensity {Number} How hard to shake around
-     * @param duration {Number} The time in milliseconds to shake for
-     * @param direction {Camera.SHAKE} The axes to shake the camera in default is gf.Camera.SHAKE.BOTH
-     * @param callback {Function} The callback to call when the shaking has stopped
-     * @return {Camera} Returns iteself for chainability
+     * @param [intensity=0.01] {Number} How hard to shake around
+     * @param [duration=1000] {Number} The time in milliseconds to shake for
+     * @param [direction=gf.Camera.DIRECTION.BOTH] {gf.Camera.DIRECTION} The axes to shake the camera in default is gf.Camera.SHAKE.BOTH
+     * @param [callback] {Function} The callback to call when the shaking has stopped
+     * @return {gf.Camera.fx.Shake} Returns the effect object
      */
     shake: function(intensity, duration, direction, cb) {
         var shake = this.fxpools.shake.create(),
@@ -146,34 +169,39 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
                 cb();
         });
     },
-    scanlines: function(color, direction, spacing, thickness, alpha) {
-        var scanlines = this.fxpools.scanlines.create();
-
-        return scanlines.start(color, direction, spacing, thickness, alpha);
-    },
+    /**
+     * Adds a mask that will hide the world via a close-in transition.
+     *
+     * @method scanlines
+     * @param [shape='circle'] {String} The shape of the transition, either 'circle' or 'rectangle'
+     * @param [duration=1000] {Number} The time in milliseconds it takes to close the transition
+     * @return {gf.Camera.fx.Close} Returns the effect object
+     */
     close: function(shape, duration, cb) {
         var close = this.fxpools.close.create(),
             self = this;
 
         return close.start(shape, duration, function() {
-            window.console.log('done!');
             self.fxpools.close.free(close);
             if(typeof cb === 'function')
                 cb();
         });
     },
     /**
-     * Stops all currently running effects (flash, fade, shake)
+     * Shows scanlines accross the screen, retro arcade style
      *
-     * @method stopAll
-     * @return {Camera} Returns iteself for chainability
+     * @method scanlines
+     * @param [color=0x000000] {Number} The hex color the lines should be
+     * @param [direction=gf.Camera.DIRECTION.HORIZONTAL] {gf.Camera.DIRECTION} The axes to shake the camera in default is gf.Camera.SHAKE.BOTH
+     * @param [spacing=4] {Number} The spacing between each line
+     * @param [thickness=1] {Number} The thickness of each line
+     * @param [alpha=0.3] {Number} The alpha of each line
+     * @return {gf.Camera.fx.Scanlines} Returns the effect object
      */
-    stopAll: function() {
-        this.stopFlash();
-        this.stopFade();
-        this.stopShake();
+    scanlines: function(color, direction, spacing, thickness, alpha) {
+        var scanlines = this.fxpools.scanlines.create();
 
-        return this;
+        return scanlines.start(color, direction, spacing, thickness, alpha);
     },
     /**
      * Follows an sprite with the camera, ensuring they are always center view. You can
