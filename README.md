@@ -1,19 +1,19 @@
 # GrapeFruit Game Engine
 
-The game engine that powers [lttp-webgl](https://github.com/englercj/lttp-webgl) and [shiv](https://github.com/englercj/shiv).
+The game engine that powers my remake of [lttp](https://github.com/englercj/lttp) and my original game [shiv](https://github.com/englercj/shiv).
 
 The goal of this project is to provide a simple, yet powerful, API that enables game makers to quickly create amazing games. Anything
-from simple top-down shooters to complex RPGs are possible with grapefruit.
+from simple top-down space shooters to complex RPGs are possible with grapefruit.
 
 Some features that GrapeFruit gives you:
 
  - Rendering Engine (WebGL, with Canvas fallback)
- - Full Physics System (collisions, gravity, etc)
- - GUI/HUD system
+ - Full Physics System (collisions, gravity, bouancy, friction, etc)
+ - GUI system (for HUDs and menus)
  - Texture Fonts
- - Extensible Input Manager (built-in keyboard, mouse, and gamepad)
- - Audio Manager
- - Tiled Map Editor integration
+ - Input Manager (keyboard, mouse, touch, and gamepad)
+ - Audio Manager (WebAudio API with HTML5 Audio fallback)
+ - Full featured [Tiled Map Editor](http://www.mapeditor.org/) support
  - Plugin system
  - much more!
 
@@ -32,8 +32,8 @@ ugh...
 ## Coming Features
 
 Grapefruit is still a baby, and it is only me working on it in my spare time, so I know it is missing a lot of features.
-Below is a list of the features I want to add in. If there is something else I missed, please open
-an [Issue](https://github.com/englercj/grapefruit/issues) and we can talk about it.
+Below is a list of the features I want to add in. If there is something else I missed, please open an
+[Issue](https://github.com/englercj/grapefruit/issues) and we can talk about it.
 
 Soon to come:
 
@@ -44,28 +44,25 @@ Soon to come:
 Coming in the future:
 
 - Multiple Cameras
-- Path Finding
 - Touch Gestures
 
 ## Plugins
 
-As of right now there are no grapefruit plugins; however, here is a list of some planned plugins that will get some 
-work as soon as gf is stable:
+Here is a list of some plugins for grapefruit that are planned, or in development:
 
 - UI Pack
-- Particle System
+- Particles
+- Path Finding
 - Achievements
 - Saves and Storage
-- Path Finding
 - Typewriter (for dialog-like text printing)
 - Spines and spinal animation
-
+- [Debugger](https://github.com/grapefruitjs/gf-debug)
 
 ## Rendering Engine
 
-Under the hood gf uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) for low-level WebGL Rendering. If you
-haven't heard of this library I suggest you check it out, it is a super performant 2D rendering engine. It is what
-allows gf to fallback to canvas and support a larger audience.
+Under the hood gf uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js) for low-level WebGL and canvas rendering.
+If you haven't heard of this library I suggest you check it out, it is a super performant 2D rendering engine.
 
 ## Physics Engine
 
@@ -75,7 +72,8 @@ library grapefruit is able to support velocity, ellasticity, gravity, friction, 
 ## Tile Engine
 
 The tile map engine is custom written in grapefruit to support all kinds of maps. The main focus however has been on
-supporting the [Tiled Map Editor](http://mapeditor.org), and its full feature set.
+supporting the [Tiled Map Editor](http://mapeditor.org), and its full feature set. In the near future, I will experiment
+with map prerendering for TiledLayers based on a property.
 
 ## License
 
