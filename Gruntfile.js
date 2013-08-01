@@ -34,6 +34,7 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/camera/fx/Effect.js',
         '<%= dirs.src %>/camera/fx/Fade.js',
         '<%= dirs.src %>/camera/fx/Flash.js',
+        '<%= dirs.src %>/camera/fx/Scanlines.js',
         '<%= dirs.src %>/camera/fx/Shake.js',
 
         '<%= dirs.src %>/font/Font.js',
