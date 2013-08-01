@@ -80,7 +80,8 @@ gf.Camera = function(game, settings) {
         flash: new gf.ObjectPool(gf.Camera.fx.Flash, this),
         fade: new gf.ObjectPool(gf.Camera.fx.Fade, this),
         shake: new gf.ObjectPool(gf.Camera.fx.Shake, this),
-        scanlines: new gf.ObjectPool(gf.Camera.fx.Scanlines, this)
+        scanlines: new gf.ObjectPool(gf.Camera.fx.Scanlines, this),
+        close: new gf.ObjectPool(gf.Camera.fx.Close, this)
     };
 
     gf.DisplayObjectContainer.call(this, settings);
@@ -149,6 +150,17 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
         var scanlines = this.fxpools.scanlines.create();
 
         return scanlines.start(color, direction, spacing, thickness, alpha);
+    },
+    close: function(shape, duration, cb) {
+        var close = this.fxpools.close.create(),
+            self = this;
+
+        return close.start(shape, duration, function() {
+            window.console.log('done!');
+            self.fxpools.close.free(close);
+            if(typeof cb === 'function')
+                cb();
+        });
     },
     /**
      * Stops all currently running effects (flash, fade, shake)
