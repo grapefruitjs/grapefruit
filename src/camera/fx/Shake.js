@@ -27,7 +27,7 @@ gf.inherits(gf.Camera.fx.Shake, gf.Camera.fx.Effect, {
 
         this.intensity = intensity || 0.01;
         this.duration = duration || 1000;
-        this.direction = direction || gf.Camera.SHAKE.BOTH;
+        this.direction = direction || gf.Camera.fx.DIRECTION.BOTH;
         this.offset.x = this.offset.y = 0;
         this.cb = cb;
 
@@ -48,7 +48,7 @@ gf.inherits(gf.Camera.fx.Shake, gf.Camera.fx.Effect, {
             //pan back to the original position
             this.offset.x = -this.offset.x;
             this.offset.y = -this.offset.y;
-            this.parent.pan(this.offset);
+            this.parent.pan(this.offset.x, this.offset.y);
 
             //check if we are complete
             if(this.duration <= 0) {
@@ -58,11 +58,11 @@ gf.inherits(gf.Camera.fx.Shake, gf.Camera.fx.Effect, {
             //otherwise do the shake
             else {
                 //pan to a random offset
-                if((this.direction === gf.Camera.SHAKE.BOTH) || (this.direction === gf.Camera.SHAKE.HORIZONTAL))
-                    this.offset.x = gf.math.round(Math.random() * this.intensity * this.size.x * 2 - this.intensity * this.size.x);
+                if((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.HORIZONTAL))
+                    this.offset.x = gf.math.round(Math.random() * this.intensity * this.parent.size.x * 2 - this.intensity * this.parent.size.x);
 
-                if ((this.direction === gf.Camera.SHAKE.BOTH) || (this.direction === gf.Camera.SHAKE.VERTICAL))
-                    this.offset.y = gf.math.round(Math.random() * this.intensity * this.size.y * 2 - this.intensity * this.size.y);
+                if ((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.VERTICAL))
+                    this.offset.y = gf.math.round(Math.random() * this.intensity * this.parent.size.y * 2 - this.intensity * this.parent.size.y);
 
                 this.parent.pan(this.offset.x, this.offset.y);
             }

@@ -29,7 +29,12 @@ module.exports = function(grunt) {
         '<%= dirs.src %>/display/DisplayObjectContainer.js',
         '<%= dirs.src %>/display/Sprite.js',
         '<%= dirs.src %>/display/AnimatedSprite.js',
-        '<%= dirs.src %>/display/Camera.js',
+
+        '<%= dirs.src %>/camera/Camera.js',
+        '<%= dirs.src %>/camera/fx/Effect.js',
+        '<%= dirs.src %>/camera/fx/Fade.js',
+        '<%= dirs.src %>/camera/fx/Flash.js',
+        '<%= dirs.src %>/camera/fx/Shake.js',
 
         '<%= dirs.src %>/font/Font.js',
         '<%= dirs.src %>/font/TextureFont.js',

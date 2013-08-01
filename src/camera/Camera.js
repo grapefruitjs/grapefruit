@@ -2,8 +2,6 @@
  * A basic Camera object that provides some effects. It also will contain the HUD and GUI
  * to ensure they are using "screen-coords".
  *
- * TODO: Currently fade/flash don't show the colors. How should I actually show them, a gf.Sprite?
- *
  * @class Camera
  * @extends gf.DisplayObjectContainer
  * @namespace gf
@@ -81,7 +79,8 @@ gf.Camera = function(game, settings) {
     this.fxpools = {
         flash: new gf.ObjectPool(gf.Camera.fx.Flash, this),
         fade: new gf.ObjectPool(gf.Camera.fx.Fade, this),
-        shake: new gf.ObjectPool(gf.Camera.fx.Shake, this)
+        shake: new gf.ObjectPool(gf.Camera.fx.Shake, this),
+        scanlines: new gf.ObjectPool(gf.Camera.fx.Scanlines, this)
     };
 
     gf.DisplayObjectContainer.call(this, settings);
@@ -98,9 +97,14 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {Camera} Returns iteself for chainability
      */
     flash: function(color, duration, cb) {
-        var flash = this.fxpools.flash.create();
+        var flash = this.fxpools.flash.create(),
+            self = this;
 
-        return flash.start(color, duration, cb);
+        return flash.start(color, duration, function() {
+            self.fxpools.flash.free(flash);
+            if(typeof cb === 'function')
+                cb();
+        });
     },
     /**
      * Makes the camera fade into a color
@@ -112,9 +116,14 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {Camera} Returns iteself for chainability
      */
     fade: function(color, duration, cb) {
-        var fade = this.fxpools.fade.create();
+        var fade = this.fxpools.fade.create(),
+            self = this;
 
-        return fade.start(color, duration, cb);
+        return fade.start(color, duration, function() {
+            self.fxpools.fade.free(fade);
+            if(typeof cb === 'function')
+                cb();
+        });
     },
     /**
      * Shakes the camera around a bit, to show it who is boss.
@@ -127,9 +136,19 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {Camera} Returns iteself for chainability
      */
     shake: function(intensity, duration, direction, cb) {
-        var shake = this.fxpools.shake.create();
+        var shake = this.fxpools.shake.create(),
+            self = this;
 
-        return shake.start(intensity, duration, direction, cb);
+        return shake.start(intensity, duration, direction, function() {
+            self.fxpools.shake.free(shake);
+            if(typeof cb === 'function')
+                cb();
+        });
+    },
+    scanlines: function(color, direction, spacing, thickness, alpha) {
+        var scanlines = this.fxpools.scanlines.create();
+
+        return scanlines.start(color, direction, spacing, thickness, alpha);
     },
     /**
      * Stops all currently running effects (flash, fade, shake)
