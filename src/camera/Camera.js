@@ -71,29 +71,17 @@ gf.Camera = function(game, settings) {
     this.game = game;
 
     /**
-     * The _fx namespace has all the instance variables for all the fx
+     * The fxpools for doing camera effects
      *
-     * @property _fx
+     * @property fxpools
      * @type Object
      * @private
      * @readOnly
      */
-    this._fx = {
-        flash: {
-            alpha: 0,
-            complete: null
-        },
-        fade: {
-            alpha: 0,
-            complete: null
-        },
-        shake: {
-            intensity: 0,
-            duration: 0,
-            direction: gf.Camera.SHAKE.BOTH,
-            offset: new gf.Point(0, 0),
-            complete: null
-        }
+    this.fxpools = {
+        flash: new gf.ObjectPool(gf.Camera.fx.Flash, this),
+        fade: new gf.ObjectPool(gf.Camera.fx.Fade, this),
+        shake: new gf.ObjectPool(gf.Camera.fx.Shake, this)
     };
 
     gf.DisplayObjectContainer.call(this, settings);
@@ -110,46 +98,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {Camera} Returns iteself for chainability
      */
     flash: function(color, duration, cb) {
-        if(this._fx.flash.alpha > 0) return this;
+        var flash = this.fxpools.flash.create();
 
-        if(typeof duration === 'function') {
-            cb = duration;
-            duration = 1;
-        }
-
-        if(typeof color === 'function') {
-            cb = color;
-            duration = 1;
-            color = 0xFFFFFF;
-        }
-
-        duration = duration || 1;
-        if(duration < 0) duration = 1;
-
-        if(color === undefined)
-            color = 0xFFFFFF;
-
-        /*var red = color >> 16 & 0xFF,
-            green = color >> 8 & 0xFF,
-            blue = color & 0xFF;*/
-
-        this._fx.flash.color = color;
-        this._fx.flash.duration = duration;
-        this._fx.flash.alpha = 1;
-        this._fx.flash.complete = cb;
-
-        return this;
-    },
-    /**
-     * Stops a running flash, instantly hiding it
-     *
-     * @method stopFlash
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopFlash: function() {
-        this._fx.flash.alpha = 0;
-
-        return this;
+        return flash.start(color, duration, cb);
     },
     /**
      * Makes the camera fade into a color
@@ -161,46 +112,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {Camera} Returns iteself for chainability
      */
     fade: function(color, duration, cb) {
-        if(this._fx.fade.alpha > 0) return this;
+        var fade = this.fxpools.fade.create();
 
-        if(typeof duration === 'function') {
-            cb = duration;
-            duration = 1;
-        }
-
-        if(typeof color === 'function') {
-            cb = color;
-            duration = 1;
-            color = 0xFFFFFF;
-        }
-
-        duration = duration || 1;
-        if(duration < 0) duration = 1;
-
-        if(color === undefined)
-            color = 0xFFFFFF;
-
-        /*var red = color >> 16 & 0xFF,
-            green = color >> 8 & 0xFF,
-            blue = color & 0xFF;*/
-
-        this._fx.fade.color = color;
-        this._fx.fade.duration = duration;
-        this._fx.fade.alpha = 0.01;
-        this._fx.fade.complete = cb;
-
-        return this;
-    },
-    /**
-     * Stops a running fade, instantly hiding it
-     *
-     * @method stopFade
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopFade: function() {
-        this._fx.fade.alpha = 0;
-
-        return this;
+        return fade.start(color, duration, cb);
     },
     /**
      * Shakes the camera around a bit, to show it who is boss.
@@ -213,56 +127,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {Camera} Returns iteself for chainability
      */
     shake: function(intensity, duration, direction, cb) {
-        //already shaking (call stop first)
-        if(this._fx.shake.offset.x !== 0 || this._fx.shake.offset.y !== 0)
-            return this;
+        var shake = this.fxpools.shake.create();
 
-        if(typeof direction === 'function') {
-            cb = direction;
-            direction = gf.Camera.SHAKE.BOTH;
-        }
-
-        if(typeof duration === 'function') {
-            cb = duration;
-            direction = gf.Camera.SHAKE.BOTH;
-            duration = null;
-        }
-
-        if(typeof intensity === 'function') {
-            cb = intensity;
-            direction = gf.Camera.SHAKE.BOTH;
-            duration = null;
-            intensity = null;
-        }
-
-        intensity = intensity || 0.01;
-        duration = duration || 1000;
-        direction = direction || gf.Camera.SHAKE.BOTH;
-
-        //setup a shake effect
-        this._fx.shake.intensity = intensity;
-        this._fx.shake.duration = duration;
-        this._fx.shake.direction = direction;
-        this._fx.shake.offset.x = 0;
-        this._fx.shake.offset.y = 0;
-        this._fx.shake.complete = cb;
-
-        return this;
-    },
-    /**
-     * Stops a running shake effect
-     *
-     * @method stopShake
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopShake: function() {
-        if(this._fx.shake.duration !== 0) {
-            this._fx.shake.duration = 0;
-            this._fx.shake.offset.x = 0;
-            this._fx.shake.offset.y = 0;
-        }
-
-        return this;
+        return shake.start(intensity, duration, direction, cb);
     },
     /**
      * Stops all currently running effects (flash, fade, shake)
@@ -481,6 +348,8 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
     },
     unconstrain: function() {
         this._bounds = null;
+
+        return this;
     },
     /**
      * Called internally every frame. Updates all effects and the follow
@@ -529,59 +398,11 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
             }
         }
 
-        //update flash effect
-        if(this._fx.flash.alpha > 0) {
-            this._fx.flash.alpha -= (dt * 1000) / this._fx.flash.duration;
-
-            if(this._fx.flash.alpha <= 0) {
-                this._fx.flash.alpha = 0;
-
-                if(this._fx.flash.complete)
-                    this._fx.flash.complete();
-            }
-        }
-
-        //update fade effect
-        if(this._fx.fade.alpha > 0) {
-            this._fx.fade.alpha += (dt * 1000) / this._fx.fade.duration;
-
-            if(this._fx.fade.alpha >= 1) {
-                this._fx.fade.alpha = 1;
-
-                if(this._fx.fade.complete) {
-                    this._fx.fade.complete();
-                }
-            }
-        }
-
-        //update shake effect
-        if(this._fx.shake.duration > 0) {
-            this._fx.shake.duration -= (dt * 1000);
-
-            //pan back to the original position
-            this._fx.shake.offset.x = -this._fx.shake.offset.x;
-            this._fx.shake.offset.y = -this._fx.shake.offset.y;
-            this.pan(this._fx.shake.offset);
-
-            if(this._fx.shake.duration <= 0) {
-                this._fx.shake.duration = 0;
-                this._fx.shake.offset.x = 0;
-                this._fx.shake.offset.y = 0;
-
-                if(this._fx.shake.complete) {
-                    this._fx.shake.complete();
-                }
-            }
-            else {
-                //pan to a random offset
-                if((this._fx.shake.direction === gf.Camera.SHAKE.BOTH) || (this._fx.shake.direction === gf.Camera.SHAKE.HORIZONTAL))
-                    this._fx.shake.offset.x = Math.round(Math.random() * this._fx.shake.intensity * this.size.x * 2 - this._fx.shake.intensity * this.size.x);
-
-                if ((this._fx.shake.direction === gf.Camera.SHAKE.BOTH) || (this._fx.shake.direction === gf.Camera.SHAKE.VERTICAL))
-                    this._fx.shake.offset.y = Math.round(Math.random() * this._fx.shake.intensity * this.size.y * 2 - this._fx.shake.intensity * this.size.y);
-
-                this.pan(this._fx.shake.offset);
-            }
+        //update effects
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var c = this.children[i];
+            if(c.update)
+                c.update(dt);
         }
 
         return this;
@@ -600,17 +421,4 @@ gf.Camera.FOLLOW = {
     TOPDOWN: 1,
     TOPDOWN_TIGHT: 2,
     LOCKON: 3
-};
-
-/**
- * Camera shake directions (used for camera.shake())
- *
- * @property SHAKE
- * @type Object
- * @static
- */
-gf.Camera.SHAKE = {
-    BOTH: 0,
-    HORIZONTAL: 1,
-    VERTICAL: 2
 };
