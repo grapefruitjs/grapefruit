@@ -39,6 +39,7 @@ gf.TiledLayer = function(layer) {
     this.properties = gf.utils.parseTiledProperties(layer.properties) || {};
 
     //translate some tiled properties to our inherited properties
+    this.type = layer.type;
     this.position.x = layer.x;
     this.position.y = layer.y;
     this.alpha = layer.opacity;
@@ -284,6 +285,10 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
     _isoToJ: function(x, y) {
         // converts world isometric coordinates into the j position of the 2D-Array
         return ((y - x) / 2);
+    },
+    destroy: function() {
+        this.clearTiles();
+        gf.Layer.prototype.destroy.call(this);
     },
     /**
      * Clears all the tiles currently used to render the layer
