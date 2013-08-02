@@ -6,7 +6,7 @@
  * @extends gf.DisplayObjectContainer
  * @namespace gf
  * @constructor
- * @param game {Game} The game this camera belongs to
+ * @param game {gf.Game} The game this camera belongs to
  * @param settings {Object} Any settings you want to override the default properties with
  */
 gf.Camera = function(game, settings) {
@@ -14,7 +14,7 @@ gf.Camera = function(game, settings) {
      * The bounds of that the camera can move to
      *
      * @property bounds
-     * @type Rectangle
+     * @type gf.Rectangle
      * @readOnly
      * @private
      */
@@ -25,7 +25,7 @@ gf.Camera = function(game, settings) {
      * before the camera moves to track it.
      *
      * @property _deadzone
-     * @type Rectangle
+     * @type gf.Rectangle
      * @readOnly
      * @private
      */
@@ -35,7 +35,7 @@ gf.Camera = function(game, settings) {
      * The target that the camera will follow
      *
      * @property _target
-     * @type Sprite
+     * @type gf.Sprite
      * @readOnly
      * @private
      */
@@ -45,7 +45,7 @@ gf.Camera = function(game, settings) {
      * The size of the camera
      *
      * @property size
-     * @type Vector
+     * @type gf.Vector
      * @readOnly
      */
     this.size = new gf.Vector(0, 0);
@@ -54,7 +54,7 @@ gf.Camera = function(game, settings) {
      * Half of the size of the camera
      *
      * @property hSize
-     * @type Vector
+     * @type gf.Vector
      * @readOnly
      */
     this.hSize = new gf.Vector(0, 0);
@@ -63,7 +63,7 @@ gf.Camera = function(game, settings) {
      * The game this camera views
      *
      * @property game
-     * @type Game
+     * @type gf.Game
      * @readOnly
      */
     this.game = game;
@@ -209,9 +209,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * to move with them.
      *
      * @method follow
-     * @param sprite {Sprite} The sprite to follow
-     * @param style {Camera.FOLLOW} The style of following, defaults to gf.Camera.FOLLOW.LOCKON
-     * @return {Camera} Returns iteself for chainability
+     * @param sprite {gf.Sprite} The sprite to follow
+     * @param [style=gf.Camera.FOLLOW.LOCKON] {gf.Camera.FOLLOW} The style of following
+     * @return {gf.Camera} Returns iteself for chainability
      */
     follow: function(spr, style) {
         if(!(spr instanceof gf.Sprite))
@@ -263,7 +263,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * Stops following any sprites
      *
      * @method unfollow
-     * @return {Camera} Returns iteself for chainability
+     * @return {gf.Camera} Returns iteself for chainability
      */
     unfollow: function() {
         this._target = null;
@@ -273,8 +273,8 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * Focuses the camera on a sprite.
      *
      * @method focusSprite
-     * @param sprite {Sprite} The sprite to focus on
-     * @return {Camera} Returns iteself for chainability
+     * @param sprite {gf.Sprite} The sprite to focus on
+     * @return {gf.Camera} Returns iteself for chainability
      */
     focusSprite: function(spr) {
         return this.focus(
@@ -287,9 +287,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * not go outside the bounds set with setBounds()
      *
      * @method focus
-     * @param x {Number|Point} The x coord to focus on, if a Point is passed the y param is ignored
+     * @param x {Number|gf.Point} The x coord to focus on, if a Point is passed the y param is ignored
      * @param y {Number} The y coord to focus on
-     * @return {Camera} Returns iteself for chainability
+     * @return {gf.Camera} Returns iteself for chainability
      */
     focus: function(x, y) {
         y = x instanceof gf.Point ? x.y : (y || 0);
@@ -310,9 +310,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * not go outside the bounds set with setBounds()
      *
      * @method pan
-     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
+     * @param x {Number|gf.Point} The x amount to pan, if a Point is passed the y param is ignored
      * @param y {Number} The y ammount to pan
-     * @return {Camera} Returns iteself for chainability
+     * @return {gf.Camera} Returns iteself for chainability
      */
     pan: function(dx, dy) {
         dy = dx instanceof gf.Point ? dx.y : (dy || 0);
@@ -361,7 +361,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @private
      * @param w {Number} The new width
      * @param h {Number} The new height
-     * @return {Camera} Returns iteself for chainability
+     * @return {gf.Camera} Returns iteself for chainability
      */
     resize: function(w, h) {
         this.size.set(w, h);
@@ -377,8 +377,8 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * min and max, and is set for you.
      *
      * @method constrain
-     * @param shape {Rectangle|Polygon|Circle|Ellipse} The shape to constrain the camera into
-     * @return {Camera} Returns iteself for chainability
+     * @param shape {gf.Rectangle|gf.Polygon|gf.Circle|gf.Ellipse} The shape to constrain the camera into
+     * @return {gf.Camera} Returns iteself for chainability
      */
     constrain: function(shape, scaled) {
         this._bounds = shape;
@@ -415,7 +415,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      *
      * @method update
      * @param dt {Number} The delta time (in seconds) since the last update
-     * @return {Camera} Returns iteself for chainability
+     * @return {gf.gf.Camera} Returns iteself for chainability
      * @private
      */
     update: function(dt) {
