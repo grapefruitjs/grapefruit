@@ -230,6 +230,8 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
     },
     update: function(dt) {
+        if(this._paused) return;
+
         //execute the physics step
         this.space.step(dt);
 
@@ -292,6 +294,12 @@ gf.inherits(gf.PhysicsSystem, Object, {
             this.onPostStep();
         }
     },
+    pause: function() {
+        this._paused = true;
+    },
+    unpause: function() {
+        this._paused = false;
+    },
     onPostStep: function() {
         //remove items
         while(this.actionQueue.length) {
@@ -328,10 +336,17 @@ gf.inherits(gf.PhysicsSystem, Object, {
                     if(data.shape.space)
                         this.space.removeShape(data.shape);
 
+                    if(data.customShapes) {
+                        for(var i = data.customShapes.length - 1; i > -1; --i) {
+                            this.space.removeShape(data.customShapes[i]);
+                        }
+                    }
+
                     //remove references
                     data.body = null;
                     data.shape.sprite = null;
                     data.shape = null;
+                    data.customShapes = null;
                     break;
 
                 case 'reindex':
