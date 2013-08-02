@@ -36,6 +36,7 @@
     this.objects = group.objects;
 
     //translate some tiled properties to our inherited properties
+    this.type = group.type;
     this.alpha = group.opacity;
     this.visible = group.visible;
 };
@@ -241,5 +242,9 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
         }
 
         return this;
+    },
+    destroy: function() {
+        this.despawn();
+        gf.Layer.prototype.destroy.call(this);
     }
 });

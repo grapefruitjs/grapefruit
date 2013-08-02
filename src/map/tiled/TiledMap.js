@@ -143,9 +143,18 @@ gf.inherits(gf.TiledMap, gf.Map, {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
-            if(o instanceof gf.TiledLayer) {
+            if(o.type === 'tilelayer') {
                 o.resize(width, height);
             }
+        }
+    },
+    destroy: function() {
+        gf.Map.prototype.destroy.call(this);
+
+        for(var i = this.children.length - 1; i > -1; --i) {
+            var o = this.children[i];
+
+            o.destroy();
         }
     },
     /**
@@ -157,7 +166,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
-            if(o instanceof gf.TiledObjectGroup) {
+            if(o.type === 'objectgroup') {
                 o.spawn();
             }
         }
