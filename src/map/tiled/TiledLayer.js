@@ -44,8 +44,12 @@ gf.TiledLayer = function(layer) {
     this.alpha = layer.opacity;
     this.visible = layer.visible;
 
-    this.prerender = this.properties.prerender;
-    this.sprite = null; //the pre-rendered layer sprite
+    this.preRender = this.properties.preRender;
+    this.chunkSize = new gf.Vector(
+        this.properties.chunkSizeX || this.properties.chunkSize || 512,
+        this.properties.chunkSizeY || this.properties.chunkSize || 512
+    );
+    this._preRendered = false;
 
     this._tilePool = [];
     this._buffered = { left: false, right: false, top: false, bottom: false };
@@ -62,12 +66,15 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @param height {Number} The number of tiles in the Y direction to render
      */
     resize: function(width, height) {
-        if(this.prerender) {
-            if(!this.sprite)
-                this._prerender();
+        if(this.preRender) {
+            if(!this._preRendered)
+                this._preRender();
 
             return;
         }
+
+        if(!this.tileSize)
+            this.tileSize = this.parent.tileSize;
 
         //clear all the visual tiles
         this.clearTiles();
@@ -94,56 +101,86 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             this.parent.parent.physics.invalidCollisions();
         }
     },
-    //render the map onto a canvas once to use as a prerendered texture
-    _prerender: function() {
+    //render the map onto a canvas once to use as a preRendered texture
+    _preRender: function() {
         if(!this.visible)
             return;
 
-        var canvas = this.canvas = document.createElement('canvas'),
-            world = this.parent,
+        this._preRendered = true;
+        this.tileSize = this.chunkSize.clone();
+
+        var world = this.parent,
+            width = world.size.x * world.tileSize.x,
+            height = world.size.y * world.tileSize.y,
+            xChunks = Math.ceil(width / this.chunkSize.x),
+            yChunks = Math.ceil(height / this.chunkSize.y);
+
+        //for each chunk
+        for(var x = 0; x < xChunks; ++x) {
+            for(var y = 0; y < yChunks; ++y) {
+                var cw = (x === xChunks - 1) ? width - (x * this.chunkSize.x) : this.chunkSize.x,
+                    ch = (y === yChunks - 1) ? height - (y * this.chunkSize.y) : this.chunkSize.y;
+
+                this._preRenderChunk(x, y, cw, ch);
+            }
+        }
+    },
+    _preRenderChunk: function(cx, cy, w, h) {
+        var world = this.parent,
+            tsx = world.tileSize.x,
+            tsy = world.tileSize.y,
+            xTiles = w / tsx,
+            yTiles = h / tsy,
+            nx = (cx * this.chunkSize.x) % tsx,
+            ny = (cy * this.chunkSize.y) % tsy,
+            tx = Math.floor(cx * this.chunkSize.x / tsx),
+            ty = Math.floor(cy * this.chunkSize.y / tsy),
             sx = world.size.x,
             sy = world.size.y,
-            tsx = world.tileSize.x,
-            tsy = world.tileSize.y;
+            canvas = document.createElement('canvas'),
+            ctx = canvas.getContext('2d');
 
-        canvas.width = sx * tsx;
-        canvas.height = sy * tsy;
-        this.ctx = canvas.getContext('2d');
+        canvas.width = w;
+        canvas.height = h;
 
-        //draw all the tiles to the canvas
-        for(var x = 0; x < sx; ++x) {
-            for(var y = 0; y < sy; ++y) {
-                var id = (x + (y * sx)),
-                    tid = this.tileIds[id],
-                    set = world.getTileset(tid),
-                    tx;
+        //draw all the tiles in this chunk to the canvas
+        for(var x = 0; x < xTiles; ++x) {
+            for(var y = 0; y < yTiles; ++y) {
+                if(x + tx < sx && y + ty < sy) {
+                    var id = ((x + tx) + ((y + ty) * sx)),
+                        tid = this.tileIds[id],
+                        set = world.getTileset(tid),
+                        tex, frame;
 
-                if(set) {
-                    tx = set.getTileTexture(tid);
-                    this._prerenderTile(tx, x * tsx, y * tsy);
+                    if(set) {
+                        tex = set.getTileTexture(tid);
+                        frame = tex.frame;
+
+                        ctx.drawImage(
+                            tex.baseTexture.source,
+                            frame.x,
+                            frame.y,
+                            frame.width,
+                            frame.height,
+                            (x * tsx) - nx + set.tileoffset.x,
+                            (y * tsy) - ny + set.tileoffset.y,
+                            frame.width,
+                            frame.height
+                        );
+                    }
                 }
             }
         }
 
-        //use the canvas as a texture for a sprite to display
-        this.sprite = new gf.Sprite(gf.Texture.fromCanvas(canvas));
+        //use the canvas as a texture for a tile to display
+        var tile = new gf.Tile(gf.Texture.fromCanvas(canvas));
+        tile.setPosition(cx * this.chunkSize.x, cy * this.chunkSize.y);
 
-        this.addChild(this.sprite);
-    },
-    _prerenderTile: function(tx, x, y) {
-        var frame = tx.frame;
+        if(!this.tiles[cx])
+            this.tiles[cx] = {};
 
-        this.ctx.drawImage(
-            tx.baseTexture.source,
-            frame.x,
-            frame.y,
-            frame.width,
-            frame.height,
-            x,
-            y,
-            frame.width,
-            frame.height
-        );
+        this.addChild(tile);
+        this.tiles[cx][cy] = tile;
     },
     _renderOrthoTiles: function(sx, sy, sw, sh) {
         //convert to tile coords
@@ -426,9 +463,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Layer} Returns itself for chainability
      */
     pan: function(dx, dy) {
-        if(this.prerender)
-            return;
-
         //isometric pan (just re render everything)
         if(this.parent.orientation === 'isometric')
             return this.resize(this._rendered.width, this._rendered.height);
