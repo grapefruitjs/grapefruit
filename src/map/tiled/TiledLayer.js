@@ -44,6 +44,9 @@ gf.TiledLayer = function(layer) {
     this.alpha = layer.opacity;
     this.visible = layer.visible;
 
+    this.prerender = this.properties.prerender;
+    this.sprite = null; //the pre-rendered layer sprite
+
     this._tilePool = [];
     this._buffered = { left: false, right: false, top: false, bottom: false };
     this._panDelta = new gf.Vector();
@@ -59,6 +62,13 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @param height {Number} The number of tiles in the Y direction to render
      */
     resize: function(width, height) {
+        if(this.prerender) {
+            if(!this.sprite)
+                this._prerender();
+
+            return;
+        }
+
         //clear all the visual tiles
         this.clearTiles();
 
@@ -83,6 +93,57 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(this.hasPhysics) {
             this.parent.parent.physics.invalidCollisions();
         }
+    },
+    //render the map onto a canvas once to use as a prerendered texture
+    _prerender: function() {
+        if(!this.visible)
+            return;
+
+        var canvas = this.canvas = document.createElement('canvas'),
+            world = this.parent,
+            sx = world.size.x,
+            sy = world.size.y,
+            tsx = world.tileSize.x,
+            tsy = world.tileSize.y;
+
+        canvas.width = sx * tsx;
+        canvas.height = sy * tsy;
+        this.ctx = canvas.getContext('2d');
+
+        //draw all the tiles to the canvas
+        for(var x = 0; x < sx; ++x) {
+            for(var y = 0; y < sy; ++y) {
+                var id = (x + (y * sx)),
+                    tid = this.tileIds[id],
+                    set = world.getTileset(tid),
+                    tx;
+
+                if(set) {
+                    tx = set.getTileTexture(tid);
+                    this._prerenderTile(tx, x * tsx, y * tsy);
+                }
+            }
+        }
+
+        //use the canvas as a texture for a sprite to display
+        this.sprite = new gf.Sprite(gf.Texture.fromCanvas(canvas));
+
+        this.addChild(this.sprite);
+    },
+    _prerenderTile: function(tx, x, y) {
+        var frame = tx.frame;
+
+        this.ctx.drawImage(
+            tx.baseTexture.source,
+            frame.x,
+            frame.y,
+            frame.width,
+            frame.height,
+            x,
+            y,
+            frame.width,
+            frame.height
+        );
     },
     _renderOrthoTiles: function(sx, sy, sw, sh) {
         //convert to tile coords
@@ -365,6 +426,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Layer} Returns itself for chainability
      */
     pan: function(dx, dy) {
+        if(this.prerender)
+            return;
+
         //isometric pan (just re render everything)
         if(this.parent.orientation === 'isometric')
             return this.resize(this._rendered.width, this._rendered.height);
