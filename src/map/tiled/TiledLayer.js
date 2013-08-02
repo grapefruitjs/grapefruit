@@ -463,6 +463,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Layer} Returns itself for chainability
      */
     pan: function(dx, dy) {
+        if(this.preRender)
+            return;
+
         //isometric pan (just re render everything)
         if(this.parent.orientation === 'isometric')
             return this.resize(this._rendered.width, this._rendered.height);
