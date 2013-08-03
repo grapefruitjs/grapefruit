@@ -206,7 +206,7 @@ gf.inherits(gf.AudioManager, Object, {
 
         //loop through each source url and pick the first that is compatible
         for(var i = 0, il = settings.urls.length; i < il; ++i) {
-            var url = settings.urls[i].toLowerCase(),
+            var url = settings.urls[i],
                 ext;
 
             //if they pass a format override, use that
