@@ -87,6 +87,28 @@
     };
 
     /**
+     * Temporarily suspends the physics of an object
+     *
+     * @method disablePhysics
+     */
+    this.suspendPhysics = function() {
+        if(this._psystem) {
+            this._psystem.suspend(this);
+        }
+    };
+
+    /**
+     * Temporarily suspends the physics of an object
+     *
+     * @method disablePhysics
+     */
+    this.unsuspendPhysics = function() {
+        if(this._psystem) {
+            this._psystem.unsuspend(this);
+        }
+    };
+
+    /**
      * Sets the mass of this sprite
      *
      * @method setMass
