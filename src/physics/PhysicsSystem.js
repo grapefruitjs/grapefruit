@@ -178,6 +178,18 @@ gf.inherits(gf.PhysicsSystem, Object, {
         this.actionQueue.push(['remove', spr._phys]);
         this.act();
     },
+    suspend: function(spr) {
+        if(!spr || !spr._phys || !spr._phys.shape)
+            return;
+
+        spr._phys.shape.setLayers(cp.NO_GROUP);
+    },
+    unsuspend: function(spr) {
+        if(!spr || !spr._phys || !spr._phys.shape)
+            return;
+
+        spr._phys.shape.setLayers(cp.ALL_LAYERS);
+    },
     addCustomShape: function(spr, poly, sensor) {
         if(spr && spr._phys && spr._phys.body) {
             var s = this._createShape(spr, spr._phys.body, poly);
