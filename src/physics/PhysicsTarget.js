@@ -77,34 +77,18 @@
     this.disablePhysics = function() {
         if(this._psystem) {
             this._psystem.remove(this);
-
-            if(this._hit) {
-                this._showHit = false;
-                this.parent.removeChild(this._hit);
-                this._hit = null;
-            }
         }
     };
 
     /**
-     * Temporarily suspends the physics of an object
+     * Reindexes the collisions for this sprite, useful when moving the sprite a great deal
+     * (like to a new world)
      *
      * @method disablePhysics
      */
-    this.suspendPhysics = function() {
+    this.reindex = function() {
         if(this._psystem) {
-            this._psystem.suspend(this);
-        }
-    };
-
-    /**
-     * Temporarily suspends the physics of an object
-     *
-     * @method disablePhysics
-     */
-    this.unsuspendPhysics = function() {
-        if(this._psystem) {
-            this._psystem.unsuspend(this);
+            this._psystem.reindex(this);
         }
     };
 
@@ -196,106 +180,5 @@
      */
     this.onSeparate = function(obj, colShape, myShape) {
         this.emit('separate', obj, colShape, myShape);
-    };
-
-    /**
-     * Shows the physics body for the sprite
-     *
-     * @method showPhysics
-     */
-    this.showPhysics = function(style) {
-        this._showHit = true;
-        if(!this._phys || !this._phys.body || !this._phys.shape)
-            return;
-
-        //no graphics object created yet
-        if(!this._hit) {
-            this._hit = new PIXI.Graphics();
-
-            this.parent.addChild(this._hit);
-        }
-
-        //pass a new style, or haven't defined one yet
-        if(style || !this._hit.style) {
-            style = this._setStyleDefaults(style);
-            style.sensor = this._setStyleDefaults(style.sensor);
-
-            this._hit.style = style;
-        }
-
-        var p = this._phys.body.p,
-            g = this._hit,
-            c = this._phys.customShapes;
-
-        if(!this._hit.lastPos)
-            this._hit.lastPos = new gf.Point();
-        else if(this._hit.lastPos.x === p.x && this._hit.lastPos.y === p.y)
-            return;
-
-        this._hit.lastPos.x = p.x;
-        this._hit.lastPos.y = p.y;
-
-        g.clear();
-        this._drawPhysicsShape(this._phys.shape, g, p);
-
-        if(c) {
-            for(var i = 0; i < c.length; ++i) {
-                this._drawPhysicsShape(c[i], g, p);
-            }
-        }
-    };
-
-    this._setStyleDefaults = function(style) {
-        style = style || {};
-        style.size = style.size || 1;
-        style.color = style.color || 0xff00ff;
-        style.alpha = style.alpha || 1;
-
-        return style;
-    };
-
-    this._drawPhysicsShape = function(shape, g, p) {
-        var style = g.style;
-
-        if(shape.sensor)
-            style = style.sensor;
-
-        g.lineStyle(style.size, style.color, style.alpha);
-
-        //circle
-        if(shape.type === 'circle') {
-            var cx = shape.bb_l + ((shape.bb_r - shape.bb_l) / 2),
-                cy = shape.bb_t + ((shape.bb_b - shape.bb_t) / 2);
-
-            g.drawCircle(cx, cy, shape.r);
-        }
-        //polygon
-        else {
-            var sx = shape.verts[0],
-                sy = shape.verts[1];
-
-            g.moveTo(p.x + sx, p.y + sy);
-
-            for(var i = 2; i < shape.verts.length; i+=2) {
-                g.lineTo(
-                    p.x + shape.verts[i],
-                    p.y + shape.verts[i + 1]
-                );
-            }
-
-            g.lineTo(p.x + sx, p.y + sy);
-        }
-    };
-
-    /**
-     * Hides the physics body for the sprite
-     *
-     * @method hidePhysics
-     */
-    this.hidePhysics = function() {
-        this._showHit = false;
-        if(this._hit) {
-            this._hit.visible = false;
-        }
     };
 };
