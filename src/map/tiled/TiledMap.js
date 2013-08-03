@@ -154,7 +154,10 @@ gf.inherits(gf.TiledMap, gf.Map, {
         for(var i = this.children.length - 1; i > -1; --i) {
             var o = this.children[i];
 
-            o.destroy();
+            if(o.destroy)
+                o.destroy();
+            else
+                this.removeChild(o);
         }
     },
     /**

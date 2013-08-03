@@ -28,7 +28,7 @@ gf.TiledLayer = function(layer) {
      * @property tiles
      * @type Object
      */
-    this.tiles = {};
+    this.tiles = [];
 
     /**
      * The user-defined properties of this group. Usually defined in the TiledEditor
@@ -297,8 +297,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      */
     clearTiles: function() {
         //hide/free each tile and remove from the memory map
-        for(var x in this.tiles) {
-            for(var y in this.tiles[x]) {
+        for(var x = 0; x < this.tiles.length; ++x) {
+            for(var y = 0; this.tiles[x] && y < this.tiles[x].length; ++y) {
                 this._freeTile(x, y);
             }
         }
@@ -406,7 +406,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         //update sprite position in the map
         if(!this.tiles[toTileX])
-            this.tiles[toTileX] = {};
+            this.tiles[toTileX] = [];
 
         this.tiles[toTileX][toTileY] = tile;
 
