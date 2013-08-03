@@ -7,15 +7,21 @@ define(function(require) {
         'core',
         'plugin',
 
-        'audio/AudioPlayer',
         'audio/AudioManager',
+        'audio/AudioPlayer',
 
-        'display/Sprite',
+        'camera/Camera',
+        'camera/fx/Close',
+        'camera/fx/Effect',
+        'camera/fx/Fade',
+        'camera/fx/Flash',
+        'camera/fx/Scanlines',
+        'camera/fx/Shake',
+
         'display/AnimatedSprite',
-        'display/Camera',
         'display/DisplayObjectContainer',
+        'display/Sprite',
 
-        'font/Font',
         'font/TextureFont',
 
         'game/Game',
@@ -24,41 +30,41 @@ define(function(require) {
         'gui/Gui',
         'gui/GuiItem',
 
-        'input/InputManager',
-        'input/Input',
-        'input/Keyboard',
         'input/Gamepad',
         'input/GamepadButtons',
         'input/GamepadSticks',
+        'input/Input',
+        'input/InputManager',
+        'input/Keyboard',
 
         'loader/AssetLoader',
-        'loader/Loader',
         'loader/AudioLoader',
         'loader/JsonLoader',
+        'loader/Loader',
         'loader/TextureLoader',
         'loader/parse/SpriteSheetLoader',
         'loader/parse/WorldLoader',
 
-        'map/Map',
-        'map/Layer',
-        'map/ImageLayer',
-        'map/Tile',
-        'map/tiled/TiledMap',
         'map/tiled/TiledLayer',
-        'map/tiled/TiledTileset',
+        'map/tiled/TiledMap',
         'map/tiled/TiledObjectGroup',
+        'map/tiled/TiledTileset',
+        'map/ImageLayer',
+        'map/Layer',
+        'map/Map',
+        'map/Tile',
 
         'physics/PhysicsSystem',
-        'physics/PhysicsTarget.js',
+        'physics/PhysicsTarget',
 
-        'pool/SpritePool',
         'pool/ObjectPool',
+        'pool/SpritePool',
 
-        'utils/utils',
-        'utils/math',
         'utils/Clock',
-        'utils/Vector',
-        'utils/EventEmitter'
+        'utils/EventEmitter',
+        'utils/math',
+        'utils/utils',
+        'utils/Vector'
     ];
 
     // Resolve all testModules and then start the Test Runner.
