@@ -237,8 +237,6 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
             if(c.destroy)
                 c.destroy();
-            else
-                this.removeChild(c);
         }
 
         return this;

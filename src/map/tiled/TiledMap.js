@@ -156,8 +156,6 @@ gf.inherits(gf.TiledMap, gf.Map, {
 
             if(o.destroy)
                 o.destroy();
-            else
-                this.removeChild(o);
         }
     },
     /**

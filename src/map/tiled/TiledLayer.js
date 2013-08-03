@@ -92,7 +92,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         this._updateRenderSq();
         if(this.hasPhysics) {
-            this.parent.parent.physics.invalidCollisions();
+            this.parent.parent.physics.reindexStatic();
         }
     },
     //render the map onto a canvas once to use as a prerendered texture
@@ -167,7 +167,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
 
         for(var x = sx; x < endX; ++x) {
             for(var y = sy; y < endY; ++y) {
-                this.moveTileSprite(x, y, x, y);
+                this.moveTileSprite(-1, -1, x, y);
             }
         }
 
@@ -263,20 +263,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
     },
     _freeTile: function(tx, ty) {
         if(this.tiles[tx] && this.tiles[tx][ty]) {
-            var t = this.tiles[tx][ty];
-
-            if(t) {
-                t.visible = false;
-                t.disablePhysics();
-                this._tilePool.push(t);
-                this.tiles[tx][ty] = null;
-                this.removeChild(t);
-            }
+            this.clearTile(this.tiles[tx][ty]);
+            this.tiles[tx][ty] = null;
         }
-
-        // make this first-in-first-out instead of a stack
-        // see: http://jsperf.com/queue-push-unshift-vs-shift-pop/3
-        //this._tilePool.reverse();
     },
     _isoToI: function(x, y) {
         // converts world isometric coordinates into the i position of the 2D-Array
@@ -287,7 +276,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         return ((y - x) / 2);
     },
     destroy: function() {
-        this.clearTiles();
+        this.clearTiles(true);
         gf.Layer.prototype.destroy.call(this);
     },
     /**
@@ -295,13 +284,21 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      *
      * @method clearTiles
      */
-    clearTiles: function() {
-        //hide/free each tile and remove from the memory map
-        for(var x = 0; x < this.tiles.length; ++x) {
-            for(var y = 0; this.tiles[x] && y < this.tiles[x].length; ++y) {
-                this._freeTile(x, y);
-            }
+    clearTiles: function(remove) {
+        for(var c = this.children.length - 1; c > -1; --c) {
+            this.clearTile(this.children[c], remove);
         }
+
+        this.tiles.length = 0;
+    },
+    clearTile: function(tile, remove) {
+        tile.visible = false;
+        tile.disablePhysics();
+
+        if(remove)
+            this.removeChild(tile);
+        else
+            this._tilePool.push(tile);
     },
     /**
      * Moves a tile sprite from one position to another, and creates a new tile
@@ -359,7 +356,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
             tile = this.tiles[fromTileX][fromTileY];
             this.tiles[fromTileX][fromTileY] = null;
-
             tile.disablePhysics();
         }
         //otherwise grab a new tile from the pool
@@ -374,8 +370,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             tile.mass = props.mass;
             tile.inertia = props.inertia;
             tile.anchor.y = 1;
+            this.addChild(tile);
         }
-        this.addChild(tile);
 
         tile.collisionType = props.type;
         tile.visible = true;
@@ -388,9 +384,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(props.mass) {
             this.hasPhysics = true;
             tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
-
-            if(this.parent._showPhysics)
-                tile.showPhysics();
         }
 
         //pass through all events
@@ -483,7 +476,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         }
 
         if(this.hasPhysics) {
-            this.parent.parent.physics.invalidCollisions();
+            this.parent.parent.physics.reindexStatic();
         }
     },
     _renderLeft: function(forceNew) {
