@@ -115,7 +115,7 @@ gf.inherits(gf.AssetLoader, Object, {
         for(var i = 0, il = assets.length; i < il; ++i) {
             var name = typeof assets[i] === 'string' ? assets[i] : assets[i].name,
                 url = typeof assets[i] === 'string' ? assets[i] : (assets[i].src || assets[i].url || assets[i].uri),
-                ext = assets[i].type || (url instanceof Array ? 'audio' : null) || url.split('.').pop().toLowerCase(), //assume arrays of urls are for audio
+                ext = assets[i].type || (url instanceof Array ? 'audio' : null) || url.split('.').pop(), //assume arrays of urls are for audio
                 Loader = this.loaders[ext];
 
             if(!Loader)
