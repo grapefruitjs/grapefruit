@@ -244,6 +244,8 @@ gf.inherits(gf.PhysicsSystem, Object, {
             spr.position.y = shape.body.p.y;// + ((spr.anchor.y * shape.height) - (shape.height / 2));
             spr.rotation = shape.body.a;
 
+            spr.emit('physUpdate');
+
             if(spr._showHit) {
                 spr.showPhysics();
             }
