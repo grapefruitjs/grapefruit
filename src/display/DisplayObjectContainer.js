@@ -142,8 +142,7 @@ gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
      * @method destroy
      */
     destroy: function() {
-        if(this.physics)
-            this.disablePhysics();
+        this.disablePhysics();
 
         if(this.parent)
             this.parent.removeChild(this);
