@@ -36,6 +36,7 @@ gf.PhysicsSystem = function(options) {
     );
 
     this.actionQueue = [];
+    this.tickCallbacks = [];
     this._skip = 0;
 };
 
@@ -125,7 +126,10 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
         return shape;
     },
-    invalidCollisions: function() {
+    nextTick: function(fn) {
+        this.tickCallbacks.push(fn);
+    },
+    reindexStatic: function() {
         this.actionQueue.push(['reindexStatic']);
         this.act();
     },
@@ -179,17 +183,12 @@ gf.inherits(gf.PhysicsSystem, Object, {
         this.actionQueue.push(['remove', spr._phys]);
         this.act();
     },
-    suspend: function(spr) {
+    reindex: function(spr) {
         if(!spr || !spr._phys || !spr._phys.shape)
             return;
 
-        spr._phys.shape.setLayers(cp.NO_GROUP);
-    },
-    unsuspend: function(spr) {
-        if(!spr || !spr._phys || !spr._phys.shape)
-            return;
-
-        spr._phys.shape.setLayers(cp.ALL_LAYERS);
+        this.actionQueue.push(['reindex', spr._phys.shape]);
+        this.act();
     },
     addCustomShape: function(spr, poly, sensor) {
         if(spr && spr._phys && spr._phys.body) {
@@ -243,7 +242,11 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
     },
     update: function(dt) {
-        if(this._paused) return;
+        if(this._paused)
+            return;
+
+        while(this.tickCallbacks.length)
+            (this.tickCallbacks.shift()).call(this);
 
         if(this._skip)
             return this._skip--;
@@ -371,6 +374,10 @@ gf.inherits(gf.PhysicsSystem, Object, {
                     data.shape.sprite = null;
                     data.shape = null;
                     data.customShapes = null;
+                    break;
+
+                case 'reindex':
+                    this.space.reindexShape(data);
                     break;
 
                 case 'reindexStatic':
