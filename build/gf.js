@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-07-22
+ * Compiled: 2013-08-03
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -44,7 +44,7 @@ Object.freeze;Object.freeze=function(a){return typeof a=="function"?a:s(a)}}Obje
  * Copyright (c) 2012, Mat Groves
  * http://goodboydigital.com/
  *
- * Compiled: 2013-07-01
+ * Compiled: 2013-07-27
  *
  * Pixi.JS is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -62,7 +62,7 @@ Object.freeze;Object.freeze=function(a){return typeof a=="function"?a:s(a)}}Obje
  */
 
 /**
-@module PIXI
+ * @module PIXI
  */
 var PIXI = PIXI || {};
 
@@ -72,6 +72,7 @@ var PIXI = PIXI || {};
 
 /**
  * The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
+ *
  * @class Point
  * @constructor 
  * @param x {Number} position of the point
@@ -94,9 +95,11 @@ PIXI.Point = function(x, y)
 	this.y = y || 0;
 }
 
-/** 
+/**
+ * Creates a clone of this point
+ *
  * @method clone
- * @return a copy of the point
+ * @return {Point} a copy of the point
  */
 PIXI.Point.prototype.clone = function()
 {
@@ -104,7 +107,7 @@ PIXI.Point.prototype.clone = function()
 }
 
 // constructor
-PIXI.Point.constructor = PIXI.Point;
+PIXI.Point.prototype.constructor = PIXI.Point;
 
 
 /**
@@ -113,12 +116,13 @@ PIXI.Point.constructor = PIXI.Point;
 
 /**
  * the Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its width and its height.
+ *
  * @class Rectangle
  * @constructor 
- * @param x {Number} position of the rectangle
- * @param y {Number} position of the rectangle
- * @param width {Number} of the rectangle
- * @param height {Number} of the rectangle
+ * @param x {Number} The X coord of the upper-left corner of the rectangle
+ * @param y {Number} The Y coord of the upper-left corner of the rectangle
+ * @param width {Number} The overall wisth of this rectangle
+ * @param height {Number} The overall height of this rectangle
  */
 PIXI.Rectangle = function(x, y, width, height)
 {
@@ -151,9 +155,11 @@ PIXI.Rectangle = function(x, y, width, height)
 	this.height = height || 0;
 }
 
-/** 
+/**
+ * Creates a clone of this Rectangle
+ *
  * @method clone
- * @return a copy of the rectangle
+ * @return {Rectangle} a copy of the rectangle
  */
 PIXI.Rectangle.prototype.clone = function()
 {
@@ -161,10 +167,12 @@ PIXI.Rectangle.prototype.clone = function()
 }
 
 /**
+ * Checks if the x, and y coords passed to this function are contained within this Rectangle
+ *
  * @method contains
  * @param x {Number} The X coord of the point to test
  * @param y {Number} The Y coord of the point to test
- * @return if the x/y coords are within this polygon
+ * @return {Boolean} if the x/y coords are within this Rectangle
  */
 PIXI.Rectangle.prototype.contains = function(x, y)
 {
@@ -172,11 +180,11 @@ PIXI.Rectangle.prototype.contains = function(x, y)
         return false;
 
 	var x1 = this.x;
-	if(x > x1 && x < x1 + this.width)
+	if(x >= x1 && x <= x1 + this.width)
 	{
 		var y1 = this.y;
 		
-		if(y > y1 && y < y1 + this.height)
+		if(y >= y1 && y <= y1 + this.height)
 		{
 			return true;
 		}
@@ -186,7 +194,7 @@ PIXI.Rectangle.prototype.contains = function(x, y)
 }
 
 // constructor
-PIXI.Rectangle.constructor = PIXI.Rectangle;
+PIXI.Rectangle.prototype.constructor = PIXI.Rectangle;
 
 
 /**
@@ -196,11 +204,18 @@ PIXI.Rectangle.constructor = PIXI.Rectangle;
 /**
  * @class Polygon
  * @constructor
- * @param points {Array<Point>|Array<Number>} This cna be an array of Points or a flat array of numbers
- *      that will be interpreted as [x,y, x,y, ...]
+ * @param points* {Array<Point>|Array<Number>|Point...|Number...} This can be an array of Points that form the polygon,
+ *      a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arugments passed can be
+ *      all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
+ *      arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are
+ *      Numbers.
  */
 PIXI.Polygon = function(points)
 {
+    //if points isn't an array, use arguments as the array
+    if(!(points instanceof Array))
+        points = Array.prototype.slice.call(arguments);
+
     //if this is a flat array of numbers, convert it to points
     if(typeof points[0] === 'number') {
         var p = [];
@@ -217,8 +232,10 @@ PIXI.Polygon = function(points)
 }
 
 /**
+ * Creates a clone of this polygon
+ *
  * @method clone
- * @return a copy of the polygon
+ * @return {Polygon} a copy of the polygon
  */
 PIXI.Polygon.prototype.clone = function()
 {
@@ -231,10 +248,12 @@ PIXI.Polygon.prototype.clone = function()
 }
 
 /**
+ * Checks if the x, and y coords passed to this function are contained within this polygon
+ *
  * @method contains
  * @param x {Number} The X coord of the point to test
  * @param y {Number} The Y coord of the point to test
- * @return if the x/y coords are within this polygon
+ * @return {Boolean} if the x/y coords are within this polygon
  */
 PIXI.Polygon.prototype.contains = function(x, y)
 {
@@ -253,7 +272,7 @@ PIXI.Polygon.prototype.contains = function(x, y)
     return inside;
 }
 
-PIXI.Polygon.constructor = PIXI.Polygon;
+PIXI.Polygon.prototype.constructor = PIXI.Polygon;
 
 
 /**
@@ -261,6 +280,8 @@ PIXI.Polygon.constructor = PIXI.Polygon;
  */
 
 /**
+ * The Circle object can be used to specify a hit area for displayobjects
+ *
  * @class Circle
  * @constructor
  * @param x {Number} The X coord of the upper-left corner of the framing rectangle of this circle
@@ -292,8 +313,10 @@ PIXI.Circle = function(x, y, radius)
 }
 
 /**
+ * Creates a clone of this Circle instance
+ *
  * @method clone
- * @return a copy of the polygon
+ * @return {Circle} a copy of the polygon
  */
 PIXI.Circle.prototype.clone = function()
 {
@@ -301,10 +324,12 @@ PIXI.Circle.prototype.clone = function()
 }
 
 /**
+ * Checks if the x, and y coords passed to this function are contained within this circle
+ *
  * @method contains
  * @param x {Number} The X coord of the point to test
  * @param y {Number} The Y coord of the point to test
- * @return if the x/y coords are within this polygon
+ * @return {Boolean} if the x/y coords are within this polygon
  */
 PIXI.Circle.prototype.contains = function(x, y)
 {
@@ -321,7 +346,7 @@ PIXI.Circle.prototype.contains = function(x, y)
     return (dx + dy <= r2);
 }
 
-PIXI.Circle.constructor = PIXI.Circle;
+PIXI.Circle.prototype.constructor = PIXI.Circle;
 
 
 /**
@@ -329,10 +354,12 @@ PIXI.Circle.constructor = PIXI.Circle;
  */
 
 /**
+ * The Ellipse object can be used to specify a hit area for displayobjects
+ *
  * @class Ellipse
  * @constructor
- * @param x {Number} The X coord of the upper-left corner of the framing rectangle of this circle
- * @param y {Number} The Y coord of the upper-left corner of the framing rectangle of this circle
+ * @param x {Number} The X coord of the upper-left corner of the framing rectangle of this ellipse
+ * @param y {Number} The Y coord of the upper-left corner of the framing rectangle of this ellipse
  * @param width {Number} The overall height of this ellipse
  * @param height {Number} The overall width of this ellipse
  */
@@ -368,8 +395,10 @@ PIXI.Ellipse = function(x, y, width, height)
 }
 
 /**
+ * Creates a clone of this Ellipse instance
+ *
  * @method clone
- * @return a copy of the polygon
+ * @return {Ellipse} a copy of the ellipse
  */
 PIXI.Ellipse.prototype.clone = function()
 {
@@ -377,10 +406,12 @@ PIXI.Ellipse.prototype.clone = function()
 }
 
 /**
+ * Checks if the x, and y coords passed to this function are contained within this ellipse
+ *
  * @method contains
  * @param x {Number} The X coord of the point to test
  * @param y {Number} The Y coord of the point to test
- * @return if the x/y coords are within this polygon
+ * @return {Boolean} if the x/y coords are within this ellipse
  */
 PIXI.Ellipse.prototype.contains = function(x, y)
 {
@@ -403,7 +434,7 @@ PIXI.Ellipse.getBounds = function()
     return new PIXI.Rectangle(this.x, this.y, this.width, this.height);
 }
 
-PIXI.Ellipse.constructor = PIXI.Ellipse;
+PIXI.Ellipse.prototype.constructor = PIXI.Ellipse;
 
 
 
@@ -438,6 +469,23 @@ PIXI.mat3.create = function()
 	
 	return matrix;
 }
+
+
+PIXI.mat3.identity = function(matrix)
+{
+	matrix[0] = 1;
+	matrix[1] = 0;
+	matrix[2] = 0;
+	matrix[3] = 0;
+	matrix[4] = 1;
+	matrix[5] = 0;
+	matrix[6] = 0;
+	matrix[7] = 0;
+	matrix[8] = 1;
+	
+	return matrix;
+}
+
 
 PIXI.mat4 = {};
 
@@ -688,7 +736,8 @@ PIXI.mat4.multiply = function (mat, mat2, dest)
  */
 
 /**
- * this is the base class for all objects that are rendered on the screen.
+ * The base class for all objects that are rendered on the screen.
+ *
  * @class DisplayObject
  * @constructor
  */
@@ -696,163 +745,243 @@ PIXI.DisplayObject = function()
 {
 	this.last = this;
 	this.first = this;
-	
+
 	/**
 	 * The coordinate of the object relative to the local coordinates of the parent.
+	 *
 	 * @property position
 	 * @type Point
 	 */
 	this.position = new PIXI.Point();
-	
+
 	/**
 	 * The scale factor of the object.
+	 *
 	 * @property scale
 	 * @type Point
 	 */
 	this.scale = new PIXI.Point(1,1);//{x:1, y:1};
-	
+
 	/**
 	 * The pivot point of the displayObject that it rotates around
+	 *
 	 * @property pivot
 	 * @type Point
 	 */
 	this.pivot = new PIXI.Point(0,0);
-	
+
 	/**
 	 * The rotation of the object in radians.
+	 *
 	 * @property rotation
 	 * @type Number
 	 */
 	this.rotation = 0;
-	
+
 	/**
 	 * The opacity of the object.
+	 *
 	 * @property alpha
 	 * @type Number
 	 */	
 	this.alpha = 1;
-	
+
 	/**
 	 * The visibility of the object.
+	 *
 	 * @property visible
 	 * @type Boolean
 	 */	
 	this.visible = true;
-	this.worldVisible = false;
-	
-	/**
-	 * [read-only] The display object container that contains this display object.
-	 * @property parent
-	 * @type DisplayObjectContainer
-	 */	
-	this.parent = null;
-	
-	/**
-	 * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
-	 * @property stage
-	 * @type Stage
-	 */	
-	this.stage = null;
-	
+
 	/**
 	 * This is the defined area that will pick up mouse / touch events. It is null by default.
 	 * Setting it is a neat way of optimising the hitTest function that the interactionManager will use (as it will not need to hit test all the children)
+	 *
 	 * @property hitArea
-	 * @type Rectangle
+	 * @type Rectangle|Circle|Ellipse|Polygon
 	 */	
 	this.hitArea = null;
-	
-	this.worldAlpha = 1;
-	this.color = [];
-	
-	this.worldTransform = PIXI.mat3.create()//mat3.identity();
-	this.localTransform = PIXI.mat3.create()//mat3.identity();
-	
-	this.dynamic = true;
-	// chach that puppy!
-	this._sr = 0;
-	this._cr = 1;
-	
-	this.childIndex = 0;
-	
-	this.renderable = false;
-	
-	// [readonly] best not to toggle directly! use setInteractive()
-	this._interactive = false;
-	
+
 	/**
 	 * This is used to indicate if the displayObject should display a mouse hand cursor on rollover
+	 *
 	 * @property buttonMode
 	 * @type Boolean
 	 */
 	this.buttonMode = false;
-	
+
+	/**
+	 * Can this object be rendered
+	 *
+	 * @property renderable
+	 * @type Boolean
+	 */
+	this.renderable = false;
+
+	/**
+	 * [read-only] The visibility of the object based on world (parent) factors.
+	 *
+	 * @property worldVisible
+	 * @type Boolean
+	 * @readOnly
+	 */	
+	this.worldVisible = false;
+
+	/**
+	 * [read-only] The display object container that contains this display object.
+	 *
+	 * @property parent
+	 * @type DisplayObjectContainer
+	 * @readOnly
+	 */	
+	this.parent = null;
+
+	/**
+	 * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
+	 *
+	 * @property stage
+	 * @type Stage
+	 * @readOnly
+	 */	
+	this.stage = null;
+
+	/**
+	 * [read-only] The index of this object in the parent's `children` array
+	 *
+	 * @property childIndex
+	 * @type Number
+	 * @readOnly
+	 */	
+	this.childIndex = 0;
+
+	/**
+	 * [read-only] The multiplied alpha of the displayobject
+	 *
+	 * @property worldAlpha
+	 * @type Number
+	 * @readOnly
+	 */
+	this.worldAlpha = 1;
+
+	/**
+	 * [read-only] Whether or not the object is interactive, do not toggle directly! use the `interactive` property
+	 *
+	 * @property _interactive
+	 * @type Boolean
+	 * @readOnly
+	 * @private
+	 */
+	this._interactive = false;
+
+	/**
+	 * [read-only] Current transform of the object based on world (parent) factors
+	 *
+	 * @property worldTransform
+	 * @type Mat3
+	 * @readOnly
+	 * @private
+	 */
+	this.worldTransform = PIXI.mat3.create()//mat3.identity();
+
+	/**
+	 * [read-only] Current transform of the object locally
+	 *
+	 * @property localTransform
+	 * @type Mat3
+	 * @readOnly
+	 * @private
+	 */
+	this.localTransform = PIXI.mat3.create()//mat3.identity();
+
+	/**
+	 * [NYI] Unkown
+	 *
+	 * @property color
+	 * @type Array<>
+	 * @private
+	 */
+	this.color = [];
+
+	/**
+	 * [NYI] Holds whether or not this object is dynamic, for rendering optimization
+	 *
+	 * @property dynamic
+	 * @type Boolean
+	 * @private
+	 */
+	this.dynamic = true;
+
+	// chach that puppy!
+	this._sr = 0;
+	this._cr = 1;
+
 	/*
 	 * MOUSE Callbacks
 	 */
-	
+
 	/**
 	 * A callback that is used when the users clicks on the displayObject with their mouse
 	 * @method click
 	 * @param interactionData {InteractionData}
 	 */
-	
+
 	/**
 	 * A callback that is used when the user clicks the mouse down over the sprite
 	 * @method mousedown
 	 * @param interactionData {InteractionData}
 	 */
-	 
+
 	/**
 	 * A callback that is used when the user releases the mouse that was over the displayObject
 	 * for this callback to be fired the mouse must have been pressed down over the displayObject
 	 * @method mouseup
 	 * @param interactionData {InteractionData}
 	 */
-	
+
 	/**
 	 * A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject
 	 * for this callback to be fired, The touch must have started over the displayObject
 	 * @method mouseupoutside
 	 * @param interactionData {InteractionData}
 	 */
-	
+
 	/**
 	 * A callback that is used when the users mouse rolls over the displayObject
 	 * @method mouseover
 	 * @param interactionData {InteractionData}
 	 */
-	
+
 	/**
 	 * A callback that is used when the users mouse leaves the displayObject
 	 * @method mouseout
 	 * @param interactionData {InteractionData}
 	 */
-	
-	
+
+
 	/*
 	 * TOUCH Callbacks
 	 */
-	
+
 	/**
 	 * A callback that is used when the users taps on the sprite with their finger
 	 * basically a touch version of click
 	 * @method tap
 	 * @param interactionData {InteractionData}
 	 */
-	
+
 	/**
 	 * A callback that is used when the user touch's over the displayObject
 	 * @method touchstart
 	 * @param interactionData {InteractionData}
 	 */
-	 
+
 	/**
 	 * A callback that is used when the user releases a touch over the displayObject
 	 * @method touchend
 	 * @param interactionData {InteractionData}
 	 */
-	
+
 	/**
 	 * A callback that is used when the user releases the touch that was over the displayObject
 	 * for this callback to be fired, The touch must have started over the sprite
@@ -862,7 +991,7 @@ PIXI.DisplayObject = function()
 }
 
 // constructor
-PIXI.DisplayObject.constructor = PIXI.DisplayObject;
+PIXI.DisplayObject.prototype.constructor = PIXI.DisplayObject;
 
 //TODO make visible a getter setter
 /*
@@ -878,19 +1007,22 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'visible', {
 /**
  * [Deprecated] Indicates if the sprite will have touch and mouse interactivity. It is false by default
  * Instead of using this function you can now simply set the interactive property to true or false
+ *
  * @method setInteractive
  * @param interactive {Boolean}
+ * @deprecated Simply set the `interactive` property directly
  */
 PIXI.DisplayObject.prototype.setInteractive = function(interactive)
 {
 	this.interactive = interactive;
-	
 }
 
 /**
  * Indicates if the sprite will have touch and mouse interactivity. It is false by default
+ *
  * @property interactive
  * @type Boolean
+ * @default false
  */
 Object.defineProperty(PIXI.DisplayObject.prototype, 'interactive', {
     get: function() {
@@ -905,16 +1037,62 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'interactive', {
     }
 });
 
-PIXI.DisplayObject.prototype.addFilter = function()
+/**
+ * Sets a mask for the displayObject. A mask is an object that limits the visibility of an object to the shape of the mask applied to it.
+ * In PIXI a regular mask must be a PIXI.Ggraphics object. This allows for much faster masking in canvas as it utilises shape clipping.
+ * To remove a mask, set this property to null.
+ *
+ * @property mask
+ * @type Graphics
+ */
+Object.defineProperty(PIXI.DisplayObject.prototype, 'mask', {
+    get: function() {
+        return this._mask;
+    },
+    set: function(value) {
+    	
+        this._mask = value;
+        
+        if(value)
+        {
+	        this.addFilter(value)
+        }
+        else
+        {
+        	 this.removeFilter();
+        }
+    }
+});
+
+/*
+ * Adds a filter to this displayObject
+ *
+ * @method addFilter
+ * @param mask {Graphics} the graphics object to use as a filter
+ * @private
+ */
+PIXI.DisplayObject.prototype.addFilter = function(mask)
 {
+	if(this.filter)return;
+	this.filter = true;
+	
 	
 	// insert a filter block..
 	var start = new PIXI.FilterBlock();
 	var end = new PIXI.FilterBlock();
 	
+	
+	start.mask = mask;
+	end.mask = mask;
+	
+	start.first = start.last =  this;
+	end.first = end.last = this;
+	
+	start.open = true;
+	
 	/*
 	 * 
-	 * and an start filter
+	 * insert start
 	 * 
 	 */
 	
@@ -924,23 +1102,32 @@ PIXI.DisplayObject.prototype.addFilter = function()
 	var previousObject;
 		
 	previousObject = this.first._iPrev;
-	nextObject = previousObject._iNext;
+	
+	if(previousObject)
+	{
+		nextObject = previousObject._iNext;
+		childFirst._iPrev = previousObject;
+		previousObject._iNext = childFirst;		
+	}
+	else
+	{
+		nextObject = this;
+	}	
 	
 	if(nextObject)
 	{
 		nextObject._iPrev = childLast;
 		childLast._iNext = nextObject;
 	}
-	childFirst._iPrev = previousObject;
-	previousObject._iNext = childFirst;		
+	
+	
 	// now insert the end filter block..
 	
 	/*
 	 * 
-	 * and an end filter
+	 * insert end filter
 	 * 
 	 */
-	
 	var childFirst = end
 	var childLast = end
 	var nextObject = null;
@@ -954,21 +1141,94 @@ PIXI.DisplayObject.prototype.addFilter = function()
 		nextObject._iPrev = childLast;
 		childLast._iNext = nextObject;
 	}
+	
 	childFirst._iPrev = previousObject;
 	previousObject._iNext = childFirst;	
 	
+	var updateLast = this;
+	
+	var prevLast = this.last;
+	while(updateLast)
+	{
+		if(updateLast.last == prevLast)
+		{
+			updateLast.last = end;
+		}
+		updateLast = updateLast.parent;
+	}
+	
 	this.first = start;
-	this.last = end;
 	
-	// TODO need to check if the stage already exists...
+	// if webGL...
+	if(this.__renderGroup)
+	{
+		this.__renderGroup.addFilterBlocks(start, end);
+	}
+	
+	mask.renderable = false;
+	
 }
 
-PIXI.FilterBlock = function()
+/*
+ * Removes the filter to this displayObject
+ *
+ * @method removeFilter
+ * @private
+ */
+PIXI.DisplayObject.prototype.removeFilter = function()
 {
+	if(!this.filter)return;
+	this.filter = false;
 	
+	// modify the list..
+	var startBlock = this.first;
+	
+	var nextObject = startBlock._iNext;
+	var previousObject = startBlock._iPrev;
+		
+	if(nextObject)nextObject._iPrev = previousObject;
+	if(previousObject)previousObject._iNext = nextObject;		
+	
+	this.first = startBlock._iNext;
+	
+	
+	// remove the end filter
+	var lastBlock = this.last;
+	
+	var nextObject = lastBlock._iNext;
+	var previousObject = lastBlock._iPrev;
+		
+	if(nextObject)nextObject._iPrev = previousObject;
+	previousObject._iNext = nextObject;		
+	
+	// this is always true too!
+//	if(this.last == lastBlock)
+	//{
+	var tempLast =  lastBlock._iPrev;	
+	// need to make sure the parents last is updated too
+	var updateLast = this;
+	while(updateLast.last == lastBlock)
+	{
+		updateLast.last = tempLast;
+		updateLast = updateLast.parent;
+		if(!updateLast)break;
+	}
+	
+	var mask = startBlock.mask
+	mask.renderable = true;
+	
+	// if webGL...
+	if(this.__renderGroup)
+	{
+		this.__renderGroup.removeFilterBlocks(startBlock, lastBlock);
+	}
+	//}
 }
 
-/**
+/*
+ * Updates the object transform for rendering
+ *
+ * @method updateTransform
  * @private
  */
 PIXI.DisplayObject.prototype.updateTransform = function()
@@ -1025,7 +1285,9 @@ PIXI.DisplayObject.prototype.updateTransform = function()
 
 
 /**
- * A DisplayObjectContainer represents a collection of display objects. It is the base class of all display objects that act as a container for other objects.
+ * A DisplayObjectContainer represents a collection of display objects.
+ * It is the base class of all display objects that act as a container for other objects.
+ *
  * @class DisplayObjectContainer 
  * @extends DisplayObject
  * @constructor
@@ -1036,17 +1298,17 @@ PIXI.DisplayObjectContainer = function()
 	
 	/**
 	 * [read-only] The of children of this container.
-	 * @property children {Array}
+	 *
+	 * @property children
+	 * @type Array<DisplayObject>
+	 * @readOnly
 	 */	
 	this.children = [];
-	//s
-	this.renderable = false;
-	
 }
 
 // constructor
-PIXI.DisplayObjectContainer.constructor = PIXI.DisplayObjectContainer;
 PIXI.DisplayObjectContainer.prototype = Object.create( PIXI.DisplayObject.prototype );
+PIXI.DisplayObjectContainer.prototype.constructor = PIXI.DisplayObjectContainer;
 
 //TODO make visible a getter setter
 /*
@@ -1062,15 +1324,12 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'visible', {
 
 /**
  * Adds a child to the container.
+ *
  * @method addChild
- * @param  DisplayObject {DisplayObject}
+ * @param child {DisplayObject} The DisplayObject to add to the container
  */
 PIXI.DisplayObjectContainer.prototype.addChild = function(child)
 {
-	
-	//this.addChildAt(child, this.children.length)
-	//return;
-	
 	if(child.parent != undefined)
 	{
 		
@@ -1078,9 +1337,9 @@ PIXI.DisplayObjectContainer.prototype.addChild = function(child)
 		child.parent.removeChild(child);
 	//	return;
 	}
-	
+
 	child.parent = this;
-	//child.childIndex = this.children.length;
+	child.childIndex = this.children.length;
 	
 	this.children.push(child);	
 	
@@ -1103,22 +1362,27 @@ PIXI.DisplayObjectContainer.prototype.addChild = function(child)
 	// modify the list..
 	var childFirst = child.first
 	var childLast = child.last;
-//	console.log(childFirst)
 	var nextObject;
 	var previousObject;
-		
-	previousObject =  this.last;
 	
-//	if(this.last._iNext)
-	
-	//console.log( this.last._iNext);
+	// this could be wrong if there is a filter??
+	if(this.filter)
+	{
+		previousObject =  this.last._iPrev;
+	}
+	else
+	{
+		previousObject = this.last;
+	}
+
 	nextObject = previousObject._iNext;
 	
 	// always true in this case
 	//this.last = child.last;
 	// need to make sure the parents last is updated too
 	var updateLast = this;
-	var prevLast = this.last;
+	var prevLast = previousObject;
+	
 	while(updateLast)
 	{
 		if(updateLast.last == prevLast)
@@ -1136,8 +1400,7 @@ PIXI.DisplayObjectContainer.prototype.addChild = function(child)
 	
 	childFirst._iPrev = previousObject;
 	previousObject._iNext = childFirst;		
-	
-//	console.log(childFirst);
+
 	// need to remove any render groups..
 	if(this.__renderGroup)
 	{
@@ -1151,9 +1414,10 @@ PIXI.DisplayObjectContainer.prototype.addChild = function(child)
 
 /**
  * Adds a child to the container at a specified index. If the index is out of bounds an error will be thrown
+ *
  * @method addChildAt
- * @param DisplayObject {DisplayObject}
- * @param index {Number}
+ * @param child {DisplayObject} The child to add
+ * @param index {Number} The index to place the child in
  */
 PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 {
@@ -1196,8 +1460,6 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 				}
 				updateLast = updateLast.parent;
 			}
-	
-	
 		}
 		else if(index == 0)
 		{
@@ -1205,7 +1467,7 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 		}
 		else
 		{
-			previousObject = this.children[index].last;
+			previousObject = this.children[index-1].last;
 		}
 		
 		nextObject = previousObject._iNext;
@@ -1219,8 +1481,7 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 		
 		childFirst._iPrev = previousObject;
 		previousObject._iNext = childFirst;		
-		
-		
+
 		this.children.splice(index, 0, child);
 		// need to remove any render groups..
 		if(this.__renderGroup)
@@ -1239,16 +1500,23 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 }
 
 /**
- * Swaps the depth of 2 displayObjects
+ * [NYI] Swaps the depth of 2 displayObjects
+ *
  * @method swapChildren
- * @param  DisplayObject {DisplayObject}
- * @param  DisplayObject2 {DisplayObject}
+ * @param child {DisplayObject}
+ * @param child2 {DisplayObject}
+ * @private
  */
 PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
 {
+	/*
+	 * this funtion needs to be recoded.. 
+	 * can be done a lot faster..
+	 */
 	return;
-	// need to fix this function :/
 	
+	// need to fix this function :/
+	/*
 	// TODO I already know this??
 	var index = this.children.indexOf( child );
 	var index2 = this.children.indexOf( child2 );
@@ -1267,7 +1535,7 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
 			
 			this.stage.__addChild(child);
 			this.stage.__addChild(child2);
-		}*/
+		}
 		
 		// swap the positions..
 		this.children[index] = child2;
@@ -1277,13 +1545,14 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
 	else
 	{
 		throw new Error(child + " Both the supplied DisplayObjects must be a child of the caller " + this);
-	}
+	}*/
 }
 
 /**
  * Returns the Child at the specified index
+ *
  * @method getChildAt
- * @param  index {Number}
+ * @param index {Number} The index to get the child from
  */
 PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
 {
@@ -1299,15 +1568,15 @@ PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
 
 /**
  * Removes a child from the container.
+ *
  * @method removeChild
- * @param  DisplayObject {DisplayObject}
+ * @param child {DisplayObject} The DisplayObject to remove
  */
 PIXI.DisplayObjectContainer.prototype.removeChild = function(child)
 {
 	var index = this.children.indexOf( child );
 	if ( index !== -1 ) 
 	{
-		//console.log(">>")
 		// unlink //
 		// modify the list..
 		var childFirst = child.first
@@ -1363,8 +1632,10 @@ PIXI.DisplayObjectContainer.prototype.removeChild = function(child)
 	}
 }
 
-
-/**
+/*
+ * Updates the container's children's transform for rendering
+ *
+ * @method updateTransform
  * @private
  */
 PIXI.DisplayObjectContainer.prototype.updateTransform = function()
@@ -1389,55 +1660,64 @@ PIXI.blendModes.SCREEN = 1;
 
 
 /**
-@class Sprite
-@extends DisplayObjectContainer
-@constructor
-@param texture {Texture}
-@type String
-*/
+ * The SPrite object is the base for all textured objects that are rendered to the screen
+ *
+ * @class Sprite
+ * @extends DisplayObjectContainer
+ * @constructor
+ * @param texture {Texture} The texture for this sprite
+ * @type String
+ */
 PIXI.Sprite = function(texture)
 {
 	PIXI.DisplayObjectContainer.call( this );
-	
-	 /**
+
+	/**
 	 * The anchor sets the origin point of the texture.
 	 * The default is 0,0 this means the textures origin is the top left 
 	 * Setting than anchor to 0.5,0.5 means the textures origin is centered
 	 * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
+	 *
      * @property anchor
      * @type Point
      */
 	this.anchor = new PIXI.Point();
-	
+
 	/**
 	 * The texture that the sprite is using
+	 *
 	 * @property texture
 	 * @type Texture
 	 */
 	this.texture = texture;
-	
+
 	/**
 	 * The blend mode of sprite.
 	 * currently supports PIXI.blendModes.NORMAL and PIXI.blendModes.SCREEN
+	 *
 	 * @property blendMode
-	 * @type uint
+	 * @type Number
 	 */
 	this.blendMode = PIXI.blendModes.NORMAL;
-	
+
 	/**
 	 * The width of the sprite (this is initially set by the texture)
-	 * @property width
-	 * @type #Number
+	 *
+	 * @property _width
+	 * @type Number
+	 * @private
 	 */
 	this._width = 0;
-	
+
 	/**
 	 * The height of the sprite (this is initially set by the texture)
-	 * @property height
-	 * @type #Number
+	 *
+	 * @property _height
+	 * @type Number
+	 * @private
 	 */
 	this._height = 0;
-	
+
 	if(texture.baseTexture.hasLoaded)
 	{
 		this.updateFrame = true;
@@ -1447,20 +1727,20 @@ PIXI.Sprite = function(texture)
 		this.onTextureUpdateBind = this.onTextureUpdate.bind(this);
 		this.texture.addEventListener( 'update', this.onTextureUpdateBind );
 	}
-	
+
 	this.renderable = true;
-	
-	// thi next bit is here for the docs...
-	
-	
 }
 
 // constructor
-PIXI.Sprite.constructor = PIXI.Sprite;
 PIXI.Sprite.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+PIXI.Sprite.prototype.constructor = PIXI.Sprite;
 
-// OOH! shiney new getters and setters for width and height
-// The width and height now modify the scale (this is what flash does, nice and tidy!)
+/**
+ * The width of the sprite, setting this will actually modify the scale to acheive the value set
+ *
+ * @property width
+ * @type Number
+ */
 Object.defineProperty(PIXI.Sprite.prototype, 'width', {
     get: function() {
         return this.scale.x * this.texture.frame.width;
@@ -1471,6 +1751,12 @@ Object.defineProperty(PIXI.Sprite.prototype, 'width', {
     }
 });
 
+/**
+ * The height of the sprite, setting this will actually modify the scale to acheive the value set
+ *
+ * @property height
+ * @type Number
+ */
 Object.defineProperty(PIXI.Sprite.prototype, 'height', {
     get: function() {
         return  this.scale.y * this.texture.frame.height;
@@ -1480,11 +1766,13 @@ Object.defineProperty(PIXI.Sprite.prototype, 'height', {
         this._height = value;
     }
 });
- 
+
 /**
-@method setTexture
-@param texture {Texture} The PIXI texture that is displayed by the sprite
-*/
+ * Sets the texture of the sprite
+ *
+ * @method setTexture
+ * @param texture {Texture} The PIXI texture that is displayed by the sprite
+ */
 PIXI.Sprite.prototype.setTexture = function(texture)
 {
 	// stop current texture;
@@ -1498,6 +1786,10 @@ PIXI.Sprite.prototype.setTexture = function(texture)
 }
 
 /**
+ * When the texture is updated, this event will fire to update the scale and frame
+ *
+ * @method onTextureUpdate
+ * @param event
  * @private
  */
 PIXI.Sprite.prototype.onTextureUpdate = function(event)
@@ -1517,6 +1809,7 @@ PIXI.Sprite.prototype.onTextureUpdate = function(event)
  * 
  * Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
  * The frame ids are created when a Texture packer file has been loaded
+ *
  * @method fromFrame
  * @static
  * @param frameId {String} The frame Id of the texture in the cache
@@ -1533,9 +1826,10 @@ PIXI.Sprite.fromFrame = function(frameId)
  * 
  * Helper function that creates a sprite that will contain a texture based on an image url
  * If the image is not in the texture cache it will be loaded
+ *
  * @method fromImage
  * @static
- * @param The image url of the texture
+ * @param imageId {String} The image url of the texture
  * @return {Sprite} A new Sprite using a texture from the texture cache matching the image id
  */
 PIXI.Sprite.fromImage = function(imageId)
@@ -1551,64 +1845,77 @@ PIXI.Sprite.fromImage = function(imageId)
 
 /**
  * A MovieClip is a simple way to display an animation depicted by a list of textures.
+ *
  * @class MovieClip
  * @extends Sprite
  * @constructor
- * @param textures {Array} an array of {Texture} objects that make up the animation
+ * @param textures {Array<Texture>} an array of {Texture} objects that make up the animation
  */
 PIXI.MovieClip = function(textures)
 {
-	PIXI.Sprite.call( this, textures[0]);
+	PIXI.Sprite.call(this, textures[0]);
 	
 	/**
 	 * The array of textures that make up the animation
+	 *
 	 * @property textures
 	 * @type Array
 	 */
 	this.textures = textures;
 	
 	/**
-	 * [read only] The index MovieClips current frame (this may not have to be a whole number)
-	 * @property currentFrame
-	 * @type Number
-	 */
-	this.currentFrame = 0; 
-	
-	/**
 	 * The speed that the MovieClip will play at. Higher is faster, lower is slower
+	 *
 	 * @property animationSpeed
 	 * @type Number
+	 * @default 1
 	 */
 	this.animationSpeed = 1;
 
 	/**
 	 * Whether or not the movie clip repeats after playing.
+	 *
 	 * @property loop
 	 * @type Boolean
+	 * @default true
 	 */
 	this.loop = true;
 
 	/**
 	 * Function to call when a MovieClip finishes playing
+	 *
 	 * @property onComplete
 	 * @type Function
 	 */
 	this.onComplete = null;
 	
 	/**
-	 * [read only] indicates if the MovieClip is currently playing
+	 * [read-only] The index MovieClips current frame (this may not have to be a whole number)
+	 *
+	 * @property currentFrame
+	 * @type Number
+	 * @default 0
+	 * @readOnly
+	 */
+	this.currentFrame = 0; 
+	
+	/**
+	 * [read-only] Indicates if the MovieClip is currently playing
+	 *
 	 * @property playing
 	 * @type Boolean
+	 * @readOnly
 	 */
-	this.playing;
+	this.playing = false;
 }
 
 // constructor
-PIXI.MovieClip.constructor = PIXI.MovieClip;
 PIXI.MovieClip.prototype = Object.create( PIXI.Sprite.prototype );
+PIXI.MovieClip.prototype.constructor = PIXI.MovieClip;
 
 /**
  * Stops the MovieClip
+ *
  * @method stop
  */
 PIXI.MovieClip.prototype.stop = function()
@@ -1618,6 +1925,7 @@ PIXI.MovieClip.prototype.stop = function()
 
 /**
  * Plays the MovieClip
+ *
  * @method play
  */
 PIXI.MovieClip.prototype.play = function()
@@ -1627,6 +1935,7 @@ PIXI.MovieClip.prototype.play = function()
 
 /**
  * Stops the MovieClip and goes to a specific frame
+ *
  * @method gotoAndStop
  * @param frameNumber {Number} frame index to stop at
  */
@@ -1640,6 +1949,7 @@ PIXI.MovieClip.prototype.gotoAndStop = function(frameNumber)
 
 /**
  * Goes to a specific frame and begins playing the MovieClip
+ *
  * @method gotoAndPlay
  * @param frameNumber {Number} frame index to start at
  */
@@ -1649,6 +1959,12 @@ PIXI.MovieClip.prototype.gotoAndPlay = function(frameNumber)
 	this.playing = true;
 }
 
+/*
+ * Updates the object transform for rendering
+ *
+ * @method updateTransform
+ * @private
+ */
 PIXI.MovieClip.prototype.updateTransform = function()
 {
 	PIXI.Sprite.prototype.updateTransform.call(this);
@@ -1674,20 +1990,35 @@ PIXI.MovieClip.prototype.updateTransform = function()
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
+
+
+PIXI.FilterBlock = function(mask)
+{
+	this.graphics = mask
+	this.visible = true;
+	this.renderable = true;
+}
+
+
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
 /**
  * A Text Object will create a line(s) of text to split a line you can use "\n"
+ *
  * @class Text
  * @extends Sprite
  * @constructor
- * @param {String} text The copy that you would like the text to display
- * @param {Object} [style] The style parameters
- * @param {String} [style.font] default "bold 20pt Arial" The style and size of the font
- * @param {Object} [style.fill="black"] A canvas fillstyle that will be used on the text eg "red", "#00FF00"
- * @param {String} [style.align="left"] An alignment of the multiline text ("left", "center" or "right")
- * @param {String} [style.stroke] A canvas fillstyle that will be used on the text stroke eg "blue", "#FCFF00"
- * @param {Number} [style.strokeThickness=0] A number that represents the thickness of the stroke. Default is 0 (no stroke)
- * @param {Boolean} [style.wordWrap=false] Indicates if word wrap should be used
- * @param {Number} [style.wordWrapWidth=100] The width at which text will wrap
+ * @param text {String} The copy that you would like the text to display
+ * @param [style] {Object} The style parameters
+ * @param [style.font] {String} default "bold 20pt Arial" The style and size of the font
+ * @param [style.fill="black"] {Object} A canvas fillstyle that will be used on the text eg "red", "#00FF00"
+ * @param [style.align="left"] {String} An alignment of the multiline text ("left", "center" or "right")
+ * @param [style.stroke] {String} A canvas fillstyle that will be used on the text stroke eg "blue", "#FCFF00"
+ * @param [style.strokeThickness=0] {Number} A number that represents the thickness of the stroke. Default is 0 (no stroke)
+ * @param [style.wordWrap=false] {Boolean} Indicates if word wrap should be used
+ * @param [style.wordWrapWidth=100] {Number} The width at which text will wrap
  */
 PIXI.Text = function(text, style)
 {
@@ -1698,25 +2029,26 @@ PIXI.Text = function(text, style)
     this.setText(text);
     this.setStyle(style);
     
-     this.updateText();
+    this.updateText();
     this.dirty = false;
 };
 
 // constructor
-PIXI.Text.constructor = PIXI.Text;
 PIXI.Text.prototype = Object.create(PIXI.Sprite.prototype);
+PIXI.Text.prototype.constructor = PIXI.Text;
 
 /**
  * Set the style of the text
+ *
  * @method setStyle
- * @param {Object} [style] The style parameters
- * @param {String} [style.font="bold 20pt Arial"] The style and size of the font
- * @param {Object} [style.fill="black"] A canvas fillstyle that will be used on the text eg "red", "#00FF00"
- * @param {String} [style.align="left"] An alignment of the multiline text ("left", "center" or "right")
- * @param {String} [style.stroke="black"] A canvas fillstyle that will be used on the text stroke eg "blue", "#FCFF00"
- * @param {Number} [style.strokeThickness=0] A number that represents the thickness of the stroke. Default is 0 (no stroke)
- * @param {Boolean} [style.wordWrap=false] Indicates if word wrap should be used
- * @param {Number} [style.wordWrapWidth=100] The width at which text will wrap
+ * @param [style] {Object} The style parameters
+ * @param [style.font="bold 20pt Arial"] {String} The style and size of the font
+ * @param [style.fill="black"] {Object} A canvas fillstyle that will be used on the text eg "red", "#00FF00"
+ * @param [style.align="left"] {String} An alignment of the multiline text ("left", "center" or "right")
+ * @param [style.stroke="black"] {String} A canvas fillstyle that will be used on the text stroke eg "blue", "#FCFF00"
+ * @param [style.strokeThickness=0] {Number} A number that represents the thickness of the stroke. Default is 0 (no stroke)
+ * @param [style.wordWrap=false] {Boolean} Indicates if word wrap should be used
+ * @param [style.wordWrapWidth=100] {Number} The width at which text will wrap
  */
 PIXI.Text.prototype.setStyle = function(style)
 {
@@ -1734,6 +2066,7 @@ PIXI.Text.prototype.setStyle = function(style)
 
 /**
  * Set the copy for the text object. To split a line you can use "\n"
+ *
  * @methos setText
  * @param {String} text The copy that you would like the text to display
  */
@@ -1745,6 +2078,8 @@ PIXI.Sprite.prototype.setText = function(text)
 
 /**
  * Renders text
+ *
+ * @method updateText
  * @private
  */
 PIXI.Text.prototype.updateText = function()
@@ -1814,11 +2149,12 @@ PIXI.Text.prototype.updateText = function()
 
 /**
  * Updates texture size based on canvas size
+ *
+ * @method updateTexture
  * @private
  */
 PIXI.Text.prototype.updateTexture = function()
 {
-
     this.texture.baseTexture.width = this.canvas.width;
     this.texture.baseTexture.height = this.canvas.height;
     this.texture.frame.width = this.canvas.width;
@@ -1831,6 +2167,9 @@ PIXI.Text.prototype.updateTexture = function()
 };
 
 /**
+ * Updates the transfor of this object
+ *
+ * @method updateTransform
  * @private
  */
 PIXI.Text.prototype.updateTransform = function()
@@ -1847,6 +2186,10 @@ PIXI.Text.prototype.updateTransform = function()
 /*
  * http://stackoverflow.com/users/34441/ellisbben
  * great solution to the problem!
+ *
+ * @method determineFontHeight
+ * @param fontStyle {Object}
+ * @private
  */
 PIXI.Text.prototype.determineFontHeight = function(fontStyle) 
 {
@@ -1874,6 +2217,9 @@ PIXI.Text.prototype.determineFontHeight = function(fontStyle)
 
 /**
  * A Text Object will apply wordwrap
+ *
+ * @method wordWrap
+ * @param text {String}
  * @private
  */
 PIXI.Text.prototype.wordWrap = function(text)
@@ -1923,6 +2269,12 @@ PIXI.Text.prototype.wordWrap = function(text)
 	return result;
 };
 
+/**
+ * Destroys this text object
+ *
+ * @method destroy
+ * @param destroyTexture {Boolean}
+ */
 PIXI.Text.prototype.destroy = function(destroyTexture)
 {
 	if(destroyTexture)
@@ -1943,13 +2295,14 @@ PIXI.Text.heightCache = {};
  * You can generate the fnt files using 
  * http://www.angelcode.com/products/bmfont/ for windows or
  * http://www.bmglyph.com/ for mac.
+ *
  * @class BitmapText
  * @extends DisplayObjectContainer
  * @constructor
- * @param {String} text The copy that you would like the text to display
- * @param {Object} style The style parameters
- * @param {String} style.font The size (optional) and bitmap font id (required) eq "Arial" or "20px Arial" (must have loaded previously)
- * @param {String} [style.align="left"] An alignment of the multiline text ("left", "center" or "right")
+ * @param text {String} The copy that you would like the text to display
+ * @param style {Object} The style parameters
+ * @param style.font {String} The size (optional) and bitmap font id (required) eq "Arial" or "20px Arial" (must have loaded previously)
+ * @param [style.align="left"] {String} An alignment of the multiline text ("left", "center" or "right")
  */
 PIXI.BitmapText = function(text, style)
 {
@@ -1963,13 +2316,14 @@ PIXI.BitmapText = function(text, style)
 };
 
 // constructor
-PIXI.BitmapText.constructor = PIXI.BitmapText;
 PIXI.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+PIXI.BitmapText.prototype.constructor = PIXI.BitmapText;
 
 /**
  * Set the copy for the text object
+ *
  * @method setText
- * @param {String} text The copy that you would like the text to display
+ * @param text {String} The copy that you would like the text to display
  */
 PIXI.BitmapText.prototype.setText = function(text)
 {
@@ -1979,10 +2333,11 @@ PIXI.BitmapText.prototype.setText = function(text)
 
 /**
  * Set the style of the text
+ *
  * @method setStyle
- * @param {Object} style The style parameters
- * @param {String} style.font The size (optional) and bitmap font id (required) eq "Arial" or "20px Arial" (must have loaded previously)
- * @param {String} [style.align="left"] An alignment of the multiline text ("left", "center" or "right")
+ * @param style {Object} The style parameters
+ * @param style.font {String} The size (optional) and bitmap font id (required) eq "Arial" or "20px Arial" (must have loaded previously)
+ * @param [style.align="left"] {String} An alignment of the multiline text ("left", "center" or "right")
  */
 PIXI.BitmapText.prototype.setStyle = function(style)
 {
@@ -1999,6 +2354,8 @@ PIXI.BitmapText.prototype.setStyle = function(style)
 
 /**
  * Renders text
+ *
+ * @method updateText
  * @private
  */
 PIXI.BitmapText.prototype.updateText = function()
@@ -2071,6 +2428,9 @@ PIXI.BitmapText.prototype.updateText = function()
 };
 
 /**
+ * Updates the transfor of this object
+ *
+ * @method updateTransform
  * @private
  */
 PIXI.BitmapText.prototype.updateTransform = function()
@@ -2090,6 +2450,7 @@ PIXI.BitmapText.prototype.updateTransform = function()
 };
 
 PIXI.BitmapText.fonts = {};
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -2097,59 +2458,69 @@ PIXI.BitmapText.fonts = {};
 
 
 /**
-The interaction manager deals with mouse and touch events. Any DisplayObject can be interactive
-This manager also supports multitouch.
-@class InteractionManager
-@constructor
-@param stage {Stage}
-@type Stage
-*/
+ * The interaction manager deals with mouse and touch events. Any DisplayObject can be interactive
+ * This manager also supports multitouch.
+ *
+ * @class InteractionManager
+ * @constructor
+ * @param stage {Stage} The stage to handle interactions
+ */
 PIXI.InteractionManager = function(stage)
 {
 	/**
 	 * a refference to the stage
+	 *
 	 * @property stage
 	 * @type Stage
 	 */
 	this.stage = stage;
 
-	// helpers
-	this.tempPoint = new PIXI.Point();
-	//this.tempMatrix =  mat3.create();
-	
-	this.mouseoverEnabled = true;
-	
 	/**
-	 * the mouse data 
+	 * the mouse data
+	 *
 	 * @property mouse
 	 * @type InteractionData
 	 */
 	this.mouse = new PIXI.InteractionData();
-	
+
 	/**
-	 * an object that stores current touches (InteractionData) by id reference 
+	 * an object that stores current touches (InteractionData) by id reference
+	 *
 	 * @property touchs
 	 * @type Object
 	 */
 	this.touchs = {};
-	
+
+	// helpers
+	this.tempPoint = new PIXI.Point();
+	//this.tempMatrix =  mat3.create();
+
+	this.mouseoverEnabled = true;
+
 	//tiny little interactiveData pool!
 	this.pool = [];
-	
+
 	this.interactiveItems = [];
 
 	this.last = 0;
 }
 
 // constructor
-PIXI.InteractionManager.constructor = PIXI.InteractionManager;
+PIXI.InteractionManager.prototype.constructor = PIXI.InteractionManager;
 
+/**
+ * Collects an interactive sprite recursively to have their interactions managed
+ *
+ * @method collectInteractiveSprite
+ * @param displayObject {DisplayObject} the displayObject to collect
+ * @param iParent {DisplayObject}
+ * @private
+ */
 PIXI.InteractionManager.prototype.collectInteractiveSprite = function(displayObject, iParent)
 {
 	var children = displayObject.children;
 	var length = children.length;
 	
-	//this.interactiveItems = [];
 	/// make an interaction tree... {item.__interactiveParent}
 	for (var i = length-1; i >= 0; i--)
 	{
@@ -2181,6 +2552,13 @@ PIXI.InteractionManager.prototype.collectInteractiveSprite = function(displayObj
 	}
 }
 
+/**
+ * Sets the target for event delegation
+ *
+ * @method setTarget
+ * @param target {WebGLRenderer|CanvasRenderer} the renderer to bind events to
+ * @private
+ */
 PIXI.InteractionManager.prototype.setTarget = function(target)
 {
 	if (window.navigator.msPointerEnabled) 
@@ -2204,6 +2582,12 @@ PIXI.InteractionManager.prototype.setTarget = function(target)
 	target.view.addEventListener("touchmove", this.onTouchMove.bind(this), true);
 }
 
+/**
+ * updates the state of interactive objects
+ *
+ * @method update
+ * @private
+ */
 PIXI.InteractionManager.prototype.update = function()
 {
 	if(!this.target)return;
@@ -2255,6 +2639,7 @@ PIXI.InteractionManager.prototype.update = function()
 		{
 			// ok so there are some functions so lets hit test it..
 			item.__hit = this.hitTest(item, this.mouse);
+			this.mouse.target = item;
 			// ok so deal with interactions..
 			// loks like there was a hit!
 			if(item.__hit)
@@ -2283,6 +2668,13 @@ PIXI.InteractionManager.prototype.update = function()
 	}
 }
 
+/**
+ * Is called when the mouse moves accross the renderer element
+ *
+ * @method onMouseMove
+ * @param event {Event} The DOM event of the mouse moving
+ * @private
+ */
 PIXI.InteractionManager.prototype.onMouseMove = function(event)
 {
 	this.mouse.originalEvent = event || window.event; //IE uses window.event
@@ -2308,6 +2700,13 @@ PIXI.InteractionManager.prototype.onMouseMove = function(event)
 	}
 }
 
+/**
+ * Is called when the mouse button is pressed down on the renderer element
+ *
+ * @method onMouseDown
+ * @param event {Event} The DOM event of a mouse button being pressed down
+ * @private
+ */
 PIXI.InteractionManager.prototype.onMouseDown = function(event)
 {
 	event.preventDefault();
@@ -2347,6 +2746,13 @@ PIXI.InteractionManager.prototype.onMouseDown = function(event)
 	}
 }
 
+/**
+ * Is called when the mouse button is released on the renderer element
+ *
+ * @method onMouseUp
+ * @param event {Event} The DOM event of a mouse button being released
+ * @private
+ */
 PIXI.InteractionManager.prototype.onMouseUp = function(event)
 {
 	this.mouse.originalEvent = event || window.event; //IE uses window.event
@@ -2392,6 +2798,14 @@ PIXI.InteractionManager.prototype.onMouseUp = function(event)
 	}
 }
 
+/**
+ * Tests if the current mouse coords hit a sprite
+ *
+ * @method hitTest
+ * @param item {DisplayObject} The displayObject to test for a hit
+ * @param interactionData {InteractionData} The interactiondata object to update in the case of a hit
+ * @private
+ */
 PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 {
 	var global = interactionData.global;
@@ -2406,14 +2820,18 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 		x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
 		y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
 
+	interactionData.target = item;
+	
 	//a sprite or display object with a hit area defined
 	if(item.hitArea && item.hitArea.contains) {
 		if(item.hitArea.contains(x, y)) {
-			if(isSprite)
-				interactionData.target = item;
+			//if(isSprite)
+			interactionData.target = item;
 
 			return true;
 		}
+		
+		return false;
 	}
 	// a sprite with no hitarea defined
 	else if(isSprite)
@@ -2442,14 +2860,24 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
 	{
 		var tempItem = item.children[i];
 		var hit = this.hitTest(tempItem, interactionData);
-		if(hit)return true;
+		if(hit)
+		{
+			// hmm.. TODO SET CORRECT TARGET?
+			interactionData.target = item
+			return true;
+		}
 	}
 
 	return false;	
 }
 
-
-
+/**
+ * Is called when a touch is moved accross the renderer element
+ *
+ * @method onTouchMove
+ * @param event {Event} The DOM event of a touch moving accross the renderer view
+ * @private
+ */
 PIXI.InteractionManager.prototype.onTouchMove = function(event)
 {
 	this.mouse.originalEvent = event || window.event; //IE uses window.event
@@ -2474,6 +2902,13 @@ PIXI.InteractionManager.prototype.onTouchMove = function(event)
 	}
 }
 
+/**
+ * Is called when a touch is started on the renderer element
+ *
+ * @method onTouchStart
+ * @param event {Event} The DOM event of a touch starting on the renderer view
+ * @private
+ */
 PIXI.InteractionManager.prototype.onTouchStart = function(event)
 {
 	event.preventDefault();
@@ -2515,9 +2950,15 @@ PIXI.InteractionManager.prototype.onTouchStart = function(event)
 			}
 		}
 	}
-	
 }
 
+/**
+ * Is called when a touch is ended on the renderer element
+ *
+ * @method onTouchEnd
+ * @param event {Event} The DOM event of a touch ending on the renderer view
+ * @private
+ */
 PIXI.InteractionManager.prototype.onTouchEnd = function(event)
 {
 	this.mouse.originalEvent = event || window.event; //IE uses window.event
@@ -2526,7 +2967,6 @@ PIXI.InteractionManager.prototype.onTouchEnd = function(event)
 	
 	for (var i=0; i < changedTouches.length; i++) 
 	{
-		 
 		var touchEvent = changedTouches[i];
 		var touchData = this.touchs[touchEvent.identifier];
 		var up = false;
@@ -2584,13 +3024,16 @@ PIXI.InteractionManager.prototype.onTouchEnd = function(event)
 }
 
 /**
-@class InteractionData
-@constructor
-*/
+ * Holds all information related to an Interaction event
+ *
+ * @class InteractionData
+ * @constructor
+ */
 PIXI.InteractionData = function()
 {
 	/**
 	 * This point stores the global coords of where the touch/mouse event happened
+	 *
 	 * @property global 
 	 * @type Point
 	 */
@@ -2601,6 +3044,7 @@ PIXI.InteractionData = function()
 
 	/**
 	 * The target Sprite that was interacted with
+	 *
 	 * @property target
 	 * @type Sprite
 	 */
@@ -2608,6 +3052,7 @@ PIXI.InteractionData = function()
 
 	/**
 	 * When passed to an event handler, this will be the original DOM Event that was captured
+	 *
 	 * @property originalEvent
 	 * @type Event
 	 */
@@ -2616,6 +3061,7 @@ PIXI.InteractionData = function()
 
 /**
  * This will return the local coords of the specified displayObject for this InteractionData
+ *
  * @method getLocalPosition
  * @param displayObject {DisplayObject} The DisplayObject that you would like the local coords off
  * @return {Point} A point containing the coords of the InteractionData position relative to the DisplayObject
@@ -2635,55 +3081,84 @@ PIXI.InteractionData.prototype.getLocalPosition = function(displayObject)
 }
 
 // constructor
-PIXI.InteractionData.constructor = PIXI.InteractionData;
-
-
+PIXI.InteractionData.prototype.constructor = PIXI.InteractionData;
 
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
 /**
-A Stage represents the root of the display tree. Everything connected to the stage is rendered
-@class Stage
-@extends DisplayObjectContainer
-@constructor
-@param backgroundColor {Number} the background color of the stage
-@param interactive {Boolean} enable / disable interaction (default is false)
-*/
+ * A Stage represents the root of the display tree. Everything connected to the stage is rendered
+ *
+ * @class Stage
+ * @extends DisplayObjectContainer
+ * @constructor
+ * @param backgroundColor {Number} the background color of the stage, easiest way to pass this in is in hex format
+ *		like: 0xFFFFFF for white
+ * @param interactive {Boolean} enable / disable interaction (default is false)
+ */
 PIXI.Stage = function(backgroundColor, interactive)
 {
-	
 	PIXI.DisplayObjectContainer.call( this );
-	
-	this.worldTransform = PIXI.mat3.create()
+
+	/**
+	 * [read-only] Current transform of the object based on world (parent) factors
+	 *
+	 * @property worldTransform
+	 * @type Mat3
+	 * @readOnly
+	 * @private
+	 */
+	this.worldTransform = PIXI.mat3.create();
+
+	/**
+	 * Whether or not the stage is interactive
+	 *
+	 * @property interactive
+	 * @type Boolean
+	 */
+	this.interactive = interactive;
+
+	/**
+	 * The interaction manage for this stage, manages all interactive activity on the stage
+	 *
+	 * @property interactive
+	 * @type InteractionManager
+	 */
+	this.interactionManager = new PIXI.InteractionManager(this);
+
+	/**
+	 * Whether the stage is dirty and needs to have interactions updated
+	 *
+	 * @property dirty
+	 * @type Boolean
+	 * @private
+	 */
+	this.dirty = true;
+
 	this.__childrenAdded = [];
 	this.__childrenRemoved = [];
-	
-	//this.childIndex = 0;
+
+	//the stage is it's own stage
 	this.stage = this;
-	this.interactive = interactive;
-	
+
+	//optimize hit detection a bit
 	this.stage.hitArea = new PIXI.Rectangle(0,0,100000, 100000);
-	
-	// interaction!
-	// this.interactive = !!interactive;
-	this.interactionManager = new PIXI.InteractionManager(this);
-	
+
 	this.setBackgroundColor(backgroundColor);
 	this.worldVisible = true;
-	this.stage.dirty = true;
 }
 
 // constructor
-PIXI.Stage.constructor = PIXI.Stage;
-
 PIXI.Stage.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+PIXI.Stage.prototype.constructor = PIXI.Stage;
 
-/**
-@method updateTransform
-@internal
-*/
+/*
+ * Updates the object transform for rendering
+ *
+ * @method updateTransform
+ * @private
+ */
 PIXI.Stage.prototype.updateTransform = function()
 {
 	this.worldAlpha = 1;		
@@ -2704,8 +3179,11 @@ PIXI.Stage.prototype.updateTransform = function()
 }
 
 /**
+ * Sets the background color for the stage
+ *
  * @method setBackgroundColor
- * @param backgroundColor {Number}
+ * @param backgroundColor {Number} the color of the background, easiest way to pass this in is in hex format
+ *		like: 0xFFFFFF for white
  */
 PIXI.Stage.prototype.setBackgroundColor = function(backgroundColor)
 {
@@ -2718,6 +3196,7 @@ PIXI.Stage.prototype.setBackgroundColor = function(backgroundColor)
 
 /**
  * This will return the point containing global coords of the mouse.
+ *
  * @method getMousePosition
  * @return {Point} The point containing the coords of the global InteractionData position.
  */
@@ -2765,38 +3244,55 @@ PIXI.Stage.prototype.__removeChild = function(child)
 
 // MIT license
 
+/**
+ * A polyfill for requestAnimationFrame
+ *
+ * @method requestAnimationFrame
+ */
+/**
+ * A polyfill for cancelAnimationFrame
+ *
+ * @method cancelAnimationFrame
+ */
+var lastTime = 0;
+var vendors = ['ms', 'moz', 'webkit', 'o'];
+for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+    window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+    window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
+                               || window[vendors[x]+'CancelRequestAnimationFrame'];
+}
 
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
+if (!window.requestAnimationFrame)
+    window.requestAnimationFrame = function(callback, element) {
+        var currTime = new Date().getTime();
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+        var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+          timeToCall);
+        lastTime = currTime + timeToCall;
+        return id;
+    };
 
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
-
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
+if (!window.cancelAnimationFrame)
+    window.cancelAnimationFrame = function(id) {
+        clearTimeout(id);
+    };
 
 window.requestAnimFrame = window.requestAnimationFrame;
 
+/**
+ * Converts a hex color number to an [R, G, B] array
+ *
+ * @method HEXtoRGB
+ * @param hex {Number}
+ */
 function HEXtoRGB(hex) {
 	return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
 }
 
 /**
- * Provides bind in a cross browser way.
+ * A polyfill for Function.prototype.bind
+ *
+ * @method bind
  */
 if (typeof Function.prototype.bind != 'function') {
   Function.prototype.bind = (function () {
@@ -2821,6 +3317,12 @@ if (typeof Function.prototype.bind != 'function') {
   })();
 }
 
+/**
+ * A wrapper for ajax requests to be handled cross browser
+ *
+ * @class AjaxRequest
+ * @constructor
+ */
 var AjaxRequest = PIXI.AjaxRequest = function()
 {
 	var activexmodes = ["Msxml2.XMLHTTP", "Microsoft.XMLHTTP"] //activeX versions to check for in IE
@@ -2847,7 +3349,32 @@ var AjaxRequest = PIXI.AjaxRequest = function()
  	}
 }
 
-
+/*
+ * DEBUGGING ONLY
+ */
+PIXI.runList = function(item)
+{
+	console.log(">>>>>>>>>")
+	console.log("_")
+	var safe = 0;
+	var tmp = item.first;
+	console.log(tmp);
+	
+	while(tmp._iNext)
+	{
+		safe++;
+//		console.log(tmp.childIndex + tmp);
+		tmp = tmp._iNext;
+		console.log(tmp);//.childIndex);
+	//	console.log(tmp);
+	
+		if(safe > 100)
+		{
+			console.log("BREAK")
+			break
+		}
+	}	
+}
 
 
 
@@ -2859,6 +3386,18 @@ var AjaxRequest = PIXI.AjaxRequest = function()
  * THankS mr DOob!
  */
 
+/**
+ * Adds event emitter functionality to a class
+ *
+ * @class EventTarget
+ * @example
+ *		function MyEmitter() {
+ *			PIXI.EventTarget.call(this); //mixes in event target stuff
+ *		}
+ *
+ *		var em = new MyEmitter();
+ *		em.emit({ type: 'eventName', data: 'some data' });
+ */
 PIXI.EventTarget = function () {
 
 	var listeners = {};
@@ -2909,14 +3448,15 @@ PIXI.EventTarget = function () {
 
 /**
  * This helper function will automatically detect which renderer you should be using.
- * WebGL is the preferred renderer as it is a lot fastest. If webGL is not supported by the browser then this function will return a canvas renderer
+ * WebGL is the preferred renderer as it is a lot fastest. If webGL is not supported by
+ * the browser then this function will return a canvas renderer
+ *
  * @method autoDetectRenderer
  * @static
  * @param width {Number} the width of the renderers view
  * @param height {Number} the height of the renderers view
  * @param view {Canvas} the canvas to use as a view, optional
- * @param transparent {Boolean} the transparency of the render view, default false
- * @default false
+ * @param transparent=false {Boolean} the transparency of the render view, default false
  */
 PIXI.autoDetectRenderer = function(width, height, view, transparent)
 {
@@ -2937,137 +3477,156 @@ PIXI.autoDetectRenderer = function(width, height, view, transparent)
 
 
 
-
-	/*
-		PolyK library
-		url: http://polyk.ivank.net
-		Released under MIT licence.
-		
-		Copyright (c) 2012 Ivan Kuckir
-
-		Permission is hereby granted, free of charge, to any person
-		obtaining a copy of this software and associated documentation
-		files (the "Software"), to deal in the Software without
-		restriction, including without limitation the rights to use,
-		copy, modify, merge, publish, distribute, sublicense, and/or sell
-		copies of the Software, and to permit persons to whom the
-		Software is furnished to do so, subject to the following
-		conditions:
-
-		The above copyright notice and this permission notice shall be
-		included in all copies or substantial portions of the Software.
-
-		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-		EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-		OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-		NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-		HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-		WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-		FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-		OTHER DEALINGS IN THE SOFTWARE.
+/*
+	PolyK library
+	url: http://polyk.ivank.net
+	Released under MIT licence.
 	
-		This is an amazing lib! 
-		
-		slightly modified by mat groves (matgroves.com);
-	* */
+	Copyright (c) 2012 Ivan Kuckir
+
+	Permission is hereby granted, free of charge, to any person
+	obtaining a copy of this software and associated documentation
+	files (the "Software"), to deal in the Software without
+	restriction, including without limitation the rights to use,
+	copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the
+	Software is furnished to do so, subject to the following
+	conditions:
+
+	The above copyright notice and this permission notice shall be
+	included in all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+	OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+	NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+	HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+	OTHER DEALINGS IN THE SOFTWARE.
+
+	This is an amazing lib! 
 	
-	PIXI.PolyK = {};
+	slightly modified by mat groves (matgroves.com);
+*/
+
+PIXI.PolyK = {};
+
+/**
+ * Triangulates shapes for webGL graphic fills
+ *
+ * @method Triangulate
+ * @namespace PolyK
+ * @constructor
+ */
+PIXI.PolyK.Triangulate = function(p)
+{
+	var sign = true;
 	
-	PIXI.PolyK.Triangulate = function(p)
+	var n = p.length>>1;
+	if(n<3) return [];
+	var tgs = [];
+	var avl = [];
+	for(var i=0; i<n; i++) avl.push(i);
+	
+	var i = 0;
+	var al = n;
+	while(al > 3)
 	{
-		var sign = true;
+		var i0 = avl[(i+0)%al];
+		var i1 = avl[(i+1)%al];
+		var i2 = avl[(i+2)%al];
 		
-		var n = p.length>>1;
-		if(n<3) return [];
-		var tgs = [];
-		var avl = [];
-		for(var i=0; i<n; i++) avl.push(i);
+		var ax = p[2*i0],  ay = p[2*i0+1];
+		var bx = p[2*i1],  by = p[2*i1+1];
+		var cx = p[2*i2],  cy = p[2*i2+1];
 		
-		var i = 0;
-		var al = n;
-		while(al > 3)
+		var earFound = false;
+		if(PIXI.PolyK._convex(ax, ay, bx, by, cx, cy, sign))
 		{
-			var i0 = avl[(i+0)%al];
-			var i1 = avl[(i+1)%al];
-			var i2 = avl[(i+2)%al];
-			
-			var ax = p[2*i0],  ay = p[2*i0+1];
-			var bx = p[2*i1],  by = p[2*i1+1];
-			var cx = p[2*i2],  cy = p[2*i2+1];
-			
-			var earFound = false;
-			if(PIXI.PolyK._convex(ax, ay, bx, by, cx, cy, sign))
+			earFound = true;
+			for(var j=0; j<al; j++)
 			{
-				earFound = true;
-				for(var j=0; j<al; j++)
-				{
-					var vi = avl[j];
-					if(vi==i0 || vi==i1 || vi==i2) continue;
-					if(PIXI.PolyK._PointInTriangle(p[2*vi], p[2*vi+1], ax, ay, bx, by, cx, cy)) {earFound = false; break;}
-				}
-			}
-			if(earFound)
-			{
-				tgs.push(i0, i1, i2);
-				avl.splice((i+1)%al, 1);
-				al--;
-				i = 0;
-			}
-			else if(i++ > 3*al) 
-			{
-				// need to flip flip reverse it!
-				// reset!
-				if(sign)
-				{
-					var tgs = [];
-					avl = [];
-					for(var i=0; i<n; i++) avl.push(i);
-					
-					i = 0;
-					al = n;
-					
-					sign = false;
-				}
-				else
-				{
-					console.log("PIXI Warning: shape too complex to fill")
-					return [];
-				}				
+				var vi = avl[j];
+				if(vi==i0 || vi==i1 || vi==i2) continue;
+				if(PIXI.PolyK._PointInTriangle(p[2*vi], p[2*vi+1], ax, ay, bx, by, cx, cy)) {earFound = false; break;}
 			}
 		}
-		tgs.push(avl[0], avl[1], avl[2]);
-		return tgs;
+		if(earFound)
+		{
+			tgs.push(i0, i1, i2);
+			avl.splice((i+1)%al, 1);
+			al--;
+			i = 0;
+		}
+		else if(i++ > 3*al) 
+		{
+			// need to flip flip reverse it!
+			// reset!
+			if(sign)
+			{
+				var tgs = [];
+				avl = [];
+				for(var i=0; i<n; i++) avl.push(i);
+				
+				i = 0;
+				al = n;
+				
+				sign = false;
+			}
+			else
+			{
+				console.log("PIXI Warning: shape too complex to fill")
+				return [];
+			}				
+		}
 	}
-	
-	PIXI.PolyK._PointInTriangle = function(px, py, ax, ay, bx, by, cx, cy)
-	{
-		var v0x = cx-ax;
-		var v0y = cy-ay;
-		var v1x = bx-ax;
-		var v1y = by-ay;
-		var v2x = px-ax;
-		var v2y = py-ay;
-		
-		var dot00 = v0x*v0x+v0y*v0y;
-		var dot01 = v0x*v1x+v0y*v1y;
-		var dot02 = v0x*v2x+v0y*v2y;
-		var dot11 = v1x*v1x+v1y*v1y;
-		var dot12 = v1x*v2x+v1y*v2y;
-		
-		var invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
-		var u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-		var v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+	tgs.push(avl[0], avl[1], avl[2]);
+	return tgs;
+}
 
-		// Check if point is in triangle
-		return (u >= 0) && (v >= 0) && (u + v < 1);
-	}
+/**
+ * Checks if a point is within a triangle
+ *
+ * @class _PointInTriangle
+ * @namespace PolyK
+ * @private
+ */
+PIXI.PolyK._PointInTriangle = function(px, py, ax, ay, bx, by, cx, cy)
+{
+	var v0x = cx-ax;
+	var v0y = cy-ay;
+	var v1x = bx-ax;
+	var v1y = by-ay;
+	var v2x = px-ax;
+	var v2y = py-ay;
 	
+	var dot00 = v0x*v0x+v0y*v0y;
+	var dot01 = v0x*v1x+v0y*v1y;
+	var dot02 = v0x*v2x+v0y*v2y;
+	var dot11 = v1x*v1x+v1y*v1y;
+	var dot12 = v1x*v2x+v1y*v2y;
+	
+	var invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+	var u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+	var v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-	PIXI.PolyK._convex = function(ax, ay, bx, by, cx, cy, sign)
-	{
-		return ((ay-by)*(cx-bx) + (bx-ax)*(cy-by) >= 0) == sign;
-	}
-	
+	// Check if point is in triangle
+	return (u >= 0) && (v >= 0) && (u + v < 1);
+}
+
+/**
+ * Checks if a shape is convex
+ *
+ * @class _convex
+ * @namespace PolyK
+ * @private
+ */
+PIXI.PolyK._convex = function(ax, ay, bx, by, cx, cy, sign)
+{
+	return ((ay-by)*(cx-bx) + (bx-ax)*(cy-by) >= 0) == sign;
+}
+
 
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
@@ -3304,20 +3863,27 @@ PIXI.activatePrimitiveShader = function()
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-
-
 /**
  * A set of functions used by the webGL renderer to draw the primitive graphics data
- * @class CanvasGraphics 
+ *
+ * @class CanvasGraphics
  */
 PIXI.WebGLGraphics = function()
 {
 	
 }
 
+/**
+ * Renders the graphics object
+ *
+ * @static
+ * @private
+ * @method renderGraphics
+ * @param graphics {Graphics}
+ * @param projection {Object}
+ */
 PIXI.WebGLGraphics.renderGraphics = function(graphics, projection)
 {
-	
 	var gl = PIXI.gl;
 	
 	if(!graphics._webGL)graphics._webGL = {points:[], indices:[], lastIndex:0, 
@@ -3368,12 +3934,8 @@ PIXI.WebGLGraphics.renderGraphics = function(graphics, projection)
 	gl.vertexAttribPointer(PIXI.primitiveProgram.vertexPositionAttribute, 2, gl.FLOAT, false, 4 * 6, 0);
 	gl.vertexAttribPointer(PIXI.primitiveProgram.colorAttribute, 4, gl.FLOAT, false,4 * 6, 2 * 4);
 	
-//	console.log(PIXI.primitiveProgram.vertexPositionAttribute);
-	//console.log("Color " + PIXI.primitiveProgram.colorAttribute);
-	
 	// set the index buffer!
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, graphics._webGL.indexBuffer);
-	
 	
 	gl.drawElements(gl.TRIANGLE_STRIP,  graphics._webGL.indices.length, gl.UNSIGNED_SHORT, 0 );
 	
@@ -3381,6 +3943,14 @@ PIXI.WebGLGraphics.renderGraphics = function(graphics, projection)
 	PIXI.activateDefaultShader();
 }
 
+/**
+ * Updates the graphics object
+ *
+ * @static
+ * @private
+ * @method updateGraphics
+ * @param graphics {Graphics}
+ */
 PIXI.WebGLGraphics.updateGraphics = function(graphics)
 {
 	for (var i=graphics._webGL.lastIndex; i < graphics.graphicsData.length; i++) 
@@ -3425,7 +3995,15 @@ PIXI.WebGLGraphics.updateGraphics = function(graphics)
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, graphics._webGL.glIndicies, gl.STATIC_DRAW);
 }
 
-
+/**
+ * Builds a rectangle to draw
+ *
+ * @static
+ * @private
+ * @method buildRectangle
+ * @param graphics {Graphics}
+ * @param webGLData {Object}
+ */
 PIXI.WebGLGraphics.buildRectangle = function(graphicsData, webGLData)
 {
 	// --- //
@@ -3482,6 +4060,15 @@ PIXI.WebGLGraphics.buildRectangle = function(graphicsData, webGLData)
 	
 }
 
+/**
+ * Builds a circle to draw
+ *
+ * @static
+ * @private
+ * @method buildCircle
+ * @param graphics {Graphics}
+ * @param webGLData {Object}
+ */
 PIXI.WebGLGraphics.buildCircle = function(graphicsData, webGLData)
 {
 	// --- //
@@ -3541,6 +4128,15 @@ PIXI.WebGLGraphics.buildCircle = function(graphicsData, webGLData)
 	
 }
 
+/**
+ * Builds a line to draw
+ *
+ * @static
+ * @private
+ * @method buildLine
+ * @param graphics {Graphics}
+ * @param webGLData {Object}
+ */
 PIXI.WebGLGraphics.buildLine = function(graphicsData, webGLData)
 {
 	// TODO OPTIMISE!
@@ -3723,7 +4319,15 @@ PIXI.WebGLGraphics.buildLine = function(graphicsData, webGLData)
 	indices.push(indexStart-1);
 }
 
-
+/**
+ * Builds a polygon to draw
+ *
+ * @static
+ * @private
+ * @method buildPoly
+ * @param graphics {Graphics}
+ * @param webGLData {Object}
+ */
 PIXI.WebGLGraphics.buildPoly = function(graphicsData, webGLData)
 {
 	var points = graphicsData.points;
@@ -3781,80 +4385,86 @@ PIXI._defaultFrame = new PIXI.Rectangle(0,0,1,1);
 PIXI.gl;
 
 /**
- * the WebGLRenderer is draws the stage and all its content onto a webGL enabled canvas. This renderer should be used for browsers support webGL. This Render works by automatically managing webGLBatchs. So no need for Sprite Batch's or Sprite Cloud's
+ * the WebGLRenderer is draws the stage and all its content onto a webGL enabled canvas. This renderer
+ * should be used for browsers support webGL. This Render works by automatically managing webGLBatchs.
+ * So no need for Sprite Batch's or Sprite Cloud's
  * Dont forget to add the view to your DOM or you will not see anything :)
+ *
  * @class WebGLRenderer
  * @constructor
- * @param width {Number} the width of the canvas view
- * @default 0
- * @param height {Number} the height of the canvas view
- * @default 0
+ * @param width=0 {Number} the width of the canvas view
+ * @param height=0 {Number} the height of the canvas view
  * @param view {Canvas} the canvas to use as a view, optional
- * @param transparent {Boolean} the transparency of the render view, default false
- * @default false
+ * @param transparent=false {Boolean} the transparency of the render view, default false
  * 
  */
 PIXI.WebGLRenderer = function(width, height, view, transparent)
 {
 	// do a catch.. only 1 webGL renderer..
 
-	//console.log(transparent)
 	this.transparent = !!transparent;
-	
+
 	this.width = width || 800;
 	this.height = height || 600;
-	
+
 	this.view = view || document.createElement( 'canvas' ); 
     this.view.width = this.width;
 	this.view.height = this.height;
-	
+
 	// deal with losing context..	
     var scope = this;
 	this.view.addEventListener('webglcontextlost', function(event) { scope.handleContextLost(event); }, false)
 	this.view.addEventListener('webglcontextrestored', function(event) { scope.handleContextRestored(event); }, false)
 
 	this.batchs = [];
-	
+
 	try 
  	{
         PIXI.gl = this.gl = this.view.getContext("experimental-webgl",  {  	
     		 alpha: this.transparent,
     		 antialias:true, // SPEED UP??
-    		 premultipliedAlpha:false
+    		 premultipliedAlpha:false,
+    		 stencil:true
         });
     } 
     catch (e) 
     {
     	throw new Error(" This browser does not support webGL. Try using the canvas renderer" + this);
     }
-    
+
     PIXI.initPrimitiveShader();
     PIXI.initDefaultShader();
     PIXI.initDefaultStripShader();
-    
+
     PIXI.activateDefaultShader();
-    
+
     var gl = this.gl;
     PIXI.WebGLRenderer.gl = gl;
-    
+
     this.batch = new PIXI.WebGLBatch(gl);
    	gl.disable(gl.DEPTH_TEST);
    	gl.disable(gl.CULL_FACE);
+
     gl.enable(gl.BLEND);
     gl.colorMask(true, true, true, this.transparent); 
-    
+
     PIXI.projection = new PIXI.Point(400, 300);
-    
+
     this.resize(this.width, this.height);
     this.contextLost = false;
-    
+
     this.stageRenderGroup = new PIXI.WebGLRenderGroup(this.gl);
 }
 
 // constructor
-PIXI.WebGLRenderer.constructor = PIXI.WebGLRenderer;
+PIXI.WebGLRenderer.prototype.constructor = PIXI.WebGLRenderer;
 
 /**
+ * Gets a new WebGLBatch from the pool
+ *
+ * @static
+ * @method getBatch
+ * @return {WebGLBatch}
  * @private 
  */
 PIXI.WebGLRenderer.getBatch = function()
@@ -3870,6 +4480,11 @@ PIXI.WebGLRenderer.getBatch = function()
 }
 
 /**
+ * Puts a batch back into the pool
+ *
+ * @static
+ * @method returnBatch
+ * @param batch {WebGLBatch} The batch to return
  * @private
  */
 PIXI.WebGLRenderer.returnBatch = function(batch)
@@ -3878,17 +4493,11 @@ PIXI.WebGLRenderer.returnBatch = function(batch)
 	PIXI._batchs.push(batch);
 }
 
-
-/**
- * @private
- */
-
-
-
 /**
  * Renders the stage to its webGL view
+ *
  * @method render
- * @param stage {Stage} the PIXI.Stage element to be rendered
+ * @param stage {Stage} the Stage element to be rendered
  */
 PIXI.WebGLRenderer.prototype.render = function(stage)
 {
@@ -3969,9 +4578,12 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
 }
 
 /**
+ * Updates the textures loaded into this webgl renderer
+ *
+ * @static
+ * @method updateTextures
  * @private
  */
-
 PIXI.WebGLRenderer.updateTextures = function()
 {
 	for (var i=0; i < PIXI.texturesToUpdate.length; i++) this.updateTexture(PIXI.texturesToUpdate[i]);
@@ -3980,6 +4592,14 @@ PIXI.WebGLRenderer.updateTextures = function()
 	PIXI.texturesToDestroy = [];
 }
 
+/**
+ * Updates a loaded webgl texture
+ *
+ * @static
+ * @method updateTexture
+ * @param texture {Texture} The texture to update
+ * @private
+ */
 PIXI.WebGLRenderer.updateTexture = function(texture)
 {
 	var gl = PIXI.gl;
@@ -3988,18 +4608,18 @@ PIXI.WebGLRenderer.updateTexture = function(texture)
 	{
 		texture._glTexture = gl.createTexture();
 	}
-	
+
 	if(texture.hasLoaded)
 	{
 		gl.bindTexture(gl.TEXTURE_2D, texture._glTexture);
 	 	gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-	 	
+
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.source);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-		
+
 		// reguler...
-		
+
 		if(!texture._powerOf2)
 		{
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -4010,16 +4630,22 @@ PIXI.WebGLRenderer.updateTexture = function(texture)
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 		}
-		
+
 		gl.bindTexture(gl.TEXTURE_2D, null);
 	}
-	
 }
 
+/**
+ * Destroys a loaded webgl texture
+ *
+ * @method destroyTexture
+ * @param texture {Texture} The texture to update
+ * @private
+ */
 PIXI.WebGLRenderer.prototype.destroyTexture = function(texture)
 {
 	var gl = this.gl;
-	
+
 	if(texture._glTexture)
 	{
 		texture._glTexture = gl.createTexture();
@@ -4029,6 +4655,7 @@ PIXI.WebGLRenderer.prototype.destroyTexture = function(texture)
 
 /**
  * resizes the webGL view to the specified width and height
+ *
  * @method resize
  * @param width {Number} the new width of the webGL view
  * @param height {Number} the new height of the webGL view
@@ -4037,17 +4664,17 @@ PIXI.WebGLRenderer.prototype.resize = function(width, height)
 {
 	this.width = width;
 	this.height = height;
-	
+
 	this.view.width = width;
 	this.view.height = height;
-	
+
 	this.gl.viewport(0, 0, this.width, this.height);	
-	
+
 	//var projectionMatrix = this.projectionMatrix;
-	
+
 	PIXI.projection.x =  this.width/2;
 	PIXI.projection.y =  this.height/2;
-	
+
 //	projectionMatrix[0] = 2/this.width;
 //	projectionMatrix[5] = -2/this.height;
 //	projectionMatrix[12] = -1;
@@ -4055,6 +4682,10 @@ PIXI.WebGLRenderer.prototype.resize = function(width, height)
 }
 
 /**
+ * Handles a lost webgl context
+ *
+ * @method handleContextLost
+ * @param event {Event}
  * @private
  */
 PIXI.WebGLRenderer.prototype.handleContextLost = function(event)
@@ -4064,6 +4695,10 @@ PIXI.WebGLRenderer.prototype.handleContextLost = function(event)
 }
 
 /**
+ * Handles a restored webgl context
+ *
+ * @method handleContextRestored
+ * @param event {Event}
  * @private
  */
 PIXI.WebGLRenderer.prototype.handleContextRestored = function(event)
@@ -4071,27 +4706,26 @@ PIXI.WebGLRenderer.prototype.handleContextRestored = function(event)
 	this.gl = this.view.getContext("experimental-webgl",  {  	
 		alpha: true
     });
-        
+
 	this.initShaders();	
-	
+
 	for(var key in PIXI.TextureCache) 
 	{
         	var texture = PIXI.TextureCache[key].baseTexture;
         	texture._glTexture = null;
         	PIXI.WebGLRenderer.updateTexture(texture);
 	};
-	
+
 	for (var i=0; i <  this.batchs.length; i++) 
 	{
 		this.batchs[i].restoreLostContext(this.gl)//
 		this.batchs[i].dirty = true;
 	};
-	
+
 	PIXI._restoreBatchs(this.gl);
-	
+
 	this.contextLost = false;
 }
-
 
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
@@ -4136,10 +4770,15 @@ PIXI._restoreBatchs = function(gl)
 
 /**
  * A WebGLBatch Enables a group of sprites to be drawn using the same settings.
- * if a group of sprites all have the same baseTexture and blendMode then they can be grouped into a batch. All the sprites in a batch can then be drawn in one go by the GPU which is hugely efficient. ALL sprites in the webGL renderer are added to a batch even if the batch only contains one sprite. Batching is handled automatically by the webGL renderer. A good tip is: the smaller the number of batchs there are, the faster the webGL renderer will run. 
+ * if a group of sprites all have the same baseTexture and blendMode then they can be grouped into a batch.
+ * All the sprites in a batch can then be drawn in one go by the GPU which is hugely efficient. ALL sprites
+ * in the webGL renderer are added to a batch even if the batch only contains one sprite. Batching is handled
+ * automatically by the webGL renderer. A good tip is: the smaller the number of batchs there are, the faster
+ * the webGL renderer will run.
+ *
  * @class WebGLBatch
- * @param an instance of the webGL context
- * @return {PIXI.renderers.WebGLBatch} WebGLBatch {@link PIXI.renderers.WebGLBatch}
+ * @constructor
+ * @param gl {WebGLContext} an instance of the webGL context
  */
 PIXI.WebGLBatch = function(gl)
 {
@@ -4155,12 +4794,13 @@ PIXI.WebGLBatch = function(gl)
 	this.dynamicSize = 1;
 }
 
-
 // constructor
-PIXI.WebGLBatch.constructor = PIXI.WebGLBatch;
+PIXI.WebGLBatch.prototype.constructor = PIXI.WebGLBatch;
 
 /**
  * Cleans the batch so that is can be returned to an object pool and reused
+ *
+ * @method clean
  */
 PIXI.WebGLBatch.prototype.clean = function()
 {
@@ -4173,13 +4813,15 @@ PIXI.WebGLBatch.prototype.clean = function()
 	this.texture = null;
 	this.last = null;
 	this.size = 0;
-	
 	this.head;
 	this.tail;
 }
 
-/*
- * recreates the buffers in the event of a context loss
+/**
+ * Recreates the buffers in the event of a context loss
+ *
+ * @method restoreLostContext
+ * @param gl {WebGLContext}
  */
 PIXI.WebGLBatch.prototype.restoreLostContext = function(gl)
 {
@@ -4192,8 +4834,10 @@ PIXI.WebGLBatch.prototype.restoreLostContext = function(gl)
 
 /**
  * inits the batch's texture and blend mode based if the supplied sprite
+ *
  * @method init
- * @param sprite {Sprite} the first sprite to be added to the batch. Only sprites with the same base texture and blend mode will be allowed to be added to this batch
+ * @param sprite {Sprite} the first sprite to be added to the batch. Only sprites with
+ *		the same base texture and blend mode will be allowed to be added to this batch
  */	
 PIXI.WebGLBatch.prototype.init = function(sprite)
 {
@@ -4205,12 +4849,13 @@ PIXI.WebGLBatch.prototype.init = function(sprite)
 	this.head = sprite;
 	this.tail = sprite;
 	this.size = 1;
-	
+
 	this.growBatch();
 }
 
 /**
  * inserts a sprite before the specified sprite
+ *
  * @method insertBefore
  * @param sprite {Sprite} the sprite to be added
  * @param nextSprite {nextSprite} the first sprite will be inserted before this sprite
@@ -4218,13 +4863,13 @@ PIXI.WebGLBatch.prototype.init = function(sprite)
 PIXI.WebGLBatch.prototype.insertBefore = function(sprite, nextSprite)
 {
 	this.size++;
-	
+
 	sprite.batch = this;
 	this.dirty = true;
 	var tempPrev = nextSprite.__prev;
 	nextSprite.__prev = sprite;
 	sprite.__next = nextSprite;
-	
+
 	if(tempPrev)
 	{
 		sprite.__prev = tempPrev;
@@ -4239,6 +4884,7 @@ PIXI.WebGLBatch.prototype.insertBefore = function(sprite, nextSprite)
 
 /**
  * inserts a sprite after the specified sprite
+ *
  * @method insertAfter
  * @param sprite {Sprite} the sprite to be added
  * @param  previousSprite {Sprite} the first sprite will be inserted after this sprite
@@ -4246,15 +4892,14 @@ PIXI.WebGLBatch.prototype.insertBefore = function(sprite, nextSprite)
 PIXI.WebGLBatch.prototype.insertAfter = function(sprite, previousSprite)
 {
 	this.size++;
-	
-	
+
 	sprite.batch = this;
 	this.dirty = true;
-	
+
 	var tempNext = previousSprite.__next;
 	previousSprite.__next = sprite;
 	sprite.__prev = previousSprite;
-	
+
 	if(tempNext)
 	{
 		sprite.__next = tempNext;
@@ -4264,18 +4909,18 @@ PIXI.WebGLBatch.prototype.insertAfter = function(sprite, previousSprite)
 	{
 		this.tail = sprite
 	}
-	
 }
 
 /**
  * removes a sprite from the batch
+ *
  * @method remove
  * @param sprite {Sprite} the sprite to be removed
  */	
 PIXI.WebGLBatch.prototype.remove = function(sprite)
 {
 	this.size--;
-	
+
 	if(this.size == 0)
 	{
 		sprite.batch = null;
@@ -4283,7 +4928,7 @@ PIXI.WebGLBatch.prototype.remove = function(sprite)
 		sprite.__next = null;
 		return;
 	}
-	
+
 	if(sprite.__prev)
 	{
 		sprite.__prev.__next = sprite.__next;
@@ -4293,7 +4938,7 @@ PIXI.WebGLBatch.prototype.remove = function(sprite)
 		this.head = sprite.__next;
 		this.head.__prev = null;
 	}
-	
+
 	if(sprite.__next)
 	{
 		sprite.__next.__prev = sprite.__prev;
@@ -4303,7 +4948,7 @@ PIXI.WebGLBatch.prototype.remove = function(sprite)
 		this.tail = sprite.__prev;
 		this.tail.__next = null
 	}
-	
+
 	sprite.batch = null;
 	sprite.__next = null;
 	sprite.__prev = null;
@@ -4312,39 +4957,32 @@ PIXI.WebGLBatch.prototype.remove = function(sprite)
 
 /**
  * Splits the batch into two with the specified sprite being the start of the new batch.
+ *
  * @method split
  * @param sprite {Sprite} the sprite that indicates where the batch should be split
  * @return {WebGLBatch} the new batch
  */
 PIXI.WebGLBatch.prototype.split = function(sprite)
 {
-	
-	//console.log("Splitting batch :" + this.size)
-//	console.log(sprite)
-//	console.log("-------")
 	this.dirty = true;
-	
-	//var val = (this.tail == this.head)
-	//console.log(val + " SAME?");
-	var batch = new PIXI.WebGLBatch(this.gl)//PIXI._getBatch(this.gl);
+
+	var batch = new PIXI.WebGLBatch(this.gl);//PIXI._getBatch(this.gl);
 	batch.init(sprite);
 	batch.texture = this.texture;
 	batch.tail = this.tail;
-	//console.log("id is " +batcheee.id)
-	
+
 	this.tail = sprite.__prev;
 	this.tail.__next = null;
-	
+
 	sprite.__prev = null;
 	// return a splite batch!
 	//sprite.__prev.__next = null;
 	//sprite.__prev = null;
-	
-	
+
 	// TODO this size is wrong!
 	// need to recalculate :/ problem with a linked list!
 	// unless it gets calculated in the "clean"?
-	
+
 	// need to loop through items as there is no way to know the length on a linked list :/
 	var tempSize = 0;
 	while(sprite)
@@ -4353,41 +4991,44 @@ PIXI.WebGLBatch.prototype.split = function(sprite)
 		sprite.batch = batch;
 		sprite = sprite.__next;
 	}
-	
+
 	batch.size = tempSize;
 	this.size -= tempSize;
-	
+
 	return batch;
 }
 
 /**
  * Merges two batchs together
+ *
  * @method merge
  * @param batch {WebGLBatch} the batch that will be merged 
  */
 PIXI.WebGLBatch.prototype.merge = function(batch)
 {
 	this.dirty = true;
-	
+
 	this.tail.__next = batch.head;
 	batch.head.__prev = this.tail;
-	
+
 	this.size += batch.size;
-			
+
 	this.tail = batch.tail;
-	
+
 	var sprite = batch.head;
 	while(sprite)
 	{
 		sprite.batch = this;
 		sprite = sprite.__next;
 	}
-	
 }
 
 /**
- * Grows the size of the batch. As the elements in the batch cannot have a dynamic size this function is used to increase the size of the batch. It also creates a little extra room so that the batch does not need to be resized every time a sprite is added
- * @methos growBatch
+ * Grows the size of the batch. As the elements in the batch cannot have a dynamic size this
+ * function is used to increase the size of the batch. It also creates a little extra room so
+ * that the batch does not need to be resized every time a sprite is added
+ *
+ * @method growBatch
  */
 PIXI.WebGLBatch.prototype.growBatch = function()
 {
@@ -4402,25 +5043,25 @@ PIXI.WebGLBatch.prototype.growBatch = function()
 	}
 	// grow verts
 	this.verticies = new Float32Array(this.dynamicSize * 8);
-	
+
 	gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER,this.verticies , gl.DYNAMIC_DRAW);
-	
+
 	this.uvs  = new Float32Array( this.dynamicSize * 8 )  
 	gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, this.uvs , gl.DYNAMIC_DRAW);
-	
+
 	this.dirtyUVS = true;
-	
+
 	this.colors  = new Float32Array( this.dynamicSize * 4 )  
 	gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
 	gl.bufferData(gl.ARRAY_BUFFER, this.colors , gl.DYNAMIC_DRAW);
-	
+
 	this.dirtyColors = true;
-	
+
 	this.indices = new Uint16Array(this.dynamicSize * 6); 
 	var length = this.indices.length/6;
-	
+
 	for (var i=0; i < length; i++) 
 	{
 	    var index2 = i * 6;
@@ -4432,152 +5073,152 @@ PIXI.WebGLBatch.prototype.growBatch = function()
 		this.indices[index2 + 4] = index3 + 2;
 		this.indices[index2 + 5] = index3 + 3;
 	};
-	
+
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
-	
 }
 
 /**
  * Refresh's all the data in the batch and sync's it with the webGL buffers
+ *
  * @method refresh
  */
 PIXI.WebGLBatch.prototype.refresh = function()
 {
 	var gl = this.gl;
-	
+
 	if (this.dynamicSize < this.size)
 	{
 		this.growBatch();
 	}
 
 	var indexRun = 0;
-	var worldTransform, width, height, aX, aY, w0, w1, h0, h1, index
-	var a, b, c, d, tx, ty
-	
-	var displayObject = this.head
+	var worldTransform, width, height, aX, aY, w0, w1, h0, h1, index;
+	var a, b, c, d, tx, ty;
+
+	var displayObject = this.head;
 
 	while(displayObject)
 	{
 		index = indexRun * 8;
-		
+
 		var texture = displayObject.texture;
-			
+
 		var frame = texture.frame;
 		var tw = texture.baseTexture.width;
 		var th = texture.baseTexture.height;
-		
+
 		this.uvs[index + 0] = frame.x / tw;
 		this.uvs[index +1] = frame.y / th;
-		
+
 		this.uvs[index +2] = (frame.x + frame.width) / tw;
 		this.uvs[index +3] = frame.y / th;
-		
+
 		this.uvs[index +4] = (frame.x + frame.width) / tw;
 		this.uvs[index +5] = (frame.y + frame.height) / th; 
-		
+
 		this.uvs[index +6] = frame.x / tw;
 		this.uvs[index +7] = (frame.y + frame.height) / th;
-		
+
 		displayObject.updateFrame = false;
-		
+
 		colorIndex = indexRun * 4;
 		this.colors[colorIndex] = this.colors[colorIndex + 1] = this.colors[colorIndex + 2] = this.colors[colorIndex + 3] = displayObject.worldAlpha;
-		
+
 		displayObject = displayObject.__next;
-		
+
 		indexRun ++;
 	}
-	
+
 	this.dirtyUVS = true;
 	this.dirtyColors = true;
 }
 
 /**
  * Updates all the relevant geometry and uploads the data to the GPU
+ *
  * @method update
  */
 PIXI.WebGLBatch.prototype.update = function()
 {
 	var gl = this.gl;
 	var worldTransform, width, height, aX, aY, w0, w1, h0, h1, index, index2, index3
-	
+
 	var a, b, c, d, tx, ty;
-	
+
 	var indexRun = 0;
-	
+
 	var displayObject = this.head;
-	
+
 	while(displayObject)
 	{
 		if(displayObject.worldVisible)
 		{
 			width = displayObject.texture.frame.width;
 			height = displayObject.texture.frame.height;
-			
+
 			// TODO trim??
 			aX = displayObject.anchor.x;// - displayObject.texture.trim.x
 			aY = displayObject.anchor.y; //- displayObject.texture.trim.y
 			w0 = width * (1-aX);
 			w1 = width * -aX;
-			 
+
 			h0 = height * (1-aY);
 			h1 = height * -aY;
-			 
+
 			index = indexRun * 8;
-	
+
 			worldTransform = displayObject.worldTransform;
-		
+
 			a = worldTransform[0];
 			b = worldTransform[3];
 			c = worldTransform[1];
 			d = worldTransform[4];
 			tx = worldTransform[2];
 			ty = worldTransform[5];
-		
+
 			this.verticies[index + 0 ] = a * w1 + c * h1 + tx; 
 			this.verticies[index + 1 ] = d * h1 + b * w1 + ty;
-			 
+
 			this.verticies[index + 2 ] = a * w0 + c * h1 + tx; 
 			this.verticies[index + 3 ] = d * h1 + b * w0 + ty; 
-			
+
 			this.verticies[index + 4 ] = a * w0 + c * h0 + tx; 
 			this.verticies[index + 5 ] = d * h0 + b * w0 + ty; 
-			
+
 			this.verticies[index + 6] =  a * w1 + c * h0 + tx; 
 			this.verticies[index + 7] =  d * h0 + b * w1 + ty; 
-			
-			
+
 			if(displayObject.updateFrame || displayObject.texture.updateFrame)
 			{
 				this.dirtyUVS = true;
-				
+
 				var texture = displayObject.texture;
-				
+
 				var frame = texture.frame;
 				var tw = texture.baseTexture.width;
 				var th = texture.baseTexture.height;
-				
+
 				this.uvs[index + 0] = frame.x / tw;
 				this.uvs[index +1] = frame.y / th;
-				
+
 				this.uvs[index +2] = (frame.x + frame.width) / tw;
 				this.uvs[index +3] = frame.y / th;
-				
+
 				this.uvs[index +4] = (frame.x + frame.width) / tw;
 				this.uvs[index +5] = (frame.y + frame.height) / th; 
-				
+
 				this.uvs[index +6] = frame.x / tw;
 				this.uvs[index +7] = (frame.y + frame.height) / th;
-				
+
 				displayObject.updateFrame = false;
 			}
-			
+
 			// TODO this probably could do with some optimisation....
 			if(displayObject.cacheAlpha != displayObject.worldAlpha)
 			{
 				displayObject.cacheAlpha = displayObject.worldAlpha;
-				
+
 				var colorIndex = indexRun * 4;
 				this.colors[colorIndex] = this.colors[colorIndex + 1] = this.colors[colorIndex + 2] = this.colors[colorIndex + 3] = displayObject.worldAlpha;
 				this.dirtyColors = true;
@@ -4586,20 +5227,20 @@ PIXI.WebGLBatch.prototype.update = function()
 		else
 		{
 			index = indexRun * 8;
-			
+
 			this.verticies[index + 0 ] = 0;
 			this.verticies[index + 1 ] = 0;
-			 
+
 			this.verticies[index + 2 ] = 0;
 			this.verticies[index + 3 ] = 0;
-			
+
 			this.verticies[index + 4 ] = 0;
 			this.verticies[index + 5 ] = 0;
-			
+
 			this.verticies[index + 6] = 0;
 			this.verticies[index + 7] = 0;
 		}
-		
+
 		indexRun++;
 		displayObject = displayObject.__next;
    }
@@ -4607,35 +5248,31 @@ PIXI.WebGLBatch.prototype.update = function()
 
 /**
  * Draws the batch to the frame buffer
+ *
  * @method render
  */
 PIXI.WebGLBatch.prototype.render = function(start, end)
 {
-	
-//	console.log(start + " :: " + end + " : " + this.size);
 	start = start || 0;
 	//end = end || this.size;
 	if(end == undefined)end = this.size;
-
+	
 	if(this.dirty)
 	{
 		this.refresh();
 		this.dirty = false;
-		
 	}
-	
-	
+
 	if (this.size == 0)return;
-	
+
 	this.update();
 	var gl = this.gl;
-	
+
 	//TODO optimize this!
-	gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-	
+
 	var shaderProgram = PIXI.shaderProgram;
 	gl.useProgram(shaderProgram);
-	
+
 	// update the verts..
 	gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
 	// ok..
@@ -4649,12 +5286,12 @@ PIXI.WebGLBatch.prototype.render = function(start, end)
     	this.dirtyUVS = false;
     	gl.bufferSubData(gl.ARRAY_BUFFER,  0, this.uvs);
     }
-    
+
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
-	
+
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, this.texture._glTexture);
-	
+
 	// update color!
 	gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
 
@@ -4663,13 +5300,12 @@ PIXI.WebGLBatch.prototype.render = function(start, end)
     	this.dirtyColors = false;
     	gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.colors);
 	}
-	
+
     gl.vertexAttribPointer(shaderProgram.colorAttribute, 1, gl.FLOAT, false, 0, 0);
-	
+
 	// dont need to upload!
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-	
-	
+
 	//var startIndex = 0//1;
 	var len = end - start;
 	// console.log(this.size)
@@ -4677,20 +5313,22 @@ PIXI.WebGLBatch.prototype.render = function(start, end)
     gl.drawElements(gl.TRIANGLES, len * 6, gl.UNSIGNED_SHORT, start * 2 * 6 );
 }
 
-
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-
-
-
 /**
  * A WebGLBatch Enables a group of sprites to be drawn using the same settings.
- * if a group of sprites all have the same baseTexture and blendMode then they can be grouped into a batch. All the sprites in a batch can then be drawn in one go by the GPU which is hugely efficient. ALL sprites in the webGL renderer are added to a batch even if the batch only contains one sprite. Batching is handled automatically by the webGL renderer. A good tip is: the smaller the number of batchs there are, the faster the webGL renderer will run. 
+ * if a group of sprites all have the same baseTexture and blendMode then they can be
+ * grouped into a batch. All the sprites in a batch can then be drawn in one go by the
+ * GPU which is hugely efficient. ALL sprites in the webGL renderer are added to a batch
+ * even if the batch only contains one sprite. Batching is handled automatically by the
+ * webGL renderer. A good tip is: the smaller the number of batchs there are, the faster
+ * the webGL renderer will run.
+ *
  * @class WebGLBatch
- * @param an instance of the webGL context
- * @return {PIXI.renderers.WebGLBatch} WebGLBatch {@link PIXI.renderers.WebGLBatch}
+ * @contructor
+ * @param gl {WebGLContext} An instance of the webGL context
  */
 PIXI.WebGLRenderGroup = function(gl)
 {
@@ -4703,8 +5341,15 @@ PIXI.WebGLRenderGroup = function(gl)
 }
 
 // constructor
-PIXI.WebGLRenderGroup.constructor = PIXI.WebGLRenderGroup;
+PIXI.WebGLRenderGroup.prototype.constructor = PIXI.WebGLRenderGroup;
 
+/**
+ * Add a display object to the webgl renderer
+ *
+ * @method setRenderable
+ * @param displayObject {DisplayObject}
+ * @private 
+ */
 PIXI.WebGLRenderGroup.prototype.setRenderable = function(displayObject)
 {
 	// has this changed??
@@ -4717,18 +5362,25 @@ PIXI.WebGLRenderGroup.prototype.setRenderable = function(displayObject)
 	
 	// TODO what if its already has an object? should remove it
 	this.root = displayObject;
-	//displayObject.__renderGroup = this;
 	this.addDisplayObjectAndChildren(displayObject);
 }
 
+/**
+ * Renders the stage to its webgl view
+ *
+ * @method render
+ * @param projection {Object}
+ */
 PIXI.WebGLRenderGroup.prototype.render = function(projection)
 {
 	PIXI.WebGLRenderer.updateTextures();
 	
 	var gl = this.gl;
 
+	
 	gl.uniform2f(PIXI.shaderProgram.projectionVector, projection.x, projection.y);
-
+	gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+	
 	// TODO remove this by replacing visible with getter setters..	
 	this.checkVisibility(this.root, this.root.visible);
 	
@@ -4745,7 +5397,6 @@ PIXI.WebGLRenderGroup.prototype.render = function(projection)
 		}
 		else if(renderable instanceof PIXI.TilingSprite)
 		{
-			
 			if(renderable.visible)this.renderTilingSprite(renderable, projection);
 		}
 		else if(renderable instanceof PIXI.Strip)
@@ -4754,12 +5405,56 @@ PIXI.WebGLRenderGroup.prototype.render = function(projection)
 		}
 		else if(renderable instanceof PIXI.Graphics)
 		{
-			if(renderable.visible) PIXI.WebGLGraphics.renderGraphics(renderable, projection);//, projectionMatrix);
+			if(renderable.visible && renderable.renderable) PIXI.WebGLGraphics.renderGraphics(renderable, projection);//, projectionMatrix);
+		}
+		else if(renderable instanceof PIXI.FilterBlock)
+		{
+			/*
+			 * for now only masks are supported..
+			 */
+			if(renderable.open)
+			{
+    			gl.enable(gl.STENCIL_TEST);
+					
+				gl.colorMask(false, false, false, false);
+				gl.stencilFunc(gl.ALWAYS,1,0xff);
+				gl.stencilOp(gl.KEEP,gl.KEEP,gl.REPLACE);
+  
+				PIXI.WebGLGraphics.renderGraphics(renderable.mask, projection);
+  					
+				gl.colorMask(true, true, true, false);
+				gl.stencilFunc(gl.NOTEQUAL,0,0xff);
+				gl.stencilOp(gl.KEEP,gl.KEEP,gl.KEEP);
+			}
+			else
+			{
+				gl.disable(gl.STENCIL_TEST);
+			}
 		}
 	}
 	
 }
 
+/**
+ * Renders the stage to its webgl view
+ *
+ * @method handleFilter
+ * @param filter {FilterBlock}
+ * @private
+ */
+PIXI.WebGLRenderGroup.prototype.handleFilter = function(filter, projection)
+{
+	
+}
+
+/**
+ * Renders a specific displayObject
+ *
+ * @method renderSpecific
+ * @param displayObject {DisplayObject}
+ * @param projection {Object}
+ * @private
+ */
 PIXI.WebGLRenderGroup.prototype.renderSpecific = function(displayObject, projection)
 {
 	PIXI.WebGLRenderer.updateTextures();
@@ -4779,8 +5474,18 @@ PIXI.WebGLRenderGroup.prototype.renderSpecific = function(displayObject, project
 	var endIndex;
 	var endBatchIndex;
 	
-	// get NEXT Renderable!
-	var nextRenderable = displayObject.renderable ? displayObject : this.getNextRenderable(displayObject);
+	/*
+	 *  LOOK FOR THE NEXT SPRITE
+	 *  This part looks for the closest next sprite that can go into a batch
+	 *  it keeps looking until it finds a sprite or gets to the end of the display
+	 *  scene graph
+	 */
+	var nextRenderable = displayObject.first;
+	while(nextRenderable._iNext)
+	{
+		nextRenderable = nextRenderable._iNext;
+		if(nextRenderable.renderable && nextRenderable.__renderGroup)break;
+	}
 	var startBatch = nextRenderable.batch;
 	
 	if(nextRenderable instanceof PIXI.Sprite)
@@ -4857,7 +5562,7 @@ PIXI.WebGLRenderGroup.prototype.renderSpecific = function(displayObject, project
 		}
 		else
 		{
-			this.renderSpecial(startBatch);
+			this.renderSpecial(startBatch, projection);
 		}
 		return;
 	}
@@ -4873,7 +5578,7 @@ PIXI.WebGLRenderGroup.prototype.renderSpecific = function(displayObject, project
 	}
 	else
 	{
-		this.renderSpecial(startBatch);
+		this.renderSpecial(startBatch, projection);
 	}
 	
 	// DO the middle batchs..
@@ -4887,7 +5592,7 @@ PIXI.WebGLRenderGroup.prototype.renderSpecific = function(displayObject, project
 		}
 		else
 		{
-			this.renderSpecial(renderable);
+			this.renderSpecial(renderable, projection);
 		}
 	}
 	
@@ -4898,30 +5603,74 @@ PIXI.WebGLRenderGroup.prototype.renderSpecific = function(displayObject, project
 	}
 	else
 	{
-		this.renderSpecial(endBatch);
+		this.renderSpecial(endBatch, projection);
 	}
 }
 
-PIXI.WebGLRenderGroup.prototype.renderSpecial = function(renderable)
+/**
+ * Renders a specific renderable
+ *
+ * @method renderSpecial
+ * @param renderable {DisplayObject}
+ * @param projection {Object}
+ * @private
+ */
+PIXI.WebGLRenderGroup.prototype.renderSpecial = function(renderable, projection)
 {
 	if(renderable instanceof PIXI.TilingSprite)
 	{
-		if(renderable.visible)this.renderTilingSprite(renderable, projectionMatrix);
+		if(renderable.visible)this.renderTilingSprite(renderable, projection);
 	}
 	else if(renderable instanceof PIXI.Strip)
 	{
-		if(renderable.visible)this.renderStrip(renderable, projectionMatrix);
+		if(renderable.visible)this.renderStrip(renderable, projection);
 	}
 	else if(renderable instanceof PIXI.CustomRenderable)
 	{
-		if(renderable.visible) renderable.renderWebGL(this, projectionMatrix);
+		if(renderable.visible) renderable.renderWebGL(this, projection);
 	}
 	else if(renderable instanceof PIXI.Graphics)
 	{
-		if(renderable.visible) PIXI.WebGLGraphics.renderGraphics(renderable);//, projectionMatrix);
+		if(renderable.visible && renderable.renderable) PIXI.WebGLGraphics.renderGraphics(renderable, projection);
+	}
+	else if(renderable instanceof PIXI.FilterBlock)
+	{
+		/*
+		 * for now only masks are supported..
+		 */
+
+		var gl = PIXI.gl;
+
+		if(renderable.open)
+		{
+			gl.enable(gl.STENCIL_TEST);
+				
+			gl.colorMask(false, false, false, false);
+			gl.stencilFunc(gl.ALWAYS,1,0xff);
+			gl.stencilOp(gl.KEEP,gl.KEEP,gl.REPLACE);
+  
+			PIXI.WebGLGraphics.renderGraphics(renderable.mask, projection);
+			
+			// we know this is a render texture so enable alpha too..
+			gl.colorMask(true, true, true, true);
+			gl.stencilFunc(gl.NOTEQUAL,0,0xff);
+			gl.stencilOp(gl.KEEP,gl.KEEP,gl.KEEP);
+		}
+		else
+		{
+			gl.disable(gl.STENCIL_TEST);
+		}
 	}
 }
 
+/**
+ * Checks the visibility of a displayObject
+ *
+ * @method checkVisibility
+ * @param displayObject {DisplayObject}
+ * @param globalVisible {Boolean}
+ * @private
+ */
 PIXI.WebGLRenderGroup.prototype.checkVisibility = function(displayObject, globalVisible)
 {
 	// give the dp a reference to its renderGroup...
@@ -4950,6 +5699,13 @@ PIXI.WebGLRenderGroup.prototype.checkVisibility = function(displayObject, global
 	};
 }
 
+/**
+ * Updates a webgl texture
+ *
+ * @method updateTexture
+ * @param displayObject {DisplayObject}
+ * @private
+ */
 PIXI.WebGLRenderGroup.prototype.updateTexture = function(displayObject)
 {
 	
@@ -4985,6 +5741,67 @@ PIXI.WebGLRenderGroup.prototype.updateTexture = function(displayObject)
 	this.insertObject(displayObject, previousRenderable, nextRenderable);
 }
 
+/**
+ * Adds filter blocks
+ *
+ * @method addFilterBlocks
+ * @param start {FilterBlock}
+ * @param end {FilterBlock}
+ * @private
+ */
+PIXI.WebGLRenderGroup.prototype.addFilterBlocks = function(start, end)
+{
+	start.__renderGroup = this;
+	end.__renderGroup = this;
+	/*
+	 *  LOOK FOR THE PREVIOUS RENDERABLE
+	 *  This part looks for the closest previous sprite that can go into a batch
+	 *  It keeps going back until it finds a sprite or the stage
+	 */
+	var previousRenderable = start;
+	while(previousRenderable != this.root)
+	{
+		previousRenderable = previousRenderable._iPrev;
+		if(previousRenderable.renderable && previousRenderable.__renderGroup)break;
+	}
+	this.insertAfter(start, previousRenderable);
+		
+	/*
+	 *  LOOK FOR THE NEXT SPRITE
+	 *  This part looks for the closest next sprite that can go into a batch
+	 *  it keeps looking until it finds a sprite or gets to the end of the display
+	 *  scene graph
+	 */
+	var previousRenderable2 = end;
+	while(previousRenderable2 != this.root)
+	{
+		previousRenderable2 = previousRenderable2._iPrev;
+		if(previousRenderable2.renderable && previousRenderable2.__renderGroup)break;
+	}
+	this.insertAfter(end, previousRenderable2);
+}
+
+/**
+ * Remove filter blocks
+ *
+ * @method removeFilterBlocks
+ * @param start {FilterBlock}
+ * @param end {FilterBlock}
+ * @private
+ */
+PIXI.WebGLRenderGroup.prototype.removeFilterBlocks = function(start, end)
+{
+	this.removeObject(start);
+	this.removeObject(end);
+}
+
+/**
+ * Adds a display object and children to the webgl context
+ *
+ * @method addDisplayObjectAndChildren
+ * @param displayObject {DisplayObject}
+ * @private
+ */
 PIXI.WebGLRenderGroup.prototype.addDisplayObjectAndChildren = function(displayObject)
 {
 	if(displayObject.__renderGroup)displayObject.__renderGroup.removeDisplayObjectAndChildren(displayObject);
@@ -4996,7 +5813,7 @@ PIXI.WebGLRenderGroup.prototype.addDisplayObjectAndChildren = function(displayOb
 	 */
 	
 	var previousRenderable = displayObject.first;
-	while(previousRenderable != this.root)
+	while(previousRenderable != this.root.first)
 	{
 		previousRenderable = previousRenderable._iPrev;
 		if(previousRenderable.renderable && previousRenderable.__renderGroup)break;
@@ -5019,13 +5836,13 @@ PIXI.WebGLRenderGroup.prototype.addDisplayObjectAndChildren = function(displayOb
 	
 	var tempObject = displayObject.first;
 	var testObject = displayObject.last._iNext;
-	
 	do	
 	{
 		tempObject.__renderGroup = this;
-
+		
 		if(tempObject.renderable)
 		{
+		
 			this.insertObject(tempObject, previousRenderable, nextRenderable);
 			previousRenderable = tempObject;
 		}
@@ -5035,6 +5852,13 @@ PIXI.WebGLRenderGroup.prototype.addDisplayObjectAndChildren = function(displayOb
 	while(tempObject != testObject)
 }
 
+/**
+ * Removes a display object and children to the webgl context
+ *
+ * @method removeDisplayObjectAndChildren
+ * @param displayObject {DisplayObject}
+ * @private
+ */
 PIXI.WebGLRenderGroup.prototype.removeDisplayObjectAndChildren = function(displayObject)
 {
 	if(displayObject.__renderGroup != this)return;
@@ -5050,12 +5874,21 @@ PIXI.WebGLRenderGroup.prototype.removeDisplayObjectAndChildren = function(displa
 	while(displayObject)
 }
 
+/**
+ * Inserts a displayObject into the linked list
+ *
+ * @method insertObject
+ * @param displayObject {DisplayObject}
+ * @param previousObject {DisplayObject}
+ * @param nextObject {DisplayObject}
+ * @private
+ */
 PIXI.WebGLRenderGroup.prototype.insertObject = function(displayObject, previousObject, nextObject)
 {
 	// while looping below THE OBJECT MAY NOT HAVE BEEN ADDED
 	var previousSprite = previousObject;
 	var nextSprite = nextObject;
-
+	
 	/*
 	 * so now we have the next renderable and the previous renderable
 	 * 
@@ -5124,6 +5957,7 @@ PIXI.WebGLRenderGroup.prototype.insertObject = function(displayObject, previousO
 			else
 			{
 				// TODO re-word!
+				
 				nextBatch = nextSprite;
 			}
 		}
@@ -5146,32 +5980,100 @@ PIXI.WebGLRenderGroup.prototype.insertObject = function(displayObject, previousO
 		{
 			this.batchs.push(batch);
 		}
-	
+		
+		return;
 	}
 	else if(displayObject instanceof PIXI.TilingSprite)
 	{
 		
 		// add to a batch!!
 		this.initTilingSprite(displayObject);
-		this.batchs.push(displayObject);
+	//	this.batchs.push(displayObject);
 		
 	}
 	else if(displayObject instanceof PIXI.Strip)
 	{
 		// add to a batch!!
 		this.initStrip(displayObject);
-		this.batchs.push(displayObject);
+	//	this.batchs.push(displayObject);
 	}
-	else if(displayObject instanceof PIXI.Graphics)
+	else if(displayObject)// instanceof PIXI.Graphics)
 	{
 		//displayObject.initWebGL(this);
 		
 		// add to a batch!!
 		//this.initStrip(displayObject);
-		this.batchs.push(displayObject);
+		//this.batchs.push(displayObject);
+	}
+	
+	this.insertAfter(displayObject, previousSprite);
+			
+	// insert and SPLIT!
+
+}
+
+/**
+ * Inserts a displayObject into the linked list
+ *
+ * @method insertAfter
+ * @param item {DisplayObject}
+ * @param displayObject {DisplayObject} The object to insert
+ * @private
+ */
+PIXI.WebGLRenderGroup.prototype.insertAfter = function(item, displayObject)
+{
+	if(displayObject instanceof PIXI.Sprite)
+	{
+		var previousBatch = displayObject.batch;
+		
+		if(previousBatch)
+		{
+			// so this object is in a batch!
+			
+			// is it not? need to split the batch
+			if(previousBatch.tail == displayObject)
+			{
+				// is it tail? insert in to batchs	
+				var index = this.batchs.indexOf( previousBatch );
+				this.batchs.splice(index+1, 0, item);
+			}
+			else
+			{
+				// TODO MODIFY ADD / REMOVE CHILD TO ACCOUNT FOR FILTERS (also get prev and next) //
+				
+				// THERE IS A SPLIT IN THIS BATCH! //
+				var splitBatch = previousBatch.split(displayObject.__next);
+				
+				// COOL!
+				// add it back into the array	
+				/*
+				 * OOPS!
+				 * seems the new sprite is in the middle of a batch
+				 * lets split it.. 
+				 */
+				var index = this.batchs.indexOf( previousBatch );
+				this.batchs.splice(index+1, 0, item, splitBatch);
+			}
+		}
+		else
+		{
+			this.batchs.push(item);
+		}
+	}
+	else
+	{
+		var index = this.batchs.indexOf( displayObject );
+		this.batchs.splice(index+1, 0, item);
 	}
 }
 
+/**
+ * Removes a displayObject from the linked list
+ *
+ * @method removeObject
+ * @param displayObject {DisplayObject} The object to remove
+ * @private
+ */
 PIXI.WebGLRenderGroup.prototype.removeObject = function(displayObject)
 {
 	// loop through children..
@@ -5243,15 +6145,11 @@ PIXI.WebGLRenderGroup.prototype.removeObject = function(displayObject)
 	}
 }
 
-
 /**
- * @private
- */
-
-
-
-
-/**
+ * Initializes a tiling sprite
+ *
+ * @method initTilingSprite
+ * @param sprite {TilingSprite} The tiling sprite to initialize
  * @private
  */
 PIXI.WebGLRenderGroup.prototype.initTilingSprite = function(sprite)
@@ -5307,6 +6205,11 @@ PIXI.WebGLRenderGroup.prototype.initTilingSprite = function(sprite)
 }
 
 /**
+ * Renders a Strip
+ *
+ * @method renderStrip
+ * @param strip {Strip} The strip to render
+ * @param projection {Object}
  * @private
  */
 PIXI.WebGLRenderGroup.prototype.renderStrip = function(strip, projection)
@@ -5330,7 +6233,7 @@ PIXI.WebGLRenderGroup.prototype.renderStrip = function(strip, projection)
 	gl.uniform2f(PIXI.stripShaderProgram.projectionVector, projection.x, projection.y);
 	gl.uniform1f(PIXI.stripShaderProgram.alpha, strip.worldAlpha);
 
-
+/*
 	if(strip.blendMode == PIXI.blendModes.NORMAL)
 	{
 		gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -5339,7 +6242,7 @@ PIXI.WebGLRenderGroup.prototype.renderStrip = function(strip, projection)
 	{
 		gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_COLOR);
 	}
-	
+	*/
 	
 	
 	if(!strip.dirty)
@@ -5393,8 +6296,12 @@ PIXI.WebGLRenderGroup.prototype.renderStrip = function(strip, projection)
   	gl.useProgram(PIXI.shaderProgram);
 }
 
-
 /**
+ * Renders a TilingSprite
+ *
+ * @method renderTilingSprite
+ * @param sprite {TilingSprite} The tiling sprite to render
+ * @param projectionMatrix {Object}
  * @private
  */
 PIXI.WebGLRenderGroup.prototype.renderTilingSprite = function(sprite, projectionMatrix)
@@ -5429,9 +6336,11 @@ PIXI.WebGLRenderGroup.prototype.renderTilingSprite = function(sprite, projection
 	this.renderStrip(sprite, projectionMatrix);
 }
 
-
-
 /**
+ * Initializes a strip to be rendered
+ *
+ * @method initStrip
+ * @param strip {Strip} The strip to initialize
  * @private
  */
 PIXI.WebGLRenderGroup.prototype.initStrip = function(strip)
@@ -5459,7 +6368,6 @@ PIXI.WebGLRenderGroup.prototype.initStrip = function(strip)
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, strip.indices, gl.STATIC_DRAW);
 }
 
-
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -5468,65 +6376,66 @@ PIXI.WebGLRenderGroup.prototype.initStrip = function(strip)
 /**
  * the CanvasRenderer draws the stage and all its content onto a 2d canvas. This renderer should be used for browsers that do not support webGL.
  * Dont forget to add the view to your DOM or you will not see anything :)
+ *
  * @class CanvasRenderer
  * @constructor
- * @param width {Number} the width of the canvas view
- * @default 0
- * @param height {Number} the height of the canvas view
- * @default 0
+ * @param width=0 {Number} the width of the canvas view
+ * @param height=0 {Number} the height of the canvas view
  * @param view {Canvas} the canvas to use as a view, optional
- * @param transparent {Boolean} the transparency of the render view, default false
- * @default false
- * 
+ * @param transparent=false {Boolean} the transparency of the render view, default false
  */
 PIXI.CanvasRenderer = function(width, height, view, transparent)
 {
 	this.transparent = transparent;
-	
+
 	/**
 	 * The width of the canvas view
+	 *
 	 * @property width
 	 * @type Number
 	 * @default 800
 	 */
 	this.width = width || 800;
+
 	/**
 	 * The height of the canvas view
+	 *
 	 * @property height
 	 * @type Number
 	 * @default 600
 	 */
 	this.height = height || 600;
-	
-	this.refresh = true;
-	
+
 	/**
 	 * The canvas element that the everything is drawn to
+	 *
 	 * @property view
 	 * @type Canvas
 	 */
-	this.view = view || document.createElement( 'canvas' ); 
-	
-	// hack to enable some hardware acceleration!
-	//this.view.style["transform"] = "translatez(0)";
-	
-    this.view.width = this.width;
-	this.view.height = this.height;  
-	this.count = 0;
-	
+	this.view = view || document.createElement( 'canvas' );
+
 	/**
 	 * The canvas context that the everything is drawn to
 	 * @property context
 	 * @type Canvas 2d Context
 	 */
 	this.context = this.view.getContext("2d");
+
+	this.refresh = true;
+	// hack to enable some hardware acceleration!
+	//this.view.style["transform"] = "translatez(0)";
+	
+    this.view.width = this.width;
+	this.view.height = this.height;  
+	this.count = 0;
 }
 
 // constructor
-PIXI.CanvasRenderer.constructor = PIXI.CanvasRenderer;
+PIXI.CanvasRenderer.prototype.constructor = PIXI.CanvasRenderer;
 
 /**
  * Renders the stage to its canvas view
+ *
  * @method render
  * @param stage {Stage} the Stage element to be rendered
  */
@@ -5567,12 +6476,16 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
 	{
 		PIXI.Texture.frameUpdates = [];
 	}
+	
+	
 }
 
 /**
  * resizes the canvas view to the specified width and height
- * @param the new width of the canvas view
- * @param the new height of the canvas view
+ *
+ * @method resize
+ * @param width {Number} the new width of the canvas view
+ * @param height {Number} the new height of the canvas view
  */
 PIXI.CanvasRenderer.prototype.resize = function(width, height)
 {
@@ -5584,14 +6497,19 @@ PIXI.CanvasRenderer.prototype.resize = function(width, height)
 }
 
 /**
+ * Renders a display object
+ *
+ * @method renderDisplayObject
+ * @param displayObject {DisplayObject} The displayObject to render
  * @private
  */
-
 PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 {
 	// no loger recurrsive!
 	var transform;
 	var context = this.context;
+	
+	context.globalCompositeOperation = 'source-over';
 	
 	// one the display object hits this. we can break the loop	
 	var testObject = displayObject.last._iNext;
@@ -5654,17 +6572,50 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
 			PIXI.CanvasGraphics.renderGraphics(displayObject, context);
 		}
-		
+		else if(displayObject instanceof PIXI.FilterBlock)
+		{
+			if(displayObject.open)
+			{
+				context.save();
+				
+				var cacheAlpha = displayObject.mask.alpha;
+				var maskTransform = displayObject.mask.worldTransform;
+				
+				context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
+				
+				displayObject.mask.worldAlpha = 0.5;
+				
+				context.worldAlpha = 0;
+				
+				PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, context);
+		//		context.fillStyle = 0xFF0000;
+			//	context.fillRect(0, 0, 200, 200);
+				context.clip();
+				
+				displayObject.mask.worldAlpha = cacheAlpha;
+				//context.globalCompositeOperation = 'lighter';
+			}
+			else
+			{
+				//context.globalCompositeOperation = 'source-over';
+				context.restore();
+			}
+		}
 	//	count++
 		displayObject = displayObject._iNext;
 		
 		
 	}
 	while(displayObject != testObject)
+
+	
 }
 
-
 /**
+ * Renders a flat strip
+ *
+ * @method renderStripFlat
+ * @param strip {Strip} The Strip to render
  * @private
  */
 PIXI.CanvasRenderer.prototype.renderStripFlat = function(strip)
@@ -5698,6 +6649,10 @@ PIXI.CanvasRenderer.prototype.renderStripFlat = function(strip)
 }
 
 /**
+ * Renders a tiling sprite
+ *
+ * @method renderTilingSprite
+ * @param sprite {TilingSprite} The tilingsprite to render
  * @private
  */
 PIXI.CanvasRenderer.prototype.renderTilingSprite = function(sprite)
@@ -5726,9 +6681,11 @@ PIXI.CanvasRenderer.prototype.renderTilingSprite = function(sprite)
     context.closePath();
 }
 
-
-
 /**
+ * Renders a strip
+ *
+ * @method renderStrip
+ * @param strip {Strip} The Strip to render
  * @private
  */
 PIXI.CanvasRenderer.prototype.renderStrip = function(strip)
@@ -5789,14 +6746,6 @@ PIXI.CanvasRenderer.prototype.renderStrip = function(strip)
 //	context.globalCompositeOperation = 'source-over';	
 }
 
-
-
-
-
-
-
-
-
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -5804,7 +6753,8 @@ PIXI.CanvasRenderer.prototype.renderStrip = function(strip)
 
 /**
  * A set of functions used by the canvas renderer to draw the primitive graphics data
- * @class CanvasGraphics 
+ *
+ * @class CanvasGraphics
  */
 PIXI.CanvasGraphics = function()
 {
@@ -5813,8 +6763,10 @@ PIXI.CanvasGraphics = function()
 
 
 /*
- * @private
+ * Renders the graphics object
+ *
  * @static
+ * @private
  * @method renderGraphics
  * @param graphics {Graphics}
  * @param context {Context2D}
@@ -5834,7 +6786,6 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
 		
 		if(data.type == PIXI.Graphics.POLY)
 		{
-			
 			//if(data.lineWidth <= 0)continue;
 			
 			context.beginPath();
@@ -5866,6 +6817,7 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
 		}
 		else if(data.type == PIXI.Graphics.RECT)
 		{
+				
 			// TODO - need to be Undefined!
 			if(data.fillColor)
 			{
@@ -5879,6 +6831,7 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
 				context.globalAlpha = data.lineAlpha * worldAlpha;
 				context.strokeRect(points[0], points[1], points[2], points[3]);
 			}
+			
 		}
 		else if(data.type == PIXI.Graphics.CIRC)
 		{
@@ -5943,6 +6896,96 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
 			}
 		}
       	
+	};
+}
+
+/*
+ * Renders a graphics mask
+ *
+ * @static
+ * @private
+ * @method renderGraphicsMask
+ * @param graphics {Graphics}
+ * @param context {Context2D}
+ */
+PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
+{
+	var worldAlpha = graphics.worldAlpha;
+	
+	var len = graphics.graphicsData.length;
+	if(len > 1)
+	{
+		len = 1;
+		console.log("Pixi.js warning: masks in canvas can only mask using the first path in the graphics object")
+	}
+	
+	for (var i=0; i < 1; i++) 
+	{
+		var data = graphics.graphicsData[i];
+		var points = data.points;
+		
+		if(data.type == PIXI.Graphics.POLY)
+		{
+			//if(data.lineWidth <= 0)continue;
+			
+			context.beginPath();
+			context.moveTo(points[0], points[1]);
+			
+			for (var j=1; j < points.length/2; j++)
+			{
+				context.lineTo(points[j * 2], points[j * 2 + 1]);
+			} 
+	      	
+	      	// if the first and last point are the same close the path - much neater :)
+	      	if(points[0] == points[points.length-2] && points[1] == points[points.length-1])
+	      	{
+	      		context.closePath();
+	      	}
+			
+		}
+		else if(data.type == PIXI.Graphics.RECT)
+		{
+			context.beginPath();
+			context.rect(points[0], points[1], points[2], points[3]);
+			context.closePath();
+		}
+		else if(data.type == PIXI.Graphics.CIRC)
+		{
+			// TODO - need to be Undefined!
+      		context.beginPath();
+			context.arc(points[0], points[1], points[2],0,2*Math.PI);
+			context.closePath();
+		}
+		else if(data.type == PIXI.Graphics.ELIP)
+		{
+			
+			// elipse code taken from: http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
+			var elipseData =  data.points;
+			
+			var w = elipseData[2] * 2;
+			var h = elipseData[3] * 2;
+	
+			var x = elipseData[0] - w/2;
+			var y = elipseData[1] - h/2;
+			
+      		context.beginPath();
+			
+			var kappa = .5522848,
+			ox = (w / 2) * kappa, // control point offset horizontal
+			oy = (h / 2) * kappa, // control point offset vertical
+			xe = x + w,           // x-end
+			ye = y + h,           // y-end
+			xm = x + w / 2,       // x-middle
+			ym = y + h / 2;       // y-middle
+			
+			context.moveTo(x, ym);
+			context.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+			context.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+			context.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+			context.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+			context.closePath();
+		}
+      	
 	   
 	};
 }
@@ -5956,6 +6999,7 @@ PIXI.CanvasGraphics.renderGraphics = function(graphics, context)
  * The Graphics class contains a set of methods that you can use to create primitive shapes and lines. 
  * It is important to know that with the webGL renderer only simple polys can be filled at this stage
  * Complex polys will not be filled. Heres an example of a complex poly: http://www.goodboydigital.com/wp-content/uploads/2013/06/complexPolygon.png
+ *
  * @class Graphics 
  * @extends DisplayObjectContainer
  * @constructor
@@ -5965,27 +7009,61 @@ PIXI.Graphics = function()
 	PIXI.DisplayObjectContainer.call( this );
 	
 	this.renderable = true;
-	
+
+    /**
+     * The alpha of the fill of this graphics object
+     *
+     * @property fillAlpha
+     * @type Number
+     */
 	this.fillAlpha = 1;
-	
-	this.lineWidth = 2;
-	this.lineColor = "#FF0000";
-	
+
+    /**
+     * The width of any lines drawn
+     *
+     * @property lineWidth
+     * @type Number
+     */
+	this.lineWidth = 0;
+
+    /**
+     * The color of any lines drawn
+     *
+     * @property lineColor
+     * @type String
+     */
+	this.lineColor = "black";
+
+    /**
+     * Graphics data
+     *
+     * @property graphicsData
+     * @type Array
+     * @private
+     */
 	this.graphicsData = [];
-	
+
+    /**
+     * Current path
+     *
+     * @property currentPath
+     * @type Object
+     * @private
+     */
 	this.currentPath = {points:[]};
 }
 
 // constructor
-PIXI.Graphics.constructor = PIXI.Graphics;
 PIXI.Graphics.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+PIXI.Graphics.prototype.constructor = PIXI.Graphics;
 
 /**
  * Specifies a line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.
+ *
  * @method lineStyle
- * @param lineWidth {Number}
- * @param color {Number}
- * @param alpha {Number}
+ * @param lineWidth {Number} width of the line to draw, will update the object's stored style
+ * @param color {Number} color of the line to draw, will update the object's stored style
+ * @param alpha {Number} alpha of the line to draw, will update the object's stored style
  */
 PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
 {
@@ -6003,9 +7081,10 @@ PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
 
 /**
  * Moves the current drawing position to (x, y).
+ *
  * @method moveTo
- * @param x {Number}
- * @param y {Number}
+ * @param x {Number} the X coord to move to
+ * @param y {Number} the Y coord to move to
  */
 PIXI.Graphics.prototype.moveTo = function(x, y)
 {
@@ -6020,10 +7099,12 @@ PIXI.Graphics.prototype.moveTo = function(x, y)
 }
 
 /**
- * Draws a line using the current line style from the current drawing position to (x, y); the current drawing position is then set to (x, y).
+ * Draws a line using the current line style from the current drawing position to (x, y);
+ * the current drawing position is then set to (x, y).
+ *
  * @method lineTo
- * @param x {Number}
- * @param y {Number}
+ * @param x {Number} the X coord to draw to
+ * @param y {Number} the Y coord to draw to
  */
 PIXI.Graphics.prototype.lineTo = function(x, y)
 {
@@ -6032,7 +7113,9 @@ PIXI.Graphics.prototype.lineTo = function(x, y)
 }
 
 /**
- * Specifies a simple one-color fill that subsequent calls to other Graphics methods (such as lineTo() or drawCircle()) use when drawing.
+ * Specifies a simple one-color fill that subsequent calls to other Graphics methods
+ * (such as lineTo() or drawCircle()) use when drawing.
+ *
  * @method beginFill
  * @param color {uint} the color of the fill
  * @param alpha {Number} the alpha
@@ -6046,6 +7129,7 @@ PIXI.Graphics.prototype.beginFill = function(color, alpha)
 
 /**
  * Applies a fill to the lines and shapes that were added since the last call to the beginFill() method.
+ *
  * @method endFill
  */
 PIXI.Graphics.prototype.endFill = function()
@@ -6057,10 +7141,11 @@ PIXI.Graphics.prototype.endFill = function()
 
 /**
  * @method drawRect
- * @param x {Number}
- * @param y {Number}
- * @param width {Number}
- * @param height {Number}
+ *
+ * @param x {Number} The X coord of the top-left of the rectangle
+ * @param y {Number} The Y coord of the top-left of the rectangle
+ * @param width {Number} The width of the rectangle
+ * @param height {Number} The height of the rectangle
  */
 PIXI.Graphics.prototype.drawRect = function( x, y, width, height )
 {
@@ -6076,10 +7161,11 @@ PIXI.Graphics.prototype.drawRect = function( x, y, width, height )
 
 /**
  * Draws a circle.
+ *
  * @method drawCircle
- * @param x {Number}
- * @param y {Number}
- * @param radius {Number}
+ * @param x {Number} The X coord of the center of the circle
+ * @param y {Number} The Y coord of the center of the circle
+ * @param radius {Number} The radius of the circle
  */
 PIXI.Graphics.prototype.drawCircle = function( x, y, radius)
 {
@@ -6095,6 +7181,7 @@ PIXI.Graphics.prototype.drawCircle = function( x, y, radius)
 
 /**
  * Draws an elipse.
+ *
  * @method drawElipse
  * @param x {Number}
  * @param y {Number}
@@ -6115,6 +7202,7 @@ PIXI.Graphics.prototype.drawElipse = function( x, y, width, height)
 
 /**
  * Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
+ *
  * @method clear
  */
 PIXI.Graphics.prototype.clear = function()
@@ -6201,8 +7289,8 @@ PIXI.Strip = function(texture, width, height)
 }
 
 // constructor
-PIXI.Strip.constructor = PIXI.Strip;
 PIXI.Strip.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+PIXI.Strip.prototype.constructor = PIXI.Strip;
 
 PIXI.Strip.prototype.setTexture = function(texture)
 {
@@ -6254,8 +7342,8 @@ PIXI.Rope = function(texture, points)
 
 
 // constructor
-PIXI.Rope.constructor = PIXI.Rope;
 PIXI.Rope.prototype = Object.create( PIXI.Strip.prototype );
+PIXI.Rope.prototype.constructor = PIXI.Rope;
 
 PIXI.Rope.prototype.refresh = function()
 {
@@ -6405,6 +7493,7 @@ PIXI.Rope.prototype.setTexture = function(texture)
 
 /**
  * A tiling sprite is a fast way of rendering a tiling image
+ *
  * @class TilingSprite
  * @extends DisplayObjectContainer
  * @constructor
@@ -6415,31 +7504,62 @@ PIXI.Rope.prototype.setTexture = function(texture)
 PIXI.TilingSprite = function(texture, width, height)
 {
 	PIXI.DisplayObjectContainer.call( this );
-	
+
+	/**
+	 * The texture that the sprite is using
+	 *
+	 * @property texture
+	 * @type Texture
+	 */
 	this.texture = texture;
+
+	/**
+	 * The width of the tiling sprite
+	 *
+	 * @property width
+	 * @type Number
+	 */
 	this.width = width;
+
+	/**
+	 * The height of the tiling sprite
+	 *
+	 * @property height
+	 * @type Number
+	 */
 	this.height = height;
-	this.renderable = true;
+
 	/**
 	 * The scaling of the image that is being tiled
+	 *
 	 * @property tileScale
 	 * @type Point
 	 */	
 	this.tileScale = new PIXI.Point(1,1);
+
 	/**
 	 * The offset position of the image that is being tiled
+	 *
 	 * @property tilePosition
 	 * @type Point
 	 */	
 	this.tilePosition = new PIXI.Point(0,0);
+
+	this.renderable = true;
 	
 	this.blendMode = PIXI.blendModes.NORMAL
 }
 
 // constructor
-PIXI.TilingSprite.constructor = PIXI.TilingSprite;
 PIXI.TilingSprite.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+PIXI.TilingSprite.prototype.constructor = PIXI.TilingSprite;
 
+/**
+ * Sets the texture of the tiling sprite
+ *
+ * @method setTexture
+ * @param texture {Texture} The PIXI texture that is displayed by the sprite
+ */
 PIXI.TilingSprite.prototype.setTexture = function(texture)
 {
 	//TODO SET THE TEXTURES
@@ -6450,6 +7570,13 @@ PIXI.TilingSprite.prototype.setTexture = function(texture)
 	this.updateFrame = true;
 }
 
+/**
+ * When the texture is updated, this event will fire to update the frame
+ *
+ * @method onTextureUpdate
+ * @param event
+ * @private
+ */
 PIXI.TilingSprite.prototype.onTextureUpdate = function(event)
 {
 	this.updateFrame = true;
@@ -6468,12 +7595,12 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function(event)
 /**
  * A class that enables the you to import and run your spine animations in pixi.
  * Spine animation data needs to be loaded using the PIXI.AssetLoader or PIXI.SpineLoader before it can be used by this class
- * Also due to a clash of names  You will need to change the extension of the spine file from *.json to *.anim for it to load
  * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
+ *
  * @class Spine
- * @constructor
  * @extends DisplayObjectContainer
- * @param {String} url the url of the spine anim file to be used
+ * @constructor
+ * @param url {String} The url of the spine anim file to be used
  */
 PIXI.Spine = function(url)
 {
@@ -6516,8 +7643,15 @@ PIXI.Spine = function(url)
 	};
 }
 
-PIXI.Spine.constructor = PIXI.Spine;
 PIXI.Spine.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+PIXI.Spine.prototype.constructor = PIXI.Spine;
+
+/*
+ * Updates the object transform for rendering
+ *
+ * @method updateTransform
+ * @private
+ */
 PIXI.Spine.prototype.updateTransform = function()
 {
 	// TODO should make this time based really..
@@ -7909,7 +9043,8 @@ spine.Bone.yDown = true;
 
 
 /**
- * Need to finalize this a bit more but works! Its in but will be working on this feature properly next..:)
+ * This object is one that will allow you to specify custom rendering functions based on render type
+ *
  * @class CustomRenderable 
  * @extends DisplayObject
  * @constructor
@@ -7921,21 +9056,37 @@ PIXI.CustomRenderable = function()
 }
 
 // constructor
-PIXI.CustomRenderable.constructor = PIXI.CustomRenderable;
 PIXI.CustomRenderable.prototype = Object.create( PIXI.DisplayObject.prototype );
+PIXI.CustomRenderable.prototype.constructor = PIXI.CustomRenderable;
 
+/**
+ * If this object is being rendered by a CanvasRenderer it will call this callback
+ *
+ * @method renderCanvas
+ * @param renderer {CanvasRenderer} The renderer instance
+ */
 PIXI.CustomRenderable.prototype.renderCanvas = function(renderer)
 {
 	// override!
 }
 
-
+/**
+ * If this object is being rendered by a WebGLRenderer it will call this callback to initialize
+ *
+ * @method initWebGL
+ * @param renderer {WebGLRenderer} The renderer instance
+ */
 PIXI.CustomRenderable.prototype.initWebGL = function(renderer)
 {
 	// override!
 }
 
-
+/**
+ * If this object is being rendered by a WebGLRenderer it will call this callback
+ *
+ * @method renderWebGL
+ * @param renderer {WebGLRenderer} The renderer instance
+ */
 PIXI.CustomRenderable.prototype.renderWebGL = function(renderGroup, projectionMatrix)
 {
 	// not sure if both needed? but ya have for now!
@@ -7953,45 +9104,54 @@ PIXI.texturesToDestroy = [];
 
 /**
  * A texture stores the information that represents an image. All textures have a base texture
+ *
  * @class BaseTexture
- * @extends EventTarget
+ * @uses EventTarget
  * @constructor
  * @param source {String} the source object (image or canvas)
  */
 PIXI.BaseTexture = function(source)
 {
 	PIXI.EventTarget.call( this );
-	
-	/*
-	 * The url of the texture
-	 * @property imageUrl
-	 * @type String
-	 */
-	//this.imageUrl = source.src;
-	
+
 	/**
-	 * [read only] The width of the base texture set when the image has loaded
+	 * [read-only] The width of the base texture set when the image has loaded
+	 *
 	 * @property width
 	 * @type Number
+	 * @readOnly
 	 */
 	this.width = 100;
+
 	/**
-	 * [read only] The height of the base texture set when the image has loaded
+	 * [read-only] The height of the base texture set when the image has loaded
+	 *
 	 * @property height
 	 * @type Number
+	 * @readOnly
 	 */
 	this.height = 100;
-	
+
+	/**
+	 * [read-only] Describes if the base texture has loaded or not
+	 *
+	 * @property hasLoaded
+	 * @type Boolean
+	 * @readOnly
+	 */
+	this.hasLoaded = false;
+
 	/**
 	 * The source that is loaded to create the texture
+	 *
 	 * @property source
 	 * @type Image
 	 */
-	this.source = source//new Image();
-	
+	this.source = source;
+
 	if(!source)return;
-	
-	if(this.source instanceof Image)
+
+	if(this.source instanceof Image || this.source instanceof HTMLImageElement)
 	{
 		if(this.source.complete)
 		{
@@ -8026,13 +9186,17 @@ PIXI.BaseTexture = function(source)
 			
 		PIXI.texturesToUpdate.push(this);
 	}
-	
+
 	this._powerOf2 = false;
-	
 }
 
-PIXI.BaseTexture.constructor = PIXI.BaseTexture;
+PIXI.BaseTexture.prototype.constructor = PIXI.BaseTexture;
 
+/**
+ * Destroys this base texture
+ *
+ * @method destroy
+ */
 PIXI.BaseTexture.prototype.destroy = function()
 {
 	if(this.source instanceof Image)
@@ -8044,9 +9208,9 @@ PIXI.BaseTexture.prototype.destroy = function()
 }
 
 /**
- * 
  * Helper function that returns a base texture based on an image url
  * If the image is not in the base texture cache it will be  created and loaded
+ *
  * @static
  * @method fromImage
  * @param imageUrl {String} The image url of the texture
@@ -8080,46 +9244,54 @@ PIXI.TextureCache = {};
 PIXI.FrameCache = {};
 
 /**
- * A texture stores the information that represents an image or part of an image. It cannot be added to the display list directly. To do this use PIXI.Sprite. If no frame is provided then the whole image is used
+ * A texture stores the information that represents an image or part of an image. It cannot be added
+ * to the display list directly. To do this use PIXI.Sprite. If no frame is provided then the whole image is used
+ *
  * @class Texture
- * @extends EventTarget
+ * @uses EventTarget
  * @constructor
- * @param baseTexture {BaseTexture}
- * @param frmae {Rectangle}
+ * @param baseTexture {BaseTexture} The base texture source to create the texture from
+ * @param frmae {Rectangle} The rectangle frame of the texture to show
  */
 PIXI.Texture = function(baseTexture, frame)
 {
 	PIXI.EventTarget.call( this );
-	
+
 	if(!frame)
 	{
 		this.noFrame = true;
 		frame = new PIXI.Rectangle(0,0,1,1);
 	}
-	
-	this.trim = new PIXI.Point();
 
 	if(baseTexture instanceof PIXI.Texture)
 		baseTexture = baseTexture.baseTexture;
-	
+
 	/**
 	 * The base texture of this texture
+	 *
 	 * @property baseTexture
 	 * @type BaseTexture
 	 */
 	this.baseTexture = baseTexture;
-	
-	
-	
+
 	/**
 	 * The frame specifies the region of the base texture that this texture uses
+	 *
 	 * @property frame
-	 * @type #Rectangle
+	 * @type Rectangle
 	 */
 	this.frame = frame;
-	
+
+	/**
+	 * The trim point
+	 *
+	 * @property trim
+	 * @type Point
+	 */
+	this.trim = new PIXI.Point();
+
 	this.scope = this;
-	
+
 	if(baseTexture.hasLoaded)
 	{
 		if(this.noFrame)frame = new PIXI.Rectangle(0,0, baseTexture.width, baseTexture.height);
@@ -8134,21 +9306,34 @@ PIXI.Texture = function(baseTexture, frame)
 	}
 }
 
-PIXI.Texture.constructor = PIXI.Texture;
+PIXI.Texture.prototype.constructor = PIXI.Texture;
 
+/**
+ * Called when the base texture is loaded
+ *
+ * @method onBaseTextureLoaded
+ * @param event
+ * @private
+ */
 PIXI.Texture.prototype.onBaseTextureLoaded = function(event)
 {
 	var baseTexture = this.baseTexture;
 	baseTexture.removeEventListener( 'loaded', this.onLoaded );
-	
+
 	if(this.noFrame)this.frame = new PIXI.Rectangle(0,0, baseTexture.width, baseTexture.height);
 	this.noFrame = false;
 	this.width = this.frame.width;
 	this.height = this.frame.height;
-	
+
 	this.scope.dispatchEvent( { type: 'update', content: this } );
 }
 
+/**
+ * Destroys this texture
+ *
+ * @method destroy
+ * @param destroyBase {Boolean} Whether to destroy the base texture as well
+ */
 PIXI.Texture.prototype.destroy = function(destroyBase)
 {
 	if(destroyBase)this.baseTexture.destroy();
@@ -8156,33 +9341,35 @@ PIXI.Texture.prototype.destroy = function(destroyBase)
 
 /**
  * Specifies the rectangle region of the baseTexture
+ *
  * @method setFrame
- * @param frame {Rectangle}
+ * @param frame {Rectangle} The frame of the texture to set it to
  */
 PIXI.Texture.prototype.setFrame = function(frame)
 {
 	this.frame = frame;
 	this.width = frame.width;
 	this.height = frame.height;
-	
+
 	if(frame.x + frame.width > this.baseTexture.width || frame.y + frame.height > this.baseTexture.height)
 	{
 		throw new Error("Texture Error: frame does not fit inside the base Texture dimensions " + this);
 	}
-	
+
 	this.updateFrame = true;
-	
+
 	PIXI.Texture.frameUpdates.push(this);
 	//this.dispatchEvent( { type: 'update', content: this } );
 }
 
 /**
- * 
  * Helper function that returns a texture based on an image url
  * If the image is not in the texture cache it will be  created and loaded
+ *
  * @static
  * @method fromImage
  * @param imageUrl {String} The image url of the texture
+ * @param crossorigin {Boolean} Whether requests should be treated as crossorigin
  * @return Texture
  */
 PIXI.Texture.fromImage = function(imageUrl, crossorigin)
@@ -8199,9 +9386,10 @@ PIXI.Texture.fromImage = function(imageUrl, crossorigin)
 }
 
 /**
- * 
  * Helper function that returns a texture based on a frame id
  * If the frame id is not in the texture cache an error will be thrown
+ *
+ * @static
  * @method fromFrame
  * @param frameId {String} The frame id of the texture
  * @return Texture
@@ -8214,9 +9402,9 @@ PIXI.Texture.fromFrame = function(frameId)
 }
 
 /**
- * 
  * Helper function that returns a texture based on a canvas element
  * If the canvas is not in the texture cache it will be  created and loaded
+ *
  * @static
  * @method fromCanvas
  * @param canvas {Canvas} The canvas element source of the texture
@@ -8230,8 +9418,8 @@ PIXI.Texture.fromCanvas = function(canvas)
 
 
 /**
- * 
- * Adds a texture to the textureCache. 
+ * Adds a texture to the textureCache.
+ *
  * @static
  * @method addTextureToCache
  * @param texture {Texture}
@@ -8243,8 +9431,8 @@ PIXI.Texture.addTextureToCache = function(texture, id)
 }
 
 /**
- * 
  * Remove a texture from the textureCache. 
+ *
  * @static
  * @method removeTextureFromCache
  * @param id {String} the id of the texture to be removed
@@ -8290,20 +9478,20 @@ PIXI.Texture.frameUpdates = [];
  @class RenderTexture
  @extends Texture
  @constructor
- @param width {Number}
- @param height {Number}
- **/
+ @param width {Number} The width of the render texture
+ @param height {Number} The height of the render texture
+ */
 PIXI.RenderTexture = function(width, height)
 {
 	PIXI.EventTarget.call( this );
-	
+
 	this.width = width || 100;
 	this.height = height || 100;
 
 	this.indetityMatrix = PIXI.mat3.create();
-	
+
 	this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);	
-	
+
 	if(PIXI.gl)
 	{
 		this.initWebGL();
@@ -8314,19 +9502,25 @@ PIXI.RenderTexture = function(width, height)
 	}
 }
 
-PIXI.RenderTexture.constructor = PIXI.RenderTexture;
 PIXI.RenderTexture.prototype = Object.create( PIXI.Texture.prototype );
+PIXI.RenderTexture.prototype.constructor = PIXI.RenderTexture;
 
+/**
+ * Initializes the webgl data for this texture
+ *
+ * @method initWebGL
+ * @private
+ */
 PIXI.RenderTexture.prototype.initWebGL = function()
 {
 	var gl = PIXI.gl;
 	this.glFramebuffer = gl.createFramebuffer();
-	
+
    	gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
 
     this.glFramebuffer.width = this.width;
     this.glFramebuffer.height = this.height;	
-  
+
 	this.baseTexture = new PIXI.BaseTexture();
 
 	this.baseTexture.width = this.width;
@@ -8334,81 +9528,129 @@ PIXI.RenderTexture.prototype.initWebGL = function()
 
     this.baseTexture._glTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTexture);
-	 	
+
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-	
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-	
+
 	this.baseTexture.isRender = true;
-	
+
 	gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
 	gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.baseTexture._glTexture, 0);
-	
+
 	// create a projection matrix..
 	this.projection = new PIXI.Point(this.width/2 , this.height/2);
-	
+/*
 	this.projectionMatrix =  PIXI.mat4.create();
-	
+
 	this.projectionMatrix[5] = 2/this.height// * 0.5;
 	this.projectionMatrix[13] = -1;
-	
+
 	this.projectionMatrix[0] = 2/this.width;
 	this.projectionMatrix[12] = -1;
-
+*/
 	// set the correct render function..
 	this.render = this.renderWebGL;
+
+	
 }
 
+
+PIXI.RenderTexture.prototype.resize = function(width, height)
+{
+
+	this.width = width;
+	this.height = height;
+	
+	//this.frame.width = this.width
+	//this.frame.height = this.height;
+		
+	
+	if(PIXI.gl)
+	{
+		this.projection.x = this.width/2
+		this.projection.y = this.height/2;
+	
+		var gl = PIXI.gl;
+		gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTexture);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+	}
+	else
+	{
+		
+		this.frame.width = this.width
+		this.frame.height = this.height;
+		this.renderer.resize(this.width, this.height);
+	}
+}
+
+/**
+ * Initializes the canvas data for this texture
+ *
+ * @method initCanvas
+ * @private
+ */
 PIXI.RenderTexture.prototype.initCanvas = function()
 {
 	this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, 0);
-	
+
 	this.baseTexture = new PIXI.BaseTexture(this.renderer.view);
 	this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);
-	
+
 	this.render = this.renderCanvas;
 }
 
 /**
  * This function will draw the display object to the texture.
- * @method render
- * @param displayObject {DisplayObject}
+ *
+ * @method renderWebGL
+ * @param displayObject {DisplayObject} The display object to render this texture on
  * @param clear {Boolean} If true the texture will be cleared before the displayObject is drawn
+ * @private
  */
-PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, clear)
+PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, position, clear)
 {
 	var gl = PIXI.gl;
-	
+
 	// enable the alpha color mask..
 	gl.colorMask(true, true, true, true); 
-	
+
 	gl.viewport(0, 0, this.width, this.height);	
-	
+
 	gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
-	
+
 	if(clear)
 	{
 		gl.clearColor(0,0,0, 0);     
 		gl.clear(gl.COLOR_BUFFER_BIT);
 	}
-	
+
 	// THIS WILL MESS WITH HIT TESTING!
 	var children = displayObject.children;
-	
+
 	//TODO -? create a new one??? dont think so!
 	displayObject.worldTransform = PIXI.mat3.create();//sthis.indetityMatrix;
 	// modify to flip...
 	displayObject.worldTransform[4] = -1;
 	displayObject.worldTransform[5] = this.projection.y * 2;
+
 	
+	if(position)
+	{
+		displayObject.worldTransform[2] = position.x;
+		displayObject.worldTransform[5] -= position.y;
+	}
+	
+
+
 	for(var i=0,j=children.length; i<j; i++)
 	{
 		children[i].updateTransform();	
 	}
-	
+
 	var renderGroup = displayObject.__renderGroup;
 
 	if(renderGroup)
@@ -8428,24 +9670,43 @@ PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, clear)
 		this.renderGroup.setRenderable(displayObject);
 		this.renderGroup.render(this.projection);
 	}
-	
 }
 
-PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, clear)
+
+/**
+ * This function will draw the display object to the texture.
+ *
+ * @method renderCanvas
+ * @param displayObject {DisplayObject} The display object to render this texture on
+ * @param clear {Boolean} If true the texture will be cleared before the displayObject is drawn
+ * @private
+ */
+PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, position, clear)
 {
 	var children = displayObject.children;
-	
+
 	displayObject.worldTransform = PIXI.mat3.create();
 	
+	if(position)
+	{
+		displayObject.worldTransform[2] = position.x;
+		displayObject.worldTransform[5] = position.y;
+	}
+	
+
 	for(var i=0,j=children.length; i<j; i++)
 	{
 		children[i].updateTransform();	
 	}
 
 	if(clear)this.renderer.context.clearRect(0,0, this.width, this.height);
+	
     this.renderer.renderDisplayObject(displayObject);
     
-    PIXI.texturesToUpdate.push(this.baseTexture);
+    this.renderer.context.setTransform(1,0,0,1,0,0); 
+    
+
+  //  PIXI.texturesToUpdate.push(this.baseTexture);
 }
 
 
@@ -8454,27 +9715,47 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, clear)
  */
 
 /**
- * A Class that loads a bunch of images / sprite sheet / bitmap font files. Once the assets have been loaded they are added to the PIXI Texture cache and can be accessed easily through PIXI.Texture.fromImage() and PIXI.Sprite.fromImage()
+ * A Class that loads a bunch of images / sprite sheet / bitmap font files. Once the
+ * assets have been loaded they are added to the PIXI Texture cache and can be accessed
+ * easily through PIXI.Texture.fromImage() and PIXI.Sprite.fromImage()
  * When all items have been loaded this class will dispatch a "onLoaded" event
  * As each individual item is loaded this class will dispatch a "onProgress" event
+ *
  * @class AssetLoader
  * @constructor
- * @extends EventTarget
- * @param {Array} assetURLs an array of image/sprite sheet urls that you would like loaded supported. Supported image formats include "jpeg", "jpg", "png", "gif". Supported sprite sheet data formats only include "JSON" at this time. Supported bitmap font data formats include "xml" and "fnt".
+ * @uses EventTarget
+ * @param {Array<String>} assetURLs an array of image/sprite sheet urls that you would like loaded
+ *      supported. Supported image formats include "jpeg", "jpg", "png", "gif". Supported
+ *      sprite sheet data formats only include "JSON" at this time. Supported bitmap font
+ *      data formats include "xml" and "fnt".
+ * @param crossorigin {Boolean} Whether requests should be treated as crossorigin
  */
-PIXI.AssetLoader = function(assetURLs)
+PIXI.AssetLoader = function(assetURLs, crossorigin)
 {
 	PIXI.EventTarget.call(this);
-	
+
 	/**
 	 * The array of asset URLs that are going to be loaded
+     *
 	 * @property assetURLs
-	 * @type Array
+	 * @type Array<String>
 	 */
 	this.assetURLs = assetURLs;
 
-	this.crossorigin = false;
+    /**
+     * Whether the requests should be treated as cross origin
+     *
+     * @property crossorigin
+     * @type Boolean
+     */
+	this.crossorigin = crossorigin;
 
+    /**
+     * Maps file extension to loader types
+     *
+     * @property loadersByType
+     * @type Object
+     */
     this.loadersByType = {
         "jpg":  PIXI.ImageLoader,
         "jpeg": PIXI.ImageLoader,
@@ -8490,20 +9771,22 @@ PIXI.AssetLoader = function(assetURLs)
 };
 
 /**
-Fired when an item has loaded
-@event onProgress
-**/
+ * Fired when an item has loaded
+ * @event onProgress
+ */
 
 /**
-Fired when all the assets have loaded
-@event onComplete 
-**/
+ * Fired when all the assets have loaded
+ * @event onComplete 
+ */
 
 // constructor
-PIXI.AssetLoader.constructor = PIXI.AssetLoader;
+PIXI.AssetLoader.prototype.constructor = PIXI.AssetLoader;
 
 /**
- * This will begin loading the assets sequentially
+ * Starts loading the assets sequentially
+ *
+ * @method load
  */
 PIXI.AssetLoader.prototype.load = function()
 {
@@ -8532,6 +9815,8 @@ PIXI.AssetLoader.prototype.load = function()
 
 /**
  * Invoked after each file is loaded
+ *
+ * @method onAssetLoaded
  * @private
  */
 PIXI.AssetLoader.prototype.onAssetLoaded = function()
@@ -8556,27 +9841,59 @@ PIXI.AssetLoader.prototype.onAssetLoaded = function()
  * The json file loader is used to load in JSON data and parsing it
  * When loaded this class will dispatch a "loaded" event
  * If load failed this class will dispatch a "error" event
+ *
  * @class JsonLoader
- * @extends EventTarget
+ * @uses EventTarget
  * @constructor
- * @param {String} url the url of the JSON file
- * @param {Boolean} crossorigin
+ * @param url {String} The url of the JSON file
+ * @param crossorigin {Boolean} Whether requests should be treated as crossorigin
  */
-
 PIXI.JsonLoader = function (url, crossorigin) {
 	PIXI.EventTarget.call(this);
+
+	/**
+	 * The url of the bitmap font data
+	 *
+	 * @property url
+	 * @type String
+	 */
 	this.url = url;
-	this.baseUrl = url.replace(/[^\/]*$/, "");
+
+	/**
+	 * Whether the requests should be treated as cross origin
+	 *
+	 * @property crossorigin
+	 * @type Boolean
+	 */
 	this.crossorigin = crossorigin;
+
+	/**
+	 * [read-only] The base url of the bitmap font data
+	 *
+	 * @property baseUrl
+	 * @type String
+	 * @readOnly
+	 */
+	this.baseUrl = url.replace(/[^\/]*$/, "");
+
+	/**
+	 * [read-only] Whether the data has loaded yet
+	 *
+	 * @property loaded
+	 * @type Boolean
+	 * @readOnly
+	 */
 	this.loaded = false;
 	
 };
 
 // constructor
-PIXI.JsonLoader.constructor = PIXI.JsonLoader;
+PIXI.JsonLoader.prototype.constructor = PIXI.JsonLoader;
 
 /**
- * This will begin loading the JSON file
+ * Loads the JSON data
+ *
+ * @method load
  */
 PIXI.JsonLoader.prototype.load = function () {
 	this.ajaxRequest = new AjaxRequest();
@@ -8592,6 +9909,8 @@ PIXI.JsonLoader.prototype.load = function () {
 
 /**
  * Invoke when JSON file is loaded
+ *
+ * @method onJSONLoaded
  * @private
  */
 PIXI.JsonLoader.prototype.onJSONLoaded = function () {
@@ -8645,11 +9964,9 @@ PIXI.JsonLoader.prototype.onJSONLoaded = function () {
 			{
 				this.onLoaded();
 			}
-			
-			
-			
-			
-		} else {
+		}
+		else
+		{
 			this.onError();
 		}
 	}
@@ -8657,6 +9974,8 @@ PIXI.JsonLoader.prototype.onJSONLoaded = function () {
 
 /**
  * Invoke when json file loaded
+ *
+ * @method onLoaded
  * @private
  */
 PIXI.JsonLoader.prototype.onLoaded = function () {
@@ -8669,6 +9988,8 @@ PIXI.JsonLoader.prototype.onLoaded = function () {
 
 /**
  * Invoke when error occured
+ *
+ * @method onError
  * @private
  */
 PIXI.JsonLoader.prototype.onError = function () {
@@ -8689,11 +10010,12 @@ PIXI.JsonLoader.prototype.onError = function () {
  * Once the data has been loaded the frames are stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFromeId()
  * This loader will also load the image file that the Spritesheet points to as well as the data.
  * When loaded this class will dispatch a "loaded" event
+ *
  * @class SpriteSheetLoader
- * @extends EventTarget
+ * @uses EventTarget
  * @constructor
- * @param {String} url the url of the sprite sheet JSON file
- * @param {Boolean} crossorigin
+ * @param url {String} The url of the sprite sheet JSON file
+ * @param crossorigin {Boolean} Whether requests should be treated as crossorigin
  */
 
 PIXI.SpriteSheetLoader = function (url, crossorigin) {
@@ -8703,18 +10025,56 @@ PIXI.SpriteSheetLoader = function (url, crossorigin) {
 	 * make sure to set the format as "JSON"
 	 */
 	PIXI.EventTarget.call(this);
+
+	/**
+	 * The url of the bitmap font data
+	 *
+	 * @property url
+	 * @type String
+	 */
 	this.url = url;
-	this.baseUrl = url.replace(/[^\/]*$/, "");
-	this.texture = null;
-	this.frames = {};
+
+	/**
+	 * Whether the requests should be treated as cross origin
+	 *
+	 * @property crossorigin
+	 * @type Boolean
+	 */
 	this.crossorigin = crossorigin;
+
+	/**
+	 * [read-only] The base url of the bitmap font data
+	 *
+	 * @property baseUrl
+	 * @type String
+	 * @readOnly
+	 */
+	this.baseUrl = url.replace(/[^\/]*$/, "");
+
+    /**
+     * The texture being loaded
+     *
+     * @property texture
+     * @type Texture
+     */
+    this.texture = null;
+
+    /**
+     * The frames of the sprite sheet
+     *
+     * @property frames
+     * @type Object
+     */
+	this.frames = {};
 };
 
 // constructor
-PIXI.SpriteSheetLoader.constructor = PIXI.SpriteSheetLoader;
+PIXI.SpriteSheetLoader.prototype.constructor = PIXI.SpriteSheetLoader;
 
 /**
  * This will begin loading the JSON file
+ *
+ * @method load
  */
 PIXI.SpriteSheetLoader.prototype.load = function () {
 	var scope = this;
@@ -8728,6 +10088,8 @@ PIXI.SpriteSheetLoader.prototype.load = function () {
 
 /**
  * Invoke when JSON file is loaded
+ *
+ * @method onJSONLoaded
  * @private
  */
 PIXI.SpriteSheetLoader.prototype.onJSONLoaded = function () {
@@ -8763,6 +10125,8 @@ PIXI.SpriteSheetLoader.prototype.onJSONLoaded = function () {
 };
 /**
  * Invoke when all files are loaded (json and texture)
+ *
+ * @method onLoaded
  * @private
  */
 PIXI.SpriteSheetLoader.prototype.onLoaded = function () {
@@ -8780,23 +10144,33 @@ PIXI.SpriteSheetLoader.prototype.onLoaded = function () {
  * The image loader class is responsible for loading images file formats ("jpeg", "jpg", "png" and "gif")
  * Once the image has been loaded it is stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFromeId()
  * When loaded this class will dispatch a 'loaded' event
+ *
  * @class ImageLoader
- * @extends EventTarget
+ * @uses EventTarget
  * @constructor
- * @param {String} url The url of the image
- * @param {Boolean} crossorigin
+ * @param url {String} The url of the image
+ * @param crossorigin {Boolean} Whether requests should be treated as crossorigin
  */
 PIXI.ImageLoader = function(url, crossorigin)
 {
     PIXI.EventTarget.call(this);
+
+    /**
+     * The texture being loaded
+     *
+     * @property texture
+     * @type Texture
+     */
     this.texture = PIXI.Texture.fromImage(url, crossorigin);
 };
 
 // constructor
-PIXI.ImageLoader.constructor = PIXI.ImageLoader;
+PIXI.ImageLoader.prototype.constructor = PIXI.ImageLoader;
 
 /**
  * Loads image or takes it from cache
+ *
+ * @method load
  */
 PIXI.ImageLoader.prototype.load = function()
 {
@@ -8816,6 +10190,8 @@ PIXI.ImageLoader.prototype.load = function()
 
 /**
  * Invoked when image file is loaded or it is already cached and ready to use
+ *
+ * @method onLoaded
  * @private
  */
 PIXI.ImageLoader.prototype.onLoaded = function()
@@ -8832,13 +10208,13 @@ PIXI.ImageLoader.prototype.onLoaded = function()
  * To generate the data you can use http://www.angelcode.com/products/bmfont/
  * This loader will also load the image file as the data.
  * When loaded this class will dispatch a "loaded" event
+ *
  * @class BitmapFontLoader
- * @extends EventTarget
+ * @uses EventTarget
  * @constructor
- * @param {String} url the url of the sprite sheet JSON file
- * @param {Boolean} crossorigin
+ * @param url {String} The url of the sprite sheet JSON file
+ * @param crossorigin {Boolean} Whether requests should be treated as crossorigin
  */
-
 PIXI.BitmapFontLoader = function(url, crossorigin)
 {
     /*
@@ -8847,17 +10223,48 @@ PIXI.BitmapFontLoader = function(url, crossorigin)
      * make sure to set the format as "JSON"
      */
     PIXI.EventTarget.call(this);
+
+    /**
+     * The url of the bitmap font data
+     *
+     * @property url
+     * @type String
+     */
     this.url = url;
-    this.baseUrl = url.replace(/[^\/]*$/, "");
-    this.texture = null;
+
+    /**
+     * Whether the requests should be treated as cross origin
+     *
+     * @property crossorigin
+     * @type Boolean
+     */
     this.crossorigin = crossorigin;
+
+    /**
+     * [read-only] The base url of the bitmap font data
+     *
+     * @property baseUrl
+     * @type String
+     * @readOnly
+     */
+    this.baseUrl = url.replace(/[^\/]*$/, "");
+
+    /**
+     * [read-only] The texture of the bitmap font
+     *
+     * @property baseUrl
+     * @type String
+     */
+    this.texture = null;
 };
 
 // constructor
-PIXI.BitmapFontLoader.constructor = PIXI.BitmapFontLoader;
+PIXI.BitmapFontLoader.prototype.constructor = PIXI.BitmapFontLoader;
 
 /**
- * This will begin loading the JSON file
+ * Loads the XML font data
+ *
+ * @method load
  */
 PIXI.BitmapFontLoader.prototype.load = function()
 {
@@ -8874,7 +10281,9 @@ PIXI.BitmapFontLoader.prototype.load = function()
 };
 
 /**
- * Invoked when XML file is loaded
+ * Invoked when XML file is loaded, parses the data
+ *
+ * @method onXMLLoaded
  * @private
  */
 PIXI.BitmapFontLoader.prototype.onXMLLoaded = function()
@@ -8945,6 +10354,8 @@ PIXI.BitmapFontLoader.prototype.onXMLLoaded = function()
 
 /**
  * Invoked when all files are loaded (xml/fnt and texture)
+ *
+ * @method onLoaded
  * @private
  */
 PIXI.BitmapFontLoader.prototype.onLoaded = function()
@@ -8968,32 +10379,50 @@ PIXI.BitmapFontLoader.prototype.onLoaded = function()
  * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
  * You will need to generate a sprite sheet to accompany the spine data 
  * When loaded this class will dispatch a "loaded" event
+ *
  * @class Spine
+ * @uses EventTarget
  * @constructor
- * @extends EventTarget
- * @param {String} url the url of the sprite sheet JSON file
- * @param {Boolean} crossorigin
+ * @param url {String} The url of the JSON file
+ * @param crossorigin {Boolean} Whether requests should be treated as crossorigin
  */
 PIXI.SpineLoader = function(url, crossorigin) 
 {
 	PIXI.EventTarget.call(this);
+
+	/**
+	 * The url of the bitmap font data
+	 *
+	 * @property url
+	 * @type String
+	 */
 	this.url = url;
+
+	/**
+	 * Whether the requests should be treated as cross origin
+	 *
+	 * @property crossorigin
+	 * @type Boolean
+	 */
 	this.crossorigin = crossorigin;
+
+	/**
+	 * [read-only] Whether the data has loaded yet
+	 *
+	 * @property loaded
+	 * @type Boolean
+	 * @readOnly
+	 */
 	this.loaded = false;
 }
 
-PIXI.SpineLoader.constructor = PIXI.SpineLoader;
+PIXI.SpineLoader.prototype.constructor = PIXI.SpineLoader;
 
-PIXI.SpineLoader.prototype.load = function()
-{
-	new PIXI.JsonLoader(this.url, this.crossorigin);
-		jsonLoader.addEventListener("loaded", function (event) {
-			scope.json = event.content.json;
-			scope.onJSONLoaded();
-		});
-		jsonLoader.load();
-};
-
+/**
+ * Loads the JSON data
+ *
+ * @method load
+ */
 PIXI.SpineLoader.prototype.load = function () {
 	
 	var scope = this;
@@ -9007,12 +10436,12 @@ PIXI.SpineLoader.prototype.load = function () {
 
 /**
  * Invoke when JSON file is loaded
+ *
+ * @method onJSONLoaded
  * @private
  */
 PIXI.SpineLoader.prototype.onJSONLoaded = function (event) {
-	
 	var spineJsonParser = new spine.SkeletonJson();
-	
 	var skeletonData = spineJsonParser.readSkeletonData(this.json);
 	
 	PIXI.AnimCache[this.url] = skeletonData;
@@ -9020,10 +10449,13 @@ PIXI.SpineLoader.prototype.onJSONLoaded = function (event) {
 	this.onLoaded();
 };
 
-
-			
-PIXI.SpineLoader.prototype.onLoaded = function()
-{
+/**
+ * Invoke when JSON file is loaded
+ *
+ * @method onLoaded
+ * @private
+ */
+PIXI.SpineLoader.prototype.onLoaded = function () {
 	this.loaded = true;
     this.dispatchEvent({type: "loaded", content: this});
 };
@@ -15555,6229 +16987,6 @@ gf.plugin = {
     }
 };
 
-//you can only have 1 audio context on a page, so we store one for use in each manager
-gf.__AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
-gf.__audioctx = gf.support.webAudio ? new gf.__AudioCtx() : null;
-
-/**
- * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
- * The GF Audio API was based on
- * <a target="_blank" href="https://github.com/goldfire/howler.js">Howler.js</a>
- *
- * @class AudioManager
- * @extends Object
- * @namespace gf
- * @constructor
- */
-gf.AudioManager = function() {
-    /**
-     * Whether the player is muted or not
-     *
-     * @property muted
-     * @type Boolean
-     * @default false
-     * @private
-     */
-    this._muted = false;
-
-    /**
-     * The master volume of the player
-     *
-     * @property _volume
-     * @type Number
-     * @default 1
-     * @private
-     */
-    this._volume = 1;
-
-    /**
-     * The master volume of all the audio playing
-     *
-     * @property volume
-     * @type Number
-     * @default 1
-     */
-    Object.defineProperty(this, 'volume', {
-        get: this.getVolume.bind(this),
-        set: this.setVolume.bind(this)
-    });
-
-    /**
-     * The Web Audio API context if we are using it
-     *
-     * @property ctx
-     * @type AudioContext
-     * @readOnly
-     */
-    this.ctx = gf.__audioctx;
-
-    /**
-     * If we have some way of playing audio
-     *
-     * @property canPlay
-     * @type Boolean
-     * @readOnly
-     */
-    this.canPlay = gf.support.webAudio || gf.support.htmlAudio;
-
-    /**
-     * The codecs that the browser supports
-     *
-     * @property codecs
-     * @type Object<Boolean>
-     * @readOnly
-     */
-    if(this.canPlay) {
-        var audioTest = new Audio();
-
-        this.codecs = {
-            mp3: !!audioTest.canPlayType('audio/mpeg;').replace(/^no$/,''),
-            opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/,''),
-            ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,''),
-            wav: !!audioTest.canPlayType('audio/wav; codecs="1"').replace(/^no$/,''),
-            m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),
-            webm: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')
-        };
-    }
-
-    //if we are using web audio, we need a master gain node
-    if(gf.support.webAudio) {
-        this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
-        this.masterGain.gain.value = 1;
-        this.masterGain.connect(this.ctx.destination);
-    }
-
-    //map of elements to play audio with
-    this.sounds = {};
-};
-
-gf.inherits(gf.AudioManager, Object, {
-    /**
-     * Returns the current master volume
-     *
-     * @method getVolume
-     */
-    getVolume: function() {
-        return this._volume;
-    },
-    /**
-     * Sets the current master volume
-     *
-     * @method setVolume
-     * @param value {Number}
-     */
-    setVolume: function(v) {
-        v = parseFloat(v, 10);
-
-        if(!isNaN(v) && v >= 0 && v <= 1) {
-            this._volume = v;
-
-            if(gf.support.webAudio)
-                this.masterGain.gain.value = v;
-
-            //go through each audio element and change their volume
-            for(var key in this.sounds) {
-                if(this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
-                    var player = this.sounds[key];
-                    //loop through the audio nodes
-                    for(var i = 0, il = player._nodes.length; i < il; ++i) {
-                        player._nodes[i].volume = player._volume * this._volume;
-                    }
-                }
-            }
-        }
-    },
-    /**
-     * Mutes all playing audio
-     *
-     * @method mute
-     */
-    mute: function() {
-        return this.setMuted(true);
-    },
-    /**
-     * Unmutes all playing audio
-     *
-     * @method unmute
-     */
-    unmute: function() {
-        return this.setMuted(false);
-    },
-    /**
-     * Sets whether or not this manager is muted
-     *
-     * @method setMuted
-     */
-    setMuted: function(m) {
-        this._muted = m = !!m;
-
-        if(gf.support.webAudio)
-            this.masterGain.gain.value = m ? 0 : this._volume;
-
-        //go through each audio element and mute/unmute them
-        for(var key in this.sounds) {
-            if(this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
-                var player = this.sounds[key];
-                //loop through the audio nodes
-                for(var i = 0, il = player._nodes.length; i < il; ++i) {
-                    player._nodes[i].muted = m;
-                }
-            }
-        }
-
-        return this;
-    },
-    /**
-     * Creates a new audio player for a peice of audio
-     *
-     * @method create
-     * @param [name] {String} An name to uniquely identify this audio, if omitted one will be ranomly chosen
-     * @param settings {Object} All the settings for the audio player
-     * @param settings.urls {Array<String>} All the url possible for this audio (so we can choose the one this browser supports)
-     * @param [settings.volume] {Number} The volume of this audio clip
-     * @param [settings.autoplay] {Boolean} Automatically start playing after loaded
-     * @param [settings.loop] {Boolean} Replay the audio when it finishes
-     * @param [settings.sprite] {Object} A map of string names -> [start, duration] arrays. You can use it to put multiple sounds in one file
-     * @param [settings.pos3d] {Array<Number>} 3D coords of where the audio should sound as if it came from (only works with WebAudio)
-     * @param [settings.buffer] {Boolean} WebAudio will load the entire file before playing, making this true forces HTML5Audio which will buffer and play
-     * @param [settings.format] {String} Force an extension override
-     * @return {AudioPlayer} Will return the new audio player, or false if we couldn't determine a compatible url
-     */
-    create: function(name, settings) {
-        //if we can't play audio return false
-        if(!this.canPlay) {
-            return false;
-        }
-
-        //name is "optional"
-        if(typeof name !== 'string') {
-            settings = name;
-            name = null;
-        }
-
-        //make up an ID if none was passed
-        if(!name)
-            name = Math.round(Date.now() * Math.random()) + '';
-
-        var src;
-
-        //loop through each source url and pick the first that is compatible
-        for(var i = 0, il = settings.urls.length; i < il; ++i) {
-            var url = settings.urls[i].toLowerCase(),
-                ext;
-
-            //if they pass a format override, use that
-            if(settings.format) {
-                ext = settings.format;
-            }
-            //otherwise extract the format from the url
-            else {
-                ext = url.match(/.+\.([^?]+)(\?|$)/);
-                ext = (ext && ext.length >= 2) ? ext[1] : url.match(/data\:audio\/([^?]+);/)[1];
-            }
-
-            //if we can play this url, then set the source of the player
-            if(this.codecs[ext]) {
-                src = url;
-                break;
-            }
-        }
-
-        //check if we found a usable url, if not return false
-        if(!src) {
-            return false;
-        }
-
-        //check if we already created a player for this audio
-        if(gf.assetCache[src])
-            return gf.assetCache[src];
-
-        settings.src = src;
-        return this.sounds[name] = gf.assetCache[src] = new gf.AudioPlayer(this, settings);
-    }
-});
-/**
- * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
- * The GF Audio API was based on
- * <a target="_blank" href="https://github.com/goldfire/howler.js">Howler.js</a>
- *
- * @class AudoPlayer
- * @extends Object
- * @uses gf.EventEmitter
- * @namespace gf
- * @constructor
- * @param manager {AudioManager} AudioManager instance for this audio player
- * @param settings {Object} All the settings for this player instance
- */
-gf.AudioPlayer = function(manager, settings) {
-    //mixin the Event Target methods
-    gf.EventEmitter.call(this);
-
-    /**
-     * The source of the audio, the actual URL to load up
-     *
-     * @property src
-     * @type String
-     */
-    this.src = '';
-
-    /**
-     * Play the audio immediately after loading
-     *
-     * @property autoplay
-     * @type Boolean
-     * @default false
-     */
-    this.autoplay = false;
-
-    /**
-     * Buffer forces use of HTML5Audio which will buffer and play
-     * instead of loading the entire file and then playing
-     *
-     * @property buffer
-     * @type Boolean
-     * @default false
-     */
-    this.buffer = false;
-
-    /**
-     * Override the format determined from the extension with this extension
-     *
-     * @property format
-     * @type String
-     * @default null
-     */
-    this.format = null;
-
-    /**
-     * Replay the audio immediately after finishing
-     *
-     * @property loop
-     * @type Boolean
-     * @default false
-     */
-    this.loop = false;
-
-    /**
-     * A 3D position where the audio should sound like it is coming from
-     *
-     * @property pos3d
-     * @type Array<Number>
-     * @default [0, 0, -0.5]
-     */
-    this.pos3d = [0, 0, -0.5];
-
-    /**
-     * A sound sprite that maps string keys to [start, duration] arrays. These can
-     * be used to put multiple sound bits in one file, and play them separately
-     *
-     * @property sprite
-     * @type Object
-     * @default {}
-     */
-    this.sprite = {};
-
-    /**
-     * The volume of the audio player
-     *
-     * @property volume
-     * @type Number
-     * @default 1
-     */
-    Object.defineProperty(this, 'volume', {
-        get: this.getVolume.bind(this),
-        set: this.setVolume.bind(this)
-    });
-
-    this._volume = 1;
-    this._duration = 0;
-    this._loaded = false;
-    this._manager = manager;
-    this._canPlay = manager.canPlay;
-    this._codecs = manager.codecs;
-    this._webAudio = gf.support.webAudio && !this.buffer;
-    this._nodes = [];
-    this._onendTimer = [];
-
-    //mixin user's settings
-    gf.utils.setValues(this, settings);
-
-    if(this._webAudio) {
-        this._setupAudioNode();
-    }
-
-    this.load();
-};
-
-gf.inherits(gf.AudioPlayer, Object, {
-    /**
-     * Load the audio file for this player, this is called from the ctor
-     * there is no reason to call it manually.
-     *
-     * @method load
-     * @return {AudioPlayer}
-     * @private
-     */
-    load: function() {
-        //if using web audio, load up the buffer
-        if(this._webAudio) {
-            this.loadBuffer(this.src);
-        }
-        //otherwise create some Audio nodes
-        else {
-            //create a new adio node
-            var node = new Audio();
-            this._nodes.push(node);
-
-            //setup the audio node
-            node.src = this.src;
-            node._pos = 0;
-            node.preload = 'auto';
-            node.volume = this._manager.muted ? 0 : this._volume * this._manager.volume;
-
-            //setup the event listener to start playing the sound when it has buffered
-            var self = this, evt = function() {
-                self._duration = node.duration;
-
-                //setup a default sprite
-                self.sprite._default = [0, node.duration * 1000];
-
-                //check if loaded
-                if(!self._loaded) {
-                    self._loaded = true;
-                    self.emit({
-                        type: 'load',
-                        message: 'Audio file loaded.',
-                        data: self.src
-                    });
-                }
-
-                //if autoplay then start it
-                if(self.autoplay) {
-                    self.play();
-                }
-
-                //clear the event listener
-                node.removeEventListener('canplaythrough', evt, false);
-            };
-            node.addEventListener('canplaythrough', evt, false);
-            node.load();
-        }
-
-        return this;
-    },
-    /**
-     * Play a sound from the current time (0 by default).
-     *
-     * @method play
-     * @param [sprite] {String} Plays from the specified position in the sound sprite definition.
-     * @param [callback] {Function} Returns the unique playback id for this sound instance.
-     * @return {AudioPlayer}
-     */
-    play: function(sprite, cb) {
-        var self = this;
-
-        if(typeof sprite === 'function') {
-            cb = sprite;
-            sprite = null;
-        }
-
-        //if no sprite specified, use default
-        if(!sprite) {
-            sprite = '_default';
-        }
-
-        //if we haven't loaded yet, wait until we do
-        if(!this._loaded) {
-            this.on('load', function() {
-                self.play(sprite, cb);
-            });
-
-            return this;
-        }
-
-        //if the sprite doesn't exist, play nothing
-        if(!this.sprite[sprite]) {
-            if(typeof cb === 'function') cb();
-            return this;
-        }
-
-        //get an audio node to use to play
-        this._inactiveNode(function(node) {
-            var pos = node._pos > 0 ? node._pos : self.sprite[sprite][0] / 1000,
-            duration = (self.sprite[sprite][1] / 1000) - node._pos,
-            loop = (self.loop || self.sprite[sprite][2]),
-            soundId = (typeof cb === 'string') ? cb : (Math.round(Date.now() * Math.random()) + ''),
-            timerId;
-
-            node._sprite = sprite;
-
-            //after the audio finishes:
-            (function(o) {
-                timerId = setTimeout(function() {
-                    //if looping restsart it
-                    if(!self._webAudio && o.loop) {
-                        self.stop(o.id, o.timer).play(o.sprite, o.id);
-                    }
-
-                    // set web audio node to paused
-                    if(self._webAudio && !o.loop) {
-                        self._nodeById(o.id).paused = true;
-                    }
-
-                    //end the track if it is HTML audio and a sprite
-                    if(!self._webAudio && !o.loop) {
-                        self.stop(o.id, o.timer);
-                    }
-
-                    //fire off the end event
-                    self.emit({
-                        type: 'end',
-                        message: 'Audio has finished playing',
-                        data: o.id
-                    });
-                }, duration * 1000);
-
-                //store the timer
-                self._onendTimer.push(timerId);
-
-                //remember which timer to kill
-                o.timer = timerId;
-            })({
-                id: soundId,
-                sprite: sprite,
-                loop: loop
-            });
-
-            //setup webAudio functions
-            if(self._webAudio) {
-                //set the play id to this node and load into context
-                node.id = soundId;
-                node.paused = false;
-                self.refreshBuffer([loop, pos, duration], soundId);
-                self._playStart = self._manager.ctx.currentTime;
-                node.gain.value = self._volume;
-
-                if(typeof node.bufferSource.start === 'undefined') {
-                    node.bufferSource.noteGrainOn(0, pos, duration);
-                } else {
-                    node.bufferSource.start(0, pos, duration);
-                }
-            } else {
-                if(node.readyState === 4) {
-                    node.id = soundId;
-                    node.currentTime = pos;
-                    node.muted = self._manager.muted;
-                    node.volume = self._volume * self._manager.volume;
-                    node.play();
-                } else {
-                    self._clearEndTimer(timerId);
-
-                    (function() {
-                        var sound = self,
-                            playSpr = sprite,
-                            fn = cb,
-                            newNode = node;
-
-                        var evt = function() {
-                            sound.play(playSpr, fn);
-
-                            //clear listener
-                            newNode.removeEventListener('canplaythrough', evt, false);
-                        };
-                        newNode.addEventListener('canplaythrough', evt, false);
-                    })();
-
-                    return self;
-                }
-            }
-
-            self.emit({
-                type: 'play',
-                message: 'Playing audio file',
-                data: soundId
-            });
-
-            if(typeof cb === 'function')
-                cb(soundId);
-        });
-
-        return this;
-    },
-    /**
-     * Pause playback and save the current position.
-     *
-     * @method pause
-     * @param [id] {String} The play instance ID.
-     * @param [timerId] {String} Clear the correct timeout ID.
-     * @return {AudioPlayer}
-     */
-    pause: function(id, timerId) {
-        var self = this;
-
-        //if we haven't loaded this sound yet, wait until we play it to pause it
-        if(!this._loaded) {
-            this.on('play', function() {
-                self.play(id);
-            });
-
-            return this;
-        }
-
-        //clear the onend timer
-        this._clearEndTimer(timerId || 0);
-
-        var activeNode = id ? this._nodeById(id) : this._activeNode();
-        if(activeNode) {
-            if(this._webAudio) {
-                //ensure the sound was created
-                if(!activeNode.bufferSource)
-                    return this;
-
-                activeNode.paused = true;
-                activeNode._pos += this._manager.ctx.currentTime - this._playStart;
-
-                if(typeof activeNode.bufferSource.stop === 'undefined') {
-                    activeNode.bufferSource.noteOff(0);
-                } else {
-                    activeNode.bufferSource.stop(0);
-                }
-            } else {
-                activeNode._pos = activeNode.currentTime;
-                activeNode.pause();
-            }
-        }
-
-        this.emit({
-            type: 'pause',
-            message: 'Audio file paused',
-            data: id
-        });
-
-        return this;
-    },
-    /**
-     * Stop playback and reset to start.
-     *
-     * @method stop
-     * @param [id] {String} The play instance ID.
-     * @param [timerId] {String} Clear the correct timeout ID.
-     * @return {AudioPlayer}
-     */
-    stop: function(id, timerId) {
-        var self = this;
-
-        //if we haven't loaded this sound yet, wait until we play it to stop it
-        if(!this._loaded) {
-            this.on('play', function() {
-                self.stop(id);
-            });
-
-            return this;
-        }
-
-        //clear onend timer
-        this._clearEndTimer(timerId || 0);
-
-        var activeNode = id ? this._nodeById(id) : this._activeNode();
-        if(activeNode) {
-            activeNode._pos = 0;
-
-            if(this._webAudio) {
-                if(!activeNode.bufferSource)
-                    return this;
-
-                activeNode.paused = true;
-
-                if(typeof activeNode.bufferSource.stop === 'undefined') {
-                    activeNode.bufferSource.noteOff(0);
-                } else {
-                    activeNode.bufferSource.stop(0);
-                }
-            } else {
-                activeNode.pause();
-                activeNode.currentTime = 0;
-            }
-        }
-
-        return this;
-    },
-    /**
-     * Mute this sound.
-     *
-     * @method mute
-     * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
-     */
-    mute: function(id) {
-        return this.setMuted(true, id);
-    },
-    /**
-     * Unmute this sound.
-     *
-     * @method unmute
-     * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
-     */
-    unmute: function(id) {
-        return this.setMuted(false, id);
-    },
-    /**
-     * Set the muted state of this sound.
-     *
-     * @method setMuted
-     * @param muted {Boolean}
-     * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
-     */
-    setMuted: function(muted, id) {
-        var self  = this;
-
-        //if we haven't loaded this sound yet, wait until we play it to mute it
-        if(!this._loaded) {
-            this.on('play', function() {
-                self.setMuted(muted, id);
-            });
-
-            return this;
-        }
-
-        var activeNode = id ? this._nodeById(id) : this._activeNode();
-        if(activeNode) {
-            if(this._webAudio) {
-                activeNode.gain.value = muted ? 0 : this._volume;
-            } else {
-                activeNode.volume =  muted ? 0 : this._volume;
-            }
-        }
-
-        return this;
-    },
-    /**
-     * Set the position of playback.
-     *
-     * @method seek
-     * @param pos {Number} The position to move current playback to.
-     * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
-     */
-    seek: function(pos, id) {
-        var self = this;
-
-        //if we haven't loaded this sound yet, wait until it is to seek it
-        if(!this._loaded) {
-            this.on('load', function() {
-                self.seek(pos);
-            });
-
-            return this;
-        }
-
-        //if position is < 0, or invalid, then set to 0
-        if(!pos || pos < 0)
-            pos = 0;
-
-        var activeNode = id ? this._nodeById(id) : this._activeNode();
-        if(activeNode) {
-            if(this._webAudio) {
-                activeNode._pos = pos;
-                this.pause(activeNode.id).play(activeNode._sprite, id);
-            } else {
-                activeNode.currentTime = pos;
-            }
-        }
-
-        return this;
-    },
-    /**
-     * Get the position of playback.
-     *
-     * @method getPosition
-     * @param [id] {String} The play instance ID.
-     * @return {Number}
-     */
-    getPosition: function(id) {
-        var self = this;
-
-        //if we haven't loaded this sound yet, wait until it is to seek it
-        if(!this._loaded) {
-            this.on('load', function() {
-                self.getPosition(id);
-            });
-
-            return this;
-        }
-
-        var activeNode = id ? this._nodeById(id) : this._activeNode();
-        if(activeNode) {
-            if(this._webAudio) {
-                return activeNode._pos + (this._manager.ctx.currentTime - this._playStart);
-            } else {
-                return activeNode.currentTime;
-            }
-        }
-
-        return 0;
-    },
-    /**
-     * Fade a currently playing sound between two volumes.
-     *
-     * @method fade
-     * @param from {Number} The volume to fade from (0.0 to 1.0).
-     * @param to {Number} The volume to fade to (0.0 to 1.0).
-     * @param len {Number} Time in milliseconds to fade.
-     * @param [id] {String} The play instance ID.
-     * @param [callback] {Function} Fired when the fade is complete.
-     * @return {AudioPlayer}
-     */
-    fade: function(from, to, len, id, cb) {
-        var self = this,
-            diff = Math.abs(from - to),
-            dir = from > to ? 'dowm' : 'up',
-            steps = diff / 0.01,
-            stepTime = len / steps;
-
-        if(typeof id === 'function') {
-            cb = id;
-            id = null;
-        }
-
-        //if we haven't loaded this sound yet, wait until it is to seek it
-        if(!this._loaded) {
-            this.on('load', function() {
-                self.fade(from, to, len, id, cb);
-            });
-
-            return this;
-        }
-
-        this.setVolume(from, id);
-
-        for(var i = 1; i <= steps; ++i) {
-            var change = this._volume + ((dir === 'up' ? 0.01 : -0.01) * i),
-                vol = Math.round(1000 * change) / 1000,
-                wait = stepTime * i;
-
-            this._doFadeStep(vol, wait, to, id, cb);
-        }
-    },
-    /**
-     * Returns the current volume of the player
-     *
-     * @method getVolume
-     * @return {Number} The current volume
-     */
-    getVolume: function() {
-        return this._volume;
-    },
-    /**
-     * Sets the current volume of the player
-     *
-     * @method setVolume
-     * @param vol {Number} The current volume
-     * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
-     */
-    setVolume: function(vol, id) {
-        var self = this;
-
-        // make sure volume is a number
-        vol = parseFloat(vol);
-
-        //if we haven't loaded this sound yet, wait until we play it to change the volume
-        if(!this._loaded) {
-            this.on('play', function() {
-                self.setVolume(vol, id);
-            });
-
-            return this;
-        }
-
-        //set the volume
-        if(vol >= 0 && vol <= 1) {
-            this._volume = vol;
-
-            var activeNode = id ? this._nodeById(id) : this._activeNode();
-            if(activeNode) {
-                if(this._webAudio) {
-                    activeNode.gain.volume = vol;
-                } else {
-                    activeNode.volume = vol * this._manager.volume;
-                }
-            }
-        }
-
-        return this;
-    },
-    /**
-     * Set the 3D position of the audio source.
-     * The most common usage is to set the 'x' position
-     * to affect the left/right ear panning. Setting any value higher than
-     * 1.0 will begin to decrease the volume of the sound as it moves further away.
-     * NOTE: This only works with Web Audio API, HTML5 Audio playback
-     * will not be affected.
-     *
-     * @method setPosition
-     * @param x {Number} The x-position of the playback from -1000.0 to 1000.0
-     * @param y {Number} The y-position of the playback from -1000.0 to 1000.0
-     * @param z {Number} The z-position of the playback from -1000.0 to 1000.0
-     * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
-     */
-    setPosition: function(x, y, z, id) {
-        var self = this;
-
-        //set a default for the optional 'y' and 'z'
-        x = !x ? 0 : x;
-        y = !y ? 0 : y;
-        z = (!z && z !== 0) ? -0.5 : z;
-
-        //if we haven't loaded this sound yet, wait until we play it to change the position
-        if(!this._loaded) {
-            this.on('play', function() {
-                self.setPosition(x, y, z, id);
-            });
-
-            return this;
-        }
-
-        if(this._webAudio) {
-            var activeNode = id ? this._nodeById(id) : this._activeNode();
-            if(activeNode) {
-                this.pos3d[0] = x;
-                this.pos3d[1] = y;
-                this.pos3d[2] = z;
-                activeNode.panner.setPosition(x, y, z);
-            }
-        }
-
-        return this;
-    },
-    /**
-     * Performs a step in the fade transition
-     *
-     * @method _doFadeStep
-     * @private
-     */
-    _doFadeStep: function(vol, wait, end, id, cb) {
-        var self = this;
-
-        setTimeout(function() {
-            self.setVolume(vol, id);
-
-            if(vol === end) {
-                if(typeof cb === 'function')
-                    cb();
-            }
-        }, wait);
-    },
-    /**
-     * Get an audio node by ID.
-     *
-     * @method _nodeById
-     * @return {AudioPlayer} Audio node.
-     * @private
-     */
-    _nodeById: function(id) {
-        var node = this._nodes[0]; //default return value
-
-        //find the node with this ID
-        for(var i = 0, il = this._nodes.length; i < il; ++i) {
-            if(this._nodes[i].id === id) {
-                node = this._nodes[i];
-                break;
-            }
-        }
-
-        return node;
-    },
-    /**
-     * Get the first active audio node.
-     *
-     * @method _activeNode
-     * @return {AudioPlayer} Audio node.
-     * @private
-     */
-    _activeNode: function() {
-        var node;
-
-        //find the first playing node
-        for(var i = 0, il = this._nodes.length; i < il; ++i) {
-            if(!this._nodes[i].paused) {
-                node = this._nodes[i];
-                break;
-            }
-        }
-
-        //remove excess inactive nodes
-        this._drainPool();
-
-        return node;
-    },
-    /**
-     * Get the first inactive audio node.
-     * If there is none, create a new one and add it to the pool.
-     *
-     * @method _inactiveNode
-     * @param cb {Function} callback Function to call when the audio node is ready.
-     * @private
-     */
-    _inactiveNode: function(cb) {
-        var node;
-
-        //find first inactive node to recycle
-        for(var i = 0, il = this._nodes.length; i < il; ++i) {
-            if(this._nodes[i].paused && this._nodes[i].readyState === 4) {
-                cb(node = this._nodes[i]);
-                break;
-            }
-        }
-
-        //remove excess inactive nodes
-        this._drainPool();
-
-        if(node) return;
-
-        //create new node if there are no inactives
-        if(this._webAudio) {
-            node = this._setupAudioNode();
-            cb(node);
-        } else {
-            this.load();
-            node = this._nodes[this.nodes.length - 1];
-            node.addEventListener('loadedmetadata', function() {
-                cb(node);
-            });
-        }
-    },
-    /**
-     * If there are more than 5 inactive audio nodes in the pool, clear out the rest.
-     *
-     * @method _drainPool
-     * @private
-     */
-    _drainPool: function() {
-        var inactive = 0,
-            i = 0, il = 0;
-
-        //count inactive nodes
-        for(i = 0, il = this._nodes.length; i < il; ++i) {
-            if(this._nodes[i].paused) {
-                inactive++;
-            }
-        }
-
-        //remove excess inactive nodes
-        for(i = this._nodes.length; i >= 0; --i) {
-            if(inactive <= 5)
-                break;
-
-            if(this._nodes[i].paused) {
-                inactive--;
-                this._nodes.splice(i, 1);
-            }
-        }
-    },
-    /**
-     * Clear 'onend' timeout before it ends.
-     *
-     * @method _clearEndTimer
-     * @param timerId {Number} timerId The ID of the sound to be cancelled.
-     * @private
-     */
-    _clearEndTimer: function(timerId) {
-        var timer = this._onendTimer.indexOf(timerId);
-
-        //make sure the timer is cleared
-        timer = timer >= 0 ? timer : 0;
-
-        if(this._onendTimer[timer]) {
-            clearTimeout(this._onendTimer[timer]);
-            this._onendTimer.splice(timer, 1);
-        }
-    },
-    /**
-     * Setup the gain node and panner for a Web Audio instance.
-     *
-     * @method _setupAudioNode
-     * @return {Object} The new audio node.
-     * @private
-     */
-    _setupAudioNode: function() {
-        var node = this._nodes,
-            i = this._nodes.length;
-
-        //create gain node
-        node.push((typeof this._manager.ctx.createGain === 'undefined') ? this._manager.ctx.createGainNode : this._manager.ctx.createGain());
-        node[i].gain.value = this._volume;
-        node[i].paused = true;
-        node[i]._pos = 0;
-        node[i].readyState = 4;
-        node[i].connect(this._manager.masterGain);
-
-        //create the panner
-        node[i].panner = this._manager.ctx.createPanner();
-        node[i].panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
-        node[i].panner.connect(node[i]);
-
-        return node[i];
-    }
-});
-
-//define some prototype functions that are only available when using the WebAudio API
-if(gf.support.webAudio) {
-    /**
-     * Buffer a sound from URL (or from cache) and decode to audio source (Web Audio API).
-     *
-     * @method loadBuffer
-     * @param url {String} The path to the sound file.
-     * @private
-     */
-    gf.AudioPlayer.prototype.loadBuffer = function(url) {
-        //load from cache
-        if(url in gf.assetCache) {
-            this._duration = gf.assetCache[url].duration;
-            this.loadSound();
-        } else {
-            //load the buffer from the URL
-            var self = this;
-
-            gf.utils.ajax({
-                method: 'GET',
-                url: url,
-                dataType: 'arraybuffer',
-                load: function(data) {
-                    //decode the buffer into an audio source
-                    self._manager.ctx.decodeAudioData(data, function(buffer) {
-                        if(buffer) {
-                            gf.assetCache[url] = buffer;
-                            self.loadSound(buffer);
-                        }
-                    });
-                },
-                error: function() {
-                    //if there was an error, switch to HTML Audio
-                    if(self._webAudio) {
-                        self._buffer = true;
-                        self._webAudio = false;
-                        self._nodes = [];
-                        self.load();
-                    }
-                }
-            });
-        }
-    };
-
-    /**
-     * Finishes loading the Web Audio API sound and fires the loaded event
-     *
-     * @method loadSound
-     * @param buffer {Object} The decoded buffer sound source.
-     * @private
-     */
-    gf.AudioPlayer.prototype.loadSound = function(buffer) {
-        this._duration = buffer ? buffer.duration : this._duration;
-
-        //setup a default sprite
-        this.sprite._default = [0, this._duration * 1000];
-
-        //fire the load event
-        if(!this._loaded) {
-            this._loaded = true;
-            this.emit({
-                type: 'load',
-                message: 'Audio file loaded.',
-                data: this.src
-            });
-        }
-
-        //autoplay is appropriate
-        if(this.autoplay) {
-            this.play();
-        }
-    };
-
-    /**
-     * Load the sound back into the buffer source.
-     *
-     * @method refreshBuffer
-     * @param loop {Array} Loop boolean, pos, and duration.
-     * @param [id] {String} The play instance ID.
-     * @private
-     */
-    gf.AudioPlayer.prototype.refreshBuffer = function(loop, id) {
-        var node = this._nodeById(id);
-
-        //setup the buffer source for playback
-        node.bufferSource = this._manager.ctx.createBufferSource();
-        node.bufferSource.buffer = gf.assetCache[this.src];
-        node.bufferSource.connect(node.panner);
-        node.bufferSource.loop = loop[0];
-
-        if(loop[0]) {
-            node.bufferSource.loopStart = loop[1];
-            node.bufferSource.loopEnd = loop[1] + loop[2];
-        }
-    };
-}
-/**
- * The base display object, that anything being put on the screen inherits from
- *
- * @class DisplayObjectContainer
- * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a>
- * @namespace gf
- * @constructor
- */
-gf.DisplayObjectContainer = function(settings) {
-    PIXI.DisplayObjectContainer.call(this);
-
-    //mixin user's settings
-    gf.utils.setValues(this, settings);
-
-    //Add these properties in so that all objects can see them in the docs
-    //these properties are inherited from PIXI.DisplayObjectContainer
-    //most of these blocks are copied straight from PIXI source
-
-    /**
-     * [read-only] The of children of this object.
-     * @property children {Array}
-     * @readOnly
-     */
-
-    /**
-     * The coordinate of the object relative to the local coordinates of the parent.
-     *
-     * @property position
-     * @type Point
-     */
-
-    /**
-     * The scale factor of the object.
-     *
-     * @property scale
-     * @type Point
-     */
-
-    /**
-     * The rotation of the object in radians.
-     *
-     * @property rotation
-     * @type Number
-     */
-
-    /**
-     * The opacity of the object.
-     *
-     * @property alpha
-     * @type Number
-     */
-
-    /**
-     * The visibility of the object.
-     *
-     * @property visible
-     * @type Boolean
-     */
-
-    /**
-     * [read-only] The display object that contains this display object.
-     *
-     * @property parent
-     * @type DisplayObject
-     * @readOnly
-     */
-
-    /**
-     * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
-     *
-     * @property stage
-     * @type Stage
-     * @readOnly
-     */
-
-    /**
-     * This is the defined area that will pick up mouse / touch events. It is null by default.
-     * Setting it is a neat way of optimising the hitTest function that the interactionManager
-     * will use (as it will not need to hit test all the children)
-     *
-     * @property hitArea
-     * @type Rectangle|Polygon|Circle|Ellipse
-     */
-
-    /**
-     * Wether or not the object will handle mouse events
-     *
-     * @property interactive
-     * @type Boolean
-     * @default false
-     */
-
-    /**
-     * Inherited Methods
-     */
-
-    /**
-     * Adds a child to the object.
-     *
-     * @method addChild
-     * @param child {DisplayObject}
-     */
-
-    /**
-     * Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown
-     *
-     * @method addChildAt
-     * @param child {DisplayObject}
-     * @param index {Number}
-     */
-
-    /**
-     * Removes a child from the object.
-     *
-     * @method removeChild
-     * @param child {DisplayObject}
-     */
-};
-
-gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
-    /**
-     * Base resize function, all this does is ensure that all children resize functions get called as well
-     *
-     * @method resize
-     */
-    resize: function() {
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.resize)
-                o.resize.apply(o, arguments);
-        }
-    },
-    /**
-     * Convenience method for setting the position of the Object.
-     *
-     * @method setPosition
-     * @param x {Number|Array<Number>|Vector|Point} X coord to put the object at.
-     *       If an Array, Vector, or Point is passed then the y parameter is ignored
-     * @param y {Number} Y coord to put the object at
-     * @return {DisplayObjectContainer} Returns itself for chainability
-     * @example
-     *      obj.setPosition(0) //will set to (0, 0)
-     *          .setPosition(1, 1)
-     *          .setPosition([5, 5])
-     *          .setPosition(new gf.Point(10, 10))
-     *          .setPosition(new gf.Vector(20, 20));
-     */
-    setPosition: function(x, y) {
-        //passed in a vector or point object
-        if(x instanceof gf.Vector || x instanceof gf.Point) {
-            this.position.x = x.x;
-            this.position.y = x.y;
-        }
-        //passed in an array of form [x, y]
-        else if(x instanceof Array) {
-            this.position.x = x[0];
-            this.position.y = x[1];
-        }
-        //passed in a single number, that will apply to both
-        else if(typeof x === 'number' && y === undefined) {
-            this.position.x = x;
-            this.position.y = x;
-        }
-        //passed in something else, lets try to massage it into numbers
-        else {
-            this.position.x = parseFloat(x, 10) || 0;
-            this.position.y = parseFloat(y, 10) || 0;
-        }
-
-        return this;
-    }
-});
-
-//Add event echos
-['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
-    gf.DisplayObjectContainer.prototype[evtname] = function(e) {
-        this.emit(evtname, e);
-    };
-});
-
-/*
- * MOUSE Callbacks
- */
-
-/**
- * A callback that is used when the users clicks on the displayObject with their mouse
- *
- * @event click
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user clicks the mouse down over the displayObject
- *
- * @event mousedown
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user releases the mouse that was over the displayObject
- * for this callback to be fired the mouse must have been pressed down over the displayObject
- *
- * @event mouseup
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject
- * for this callback to be fired, The touch must have started over the displayObject
- *
- * @event mouseupoutside
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the users mouse rolls over the displayObject
- *
- * @event mouseover
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the users mouse leaves the displayObject
- *
- * @event mouseout
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user moves the mouse while over the displayObject
- *
- * @event mousemove
- * @param interactionData {InteractionData}
- */
-
-/*
- * TOUCH Callbacks
- */
-
-/**
- * A callback that is used when the users taps on the displayObject with their finger
- * basically a touch version of click
- *
- * @event tap
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user touch's over the displayObject
- *
- * @event touchstart
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user releases a touch over the displayObject
- *
- * @event touchend
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user releases the touch that was over the displayObject
- * for this callback to be fired, The touch must have started over the displayObject
- *
- * @event touchendoutside
- * @param interactionData {InteractionData}
- */
-/**
- * The base Sprite class. This class is the base for all images on the screen
- *
- * @class Sprite
- * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html">PIXI.Sprite</a>
- * @uses gf.EventEmitter
- * @namespace gf
- * @constructor
- * @param texture {Texture} The texture to set the sprite to
- * @example
- *      var spr = new gf.Sprite(texture);
- */
-gf.Sprite = function(tx) {
-    PIXI.Sprite.call(this, tx);
-    gf.EventEmitter.call(this);
-
-    /**
-     * The type of the sprite
-     *
-     * @property type
-     * @type String
-     * @default 'neutral'
-     */
-    this.type = gf.Sprite.TYPE.NEUTRAL;
-
-    /**
-     * Whether or not the sprite is "alive", advisory only
-     *
-     * @property alive
-     * @type Boolean
-     * @default true
-     */
-    this.alive = true;
-
-    /**
-     * The mass of this sprite (if using physics), please use setMass to set this value
-     *
-     * @property mass
-     * @type Number
-     * @default 0
-     * @readOnly
-     */
-    this.mass = 0;
-
-    /**
-     * The physics system that this sprite is a part of. This is advisory only
-     * please use enablePhysics() or disablePhysics() and do not set this value
-     * directly.
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @default null
-     * @readOnly
-     */
-    this.physics = null;
-};
-
-gf.inherits(gf.Sprite, PIXI.Sprite, {
-    /**
-     * Enables physics for this sprite
-     *
-     * @method enablePhysics
-     * @param system {PhysicsSystem} The system for the sprite to be in
-     */
-    enablePhysics: function(sys) {
-        if(sys && this.physics !== sys) {
-            if(this.physics)
-                this.physics.remove(this);
-
-            this.physics = sys;
-        }
-
-        this.physics.add(this);
-    },
-    /**
-     * Disbales physics for this sprite
-     *
-     * @method disablePhysics
-     */
-    disablePhysics: function() {
-        if(this.physics) {
-            this.physics.remove(this);
-        }
-    },
-    /**
-     * Sets the mass of this sprite
-     *
-     * @method setMass
-     * @param mass {Number} The new mass of the object
-     */
-    setMass: function(mass) {
-        if(this.physics) {
-            this.physics.setMass(this, mass);
-        }
-    },
-    /**
-     * Sets the velocity of this sprite
-     *
-     * @method setVelocity
-     * @param velocity {Vector} The new velocity of the object
-     */
-    setVelocity: function(vel) {
-        if(this.physics) {
-            this.physics.setVelocity(this, gf.utils.ensureVector(vel));
-        }
-    },
-    /**
-     * Sets the rotation of this sprite
-     *
-     * @method setRotation
-     * @param rotation {Number} The new rotation of the object in radians
-     */
-    setRotation: function(rads, skipPhysics) {
-        this.rotation = rads;
-
-        if(!skipPhysics && this.physics) {
-            this.physics.setRotation(this, rads);
-        }
-    },
-    /**
-     * Sets the position of this sprite
-     *
-     * @method setPosition
-     * @param x {Number}
-     * @param y {Number}
-     */
-    setPosition: function(x, y, skipPhysics) {
-        this.position.x = x;
-        this.position.y = y;
-
-        if(!skipPhysics && this.physics) {
-            this.physics.setPosition(this, this.position);
-        }
-    },
-    /**
-     * Removes this sprite from the stage and the physics system
-     *
-     * @method destroy
-     */
-    destroy: function() {
-        if(this.parent)
-            this.parent.removeChild(this);
-
-        if(this.physics)
-            this.physics.remove(this);
-
-    },
-    /**
-     * On Collision Event
-     *      called when this sprite collides into another, or is being collided into by another.
-     *      By default if something collides with a collectable sprite we destroy the collectable
-     *      and if we collide with a solid tile we kill our velocity. This method will emit a
-     *      'collision' event that you can listen for
-     *
-     * @method onCollision
-     * @param obj {Sprite} Colliding sprite
-     */
-    onCollision: function(obj) {
-        if(obj.type === gf.Sprite.TYPE.COLLECTABLE)
-            obj.destroy();
-
-        this.emit('collision', obj);
-    }
-});
-
-/**
- * Sprite types
- *
- * @property TYPE
- * @type Object
- * @static
- */
-gf.Sprite.TYPE = {
-    PLAYER: 'player',
-    ENEMY: 'enemy',
-    FRIENDLY: 'friendly',
-    NEUTRAL: 'neutral',
-    COLLECTABLE: 'collectable',
-    TILE: 'tile'
-};
-
-//Add event echos
-['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
-    gf.Sprite.prototype[evtname] = function(e) {
-        this.emit(evtname, e);
-    };
-});
-
-/*
- * MOUSE Callbacks
- */
-
-/**
- * A callback that is used when the users clicks on the sprite with their mouse
- *
- * @event click
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user clicks the mouse down over the sprite
- *
- * @event mousedown
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user releases the mouse that was over the sprite
- * for this callback to be fired the mouse must have been pressed down over the sprite
- *
- * @event mouseup
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user releases the mouse that was over the sprite but is no longer over the sprite
- * for this callback to be fired, The touch must have started over the sprite
- *
- * @event mouseupoutside
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the users mouse rolls over the sprite
- *
- * @event mouseover
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the users mouse leaves the sprite
- *
- * @event mouseout
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user moves the mouse while over the sprite
- *
- * @event mousemove
- * @param interactionData {InteractionData}
- */
-
-/*
- * TOUCH Callbacks
- */
-
-/**
- * A callback that is used when the users taps on the sprite with their finger
- * basically a touch version of click
- *
- * @event tap
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user touch's over the sprite
- *
- * @event touchstart
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user releases a touch over the sprite
- *
- * @event touchend
- * @param interactionData {InteractionData}
- */
-
-/**
- * A callback that is used when the user releases the touch that was over the sprite
- * for this callback to be fired, The touch must have started over the sprite
- *
- * @event touchendoutside
- * @param interactionData {InteractionData}
- */
-/**
- * The base AnimatedSprite class
- *
- * @class AnimatedSprite
- * @extends gf.Sprite
- * @namespace gf
- * @constructor
- * @param animations {Object} An object of the form `{ animationName: [frame1, frame2] }` or you can also specify overrides on a per-animation basis:
- *      `{ animationName: { frames: [frame1, frame2], speed: 2 } }`. Each frame is a Texture object
- * @param [speed] {Number} The speed of the animations (can be overriden on a specific animations)
- * @param [start] {String} The animation to start with, defaults to the first found key otherwise
- */
-gf.AnimatedSprite = function(anims, speed, start) {
-    //massage animations into full format
-    for(var a in anims) {
-        if(start === undefined)
-            start = a;
-
-        var anim = anims[a];
-
-        if(anim instanceof Array)
-            anims[a] = { frames: anim };
-    }
-
-    gf.Sprite.call(this, anims[start].frames[0]);
-
-    /**
-     * The animation speed for this sprite
-     *
-     * @property speed
-     * @type Number
-     * @default 1
-     */
-    this.speed = speed || 1;
-
-    /**
-     * Whether or not to loop the animations. This can be overriden
-     * on a per-animation level
-     *
-     * @property loop
-     * @type Boolean
-     * @default false
-     */
-    this.loop = false;
-
-    /**
-     * The registerd animations for this AnimatedSprite
-     *
-     * @property animations
-     * @type Object
-     * @readOnly
-     */
-    this.animations = anims;
-
-    /**
-     * The currently playing animation
-     *
-     * @property currentAnimation
-     * @type String
-     * @readOnly
-     */
-    this.currentAnimation = start;
-
-    /**
-     * The current frame being shown
-     *
-     * @property currentFrame
-     * @type Number
-     * @readOnly
-     */
-    this.currentFrame = 0;
-
-    /**
-     * Whether or not the animation is currently playing
-     *
-     * @property playing
-     * @type Boolean
-     * @readOnly
-     */
-    this.playing = false;
-};
-
-gf.inherits(gf.AnimatedSprite, gf.Sprite, {
-    /**
-     * Adds a new animation to this animated sprite
-     *
-     * @method addAnimation
-     * @param name {String} The string name of the animation
-     * @param frames {Array<Texture>} The array of texture frames
-     * @param [speed] {Number} The animation speed
-     * @param [loop] {Boolean} Loop the animation or not
-     */
-    addAnimation: function(name, frames, speed, loop) {
-        if(typeof name === 'object') {
-            this.animations[name.name] = name;
-        } else {
-            this.animations[name] = {
-                name: name,
-                frames: frames,
-                speed: speed,
-                loop: loop
-            };
-        }
-    },
-    /**
-     * Goes to a frame and starts playing the animation from there
-     *
-     * @method gotoAndPlay
-     * @param [name] {String} The string name of the animation to play
-     * @param frame {Number} The index of the frame to start on
-     */
-    gotoAndPlay: function(anim, frame) {
-        if(typeof anim === 'number') {
-            this.currentFrame = anim;
-        } else {
-            this.currentFrame = frame || 0;
-            this.currentAnimation = anim;
-        }
-
-        this.playing = true;
-    },
-    /**
-     * Goes to a frame and stops playing the animation
-     *
-     * @method gotoAndStop
-     * @param [name] {String} The string name of the animation to go to
-     * @param frame {Number} The index of the frame to stop on
-     */
-    gotoAndStop: function(anim, frame) {
-        if(typeof anim === 'number') {
-            this.currentFrame = anim;
-        } else {
-            this.currentFrame = frame || 0;
-            this.currentAnimation = anim;
-        }
-
-        this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
-        this.playing = false;
-    },
-    /**
-     * Starts playing the currently active animation
-     *
-     * @method play
-     */
-    play: function() {
-        this.playing = true;
-    },
-    /**
-     * Stops playing the currently active animation
-     *
-     * @method stop
-     */
-    stop: function() {
-        this.playing = false;
-    },
-    /**
-     * Called by PIXI to update our textures and do the actual animation
-     *
-     * @method updateTransform
-     * @private
-     */
-    updateTransform: function() {
-        gf.Sprite.prototype.updateTransform.call(this);
-
-        if(!this.playing) return;
-
-        var anim = this.animations[this.currentAnimation],
-            round,
-            loop = anim.loop !== undefined ? anim.loop : this.loop;
-
-        this.currentFrame += anim.speed || this.speed;
-        round = gf.math.round(this.currentFrame);
-
-        if(round < anim.frames.length) {
-            this.setTexture(anim.frames[round]);
-        }
-        else {
-            if(loop) {
-                this.gotoAndPlay(0);
-            } else {
-                this.stop();
-                this.emit('complete', this.currentAnimation);
-            }
-        }
-    }
-});
-/**
- * A basic Camera object that provides some effects. It also will contain the HUD and GUI
- * to ensure they are using "screen-coords".
- *
- * TODO: Currently fade/flash don't show the colors. How should I actually show them, a gf.Sprite?
- *
- * @class Camera
- * @extends gf.DisplayObjectContainer
- * @namespace gf
- * @constructor
- * @param game {Game} The game this camera belongs to
- * @param settings {Object} Any settings you want to override the default properties with
- */
-gf.Camera = function(game, settings) {
-    /**
-     * The bounds of that the camera can move to
-     *
-     * @property bounds
-     * @type Rectangle
-     * @readOnly
-     * @private
-     */
-    this._bounds = new gf.Rectangle(0, 0, 0, 0);
-
-    /**
-     * When following a sprite this is the space within the camera that it can move around
-     * before the camera moves to track it.
-     *
-     * @property _deadzone
-     * @type Rectangle
-     * @readOnly
-     * @private
-     */
-    this._deadzone = null;
-
-    /**
-     * The target that the camera will follow
-     *
-     * @property _target
-     * @type Sprite
-     * @readOnly
-     * @private
-     */
-    this._target = null;
-
-    /**
-     * The size of the camera
-     *
-     * @property size
-     * @type Vector
-     * @readOnly
-     */
-    this.size = new gf.Vector(0, 0);
-
-    /**
-     * Half of the size of the camera
-     *
-     * @property hSize
-     * @type Vector
-     * @readOnly
-     */
-    this.hSize = new gf.Vector(0, 0);
-
-    /**
-     * The _fx namespace has all the instance variables for all the fx
-     *
-     * @property _fx
-     * @type Object
-     * @private
-     * @readOnly
-     */
-    this._fx = {
-        flash: {
-            alpha: 0,
-            complete: null
-        },
-        fade: {
-            alpha: 0,
-            complete: null
-        },
-        shake: {
-            intensity: 0,
-            duration: 0,
-            direction: gf.Camera.SHAKE.BOTH,
-            offset: new gf.Point(0, 0),
-            complete: null
-        }
-    };
-
-    gf.DisplayObjectContainer.call(this, settings);
-};
-
-gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
-    /**
-     * Makes the camera flash with a certain color
-     *
-     * @method flash
-     * @param color {Number} The color to flash the screen with
-     * @param duration {Number} The time in milliseconds to fade away
-     * @param callback {Function} The callback to call when the flash has completed
-     * @return {Camera} Returns iteself for chainability
-     */
-    flash: function(color, duration, cb) {
-        if(this._fx.flash.alpha > 0) return this;
-
-        if(typeof duration === 'function') {
-            cb = duration;
-            duration = 1;
-        }
-
-        if(typeof color === 'function') {
-            cb = color;
-            duration = 1;
-            color = 0xFFFFFF;
-        }
-
-        duration = duration || 1;
-        if(duration < 0) duration = 1;
-
-        if(color === undefined)
-            color = 0xFFFFFF;
-
-        /*var red = color >> 16 & 0xFF,
-            green = color >> 8 & 0xFF,
-            blue = color & 0xFF;*/
-
-        this._fx.flash.color = color;
-        this._fx.flash.duration = duration;
-        this._fx.flash.alpha = 1;
-        this._fx.flash.complete = cb;
-
-        return this;
-    },
-    /**
-     * Stops a running flash, instantly hiding it
-     *
-     * @method stopFlash
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopFlash: function() {
-        this._fx.flash.alpha = 0;
-
-        return this;
-    },
-    /**
-     * Makes the camera fade into a color
-     *
-     * @method fade
-     * @param color {Number} The color to fade into
-     * @param duration {Number} The time in milliseconds to take to fade in
-     * @param callback {Function} The callback to call when the fade has completed
-     * @return {Camera} Returns iteself for chainability
-     */
-    fade: function(color, duration, cb) {
-        if(this._fx.fade.alpha > 0) return this;
-
-        if(typeof duration === 'function') {
-            cb = duration;
-            duration = 1;
-        }
-
-        if(typeof color === 'function') {
-            cb = color;
-            duration = 1;
-            color = 0xFFFFFF;
-        }
-
-        duration = duration || 1;
-        if(duration < 0) duration = 1;
-
-        if(color === undefined)
-            color = 0xFFFFFF;
-
-        /*var red = color >> 16 & 0xFF,
-            green = color >> 8 & 0xFF,
-            blue = color & 0xFF;*/
-
-        this._fx.fade.color = color;
-        this._fx.fade.duration = duration;
-        this._fx.fade.alpha = 0.01;
-        this._fx.fade.complete = cb;
-
-        return this;
-    },
-    /**
-     * Stops a running fade, instantly hiding it
-     *
-     * @method stopFade
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopFade: function() {
-        this._fx.fade.alpha = 0;
-
-        return this;
-    },
-    /**
-     * Shakes the camera around a bit, to show it who is boss.
-     *
-     * @method shake
-     * @param intensity {Number} How hard to shake around
-     * @param duration {Number} The time in milliseconds to shake for
-     * @param direction {Camera.SHAKE} The axes to shake the camera in default is gf.Camera.SHAKE.BOTH
-     * @param callback {Function} The callback to call when the shaking has stopped
-     * @return {Camera} Returns iteself for chainability
-     */
-    shake: function(intensity, duration, direction, cb) {
-        //already shaking (call stop first)
-        if(this._fx.shake.offset.x !== 0 || this._fx.shake.offset.y !== 0)
-            return this;
-
-        if(typeof direction === 'function') {
-            cb = direction;
-            direction = gf.Camera.SHAKE.BOTH;
-        }
-
-        if(typeof duration === 'function') {
-            cb = duration;
-            direction = gf.Camera.SHAKE.BOTH;
-            duration = null;
-        }
-
-        if(typeof intensity === 'function') {
-            cb = intensity;
-            direction = gf.Camera.SHAKE.BOTH;
-            duration = null;
-            intensity = null;
-        }
-
-        intensity = intensity || 0.01;
-        duration = duration || 1000;
-        direction = direction || gf.Camera.SHAKE.BOTH;
-
-        //setup a shake effect
-        this._fx.shake.intensity = intensity;
-        this._fx.shake.duration = duration;
-        this._fx.shake.direction = direction;
-        this._fx.shake.offset.x = 0;
-        this._fx.shake.offset.y = 0;
-        this._fx.shake.complete = cb;
-
-        return this;
-    },
-    /**
-     * Stops a running shake effect
-     *
-     * @method stopShake
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopShake: function() {
-        if(this._fx.shake.duration !== 0) {
-            this._fx.shake.duration = 0;
-            this._fx.shake.offset.x = 0;
-            this._fx.shake.offset.y = 0;
-        }
-
-        return this;
-    },
-    /**
-     * Stops all currently running effects (flash, fade, shake)
-     *
-     * @method stopAll
-     * @return {Camera} Returns iteself for chainability
-     */
-    stopAll: function() {
-        this.stopFlash();
-        this.stopFade();
-        this.stopShake();
-
-        return this;
-    },
-    /**
-     * Follows an sprite with the camera, ensuring they are always center view. You can
-     * pass a follow style to change the area an sprite can move around in before we start
-     * to move with them.
-     *
-     * @method follow
-     * @param sprite {Sprite} The sprite to follow
-     * @param style {Camera.FOLLOW} The style of following, defaults to gf.Camera.FOLLOW.LOCKON
-     * @return {Camera} Returns iteself for chainability
-     */
-    follow: function(spr, style) {
-        if(!(spr instanceof gf.Sprite))
-            return this;
-
-        this._target = spr;
-
-        switch(style) {
-            case gf.Camera.FOLLOW.PLATFORMER:
-                var w = this.size.x / 8;
-                var h = this.size.y / 3;
-                this._deadzone = new gf.Rectangle(
-                    (this.size.x - w) / 2,
-                    (this.size.y - h) / 2 - (h / 4),
-                    w,
-                    h
-                );
-                break;
-            case gf.Camera.FOLLOW.TOPDOWN:
-                var sq4 = Math.max(this.size.x, this.size.y) / 4;
-                this._deadzone = new gf.Rectangle(
-                    (this.size.x - sq4) / 2,
-                    (this.size.y - sq4) / 2,
-                    sq4,
-                    sq4
-                );
-                break;
-            case gf.Camera.FOLLOW.TOPDOWN_TIGHT:
-                var sq8 = Math.max(this.size.x, this.size.y) / 8;
-                this._deadzone = new gf.Rectangle(
-                    (this.size.x - sq8) / 2,
-                    (this.size.y - sq8) / 2,
-                    sq8,
-                    sq8
-                );
-                break;
-            case gf.Camera.FOLLOW.LOCKON:
-                /* falls through */
-            default:
-                this._deadzone = null;
-                break;
-        }
-
-        this.focusSprite(this._target);
-
-        return this;
-    },
-    /**
-     * Stops following any sprites
-     *
-     * @method unfollow
-     * @return {Camera} Returns iteself for chainability
-     */
-    unfollow: function() {
-        this._target = null;
-        return this;
-    },
-    /**
-     * Focuses the camera on a sprite.
-     *
-     * @method focusSprite
-     * @param sprite {Sprite} The sprite to focus on
-     * @return {Camera} Returns iteself for chainability
-     */
-    focusSprite: function(spr) {
-        return this.focus(
-            gf.math.round(spr.position.x) * this.game.world.scale.x,
-            gf.math.round(spr.position.y) * this.game.world.scale.y
-        );
-    },
-    /**
-     * Focuses the camera on an x,y position. Ensures that the camera does
-     * not go outside the bounds set with setBounds()
-     *
-     * @method focus
-     * @param x {Number|Point} The x coord to focus on, if a Point is passed the y param is ignored
-     * @param y {Number} The y coord to focus on
-     * @return {Camera} Returns iteself for chainability
-     */
-    focus: function(x, y) {
-        y = x instanceof gf.Point ? x.y : (y || 0);
-        x = x instanceof gf.Point ? x.x : (x || 0);
-        //x += (x > 0) ? 0.0000001 : -0.0000001;
-        //y += (y > 0) ? 0.0000001 : -0.0000001;
-
-        //calculate how much we need to pan
-        var goToX = x - this.hSize.x,
-            goToY = y - this.hSize.y,
-            dx = goToX + this.game.world.position.x, //world pos is negative
-            dy = goToY + this.game.world.position.y;
-
-        return this.pan(dx, dy);
-    },
-    /**
-     * Pans the camera around by the x,y amount. Ensures that the camera does
-     * not go outside the bounds set with setBounds()
-     *
-     * @method pan
-     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
-     * @param y {Number} The y ammount to pan
-     * @return {Camera} Returns iteself for chainability
-     */
-    pan: function(dx, dy) {
-        dy = dx instanceof gf.Point ? dx.y : (dy || 0);
-        dx = dx instanceof gf.Point ? dx.x : (dx || 0);
-
-        if(!dx && !dy) return;
-
-        var newX = this.game.world.position.x - dx,
-            newY = this.game.world.position.y - dy;
-
-        //move only the difference that puts us at 0
-        if(newX > 0)
-            dx = 0 + this.game.world.position.x;
-        //move only the difference that puts us at max (remember that position is negative)
-        else if(newX < -this._bounds.maxPanX)
-            dx = this._bounds.maxPanX + this.game.world.position.x;
-
-        if(newY > 0)
-            dy = 0 - Math.abs(this.game.world.position.y);
-        else if(newY < -this._bounds.maxPanY)
-            dy = this._bounds.maxPanY + this.game.world.position.y;
-
-        if(dx || dy) {
-            //if we move a lot, then just force a re render (less expensive then panning all the way there)
-            if(Math.abs(dx) > this.hSize.x || Math.abs(dy) > this.hSize.y) {
-                this.game.world.setPosition(this.game.world.position.x - dx, this.game.world.position.y - dy);
-                this.game.world.resize();
-            }
-            //otherwise just pan
-            else {
-                this.game.world.pan(-dx, -dy);
-            }
-        }
-
-        return this;
-    },
-    /**
-     * Resizes the viewing area, this is called internally by your game instance
-     * when you call mygame.resize(). DO NOT CALL THIS DIRECTLY
-     *
-     * @method resize
-     * @private
-     * @param w {Number} The new width
-     * @param h {Number} The new height
-     * @return {Camera} Returns iteself for chainability
-     */
-    resize: function(w, h) {
-        this.size.set(w, h);
-        this.hSize.set(
-            Math.round(this.size.x / 2),
-            Math.round(this.size.y / 2)
-        );
-
-        return this;
-    },
-    /**
-     * Sets the bounds the camera is allowed to go. Usually this is the world's
-     * min and max, and is set for you.
-     *
-     * @method setBounds
-     * @param x {Number} The minimum x coord (usually 0)
-     * @param y {Number} The minimum y coord (usually 0)
-     * @param width {Number} The maximum x coord (usually map width)
-     * @param height {Number} The maximum y coord (usually map height)
-     * @return {Camera} Returns iteself for chainability
-     */
-    setBounds: function(x, y, width, height) {
-        this._bounds.x = x;
-        this._bounds.y = y;
-        this._bounds.width = width;
-        this._bounds.height = height;
-
-        this._bounds.maxX = this._bounds.x + this._bounds.width;
-        this._bounds.maxY = this._bounds.y + this._bounds.height;
-
-        this._bounds.maxPanX = width - this.size.x;
-        this._bounds.maxPanY = height - this.size.y;
-
-        return this;
-    },
-    /**
-     * Called internally every frame. Updates all effects and the follow
-     *
-     * @method update
-     * @param dt {Number} The delta time (in seconds) since the last update
-     * @return {Camera} Returns iteself for chainability
-     * @private
-     */
-    update: function(dt) {
-        //follow sprite
-        if(this._target) {
-            if(!this._deadzone) {
-                this.focusSprite(this._target);
-            } else {
-                var moveX, moveY,
-                    dx, dy,
-                    //get the x,y of the sprite on the screen
-                    camX = (this._target.position.x + (this.game.world.position.x / this.game.world.scale.x)) * this.game.world.scale.x,
-                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * this.game.world.scale.x;
-
-                moveX = moveY = dx = dy = 0;
-
-                //check less than
-                dx = camX - this._deadzone.x;
-                dy = camY - this._deadzone.y;
-
-                if(dx < 0)
-                    moveX = dx;
-                if(dy < 0)
-                    moveY = dy;
-
-                //check greater than
-                dx = camX - (this._deadzone.x + this._deadzone.width);
-                dy = camY - (this._deadzone.y + this._deadzone.height);
-
-                if(dx > 0)
-                    moveX = dx;
-                if(dy > 0)
-                    moveY = dy;
-
-                this.pan(
-                    Math.round(moveX),
-                    Math.round(moveY)
-                );
-            }
-        }
-
-        //update flash effect
-        if(this._fx.flash.alpha > 0) {
-            this._fx.flash.alpha -= (dt * 1000) / this._fx.flash.duration;
-
-            if(this._fx.flash.alpha <= 0) {
-                this._fx.flash.alpha = 0;
-
-                if(this._fx.flash.complete)
-                    this._fx.flash.complete();
-            }
-        }
-
-        //update fade effect
-        if(this._fx.fade.alpha > 0) {
-            this._fx.fade.alpha += (dt * 1000) / this._fx.fade.duration;
-
-            if(this._fx.fade.alpha >= 1) {
-                this._fx.fade.alpha = 1;
-
-                if(this._fx.fade.complete) {
-                    this._fx.fade.complete();
-                }
-            }
-        }
-
-        //update shake effect
-        if(this._fx.shake.duration > 0) {
-            this._fx.shake.duration -= (dt * 1000);
-
-            //pan back to the original position
-            this._fx.shake.offset.x = -this._fx.shake.offset.x;
-            this._fx.shake.offset.y = -this._fx.shake.offset.y;
-            this.pan(this._fx.shake.offset);
-
-            if(this._fx.shake.duration <= 0) {
-                this._fx.shake.duration = 0;
-                this._fx.shake.offset.x = 0;
-                this._fx.shake.offset.y = 0;
-
-                if(this._fx.shake.complete) {
-                    this._fx.shake.complete();
-                }
-            }
-            else {
-                //pan to a random offset
-                if((this._fx.shake.direction === gf.Camera.SHAKE.BOTH) || (this._fx.shake.direction === gf.Camera.SHAKE.HORIZONTAL))
-                    this._fx.shake.offset.x = Math.round(Math.random() * this._fx.shake.intensity * this.size.x * 2 - this._fx.shake.intensity * this.size.x);
-
-                if ((this._fx.shake.direction === gf.Camera.SHAKE.BOTH) || (this._fx.shake.direction === gf.Camera.SHAKE.VERTICAL))
-                    this._fx.shake.offset.y = Math.round(Math.random() * this._fx.shake.intensity * this.size.y * 2 - this._fx.shake.intensity * this.size.y);
-
-                this.pan(this._fx.shake.offset);
-            }
-        }
-
-        return this;
-    }
-});
-
-/**
- * Camera follow types (used for camera.follow())
- *
- * @property FOLLOW
- * @type Object
- * @static
- */
-gf.Camera.FOLLOW = {
-    PLATFORMER: 0,
-    TOPDOWN: 1,
-    TOPDOWN_TIGHT: 2,
-    LOCKON: 3
-};
-
-/**
- * Camera shake directions (used for camera.shake())
- *
- * @property SHAKE
- * @type Object
- * @static
- */
-gf.Camera.SHAKE = {
-    BOTH: 0,
-    HORIZONTAL: 1,
-    VERTICAL: 2
-};
-/**
- * A texture font makes it easy to use a texture for writing generic text. Basically
- * this holds an array of textures each one representing a character, that all share
- * the same base texture (image). It is the same way a spritesheet works except you
- * use the textures for text instead of animation frames.
- *
- * For special characters, you can either use the `.map` property to map a character
- * to a texture name like `font.map['~'] = 'tilde'` so that any `~` uses the texture named
- * `tilde + font.ext` for rendering; or you can make the texture name be the character code
- * prefixed with `#`. So, for `~`, naming the texture `#126.png` with `font.ext = 'png'`
- * would just work automagically. There is a default map already that you can view in the source,
- * and if you follow that naming convention, it will work without modification as well.
- *
- * @class TextureFont
- * @extends gf.DisplayObjectContainer
- * @namespace gf
- * @constructor
- * @param texture {Texture|String} The sprite sheet to use, if you pass a string make sure to preload it first
- * @param [settings] {Object} All the settings for the font
- * @param [settings.ext] {String} The extension used for the different texture names
- * @param [settings.map] {Object} Maps a special character to a string name
- * @param [settings.spaceSize] {Number} The size of a space character in pixels
- * @param [settings.lineWidth] {Number} The width factor of characters, default is 1 which is normal spacing
- * @param [settings.lineHeight] {Number} The height factor of characters, default is 1 which is normal spacing
- * @param [settings.text] {String} Starting text of the font
- */
-gf.TextureFont = function(font, settings) {
-    if(typeof font === 'string') {
-        if(gf.assetCache[font])
-            font = gf.assetCache[font];
-        else
-            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
-    }
-
-    /**
-     * The extension to use with texture names
-     *
-     * @property ext
-     * @type String
-     * @default ''
-     */
-    this.ext = '';
-
-    /**
-     * Maps a special character to a string name
-     *
-     * @property map
-     * @type Object
-     */
-    this.map = {
-        '`': 'accent',
-        '~': 'tilde',
-        '!': 'exclamation',
-        '@': 'at',
-        '#': 'hash',
-        '$': 'dollar',
-        '%': 'percent',
-        '^': 'carret',
-        '&': 'ampersand',
-        '*': 'asterisk',
-        '(': 'open-parenthesis',
-        ')': 'close-parenthesis',
-        '-': 'dash',
-        '_': 'underscore',
-        '+': 'plus',
-        '=': 'equal',
-        '{': 'open-brace',
-        '}': 'close-brace',
-        '[': 'open-bracket',
-        ']': 'close-bracket',
-        '\\': 'backslash',
-        '|': 'pipe',
-        ':': 'colon',
-        ';': 'semicolon',
-        '"': 'quote',
-        '\'': 'single-quote',
-        '<': 'less-than',
-        '>': 'greater-than',
-        ',': 'comma',
-        '.': 'period',
-        '?': 'question',
-        '/': 'slash'
-    };
-
-    /**
-     * The size of a space character in pixels
-     *
-     * @property spaceSize
-     * @type Number
-     */
-    this.spaceSize = 15;
-
-    /**
-     * The width factor of characters, default is 1 which is normal spacing
-     *
-     * @property lineWidth
-     * @type Number
-     */
-    this.lineWidth = 1;
-
-    /**
-     * The height factor of characters, default is 1 which is normal spacing
-     *
-     * @property lineHeight
-     * @type Number
-     */
-    this.lineHeight = 1;
-
-    /**
-     * The textures for all the characters in the alphabet
-     *
-     * @property textures
-     * @type Object<Texture>
-     * @readOnly
-     * @private
-     */
-    this.textures = font;
-
-    /**
-     * The sprite pool to grab character sprites from
-     *
-     * @property sprites
-     * @type ObjectPool
-     * @readOnly
-     * @private
-     */
-    this.sprites = new gf.ObjectPool(gf.Sprite, this);
-
-    //call base ctor
-    gf.DisplayObjectContainer.call(this, settings);
-
-    if(this.ext && this.ext.charAt(0) !== '.')
-        this.ext = '.' + this.ext;
-
-    if(settings.text)
-        this.setText(settings.text);
-};
-
-gf.inherits(gf.TextureFont, gf.DisplayObjectContainer, {
-    /**
-     * Gets a sprite from the pool for the character pased
-     *
-     * @method _getSprite
-     * @param character {String} The character to get a sprite for
-     * @return Sprite
-     */
-    _getSprite: function(ch) {
-        if(this.map[ch])
-            ch = this.map[ch];
-
-        //skips spaces
-        if(ch === '' || ch === ' ')
-            return null;
-
-        var texture = this.textures[ch + this.ext];
-
-        //try character code
-        if(!texture)
-            texture = this.textures['#' + ch.charCodeAt(0) + this.ext];
-
-        //if no match, error
-        if(!texture)
-            throw 'There is no texture for character "' + ch + '" with extension "' + this.ext + '"';
-
-        var spr = this.sprites.create(texture);
-
-        spr.setTexture(texture);
-        spr.visible = true;
-
-        return spr;
-    },
-    /**
-     * Clones this font to get another just like it
-     *
-     * @method clone
-     * @return TextureFont
-     */
-    clone: function() {
-        return new gf.TextureFont(this.textures, {
-            ext: this.ext,
-            map: this.map,
-            text: this.text,
-            lineWidth: this.lineWidth,
-            lineHeight: this.lineHeight
-        });
-    },
-    /**
-     * Sets the text of this font to the string passed
-     *
-     * @method setText
-     * @param text {String} The text to display
-     */
-    setText: function(txt) {
-        this.text = txt;
-
-        //free all sprites
-        for(var c = 0, cl = this.children.length; c < cl; ++c) {
-            var child = this.children[c];
-            child.visible = false;
-            this.sprites.free(child);
-        }
-
-        //add text sprites
-        var strs = this.text.toString().split('\n'),
-            h = 0,
-            x = 0,
-            y = 0;
-
-        for(var i = 0, il = strs.length; i < il; ++i) {
-            var str = strs[i];
-
-            //create the string sprites
-            for(var s = 0, sl = str.length; s < sl; ++s) {
-                var ch = str.charAt(s),
-                    spr = this._getSprite(ch);
-
-                if(spr !== null) {
-                    spr.position.x = x;
-                    spr.position.y = y;
-
-                    if(spr.texture.frame.height > h)
-                        h = spr.texture.frame.height;
-
-                    x += spr.texture.frame.width * this.lineWidth;
-                } else {
-                    x += this.spaceSize * this.lineWidth;
-                }
-
-            }
-
-            y += h * this.lineHeight;
-        }
-    }
-});
-/**
- * Main game object, controls the entire instance of the game
- *
- * @class Game
- * @extends Object
- * @uses gf.EventEmitter
- * @namespace gf
- * @constructor
- * @param contId {String} The container for the new canvas we will create for the game
- * @param settings {Object} All the settings for the game instance
- * @param settings.width {Number} The width of the viewport
- * @param settings.height {Number} The height of the viewport
- * @param [settings.view] {DOMElement} The canvas to render into
- * @param [settings.transparent] {Boolean} Whether the viewport should be transparent or not
- * @param [settings.renderMethod] {String} Can be 'canvas' or 'webgl' to force that render method
- * @param [settings.background] {Number} The background color of the stage
- * @param [settings.interactive] {Boolean} Whether the game will use mouse events or not
- */
-gf.Game = function(contId, settings) {
-    //mixin the Event Target methods
-    gf.EventEmitter.call(this);
-
-    /**
-     * The domElement that we are putting our rendering canvas into (the container)
-     *
-     * @property container
-     * @type DOMELement
-     * @readOnly
-     */
-    this.container = document.getElementById(contId);
-
-    if(!this.container)
-        this.container = document.body;
-
-    /**
-     * The method used to render values to the screen (either webgl, or canvas)
-     *
-     * @property renderMethod
-     * @type String
-     * @default 'webgl'
-     */
-    this.renderMethod = 'webgl';
-
-    /**
-     * The player entities added into the game
-     *
-     * @property players
-     * @type {Array}
-     * @readOnly
-     */
-    this.players = [];
-
-    /**
-     * Raw PIXI.stage instance
-     *
-     * @property stage
-     * @type PIXI.Stage
-     * @readOnly
-     */
-    this.stage = new PIXI.Stage(
-        settings.background,
-        settings.interactive !== undefined ? settings.interactive : true
-    );
-
-    /**
-     * Raw Clock instance for internal timing
-     *
-     * @property clock
-     * @type Clock
-     * @readOnly
-     */
-    this.clock = new gf.Clock(false);
-
-    /**
-     * Raw rendering engine
-     *
-     * @property renderer
-     * @type PIXI.WebGLRenderer|PIXI.CanvasRenderer
-     * @readOnly
-     */
-    this.renderer = null;
-
-    //if they speciy a method, check if it is available
-    if(settings.renderMethod) {
-        if(!gf.support[settings.renderMethod]) {
-            throw 'Render method ' + settings.renderMethod + ' is not supported by this browser!';
-        }
-        this.renderMethod = settings.renderMethod;
-    }
-    //if they don't specify a method, guess the best to use
-    else {
-        if(gf.support.webgl) this.renderMethod = 'webgl';
-        else if(gf.support.canvas) this.renderMethod = 'canvas';
-        else {
-            throw 'Neither WebGL nor Canvas is supported by this browser!';
-        }
-    }
-
-    //initialize the correct renderer
-    if(this.renderMethod === 'webgl') {
-        this.renderer = new PIXI.WebGLRenderer(settings.width, settings.height, settings.view, settings.transparent);
-    } else if(this.renderMethod === 'canvas') {
-        this.renderer = new PIXI.CanvasRenderer(settings.width, settings.height, settings.view, settings.transparent);
-    }
-
-    /**
-     * Maximum Z value
-     *
-     * @property MAX_Z
-     * @type {Number}
-     * @default 500
-     * @private
-     * @readOnly
-     */
-    this.MAX_Z = 500;
-
-    /**
-     * The loader for this game instance
-     *
-     * @property loader
-     * @type AssetLoader
-     * @readOnly
-     */
-    this.loader = new gf.AssetLoader();
-
-    /**
-     * The sprite pool to use to create registered entities
-     *
-     * @property spritepool
-     * @type SpritePool
-     * @readOnly
-     */
-    this.spritepool = new gf.SpritePool();
-
-    /**
-     * The GameStates added to the game
-     *
-     * @property states
-     * @type Array
-     * @readOnly
-     */
-    this.states = {};
-
-    /**
-     * The currently active GameState
-     *
-     * @property activeState
-     * @type GameState
-     * @readOnly
-     */
-    this.activeState = null;
-    this._defaultState = new gf.GameState('_default');
-
-    //append the renderer view only if the user didn't pass their own
-    if(!settings.view)
-        this.container.appendChild(this.renderer.view);
-
-    //mixin user settings
-    gf.utils.setValues(this, settings);
-
-    //enable default state
-    this.addState(this._defaultState);
-    this.enableState('_default');
-
-    //define getters for common properties in GameState
-    var self = this;
-    ['audio', 'input', 'physics', 'camera', 'world'].forEach(function(prop) {
-        self.__defineGetter__(prop, function() {
-            return self.activeState[prop];
-        });
-    });
-
-    //some docs for the getters above
-
-    /**
-     * The audio player for this game instance
-     * (refers to the active GameState's audio instance)
-     *
-     * @property audio
-     * @type AudioPlayer
-     * @readOnly
-     */
-
-    /**
-     * The input instance for this game
-     * (refers to the active GameState's input instance)
-     *
-     * @property input
-     * @type InputManager
-     * @readOnly
-     */
-
-    /**
-     * The physics system to simulate stuffs
-     * (refers to the active GameState's physics instance)
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @readOnly
-     */
-
-    /**
-     * The camera you view the scene through
-     * (refers to the active GameState's camera instance)
-     *
-     * @property camera
-     * @type Camera
-     * @readOnly
-     */
-
-    /**
-     * The world instance that holds all sprites and the map
-     * (refers to the active GameState's world instance)
-     *
-     * @property world
-     * @type Map
-     * @readOnly
-     */
-};
-
-gf.inherits(gf.Game, Object, {
-    /**
-     * Allows you to resize the game area
-     *
-     * @method resize
-     * @param width {Number} Width to resize to
-     * @param height {Number} Height to resize to
-     * @return {Game} Returns itself for chainability
-     */
-    resize: function(w, h) {
-        this.renderer.resize(w, h);
-
-        for(var i = 0, il = this.stage.children.length; i < il; ++i) {
-            var o = this.stage.children[i];
-
-            if(o.resize)
-                o.resize(w, h);
-        }
-
-        return this;
-    },
-    /**
-     * Adds an object to the current stage
-     *
-     * @method addChild
-     * @param obj {Sprite} The sprite to the stage
-     * @return {Game} Returns itself for chainability
-     */
-    addChild: function(obj) {
-        this.activeState.addChild(obj);
-
-        return this;
-    },
-    /**
-     * Removes a sprite from the stage
-     *
-     * @method removeChild
-     * @param obj {Sprite} The sprite to the stage
-     * @return {Game} Returns itself for chainability
-     */
-    removeChild: function(obj) {
-        if(obj) {
-            if(obj instanceof gf.Gui)
-                this.camera.removeChild(obj);
-            else
-                this.world.removeChild(obj);
-        }
-
-        return this;
-    },
-    requestFullscreen: function() {
-        var elem = this.renderer.view;
-
-        if(elem.requestFullscreen) {
-          elem.requestFullscreen();
-        } else if(elem.mozRequestFullScreen) {
-          elem.mozRequestFullScreen();
-        } else if(elem.webkitRequestFullscreen) {
-          elem.webkitRequestFullscreen();
-        }
-    },
-    /**
-     * Adds a new game state to this game to be later enabled
-     *
-     * @method addState
-     * @param state {GameState} The state to add to this game
-     * @return {Game} Returns itself for chainability
-     */
-    addState: function(state) {
-        var name = state.name;
-
-        if(!name) {
-            throw 'No state name could be determined, did you give the state a name when you created it?';
-        } else if(this.states[name]) {
-            throw 'A state with the name "' + name + '" already exists, did you try to add it twice?';
-        } else {
-            this.states[name] = state;
-            this.stage.addChild(state);
-
-            state.game = this;
-        }
-
-        return this;
-    },
-    /**
-     * Removes a game state from the game
-     *
-     * @method removeState
-     * @param state {GameState|String} The state to remove from the game, or the name of a state to remove
-     * @return {Game} Returns itself for chainability
-     */
-    removeState: function(state) {
-        var name = (typeof state === 'string') ? state : state.name;
-
-        if(!name) {
-            throw 'No state name could be determined, are you sure you passed me a game state?';
-        } else if(!this.states[name]) {
-            throw 'A state with the name "' + name + '" does not exist, are you sure you added it?';
-        } else {
-            //don't remove the default state
-            if(name === '_default') return;
-
-            //if this is the active state, revert to the default state
-            if(name === this.activeState.name) {
-                this.enableState('_default');
-            }
-
-            delete this.states[name];
-        }
-
-        return this;
-    },
-    /**
-     * Enables a state that has been added to the game
-     *
-     * @method enableState
-     * @param state {GameState|String} The state to enable, or the name of a state to enable
-     * @return {Game} Returns itself for chainability
-     */
-    enableState: function(state) {
-        var name = (typeof state === 'string') ? state : state.name;
-
-        if(this.activeState)
-            this.activeState.disable();
-
-        this.activeState = this.states[name];
-
-        this.activeState.enable();
-
-        return this;
-    },
-    /**
-     * Loads the world map into the game
-     *
-     * @method loadWorld
-     * @param world {String|Map} The map to load as the current world
-     * @return {Game} Returns itself for chainability
-     */
-    loadWorld: function(world) {
-        this.activeState.loadWorld(world);
-
-        return this;
-    },
-    /**
-     * Begins the render loop
-     *
-     * @method render
-     * @return {Game} Returns itself for chainability
-     */
-    render: function() {
-        this.clock.start();
-        this._tick();
-
-        return this;
-    },
-    /**
-     * The looping render tick
-     *
-     * @method _tick
-     * @private
-     */
-    _tick: function() {
-        this.emit({ type: 'beforetick' });
-        //start render loop
-        window.requestAnimFrame(this._tick.bind(this));
-
-        //update this game state
-        this.activeState.update(this.clock.getDelta());
-
-        //render scene
-        this.renderer.render(this.stage);
-        this.emit({ type: 'aftertick' });
-    }
-});
-
-/**
- * GameStates are different , controls the entire instance of the game
- *
- * @class GameState
- * @extends gf.DisplayObjectContainer
- * @namespace gf
- * @constructor
- * @param [name] {String} The name of this state
- * @param [settings] {Object} All the settings for this game state
- * @param [settings.gravity] {Number} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
- * @example
- *      var state = new gf.GameState(game, 'battle');
- *      state.addChild(battlePlayer);
- *      state.addChild(enemy);
- *
- *      game.enableState(state); //or you can use the name from the ctor 'battle'
- */
-gf.GameState = function(name, settings) {
-    if(typeof name === 'object') {
-        settings = name;
-        name = Math.floor(Date.now() * Math.random()).toString();
-    }
-
-    settings = settings || {};
-
-    /**
-     * The name of this game state
-     *
-     * @property name
-     * @type String
-     */
-    this.name = name;
-
-    /**
-     * The audio player for this game instance
-     *
-     * @property audio
-     * @type AudioPlayer
-     * @readOnly
-     */
-    this.audio = new gf.AudioManager();
-
-    /**
-     * The physics system to simulate stuffs
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @readOnly
-     */
-    this.physics = new gf.PhysicsSystem({ gravity: settings.gravity });
-
-    /**
-     * The input instance for this game
-     *
-     * @property input
-     * @type InputManager
-     * @readOnly
-     */
-    this.input = null; //need to be added to a game first
-
-    /**
-     * The camera you view the scene through
-     *
-     * @property camera
-     * @type Camera
-     * @readOnly
-     */
-    this.camera = null; //need to be added to a game first
-
-    /**
-     * The world instance that holds all entites and the map
-     *
-     * @property world
-     * @type Map
-     * @readOnly
-     */
-    this.world = null;
-
-    /**
-     * The game instance that this state belongs too
-     *
-     * @property game
-     * @type Game
-     */
-    Object.defineProperty(this, 'game', {
-        get: function() { return this._game; },
-        set: this._setGame.bind(this),
-        enumerable: true
-    });
-
-    //call base ctor
-    gf.DisplayObjectContainer.call(this, settings);
-
-    //start disabled
-    this.disable();
-};
-
-gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
-    /**
-     * The setter for the game property, sets up the input and camera objects
-     *
-     * @method _setGame
-     * @param game {Game}
-     * @private
-     */
-    _setGame: function(game) {
-        this._game = game;
-
-        this.input = new gf.InputManager(game.renderer.view);
-
-        if(this.camera)
-            this.removeChild(this.camera);
-
-        this.camera = new gf.Camera(game);
-        this.addChild(this.camera);
-        this.camera.resize(game.renderer.width, game.renderer.height);
-    },
-    /**
-     * Adds a child object to the GameState, this will add objects to either
-     * the Camera or the Map depending on the type. Anything inheriting from
-     * gf.Gui will be put to the camera, everything else goes in the world.
-     *
-     * @method addChild
-     * @param obj {DisplayObject} Any generic object to add to the game state
-     */
-    addChild: function(obj) {
-        if(obj) {
-            //we add the camera in the ctor and the map later when
-            //.loadWorld is called. This way the camera is always the
-            //last child of stage, so it is rendered on top!
-            if(obj instanceof gf.Camera || obj instanceof gf.Map)
-                this.addChildAt(obj, 0);
-            else if(obj instanceof gf.Gui)
-                this.camera.addChild(obj);
-            else
-                this.world.addChild(obj);
-        }
-    },
-    /**
-     * Loads a game world into the state
-     *
-     * @method loadWorld
-     * @param world {String|Object} The world to load, if you pass a string be sure to preload it first
-     */
-    loadWorld: function(world) {
-        if(typeof world === 'string'){
-            if(gf.assetCache[world]) {
-                world = gf.assetCache[world];
-            } else {
-                throw 'World "' + world + '" needs to be preloaded before being added to a game!';
-            }
-        }
-
-        this.world = new gf.TiledMap(world);
-        this.addChild(this.world);
-
-        this.world.resize(this._game.renderer.width, this._game.renderer.height);
-        this.world.spawnObjects();
-
-        this.camera.setBounds(0, 0, this.world.realSize.x, this.world.realSize.y);
-
-        /* TODO: Autoplay music
-        if(this.world.properties.music) {
-            this.audio.play(this.world.properties.music, { loop: this.world.properties.music_loop === 'true' });
-        }*/
-
-        return this;
-    },
-    /**
-     * Enables (shows) the game state
-     *
-     * @method enable
-     */
-    enable: function() {
-        this.visible = true;
-    },
-    /**
-     * Disables (hides) the game state
-     *
-     * @method disable
-     */
-    disable: function() {
-        this.visible = false;
-    },
-    /**
-     * Called by the game each frame to update the input, camera, and physics objects
-     *
-     * @method update
-     * @private
-     */
-    update: function(dt) {
-        //gather input from user
-        this.input.update(dt);
-
-        //update any camera effects
-        this.camera.update(dt);
-
-        //simulate physics and detect/resolve collisions
-        this.physics.update(dt);
-    }
-});
-/**
- * The base Gui that holds GuiItems to be added to the Camera
- *
- * @class Gui
- * @extends gf.DisplayObjectContainer
- * @namespace gf
- * @constructor
- */
-gf.Gui = function(name) {
-    /**
-     * The name of the Gui
-     *
-     * @property name
-     * @type String
-     * @default ''
-     */
-    this.name = name || '';
-
-    gf.DisplayObjectContainer.call(this);
-};
-
-gf.inherits(gf.Gui, gf.DisplayObjectContainer);
-
-/**
- * The base GuiItem that represents an element of a gui on the screen.
- *
- * @class GuiItem
- * @extends gf.Sprite
- * @namespace gf
- * @constructor
- * @param texture {Texture} The texture to set the sprite to
- * @param interactive {Boolean} Whether this item should repsond to mouse events
- */
-gf.GuiItem = function(texture, interactive) {
-    /**
-     * Sets whether or not you can drag the GuiItem around
-     *
-     * @property draggable
-     * @type Boolean
-     * @default false
-     */
-    this.draggable = false;
-
-    /**
-     * Describes if the current item is being dragged or not, if it is this
-     * object will hold the last local position of the mouse (relative to this object's parent)
-     *
-     * @property dragging
-     * @type Object
-     * @default false
-     * @readOnly
-     */
-    this.dragging = false;
-
-    gf.Sprite.call(this, texture);
-    this.setInteractive(interactive);
-};
-
-gf.inherits(gf.GuiItem, gf.Sprite, {
-    mousedown: function(e) {
-        gf.Sprite.prototype.mousedown.call(this, e);
-
-        if(!this.draggable)
-            return;
-
-        this.dragging = e.data.getLocalPosition(e.object.parent);
-    },
-    mouseup: function(e) {
-        gf.Sprite.prototype.mouseup.call(this, e);
-
-        this.dragging = false;
-    },
-    mousemove: function(e) {
-        gf.Sprite.prototype.mousemove.call(this, e);
-
-        if(!this.draggable || !this.dragging)
-            return;
-
-        var pos = e.data.getLocalPosition(this.parent);
-
-        //current position + (new mouse position - old mouse position) == current position + mousemove delta
-        this.setPosition(
-            this.position.x + (pos.x - this.dragging.x),
-            this.position.y + (pos.y - this.dragging.y)
-        );
-
-        this.dragging = pos;
-    }
-});
-
-/**
- * Manages all input handlers in a unified way
- *
- * @class InputManager
- * @extends Object
- * @namespace gf
- * @constructor
- * @param view {DOMElement} The DOMElement to bind input events to
- */
-gf.InputManager = function(view) {
-    /**
-     * The dom element to bind events to
-     *
-     * @property view
-     * @type Game
-     */
-    this.view = view;
-
-    /**
-     * Holds the keyboard handler for keyboard events
-     *
-     * @property keyboard
-     * @type Keyboard
-     * @readOnly
-     */
-    this.keyboard = new gf.input.Keyboard(view);
-
-    /**
-     * Holds the gamepad handler for gamepad events
-     *
-     * @property gamepad
-     * @type Keyboard
-     * @readOnly
-     */
-    this.gamepad = new gf.input.Gamepad();
-};
-
-gf.inherits(gf.InputManager, Object, {
-    /**
-     * Called each frame to update state info for some input methods
-     *
-     * @method update
-     * @private
-     */
-    update: function(dt) {
-        this.gamepad.update(dt);
-    }
-});
-/**
- * input object
- */
-gf.input = {};
-
-/**
- * The base Input object, holds common functions and properties between input types
- *
- * @class Input
- * @extends Object
- * @uses gf.EventEmitter
- * @namespace gf.input
- * @constructor
- * @param view {DOMElement} The DOMElement to bind input events to
- */
-gf.input.Input = function(view) {
-    gf.EventEmitter.call(this);
-
-    /**
-     * For backwards compatibility
-     *
-     * @method bind
-     * @deprecated use on
-     */
-    this.bind = this.on;
-
-    /**
-     * The dom element to bind events to
-     *
-     * @property view
-     * @type Game
-     */
-    this.view = view;
-};
-
-gf.inherits(gf.input.Input, Object, {
-    /**
-     * Prevents the default action of an event, and prevents it from bubbling up
-     * the DOM.
-     *
-     * @method preventDefault
-     * @param event {DOMEvent} The event to prevent default actions for
-     */
-    preventDefault: function(e) {
-        if(e.stopPropagation) e.stopPropagation();
-        else e.cancelBubble = true;
-
-        if(e.preventDefault) e.preventDefault();
-        else e.returnValue = false;
-
-        return false;
-    }
-});
-
-/**
- * Bindable keycodes
- *
- * @property KEY
- * @type Object
- * @static
- */
-gf.input.KEY = {
-    BACKSPACE: 8,
-    TAB: 9,
-    ENTER: 13,
-    SHIFT: 16,
-    CTRL: 17,
-    ALT: 18,
-    PAUSE: 19,
-    ESC: 27,
-    SPACE: 32,
-    PAGE_UP: 33,
-    PAGE_DOWN: 34,
-    END: 35,
-    HOME: 36,
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    INSERT: 45,
-    DELETE: 46,
-    NUM0: 48,
-    NUM1: 49,
-    NUM2: 50,
-    NUM3: 51,
-    NUM4: 52,
-    NUM5: 53,
-    NUM6: 54,
-    NUM7: 55,
-    NUM8: 56,
-    NUM9: 57,
-    PLUS: 61,
-    A : 65,
-    B : 66,
-    C : 67,
-    D : 68,
-    E : 69,
-    F : 70,
-    G : 71,
-    H : 72,
-    I : 73,
-    J : 74,
-    K : 75,
-    L : 76,
-    M : 77,
-    N : 78,
-    O : 79,
-    P : 80,
-    Q : 81,
-    R : 82,
-    S : 83,
-    T : 84,
-    U : 85,
-    V : 86,
-    W : 87,
-    X : 88,
-    Y : 89,
-    Z : 90,
-    NUMPAD0: 96,
-    NUMPAD1: 97,
-    NUMPAD2: 98,
-    NUMPAD3: 99,
-    NUMPAD4: 100,
-    NUMPAD5: 101,
-    NUMPAD6: 102,
-    NUMPAD7: 103,
-    NUMPAD8: 104,
-    NUMPAD9: 105,
-    NUMPAD_STAR: 106,
-    NUMPAD_PLUS: 107,
-    NUMPAD_MINUS: 109,
-    NUMPAD_DOT: 110,
-    NUMPAD_SLASH: 111,
-    F1: 112,
-    F2: 113,
-    F3: 114,
-    F4: 115,
-    MINUS: 173,
-    TILDE: 192
-};
-
-/**
- * Controls keyboard input
- *
- * @class Keyboard
- * @extends gf.input.Input
- * @namespace gf.input
- * @constructor
- * @param view {DOMElement} The DOMElement to bind input events to
- */
-gf.input.Keyboard = function(view) {
-    gf.input.Input.call(this, view);
-
-    /**
-     * The current sequence of keys that have been pressed
-     *
-     * @property sequence
-     * @type Array<Number>
-     * @readOnly
-     */
-    this.sequence = [];
-
-    /**
-     * The amount of time it takes for the sequence to clear out, in ms
-     *
-     * @property sequenceTimeout
-     * @type Number
-     * @default 500
-     */
-    this.sequenceTimeout = 500;
-
-    /**
-     * The timeout ID for the wait to clear the input sequence
-     *
-     * @property _clearSq
-     * @type Number
-     * @private 
-     */
-    this._clearSq = null;
-
-    document.addEventListener('keydown', this.onKeyDown.bind(this), false);
-    document.addEventListener('keyup', this.onKeyUp.bind(this), false);
-};
-
-gf.inherits(gf.input.Keyboard, gf.input.Input, {
-    /**
-     * Called when a key is pressed down
-     *
-     * @method onKeyDown
-     * @param event {DOMEvent}
-     * @param override {Number} The key code to use instead of checking event data
-     * @private
-     */
-    onKeyDown: function(e, override) {
-        //if(e.target === this.view.parentElement)
-            return this.modifyKey(e, override || e.keyCode || e.which, true);
-    },
-    /**
-     * Called when a key is released
-     *
-     * @method onKeyUp
-     * @param event {DOMEvent}
-     * @param override {Number} The key code to use instead of checking event data
-     * @private
-     */
-    onKeyUp: function(e, override) {
-        //if(e.target === this.view.parentElement)
-            return this.modifyKey(e, override || e.keyCode || e.which, false);
-    },
-    /**
-     * Called when a key state has changed, updates current sequence and emits events
-     *
-     * @method modifyKey
-     * @param event {DOMEvent}
-     * @param key {Number} The key code that has changed
-     * @param down {Boolean} Whether the key has been pressed or not
-     * @private
-     */
-    modifyKey: function(e, key, down) {
-        //emit single key event
-        this.emit(key, {
-            input: this,
-            originalEvent: e,
-            down: down
-        });
-
-        //when pressed is when we process a key for a sequence
-        if(down) {
-            //update the key sequence
-            this.sequence.push(key);
-
-            //process current sequence
-            var s = this.sequence.toString();
-            if(s !== key.toString()) {
-                this.emit(s, {
-                    input: this,
-                    originalEvent: e,
-                    down: down
-                });
-            }
-
-            //set timeout to clear sequence
-            clearTimeout(this._clearSq);
-            this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
-        }
-    },
-    /**
-     * Clears the current sequence so that a new one can start
-     *
-     * @method _clearSequence
-     * @private
-     */
-    _clearSequence: function() {
-        this.sequence.length = 0;
-    }
-});
-/**
- * Controls input from gamepads
- *
- * @class Gamepad
- * @extends gf.input.Input
- * @namespace gf.input
- * @constructor
- */
-gf.input.Gamepad = function() {
-    gf.input.Input.call(this);
-
-    /**
-     * Tracks if we are polling for status/connections
-     *
-     * @property ticking
-     * @type Boolean
-     * @readOnly
-     */
-    this.ticking = false;
-
-    /**
-     * The currently activated gamepads list
-     *
-     * @property pads
-     * @type Array<Gamepad>
-     * @readOnly
-     */
-    this.pads = [];
-
-    /**
-     * Timestamp tracking for state changes
-     *
-     * @property prevTimestamps
-     * @type Array<Number>
-     * @private
-     */
-    this.prevTimestamps = [];
-
-    /**
-     * Holds the button handler for gamepad button events
-     *
-     * @property buttons
-     * @type GamepadButtons
-     * @readOnly
-     */
-    this.buttons = new gf.input.GamepadButtons();
-
-    /**
-     * Holds the stick handler for gamepad stick events
-     *
-     * @property sticks
-     * @type GamepadSticks
-     * @readOnly
-     */
-    this.sticks = new gf.input.GamepadSticks();
-
-    //Firefox uses connect/disconnect events so listen to those
-    window.addEventListener('MozGamepadConnected', this.onGamepadConnect.bind(this), false);
-    window.addEventListener('MozGamepadDisconnected', this.onGamepadDisconnect.bind(this), false);
-
-    //Since chrome only supports polling, we have to start looping immediately
-    if (!!navigator.webkitGamepads || !!navigator.webkitGetGamepads) {
-        this.startPolling();
-    }
-};
-
-gf.inherits(gf.input.Gamepad, gf.input.Input, {
-    /**
-     * Called when a gamepad connects (FF Only)
-     *
-     * @method onGamepadDisconnect
-     * @param event {GamepadConnectEvent}
-     * @private
-     */
-    onGamepadConnect: function(event) {
-        //add the gamepad to our list
-        this.pads.push(event.gamepad);
-
-        //start polling
-        this.startPolling();
-    },
-    /**
-     * Called when a gamepad disconnects (FF Only)
-     *
-     * @method onGamepadDisconnect
-     * @param event {GamepadDisconnectEvent}
-     * @private
-     */
-    onGamepadDisconnect: function(event) {
-        //remove the gamepad from our list
-        for(var i = 0, il = this.pads.length; i < il; ++i) {
-            if(this.pads[i].index === event.gamepad.index) {
-                this.pads.splice(i, 1);
-                break;
-            }
-        }
-
-        //if no pads left connected, stop polling
-        if(this.pads.length === 0)
-            this.stopPolling();
-    },
-    /**
-     * Stats polling for new gamepads and status updates
-     *
-     * @method startPolling
-     */
-    startPolling: function() {
-        if(this.ticking) return;
-
-        this.ticking = true;
-        this.update();
-    },
-    /**
-     * Stops polling for new gamepads and status updates
-     *
-     * @method stopPolling
-     */
-    stopPolling: function() {
-        this.ticking = false;
-    },
-    /**
-     * Polls for newly connected gamepads (Chrome Only)
-     *
-     * @method pollGamepads
-     */
-    //called on Chrome, which doesn't do the connect/disconnect events
-    pollGamepads: function() {
-        //get a list of connected gamepads
-        var rawPads = (navigator.webkitGetGamepads && navigator.webkitGetGamepads()) || navigator.webkitGamepads;
-
-        if(rawPads) {
-            //reset the pads list
-            this.pads.length = 0;
-
-            //don't use the raw array from the browser, since it can have "holes"
-            //if you plug in 2, then remove the first the second one is still index 1 (not 0)
-            for(var i = 0, il = rawPads.length; i < il; ++i) {
-                if(rawPads[i]) {
-                    this.pads.push(rawPads[i]);
-                }
-            }
-        }
-    },
-    /**
-     * Polls the gamepad object for status updates and emits events when they occur
-     *
-     * @method pollStatus
-     * @param pad {Gamepad} The gamepad object to check
-     */
-    pollStatus: function() {
-        for(var i = 0, il = this.pads.length; i < il; ++i) {
-            var pad = this.pads[i];
-            //don't do anything if the current timestamp is the same as the previous one
-            //(meaning the state has not changed). This is a chrome-only feature right now,
-            //so first we have to check if it is empty as well
-            if(pad.timestamp && (pad.timestamp === gf.gamepad.prevTimestamps[i]))
-                continue;
-
-            this.prevTimestamps[i] = pad.timestamp;
-            this.buttons.pollStatus(pad);
-            this.sticks.pollStatus(pad);
-        }
-    },
-    /**
-     * Called each frame to update polling mechanisms
-     *
-     * @method update
-     */
-    update: function() {
-        if(!this.ticking) return;
-
-        //pollin' fo' pads
-        this.pollGamepads();
-
-        //poll for the status of our gamepads
-        this.pollStatus();
-    }
-});
-/**
- * Bindable Gamepad Buttons
- *
- * @property GP_BUTTON
- * @type Object
- * @static
- */
-gf.input.GP_BUTTON = {
-    FACE_1: 0, // Face (main) buttons
-    FACE_2: 1,
-    FACE_3: 2,
-    FACE_4: 3,
-    LEFT_SHOULDER: 4, // Top shoulder buttons
-    RIGHT_SHOULDER: 5,
-    LEFT_TRIGGER: 6, // Bottom shoulder buttons
-    RIGHT_TRIGGER: 7,
-    SELECT: 8,
-    START: 9,
-    LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
-    RIGHT_ANALOGUE_STICK: 11,
-    PAD_TOP: 12, // Directional (discrete) pad
-    PAD_BOTTOM: 13,
-    PAD_LEFT: 14,
-    PAD_RIGHT: 15
-};
-gf.input.getGpButtonName = function(i) {
-    for(var k in gf.input.GP_BUTTON) {
-        if(gf.input.GP_BUTTON[k] === i) {
-            return k;
-        }
-    }
-
-    return '';
-};
-/**
- * Controls gamepad button input
- *
- * @class GamepadButtons
- * @extends gf.input.Input
- * @namespace gf.input
- * @constructor
- */
- gf.input.GamepadButtons = function() {
-    gf.input.Input.call(this);
-
-    /**
-     * The threshold at which we consider a button "pressed"
-     *
-     * @property threshold
-     * @type Number
-     * @default 0.4
-     */
-    this.threshold = 0.4;
-
-    /**
-     * Track the status of each button
-     *
-     * @property buttons
-     * @type Object
-     * @private
-     */
-    this.buttons = {};
-
-    //setup default objects for each axis
-    for(var bt in gf.input.GP_BUTTON) {
-        this.buttons[bt] = {
-            code: bt,
-            down: false,
-            value: 0
-        };
-    }
-};
-
-gf.inherits(gf.input.GamepadButtons, gf.input.Input, {
-    /**
-     * Polls the gamepad object for status updates and emits events when they occur
-     *
-     * @method pollStatus
-     * @param pad {Gamepad} The gamepad object to check
-     */
-    pollStatus: function(pad) {
-        for(var b = 0, bl = pad.buttons.length; b < bl; ++b) {
-            var down = (pad.buttons[b] > this.threshold),
-                status = this.buttons[b];
-
-            status.value = pad.buttons[b];
-
-            //down state changed
-            if(status.down !== down) {
-                status.down = down;
-
-                this.emit(b, status);
-            }
-        }
-    }
-});
-/**
- * Bindable Gamepad Axes
- *
- * @property GP_AXIS
- * @type Object
- * @static
- */
- gf.input.GP_AXIS = {
-    LEFT_ANALOGUE_HOR: 0,
-    LEFT_ANALOGUE_VERT: 1,
-    RIGHT_ANALOGUE_HOR: 2,
-    RIGHT_ANALOGUE_VERT: 3
-};
-gf.input.getGpAxisName = function(i) {
-    for(var k in gf.input.GP_AXIS) {
-        if(gf.input.GP_AXIS[k] === i) {
-            return k;
-        }
-    }
-
-    return '';
-};
-/**
- * Controls gamepad stick input
- *
- * @class GamepadSticks
- * @extends gf.input.Input
- * @namespace gf.input
- * @constructor
- */
- gf.input.GamepadSticks = function() {
-    gf.input.Input.call(this);
-
-    /**
-     * The threshold at which we consider a stick "moved"
-     *
-     * @property threshold
-     * @type Number
-     * @default 0.5
-     */
-    this.threshold = 0.5;
-
-    /**
-     * Track the status of each of the axes
-     *
-     * @property axes
-     * @type Object
-     * @private
-     */
-    this.axes = {};
-
-    //setup default objects for each axis
-    for(var ax in gf.input.GP_AXIS) {
-        this.axes[ax] = {
-            code: ax,
-            negative: false,
-            value: 0
-        };
-    }
-};
-
-gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
-    /**
-     * Polls the gamepad object for status updates and emits events when they occur
-     *
-     * @method pollStatus
-     * @param pad {Gamepad} The gamepad object to check
-     */
-    pollStatus: function(pad) {
-        for(var a = 0, al = pad.axes.length; a < al; ++a) {
-            var ax = pad.axes[a],
-                neg = (ax < 0),
-                status = this.axes[a];
-
-            //if the difference between the last value and the new one is greater
-            //than the threashold set, call the event for that axis.
-            //We also always emit 0 because if your threshold is too high, it will
-            //never reset to 0
-            if(Math.abs(status.value - ax) >= this.threshold || (status.value !== 0 && ax === 0)) {
-                status.negative = neg;
-                status.value = ax;
-
-                this.emit(a, status);
-            }
-        }
-    }
-});
-/**
- * The Base loader class that all other loaders inherit from
- *
- * @class Loader
- * @extends Object
- * @uses gf.EventEmitter
- * @namespace gf
- * @constructor
- * @param name {String} The name of the resource to load, used as a key in the assetCache
- * @param url {String} The url to load the resource from, also used as a key in the assetCache
- */
-gf.Loader = function(name, url) {
-    gf.EventEmitter.call(this);
-
-    this.type = 'hey';
-
-    this.name = name;
-    this.url = url;
-};
-
-gf.inherits(gf.Loader, Object, {
-    /**
-     * Atempts to load a resource from the asset cache, if it finds the resource
-     * in the cache, it will return the value and asynchronously emit the 'load' event
-     *
-     * @method load
-     * @return {mixed} The cached value, or undefined if there is none cached
-     */
-    load: function() {
-        var self = this;
-
-        if(gf.assetCache[this.name]) {
-            setTimeout(function() {
-                self.done(gf.assetCache[self.name]);
-            }, 0);
-            return gf.assetCache[this.name];
-        }
-        else if(gf.assetCache[this.url]) {
-            setTimeout(function() {
-                self.done(gf.assetCache[self.url]);
-            }, 0);
-            return gf.assetCache[this.url];
-        }
-    },
-    /**
-     * Emits the 'load' event, passing the properties of this instance and the data passed
-     *
-     * @method done
-     * @param data {mixed} The loaded data
-     */
-    done: function(data) {
-        gf.assetCache[this.name] = data;
-
-        //be async for sure
-        var self = this;
-        setTimeout(function() {
-            self.emit('load', {
-                name: self.name,
-                assetType: self.type,
-                url: self.url,
-                data: data
-            });
-        }, 0);
-    },
-    /**
-     * Emits the 'error' event, passing the properties of this instance and the message passed
-     *
-     * @method error
-     * @param msg {String} The error message that occurred
-     */
-    error: function(msg) {
-        //be async for sure
-        var self = this;
-        setTimeout(function() {
-            self.emit('error', {
-                name: self.name,
-                assetType: self.type,
-                url: self.url,
-                message: msg
-            });
-        }, 0);
-    }
-});
-/**
- * The AssetLoader loads and parses different game assets, such as sounds, textures,
- * TMX World JSON file (exported from the <a target="_blank" href="http://mapeditor.org">Tiled Editor</a>),
- * and Spritesheet JSON files (published from <a target="_blank" href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
- *
- * @class AssetLoader
- * @extends Object
- * @uses gf.EventEmitter
- * @namespace gf
- * @constructor
- * @param assets {Array} Array of assets to load when `.load()` is called
- * @example
- *      var loader = new AssetLoader(['/my/texture.png']);
- *      loader.load();
- *      //OR
- *      var loader = new AssetLoader();
- *      loader.load(['/my/texture.png']);
- */
-gf.AssetLoader = function() {
-    //mixin the Event Target methods
-    gf.EventEmitter.call(this);
-
-    /**
-     * The array of assets to load
-     *
-     * @property assets
-     * @type Array
-     */
-    this.assets = [];
-
-    /**
-     * The count of remaining assets to load
-     *
-     * @property remaining
-     * @type Number
-     * @readOnly
-     */
-    this.remaining = 0;
-
-    /**
-     * A mapping of extensions to types
-     *
-     * @property loaders
-     * @type Object
-     * @readOnly
-     * @private
-     */
-    this.loaders = {
-        'texture': gf.TextureLoader,
-        'jpeg': gf.TextureLoader,
-        'jpg': gf.TextureLoader,
-        'png': gf.TextureLoader,
-        'gif': gf.TextureLoader,
-
-        'audio': gf.AudioLoader,
-        'music': gf.AudioLoader,
-        'mp3': gf.AudioLoader,
-        'ogg': gf.AudioLoader,
-        'wma': gf.AudioLoader,
-        'wav': gf.AudioLoader,
-
-        'json': gf.JsonLoader
-    };
-
-    /**
-     * Fired if a loader encounters an error
-     *
-     * @event error
-     * @param eventData {Object}
-     * @param eventData.assetType {String} The type of asset (loader name)
-     * @param eventData.message {String} The message of the error
-     */
-
-    /**
-     * Fired when an item has loaded
-     *
-     * @event progress
-     * @param eventData {Object}
-     * @param eventData.assetType {String} The type of asset (loader name)
-     * @param eventData.url {String} The url the asset loaded from
-     * @param eventData.data {mixed} The data that was loaded
-     */
-
-    /**
-     * Fired when all the assets have loaded
-     *
-     * @event complete
-     */
-};
-
-gf.inherits(gf.AssetLoader, Object, {
-    /**
-     * Adds a resource to the assets array.
-     *
-     * @method add
-     * @param name {String} The name of the resource (to use as the key in the cache)
-     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
-     */
-    add: function(name, url) {
-        this.assets.push({
-            name: name,
-            src: url
-        });
-    },
-    /**
-     * Starts the loading festivities. If called without any arguments it will load
-     * the assets passed in at the ctor. If an array of assets are passed it will
-     * load those instead.
-     *
-     * @method load
-     * @param items {Array<String>|Array<Object>} Array of resources to load instead of the object's resources
-     */
-    load: function(items) {
-        var assets = items || this.assets;
-
-        for(var i = 0, il = assets.length; i < il; ++i) {
-            var name = typeof assets[i] === 'string' ? assets[i] : assets[i].name,
-                url = typeof assets[i] === 'string' ? assets[i] : (assets[i].src || assets[i].url || assets[i].uri),
-                ext = assets[i].type || (url instanceof Array ? 'audio' : null) || url.split('.').pop().toLowerCase(), //assume arrays of urls are for audio
-                Loader = this.loaders[ext];
-
-            if(!Loader)
-                throw 'Unknown type "' + ext + '", unable to preload!';
-
-            this.remaining++;
-            var loader = new Loader(name, url);
-
-            loader.on('load', this.onAssetLoaded.bind(this));
-            loader.on('error', this.onAssetError.bind(this));
-            loader.load();
-        }
-    },
-    /**
-     * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
-     *
-     * @method onAssetLoaded
-     * @param event {Object} The event object
-     * @private
-     */
-    onAssetLoaded: function(e) {
-        this.remaining--;
-
-        this.emit('progress', {
-            assetType: e.assetType,
-            url: e.url,
-            data: e.data
-        });
-
-        if(this.remaining === 0) {
-            this.emit('complete');
-        }
-    },
-    /**
-     * Called whenever an asset loader encounters an error
-     *
-     * @method onAssetError
-     * @param event {Object} The event object
-     * @private
-     */
-    onAssetError: function(e) {
-        this.remaining--;
-
-        this.emit('error', {
-            assetType: e.assetType,
-            message: e.message
-        });
-
-        if(this.remaining === 0) {
-            this.emit('complete');
-        }
-    }
-});
-
-/**
- * Loads an audio clip
- *
- * @class AudioLoader
- * @extends gf.Loader
- * @namespace gf
- * @constructor
- * @param name {String} The name of the resource to load, used as a key in the assetCache
- * @param urls {Array<String>} All the urls for the different formats of this audio file
- */
-gf.AudioLoader = function(name, urls) {
-    gf.Loader.call(this, name, urls);
-
-    this.type = 'audio';
-    this.urls = typeof urls === 'string' ? [urls] : urls;
-};
-
-gf.inherits(gf.AudioLoader, gf.Loader, {
-    /**
-     * Loads the audio file described by the urls passed in to the ctor. Will intelligently
-     * determine which url is supported by this browser.
-     *
-     * @method load
-     */
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
-
-        var man = new gf.AudioManager(),
-            player = man.create(name, { urls: this.urls });
-
-        if(!player) {
-            this.error('Cannot find a url for an audio type supported by this browser.');
-        } else {
-            var self = this;
-            player.on('load', function() {
-                self.done(player);
-            });
-
-            player.on('error', function(e) {
-                self.error(e.message);
-            });
-        }
-    }
-});
-/**
- * Loads json data
- *
- * @class JsonLoader
- * @extends gf.Loader
- * @namespace gf
- * @constructor
- * @param name {String} The name of the resource to load, used as a key in the assetCache
- * @param url {String} The url to load the resource from, also used as a key in the assetCache
- */
-gf.JsonLoader = function(name, url) {
-    gf.Loader.call(this, name, url);
-
-    this.type = 'json';
-};
-
-gf.inherits(gf.JsonLoader, gf.Loader, {
-    /**
-     * Loads the json data
-     *
-     * @method load
-     */
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
-
-        var self = this,
-            baseUrl = this.url.replace(/[^\/]*$/, '');
-
-        gf.utils.ajax({
-            method: 'GET',
-            url: this.url,
-            dataType: 'json',
-            load: function(data) {
-                var loader;
-
-                //check some properties to see if this is a TiledMap Object
-                if(data.orientation && data.layers && data.tilesets && data.version) {
-                    loader = new gf.WorldLoader(self.name, baseUrl, data);
-                }
-                //this is a sprite sheet (published from TexturePacker)
-                else if(data.frames && data.meta) {
-                    loader = new gf.SpriteSheetLoader(self.name, baseUrl, data);
-                }
-
-                if(loader) {
-                    loader.on('load', function(e) {
-                        self.done(e.data);
-                    });
-                    loader.on('error', function(e) {
-                        self.error(e.message);
-                    });
-
-                    loader.load();
-                }
-                //just some json data
-                else {
-                    self.done(data);
-                }
-            },
-            error: function(err) {
-                self.error(err.message || err);
-            }
-        });
-    }
-});
-/**
- * Loads a texture image
- *
- * @class TextureLoader
- * @extends gf.Loader
- * @namespace gf
- * @constructor
- * @param name {String} The name of the resource to load, used as a key in the assetCache
- * @param url {String} The url to load the resource from, also used as a key in the assetCache
- */
- gf.TextureLoader = function(name, url) {
-    gf.Loader.call(this, name, url);
-
-    this.type = 'texture';
-};
-
-gf.inherits(gf.TextureLoader, gf.Loader, {
-    /**
-     * Loads the texture data
-     *
-     * @method load
-     */
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
-
-        var self = this,
-            texture = gf.Texture.fromImage(this.url);
-
-        if(!texture.baseTexture.hasLoaded) {
-            texture.baseTexture.on('loaded', function() {
-                self.done(texture);
-            });
-            texture.baseTexture.source.onerror = function() {
-                self.error('Unable to load texture');
-            };
-        } else {
-            this.done(texture);
-        }
-    }
-});
-gf.SpriteSheetLoader = function(name, baseUrl, data) {
-    gf.Loader.call(this, name, baseUrl);
-
-    this.type = 'spritesheet';
-    this.data = data;
-};
-
-gf.inherits(gf.SpriteSheetLoader, gf.Loader, {
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
-
-        var self = this,
-            data = this.data,
-            txLoader = new gf.TextureLoader(this.name, this.url + data.meta.image);
-
-        txLoader.on('load', function(e) {
-            var texture =  e.data.baseTexture,
-                frames = self.data.frames,
-                assets = {};
-
-            for(var f in frames) {
-                var rect = frames[f].frame;
-
-                if(rect) {
-                    assets[f] = PIXI.TextureCache[f] = new gf.Texture(texture, {
-                        x: rect.x,
-                        y: rect.y,
-                        width: rect.w,
-                        height: rect.h
-                    });
-
-                    if(frames[f].trimmed) {
-                        PIXI.TextureCache[f].realSize = frames[f].spriteSourceSize;
-                        PIXI.TextureCache[f].trim.x = 0;
-                    }
-                }
-            }
-
-            self.done(assets);
-        });
-
-        txLoader.on('error', function(e) {
-            self.error(e.message);
-        });
-
-        txLoader.load();
-    }
-});
-gf.WorldLoader = function(name, baseUrl, data) {
-    gf.Loader.call(this, name, baseUrl);
-
-    this.type = 'world';
-    this.data = data;
-    this.numTextures = 0;
-    this.errors = [];
-};
-
-gf.inherits(gf.WorldLoader, gf.Loader, {
-    load: function() {
-        //pull from cache
-        if(gf.Loader.prototype.load.call(this)) return;
-
-        //loop through each layer and load the sprites (objectgroup types)
-        for(var i = 0, il = this.data.layers.length; i < il; ++i) {
-            var layer = this.data.layers[i];
-            if(layer.type !== 'objectgroup') continue;
-
-            //loop through each object, and load the textures
-            for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
-                var obj = layer.objects[o],
-                    txLoader;
-
-                if(!obj.properties.spritesheet) continue;
-                this.numTextures++;
-
-                txLoader = new gf.TextureLoader(layer.name + '_' + obj.name + '_texture', obj.properties.spritesheet);
-
-                txLoader.on('load', this.onTextLoad.bind(this));
-                txLoader.on('error', this.onTextError.bind(this));
-                txLoader.load();
-            }
-        }
-
-        //loop through each tileset and load the texture
-        for(var s = 0, sl = this.data.tilesets.length; s < sl; ++s) {
-            var set = this.data.tilesets[s],
-                txLoader2;
-
-            if(!set.image) continue;
-            this.numTextures++;
-
-            txLoader2 = new gf.TextureLoader(set.name + '_texture', this.url + set.image);
-
-            txLoader2.on('load', this.onTextLoad.bind(this));
-            txLoader2.on('error', this.onTextError.bind(this));
-            txLoader2.load();
-        }
-    },
-    onTextLoad: function() {
-        this.numTextures--;
-
-        if(this.numTextures === 0) {
-            this.done();
-        }
-    },
-    onTextError: function(e) {
-        this.numTextures--;
-        this.errors.push(e);
-
-        if(this.numTextures === 0) {
-            this.done();
-        }
-    },
-    done: function() {
-        if(this.errors.length)
-            gf.Loader.prototype.error.call(this, this.errors);
-        else
-            gf.Loader.prototype.done.call(this, this.data);
-    }
-});
-/**
- * Base Map implementation, provides common functions for all Map types
- *
- * @class Map
- * @extends gf.DisplayObjectContainer
- * @uses gf.EventEmitter
- * @namespace gf
- * @constructor
- * @param map {Object} All the settings for the map
- */
-gf.Map = function(map) {
-    //mixin the Event Target methods
-    gf.EventEmitter.call(this);
-
-    /**
-     * The size of the map
-     *
-     * @property size
-     * @type Vector
-     * @default new gf.Vector(0, 0)
-     */
-    this.size = new gf.Vector(map.width, map.height);
-
-    //call base ctor
-    gf.DisplayObjectContainer.call(this, map);
-};
-
-gf.inherits(gf.Map, gf.DisplayObjectContainer, {
-    /**
-     * Pans the map around
-     *
-     * @method pan
-     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
-     * @param y {Number} The y ammount to pan
-     * @return {Map} Returns itself for chainability
-     */
-    pan: function(x, y) {
-        y = x instanceof gf.Point ? x.y : (y || 0);
-        x = x instanceof gf.Point ? x.x : (x || 0);
-
-        this.position.x += x;
-        this.position.y += y;
-
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.pan)
-                o.pan(x, y);
-        }
-    }
-});
-/**
- * Base Tile implementation, a tile is a single tile in a tilemap layer
- *
- * @class Tile
- * @extends gf.Sprite
- * @namespace gf
- * @constructor
- * @param tile {Object} All the settings for the tile
- */
-gf.Tile = function(texture) {
-    this.collisionType = gf.Tile.TYPE.NONE;
-
-    //call base ctor
-    gf.Sprite.call(this, texture);
-
-    this.type = gf.Sprite.TYPE.TILE;
-};
-
-gf.inherits(gf.Tile, gf.Sprite, {
-    /**
-     * On Collision Event
-     *      called when this sprite collides into another, or is being collided into by another.
-     *      By default if something collides with a collectable sprite we remove the collectable
-     *      and if we collide with a solid tile we kill our velocity
-     *
-     * @method onCollision
-     * @param obj {Sprite} Colliding sprite
-     */
-    onCollision: function(obj) {
-        gf.Sprite.prototype.onCollision.call(this, obj);
-
-        //I did a switch-case here because I feel like I
-        //will be adding more defaults later
-        switch(this.collisionType) {
-            case gf.Tile.TYPE.SOLID:
-                obj.setVelocity(0);
-                break;
-        }
-    }
-});
-
-/**
- * Tile collision types
- *
- * @property COLLISION
- * @type Object
- * @static
- */
-gf.Tile.TYPE = {
-    NONE: 'none',
-    SOLID: 'solid',
-    CLIFF: 'cliff',
-    LADDER: 'ladder',
-    WATER: 'water',
-    DEEP_WATER: 'deep_water'
-};
-/**
- * Base Layer implementation, provides common functions for all Layer types
- *
- * @class Layer
- * @extends gf.DisplayObjectContainer
- * @namespace gf
- * @constructor
- * @param layer {Object} All the settings for the layer
- */
-gf.Layer = function(layer) {
-    /**
-     * The name of the layer
-     *
-     * @property name
-     * @type String
-     * @default ''
-     */
-    this.name = '';
-
-    /**
-     * The size of the layer
-     *
-     * @property size
-     * @type Vector
-     * @default new gf.Vector(1, 1)
-     */
-    this.size = new gf.Vector(layer.width || 0, layer.height || 0);
-
-    //call base ctor
-    gf.DisplayObjectContainer.call(this, layer);
-};
-
-gf.inherits(gf.Layer, gf.DisplayObjectContainer, {
-    /**
-     * Pans the layer around, rendering stuff if necessary
-     *
-     * @method pan
-     * @param dx {Number|Point} The x amount to pan, if a Point is passed the dy param is ignored
-     * @param dy {Number} The y ammount to pan
-     * @return {Layer} Returns itself for chainability
-     */
-    pan: function() {
-    }
-});
-/**
- * ImageLayer is a layer represented by a single image
- *
- * @class ImageLayer
- * @extends gf.Layer
- * @namespace gf
- * @constructor
- * @param game {Game} The game the layer is in
- * @param position {Point|Vector|Array|Number} The starting position of the layer
- * @param layer {Object|Texture} All the settings for the layer, or the texture to use
- */
-gf.ImageLayer = function(layer) {
-    this.sprite = new gf.Sprite(layer.image || layer.texture || layer);
-
-    this.addChild(this.sprite);
-
-    //call base ctor
-    gf.Layer.call(this, layer);
-};
-
-gf.inherits(gf.ImageLayer, gf.Layer);
-/**
- * Tiled map, expects a Tiled TMX file loaded by the gf.loader as the argument.
- * The loader knows to load all textures and other resources when loading a world TMX
- * file, and this expets that to already be done.
- *
- * @class TiledMap
- * @extends gf.Map
- * @namespace gf
- * @constructor
- * @param game {Game} The game the map is in
- * @param position {Point|Vector|Array|Number} The starting position of the map
- * @param map {Object} All the settings for the map
- */
-gf.TiledMap = function(map) {
-    gf.Map.call(this, map);
-
-    //Tiled Editor properties
-
-    /**
-     * The user-defined properties
-     *
-     * @property properties
-     * @type Object
-     * @default {}
-     */
-    this.properties = map.properties || {};
-    this.scale.x = parseFloat(this.properties.scale, 10) || 1;
-    this.scale.y = parseFloat(this.properties.scale, 10) || 1;
-
-    /**
-     * The tile size
-     *
-     * @property tileSize
-     * @type Vector
-     */
-    this.tileSize = new gf.Vector(
-        map.tilewidth,
-        map.tileheight
-    );
-
-    /**
-     * The orientation of the map
-     *
-     * @property orientation
-     * @type String
-     */
-    this.orientation = map.orientation;
-
-    /**
-     * The version of the TMX format
-     *
-     * @property version
-     * @type Number
-     */
-    this.version = map.version;
-
-    /**
-     * The background color of the map (since Tiled 0.9.0)
-     *
-     * @property backgroundColor
-     * @type Number
-     */
-    this.backgroundColor = map.backgroundColor;
-
-    //Custom/Optional properties
-
-    /**
-     * The tilesets used by this map
-     *
-     * @property tilesets
-     * @type Array
-     */
-    this.tilesets = [];
-
-    /**
-     * The scaled tile size
-     *
-     * @property scaledTileSize
-     * @type Vector
-     */
-    this.scaledTileSize = new gf.Vector(
-        map.tilewidth * this.scale.x,
-        map.tileheight * this.scale.y
-    );
-
-    /**
-     * The real size (size * scaledTileSize)
-     *
-     * @property realSize
-     * @type Vector
-     */
-    this.realSize = new gf.Vector(
-        this.size.x * this.scaledTileSize.x,
-        this.size.y * this.scaledTileSize.y
-    );
-
-    for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
-        this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
-    }
-
-    for(var i = 0, il = map.layers.length; i < il; ++i) {
-        var lyr;
-
-        switch(map.layers[i].type) {
-            case 'tilelayer':
-                lyr = new gf.TiledLayer(map.layers[i]);
-                break;
-
-            case 'objectgroup':
-                lyr = new gf.TiledObjectGroup(map.layers[i]);
-                break;
-
-            case 'imagelayer':
-                lyr = new gf.ImageLayer(map.layers[i]);
-                break;
-        }
-
-        this.addChild(lyr);
-    }
-};
-
-gf.inherits(gf.TiledMap, gf.Map, {
-    /**
-     * Gets the tileset that an ID is associated with
-     *
-     * @method getTileset
-     * @param tileId {Number} The id of the tile to find the tileset for
-     * @return {TiledTileset}
-     */
-    getTileset: function(tileId) {
-        for(var i = 0, il = this.tilesets.length; i < il; ++i)
-            if(tileId >= this.tilesets[i].firstgid && tileId <= this.tilesets[i].lastgid)
-                return this.tilesets[i];
-    },
-    /**
-     * Notifies the map it needs to resize, re renders the viewport
-     *
-     * @method resize
-     */
-    resize: function(width, height) {
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o instanceof gf.TiledLayer) {
-                o.resize(width, height);
-            }
-        }
-    },
-    /**
-     * Spawns all the objects in the TiledObjectGroups of this map
-     *
-     * @method spawnObjects
-     */
-    spawnObjects: function() {
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o instanceof gf.TiledObjectGroup) {
-                o.spawn();
-            }
-        }
-    },
-    /**
-     * Called by a TiledLayer when a tile event occurs. This is so you can listen for
-     * the emitted events on the world instead of the tile itself.
-     *
-     * @method onTileEvent
-     * @param eventName {String} The event name to emit, the prefix 'tile.' will be added to it
-     * @param tile {Tile} The tile that has the event
-     * @param data {InteractionData} The raw interaction object for the event
-     * @private
-     */
-    onTileEvent: function(eventName, tile, data) {
-        this.emit({
-            type: 'tile.' + eventName,
-            tile: tile,
-            data: data
-        });
-    },
-    /**
-     * Called by a TiledObjectGroup when an object event occurs. This is so you can listen for
-     * the emitted events on the world instead of the tile itself.
-     *
-     * @method onObjectEvent
-     * @param eventName {String} The event name to emit, the prefix 'object.' will be added to it
-     * @param obj {Sprite|DisplayObjectContainer} The object that has the event
-     * @param data {InteractionData} The raw interaction object for the event
-     * @private
-     */
-    onObjectEvent: function(eventName, obj, data) {
-        this.emit({
-            type: 'object.' + eventName,
-            object: obj,
-            data: data
-        });
-    }
-});
-
-/**
- * The TiledLayer is the visual tiled layer that actually displays on the screen
- *
- * This class will be created by the TiledMap, there shouldn't be a reason to
- * create an instance on your own.
- *
- * @class TiledLayer
- * @extends gf.Layer
- * @namespace gf
- * @constructor
- * @param layer {Object} All the settings for the layer
- */
-//see: https://github.com/GoodBoyDigital/pixi.js/issues/48
-gf.TiledLayer = function(layer) {
-    gf.Layer.call(this, layer);
-
-    /**
-     * The tile IDs of the tilemap
-     *
-     * @property name
-     * @type Uint32Array
-     */
-    this.tileIds = gf.support.typedArrays ? new Uint32Array(layer.data) : layer.data;
-
-    /**
-     * The current map of all tiles on the screen
-     *
-     * @property tiles
-     * @type Object
-     */
-    this.tiles = {};
-
-    /**
-     * The user-defined properties of this group. Usually defined in the TiledEditor
-     *
-     * @property properties
-     * @type Object
-     */
-    this.properties = layer.properties || {};
-
-    //translate some tiled properties to our inherited properties
-    this.position.x = layer.x;
-    this.position.y = layer.y;
-    this.alpha = layer.opacity;
-    this.visible = layer.visible;
-
-    this._tilePool = [];
-    this._buffered = { left: false, right: false, top: false, bottom: false };
-    this._panDelta = new gf.Vector();
-    this._rendered = new gf.Rectangle();
-};
-
-gf.inherits(gf.TiledLayer, gf.Layer, {
-    /**
-     * Creates all the tile sprites needed to display the layer
-     *
-     * @method resize
-     * @param width {Number} The number of tiles in the X direction to render
-     * @param height {Number} The number of tiles in the Y direction to render
-     */
-    resize: function(width, height) {
-        //clear all the visual tiles
-        this.clearTiles();
-        //set rendered area
-        this._rendered.x = this.parent.position.x;
-        this._rendered.y = this.parent.position.y;
-        this._rendered.width = width;
-        this._rendered.height = height;
-
-        if(this.parent.orientation === 'isometric') {
-            return this._renderIsoTiles(
-                this.parent.position.x,
-                this.parent.position.y,
-                width,
-                height
-            );
-        }
-        else {
-            return this._renderOrthoTiles(
-                -this.parent.position.x,
-                -this.parent.position.y,
-                width,
-                height
-            );
-        }
-    },
-    _renderOrthoTiles: function(sx, sy, sw, sh) {
-        //convert to tile coords
-        sx = Math.floor(sx / this.parent.scaledTileSize.x);
-        sy = Math.floor(sy / this.parent.scaledTileSize.y);
-        //ensure we don't go below 0
-        sx = sx < 0 ? 0 : sx;
-        sy = sy < 0 ? 0 : sy;
-
-        //convert to tile coords
-        sw = Math.ceil(sw / this.parent.scaledTileSize.x) + 1;
-        sh = Math.ceil(sh / this.parent.scaledTileSize.y) + 1;
-        //ensure we don't go outside the map size
-        sw = (sx + sw > this.parent.size.x) ? (this.parent.size.x - sx) : sw;
-        sh = (sy + sh > this.parent.size.y) ? (this.parent.size.y - sy) : sh;
-
-        //render new sprites
-        var endX = sx + sw,
-            endY = sy + sh;
-
-        for(var x = sx; x < endX; ++x) {
-            for(var y = sy; y < endY; ++y) {
-                this.moveTileSprite(x, y, x, y);
-            }
-        }
-
-        /*//set rendered area
-        this._rendered.x = sx;
-        this._rendered.y = sy;
-        this._rendered.width = sw;
-        this._rendered.height = sh;
-        this._updateRenderSq();
-
-        //reset buffered status
-        this._buffered.left = this._buffered.right = this._buffered.top = this._buffered.bottom = false;
-
-        //reset panDelta
-        this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
-        this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;*/
-    },
-    _renderIsoTiles: function(sx, sy, sw, sh) {
-        var scaled = this.parent.scaledTileSize;
-
-        //convert to tile coords
-        sx = Math.floor(sx / (scaled.x / 2));
-        sy = Math.floor(sy / scaled.y);
-
-        //the view rect offset is opposite of what the world is
-        sx = -sx;
-        sy = -sy;
-
-        //convert to tile units
-        sw = Math.ceil(sw / (scaled.x / 2));
-        sh = Math.ceil(sh / (scaled.y / 2));
-
-        //in this function i,j represents the coord system in the isometric plane
-        var iStart = Math.floor(this._isoToI(sx, sy)) - 1,
-            jStart = Math.floor(this._isoToJ(sx, sy)),
-            iMax = Math.ceil(this._isoToI(sx + sw, sy + sh)) + 1,
-            jMax = Math.ceil(this._isoToJ(sx, sy + sh)) + 2,
-            jMin = Math.floor(this._isoToJ(sx + sw, sy)),
-
-            iParentMax = this.parent.size.x,
-            jParentMax = this.parent.size.y,
-
-            nBump = false, //have we reached minimum j (the bump)
-            mBump = false, //have we reached maximum j (the bump)
-            n = 0, nBuffer = 1,
-            m = 1, mBuffer = 0;
-
-        for(var i = iStart; i < iMax; ++i) {
-            for(var j = jStart - n; j < jStart + m; ++j) {
-                if(i < 0 || j < 0 || i >= iParentMax || j >= jParentMax)
-                    continue;
-
-                this.moveTileSprite(i, j, i, j);
-            }
-
-            if(!nBump) {
-                //we have not reached lowest j point, increment n to go even lower next iteration
-                n++;
-
-                //check if we reached lowest j point
-                if((jStart - n) === jMin) {
-                    nBump = true;
-                }
-            } else {
-                //if we have reached deepest j start decreasing after the buffer is gone
-                if(nBuffer > 0) {
-                    nBuffer--;
-                }
-                //the buffer is gone, start decreasing n each iteration
-                else {
-                    n--;
-                }
-            }
-
-            if(!mBump) {
-                //we have not reached the highest j point, increase m to go even higher next iteration
-                m++;
-
-                if((jStart + m) === jMax) {
-                    mBump = true;
-                }
-            } else {
-                //we have reached max j, start decreasing m after the buffer is gone
-                if(mBuffer > 0) {
-                    mBuffer--;
-                }
-                //the buffer is gone, start decreasing m each iteration
-                else {
-                    m--;
-                }
-            }
-        }
-    },
-    _freeTile: function(tx, ty) {
-        if(this.tiles[tx] && this.tiles[tx][ty]) {
-            var t = this.tiles[tx][ty];
-
-            if(t) {
-                t.visible = false;
-                t.disablePhysics();
-                this._tilePool.push(t);
-                this.tiles[tx][ty] = null;
-                this.removeChild(t);
-            }
-        }
-
-        // make this first-in-first-out instead of a stack
-        // see: http://jsperf.com/queue-push-unshift-vs-shift-pop/3
-        //this._tilePool.reverse();
-    },
-    _isoToI: function(x, y) {
-        // converts world isometric coordinates into the i position of the 2D-Array
-        return ((y + x) / 2);
-    },
-    _isoToJ: function(x, y) {
-        // converts world isometric coordinates into the j position of the 2D-Array
-        return ((y - x) / 2);
-    },
-    /**
-     * Clears all the tiles currently used to render the layer
-     *
-     * @method clearTiles
-     */
-    clearTiles: function() {
-        //hide/free each tile and remove from the memory map
-        for(var x in this.tiles) {
-            for(var y in this.tiles[x]) {
-                this._freeTile(x, y);
-            }
-        }
-    },
-    /**
-     * Moves a tile sprite from one position to another, and creates a new tile
-     * if the old position didn't have a sprite
-     *
-     * @method moveTileSprite
-     * @param fromTileX {Number} The x coord of the tile in units of tiles (not pixels) to move from
-     * @param fromTileY {Number} The y coord of the tile in units of tiles (not pixels) to move from
-     * @param toTileX {Number} The x coord of the tile in units of tiles (not pixels) to move to
-     * @param toTileY {Number} The y coord of the tile in units of tiles (not pixels) to move to
-     * @return {Tile} The sprite to display
-     */
-    moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
-        var tile,
-            id = (toTileX + (toTileY * this.size.x)),
-            tileId = this.tileIds[id],
-            set = this.parent.getTileset(tileId),
-            iso = (this.parent.orientation === 'isometric'),
-            texture,
-            props,
-            position,
-            hitArea,
-            interactive;
-
-        //if no tileset, just ensure the "from" tile is put back in the pool
-        if(!set) {
-            this._freeTile(fromTileX, fromTileY);
-            return;
-        }
-
-        //grab some values for the tile
-        texture = set.getTileTexture(tileId);
-        props = set.getTileProperties(tileId);
-        hitArea = props.hitArea || set.properties.hitArea;
-        interactive = this._getInteractive(set, props);
-        position = iso ?
-            // Isometric position
-            [
-                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + set.tileoffset.x,
-                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + set.tileoffset.y
-            ]
-            :
-            // Orthoganal position
-            [
-                (toTileX * this.parent.tileSize.x) + set.tileoffset.x,
-                (toTileY * this.parent.tileSize.y) + set.tileoffset.y
-            ];
-
-        //due to the fact that we use top-left anchors for everything, but tiled uses bottom-left
-        //we need to move the position of each tile down by a single map-tile height. That is why
-        //there is an addition of "this.parent.tileSize.y" to the coords
-        position[1] +=  this.parent.tileSize.y;
-
-        //if there is one to move in the map, lets just move it
-        if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
-            tile = this.tiles[fromTileX][fromTileY];
-            this.tiles[fromTileX][fromTileY] = null;
-        }
-        //otherwise grab a new tile from the pool
-        else {
-            tile = this._tilePool.pop();
-        }
-
-        //if we couldn't find a tile from the pool, or one to move
-        //then create a new tile
-        if(!tile) {
-            tile = new gf.Tile(texture);
-            tile.mass = Infinity;
-            tile.anchor.y = 1;
-        }
-        this.addChild(tile);
-
-        if(props.isCollidable)
-            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
-
-        tile.setTexture(texture);
-        tile.setPosition(position[0], position[1]);
-
-        tile.setInteractive(interactive);
-
-        tile.collisionType = props.type;
-        tile.visible = true;
-        tile.hitArea = hitArea;
-
-        //pass through all events
-        if(interactive) {
-            tile.click = this.onTileEvent.bind(this, 'click', tile);
-            tile.mousedown = this.onTileEvent.bind(this, 'mousedown', tile);
-            tile.mouseup = this.onTileEvent.bind(this, 'mouseup', tile);
-            tile.mousemove = this.onTileEvent.bind(this, 'mousemove', tile);
-            tile.mouseout = this.onTileEvent.bind(this, 'mouseout', tile);
-            tile.mouseover = this.onTileEvent.bind(this, 'mouseover', tile);
-            tile.mouseupoutside = this.onTileEvent.bind(this, 'mouseupoutside', tile);
-        }
-
-        //update sprite position in the map
-        if(!this.tiles[toTileX])
-            this.tiles[toTileX] = {};
-
-        this.tiles[toTileX][toTileY] = tile;
-
-        return tile;
-    },
-    onTileEvent: function(eventName, tile, data) {
-        this.parent.onTileEvent(eventName, tile, data);
-    },
-    _getInteractive: function(set, o) {
-        var v;
-
-        //first check the lowest level value (on the tile iteself)
-        if(o.interactive !== undefined || o.interactiveTiles !== undefined)
-            v = o;
-        //next check if the tileset has the value
-        else if(set && (set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined))
-            v = set.properties;
-        //next check if this layer has interactive tiles
-        else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
-            v = this.properties;
-        //finally check if the map as a whole has interactive tiles
-        else if(this.parent.properties.interactive !== undefined || this.parent.properties.interactiveTiles !== undefined)
-            v = this.parent.properties;
-
-        //see if anything has a value to use
-        if(v) {
-            //if they do, lets grab what the interactive value is
-            return !!(v.interactive || v.interactiveTiles);
-        }
-
-        return false;
-    },
-    /**
-     * Pans the layer around, rendering stuff if necessary
-     *
-     * @method pan
-     * @param dx {Number|Point} The x amount to pan, if a Point is passed the dy param is ignored
-     * @param dy {Number} The y ammount to pan
-     * @return {Layer} Returns itself for chainability
-     */
-    pan: function(dx, dy) {
-        this.resize(this._rendered.width, this._rendered.height);
-
-        this._panDelta.x += dx;
-        this._panDelta.y += dy;/*
-
-        //check if we need to build a buffer around the viewport
-        //usually this happens on the first pan after a full render
-
-        //moving world right, so left will be exposed
-        if(dx > 0 && !this._buffered.left)
-            this._renderLeft(this._buffered.left = true);
-        //moving world left, so right will be exposed
-        else if(dx < 0 && !this._buffered.right)
-            this._renderRight(this._buffered.right = true);
-        //moving world down, so top will be exposed
-        else if(dy > 0 && !this._buffered.top)
-            this._renderUp(this._buffered.top = true);
-        //moving world up, so bottom will be exposed
-        else if(dy < 0 && !this._buffered.bottom)
-            this._renderDown(this._buffered.bottom = true);
-
-        //moved position right, so render left
-        while(this._panDelta.x >= this.parent.scaledTileSize.x) {
-            this._renderLeft();
-            this._panDelta.x -= this.parent.scaledTileSize.x;
-        }
-
-        //moved position left, so render right
-        while(this._panDelta.x <= -this.parent.scaledTileSize.x) {
-            this._renderRight();
-            this._panDelta.x += this.parent.scaledTileSize.x;
-        }
-
-        //moved position down, so render up
-        while(this._panDelta.y >= this.parent.scaledTileSize.y) {
-            this._renderUp();
-            this._panDelta.y -= this.parent.scaledTileSize.y;
-        }
-
-        //moved position up, so render down
-        while(this._panDelta.y <= -this.parent.scaledTileSize.y) {
-            this._renderDown();
-            this._panDelta.y += this.parent.scaledTileSize.y;
-        }*/
-    },
-    _renderLeft: function(forceNew) {
-        //move all the far right tiles to the left side
-        for(var i = 0; i < this._rendered.height; ++i) {
-            this.moveTileSprite(
-                forceNew ? -1 : this._rendered.right,
-                forceNew ? -1 : this._rendered.top + i,
-                this._rendered.left - 1,
-                this._rendered.top + i
-            );
-        }
-        this._rendered.x--;
-        if(forceNew) this._rendered.width++;
-        this._updateRenderSq();
-    },
-    _renderRight: function(forceNew) {
-        //move all the far left tiles to the right side
-        for(var i = 0; i < this._rendered.height; ++i) {
-            this.moveTileSprite(
-                forceNew ? -1 : this._rendered.left,
-                forceNew ? -1 : this._rendered.top + i,
-                this._rendered.right + 1,
-                this._rendered.top + i
-            );
-        }
-        if(!forceNew) this._rendered.x++;
-        if(forceNew) this._rendered.width++;
-        this._updateRenderSq();
-    },
-    _renderUp: function(forceNew) {
-        //move all the far bottom tiles to the top side
-        for(var i = 0; i < this._rendered.width; ++i) {
-            this.moveTileSprite(
-                forceNew ? -1 : this._rendered.left + i,
-                forceNew ? -1 : this._rendered.bottom,
-                this._rendered.left + i,
-                this._rendered.top - 1
-            );
-        }
-        this._rendered.y--;
-        if(forceNew) this._rendered.height++;
-        this._updateRenderSq();
-    },
-    _renderDown: function(forceNew) {
-        //move all the far top tiles to the bottom side
-        for(var i = 0; i < this._rendered.width; ++i) {
-            this.moveTileSprite(
-                forceNew ? -1 : this._rendered.left + i,
-                forceNew ? -1 : this._rendered.top,
-                this._rendered.left + i,
-                this._rendered.bottom + 1
-            );
-        }
-        if(!forceNew) this._rendered.y++;
-        if(forceNew) this._rendered.height++;
-        this._updateRenderSq();
-    },
-    _updateRenderSq: function() {
-        this._rendered.left = this._rendered.x;
-        this._rendered.right = this._rendered.x + this._rendered.width - 1;
-        this._rendered.top = this._rendered.y;
-        this._rendered.bottom = this._rendered.y + this._rendered.height - 1;
-    }
-});
-
-/**
- * This object represents a tileset used by a TiledMap.
- * There can be multiple Tilesets in a map
- *
- * @class TiledTileset
- * @extends gf.Texture
- * @namespace gf
- * @constructor
- * @param settings {Object} All the settings for the tileset
- */
-//TODO: Support external tilesets (TSX files) via the "source" attribute
-//see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
-gf.TiledTileset = function(settings) {
-    if(!gf.assetCache[settings.name + '_texture']) {
-        throw 'You must preload the tileset images! Try loading the world file with the AssetLoader';
-    }
-
-    //initialize the base Texture class
-    gf.Texture.call(this, gf.assetCache[settings.name + '_texture'].baseTexture);
-
-    //Tiled Editor properties
-
-    /**
-     * The first tileId in the tileset
-     *
-     * @property firstgid
-     * @type Number
-     */
-    this.firstgid = settings.firstgid;
-
-    /**
-     * The name of the tileset
-     *
-     * @property name
-     * @type String
-     */
-    this.name = settings.name;
-
-    /**
-     * The size of a tile in the tileset
-     *
-     * @property tileSize
-     * @type Vector
-     */
-    this.tileSize = new gf.Vector(settings.tilewidth, settings.tileheight);
-
-    /**
-     * The spacing around a tile in the tileset
-     *
-     * @property spacing
-     * @type Number
-     */
-    this.spacing = settings.spacing || 0;
-
-    /**
-     * The margin around a tile in the tileset
-     *
-     * @property margin
-     * @type Number
-     */
-    this.margin = settings.margin || 0;
-
-    /**
-     * The offset of tile positions when rendered
-     *
-     * @property tileoffset
-     * @type Number
-     */
-    this.tileoffset = new gf.Vector(
-        settings.tileoffset ? settings.tileoffset.x : 0,
-        settings.tileoffset ? settings.tileoffset.y : 0
-    );
-
-    //TODO: Support for "tileoffset," "terraintypes," "image"
-    //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
-
-    //Custom/Optional properties
-
-    /**
-     * The number of tiles calculated based on size, margin, and spacing
-     *
-     * @property numTiles
-     * @type Vector
-     */
-    this.numTiles = new gf.Vector(
-        ~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), //75 / 
-        ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing))
-    );
-
-    /**
-     * The last tileId in the tileset
-     *
-     * @property lastgid
-     * @type Number
-     */
-    this.lastgid = this.firstgid + (((this.numTiles.x * this.numTiles.y) - 1) || 0);
-
-    /**
-     * The properties of the tileset
-     *
-     * @property properties
-     * @type Object
-     */
-    this.properties = settings.properties || {};
-
-    /**
-     * The properties of the tiles in the tileset (like collision stuff)
-     *
-     * @property tileproperties
-     * @type Object
-     */
-    this.tileproperties = settings.tileproperties || {};
-
-    /**
-     * The size of the tileset
-     *
-     * @property size
-     * @type Vector
-     */
-    this.size = new gf.Vector(settings.imagewidth, settings.imageheight);
-
-    /**
-     * The texture instances for each tile in the set
-     *
-     * @property textures
-     * @type Array
-     */
-    this.textures = [];
-
-    //ensure hitArea is a polygon
-    if(this.properties.hitArea) {
-        var h = this.properties.hitArea.split(gf.utils._arrayDelim);
-
-        //odd number of values
-        if(h.length % 2 !== 0) {
-            throw 'Uneven number of values for hitArea on tileset! Should be a flat array of x/y values.';
-        }
-
-        var hv = [];
-        for(var i = 0, il = h.length; i < il; ++i) {
-            hv.push(parseFloat(h[i], 10));
-        }
-        this.properties.hitArea = new gf.Polygon(hv);
-    }
-
-    //massage tile properties
-    for(var k in this.tileproperties) {
-        var v = this.tileproperties[k];
-
-        if(v.normal) v.normal = gf.utils.ensureVector(v.normal);
-
-        if(v.isCollidable === 'true') v.isCollidable = true;
-        if(v.isBreakable === 'true') v.isBreakable = true;
-
-        if(v.hitArea) {
-            var ha = v.hitArea.split(gf.utils._arrayDelim);
-
-            //odd number of values
-            if(ha.length % 2 !== 0) {
-                throw 'Uneven number of values for hitArea on a tile of a tileset! Should be a flat array of x/y values.';
-            }
-
-            var hav = [];
-            for(var p = 0, pl = ha.length; p < pl; p+=2) {
-                hav.push(
-                    new gf.Point(
-                        parseFloat(ha[p], 10),
-                        parseFloat(ha[p + 1], 10)
-                    )
-                );
-            }
-            v.hitArea = new gf.Polygon(hav);
-        }
-    }
-
-    //generate tile textures
-    for(var t = 0, tl = this.lastgid - this.firstgid + 1; t < tl; ++t) {
-        //convert the tileId to x,y coords of the tile in the Texture
-        var y = ~~(t / this.numTiles.x),
-            x = (t - (y * this.numTiles.x));
-
-        //get location in pixels
-        x = (x * this.tileSize.x) + (x * this.spacing) + this.margin;
-        y = (y * this.tileSize.y) + (y * this.spacing) + this.margin;
-
-        this.textures.push(
-            new gf.Texture(
-                this.baseTexture,
-                new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)
-            )
-        );
-    }
-};
-
-gf.inherits(gf.TiledTileset, gf.Texture, {
-    /**
-     * Gets the tile properties for a tile based on it's ID
-     *
-     * @method getTileProperties
-     * @param tileId {Number} The id of the tile to get the properties for
-     * @return {Object} The properties of the tile
-     */
-    getTileProperties: function(tileId) {
-        if(tileId === undefined) return null;
-
-        tileId = tileId - this.firstgid;
-
-        //if less than 0, then this id isn't in this tileset
-        if(tileId < 0) return null;
-
-        return this.tileproperties[tileId] ?
-                //get this value
-                this.tileproperties[tileId] :
-                //set this id to default values and cache
-                this.tileproperties[tileId] = {
-                    isCollidable: false,
-                    isBreakable: false,
-                    type: gf.Tile.TYPE.NONE
-                };
-    },
-    /**
-     * Gets the tile texture for a tile based on it's ID
-     *
-     * @method getTileTexture
-     * @param tileId {Number} The id of the tile to get the texture for
-     * @return {Texture} The texture for the tile
-     */
-    getTileTexture: function(tileId) {
-        if(tileId === undefined) return null;
-
-        //get the internal ID of the tile in this set (0 indexed)
-        tileId = tileId - this.firstgid;
-
-        //if less than 0, then this id isn't in this tileset
-        if(tileId < 0) return null;
-
-        return this.textures[tileId];
-    }
-});
-
-/**
- * Tiled object group is a special layer that contains entities
- * TODO: This is all trash
- *
- * @class TiledObjectGroup
- * @extends gf.Layer
- * @namespace gf
- * @constructor
- * @param group {Object} All the settings for the layer
- */
- gf.TiledObjectGroup = function(group) {
-    gf.Layer.call(this, group);
-
-    /**
-     * The color to display objects in this group
-     *
-     * @property color
-     * @type
-     */
-    this.color = group.color;
-
-    /**
-     * The user-defined properties of this group. Usually defined in the TiledEditor
-     *
-     * @property properties
-     * @type Object
-     */
-    this.properties = group.properties || {};
-
-    /**
-     * The objects in this group that can be spawned
-     *
-     * @property objects
-     * @type Array
-     */
-    this.objects = group.objects;
-
-    //translate some tiled properties to our inherited properties
-    this.alpha = group.opacity;
-    this.visible = group.visible;
-};
-
-gf.inherits(gf.TiledObjectGroup, gf.Layer, {
-    /**
-     * Spawns all the entities associated with this layer, and properly sets their attributes
-     *
-     * @method spawn
-     * @return {TiledObjectGroup} Returns itself for chainability
-     */
-    spawn: function() {
-        var game = this.parent.parent.game; //this.TiledMap.GameState.Game
-
-        //we go through these backwards so that things that are higher in the
-        //list of object gets rendered on top.
-        for(var i = this.objects.length - 1; i >= 0; --i) {
-            var o = this.objects[i],
-                props = o.properties || {},
-                set,
-                interactive,
-                obj;
-
-            //create a sprite with that texture
-            if(o.gid) {
-                //check for a custom object hitArea
-                if(props.hitArea) {
-                    var h = props.hitArea.split(gf.utils._arrayDelim);
-
-                    //odd number of values
-                    if(h.length % 2 !== 0) {
-                        throw 'Uneven number of values for hitArea on Tiled Object! Should be a flat array of x/y values.';
-                    }
-
-                    var hv = [];
-                    for(var x = 0, xl = h.length; x < xl; ++x) {
-                        hv.push(parseFloat(h[x], 10));
-                    }
-                    props.hitArea = new gf.Polygon(hv);
-                }
-
-                set = this.parent.getTileset(o.gid);
-
-                if(set) {
-                    props.texture = set.getTileTexture(o.gid);
-
-                    //if no hitArea then use the tileset's if available
-                    if(!props.hitArea) {
-                        props.hitArea = set.properties.hitArea;
-                    }
-                }
-            }
-            //non-sprite object (usually to define an "area" on a map)
-            else {
-                //define a hitArea
-                if(o.polyline)
-                    props.hitArea = this._getPolyline(o);
-                else if(o.polygon)
-                    props.hitArea = this._getPolygon(o);
-                else if(o.ellipse)
-                    props.hitArea = this._getEllipse(o);
-                else
-                    props.hitArea = this._getRectangle(o);
-            }
-
-            //a manually specified string texture
-            if(typeof props.texture === 'string') {
-                props.texture = gf.assetCache[props.texture];
-            }
-
-            //just a regular DisplayObject
-            if(!props.texture) {
-                obj = new gf.DisplayObjectContainer();
-
-                obj.width = o.width;
-                obj.height = o.height;
-                obj.name = o.name;
-                obj.hitArea = props.hitArea;
-                obj.rotation = o.rotation;
-            } else {
-                //some variable for the user if they want them
-                //these will be passed through to a custom sprite if wanted
-                props.width = o.width;
-                props.height = o.height;
-                props.zIndex = this.zIndex;
-
-                obj = game.spritepool.create(o.name, props.texture, props);
-
-                //assign some values
-                obj.name = o.name;
-                obj.type = o.type;
-                obj.hitArea = props.hitArea;
-                obj.anchor.y = 1;
-                obj.anchor.x = this.parent.orientation === 'isometric' ? 0.5 : 0;
-
-                if(props.physical === 'true' || props.physics === 'true')
-                    obj.enablePhysics(game.physics);
-
-                //set some more stuffz
-                obj.setRotation(o.rotation);
-            }
-
-            //visible was recently added to Tiled, default old versions to true
-            obj.visible = o.visible !== undefined ? !!o.visible : true;
-
-            if(this.parent.orientation === 'isometric') {
-                var toTileX = o.x / this.parent.tileSize.x,
-                    toTileY = o.y / this.parent.tileSize.y;
-
-                //This cannot be the simplest form of this...
-                o.x = (toTileX * this.parent.tileSize.x) - ((toTileY - 1) * (this.parent.tileSize.x / 2));
-                o.y = (toTileY * this.parent.tileSize.y / 2) + (toTileX * this.parent.tileSize.y);
-            }
-
-            interactive = this._getInteractive(set, o);
-
-            //pass through all events
-            if(interactive) {
-                obj.setInteractive(interactive);
-
-                obj.click = this.onObjectEvent.bind(this, 'click', obj);
-                obj.mousedown = this.onObjectEvent.bind(this, 'mousedown', obj);
-                obj.mouseup = this.onObjectEvent.bind(this, 'mouseup', obj);
-                obj.mousemove = this.onObjectEvent.bind(this, 'mousemove', obj);
-                obj.mouseout = this.onObjectEvent.bind(this, 'mouseout', obj);
-                obj.mouseover = this.onObjectEvent.bind(this, 'mouseover', obj);
-                obj.mouseupoutside = this.onObjectEvent.bind(this, 'mouseupoutside', obj);
-            }
-
-            obj.setPosition(o.x, o.y);
-            this.addChild(obj);
-        }
-
-        return this;
-    },
-    onObjectEvent: function(eventName, obj, data) {
-        this.parent.onObjectEvent(eventName, obj, data);
-    },
-    _getPolygon: function(o) {
-        var points = [];
-        for(var i = 0, il = o.polygon.length; i < il; ++i) {
-            points.push(new gf.Point(o.polygon[i].x, o.polygon[i].y));
-        }
-
-        return new gf.Polygon(points);
-    },
-    _getPolyline: function(o) {
-        var points = [];
-        for(var i = 0, il = o.polyline.length; i < il; ++i) {
-            points.push(new gf.Point(o.polyline[i].x, o.polyline[i].y));
-        }
-
-        return new gf.Polygon(points);
-    },
-    _getEllipse: function(o) {
-        return new gf.Ellipse(0, 0, o.width, o.height);
-    },
-    _getRectangle: function(o) {
-        return new gf.Rectangle(0, 0, o.width, o.height);
-    },
-    _getInteractive: function(set, o) {
-        var v;
-
-        //first check the lowest level value (on the tile iteself)
-        if(o.interactive !== undefined || o.interactiveTiles !== undefined)
-            v = o;
-        //next check if the tileset has the value
-        else if(set && (set.properties.interactive !== undefined || set.properties.interactiveTiles !== undefined))
-            v = set.properties;
-        //next check if this layer has interactive tiles
-        else if(this.properties.interactive !== undefined || this.properties.interactiveTiles !== undefined)
-            v = this.properties;
-        //finally check if the map as a whole has interactive tiles
-        else if(this.parent.properties.interactive !== undefined || this.parent.properties.interactiveTiles !== undefined)
-            v = this.parent.properties;
-
-        //see if anything has a value to use
-        if(v) {
-            //if they do, lets grab what the interactive value is
-            return !!(v.interactive || v.interactiveTiles);
-        }
-
-        return false;
-    },
-    /**
-     * Despawns all the sprites associated with this layer
-     *
-     * @method despawn
-     * @return {TiledObjectGroup} Returns itself for chainability
-     */
-    despawn: function() {
-        //remove each sprite from the game
-        for(var i = this.children.length; i > -1; --i) {
-            this.removeChild(this.children[i]);
-        }
-
-        return this;
-    }
-});
-
-gf.PhysicsSystem = function(options) {
-    options = options || {};
-
-    this.space = new cp.Space();
-    this.space.gravity = gf.utils.ensureVector(options.gravity !== undefined ? options.gravity : 9.87);
-
-    //Time a body must remain idle to fall asleep
-    //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#a928d74741904aae266a9efff5b5f68f7
-    this.space.sleepTimeThreshold = options.sleepTimeThreshold || 0.2;
-
-    //Amount of encouraged penetration between colliding shapes.
-    //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#af1bec644a24e12bfc642a942a88520f7
-    this.space.collisionSlop = options.collisionSlop || 0.1;
-
-    //These two collision scenarios are separate because we don't
-    //want tiles to collide with tiles all the time
-
-    //sprite - sprite collisions
-    this.space.addCollisionHandler(
-        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
-        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
-        this.onCollisionBegin.bind(this), //begin
-        null, //preSolve
-        null, //postSolve
-        null //separate
-    );
-
-    //sprite - tile collisions
-    this.space.addCollisionHandler(
-        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
-        gf.PhysicsSystem.COLLISION_TYPE.TILE,
-        this.onCollisionBegin.bind(this), //begin
-        null, //preSolve
-        null, //postSolve
-        null //separate
-    );
-};
-
-gf.inherits(gf.PhysicsSystem, Object, {
-    _createBody: function(spr) {
-        return this.space.addBody(new cp.Body(
-            spr.mass || 1,
-            Infinity //cp.momsprForBox(spr.mass, spr.width, spr.height)
-        ));
-    },
-    _createShape: function(spr, body) {
-        var shape = this.space.addShape(
-            new cp.BoxShape(
-                body,
-                spr.width,
-                spr.height
-            )
-        );
-
-        shape.setElasticity(0);
-        shape.setFriction(spr.friction || 0.1);
-        shape.sprite = spr;
-        shape.setCollisionType(this.getCollisionType(spr));
-
-        return shape;
-    },
-    getCollisionType: function(spr) {
-        if(spr instanceof gf.Tile) {
-            return gf.PhysicsSystem.COLLISION_TYPE.TILE;
-        } else {
-            return gf.PhysicsSystem.COLLISION_TYPE.SPRITE;
-        }
-    },
-    add: function(spr) {
-        if(!spr._phys)
-            spr._phys = {};
-
-        //already in system
-        if(spr._phys.body)
-            return;
-
-        var body = this._createBody(spr),
-            shape = this._createShape(spr, body);
-
-        spr._phys.body = body;
-        spr._phys.shape = shape;
-
-        //add control body and constraints
-        if(body.m !== Infinity) {
-            var cbody = new cp.Body(Infinity, Infinity), //control body
-                cpivot = this.space.addConstraint(new cp.PivotJoint(cbody, body, cp.vzero, cp.vzero)),
-                cgear = this.space.addConstraint(new cp.GearJoint(cbody, body, 0, 1));
-
-            cpivot.maxBias = 0; //disable join correction
-            cpivot.maxForce = 10000; //emulate linear friction
-
-            cgear.errorBias = 0; //attempt to fully correct the joint each step
-            cgear.maxBias = 1.2; //but limit the angular correction
-            cgear.maxForce = 50000; //emulate angular friction
-
-            if(!spr._phys.control)
-                spr._phys.control = {};
-
-            spr._phys.control.body = cbody;
-            spr._phys.control.pivot = cpivot;
-            spr._phys.control.gear = cgear;
-        }
-    },
-    remove: function(spr) {
-        if(!spr || !spr._phys || !spr._phys.body || !spr._phys.shape)
-            return;
-
-        this.space.remove(spr._phys.body);
-        this.space.remove(spr._phys.shape);
-
-        spr._phys.shape.sprite = null;
-
-        //remove references
-        spr._phys.body = null;
-        spr._phys.shape = null;
-    },
-    setMass: function(spr, mass) {
-        if(spr && spr._phys && spr._phys.body)
-            spr._phys.body.setMass(mass);
-    },
-    setVelocity: function(spr, vel) {
-        //update control body velocity (and pivot contraint makes regular follow)
-        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
-            spr._phys.control.body.setVel(vel);
-
-        //if no control body then update real body
-        else if(spr && spr._phys && spr._phys.body)
-            spr._phys.body.setVel(vel);
-    },
-    setPosition: function(spr, pos) {
-        //update body position
-        if(spr && spr._phys && spr._phys.body)
-            spr._phys.body.setPos(pos);
-
-        //update control body position
-        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
-            spr._phys.control.body.setPos(pos);
-    },
-    setRotation: function(spr, rads) {
-        //update control body rotation (and gear contraint makes regular follow)
-        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
-            spr._phys.control.body.setAngle(rads);
-
-        //if no control body then update real body
-        else if(spr && spr._phys && spr._phys.body)
-            spr._phys.body.setAngle(rads);
-
-    },
-    update: function(dt) {
-        //execute the physics step
-        this.space.step(dt);
-
-        //go through each changed shape
-        this.space.activeShapes.each(function(shape) {
-            shape.sprite.setPosition(shape.body.p.x, shape.body.p.y, true);
-            shape.sprite.setRotation(shape.body.a, true);
-        });
-    },
-    onCollisionBegin: function(arbiter) {//, space) {
-        var shapes = arbiter.getShapes(),
-            spr1 = shapes[0].sprite,
-            spr2 = shapes[1].sprite;
-
-        spr1.onCollision(spr2);
-        spr2.onCollision(spr1);
-
-        //maintain the colliding state
-        return true;
-    }
-});
-
-gf.PhysicsSystem.COLLISION_TYPE = {
-    SPRITE: 0,
-    TILE: 1
-};
-/**
- * Holds a pool of different Objects to help reduce the number times
- * an object is created and destroyed.
- *
- * @class ObjectPool
- * @extends Object
- * @namespace gf
- * @constructor
- * @param type {mixed} The object type that this pool will hold (like gf.Sprite, or gf.Tile)
- * @param parent {mixed} The parent that the objects will be added to. Passing this in will
- *      make the pool add any newly created objects as children to this object.
- */
-gf.ObjectPool = function(type, parent) {
-    this.type = type;
-    this.pool = [];
-    this.parent = parent;
-};
-
-gf.inherits(gf.ObjectPool, Object, {
-    /**
-     * Creates a new instance of the pool's object type, or if available
-     * pulls one that is already created out of the pool
-     *
-     * @method create
-     */
-    create: function() {
-        var o = this.pool.pop();
-
-        if(!o) {
-            o = this._construct(this.type, arguments);
-            if(this.parent)
-                this.parent.addChild(o);
-        }
-
-        return o;
-    },
-    /**
-     * Frees an object back into the pool to be recycled
-     *
-     * @method free
-     */
-    free: function(o) {
-        this.pool.push(o);
-    },
-    //have to do this hack around to be able to use
-    //apply and new together
-    _construct: function(ctor, args) {
-        function F() {
-            return ctor.apply(this, args);
-        }
-        F.prototype = ctor.prototype;
-        return new F();
-    }
-});
-/**
- * Holds a pool of different Sprites that can be created, makes it very
- * easy to quickly create different registered entities
- *
- * @class SpritePool
- * @extends Object
- * @namespace gf
- * @constructor
- */
-gf.SpritePool = function() {
-    this.types = {};
-
-    this.add('_default', gf.Sprite);
-};
-
-gf.inherits(gf.SpritePool, Object, {
-    /**
-     * Adds an Sprite Type to the pool
-     *
-     * @method add
-     * @param name {String} The user-defined name of the Sprite Type to add
-     * @param obj {Sprite} The Sprite or decendant type to add to the pool
-     * @return {Sprite} Returns the passed sprite
-     */
-    add: function(name, obj) {
-        return this.types[name] = obj;
-    },
-    /**
-     * Checks if the Sprite Type exists in the pool
-     *
-     * @method has
-     * @param name {String} The user-defined name of the Sprite Type to check if is in the pool
-     * @return {Boolean}
-     */
-    has: function(name) {
-        return !!this.types[name];
-    },
-    /**
-     * Creates a new sprite from the pool
-     *
-     * @method create
-     * @param name {String} The user-defined name of the Sprite to check if is in the pool
-     * @param texture {Texture} The texture for the sprite
-     * @param props {Object} Extra object that will be passed along (for custom sprite options)
-     * @return {Sprite} Returns a new instance of the object from the pool
-     */
-    create: function(name, texture, props) {
-        if(!name || !this.types[name])
-            name = '_default';
-
-        return new this.types[name](texture, props);
-    },
-    //currently doesn't do any recycling unfortunately
-    free: function() {
-        return;
-    }
-});
-
 /**
  * The grapefruit utility object, used for misc functions used throughout the code base
  *
@@ -21987,6 +17196,67 @@ gf.inherits(gf.SpritePool, Object, {
                 }
             }
         }
+
+        return obj;
+    },
+    parseHitArea: function(hv) {
+        var ha;
+
+        //odd number of values
+        if(hv.length % 2 !== 0 && hv.length !== 3) {
+            throw 'Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.';
+        }
+
+        //a circle x,y,r
+        if(hv.length === 3) {
+            ha = new gf.Circle(hv[0], hv[1], hv[2]);
+        }
+        //a rectangle x,y,w,h
+        else if(hv.length === 4) {
+            ha = new gf.Rectangle(hv[0], hv[1], hv[2], hv[3]);
+        }
+        //generic polygon
+        else {
+            ha = new gf.Polygon(hv);
+        }
+
+        return ha;
+    },
+    parseTiledProperties: function(obj) {
+        if(!obj || obj.__tiledparsed)
+            return obj;
+
+        for(var k in obj) {
+            var v = obj[k];
+
+            //try to massage numbers
+            if(!isNaN(v))
+                obj[k] = parseFloat(v, 10);
+            //true values
+            else if(v === 'true')
+                obj[k] = true;
+            //false values
+            else if(v === 'false')
+                obj[k] = false;
+            //anything else is either a string or json, try json
+            else {
+                try{
+                    v = JSON.parse(v);
+                    obj[k] = v;
+                } catch(e) {}
+            }
+        }
+
+        //after parsing, check some other things
+        if(obj.hitArea)
+            obj.hitArea = gf.utils.parseHitArea(obj.hitArea);
+
+        if(obj.static || obj.sensor) {
+            obj.mass = Infinity;
+            obj.inertia = Infinity;
+        }
+
+        obj.__tiledparsed = true;
 
         return obj;
     }
@@ -22703,14 +17973,12 @@ gf.inherits(gf.Vector, Object, {
  * Event emitter mixin. This will add emitter properties to an object so that
  * it can emit events, and have others listen for them. Based on
  * <a target="_blank" href="https://github.com/joyent/node/blob/master/lib/events.js">node.js event emitter</a>
- * 
  *
  * @class EventEmitter
  * @namespace gf
  * @constructor
  * @example
  *      function MyObject(clr) {
- *          gf.EventEmitter.call(this); //adds properties
  *          this.color = clr;
  *      }
  *
@@ -22719,6 +17987,7 @@ gf.inherits(gf.Vector, Object, {
  *              this.emit('hey', { some: s });
  *          }
  *      });
+ *      gf.EventEmitter.call(MyObject.prototype); //adds properties
  *
  *      //then later
  *      var o = new MyObject('red');
@@ -22728,7 +17997,7 @@ gf.inherits(gf.Vector, Object, {
  *      });
  *      o.something('hello');
  */
- gf.EventEmitter = function() {
+gf.EventEmitter = function() {
     this._events = this._events || {};
 
     /**
@@ -22877,5 +18146,6883 @@ gf.inherits(gf.Vector, Object, {
         return this;
     };
 };
+gf.PhysicsSystem = function(options) {
+    options = options || {};
+
+    this.space = new cp.Space();
+    this.space.gravity = gf.utils.ensureVector(options.gravity !== undefined ? options.gravity : 9.87);
+
+    //Time a body must remain idle to fall asleep
+    //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#a928d74741904aae266a9efff5b5f68f7
+    this.space.sleepTimeThreshold = options.sleepTimeThreshold || 0.2;
+
+    //Amount of encouraged penetration between colliding shapes.
+    //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#af1bec644a24e12bfc642a942a88520f7
+    this.space.collisionSlop = options.collisionSlop || 0.1;
+
+    //These two collision scenarios are separate because we don't
+    //want tiles to collide with tiles all the time
+
+    //sprite - sprite collisions
+    this.space.addCollisionHandler(
+        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
+        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
+        this.onCollisionBegin.bind(this), //begin
+        null, //preSolve
+        this.onCollisionPostSolve.bind(this), //postSolve
+        this.onCollisionEnd.bind(this) //separate
+    );
+
+    //sprite - tile collisions
+    this.space.addCollisionHandler(
+        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
+        gf.PhysicsSystem.COLLISION_TYPE.TILE,
+        this.onCollisionBegin.bind(this), //begin
+        null, //preSolve
+        this.onCollisionPostSolve.bind(this), //postSolve
+        this.onCollisionEnd.bind(this) //separate
+    );
+
+    this.actionQueue = [];
+    this.tickCallbacks = [];
+    this._skip = 0;
+};
+
+gf.inherits(gf.PhysicsSystem, Object, {
+    _createBody: function(spr) {
+        var body = new cp.Body(
+            spr.mass || 1,
+            spr.inertia || cp.momentForBox(spr.mass || 1, spr.width, spr.height) || Infinity
+        );
+
+        if(spr.mass === Infinity) {
+            //inifinite mass means it is static, so make it static
+            //and do not add it to the world (no need to simulate it)
+            body.nodeIdleTime = Infinity;
+        }// else {
+            //this.space.addBody(body);
+        //}
+
+        return body;
+    },
+    _createShape: function(spr, body, poly) {
+        var shape,
+            hit = poly || spr.hitArea,
+            ax = spr.anchor ? spr.anchor.x : 0,
+            ay = spr.anchor ? spr.anchor.y : 0,
+            aw = spr.width * ax,
+            ah = spr.height * ay;
+
+        //specified shape
+        if(hit) {
+            if(hit instanceof gf.Rectangle) {
+                //convert the top-left anchored rectangle to left,right,bottom,top values
+                //for chipmunk space that will corospond to our own
+                var l = hit.x,
+                    r = hit.x + hit.width,
+                    b = hit.y - spr.height,
+                    t = b + hit.height;
+
+                l -= aw;
+                r -= aw;
+
+                b += spr.height - ah;
+                t += spr.height - ah;
+
+                shape = new cp.BoxShape2(body, new cp.BB(l, b, r, t));
+            }
+            else if(hit instanceof gf.Circle) {
+                //the offset needs to move the circle to the sprite center based on the sprite's anchor (bottom-left)
+                var offset = new gf.Vector(
+                    ((spr.width / 2) - aw) + hit.x,
+                    ((spr.height / 2) - ah) + hit.y
+                );
+
+                shape = new cp.CircleShape(body, hit.radius, offset);
+            }
+            else if(hit instanceof gf.Polygon) {
+                //cp shapes anchors are 0.5,0.5, but a polygon uses 0,0 as the topleft
+                //of the bounding rect so we have to convert
+                var points = [],
+                    ps = hit.points;
+
+                for(var i = 0; i < ps.length; ++i) {
+                    var p = ps[i];
+
+                    points.push(p.x - aw);
+                    points.push(p.y - ah);
+                }
+
+                shape = new cp.PolyShape(body, cp.convexHull(points, null, 0), cp.vzero);
+            }
+        }
+
+        //default box shape
+        if(!shape) {
+            shape = new cp.BoxShape2(body, new cp.BB(0, -spr.height, spr.width, 0));
+        }
+
+        //this.space.addShape(shape);
+
+        shape.width = spr.width;
+        shape.height = spr.height;
+        shape.sprite = spr;
+        shape.setElasticity(0);
+        shape.setSensor(spr.sensor);
+        shape.setCollisionType(this.getCollisionType(spr));
+        shape.setFriction(spr.friction || 0);
+
+        return shape;
+    },
+    nextTick: function(fn) {
+        this.tickCallbacks.push(fn);
+    },
+    reindexStatic: function() {
+        this.actionQueue.push(['reindexStatic']);
+        this.act();
+    },
+    getCollisionType: function(spr) {
+        if(spr instanceof gf.Tile) {
+            return gf.PhysicsSystem.COLLISION_TYPE.TILE;
+        } else {
+            return gf.PhysicsSystem.COLLISION_TYPE.SPRITE;
+        }
+    },
+    add: function(spr) {
+        //already in system
+        if(spr._phys && spr._phys.body)
+            return;
+
+        var body = this._createBody(spr),
+            shape = this._createShape(spr, body),
+            control;
+
+        //add control body and constraints
+        if(!body.isStatic()) {
+            var cbody = new cp.Body(Infinity, Infinity), //control body
+                cpivot = new cp.PivotJoint(cbody, body, cp.vzero, cp.vzero),
+                cgear = new cp.GearJoint(cbody, body, 0, 1);
+
+            cpivot.maxBias = 0; //disable join correction
+            cpivot.maxForce = 10000; //emulate linear friction
+
+            cgear.errorBias = 0; //attempt to fully correct the joint each step
+            cgear.maxBias = 1.2; //but limit the angular correction
+            cgear.maxForce = 50000; //emulate angular friction
+
+            control = {};
+            control.body = cbody;
+            control.pivot = cpivot;
+            control.gear = cgear;
+        }
+
+        this.actionQueue.push(['add', {
+            spr: spr,
+            body: body,
+            shape: shape,
+            control: control
+        }]);
+        this.act();
+    },
+    remove: function(spr) {
+        if(!spr || !spr._phys || !spr._phys.body || !spr._phys.shape)
+            return;
+
+        this.actionQueue.push(['remove', spr._phys]);
+        this.act();
+    },
+    reindex: function(spr) {
+        if(!spr || !spr._phys || !spr._phys.shape)
+            return;
+
+        this.actionQueue.push(['reindex', spr._phys.shape]);
+        this.act();
+    },
+    addCustomShape: function(spr, poly, sensor) {
+        if(spr && spr._phys && spr._phys.body) {
+            var s = this._createShape(spr, spr._phys.body, poly);
+
+            s.setSensor(sensor);
+            s.width = spr.width;
+            s.height = spr.height;
+            s.sprite = spr;
+            s.setElasticity(0);
+            s.setSensor(sensor !== undefined ? sensor : spr.sensor);
+            s.setCollisionType(this.getCollisionType(spr));
+            s.setFriction(spr.friction || 0);
+
+            this.actionQueue.push(['addCustomShape', { spr: spr, shape: s }]);
+            this.act();
+
+            return s;
+        }
+    },
+    setMass: function(spr, mass) {
+        if(spr && spr._phys && spr._phys.body)
+            spr._phys.body.setMass(mass);
+    },
+    setVelocity: function(spr, vel) {
+        //update control body velocity (and pivot contraint makes regular follow)
+        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+            spr._phys.control.body.setVel(vel);
+
+        //if no control body then update real body
+        else if(spr && spr._phys && spr._phys.body)
+            spr._phys.body.setVel(vel);
+    },
+    setPosition: function(spr, pos) {
+        //update body position
+        if(spr && spr._phys && spr._phys.body)
+            spr._phys.body.setPos(pos);
+
+        //update control body position
+        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+            spr._phys.control.body.setPos(pos);
+    },
+    setRotation: function(spr, rads) {
+        //update control body rotation (and gear contraint makes regular follow)
+        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+            spr._phys.control.body.setAngle(rads);
+
+        //if no control body then update real body
+        else if(spr && spr._phys && spr._phys.body)
+            spr._phys.body.setAngle(rads);
+
+    },
+    update: function(dt) {
+        if(this._paused)
+            return;
+
+        while(this.tickCallbacks.length)
+            (this.tickCallbacks.shift()).call(this);
+
+        if(this._skip)
+            return this._skip--;
+
+        //execute the physics step
+        this.space.step(dt);
+
+        //go through each changed shape
+        this.space.activeShapes.each(function(shape) {
+            //since the anchor for a cp shape is 0.5 0.5, we have to modify the pos a bit
+            //to make it match the sprite's anchor point
+            var spr = shape.sprite;
+            spr.position.x = shape.body.p.x;// + ((spr.anchor.x * shape.width) - (shape.width / 2));
+            spr.position.y = shape.body.p.y;// + ((spr.anchor.y * shape.height) - (shape.height / 2));
+            spr.rotation = shape.body.a;
+
+            spr.emit('physUpdate');
+
+            if(spr._showHit) {
+                spr.showPhysics();
+            }
+        });
+    },
+    onCollisionBegin: function(arbiter) {//, space) {
+        var shapes = arbiter.getShapes(),
+            spr1 = shapes[0].sprite,
+            spr2 = shapes[1].sprite;
+
+        //only call the sensor collisions here
+        if(shapes[0].sensor || shapes[1].sensor) {
+            spr1.onCollision(spr2, arbiter.getNormal(0), shapes[1], shapes[0]);
+            spr2.onCollision(spr1, arbiter.getNormal(0), shapes[0], shapes[1]);
+        }
+
+        //maintain the colliding state
+        return true;
+    },
+    onCollisionPostSolve: function(arbiter) {//, space) {
+        var shapes = arbiter.getShapes(),
+            spr1 = shapes[0].sprite,
+            spr2 = shapes[1].sprite;
+
+        if(arbiter.isFirstContact()) {
+            spr1.onCollision(spr2, arbiter.totalImpulse(), shapes[1], shapes[0]);
+            spr2.onCollision(spr1, arbiter.totalImpulse(), shapes[0], shapes[1]);
+        }
+
+        //maintain the colliding state
+        return true;
+    },
+    onCollisionEnd: function(arbiter) {//, space) {
+        var shapes = arbiter.getShapes(),
+            spr1 = shapes[0].sprite,
+            spr2 = shapes[1].sprite;
+
+        spr1.onSeparate(spr2, shapes[1], shapes[0]);
+        spr2.onSeparate(spr1, shapes[0], shapes[1]);
+
+        //maintain the colliding state
+        return true;
+    },
+    act: function() {
+        if(this.space.locked) {
+            this.space.addPostStepCallback(this.onPostStep.bind(this));
+        } else {
+            this.onPostStep();
+        }
+    },
+    pause: function() {
+        this._paused = true;
+    },
+    resume: function() {
+        this._paused = false;
+    },
+    skip: function(num) {
+        this._skip = num;
+    },
+    skipNext: function() {
+        this.skip(1);
+    },
+    onPostStep: function() {
+        //remove items
+        while(this.actionQueue.length) {
+            var a = this.actionQueue.shift(),
+                act = a[0],
+                data = a[1];
+
+            switch(act) {
+                case 'add':
+                    data.body.setPos(data.spr.position);
+                    if(!data.body.isStatic()) {
+                        this.space.addBody(data.body);
+                    }
+
+                    this.space.addShape(data.shape);
+
+                    if(data.control) {
+                        data.control.body.setPos(data.spr.position);
+                        this.space.addConstraint(data.control.pivot);
+                        this.space.addConstraint(data.control.gear);
+                    }
+
+                    data.spr._phys = data;
+
+                    if(data.spr._showHit) {
+                        data.spr.showPhysics();
+                    }
+                    break;
+
+                case 'remove':
+                    if(data.body.space)
+                        this.space.removeBody(data.body);
+
+                    if(data.shape.space)
+                        this.space.removeShape(data.shape);
+
+                    if(data.customShapes) {
+                        for(var i = data.customShapes.length - 1; i > -1; --i) {
+                            this.space.removeShape(data.customShapes[i]);
+                        }
+                    }
+
+                    //remove references
+                    data.body = null;
+                    data.shape.sprite = null;
+                    data.shape = null;
+                    data.customShapes = null;
+                    break;
+
+                case 'reindex':
+                    this.space.reindexShape(data);
+                    break;
+
+                case 'reindexStatic':
+                    this.space.reindexStatic();
+                    break;
+
+                case 'addCustomShape':
+                    if(!data.spr._phys.customShapes)
+                        data.spr._phys.customShapes = [];
+
+                    data.spr._phys.customShapes.push(data.shape);
+                    this.space.addShape(data.shape);
+                    break;
+
+            }
+        }
+    }
+});
+
+gf.PhysicsSystem.COLLISION_TYPE = {
+    SPRITE: 0,
+    TILE: 1
+};
+/**
+ * Physics mixin. This will add physics capabilities to the class it mixes into.
+ *
+ * @class PhysicsTarget
+ * @namespace gf
+ * @constructor
+ * @example
+ *      function MyObject(clr) {
+ *          this.color = clr;
+ *      }
+ *
+ *      gf.inherits(MyObject, Object, {
+ *          something: function(s) {
+ *          }
+ *      });
+ *      gf.PhysicsTarget.call(MyObject.prototype); //adds properties
+ *
+ *      //then later
+ *      var o = new MyObject('red');
+ *      o.enablePhysics(game.physics);
+ */
+ gf.PhysicsTarget = function() {
+    /**
+     * The physics system that this object is a part of. This is advisory only
+     * please use enablePhysics() or disablePhysics() and do not set this value
+     * directly.
+     *
+     * @property _psystem
+     * @type PhysicsSystem
+     * @default null
+     * @private
+     * @readOnly
+     */
+    this._psystem = null;
+
+    /**
+     * The mass of this object, please use setMass to set this value
+     *
+     * @property mass
+     * @type Number
+     * @default 0
+     * @readOnly
+     */
+    this.mass = 0;
+
+    /**
+     * The moment of inertia of this object, only set this before enabling physics (has no effect after enabling)
+     *
+     * @property inertia
+     * @type Number
+     * @default 0
+     */
+    this.inertia = 0;
+
+    /**
+     * Enables physics for this sprite
+     *
+     * @method enablePhysics
+     * @param system {PhysicsSystem} The system for the sprite to be in
+     */
+    this.enablePhysics = function(sys) {
+        if(sys && this._psystem !== sys) {
+            if(this._psystem)
+                this._psystem.remove(this);
+
+            this._psystem = sys;
+        }
+
+        this._psystem.add(this);
+    };
+
+    /**
+     * Disbales physics for this sprite
+     *
+     * @method disablePhysics
+     */
+    this.disablePhysics = function() {
+        if(this._psystem) {
+            this._psystem.remove(this);
+        }
+    };
+
+    /**
+     * Reindexes the collisions for this sprite, useful when moving the sprite a great deal
+     * (like to a new world)
+     *
+     * @method disablePhysics
+     */
+    this.reindex = function() {
+        if(this._psystem) {
+            this._psystem.reindex(this);
+        }
+    };
+
+    /**
+     * Sets the mass of this sprite
+     *
+     * @method setMass
+     * @param mass {Number} The new mass of the object
+     */
+    this.setMass = function(mass) {
+        if(this._psystem) {
+            this._psystem.setMass(this, mass);
+        }
+    };
+
+    /**
+     * Sets the velocity of this sprite
+     *
+     * @method setVelocity
+     * @param velocity {Vector} The new velocity of the object
+     */
+    this.setVelocity = function(vel) {
+        if(this._psystem) {
+            this._psystem.setVelocity(this, gf.utils.ensureVector(vel));
+        }
+    };
+
+    /**
+     * Sets the rotation of this sprite
+     *
+     * @method setRotation
+     * @param rotation {Number} The new rotation of the object in radians
+     */
+    this.setRotation = function(rads) {
+        this.rotation = rads;
+
+        if(this._psystem) {
+            this._psystem.setRotation(this, rads);
+        }
+    };
+
+    /**
+     * Sets the position of this sprite
+     *
+     * @method setPosition
+     * @param x {Number}
+     * @param y {Number}
+     */
+    this.setPosition = function(x, y) {
+        this.position.x = x;
+        this.position.y = y;
+
+        if(this._psystem) {
+            this._psystem.setPosition(this, this.position);
+        }
+    };
+
+    /**
+     * On Collision Event
+     *      called when this sprite collides into another, or is being collided into by another.
+     *      By default if something collides with a collectable sprite we destroy the collectable
+     *      and if we collide with a solid tile we kill our velocity. This method will emit a
+     *      'collision' event that you can listen for
+     *
+     * @method onCollision
+     * @param obj {Sprite} Colliding sprite
+     * @param vec {Vector} Collision vector (for sensors this is normalized)
+     * @param colShape {cp.Shape} The colliding physics shape
+     * @param myShape {Sprite} Your physics shape that caused the collision
+     */
+    this.onCollision = function(obj, vec, colShape, myShape) {
+        if(obj.type === gf.Sprite.TYPE.COLLECTABLE)
+            obj.destroy();
+
+        this.emit('collision', obj, vec, colShape, myShape);
+    };
+
+    /**
+     * On Seperate Event
+     *      called when this sprite collides into another, or is being collided into by another.
+     *      By default if something collides with a collectable sprite we destroy the collectable
+     *      and if we collide with a solid tile we kill our velocity. This method will emit a
+     *      'collision' event that you can listen for
+     *
+     * @method onCollision
+     * @param obj {Sprite} Colliding sprite
+     * @param colShape {cp.Shape} The colliding physics shape
+     * @param myShape {Sprite} Your physics shape that caused the collision
+     */
+    this.onSeparate = function(obj, colShape, myShape) {
+        this.emit('separate', obj, colShape, myShape);
+    };
+};
+//you can only have 1 audio context on a page, so we store one for use in each manager
+gf.__AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
+gf.__audioctx = gf.support.webAudio ? new gf.__AudioCtx() : null;
+
+/**
+ * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
+ * The GF Audio API was based on
+ * <a target="_blank" href="https://github.com/goldfire/howler.js">Howler.js</a>
+ *
+ * @class AudioManager
+ * @extends Object
+ * @namespace gf
+ * @constructor
+ */
+gf.AudioManager = function() {
+    /**
+     * Whether the player is muted or not
+     *
+     * @property muted
+     * @type Boolean
+     * @default false
+     * @private
+     */
+    this._muted = false;
+
+    /**
+     * The master volume of the player
+     *
+     * @property _volume
+     * @type Number
+     * @default 1
+     * @private
+     */
+    this._volume = 1;
+
+    /**
+     * The master volume of all the audio playing
+     *
+     * @property volume
+     * @type Number
+     * @default 1
+     */
+    Object.defineProperty(this, 'volume', {
+        get: this.getVolume.bind(this),
+        set: this.setVolume.bind(this)
+    });
+
+    /**
+     * The Web Audio API context if we are using it
+     *
+     * @property ctx
+     * @type AudioContext
+     * @readOnly
+     */
+    this.ctx = gf.__audioctx;
+
+    /**
+     * If we have some way of playing audio
+     *
+     * @property canPlay
+     * @type Boolean
+     * @readOnly
+     */
+    this.canPlay = gf.support.webAudio || gf.support.htmlAudio;
+
+    /**
+     * The codecs that the browser supports
+     *
+     * @property codecs
+     * @type Object<Boolean>
+     * @readOnly
+     */
+    if(this.canPlay) {
+        var audioTest = new Audio();
+
+        this.codecs = {
+            mp3: !!audioTest.canPlayType('audio/mpeg;').replace(/^no$/,''),
+            opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/,''),
+            ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,''),
+            wav: !!audioTest.canPlayType('audio/wav; codecs="1"').replace(/^no$/,''),
+            m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),
+            webm: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')
+        };
+    }
+
+    //if we are using web audio, we need a master gain node
+    if(gf.support.webAudio) {
+        this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
+        this.masterGain.gain.value = 1;
+        this.masterGain.connect(this.ctx.destination);
+    }
+
+    //map of elements to play audio with
+    this.sounds = {};
+};
+
+gf.inherits(gf.AudioManager, Object, {
+    /**
+     * Returns the current master volume
+     *
+     * @method getVolume
+     */
+    getVolume: function() {
+        return this._volume;
+    },
+    /**
+     * Sets the current master volume
+     *
+     * @method setVolume
+     * @param value {Number}
+     */
+    setVolume: function(v) {
+        v = parseFloat(v, 10);
+
+        if(!isNaN(v) && v >= 0 && v <= 1) {
+            this._volume = v;
+
+            if(gf.support.webAudio)
+                this.masterGain.gain.value = v;
+
+            //go through each audio element and change their volume
+            for(var key in this.sounds) {
+                if(this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
+                    var player = this.sounds[key];
+                    //loop through the audio nodes
+                    for(var i = 0, il = player._nodes.length; i < il; ++i) {
+                        player._nodes[i].volume = player._volume * this._volume;
+                    }
+                }
+            }
+        }
+    },
+    /**
+     * Mutes all playing audio
+     *
+     * @method mute
+     */
+    mute: function() {
+        return this.setMuted(true);
+    },
+    /**
+     * Unmutes all playing audio
+     *
+     * @method unmute
+     */
+    unmute: function() {
+        return this.setMuted(false);
+    },
+    /**
+     * Sets whether or not this manager is muted
+     *
+     * @method setMuted
+     */
+    setMuted: function(m) {
+        this._muted = m = !!m;
+
+        if(gf.support.webAudio)
+            this.masterGain.gain.value = m ? 0 : this._volume;
+
+        //go through each audio element and mute/unmute them
+        for(var key in this.sounds) {
+            if(this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
+                var player = this.sounds[key];
+                //loop through the audio nodes
+                for(var i = 0, il = player._nodes.length; i < il; ++i) {
+                    player._nodes[i].muted = m;
+                }
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Creates a new audio player for a peice of audio
+     *
+     * @method create
+     * @param [name] {String} An name to uniquely identify this audio, if omitted one will be ranomly chosen
+     * @param settings {Object} All the settings for the audio player
+     * @param settings.urls {Array<String>} All the url possible for this audio (so we can choose the one this browser supports)
+     * @param [settings.volume] {Number} The volume of this audio clip
+     * @param [settings.autoplay] {Boolean} Automatically start playing after loaded
+     * @param [settings.loop] {Boolean} Replay the audio when it finishes
+     * @param [settings.sprite] {Object} A map of string names -> [start, duration] arrays. You can use it to put multiple sounds in one file
+     * @param [settings.pos3d] {Array<Number>} 3D coords of where the audio should sound as if it came from (only works with WebAudio)
+     * @param [settings.buffer] {Boolean} WebAudio will load the entire file before playing, making this true forces HTML5Audio which will buffer and play
+     * @param [settings.format] {String} Force an extension override
+     * @return {AudioPlayer} Will return the new audio player, or false if we couldn't determine a compatible url
+     */
+    create: function(name, settings) {
+        //if we can't play audio return false
+        if(!this.canPlay) {
+            return false;
+        }
+
+        //name is "optional"
+        if(typeof name !== 'string') {
+            settings = name;
+            name = null;
+        }
+
+        //make up an ID if none was passed
+        if(!name)
+            name = Math.round(Date.now() * Math.random()) + '';
+
+        var src;
+
+        //loop through each source url and pick the first that is compatible
+        for(var i = 0, il = settings.urls.length; i < il; ++i) {
+            var url = settings.urls[i].toLowerCase(),
+                ext;
+
+            //if they pass a format override, use that
+            if(settings.format) {
+                ext = settings.format;
+            }
+            //otherwise extract the format from the url
+            else {
+                ext = url.match(/.+\.([^?]+)(\?|$)/);
+                ext = (ext && ext.length >= 2) ? ext[1] : url.match(/data\:audio\/([^?]+);/)[1];
+            }
+
+            //if we can play this url, then set the source of the player
+            if(this.codecs[ext]) {
+                src = url;
+                break;
+            }
+        }
+
+        //check if we found a usable url, if not return false
+        if(!src) {
+            return false;
+        }
+
+        //check if we already created a player for this audio
+        if(gf.assetCache[src])
+            return gf.assetCache[src];
+
+        settings.src = src;
+        return this.sounds[name] = gf.assetCache[src] = new gf.AudioPlayer(this, settings);
+    }
+});
+/**
+ * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
+ * The GF Audio API was based on
+ * <a target="_blank" href="https://github.com/goldfire/howler.js">Howler.js</a>
+ *
+ * @class AudoPlayer
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
+ * @constructor
+ * @param manager {AudioManager} AudioManager instance for this audio player
+ * @param settings {Object} All the settings for this player instance
+ */
+gf.AudioPlayer = function(manager, settings) {
+    gf.EventEmitter.call(this);
+
+    /**
+     * The source of the audio, the actual URL to load up
+     *
+     * @property src
+     * @type String
+     */
+    this.src = '';
+
+    /**
+     * Play the audio immediately after loading
+     *
+     * @property autoplay
+     * @type Boolean
+     * @default false
+     */
+    this.autoplay = false;
+
+    /**
+     * Buffer forces use of HTML5Audio which will buffer and play
+     * instead of loading the entire file and then playing
+     *
+     * @property buffer
+     * @type Boolean
+     * @default false
+     */
+    this.buffer = false;
+
+    /**
+     * Override the format determined from the extension with this extension
+     *
+     * @property format
+     * @type String
+     * @default null
+     */
+    this.format = null;
+
+    /**
+     * Replay the audio immediately after finishing
+     *
+     * @property loop
+     * @type Boolean
+     * @default false
+     */
+    this.loop = false;
+
+    /**
+     * A 3D position where the audio should sound like it is coming from
+     *
+     * @property pos3d
+     * @type Array<Number>
+     * @default [0, 0, -0.5]
+     */
+    this.pos3d = [0, 0, -0.5];
+
+    /**
+     * A sound sprite that maps string keys to [start, duration] arrays. These can
+     * be used to put multiple sound bits in one file, and play them separately
+     *
+     * @property sprite
+     * @type Object
+     * @default {}
+     */
+    this.sprite = {};
+
+    /**
+     * The volume of the audio player
+     *
+     * @property volume
+     * @type Number
+     * @default 1
+     */
+    Object.defineProperty(this, 'volume', {
+        get: this.getVolume.bind(this),
+        set: this.setVolume.bind(this)
+    });
+
+    this._volume = 1;
+    this._duration = 0;
+    this._loaded = false;
+    this._manager = manager;
+    this._canPlay = manager.canPlay;
+    this._codecs = manager.codecs;
+    this._webAudio = gf.support.webAudio && !this.buffer;
+    this._nodes = [];
+    this._onendTimer = [];
+
+    //mixin user's settings
+    gf.utils.setValues(this, settings);
+
+    if(this._webAudio) {
+        this._setupAudioNode();
+    }
+
+    this.load();
+};
+
+gf.inherits(gf.AudioPlayer, Object, {
+    /**
+     * Load the audio file for this player, this is called from the ctor
+     * there is no reason to call it manually.
+     *
+     * @method load
+     * @return {AudioPlayer}
+     * @private
+     */
+    load: function() {
+        //if using web audio, load up the buffer
+        if(this._webAudio) {
+            this.loadBuffer(this.src);
+        }
+        //otherwise create some Audio nodes
+        else {
+            //create a new adio node
+            var node = new Audio();
+            this._nodes.push(node);
+
+            //setup the audio node
+            node.src = this.src;
+            node._pos = 0;
+            node.preload = 'auto';
+            node.volume = this._manager.muted ? 0 : this._volume * this._manager.volume;
+
+            //setup the event listener to start playing the sound when it has buffered
+            var self = this, evt = function() {
+                self._duration = node.duration;
+
+                //setup a default sprite
+                self.sprite._default = [0, node.duration * 1000];
+
+                //check if loaded
+                if(!self._loaded) {
+                    self._loaded = true;
+                    self.emit('load', {
+                        message: 'Audio file loaded.',
+                        data: self.src
+                    });
+                }
+
+                //if autoplay then start it
+                if(self.autoplay) {
+                    self.play();
+                }
+
+                //clear the event listener
+                node.removeEventListener('canplaythrough', evt, false);
+            };
+            node.addEventListener('canplaythrough', evt, false);
+            node.load();
+        }
+
+        return this;
+    },
+    /**
+     * Play a sound from the current time (0 by default).
+     *
+     * @method play
+     * @param [sprite] {String} Plays from the specified position in the sound sprite definition.
+     * @param [callback] {Function} Returns the unique playback id for this sound instance.
+     * @return {AudioPlayer}
+     */
+    play: function(sprite, cb) {
+        var self = this;
+
+        if(typeof sprite === 'function') {
+            cb = sprite;
+            sprite = null;
+        }
+
+        //if no sprite specified, use default
+        if(!sprite) {
+            sprite = '_default';
+        }
+
+        //if we haven't loaded yet, wait until we do
+        if(!this._loaded) {
+            this.on('load', function() {
+                self.play(sprite, cb);
+            });
+
+            return this;
+        }
+
+        //if the sprite doesn't exist, play nothing
+        if(!this.sprite[sprite]) {
+            if(typeof cb === 'function') cb();
+            return this;
+        }
+
+        //get an audio node to use to play
+        this._inactiveNode(function(node) {
+            var pos = node._pos > 0 ? node._pos : self.sprite[sprite][0] / 1000,
+            duration = (self.sprite[sprite][1] / 1000) - node._pos,
+            loop = (self.loop || self.sprite[sprite][2]),
+            soundId = (typeof cb === 'string') ? cb : (Math.round(Date.now() * Math.random()) + ''),
+            timerId;
+
+            node._sprite = sprite;
+
+            //after the audio finishes:
+            (function(o) {
+                timerId = setTimeout(function() {
+                    //if looping restsart it
+                    if(!self._webAudio && o.loop) {
+                        self.stop(o.id, o.timer).play(o.sprite, o.id);
+                    }
+
+                    // set web audio node to paused
+                    if(self._webAudio && !o.loop) {
+                        self._nodeById(o.id).paused = true;
+                    }
+
+                    //end the track if it is HTML audio and a sprite
+                    if(!self._webAudio && !o.loop) {
+                        self.stop(o.id, o.timer);
+                    }
+
+                    //fire off the end event
+                    self.emit('end', {
+                        message: 'Audio has finished playing',
+                        data: o.id
+                    });
+                }, duration * 1000);
+
+                //store the timer
+                self._onendTimer.push(timerId);
+
+                //remember which timer to kill
+                o.timer = timerId;
+            })({
+                id: soundId,
+                sprite: sprite,
+                loop: loop
+            });
+
+            //setup webAudio functions
+            if(self._webAudio) {
+                //set the play id to this node and load into context
+                node.id = soundId;
+                node.paused = false;
+                self.refreshBuffer([loop, pos, duration], soundId);
+                self._playStart = self._manager.ctx.currentTime;
+                node.gain.value = self._volume;
+
+                if(typeof node.bufferSource.start === 'undefined') {
+                    node.bufferSource.noteGrainOn(0, pos, duration);
+                } else {
+                    node.bufferSource.start(0, pos, duration);
+                }
+            } else {
+                if(node.readyState === 4) {
+                    node.id = soundId;
+                    node.currentTime = pos;
+                    node.muted = self._manager.muted;
+                    node.volume = self._volume * self._manager.volume;
+                    node.play();
+                } else {
+                    self._clearEndTimer(timerId);
+
+                    (function() {
+                        var sound = self,
+                            playSpr = sprite,
+                            fn = cb,
+                            newNode = node;
+
+                        var evt = function() {
+                            sound.play(playSpr, fn);
+
+                            //clear listener
+                            newNode.removeEventListener('canplaythrough', evt, false);
+                        };
+                        newNode.addEventListener('canplaythrough', evt, false);
+                    })();
+
+                    return self;
+                }
+            }
+
+            self.emit('play', {
+                message: 'Playing audio file',
+                data: soundId
+            });
+
+            if(typeof cb === 'function')
+                cb(soundId);
+        });
+
+        return this;
+    },
+    /**
+     * Pause playback and save the current position.
+     *
+     * @method pause
+     * @param [id] {String} The play instance ID.
+     * @param [timerId] {String} Clear the correct timeout ID.
+     * @return {AudioPlayer}
+     */
+    pause: function(id, timerId) {
+        var self = this;
+
+        //if we haven't loaded this sound yet, wait until we play it to pause it
+        if(!this._loaded) {
+            this.on('play', function() {
+                self.play(id);
+            });
+
+            return this;
+        }
+
+        //clear the onend timer
+        this._clearEndTimer(timerId || 0);
+
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if(activeNode) {
+            if(this._webAudio) {
+                //ensure the sound was created
+                if(!activeNode.bufferSource)
+                    return this;
+
+                activeNode.paused = true;
+                activeNode._pos += this._manager.ctx.currentTime - this._playStart;
+
+                if(typeof activeNode.bufferSource.stop === 'undefined') {
+                    activeNode.bufferSource.noteOff(0);
+                } else {
+                    activeNode.bufferSource.stop(0);
+                }
+            } else {
+                activeNode._pos = activeNode.currentTime;
+                activeNode.pause();
+            }
+        }
+
+        this.emit('pause', {
+            message: 'Audio file paused',
+            data: id
+        });
+
+        return this;
+    },
+    /**
+     * Stop playback and reset to start.
+     *
+     * @method stop
+     * @param [id] {String} The play instance ID.
+     * @param [timerId] {String} Clear the correct timeout ID.
+     * @return {AudioPlayer}
+     */
+    stop: function(id, timerId) {
+        var self = this;
+
+        //if we haven't loaded this sound yet, wait until we play it to stop it
+        if(!this._loaded) {
+            this.on('play', function() {
+                self.stop(id);
+            });
+
+            return this;
+        }
+
+        //clear onend timer
+        this._clearEndTimer(timerId || 0);
+
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if(activeNode) {
+            activeNode._pos = 0;
+
+            if(this._webAudio) {
+                if(!activeNode.bufferSource)
+                    return this;
+
+                activeNode.paused = true;
+
+                if(typeof activeNode.bufferSource.stop === 'undefined') {
+                    activeNode.bufferSource.noteOff(0);
+                } else {
+                    activeNode.bufferSource.stop(0);
+                }
+            } else {
+                activeNode.pause();
+                activeNode.currentTime = 0;
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Mute this sound.
+     *
+     * @method mute
+     * @param [id] {String} The play instance ID.
+     * @return {AudioPlayer}
+     */
+    mute: function(id) {
+        return this.setMuted(true, id);
+    },
+    /**
+     * Unmute this sound.
+     *
+     * @method unmute
+     * @param [id] {String} The play instance ID.
+     * @return {AudioPlayer}
+     */
+    unmute: function(id) {
+        return this.setMuted(false, id);
+    },
+    /**
+     * Set the muted state of this sound.
+     *
+     * @method setMuted
+     * @param muted {Boolean}
+     * @param [id] {String} The play instance ID.
+     * @return {AudioPlayer}
+     */
+    setMuted: function(muted, id) {
+        var self  = this;
+
+        //if we haven't loaded this sound yet, wait until we play it to mute it
+        if(!this._loaded) {
+            this.on('play', function() {
+                self.setMuted(muted, id);
+            });
+
+            return this;
+        }
+
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if(activeNode) {
+            if(this._webAudio) {
+                activeNode.gain.value = muted ? 0 : this._volume;
+            } else {
+                activeNode.volume =  muted ? 0 : this._volume;
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Set the position of playback.
+     *
+     * @method seek
+     * @param pos {Number} The position to move current playback to.
+     * @param [id] {String} The play instance ID.
+     * @return {AudioPlayer}
+     */
+    seek: function(pos, id) {
+        var self = this;
+
+        //if we haven't loaded this sound yet, wait until it is to seek it
+        if(!this._loaded) {
+            this.on('load', function() {
+                self.seek(pos);
+            });
+
+            return this;
+        }
+
+        //if position is < 0, or invalid, then set to 0
+        if(!pos || pos < 0)
+            pos = 0;
+
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if(activeNode) {
+            if(this._webAudio) {
+                activeNode._pos = pos;
+                this.pause(activeNode.id).play(activeNode._sprite, id);
+            } else {
+                activeNode.currentTime = pos;
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Get the position of playback.
+     *
+     * @method getPosition
+     * @param [id] {String} The play instance ID.
+     * @return {Number}
+     */
+    getPosition: function(id) {
+        var self = this;
+
+        //if we haven't loaded this sound yet, wait until it is to seek it
+        if(!this._loaded) {
+            this.on('load', function() {
+                self.getPosition(id);
+            });
+
+            return this;
+        }
+
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if(activeNode) {
+            if(this._webAudio) {
+                return activeNode._pos + (this._manager.ctx.currentTime - this._playStart);
+            } else {
+                return activeNode.currentTime;
+            }
+        }
+
+        return 0;
+    },
+    /**
+     * Fade a currently playing sound between two volumes.
+     *
+     * @method fade
+     * @param from {Number} The volume to fade from (0.0 to 1.0).
+     * @param to {Number} The volume to fade to (0.0 to 1.0).
+     * @param len {Number} Time in milliseconds to fade.
+     * @param [id] {String} The play instance ID.
+     * @param [callback] {Function} Fired when the fade is complete.
+     * @return {AudioPlayer}
+     */
+    fade: function(from, to, len, id, cb) {
+        var self = this,
+            diff = Math.abs(from - to),
+            dir = from > to ? 'dowm' : 'up',
+            steps = diff / 0.01,
+            stepTime = len / steps;
+
+        if(typeof id === 'function') {
+            cb = id;
+            id = null;
+        }
+
+        //if we haven't loaded this sound yet, wait until it is to seek it
+        if(!this._loaded) {
+            this.on('load', function() {
+                self.fade(from, to, len, id, cb);
+            });
+
+            return this;
+        }
+
+        this.setVolume(from, id);
+
+        for(var i = 1; i <= steps; ++i) {
+            var change = this._volume + ((dir === 'up' ? 0.01 : -0.01) * i),
+                vol = Math.round(1000 * change) / 1000,
+                wait = stepTime * i;
+
+            this._doFadeStep(vol, wait, to, id, cb);
+        }
+    },
+    /**
+     * Returns the current volume of the player
+     *
+     * @method getVolume
+     * @return {Number} The current volume
+     */
+    getVolume: function() {
+        return this._volume;
+    },
+    /**
+     * Sets the current volume of the player
+     *
+     * @method setVolume
+     * @param vol {Number} The current volume
+     * @param [id] {String} The play instance ID.
+     * @return {AudioPlayer}
+     */
+    setVolume: function(vol, id) {
+        var self = this;
+
+        // make sure volume is a number
+        vol = parseFloat(vol);
+
+        //if we haven't loaded this sound yet, wait until we play it to change the volume
+        if(!this._loaded) {
+            this.on('play', function() {
+                self.setVolume(vol, id);
+            });
+
+            return this;
+        }
+
+        //set the volume
+        if(vol >= 0 && vol <= 1) {
+            this._volume = vol;
+
+            var activeNode = id ? this._nodeById(id) : this._activeNode();
+            if(activeNode) {
+                if(this._webAudio) {
+                    activeNode.gain.volume = vol;
+                } else {
+                    activeNode.volume = vol * this._manager.volume;
+                }
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Set the 3D position of the audio source.
+     * The most common usage is to set the 'x' position
+     * to affect the left/right ear panning. Setting any value higher than
+     * 1.0 will begin to decrease the volume of the sound as it moves further away.
+     * NOTE: This only works with Web Audio API, HTML5 Audio playback
+     * will not be affected.
+     *
+     * @method setPosition
+     * @param x {Number} The x-position of the playback from -1000.0 to 1000.0
+     * @param y {Number} The y-position of the playback from -1000.0 to 1000.0
+     * @param z {Number} The z-position of the playback from -1000.0 to 1000.0
+     * @param [id] {String} The play instance ID.
+     * @return {AudioPlayer}
+     */
+    setPosition: function(x, y, z, id) {
+        var self = this;
+
+        //set a default for the optional 'y' and 'z'
+        x = !x ? 0 : x;
+        y = !y ? 0 : y;
+        z = (!z && z !== 0) ? -0.5 : z;
+
+        //if we haven't loaded this sound yet, wait until we play it to change the position
+        if(!this._loaded) {
+            this.on('play', function() {
+                self.setPosition(x, y, z, id);
+            });
+
+            return this;
+        }
+
+        if(this._webAudio) {
+            var activeNode = id ? this._nodeById(id) : this._activeNode();
+            if(activeNode) {
+                this.pos3d[0] = x;
+                this.pos3d[1] = y;
+                this.pos3d[2] = z;
+                activeNode.panner.setPosition(x, y, z);
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Performs a step in the fade transition
+     *
+     * @method _doFadeStep
+     * @private
+     */
+    _doFadeStep: function(vol, wait, end, id, cb) {
+        var self = this;
+
+        setTimeout(function() {
+            self.setVolume(vol, id);
+
+            if(vol === end) {
+                if(typeof cb === 'function')
+                    cb();
+            }
+        }, wait);
+    },
+    /**
+     * Get an audio node by ID.
+     *
+     * @method _nodeById
+     * @return {AudioPlayer} Audio node.
+     * @private
+     */
+    _nodeById: function(id) {
+        var node = this._nodes[0]; //default return value
+
+        //find the node with this ID
+        for(var i = 0, il = this._nodes.length; i < il; ++i) {
+            if(this._nodes[i].id === id) {
+                node = this._nodes[i];
+                break;
+            }
+        }
+
+        return node;
+    },
+    /**
+     * Get the first active audio node.
+     *
+     * @method _activeNode
+     * @return {AudioPlayer} Audio node.
+     * @private
+     */
+    _activeNode: function() {
+        var node;
+
+        //find the first playing node
+        for(var i = 0, il = this._nodes.length; i < il; ++i) {
+            if(!this._nodes[i].paused) {
+                node = this._nodes[i];
+                break;
+            }
+        }
+
+        //remove excess inactive nodes
+        this._drainPool();
+
+        return node;
+    },
+    /**
+     * Get the first inactive audio node.
+     * If there is none, create a new one and add it to the pool.
+     *
+     * @method _inactiveNode
+     * @param cb {Function} callback Function to call when the audio node is ready.
+     * @private
+     */
+    _inactiveNode: function(cb) {
+        var node;
+
+        //find first inactive node to recycle
+        for(var i = 0, il = this._nodes.length; i < il; ++i) {
+            if(this._nodes[i].paused && this._nodes[i].readyState === 4) {
+                cb(node = this._nodes[i]);
+                break;
+            }
+        }
+
+        //remove excess inactive nodes
+        this._drainPool();
+
+        if(node) return;
+
+        //create new node if there are no inactives
+        if(this._webAudio) {
+            node = this._setupAudioNode();
+            cb(node);
+        } else {
+            this.load();
+            node = this._nodes[this.nodes.length - 1];
+            node.addEventListener('loadedmetadata', function() {
+                cb(node);
+            });
+        }
+    },
+    /**
+     * If there are more than 5 inactive audio nodes in the pool, clear out the rest.
+     *
+     * @method _drainPool
+     * @private
+     */
+    _drainPool: function() {
+        var inactive = 0,
+            i = 0, il = 0;
+
+        //count inactive nodes
+        for(i = 0, il = this._nodes.length; i < il; ++i) {
+            if(this._nodes[i].paused) {
+                inactive++;
+            }
+        }
+
+        //remove excess inactive nodes
+        for(i = this._nodes.length; i >= 0; --i) {
+            if(inactive <= 5)
+                break;
+
+            if(this._nodes[i].paused) {
+                inactive--;
+                this._nodes.splice(i, 1);
+            }
+        }
+    },
+    /**
+     * Clear 'onend' timeout before it ends.
+     *
+     * @method _clearEndTimer
+     * @param timerId {Number} timerId The ID of the sound to be cancelled.
+     * @private
+     */
+    _clearEndTimer: function(timerId) {
+        var timer = this._onendTimer.indexOf(timerId);
+
+        //make sure the timer is cleared
+        timer = timer >= 0 ? timer : 0;
+
+        if(this._onendTimer[timer]) {
+            clearTimeout(this._onendTimer[timer]);
+            this._onendTimer.splice(timer, 1);
+        }
+    },
+    /**
+     * Setup the gain node and panner for a Web Audio instance.
+     *
+     * @method _setupAudioNode
+     * @return {Object} The new audio node.
+     * @private
+     */
+    _setupAudioNode: function() {
+        var node = this._nodes,
+            i = this._nodes.length;
+
+        //create gain node
+        node.push((typeof this._manager.ctx.createGain === 'undefined') ? this._manager.ctx.createGainNode : this._manager.ctx.createGain());
+        node[i].gain.value = this._volume;
+        node[i].paused = true;
+        node[i]._pos = 0;
+        node[i].readyState = 4;
+        node[i].connect(this._manager.masterGain);
+
+        //create the panner
+        node[i].panner = this._manager.ctx.createPanner();
+        node[i].panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
+        node[i].panner.connect(node[i]);
+
+        return node[i];
+    }
+});
+
+//define some prototype functions that are only available when using the WebAudio API
+if(gf.support.webAudio) {
+    /**
+     * Buffer a sound from URL (or from cache) and decode to audio source (Web Audio API).
+     *
+     * @method loadBuffer
+     * @param url {String} The path to the sound file.
+     * @private
+     */
+    gf.AudioPlayer.prototype.loadBuffer = function(url) {
+        //load from cache
+        if(url in gf.assetCache) {
+            this._duration = gf.assetCache[url].duration;
+            this.loadSound();
+        } else {
+            //load the buffer from the URL
+            var self = this;
+
+            gf.utils.ajax({
+                method: 'GET',
+                url: url,
+                dataType: 'arraybuffer',
+                load: function(data) {
+                    //decode the buffer into an audio source
+                    self._manager.ctx.decodeAudioData(data, function(buffer) {
+                        if(buffer) {
+                            gf.assetCache[url] = buffer;
+                            self.loadSound(buffer);
+                        }
+                    });
+                },
+                error: function() {
+                    //if there was an error, switch to HTML Audio
+                    if(self._webAudio) {
+                        self._buffer = true;
+                        self._webAudio = false;
+                        self._nodes = [];
+                        self.load();
+                    }
+                }
+            });
+        }
+    };
+
+    /**
+     * Finishes loading the Web Audio API sound and fires the loaded event
+     *
+     * @method loadSound
+     * @param buffer {Object} The decoded buffer sound source.
+     * @private
+     */
+    gf.AudioPlayer.prototype.loadSound = function(buffer) {
+        this._duration = buffer ? buffer.duration : this._duration;
+
+        //setup a default sprite
+        this.sprite._default = [0, this._duration * 1000];
+
+        //fire the load event
+        if(!this._loaded) {
+            this._loaded = true;
+            this.emit('load', {
+                message: 'Audio file loaded.',
+                data: this.src
+            });
+        }
+
+        //autoplay is appropriate
+        if(this.autoplay) {
+            this.play();
+        }
+    };
+
+    /**
+     * Load the sound back into the buffer source.
+     *
+     * @method refreshBuffer
+     * @param loop {Array} Loop boolean, pos, and duration.
+     * @param [id] {String} The play instance ID.
+     * @private
+     */
+    gf.AudioPlayer.prototype.refreshBuffer = function(loop, id) {
+        var node = this._nodeById(id);
+
+        //setup the buffer source for playback
+        node.bufferSource = this._manager.ctx.createBufferSource();
+        node.bufferSource.buffer = gf.assetCache[this.src];
+        node.bufferSource.connect(node.panner);
+        node.bufferSource.loop = loop[0];
+
+        if(loop[0]) {
+            node.bufferSource.loopStart = loop[1];
+            node.bufferSource.loopEnd = loop[1] + loop[2];
+        }
+    };
+}
+/**
+ * The base display object, that anything being put on the screen inherits from
+ *
+ * @class DisplayObjectContainer
+ * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a>
+ * @uses gf.EventEmitter
+ * @uses gf.PhysicsTarget
+ * @namespace gf
+ * @constructor
+ */
+gf.DisplayObjectContainer = function(settings) {
+    PIXI.DisplayObjectContainer.call(this);
+    gf.PhysicsTarget.call(this);
+    gf.EventEmitter.call(this);
+
+    //mixin user's settings
+    gf.utils.setValues(this, settings);
+
+    //Add these properties in so that all objects can see them in the docs
+    //these properties are inherited from PIXI.DisplayObjectContainer
+    //most of these blocks are copied straight from PIXI source
+
+    /**
+     * [read-only] The of children of this object.
+     * @property children {Array}
+     * @readOnly
+     */
+
+    /**
+     * The coordinate of the object relative to the local coordinates of the parent.
+     *
+     * @property position
+     * @type Point
+     */
+
+    /**
+     * The scale factor of the object.
+     *
+     * @property scale
+     * @type Point
+     */
+
+    /**
+     * The rotation of the object in radians.
+     *
+     * @property rotation
+     * @type Number
+     */
+
+    /**
+     * The opacity of the object.
+     *
+     * @property alpha
+     * @type Number
+     */
+
+    /**
+     * The visibility of the object.
+     *
+     * @property visible
+     * @type Boolean
+     */
+
+    /**
+     * [read-only] The display object that contains this display object.
+     *
+     * @property parent
+     * @type DisplayObject
+     * @readOnly
+     */
+
+    /**
+     * [read-only] The stage the display object is connected to, or undefined if it is not connected to the stage.
+     *
+     * @property stage
+     * @type Stage
+     * @readOnly
+     */
+
+    /**
+     * This is the defined area that will pick up mouse / touch events. It is null by default.
+     * Setting it is a neat way of optimising the hitTest function that the interactionManager
+     * will use (as it will not need to hit test all the children)
+     *
+     * @property hitArea
+     * @type Rectangle|Polygon|Circle|Ellipse
+     */
+
+    /**
+     * Wether or not the object will handle mouse events
+     *
+     * @property interactive
+     * @type Boolean
+     * @default false
+     */
+
+    /**
+     * Inherited Methods
+     */
+
+    /**
+     * Adds a child to the object.
+     *
+     * @method addChild
+     * @param child {DisplayObject}
+     */
+
+    /**
+     * Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown
+     *
+     * @method addChildAt
+     * @param child {DisplayObject}
+     * @param index {Number}
+     */
+
+    /**
+     * Removes a child from the object.
+     *
+     * @method removeChild
+     * @param child {DisplayObject}
+     */
+};
+
+gf.inherits(gf.DisplayObjectContainer, PIXI.DisplayObjectContainer, {
+    /**
+     * Base resize function, all this does is ensure that all children resize functions get called as well
+     *
+     * @method resize
+     */
+    resize: function() {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.resize)
+                o.resize.apply(o, arguments);
+        }
+    },
+
+    /**
+     * Removes this object from the stage and the physics system
+     *
+     * @method destroy
+     */
+    destroy: function() {
+        this.disablePhysics();
+
+        if(this.parent)
+            this.parent.removeChild(this);
+    }
+});
+
+//Add event echos
+['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
+    gf.DisplayObjectContainer.prototype[evtname] = function(e) {
+        this.emit(evtname, e);
+    };
+});
+
+/*
+ * MOUSE Callbacks
+ */
+
+/**
+ * A callback that is used when the users clicks on the displayObject with their mouse
+ *
+ * @event click
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user clicks the mouse down over the displayObject
+ *
+ * @event mousedown
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the mouse that was over the displayObject
+ * for this callback to be fired the mouse must have been pressed down over the displayObject
+ *
+ * @event mouseup
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the mouse that was over the displayObject but is no longer over the displayObject
+ * for this callback to be fired, The touch must have started over the displayObject
+ *
+ * @event mouseupoutside
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the users mouse rolls over the displayObject
+ *
+ * @event mouseover
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the users mouse leaves the displayObject
+ *
+ * @event mouseout
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user moves the mouse while over the displayObject
+ *
+ * @event mousemove
+ * @param interactionData {InteractionData}
+ */
+
+/*
+ * TOUCH Callbacks
+ */
+
+/**
+ * A callback that is used when the users taps on the displayObject with their finger
+ * basically a touch version of click
+ *
+ * @event tap
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user touch's over the displayObject
+ *
+ * @event touchstart
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases a touch over the displayObject
+ *
+ * @event touchend
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the touch that was over the displayObject
+ * for this callback to be fired, The touch must have started over the displayObject
+ *
+ * @event touchendoutside
+ * @param interactionData {InteractionData}
+ */
+/**
+ * The base Sprite class. This class is the base for all images on the screen
+ *
+ * @class Sprite
+ * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html">PIXI.Sprite</a>
+ * @uses gf.EventEmitter
+ * @uses gf.PhysicsTarget
+ * @namespace gf
+ * @constructor
+ * @param texture {Texture} The texture to set the sprite to
+ * @example
+ *      var spr = new gf.Sprite(texture);
+ */
+gf.Sprite = function(tx) {
+    PIXI.Sprite.call(this, tx);
+    gf.PhysicsTarget.call(this);
+    gf.EventEmitter.call(this);
+
+    /**
+     * The type of the sprite
+     *
+     * @property type
+     * @type String
+     * @default 'neutral'
+     */
+    this.type = gf.Sprite.TYPE.NEUTRAL;
+};
+
+gf.inherits(gf.Sprite, PIXI.Sprite, {
+    /**
+     * Removes this sprite from the stage and the physics system
+     *
+     * @method destroy
+     */
+    destroy: function() {
+        this.disablePhysics();
+
+        if(this.parent)
+            this.parent.removeChild(this);
+    }
+});
+
+/**
+ * Sprite types
+ *
+ * @property TYPE
+ * @type Object
+ * @static
+ */
+gf.Sprite.TYPE = {
+    PLAYER: 'player',
+    ENEMY: 'enemy',
+    FRIENDLY: 'friendly',
+    NEUTRAL: 'neutral',
+    COLLECTABLE: 'collectable',
+    TILE: 'tile'
+};
+
+//Add event echos
+['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
+    gf.Sprite.prototype[evtname] = function(e) {
+        this.emit(evtname, e);
+    };
+});
+
+/*
+ * MOUSE Callbacks
+ */
+
+/**
+ * A callback that is used when the users clicks on the sprite with their mouse
+ *
+ * @event click
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user clicks the mouse down over the sprite
+ *
+ * @event mousedown
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the mouse that was over the sprite
+ * for this callback to be fired the mouse must have been pressed down over the sprite
+ *
+ * @event mouseup
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the mouse that was over the sprite but is no longer over the sprite
+ * for this callback to be fired, The touch must have started over the sprite
+ *
+ * @event mouseupoutside
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the users mouse rolls over the sprite
+ *
+ * @event mouseover
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the users mouse leaves the sprite
+ *
+ * @event mouseout
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user moves the mouse while over the sprite
+ *
+ * @event mousemove
+ * @param interactionData {InteractionData}
+ */
+
+/*
+ * TOUCH Callbacks
+ */
+
+/**
+ * A callback that is used when the users taps on the sprite with their finger
+ * basically a touch version of click
+ *
+ * @event tap
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user touch's over the sprite
+ *
+ * @event touchstart
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases a touch over the sprite
+ *
+ * @event touchend
+ * @param interactionData {InteractionData}
+ */
+
+/**
+ * A callback that is used when the user releases the touch that was over the sprite
+ * for this callback to be fired, The touch must have started over the sprite
+ *
+ * @event touchendoutside
+ * @param interactionData {InteractionData}
+ */
+/**
+ * The base AnimatedSprite class
+ *
+ * @class AnimatedSprite
+ * @extends gf.Sprite
+ * @namespace gf
+ * @constructor
+ * @param animations {Object} An object of the form `{ animationName: [frame1, frame2] }` or you can also specify overrides on a per-animation basis:
+ *      `{ animationName: { frames: [frame1, frame2], speed: 2 } }`. Each frame is a Texture object
+ * @param [speed] {Number} The speed of the animations (can be overriden on a specific animations)
+ * @param [start] {String} The animation to start with, defaults to the first found key otherwise
+ */
+gf.AnimatedSprite = function(anims, speed, start) {
+    if(anims instanceof Array) {
+        anims = { _default: { frames: [anims] } };
+        start = '_default';
+    } else {
+        //massage animations into full format
+        for(var a in anims) {
+            if(start === undefined)
+                start = a;
+
+            var anim = anims[a];
+
+            if(anim instanceof Array)
+                anims[a] = { frames: anim };
+            else if(anim instanceof gf.Texture)
+                anims[a] = { frames: [anim] };
+        }
+    }
+
+    gf.Sprite.call(this, anims[start].frames[0]);
+
+    /**
+     * The animation speed for this sprite
+     *
+     * @property speed
+     * @type Number
+     * @default 1
+     */
+    this.speed = speed || 1;
+
+    /**
+     * Whether or not to loop the animations. This can be overriden
+     * on a per-animation level
+     *
+     * @property loop
+     * @type Boolean
+     * @default false
+     */
+    this.loop = false;
+
+    /**
+     * The registerd animations for this AnimatedSprite
+     *
+     * @property animations
+     * @type Object
+     * @readOnly
+     */
+    this.animations = anims;
+
+    /**
+     * The currently playing animation
+     *
+     * @property currentAnimation
+     * @type String
+     * @readOnly
+     */
+    this.currentAnimation = start;
+
+    /**
+     * The current frame being shown
+     *
+     * @property currentFrame
+     * @type Number
+     * @readOnly
+     */
+    this.currentFrame = 0;
+
+    /**
+     * Whether or not the animation is currently playing
+     *
+     * @property playing
+     * @type Boolean
+     * @readOnly
+     */
+    this.playing = false;
+};
+
+gf.inherits(gf.AnimatedSprite, gf.Sprite, {
+    /**
+     * Adds a new animation to this animated sprite
+     *
+     * @method addAnimation
+     * @param name {String} The string name of the animation
+     * @param frames {Array<Texture>} The array of texture frames
+     * @param [speed] {Number} The animation speed
+     * @param [loop] {Boolean} Loop the animation or not
+     */
+    addAnimation: function(name, frames, speed, loop) {
+        if(typeof name === 'object') {
+            this.animations[name.name] = name;
+        } else {
+            this.animations[name] = {
+                name: name,
+                frames: frames,
+                speed: speed,
+                loop: loop
+            };
+        }
+    },
+    /**
+     * Goes to a frame and starts playing the animation from there
+     *
+     * @method gotoAndPlay
+     * @param [name] {String} The string name of the animation to play
+     * @param frame {Number} The index of the frame to start on
+     */
+    gotoAndPlay: function(anim, frame) {
+        if(typeof anim === 'number') {
+            this.currentFrame = anim;
+        } else {
+            this.currentFrame = frame || 0;
+            this.lastRound = gf.math.round(frame || 0);
+            this.currentAnimation = anim;
+        }
+        this.playing = true;
+
+        this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
+        this.emit('frame', this.currentAnimation, this.lastRound);
+    },
+    /**
+     * Goes to a frame and stops playing the animation
+     *
+     * @method gotoAndStop
+     * @param [name] {String} The string name of the animation to go to
+     * @param frame {Number} The index of the frame to stop on
+     */
+    gotoAndStop: function(anim, frame) {
+        if(typeof anim === 'number') {
+            this.currentFrame = anim;
+        } else {
+            this.currentFrame = frame || 0;
+            this.lastRound = gf.math.round(frame || 0);
+            this.currentAnimation = anim;
+        }
+        this.playing = false;
+
+        this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
+        this.emit('frame', this.currentAnimation, this.lastRound);
+    },
+    /**
+     * Starts playing the currently active animation
+     *
+     * @method play
+     */
+    play: function() {
+        this.playing = true;
+    },
+    /**
+     * Stops playing the currently active animation
+     *
+     * @method stop
+     */
+    stop: function() {
+        this.playing = false;
+    },
+    /**
+     * Called by PIXI to update our textures and do the actual animation
+     *
+     * @method updateTransform
+     * @private
+     */
+    updateTransform: function() {
+        gf.Sprite.prototype.updateTransform.call(this);
+
+        if(!this.playing) return;
+
+        var anim = this.animations[this.currentAnimation],
+            round,
+            loop = anim.loop !== undefined ? anim.loop : this.loop;
+
+        this.currentFrame += anim.speed || this.speed;
+        round = gf.math.round(this.currentFrame);
+
+        if(round < anim.frames.length) {
+            if(round !== this.lastRound) {
+                this.lastRound = round;
+                this.setTexture(anim.frames[round]);
+                this.emit('frame', this.currentAnimation, round);
+            }
+        }
+        else {
+            if(loop) {
+                this.gotoAndPlay(0);
+            } else {
+                this.stop();
+                this.emit('complete', this.currentAnimation);
+            }
+        }
+    }
+});
+/**
+ * A basic Camera object that provides some effects. It also will contain the HUD and GUI
+ * to ensure they are using "screen-coords".
+ *
+ * @class Camera
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
+ * @constructor
+ * @param game {gf.Game} The game this camera belongs to
+ * @param settings {Object} Any settings you want to override the default properties with
+ */
+gf.Camera = function(game, settings) {
+    /**
+     * The bounds of that the camera can move to
+     *
+     * @property bounds
+     * @type gf.Rectangle
+     * @readOnly
+     * @private
+     */
+    this._bounds = new gf.Rectangle(0, 0, 0, 0);
+
+    /**
+     * When following a sprite this is the space within the camera that it can move around
+     * before the camera moves to track it.
+     *
+     * @property _deadzone
+     * @type gf.Rectangle
+     * @readOnly
+     * @private
+     */
+    this._deadzone = null;
+
+    /**
+     * The target that the camera will follow
+     *
+     * @property _target
+     * @type gf.Sprite
+     * @readOnly
+     * @private
+     */
+    this._target = null;
+
+    /**
+     * The size of the camera
+     *
+     * @property size
+     * @type gf.Vector
+     * @readOnly
+     */
+    this.size = new gf.Vector(0, 0);
+
+    /**
+     * Half of the size of the camera
+     *
+     * @property hSize
+     * @type gf.Vector
+     * @readOnly
+     */
+    this.hSize = new gf.Vector(0, 0);
+
+    /**
+     * The game this camera views
+     *
+     * @property game
+     * @type gf.Game
+     * @readOnly
+     */
+    this.game = game;
+
+    /**
+     * The fxpools for doing camera effects
+     *
+     * @property fxpools
+     * @type Object
+     * @private
+     * @readOnly
+     */
+    this.fxpools = {
+        flash: new gf.ObjectPool(gf.Camera.fx.Flash, this),
+        fade: new gf.ObjectPool(gf.Camera.fx.Fade, this),
+        shake: new gf.ObjectPool(gf.Camera.fx.Shake, this),
+        scanlines: new gf.ObjectPool(gf.Camera.fx.Scanlines, this),
+        close: new gf.ObjectPool(gf.Camera.fx.Close, this)
+    };
+
+    gf.DisplayObjectContainer.call(this, settings);
+
+    /*
+     * Dynamic addition of fx shortcuts
+    var self = this;
+    Object.keys(this.fxpools).forEach(function(key) {
+        self[key] = function() {
+            var e = self.fxpools[key].create(),
+                args = Array.prototype.slice.call(arguments),
+                cb = args.pop();
+
+            if(typeof cb !== 'function')
+                args.push(cb);
+
+            args.push(function() {
+                self.fxpools[key].free(e);
+                if(typeof cb === 'function')
+                    cb();
+            });
+
+            return e.start.apply(e, args);
+        };
+    });
+    */
+};
+
+gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
+    /**
+     * Makes the camera flash with a certain color
+     *
+     * @method flash
+     * @param [color=0xffffff] {Number} The color to flash the screen with
+     * @param [duration=1000] {Number} The time in milliseconds to fade away
+     * @param [callback] {Function} The callback to call when the flash has completed
+     * @return {gf.Camera.fx.Flash} Returns the effect object
+     */
+    flash: function(color, duration, cb) {
+        var flash = this.fxpools.flash.create(),
+            self = this;
+
+        return flash.start(color, duration, function() {
+            self.fxpools.flash.free(flash);
+            if(typeof cb === 'function')
+                cb();
+        });
+    },
+    /**
+     * Makes the camera fade into a color
+     *
+     * @method fade
+     * @param [color=0xffffff] {Number} The color to fade into
+     * @param [duration=1000] {Number} The time in milliseconds to take to fade in
+     * @param [callback] {Function} The callback to call when the fade has completed
+     * @return {gf.Camera.fx.Fade} Returns the effect object
+     */
+    fade: function(color, duration, cb) {
+        var fade = this.fxpools.fade.create(),
+            self = this;
+
+        return fade.start(color, duration, function() {
+            self.fxpools.fade.free(fade);
+            if(typeof cb === 'function')
+                cb();
+        });
+    },
+    /**
+     * Shakes the camera around a bit, to show it who is boss.
+     *
+     * @method shake
+     * @param [intensity=0.01] {Number} How hard to shake around
+     * @param [duration=1000] {Number} The time in milliseconds to shake for
+     * @param [direction=gf.Camera.DIRECTION.BOTH] {gf.Camera.DIRECTION} The axes to shake the camera in default is gf.Camera.SHAKE.BOTH
+     * @param [callback] {Function} The callback to call when the shaking has stopped
+     * @return {gf.Camera.fx.Shake} Returns the effect object
+     */
+    shake: function(intensity, duration, direction, cb) {
+        var shake = this.fxpools.shake.create(),
+            self = this;
+
+        return shake.start(intensity, duration, direction, function() {
+            self.fxpools.shake.free(shake);
+            if(typeof cb === 'function')
+                cb();
+        });
+    },
+    /**
+     * Adds a mask that will hide the world via a close-in transition.
+     *
+     * @method scanlines
+     * @param [shape='circle'] {String} The shape of the transition, either 'circle' or 'rectangle'
+     * @param [duration=1000] {Number} The time in milliseconds it takes to close the transition
+     * @return {gf.Camera.fx.Close} Returns the effect object
+     */
+    close: function(shape, duration, cb) {
+        var close = this.fxpools.close.create(),
+            self = this;
+
+        return close.start(shape, duration, function() {
+            self.fxpools.close.free(close);
+            if(typeof cb === 'function')
+                cb();
+        });
+    },
+    /**
+     * Shows scanlines accross the screen, retro arcade style
+     *
+     * @method scanlines
+     * @param [color=0x000000] {Number} The hex color the lines should be
+     * @param [direction=gf.Camera.DIRECTION.HORIZONTAL] {gf.Camera.DIRECTION} The axes to shake the camera in default is gf.Camera.SHAKE.BOTH
+     * @param [spacing=4] {Number} The spacing between each line
+     * @param [thickness=1] {Number} The thickness of each line
+     * @param [alpha=0.3] {Number} The alpha of each line
+     * @return {gf.Camera.fx.Scanlines} Returns the effect object
+     */
+    scanlines: function(color, direction, spacing, thickness, alpha) {
+        var scanlines = this.fxpools.scanlines.create();
+
+        return scanlines.start(color, direction, spacing, thickness, alpha);
+    },
+    /**
+     * Follows an sprite with the camera, ensuring they are always center view. You can
+     * pass a follow style to change the area an sprite can move around in before we start
+     * to move with them.
+     *
+     * @method follow
+     * @param sprite {gf.Sprite} The sprite to follow
+     * @param [style=gf.Camera.FOLLOW.LOCKON] {gf.Camera.FOLLOW} The style of following
+     * @return {gf.Camera} Returns iteself for chainability
+     */
+    follow: function(spr, style) {
+        if(!(spr instanceof gf.Sprite))
+            return this;
+
+        this._target = spr;
+
+        switch(style) {
+            case gf.Camera.FOLLOW.PLATFORMER:
+                var w = this.size.x / 8;
+                var h = this.size.y / 3;
+                this._deadzone = new gf.Rectangle(
+                    (this.size.x - w) / 2,
+                    (this.size.y - h) / 2 - (h / 4),
+                    w,
+                    h
+                );
+                break;
+            case gf.Camera.FOLLOW.TOPDOWN:
+                var sq4 = Math.max(this.size.x, this.size.y) / 4;
+                this._deadzone = new gf.Rectangle(
+                    (this.size.x - sq4) / 2,
+                    (this.size.y - sq4) / 2,
+                    sq4,
+                    sq4
+                );
+                break;
+            case gf.Camera.FOLLOW.TOPDOWN_TIGHT:
+                var sq8 = Math.max(this.size.x, this.size.y) / 8;
+                this._deadzone = new gf.Rectangle(
+                    (this.size.x - sq8) / 2,
+                    (this.size.y - sq8) / 2,
+                    sq8,
+                    sq8
+                );
+                break;
+            case gf.Camera.FOLLOW.LOCKON:
+                /* falls through */
+            default:
+                this._deadzone = null;
+                break;
+        }
+
+        this.focusSprite(this._target);
+
+        return this;
+    },
+    /**
+     * Stops following any sprites
+     *
+     * @method unfollow
+     * @return {gf.Camera} Returns iteself for chainability
+     */
+    unfollow: function() {
+        this._target = null;
+        return this;
+    },
+    /**
+     * Focuses the camera on a sprite.
+     *
+     * @method focusSprite
+     * @param sprite {gf.Sprite} The sprite to focus on
+     * @return {gf.Camera} Returns iteself for chainability
+     */
+    focusSprite: function(spr) {
+        return this.focus(
+            gf.math.round(spr.position.x) * this.game.world.scale.x,
+            gf.math.round(spr.position.y) * this.game.world.scale.y
+        );
+    },
+    /**
+     * Focuses the camera on an x,y position. Ensures that the camera does
+     * not go outside the bounds set with setBounds()
+     *
+     * @method focus
+     * @param x {Number|gf.Point} The x coord to focus on, if a Point is passed the y param is ignored
+     * @param y {Number} The y coord to focus on
+     * @return {gf.Camera} Returns iteself for chainability
+     */
+    focus: function(x, y) {
+        y = x instanceof gf.Point ? x.y : (y || 0);
+        x = x instanceof gf.Point ? x.x : (x || 0);
+        //x += (x > 0) ? 0.0000001 : -0.0000001;
+        //y += (y > 0) ? 0.0000001 : -0.0000001;
+
+        //calculate how much we need to pan
+        var goToX = x - this.hSize.x,
+            goToY = y - this.hSize.y,
+            dx = goToX + this.game.world.position.x, //world pos is negative
+            dy = goToY + this.game.world.position.y;
+
+        return this.pan(dx, dy);
+    },
+    /**
+     * Pans the camera around by the x,y amount. Ensures that the camera does
+     * not go outside the bounds set with setBounds()
+     *
+     * @method pan
+     * @param x {Number|gf.Point} The x amount to pan, if a Point is passed the y param is ignored
+     * @param y {Number} The y ammount to pan
+     * @return {gf.Camera} Returns iteself for chainability
+     */
+    pan: function(dx, dy) {
+        dy = dx instanceof gf.Point ? dx.y : (dy || 0);
+        dx = dx instanceof gf.Point ? dx.x : (dx || 0);
+
+        if(!dx && !dy) return;
+
+        var pos = this.game.world.position,
+            newX = pos.x - dx,
+            newY = pos.y - dy;
+
+        if(this._bounds) {
+            if(this._outsideBounds(-newX, -pos.y))
+                dx = 0;
+            if(this._outsideBounds(-pos.x, -newY))
+                dy = 0;
+        }
+
+        if(dx || dy) {
+            //if we move a lot, then just force a re render (less expensive then panning all the way there)
+            if(Math.abs(dx) > this.hSize.x || Math.abs(dy) > this.hSize.y) {
+                this.game.world.setPosition(this.game.world.position.x - dx, this.game.world.position.y - dy);
+                this.game.world.resize(this.size.x, this.size.y);
+            }
+            //otherwise just pan
+            else {
+                this.game.world.pan(-dx, -dy);
+            }
+        }
+
+        return this;
+    },
+    _outsideBounds: function(x, y) {
+        return (
+            !this._bounds.contains(x, y) || //top left
+            !this._bounds.contains(x, y + this.size.y) || //bottom left
+            !this._bounds.contains(x + this.size.x, y) || //top right
+            !this._bounds.contains(x + this.size.x, y + this.size.y) //bottom right
+        );
+    },
+    /**
+     * Resizes the viewing area, this is called internally by your game instance
+     * when you call mygame.resize(). DO NOT CALL THIS DIRECTLY
+     *
+     * @method resize
+     * @private
+     * @param w {Number} The new width
+     * @param h {Number} The new height
+     * @return {gf.Camera} Returns iteself for chainability
+     */
+    resize: function(w, h) {
+        this.size.set(w, h);
+        this.hSize.set(
+            Math.round(this.size.x / 2),
+            Math.round(this.size.y / 2)
+        );
+
+        return this;
+    },
+    /**
+     * Sets the bounds the camera is allowed to go. Usually this is the world's
+     * min and max, and is set for you.
+     *
+     * @method constrain
+     * @param shape {gf.Rectangle|gf.Polygon|gf.Circle|gf.Ellipse} The shape to constrain the camera into
+     * @return {gf.Camera} Returns iteself for chainability
+     */
+    constrain: function(shape, scaled) {
+        this._bounds = shape;
+
+        //scale the points
+        if(!scaled) {
+            if(shape instanceof gf.Rectangle) {
+                shape.x *= this.game.world.scale.x;
+                shape.y *= this.game.world.scale.y;
+                shape.width *= this.game.world.scale.x;
+                shape.height *= this.game.world.scale.y;
+            } else if(shape instanceof gf.Polygon) {
+                for(var i = 0; i < shape.points.length; ++i) {
+                    var p = shape.points[i];
+
+                    p.x *= this.game.world.scale.x;
+                    p.y *= this.game.world.scale.y;
+                }
+            } else {
+                shape.x *= this.game.world.scale.x;
+                shape.y *= this.game.world.scale.y;
+            }
+        }
+
+        return this;
+    },
+    unconstrain: function() {
+        this._bounds = null;
+
+        return this;
+    },
+    /**
+     * Called internally every frame. Updates all effects and the follow
+     *
+     * @method update
+     * @param dt {Number} The delta time (in seconds) since the last update
+     * @return {gf.gf.Camera} Returns iteself for chainability
+     * @private
+     */
+    update: function(dt) {
+        //follow sprite
+        if(this._target) {
+            if(!this._deadzone) {
+                this.focusSprite(this._target);
+            } else {
+                var moveX, moveY,
+                    dx, dy,
+                    //get the x,y of the sprite on the screen
+                    camX = (this._target.position.x + (this.game.world.position.x / this.game.world.scale.x)) * this.game.world.scale.x,
+                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * this.game.world.scale.y;
+
+                moveX = moveY = dx = dy = 0;
+
+                //check less than
+                dx = camX - this._deadzone.x;
+                dy = camY - this._deadzone.y;
+
+                if(dx < 0)
+                    moveX = dx;
+                if(dy < 0)
+                    moveY = dy;
+
+                //check greater than
+                dx = camX - (this._deadzone.x + this._deadzone.width);
+                dy = camY - (this._deadzone.y + this._deadzone.height);
+
+                if(dx > 0)
+                    moveX = dx;
+                if(dy > 0)
+                    moveY = dy;
+
+                this.pan(
+                    Math.round(moveX),
+                    Math.round(moveY)
+                );
+            }
+        }
+
+        //update effects
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var c = this.children[i];
+            if(c.update)
+                c.update(dt);
+        }
+
+        return this;
+    }
+});
+
+/**
+ * Camera follow types (used for camera.follow())
+ *
+ * @property FOLLOW
+ * @type Object
+ * @static
+ */
+gf.Camera.FOLLOW = {
+    PLATFORMER: 0,
+    TOPDOWN: 1,
+    TOPDOWN_TIGHT: 2,
+    LOCKON: 3
+};
+gf.Camera.fx = {
+    /**
+     * Camera directions, used for certain effects (like shake and scanlines)
+     *
+     * @property DIRECTION
+     * @type Object
+     * @static
+     */
+    DIRECTION: {
+        BOTH: 0,
+        HORIZONTAL: 1,
+        VERTICAL: 2
+    }
+};
+
+gf.Camera.fx.Effect = function() {
+    gf.DisplayObjectContainer.call(this);
+
+    this.addChild(this.gfx = new PIXI.Graphics());
+    this.gfx.visible = false;
+};
+
+gf.inherits(gf.Camera.fx.Effect, gf.DisplayObjectContainer, {
+    start: function() {
+        return this;
+    },
+    stop: function() {
+        return this;
+    },
+    update: function() {
+        return this;
+    },
+    _complete: function() {
+        if(typeof this.cb === 'function')
+            this.cb();
+    }
+});
+gf.Camera.fx.Close = function() {
+    gf.Camera.fx.Effect.call(this);
+};
+
+gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
+    start: function(shape, duration, cb) {
+        gf.Camera.fx.Effect.prototype.start.call(this);
+
+        if(typeof duration === 'function') {
+            cb = duration;
+            duration = null;
+        }
+
+        if(typeof shape === 'function') {
+            cb = shape;
+            duration = null;
+            shape = null;
+        }
+
+        this.shape = shape || 'circle';
+        this.duration = duration && duration > 0 ? duration : 1000;
+        this.cb = cb;
+
+        if(shape === 'circle') {
+            this.cx = this.parent.size.x / 2;
+            this.cy = this.parent.size.y / 2;
+            this.radius = this.maxRadius = Math.max(this.parent.size.x / 2, this.parent.size.y / 2);
+        } else {
+            this.x = 0;
+            this.y = 0;
+            this.w = this.mx = this.parent.size.x;
+            this.h = this.my = this.parent.size.y;
+        }
+
+        this.gfx.visible = true;
+        this.parent.game.world.mask = this.gfx;
+
+        return this;
+    },
+    stop: function() {
+        gf.Camera.fx.Effect.prototype.stop.call(this);
+
+        this.radius = this.sx = this.sy = 0;
+        this.gfx.visible = false;
+
+        if(this.parent.game.world.mask === this.gfx)
+            this.parent.game.world.mask = null;
+
+        return this;
+    },
+    update: function(dt) {
+        if(!this.gfx.visible)
+            return;
+
+        var part = (dt * 1000) / this.duration;
+
+        this.gfx.clear();
+        this.gfx.beginFill(0xff00ff);
+
+        switch(this.shape) {
+            case 'circle':
+                this.radius -= (part * this.maxRadius);
+
+                if(this.radius <= 0) {
+                    this.stop();
+                    this._complete();
+                } else {
+                    this.gfx.drawCircle(this.cx, this.cy, this.radius);
+                }
+                break;
+
+            case 'rect':
+            case 'rectangle':
+                this.x += (part * this.mx) / 2;
+                this.y += (part * this.my) / 2;
+                this.w -= (part * this.mx);
+                this.h -= (part * this.my);
+
+                if(this.x >= (this.mx / 2)) {
+                    this.stop();
+                    this._complete();
+                } else {
+                    this.gfx.drawRect(this.x, this.y, this.w, this.h);
+                }
+                break;
+        }
+
+        return this;
+    }
+});
+gf.Camera.fx.Fade = function() {
+    gf.Camera.fx.Effect.call(this);
+};
+
+gf.inherits(gf.Camera.fx.Fade, gf.Camera.fx.Effect, {
+    start: function(color, duration, cb) {
+        gf.Camera.fx.Effect.prototype.start.call(this);
+
+        if(typeof duration === 'function') {
+            cb = duration;
+            duration = null;
+        }
+
+        if(typeof color === 'function') {
+            cb = color;
+            duration = null;
+            color = null;
+        }
+
+        color = typeof color === 'number' ? color : 0xFFFFFF;
+        this.duration = duration && duration > 0 ? duration : 1000;
+        this.cb = cb;
+
+        this.gfx.visible = true;
+        this.gfx.alpha = 0;
+        this.gfx.clear();
+        this.gfx.beginFill(color);
+        this.gfx.drawRect(0, 0, this.parent.size.x, this.parent.size.y);
+
+        return this;
+    },
+    stop: function() {
+        gf.Camera.fx.Effect.prototype.stop.call(this);
+
+        this.gfx.alpha = 1;
+        this.gfx.visible = false;
+
+        return this;
+    },
+    update: function(dt) {
+        if(this.gfx.alpha < 1) {
+            this.gfx.alpha += (dt * 1000) / this.duration;
+
+            if(this.gfx.alpha >= 1) {
+                this.stop();
+                this._complete();
+            }
+        }
+
+        return this;
+    }
+});
+gf.Camera.fx.Flash = function() {
+    gf.Camera.fx.Effect.call(this);
+};
+
+gf.inherits(gf.Camera.fx.Flash, gf.Camera.fx.Effect, {
+    start: function(color, duration, cb) {
+        gf.Camera.fx.Effect.prototype.start.call(this);
+
+        if(typeof duration === 'function') {
+            cb = duration;
+            duration = null;
+        }
+
+        if(typeof color === 'function') {
+            cb = color;
+            duration = null;
+            color = null;
+        }
+
+        color = typeof color === 'number' ? color : 0xFFFFFF;
+        this.duration = duration && duration > 0 ? duration : 1000;
+        this.cb = cb;
+
+        this.gfx.visible = true;
+        this.gfx.alpha = 1;
+        this.gfx.clear();
+        this.gfx.beginFill(color);
+        this.gfx.drawRect(0, 0, this.parent.size.x, this.parent.size.y);
+
+        return this;
+    },
+    stop: function() {
+        gf.Camera.fx.Effect.prototype.stop.call(this);
+
+        this.gfx.alpha = 0;
+        this.gfx.visible = false;
+
+        return this;
+    },
+    update: function(dt) {
+        if(this.gfx.alpha > 0) {
+            this.gfx.alpha -= (dt * 1000) / this.duration;
+
+            if(this.gfx.alpha <= 0) {
+                this.stop();
+                this._complete();
+            }
+        }
+
+        return this;
+    }
+});
+gf.Camera.fx.Scanlines = function() {
+    gf.Camera.fx.Effect.call(this);
+};
+
+gf.inherits(gf.Camera.fx.Scanlines, gf.Camera.fx.Effect, {
+    start: function(color, direction, spacing, thickness, alpha) {
+        gf.Camera.fx.Effect.prototype.start.call(this);
+
+        color = color || 0x000000;
+        direction = direction || gf.Camera.fx.DIRECTION.HORIZONTAL;
+        spacing = spacing || 4;
+        thickness = thickness || 1;
+        alpha = alpha || 0.3;
+
+        var sx = this.parent.size.x,
+            sy = this.parent.size.y;
+
+        this.gfx.clear();
+        this.gfx.visible = true;
+        this.gfx.beginFill(color, alpha);
+
+        //draw the lines
+        if((direction === gf.Camera.fx.DIRECTION.BOTH) || (direction === gf.Camera.fx.DIRECTION.VERTICAL)) {
+            for(var x = 0; x < sx; x += spacing) {
+                this.gfx.drawRect(x, 0, thickness, sy);
+            }
+        }
+
+        if((direction === gf.Camera.fx.DIRECTION.BOTH) || (direction === gf.Camera.fx.DIRECTION.HORIZONTAL)) {
+            for(var y = 0; y < sy; y += spacing) {
+                this.gfx.drawRect(0, y, sx, thickness);
+            }
+        }
+        this.gfx.endFill();
+
+        return this;
+    },
+    stop: function() {
+        gf.Camera.fx.Effect.prototype.stop.call(this);
+
+        this.gfx.visible = false;
+
+        return this;
+    }
+});
+
+gf.Camera.fx.Shake = function() {
+    gf.Camera.fx.Effect.call(this);
+    this.offset = new gf.Vector();
+};
+
+gf.inherits(gf.Camera.fx.Shake, gf.Camera.fx.Effect, {
+    start: function(intensity, duration, direction, cb) {
+        gf.Camera.fx.Effect.prototype.start.call(this);
+
+        if(typeof direction === 'function') {
+            cb = direction;
+            direction = null;
+        }
+
+        if(typeof duration === 'function') {
+            cb = duration;
+            direction = null;
+            duration = null;
+        }
+
+        if(typeof intensity === 'function') {
+            cb = intensity;
+            direction = null;
+            duration = null;
+            intensity = null;
+        }
+
+        this.intensity = intensity || 0.01;
+        this.duration = duration || 1000;
+        this.direction = direction || gf.Camera.fx.DIRECTION.BOTH;
+        this.offset.x = this.offset.y = 0;
+        this.cb = cb;
+
+        return this;
+    },
+    stop: function() {
+        gf.Camera.fx.Effect.prototype.stop.call(this);
+
+        this.duration = this.offset.x = this.offset.y = 0;
+
+        return this;
+    },
+    update: function(dt) {
+        //update shake effect
+        if(this.duration > 0) {
+            this.duration -= (dt * 1000);
+
+            //pan back to the original position
+            this.offset.x = -this.offset.x;
+            this.offset.y = -this.offset.y;
+            this.parent.pan(this.offset.x, this.offset.y);
+
+            //check if we are complete
+            if(this.duration <= 0) {
+                this.stop();
+                this._complete();
+            }
+            //otherwise do the shake
+            else {
+                //pan to a random offset
+                if((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.HORIZONTAL))
+                    this.offset.x = gf.math.round(Math.random() * this.intensity * this.parent.size.x * 2 - this.intensity * this.parent.size.x);
+
+                if ((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.VERTICAL))
+                    this.offset.y = gf.math.round(Math.random() * this.intensity * this.parent.size.y * 2 - this.intensity * this.parent.size.y);
+
+                this.parent.pan(this.offset.x, this.offset.y);
+            }
+        }
+    }
+});
+
+/**
+ * Camera shake directions (used for camera.shake())
+ *
+ * @property SHAKE
+ * @type Object
+ * @static
+ */
+gf.Camera.fx.SHAKE = {
+    BOTH: 0,
+    HORIZONTAL: 1,
+    VERTICAL: 2
+};
+/**
+ * A texture font makes it easy to use a texture for writing generic text. Basically
+ * this holds an array of textures each one representing a character, that all share
+ * the same base texture (image). It is the same way a spritesheet works except you
+ * use the textures for text instead of animation frames.
+ *
+ * For special characters, you can either use the `.map` property to map a character
+ * to a texture name like `font.map['~'] = 'tilde'` so that any `~` uses the texture named
+ * `tilde + font.ext` for rendering; or you can make the texture name be the character code
+ * prefixed with `#`. So, for `~`, naming the texture `#126.png` with `font.ext = 'png'`
+ * would just work automagically. There is a default map already that you can view in the source,
+ * and if you follow that naming convention, it will work without modification as well.
+ *
+ * @class TextureFont
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
+ * @constructor
+ * @param texture {Texture|String} The sprite sheet to use, if you pass a string make sure to preload it first
+ * @param [settings] {Object} All the settings for the font
+ * @param [settings.ext] {String} The extension used for the different texture names
+ * @param [settings.map] {Object} Maps a special character to a string name
+ * @param [settings.spaceSize] {Number} The size of a space character in pixels
+ * @param [settings.lineWidth] {Number} The width factor of characters, default is 1 which is normal spacing
+ * @param [settings.lineHeight] {Number} The height factor of characters, default is 1 which is normal spacing
+ * @param [settings.text] {String} Starting text of the font
+ */
+gf.TextureFont = function(font, settings) {
+    if(typeof font === 'string') {
+        if(gf.assetCache[font])
+            font = gf.assetCache[font];
+        else
+            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
+    }
+
+    /**
+     * The extension to use with texture names
+     *
+     * @property ext
+     * @type String
+     * @default ''
+     */
+    this.ext = '';
+
+    /**
+     * Maps a special character to a string name
+     *
+     * @property map
+     * @type Object
+     */
+    this.map = {
+        '`': 'accent',
+        '~': 'tilde',
+        '!': 'exclamation',
+        '@': 'at',
+        '#': 'hash',
+        '$': 'dollar',
+        '%': 'percent',
+        '^': 'carret',
+        '&': 'ampersand',
+        '*': 'asterisk',
+        '(': 'open-parenthesis',
+        ')': 'close-parenthesis',
+        '-': 'dash',
+        '_': 'underscore',
+        '+': 'plus',
+        '=': 'equal',
+        '{': 'open-brace',
+        '}': 'close-brace',
+        '[': 'open-bracket',
+        ']': 'close-bracket',
+        '\\': 'backslash',
+        '|': 'pipe',
+        ':': 'colon',
+        ';': 'semicolon',
+        '"': 'quote',
+        '\'': 'single-quote',
+        '<': 'less-than',
+        '>': 'greater-than',
+        ',': 'comma',
+        '.': 'period',
+        '?': 'question',
+        '/': 'slash'
+    };
+
+    /**
+     * The size of a space character in pixels
+     *
+     * @property spaceSize
+     * @type Number
+     */
+    this.spaceSize = 15;
+
+    /**
+     * The width factor of characters, default is 1 which is normal spacing
+     *
+     * @property lineWidth
+     * @type Number
+     */
+    this.lineWidth = 1;
+
+    /**
+     * The height factor of characters, default is 1 which is normal spacing
+     *
+     * @property lineHeight
+     * @type Number
+     */
+    this.lineHeight = 1;
+
+    /**
+     * The textures for all the characters in the alphabet
+     *
+     * @property textures
+     * @type Object<Texture>
+     * @readOnly
+     * @private
+     */
+    this.textures = font;
+
+    /**
+     * The sprite pool to grab character sprites from
+     *
+     * @property sprites
+     * @type ObjectPool
+     * @readOnly
+     * @private
+     */
+    this.sprites = new gf.ObjectPool(gf.Sprite, this);
+
+    //call base ctor
+    gf.DisplayObjectContainer.call(this, settings);
+
+    if(this.ext && this.ext.charAt(0) !== '.')
+        this.ext = '.' + this.ext;
+
+    if(settings.text)
+        this.setText(settings.text);
+};
+
+gf.inherits(gf.TextureFont, gf.DisplayObjectContainer, {
+    /**
+     * Gets a sprite from the pool for the character pased
+     *
+     * @method _getSprite
+     * @param character {String} The character to get a sprite for
+     * @return Sprite
+     */
+    _getSprite: function(ch) {
+        if(this.map[ch])
+            ch = this.map[ch];
+
+        //skips spaces
+        if(ch === '' || ch === ' ')
+            return null;
+
+        var texture = this.textures[ch + this.ext];
+
+        //try character code
+        if(!texture)
+            texture = this.textures['#' + ch.charCodeAt(0) + this.ext];
+
+        //if no match, error
+        if(!texture)
+            throw 'There is no texture for character "' + ch + '" with extension "' + this.ext + '"';
+
+        var spr = this.sprites.create(texture);
+
+        spr.setTexture(texture);
+        spr.visible = true;
+
+        return spr;
+    },
+    /**
+     * Clones this font to get another just like it
+     *
+     * @method clone
+     * @return TextureFont
+     */
+    clone: function() {
+        return new gf.TextureFont(this.textures, {
+            ext: this.ext,
+            map: this.map,
+            text: this.text,
+            lineWidth: this.lineWidth,
+            lineHeight: this.lineHeight
+        });
+    },
+    /**
+     * Sets the text of this font to the string passed
+     *
+     * @method setText
+     * @param text {String} The text to display
+     */
+    setText: function(txt) {
+        this.text = txt;
+
+        //free all sprites
+        for(var c = 0, cl = this.children.length; c < cl; ++c) {
+            var child = this.children[c];
+            child.visible = false;
+            this.sprites.free(child);
+        }
+
+        //add text sprites
+        var strs = this.text.toString().split('\n'),
+            h = 0,
+            x = 0,
+            y = 0;
+
+        for(var i = 0, il = strs.length; i < il; ++i) {
+            var str = strs[i];
+
+            //create the string sprites
+            for(var s = 0, sl = str.length; s < sl; ++s) {
+                var ch = str.charAt(s),
+                    spr = this._getSprite(ch);
+
+                if(spr !== null) {
+                    spr.position.x = x;
+                    spr.position.y = y;
+
+                    if(spr.texture.frame.height > h)
+                        h = spr.texture.frame.height;
+
+                    x += spr.texture.frame.width * this.lineWidth;
+                } else {
+                    x += this.spaceSize * this.lineWidth;
+                }
+
+            }
+
+            y += h * this.lineHeight;
+        }
+    }
+});
+/**
+ * Main game object, controls the entire instance of the game
+ *
+ * @class Game
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
+ * @constructor
+ * @param contId {String} The container for the new canvas we will create for the game
+ * @param settings {Object} All the settings for the game instance
+ * @param settings.width {Number} The width of the viewport
+ * @param settings.height {Number} The height of the viewport
+ * @param [settings.view] {DOMElement} The canvas to render into
+ * @param [settings.transparent] {Boolean} Whether the viewport should be transparent or not
+ * @param [settings.renderMethod] {String} Can be 'canvas' or 'webgl' to force that render method
+ * @param [settings.background] {Number} The background color of the stage
+ * @param [settings.interactive] {Boolean} Whether the game will use mouse events or not
+ */
+gf.Game = function(contId, settings) {
+    gf.EventEmitter.call(this);
+
+    /**
+     * The domElement that we are putting our rendering canvas into (the container)
+     *
+     * @property container
+     * @type DOMELement
+     * @readOnly
+     */
+    this.container = document.getElementById(contId);
+
+    if(!this.container)
+        this.container = document.body;
+
+    /**
+     * The method used to render values to the screen (either webgl, or canvas)
+     *
+     * @property renderMethod
+     * @type String
+     * @default 'webgl'
+     */
+    this.renderMethod = 'webgl';
+
+    /**
+     * The player entities added into the game
+     *
+     * @property players
+     * @type {Array}
+     * @readOnly
+     */
+    this.players = [];
+
+    /**
+     * Raw PIXI.stage instance
+     *
+     * @property stage
+     * @type PIXI.Stage
+     * @readOnly
+     */
+    this.stage = new PIXI.Stage(
+        settings.background,
+        settings.interactive !== undefined ? settings.interactive : true
+    );
+
+    /**
+     * Raw Clock instance for internal timing
+     *
+     * @property clock
+     * @type Clock
+     * @readOnly
+     */
+    this.clock = new gf.Clock(false);
+
+    /**
+     * Raw rendering engine
+     *
+     * @property renderer
+     * @type PIXI.WebGLRenderer|PIXI.CanvasRenderer
+     * @readOnly
+     */
+    this.renderer = null;
+
+    //if they speciy a method, check if it is available
+    if(settings.renderMethod) {
+        if(!gf.support[settings.renderMethod]) {
+            throw 'Render method ' + settings.renderMethod + ' is not supported by this browser!';
+        }
+        this.renderMethod = settings.renderMethod;
+    }
+    //if they don't specify a method, guess the best to use
+    else {
+        if(gf.support.webgl) this.renderMethod = 'webgl';
+        else if(gf.support.canvas) this.renderMethod = 'canvas';
+        else {
+            throw 'Neither WebGL nor Canvas is supported by this browser!';
+        }
+    }
+
+    //initialize the correct renderer
+    if(this.renderMethod === 'webgl') {
+        this.renderer = new PIXI.WebGLRenderer(settings.width, settings.height, settings.view, settings.transparent);
+    } else if(this.renderMethod === 'canvas') {
+        this.renderer = new PIXI.CanvasRenderer(settings.width, settings.height, settings.view, settings.transparent);
+    }
+
+    /**
+     * Maximum Z value
+     *
+     * @property MAX_Z
+     * @type {Number}
+     * @default 500
+     * @private
+     * @readOnly
+     */
+    this.MAX_Z = 500;
+
+    /**
+     * The loader for this game instance
+     *
+     * @property loader
+     * @type AssetLoader
+     * @readOnly
+     */
+    this.loader = new gf.AssetLoader();
+
+    /**
+     * The sprite pool to use to create registered entities
+     *
+     * @property spritepool
+     * @type SpritePool
+     * @readOnly
+     */
+    this.spritepool = new gf.SpritePool();
+
+    /**
+     * The GameStates added to the game
+     *
+     * @property states
+     * @type Array
+     * @readOnly
+     */
+    this.states = {};
+
+    /**
+     * The currently active GameState
+     *
+     * @property activeState
+     * @type GameState
+     * @readOnly
+     */
+    this.activeState = null;
+    this._defaultState = new gf.GameState('_default');
+
+    /**
+     * Holds timing data for the previous loop
+     *
+     * @property timings
+     * @type Object
+     * @readOnly
+     */
+    this.timings = {
+        _timer: window.performance && window.performance.now ? window.performance : Date
+    };
+
+    //append the renderer view only if the user didn't pass their own
+    if(!settings.view)
+        this.container.appendChild(this.renderer.view);
+
+    //mixin user settings
+    gf.utils.setValues(this, settings);
+
+    //enable default state
+    this.addState(this._defaultState);
+    this.enableState('_default');
+
+    //define getters for common properties in GameState
+    var self = this;
+    ['audio', 'input', 'physics', 'camera', 'world'].forEach(function(prop) {
+        self.__defineGetter__(prop, function() {
+            return self.activeState[prop];
+        });
+    });
+
+    //some docs for the getters above
+
+    /**
+     * The audio player for this game instance
+     * (refers to the active GameState's audio instance)
+     *
+     * @property audio
+     * @type AudioPlayer
+     * @readOnly
+     */
+
+    /**
+     * The input instance for this game
+     * (refers to the active GameState's input instance)
+     *
+     * @property input
+     * @type InputManager
+     * @readOnly
+     */
+
+    /**
+     * The physics system to simulate stuffs
+     * (refers to the active GameState's physics instance)
+     *
+     * @property physics
+     * @type PhysicsSystem
+     * @readOnly
+     */
+
+    /**
+     * The camera you view the scene through
+     * (refers to the active GameState's camera instance)
+     *
+     * @property camera
+     * @type Camera
+     * @readOnly
+     */
+
+    /**
+     * The world instance that holds all sprites and the map
+     * (refers to the active GameState's world instance)
+     *
+     * @property world
+     * @type Map
+     * @readOnly
+     */
+
+     //pixi does some prevent default on mousedown, so we need to
+     //make sure mousedown will focus the canvas or keyboard events break
+
+
+    //ensure that key events will work
+    var view = this.renderer.view;
+    if(!view.getAttribute('tabindex'))
+        view.setAttribute('tabindex','1');
+
+    view.focus();
+    view.addEventListener('click', function() {
+        view.focus();
+    }, false);
+};
+
+gf.inherits(gf.Game, Object, {
+    /**
+     * Allows you to resize the game area
+     *
+     * @method resize
+     * @param width {Number} Width to resize to
+     * @param height {Number} Height to resize to
+     * @return {Game} Returns itself for chainability
+     */
+    resize: function(w, h) {
+        this.renderer.resize(w, h);
+
+        for(var i = 0, il = this.stage.children.length; i < il; ++i) {
+            var o = this.stage.children[i];
+
+            if(o.resize)
+                o.resize(w, h);
+        }
+
+        return this;
+    },
+    /**
+     * Adds an object to the current stage
+     *
+     * @method addChild
+     * @param obj {Sprite} The sprite to the stage
+     * @return {Game} Returns itself for chainability
+     */
+    addChild: function(obj) {
+        this.activeState.addChild(obj);
+
+        return this;
+    },
+    /**
+     * Removes a sprite from the stage
+     *
+     * @method removeChild
+     * @param obj {Sprite} The sprite to the stage
+     * @return {Game} Returns itself for chainability
+     */
+    removeChild: function(obj) {
+        if(obj) {
+            if(obj instanceof gf.Gui)
+                this.camera.removeChild(obj);
+            else
+                this.world.removeChild(obj);
+        }
+
+        return this;
+    },
+    requestFullscreen: function() {
+        var elem = this.renderer.view;
+
+        if(elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if(elem.mozRequestFullScreen) {
+          elem.mozRequestFullScreen();
+        } else if(elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen();
+        }
+    },
+    /**
+     * Adds a new game state to this game to be later enabled
+     *
+     * @method addState
+     * @param state {GameState} The state to add to this game
+     * @return {Game} Returns itself for chainability
+     */
+    addState: function(state) {
+        var name = state.name;
+
+        if(!name) {
+            throw 'No state name could be determined, did you give the state a name when you created it?';
+        } else if(this.states[name]) {
+            throw 'A state with the name "' + name + '" already exists, did you try to add it twice?';
+        } else {
+            this.states[name] = state;
+            this.stage.addChild(state);
+
+            state.game = this;
+        }
+
+        return this;
+    },
+    /**
+     * Removes a game state from the game
+     *
+     * @method removeState
+     * @param state {GameState|String} The state to remove from the game, or the name of a state to remove
+     * @return {Game} Returns itself for chainability
+     */
+    removeState: function(state) {
+        var name = (typeof state === 'string') ? state : state.name;
+
+        if(!name) {
+            throw 'No state name could be determined, are you sure you passed me a game state?';
+        } else if(!this.states[name]) {
+            throw 'A state with the name "' + name + '" does not exist, are you sure you added it?';
+        } else {
+            //don't remove the default state
+            if(name === '_default') return;
+
+            //if this is the active state, revert to the default state
+            if(name === this.activeState.name) {
+                this.enableState('_default');
+            }
+
+            delete this.states[name];
+        }
+
+        return this;
+    },
+    /**
+     * Enables a state that has been added to the game
+     *
+     * @method enableState
+     * @param state {GameState|String} The state to enable, or the name of a state to enable
+     * @return {Game} Returns itself for chainability
+     */
+    enableState: function(state) {
+        var name = (typeof state === 'string') ? state : state.name;
+
+        if(this.activeState)
+            this.activeState.disable();
+
+        this.activeState = this.states[name];
+
+        this.activeState.enable();
+
+        return this;
+    },
+    /**
+     * Loads the world map into the game
+     *
+     * @method loadWorld
+     * @param world {String|Map} The map to load as the current world
+     * @return {Game} Returns itself for chainability
+     */
+    loadWorld: function(world) {
+        this.activeState.loadWorld(world);
+
+        return this;
+    },
+    /**
+     * Begins the render loop
+     *
+     * @method render
+     * @return {Game} Returns itself for chainability
+     */
+    render: function() {
+        this.clock.start();
+        this._tick();
+
+        return this;
+    },
+    /**
+     * The looping render tick
+     *
+     * @method _tick
+     * @private
+     */
+    _tick: function() {
+        this.timings.tickStart = this.timings._timer.now();
+
+        //start render loop
+        window.requestAnimFrame(this._tick.bind(this));
+
+        //update this game state
+        this.timings.stateStart = this.timings._timer.now();
+        this.activeState.update(this.clock.getDelta());
+        this.timings.stateEnd = this.timings._timer.now();
+
+        //render scene
+        this.timings.renderStart = this.timings._timer.now();
+        this.renderer.render(this.stage);
+        this.timings.renderEnd = this.timings._timer.now();
+
+        this.timings.tickEnd =  this.timings._timer.now();
+    }
+});
+
+/**
+ * GameStates are different , controls the entire instance of the game
+ *
+ * @class GameState
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
+ * @constructor
+ * @param [name] {String} The name of this state
+ * @param [settings] {Object} All the settings for this game state
+ * @param [settings.gravity] {Number} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
+ * @example
+ *      var state = new gf.GameState(game, 'battle');
+ *      state.addChild(battlePlayer);
+ *      state.addChild(enemy);
+ *
+ *      game.enableState(state); //or you can use the name from the ctor 'battle'
+ */
+gf.GameState = function(name, settings) {
+    if(typeof name === 'object') {
+        settings = name;
+        name = Math.floor(Date.now() * Math.random()).toString();
+    }
+
+    settings = settings || {};
+
+    /**
+     * The name of this game state
+     *
+     * @property name
+     * @type String
+     */
+    this.name = name;
+
+    /**
+     * The audio player for this game instance
+     *
+     * @property audio
+     * @type AudioPlayer
+     * @readOnly
+     */
+    this.audio = new gf.AudioManager();
+
+    /**
+     * The physics system to simulate stuffs
+     *
+     * @property physics
+     * @type PhysicsSystem
+     * @readOnly
+     */
+    this.physics = new gf.PhysicsSystem({ gravity: settings.gravity });
+
+    /**
+     * The input instance for this game
+     *
+     * @property input
+     * @type InputManager
+     * @readOnly
+     */
+    this.input = null; //need to be added to a game first
+
+    /**
+     * The camera you view the scene through
+     *
+     * @property camera
+     * @type Camera
+     * @readOnly
+     */
+    this.camera = null; //need to be added to a game first
+
+    /**
+     * The world instance that holds all entites and the map
+     *
+     * @property world
+     * @type Map
+     * @readOnly
+     */
+    this.world = null;
+
+    /**
+     * The game instance that this state belongs too
+     *
+     * @property game
+     * @type Game
+     */
+    Object.defineProperty(this, 'game', {
+        get: function() { return this._game; },
+        set: this._setGame.bind(this),
+        enumerable: true
+    });
+
+    //call base ctor
+    gf.DisplayObjectContainer.call(this, settings);
+
+    //start disabled
+    this.disable();
+};
+
+gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
+    /**
+     * The setter for the game property, sets up the input and camera objects
+     *
+     * @method _setGame
+     * @param game {Game}
+     * @private
+     */
+    _setGame: function(game) {
+        this._game = game;
+
+        this.input = new gf.InputManager(game.renderer.view);
+
+        if(this.camera)
+            this.removeChild(this.camera);
+
+        this.camera = new gf.Camera(game);
+        this.addChild(this.camera);
+        this.camera.resize(game.renderer.width, game.renderer.height);
+    },
+    /**
+     * Adds a child object to the GameState, this will add objects to either
+     * the Camera or the Map depending on the type. Anything inheriting from
+     * gf.Gui will be put to the camera, everything else goes in the world.
+     *
+     * @method addChild
+     * @param obj {DisplayObject} Any generic object to add to the game state
+     */
+    addChild: function(obj) {
+        if(obj) {
+            //we add the camera in the ctor and the map later when
+            //.loadWorld is called. This way the camera is always the
+            //last child of stage, so it is rendered on top!
+            if(obj instanceof gf.Camera || obj instanceof gf.Map)
+                this.addChildAt(obj, 0);
+            else if(obj instanceof gf.Gui)
+                this.camera.addChild(obj);
+            else
+                this.world.addChild(obj);
+        }
+    },
+    /**
+     * Loads a game world into the state
+     *
+     * @method loadWorld
+     * @param world {String|Object} The world to load, if you pass a string be sure to preload it first
+     */
+    loadWorld: function(world) {
+        if(typeof world === 'string'){
+            if(gf.assetCache[world]) {
+                world = gf.assetCache[world];
+            } else {
+                throw 'World "' + world + '" needs to be preloaded before being added to a game!';
+            }
+        }
+
+        this.world = new gf.TiledMap(world);
+        this.addChild(this.world);
+
+        this.world.resize(this._game.renderer.width, this._game.renderer.height);
+
+        this.camera.constrain(new gf.Rectangle(0, 0, this.world.realSize.x, this.world.realSize.y), true);
+
+        return this;
+    },
+    /**
+     * Enables (shows) the game state
+     *
+     * @method enable
+     */
+    enable: function() {
+        this.visible = true;
+    },
+    /**
+     * Disables (hides) the game state
+     *
+     * @method disable
+     */
+    disable: function() {
+        this.visible = false;
+    },
+    /**
+     * Called by the game each frame to update the input, camera, and physics objects
+     *
+     * @method update
+     * @private
+     */
+    update: function(dt) {
+        //gather input from user
+        this.game.timings.inputStart = this.game.timings._timer.now();
+        this.input.update(dt);
+        this.game.timings.inputEnd = this.game.timings._timer.now();
+
+        //update any camera effects
+        this.game.timings.cameraStart = this.game.timings._timer.now();
+        this.camera.update(dt);
+        this.game.timings.cameraEnd = this.game.timings._timer.now();
+
+        //simulate physics and detect/resolve collisions
+        this.game.timings.physicsStart = this.game.timings._timer.now();
+        this.physics.update(dt);
+        this.game.timings.physicsEnd = this.game.timings._timer.now();
+    }
+});
+/**
+ * The base Gui that holds GuiItems to be added to the Camera
+ *
+ * @class Gui
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
+ * @constructor
+ */
+gf.Gui = function(name) {
+    /**
+     * The name of the Gui
+     *
+     * @property name
+     * @type String
+     * @default ''
+     */
+    this.name = name || '';
+
+    gf.DisplayObjectContainer.call(this);
+};
+
+gf.inherits(gf.Gui, gf.DisplayObjectContainer);
+
+/**
+ * The base GuiItem that represents an element of a gui on the screen.
+ *
+ * @class GuiItem
+ * @extends gf.Sprite
+ * @namespace gf
+ * @constructor
+ * @param texture {Texture} The texture to set the sprite to
+ * @param interactive {Boolean} Whether this item should repsond to mouse events
+ */
+gf.GuiItem = function(texture, interactive) {
+    /**
+     * Sets whether or not you can drag the GuiItem around
+     *
+     * @property draggable
+     * @type Boolean
+     * @default false
+     */
+    this.draggable = false;
+
+    /**
+     * Describes if the current item is being dragged or not, if it is this
+     * object will hold the last local position of the mouse (relative to this object's parent)
+     *
+     * @property dragging
+     * @type Object
+     * @default false
+     * @readOnly
+     */
+    this.dragging = false;
+
+    gf.Sprite.call(this, texture);
+    this.interactive = interactive;
+};
+
+gf.inherits(gf.GuiItem, gf.Sprite, {
+    mousedown: function(e) {
+        gf.Sprite.prototype.mousedown.call(this, e);
+
+        if(!this.draggable)
+            return;
+
+        this.dragging = e.data.getLocalPosition(e.object.parent);
+    },
+    mouseup: function(e) {
+        gf.Sprite.prototype.mouseup.call(this, e);
+
+        this.dragging = false;
+    },
+    mousemove: function(e) {
+        gf.Sprite.prototype.mousemove.call(this, e);
+
+        if(!this.draggable || !this.dragging)
+            return;
+
+        var pos = e.data.getLocalPosition(this.parent);
+
+        //current position + (new mouse position - old mouse position) == current position + mousemove delta
+        this.setPosition(
+            this.position.x + (pos.x - this.dragging.x),
+            this.position.y + (pos.y - this.dragging.y)
+        );
+
+        this.dragging = pos;
+    }
+});
+
+/**
+ * Manages all input handlers in a unified way
+ *
+ * @class InputManager
+ * @extends Object
+ * @namespace gf
+ * @constructor
+ * @param view {DOMElement} The DOMElement to bind input events to
+ */
+gf.InputManager = function(view) {
+    /**
+     * The dom element to bind events to
+     *
+     * @property view
+     * @type Game
+     */
+    this.view = view;
+
+    /**
+     * Holds the keyboard handler for keyboard events
+     *
+     * @property keyboard
+     * @type Keyboard
+     * @readOnly
+     */
+    this.keyboard = new gf.input.Keyboard(view);
+
+    /**
+     * Holds the gamepad handler for gamepad events
+     *
+     * @property gamepad
+     * @type Keyboard
+     * @readOnly
+     */
+    this.gamepad = new gf.input.Gamepad();
+};
+
+gf.inherits(gf.InputManager, Object, {
+    /**
+     * Called each frame to update state info for some input methods
+     *
+     * @method update
+     * @private
+     */
+    update: function(dt) {
+        this.gamepad.update(dt);
+    }
+});
+/**
+ * input object
+ */
+gf.input = {};
+
+/**
+ * The base Input object, holds common functions and properties between input types
+ *
+ * @class Input
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf.input
+ * @constructor
+ * @param view {DOMElement} The DOMElement to bind input events to
+ */
+gf.input.Input = function(view) {
+    gf.EventEmitter.call(this);
+
+    /**
+     * For backwards compatibility
+     *
+     * @method bind
+     * @deprecated use on
+     */
+    this.bind = this.on;
+
+    /**
+     * The dom element to bind events to
+     *
+     * @property view
+     * @type Game
+     */
+    this.view = view;
+};
+
+gf.inherits(gf.input.Input, Object, {
+    /**
+     * Prevents the default action of an event
+     *
+     * @method preventDefault
+     * @param event {DOMEvent} The event to prevent default actions for
+     */
+    preventDefault: function(e) {
+        if(e.preventDefault) e.preventDefault();
+        else e.returnValue = false;
+
+        return false;
+    },
+    /**
+     * Prevents an event from bubbling up the DOM.
+     *
+     * @method stopPropogation
+     * @param event {DOMEvent} The event to prevent bubbling for
+     */
+    stopPropogation: function(e) {
+        if(e.stopPropagation) e.stopPropagation();
+        else e.cancelBubble = true;
+    }
+});
+
+/**
+ * Bindable keycodes
+ *
+ * @property KEY
+ * @type Object
+ * @static
+ */
+gf.input.KEY = {
+    BACKSPACE: 8,
+    TAB: 9,
+    ENTER: 13,
+    SHIFT: 16,
+    CTRL: 17,
+    ALT: 18,
+    PAUSE: 19,
+    ESC: 27,
+    SPACE: 32,
+    PAGE_UP: 33,
+    PAGE_DOWN: 34,
+    END: 35,
+    HOME: 36,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    INSERT: 45,
+    DELETE: 46,
+    NUM0: 48,
+    NUM1: 49,
+    NUM2: 50,
+    NUM3: 51,
+    NUM4: 52,
+    NUM5: 53,
+    NUM6: 54,
+    NUM7: 55,
+    NUM8: 56,
+    NUM9: 57,
+    PLUS: 61,
+    A : 65,
+    B : 66,
+    C : 67,
+    D : 68,
+    E : 69,
+    F : 70,
+    G : 71,
+    H : 72,
+    I : 73,
+    J : 74,
+    K : 75,
+    L : 76,
+    M : 77,
+    N : 78,
+    O : 79,
+    P : 80,
+    Q : 81,
+    R : 82,
+    S : 83,
+    T : 84,
+    U : 85,
+    V : 86,
+    W : 87,
+    X : 88,
+    Y : 89,
+    Z : 90,
+    NUMPAD0: 96,
+    NUMPAD1: 97,
+    NUMPAD2: 98,
+    NUMPAD3: 99,
+    NUMPAD4: 100,
+    NUMPAD5: 101,
+    NUMPAD6: 102,
+    NUMPAD7: 103,
+    NUMPAD8: 104,
+    NUMPAD9: 105,
+    NUMPAD_STAR: 106,
+    NUMPAD_PLUS: 107,
+    NUMPAD_MINUS: 109,
+    NUMPAD_DOT: 110,
+    NUMPAD_SLASH: 111,
+    F1: 112,
+    F2: 113,
+    F3: 114,
+    F4: 115,
+    MINUS: 173,
+    TILDE: 192
+};
+
+/**
+ * Controls keyboard input
+ *
+ * @class Keyboard
+ * @extends gf.input.Input
+ * @namespace gf.input
+ * @constructor
+ * @param view {DOMElement} The DOMElement to bind input events to
+ */
+gf.input.Keyboard = function(view) {
+    gf.input.Input.call(this, view);
+
+    /**
+     * The current sequence of keys that have been pressed
+     *
+     * @property sequence
+     * @type Array<Number>
+     * @readOnly
+     */
+    this.sequence = [];
+
+    /**
+     * The amount of time it takes for the sequence to clear out, in ms
+     *
+     * @property sequenceTimeout
+     * @type Number
+     * @default 500
+     */
+    this.sequenceTimeout = 500;
+
+    /**
+     * The timeout ID for the wait to clear the input sequence
+     *
+     * @property _clearSq
+     * @type Number
+     * @private 
+     */
+    this._clearSq = null;
+
+    view.addEventListener('keydown', this.onKeyDown.bind(this), false);
+    view.addEventListener('keyup', this.onKeyUp.bind(this), false);
+};
+
+gf.inherits(gf.input.Keyboard, gf.input.Input, {
+    /**
+     * Called when a key is pressed down
+     *
+     * @method onKeyDown
+     * @param event {DOMEvent}
+     * @param override {Number} The key code to use instead of checking event data
+     * @private
+     */
+    onKeyDown: function(e, override) {
+        //if(e.target === this.view.parentElement)
+            return this.modifyKey(e, override || e.keyCode || e.which, true);
+    },
+    /**
+     * Called when a key is released
+     *
+     * @method onKeyUp
+     * @param event {DOMEvent}
+     * @param override {Number} The key code to use instead of checking event data
+     * @private
+     */
+    onKeyUp: function(e, override) {
+        //if(e.target === this.view.parentElement)
+            return this.modifyKey(e, override || e.keyCode || e.which, false);
+    },
+    /**
+     * Called when a key state has changed, updates current sequence and emits events
+     *
+     * @method modifyKey
+     * @param event {DOMEvent}
+     * @param key {Number} The key code that has changed
+     * @param down {Boolean} Whether the key has been pressed or not
+     * @private
+     */
+    modifyKey: function(e, key, down) {
+        //emit single key event
+        this.emit(key, {
+            input: this,
+            originalEvent: e,
+            down: down
+        });
+
+        //when pressed is when we process a key for a sequence
+        if(down) {
+            //update the key sequence
+            this.sequence.push(key);
+
+            //process current sequence
+            var s = this.sequence.toString();
+            if(s !== key.toString()) {
+                this.emit(s, {
+                    input: this,
+                    originalEvent: e,
+                    down: down
+                });
+            }
+
+            //set timeout to clear sequence
+            clearTimeout(this._clearSq);
+            this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
+        }
+    },
+    /**
+     * Clears the current sequence so that a new one can start
+     *
+     * @method _clearSequence
+     * @private
+     */
+    _clearSequence: function() {
+        this.sequence.length = 0;
+    }
+});
+/**
+ * Controls input from gamepads
+ *
+ * @class Gamepad
+ * @extends gf.input.Input
+ * @namespace gf.input
+ * @constructor
+ */
+gf.input.Gamepad = function() {
+    gf.input.Input.call(this);
+
+    /**
+     * Tracks if we are polling for status/connections
+     *
+     * @property ticking
+     * @type Boolean
+     * @readOnly
+     */
+    this.ticking = false;
+
+    /**
+     * The currently activated gamepads list
+     *
+     * @property pads
+     * @type Array<Gamepad>
+     * @readOnly
+     */
+    this.pads = [];
+
+    /**
+     * Timestamp tracking for state changes
+     *
+     * @property prevTimestamps
+     * @type Array<Number>
+     * @private
+     */
+    this.prevTimestamps = [];
+
+    /**
+     * Holds the button handler for gamepad button events
+     *
+     * @property buttons
+     * @type GamepadButtons
+     * @readOnly
+     */
+    this.buttons = new gf.input.GamepadButtons();
+
+    /**
+     * Holds the stick handler for gamepad stick events
+     *
+     * @property sticks
+     * @type GamepadSticks
+     * @readOnly
+     */
+    this.sticks = new gf.input.GamepadSticks();
+
+    //Firefox uses connect/disconnect events so listen to those
+    window.addEventListener('MozGamepadConnected', this.onGamepadConnect.bind(this), false);
+    window.addEventListener('MozGamepadDisconnected', this.onGamepadDisconnect.bind(this), false);
+
+    //Since chrome only supports polling, we have to start looping immediately
+    if (!!navigator.webkitGamepads || !!navigator.webkitGetGamepads) {
+        this.startPolling();
+    }
+};
+
+gf.inherits(gf.input.Gamepad, gf.input.Input, {
+    /**
+     * Called when a gamepad connects (FF Only)
+     *
+     * @method onGamepadDisconnect
+     * @param event {GamepadConnectEvent}
+     * @private
+     */
+    onGamepadConnect: function(event) {
+        //add the gamepad to our list
+        this.pads.push(event.gamepad);
+
+        //start polling
+        this.startPolling();
+    },
+    /**
+     * Called when a gamepad disconnects (FF Only)
+     *
+     * @method onGamepadDisconnect
+     * @param event {GamepadDisconnectEvent}
+     * @private
+     */
+    onGamepadDisconnect: function(event) {
+        //remove the gamepad from our list
+        for(var i = 0, il = this.pads.length; i < il; ++i) {
+            if(this.pads[i].index === event.gamepad.index) {
+                this.pads.splice(i, 1);
+                break;
+            }
+        }
+
+        //if no pads left connected, stop polling
+        if(this.pads.length === 0)
+            this.stopPolling();
+    },
+    /**
+     * Stats polling for new gamepads and status updates
+     *
+     * @method startPolling
+     */
+    startPolling: function() {
+        if(this.ticking) return;
+
+        this.ticking = true;
+        this.update();
+    },
+    /**
+     * Stops polling for new gamepads and status updates
+     *
+     * @method stopPolling
+     */
+    stopPolling: function() {
+        this.ticking = false;
+    },
+    /**
+     * Polls for newly connected gamepads (Chrome Only)
+     *
+     * @method pollGamepads
+     */
+    //called on Chrome, which doesn't do the connect/disconnect events
+    pollGamepads: function() {
+        //get a list of connected gamepads
+        var rawPads = (navigator.webkitGetGamepads && navigator.webkitGetGamepads()) || navigator.webkitGamepads;
+
+        if(rawPads) {
+            //reset the pads list
+            this.pads.length = 0;
+
+            //don't use the raw array from the browser, since it can have "holes"
+            //if you plug in 2, then remove the first the second one is still index 1 (not 0)
+            for(var i = 0, il = rawPads.length; i < il; ++i) {
+                if(rawPads[i]) {
+                    this.pads.push(rawPads[i]);
+                }
+            }
+        }
+    },
+    /**
+     * Polls the gamepad object for status updates and emits events when they occur
+     *
+     * @method pollStatus
+     * @param pad {Gamepad} The gamepad object to check
+     */
+    pollStatus: function() {
+        for(var i = 0, il = this.pads.length; i < il; ++i) {
+            var pad = this.pads[i];
+            //don't do anything if the current timestamp is the same as the previous one
+            //(meaning the state has not changed). This is a chrome-only feature right now,
+            //so first we have to check if it is empty as well
+            if(pad.timestamp && (pad.timestamp === this.prevTimestamps[i]))
+                continue;
+
+            this.prevTimestamps[i] = pad.timestamp;
+            this.buttons.pollStatus(pad);
+            this.sticks.pollStatus(pad);
+        }
+    },
+    /**
+     * Called each frame to update polling mechanisms
+     *
+     * @method update
+     */
+    update: function() {
+        if(!this.ticking) return;
+
+        //pollin' fo' pads
+        this.pollGamepads();
+
+        //poll for the status of our gamepads
+        this.pollStatus();
+    }
+});
+/**
+ * Bindable Gamepad Buttons
+ *
+ * @property GP_BUTTON
+ * @type Object
+ * @static
+ */
+gf.input.GP_BUTTON = {
+    FACE_1: 0, // Face (main) buttons
+    FACE_2: 1,
+    FACE_3: 2,
+    FACE_4: 3,
+    LEFT_SHOULDER: 4, // Top shoulder buttons
+    RIGHT_SHOULDER: 5,
+    LEFT_TRIGGER: 6, // Bottom shoulder buttons
+    RIGHT_TRIGGER: 7,
+    SELECT: 8,
+    START: 9,
+    LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
+    RIGHT_ANALOGUE_STICK: 11,
+    PAD_TOP: 12, // Directional (discrete) pad
+    PAD_BOTTOM: 13,
+    PAD_LEFT: 14,
+    PAD_RIGHT: 15
+};
+gf.input.getGpButtonName = function(i) {
+    for(var k in gf.input.GP_BUTTON) {
+        if(gf.input.GP_BUTTON[k] === i) {
+            return k;
+        }
+    }
+
+    return '';
+};
+/**
+ * Controls gamepad button input
+ *
+ * @class GamepadButtons
+ * @extends gf.input.Input
+ * @namespace gf.input
+ * @constructor
+ */
+ gf.input.GamepadButtons = function() {
+    gf.input.Input.call(this);
+
+    /**
+     * The threshold at which we consider a button "pressed"
+     *
+     * @property threshold
+     * @type Number
+     * @default 0.4
+     */
+    this.threshold = 0.4;
+
+    /**
+     * Track the status of each button
+     *
+     * @property buttons
+     * @type Object
+     * @private
+     */
+    this.buttons = {};
+
+    //setup default objects for each axis
+    for(var bt in gf.input.GP_BUTTON) {
+        this.buttons[gf.input.GP_BUTTON[bt]] = {
+            code: gf.input.GP_BUTTON[bt],
+            name: bt,
+            down: false,
+            value: 0
+        };
+    }
+};
+
+gf.inherits(gf.input.GamepadButtons, gf.input.Input, {
+    /**
+     * Polls the gamepad object for status updates and emits events when they occur
+     *
+     * @method pollStatus
+     * @param pad {Gamepad} The gamepad object to check
+     */
+    pollStatus: function(pad) {
+        for(var b = 0, bl = pad.buttons.length; b < bl; ++b) {
+            var down = (pad.buttons[b] > this.threshold),
+                status = this.buttons[b];
+
+            status.value = pad.buttons[b];
+
+            //down state changed
+            if(status.down !== down) {
+                status.down = down;
+
+                this.emit(b, status);
+            }
+        }
+    }
+});
+/**
+ * Bindable Gamepad Axes
+ *
+ * @property GP_AXIS
+ * @type Object
+ * @static
+ */
+ gf.input.GP_AXIS = {
+    LEFT_ANALOGUE_HOR: 0,
+    LEFT_ANALOGUE_VERT: 1,
+    RIGHT_ANALOGUE_HOR: 2,
+    RIGHT_ANALOGUE_VERT: 3
+};
+gf.input.getGpAxisName = function(i) {
+    for(var k in gf.input.GP_AXIS) {
+        if(gf.input.GP_AXIS[k] === i) {
+            return k;
+        }
+    }
+
+    return '';
+};
+/**
+ * Controls gamepad stick input
+ *
+ * @class GamepadSticks
+ * @extends gf.input.Input
+ * @namespace gf.input
+ * @constructor
+ */
+ gf.input.GamepadSticks = function() {
+    gf.input.Input.call(this);
+
+    /**
+     * The threshold at which we consider a stick moved from center
+     *
+     * @property threshold
+     * @type Number
+     * @default 0.5
+     */
+    this.threshold = 0.5;
+
+    /**
+     * Track the status of each of the axes
+     *
+     * @property axes
+     * @type Object
+     * @private
+     */
+    this.axes = {};
+
+    //setup default objects for each axis
+    for(var ax in gf.input.GP_AXIS) {
+        this.axes[gf.input.GP_AXIS[ax]] = {
+            code: gf.input.GP_AXIS[ax],
+            name: ax,
+            value: 0
+        };
+    }
+};
+
+gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
+    /**
+     * Polls the gamepad object for status updates and emits events when they occur
+     *
+     * @method pollStatus
+     * @param pad {Gamepad} The gamepad object to check
+     */
+    pollStatus: function(pad) {
+        for(var a = 0, al = pad.axes.length; a < al; ++a) {
+            var ax = pad.axes[a],
+                status = this.axes[a];
+
+            //if we have moved off center by threshold, update the value
+            if(Math.abs(ax) >= this.threshold) {
+                status.value = ax;
+            }
+            //otherwise, set it back to zero
+            else {
+                status.value = 0;
+            }
+
+            this.emit(a, status);
+        }
+    }
+});
+/**
+ * The Base loader class that all other loaders inherit from
+ *
+ * @class Loader
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
+ * @constructor
+ * @param name {String} The name of the resource to load, used as a key in the assetCache
+ * @param url {String} The url to load the resource from, also used as a key in the assetCache
+ */
+gf.Loader = function(name, url) {
+    gf.EventEmitter.call(this);
+
+    this.type = 'hey';
+
+    this.name = name;
+    this.url = url;
+};
+
+gf.inherits(gf.Loader, Object, {
+    /**
+     * Atempts to load a resource from the asset cache, if it finds the resource
+     * in the cache, it will return the value and asynchronously emit the 'load' event
+     *
+     * @method load
+     * @return {mixed} The cached value, or undefined if there is none cached
+     */
+    load: function() {
+        var self = this;
+
+        if(gf.assetCache[this.name]) {
+            setTimeout(function() {
+                self.done(gf.assetCache[self.name]);
+            }, 0);
+            return gf.assetCache[this.name];
+        }
+        else if(gf.assetCache[this.url]) {
+            setTimeout(function() {
+                self.done(gf.assetCache[self.url]);
+            }, 0);
+            return gf.assetCache[this.url];
+        }
+    },
+    /**
+     * Emits the 'load' event, passing the properties of this instance and the data passed
+     *
+     * @method done
+     * @param data {mixed} The loaded data
+     */
+    done: function(data) {
+        gf.assetCache[this.name] = data;
+
+        //be async for sure
+        var self = this;
+        setTimeout(function() {
+            self.emit('load', {
+                name: self.name,
+                assetType: self.type,
+                url: self.url,
+                data: data
+            });
+        }, 0);
+    },
+    /**
+     * Emits the 'error' event, passing the properties of this instance and the message passed
+     *
+     * @method error
+     * @param msg {String} The error message that occurred
+     */
+    error: function(msg) {
+        //be async for sure
+        var self = this;
+        setTimeout(function() {
+            self.emit('error', {
+                name: self.name,
+                assetType: self.type,
+                url: self.url,
+                message: msg
+            });
+        }, 0);
+    }
+});
+
+/**
+ * The AssetLoader loads and parses different game assets, such as sounds, textures,
+ * TMX World JSON file (exported from the <a target="_blank" href="http://mapeditor.org">Tiled Editor</a>),
+ * and Spritesheet JSON files (published from <a target="_blank" href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
+ *
+ * @class AssetLoader
+ * @extends Object
+ * @uses gf.EventEmitter
+ * @namespace gf
+ * @constructor
+ * @param assets {Array} Array of assets to load when `.load()` is called
+ * @example
+ *      var loader = new AssetLoader(['/my/texture.png']);
+ *      loader.load();
+ *      //OR
+ *      var loader = new AssetLoader();
+ *      loader.load(['/my/texture.png']);
+ */
+gf.AssetLoader = function() {
+    gf.EventEmitter.call(this);
+
+    /**
+     * The array of assets to load
+     *
+     * @property assets
+     * @type Array
+     */
+    this.assets = [];
+
+    /**
+     * The count of remaining assets to load
+     *
+     * @property remaining
+     * @type Number
+     * @readOnly
+     */
+    this.remaining = 0;
+
+    /**
+     * A mapping of extensions to types
+     *
+     * @property loaders
+     * @type Object
+     * @readOnly
+     * @private
+     */
+    this.loaders = {
+        'texture': gf.TextureLoader,
+        'jpeg': gf.TextureLoader,
+        'jpg': gf.TextureLoader,
+        'png': gf.TextureLoader,
+        'gif': gf.TextureLoader,
+
+        'audio': gf.AudioLoader,
+        'music': gf.AudioLoader,
+        'mp3': gf.AudioLoader,
+        'ogg': gf.AudioLoader,
+        'wma': gf.AudioLoader,
+        'wav': gf.AudioLoader,
+
+        'json': gf.JsonLoader
+    };
+
+    /**
+     * Fired if a loader encounters an error
+     *
+     * @event error
+     * @param eventData {Object}
+     * @param eventData.assetType {String} The type of asset (loader name)
+     * @param eventData.message {String} The message of the error
+     */
+
+    /**
+     * Fired when an item has loaded
+     *
+     * @event progress
+     * @param eventData {Object}
+     * @param eventData.assetType {String} The type of asset (loader name)
+     * @param eventData.url {String} The url the asset loaded from
+     * @param eventData.data {mixed} The data that was loaded
+     */
+
+    /**
+     * Fired when all the assets have loaded
+     *
+     * @event complete
+     */
+};
+
+gf.inherits(gf.AssetLoader, Object, {
+    /**
+     * Adds a resource to the assets array.
+     *
+     * @method add
+     * @param name {String} The name of the resource (to use as the key in the cache)
+     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     */
+    add: function(name, url) {
+        this.assets.push({
+            name: name,
+            src: url
+        });
+    },
+    /**
+     * Starts the loading festivities. If called without any arguments it will load
+     * the assets passed in at the ctor. If an array of assets are passed it will
+     * load those instead.
+     *
+     * @method load
+     * @param items {Array<String>|Array<Object>} Array of resources to load instead of the object's resources
+     */
+    load: function(items) {
+        var assets = items || this.assets;
+
+        for(var i = 0, il = assets.length; i < il; ++i) {
+            var name = typeof assets[i] === 'string' ? assets[i] : assets[i].name,
+                url = typeof assets[i] === 'string' ? assets[i] : (assets[i].src || assets[i].url || assets[i].uri),
+                ext = assets[i].type || (url instanceof Array ? 'audio' : null) || url.split('.').pop().toLowerCase(), //assume arrays of urls are for audio
+                Loader = this.loaders[ext];
+
+            if(!Loader)
+                throw 'Unknown type "' + ext + '", unable to preload!';
+
+            this.remaining++;
+            var loader = new Loader(name, url);
+
+            loader.on('load', this.onAssetLoaded.bind(this));
+            loader.on('error', this.onAssetError.bind(this));
+            loader.load();
+        }
+    },
+    /**
+     * Called whenever an asset is loaded, to keep track of when to emit complete and progress.
+     *
+     * @method onAssetLoaded
+     * @param event {Object} The event object
+     * @private
+     */
+    onAssetLoaded: function(e) {
+        this.remaining--;
+
+        this.emit('progress', {
+            assetType: e.assetType,
+            url: e.url,
+            data: e.data
+        });
+
+        if(this.remaining === 0) {
+            this.emit('complete');
+        }
+    },
+    /**
+     * Called whenever an asset loader encounters an error
+     *
+     * @method onAssetError
+     * @param event {Object} The event object
+     * @private
+     */
+    onAssetError: function(e) {
+        this.remaining--;
+
+        this.emit('error', {
+            assetType: e.assetType,
+            message: e.message
+        });
+
+        if(this.remaining === 0) {
+            this.emit('complete');
+        }
+    }
+});
+
+/**
+ * Loads an audio clip
+ *
+ * @class AudioLoader
+ * @extends gf.Loader
+ * @namespace gf
+ * @constructor
+ * @param name {String} The name of the resource to load, used as a key in the assetCache
+ * @param urls {Array<String>} All the urls for the different formats of this audio file
+ */
+gf.AudioLoader = function(name, urls) {
+    gf.Loader.call(this, name, urls);
+
+    this.type = 'audio';
+    this.urls = typeof urls === 'string' ? [urls] : urls;
+};
+
+gf.inherits(gf.AudioLoader, gf.Loader, {
+    /**
+     * Loads the audio file described by the urls passed in to the ctor. Will intelligently
+     * determine which url is supported by this browser.
+     *
+     * @method load
+     */
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var man = new gf.AudioManager(),
+            player = man.create(name, { urls: this.urls });
+
+        if(!player) {
+            this.error('Cannot find a url for an audio type supported by this browser.');
+        } else {
+            var self = this;
+            player.on('load', function() {
+                self.done(player);
+            });
+
+            player.on('error', function(e) {
+                self.error(e.message);
+            });
+        }
+    }
+});
+/**
+ * Loads json data
+ *
+ * @class JsonLoader
+ * @extends gf.Loader
+ * @namespace gf
+ * @constructor
+ * @param name {String} The name of the resource to load, used as a key in the assetCache
+ * @param url {String} The url to load the resource from, also used as a key in the assetCache
+ */
+gf.JsonLoader = function(name, url) {
+    gf.Loader.call(this, name, url);
+
+    this.type = 'json';
+};
+
+gf.inherits(gf.JsonLoader, gf.Loader, {
+    /**
+     * Loads the json data
+     *
+     * @method load
+     */
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var self = this,
+            baseUrl = this.url.replace(/[^\/]*$/, '');
+
+        gf.utils.ajax({
+            method: 'GET',
+            url: this.url,
+            dataType: 'json',
+            load: function(data) {
+                var loader;
+
+                //check some properties to see if this is a TiledMap Object
+                if(data.orientation && data.layers && data.tilesets && data.version) {
+                    loader = new gf.WorldLoader(self.name, baseUrl, data);
+                }
+                //this is a sprite sheet (published from TexturePacker)
+                else if(data.frames && data.meta) {
+                    loader = new gf.SpriteSheetLoader(self.name, baseUrl, data);
+                }
+
+                if(loader) {
+                    loader.on('load', function(e) {
+                        self.done(e.data);
+                    });
+                    loader.on('error', function(e) {
+                        self.error(e.message);
+                    });
+
+                    loader.load();
+                }
+                //just some json data
+                else {
+                    self.done(data);
+                }
+            },
+            error: function(err) {
+                self.error(err.message || err);
+            }
+        });
+    }
+});
+/**
+ * Loads a texture image
+ *
+ * @class TextureLoader
+ * @extends gf.Loader
+ * @namespace gf
+ * @constructor
+ * @param name {String} The name of the resource to load, used as a key in the assetCache
+ * @param url {String} The url to load the resource from, also used as a key in the assetCache
+ */
+ gf.TextureLoader = function(name, url) {
+    gf.Loader.call(this, name, url);
+
+    this.type = 'texture';
+};
+
+gf.inherits(gf.TextureLoader, gf.Loader, {
+    /**
+     * Loads the texture data
+     *
+     * @method load
+     */
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var self = this,
+            texture = gf.Texture.fromImage(this.url);
+
+        if(!texture.baseTexture.hasLoaded) {
+            texture.baseTexture.on('loaded', function() {
+                self.done(texture);
+            });
+            texture.baseTexture.source.onerror = function() {
+                self.error('Unable to load texture');
+            };
+        } else {
+            this.done(texture);
+        }
+    }
+});
+gf.SpriteSheetLoader = function(name, baseUrl, data) {
+    gf.Loader.call(this, name, baseUrl);
+
+    this.type = 'spritesheet';
+    this.data = data;
+};
+
+gf.inherits(gf.SpriteSheetLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        var self = this,
+            data = this.data,
+            txLoader = new gf.TextureLoader(this.name, this.url + data.meta.image);
+
+        txLoader.on('load', function(e) {
+            var texture =  e.data.baseTexture,
+                frames = self.data.frames,
+                assets = {};
+
+            for(var f in frames) {
+                var rect = frames[f].frame;
+
+                if(rect) {
+                    assets[f] = PIXI.TextureCache[f] = new gf.Texture(texture, {
+                        x: rect.x,
+                        y: rect.y,
+                        width: rect.w,
+                        height: rect.h
+                    });
+
+                    if(frames[f].trimmed) {
+                        PIXI.TextureCache[f].realSize = frames[f].spriteSourceSize;
+                        PIXI.TextureCache[f].trim.x = 0;
+                    }
+                }
+            }
+
+            self.done(assets);
+        });
+
+        txLoader.on('error', function(e) {
+            self.error(e.message);
+        });
+
+        txLoader.load();
+    }
+});
+gf.WorldLoader = function(name, baseUrl, data) {
+    gf.Loader.call(this, name, baseUrl);
+
+    this.type = 'world';
+    this.data = data;
+    this.numTextures = 0;
+    this.errors = [];
+};
+
+gf.inherits(gf.WorldLoader, gf.Loader, {
+    load: function() {
+        //pull from cache
+        if(gf.Loader.prototype.load.call(this)) return;
+
+        //loop through each layer and load the sprites (objectgroup types)
+        for(var i = 0, il = this.data.layers.length; i < il; ++i) {
+            var layer = this.data.layers[i];
+            if(layer.type !== 'objectgroup') continue;
+
+            //loop through each object, and load the textures
+            for(var o = 0, ol = layer.objects.length; o < ol; ++o) {
+                var obj = layer.objects[o],
+                    txLoader;
+
+                if(!obj.properties.spritesheet) continue;
+                this.numTextures++;
+
+                txLoader = new gf.TextureLoader(layer.name + '_' + obj.name + '_texture', obj.properties.spritesheet);
+
+                txLoader.on('load', this.onTextLoad.bind(this));
+                txLoader.on('error', this.onTextError.bind(this));
+                txLoader.load();
+            }
+        }
+
+        //loop through each tileset and load the texture
+        for(var s = 0, sl = this.data.tilesets.length; s < sl; ++s) {
+            var set = this.data.tilesets[s],
+                txLoader2;
+
+            if(!set.image) continue;
+            this.numTextures++;
+
+            txLoader2 = new gf.TextureLoader(set.name + '_texture', this.url + set.image);
+
+            txLoader2.on('load', this.onTextLoad.bind(this));
+            txLoader2.on('error', this.onTextError.bind(this));
+            txLoader2.load();
+        }
+    },
+    onTextLoad: function() {
+        this.numTextures--;
+
+        if(this.numTextures === 0) {
+            this.done();
+        }
+    },
+    onTextError: function(e) {
+        this.numTextures--;
+        this.errors.push(e);
+
+        if(this.numTextures === 0) {
+            this.done();
+        }
+    },
+    done: function() {
+        if(this.errors.length)
+            gf.Loader.prototype.error.call(this, this.errors);
+        else
+            gf.Loader.prototype.done.call(this, this.data);
+    }
+});
+/**
+ * Base Map implementation, provides common functions for all Map types
+ *
+ * @class Map
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
+ * @constructor
+ * @param map {Object} All the settings for the map
+ */
+gf.Map = function(map) {
+    /**
+     * The size of the map
+     *
+     * @property size
+     * @type Vector
+     * @default new gf.Vector(0, 0)
+     */
+    this.size = new gf.Vector(map.width, map.height);
+
+    //call base ctor
+    gf.DisplayObjectContainer.call(this, map);
+};
+
+gf.inherits(gf.Map, gf.DisplayObjectContainer, {
+    /**
+     * Pans the map around
+     *
+     * @method pan
+     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
+     * @param y {Number} The y ammount to pan
+     * @return {Map} Returns itself for chainability
+     */
+    pan: function(x, y) {
+        y = x instanceof gf.Point ? x.y : (y || 0);
+        x = x instanceof gf.Point ? x.x : (x || 0);
+
+        this.position.x += x;
+        this.position.y += y;
+
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.pan)
+                o.pan(x, y);
+        }
+    },
+    /**
+     * Finds a layer based on the string name
+     *
+     * @method findLayer
+     * @param name {String} The name of the layer to find
+     * @return {Layer}
+     */
+    findLayer: function(name) {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.name === name)
+                return o;
+        }
+    }
+});
+/**
+ * Base Tile implementation, a tile is a single tile in a tilemap layer
+ *
+ * @class Tile
+ * @extends gf.Sprite
+ * @namespace gf
+ * @constructor
+ * @param tile {Object} All the settings for the tile
+ */
+gf.Tile = function(texture) {
+    this.collisionType = gf.Tile.TYPE.NONE;
+
+    //call base ctor
+    gf.Sprite.call(this, texture);
+
+    this.type = gf.Sprite.TYPE.TILE;
+};
+
+gf.inherits(gf.Tile, gf.Sprite, {
+    /**
+     * On Collision Event
+     *      called when this sprite collides into another, or is being collided into by another.
+     *      By default if something collides with a collectable sprite we remove the collectable
+     *      and if we collide with a solid tile we kill our velocity
+     *
+     * @method onCollision
+     * @param obj {Sprite} Colliding sprite
+     */
+    onCollision: function(obj) {
+        gf.Sprite.prototype.onCollision.call(this, obj);
+
+        //I did a switch-case here because I feel like I
+        //will be adding more defaults later
+        switch(this.collisionType) {
+            case gf.Tile.TYPE.SOLID:
+                obj.setVelocity(0);
+                break;
+        }
+    }
+});
+
+/**
+ * Tile collision types
+ *
+ * @property TYPE
+ * @type Object
+ * @static
+ */
+gf.Tile.TYPE = {
+    NONE: 'none',
+    SOLID: 'solid',
+    CLIFF: 'cliff',
+    LADDER: 'ladder',
+    WATER: 'water',
+    DEEP_WATER: 'deep_water'
+};
+/**
+ * Base Layer implementation, provides common functions for all Layer types
+ *
+ * @class Layer
+ * @extends gf.DisplayObjectContainer
+ * @namespace gf
+ * @constructor
+ * @param layer {Object} All the settings for the layer
+ */
+gf.Layer = function(layer) {
+    /**
+     * The name of the layer
+     *
+     * @property name
+     * @type String
+     * @default ''
+     */
+    this.name = '';
+
+    /**
+     * The size of the layer
+     *
+     * @property size
+     * @type Vector
+     * @default new gf.Vector(1, 1)
+     */
+    this.size = new gf.Vector(layer.width || 0, layer.height || 0);
+
+    //call base ctor
+    gf.DisplayObjectContainer.call(this, layer);
+};
+
+gf.inherits(gf.Layer, gf.DisplayObjectContainer, {
+    /**
+     * Pans the layer around, rendering stuff if necessary
+     *
+     * @method pan
+     * @param dx {Number|Point} The x amount to pan, if a Point is passed the dy param is ignored
+     * @param dy {Number} The y ammount to pan
+     * @return {Layer} Returns itself for chainability
+     */
+    pan: function() {
+    }
+});
+/**
+ * ImageLayer is a layer represented by a single image
+ *
+ * @class ImageLayer
+ * @extends gf.Layer
+ * @namespace gf
+ * @constructor
+ * @param game {Game} The game the layer is in
+ * @param position {Point|Vector|Array|Number} The starting position of the layer
+ * @param layer {Object|Texture} All the settings for the layer, or the texture to use
+ */
+gf.ImageLayer = function(layer) {
+    this.sprite = new gf.Sprite(layer.image || layer.texture || layer);
+
+    this.addChild(this.sprite);
+
+    //call base ctor
+    gf.Layer.call(this, layer);
+};
+
+gf.inherits(gf.ImageLayer, gf.Layer);
+/**
+ * Tiled map, expects a Tiled TMX file loaded by the gf.loader as the argument.
+ * The loader knows to load all textures and other resources when loading a world TMX
+ * file, and this expets that to already be done.
+ *
+ * @class TiledMap
+ * @extends gf.Map
+ * @namespace gf
+ * @constructor
+ * @param game {Game} The game the map is in
+ * @param position {Point|Vector|Array|Number} The starting position of the map
+ * @param map {Object} All the settings for the map
+ */
+gf.TiledMap = function(map) {
+    gf.Map.call(this, map);
+
+    //Tiled Editor properties
+
+    /**
+     * The user-defined properties
+     *
+     * @property properties
+     * @type Object
+     * @default {}
+     */
+    this.properties = gf.utils.parseTiledProperties(map.properties) || {};
+    this.scale.x = this.properties.scale || 1;
+    this.scale.y = this.properties.scale || 1;
+
+    /**
+     * The tile size
+     *
+     * @property tileSize
+     * @type Vector
+     */
+    this.tileSize = new gf.Vector(
+        map.tilewidth,
+        map.tileheight
+    );
+
+    /**
+     * The orientation of the map
+     *
+     * @property orientation
+     * @type String
+     */
+    this.orientation = map.orientation;
+
+    /**
+     * The version of the TMX format
+     *
+     * @property version
+     * @type Number
+     */
+    this.version = map.version;
+
+    /**
+     * The background color of the map (since Tiled 0.9.0)
+     *
+     * @property backgroundColor
+     * @type Number
+     */
+    this.backgroundColor = map.backgroundColor;
+
+    //Custom/Optional properties
+
+    /**
+     * The tilesets used by this map
+     *
+     * @property tilesets
+     * @type Array
+     */
+    this.tilesets = [];
+
+    /**
+     * The scaled tile size
+     *
+     * @property scaledTileSize
+     * @type Vector
+     */
+    this.scaledTileSize = new gf.Vector(
+        map.tilewidth * this.scale.x,
+        map.tileheight * this.scale.y
+    );
+
+    /**
+     * The real size (size * scaledTileSize)
+     *
+     * @property realSize
+     * @type Vector
+     */
+    this.realSize = new gf.Vector(
+        this.size.x * this.scaledTileSize.x,
+        this.size.y * this.scaledTileSize.y
+    );
+
+    for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
+        this.tilesets.push(new gf.TiledTileset(map.tilesets[t]));
+    }
+
+    for(var i = 0, il = map.layers.length; i < il; ++i) {
+        var lyr;
+
+        switch(map.layers[i].type) {
+            case 'tilelayer':
+                lyr = new gf.TiledLayer(map.layers[i]);
+                break;
+
+            case 'objectgroup':
+                lyr = new gf.TiledObjectGroup(map.layers[i]);
+                break;
+
+            case 'imagelayer':
+                lyr = new gf.ImageLayer(map.layers[i]);
+                break;
+        }
+
+        this.addChild(lyr);
+    }
+
+    this._showPhysics = false;
+};
+
+gf.inherits(gf.TiledMap, gf.Map, {
+    /**
+     * Gets the tileset that an ID is associated with
+     *
+     * @method getTileset
+     * @param tileId {Number} The id of the tile to find the tileset for
+     * @return {TiledTileset}
+     */
+    getTileset: function(tileId) {
+        for(var i = 0, il = this.tilesets.length; i < il; ++i)
+            if(tileId >= this.tilesets[i].firstgid && tileId <= this.tilesets[i].lastgid)
+                return this.tilesets[i];
+    },
+    /**
+     * Notifies the map it needs to resize, re renders the viewport
+     *
+     * @method resize
+     */
+    resize: function(width, height) {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.type === 'tilelayer') {
+                o.resize(width, height);
+            }
+        }
+    },
+    destroy: function() {
+        gf.Map.prototype.destroy.call(this);
+
+        for(var i = this.children.length - 1; i > -1; --i) {
+            var o = this.children[i];
+
+            if(o.destroy)
+                o.destroy();
+        }
+    },
+    /**
+     * Spawns all the objects in the TiledObjectGroups of this map
+     *
+     * @method spawnObjects
+     */
+    spawnObjects: function() {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.type === 'objectgroup') {
+                o.spawn();
+            }
+        }
+    },
+    /**
+     * Called by a TiledLayer when a tile event occurs. This is so you can listen for
+     * the emitted events on the world instead of the tile itself.
+     *
+     * @method onTileEvent
+     * @param eventName {String} The event name to emit, the prefix 'tile.' will be added to it
+     * @param tile {Tile} The tile that has the event
+     * @param data {InteractionData} The raw interaction object for the event
+     * @private
+     */
+    onTileEvent: function(eventName, tile, data) {
+        this.emit('tile.' + eventName, {
+            tile: tile,
+            data: data
+        });
+    },
+    /**
+     * Called by a TiledObjectGroup when an object event occurs. This is so you can listen for
+     * the emitted events on the world instead of the tile itself.
+     *
+     * @method onObjectEvent
+     * @param eventName {String} The event name to emit, the prefix 'object.' will be added to it
+     * @param obj {Sprite|DisplayObjectContainer} The object that has the event
+     * @param data {InteractionData} The raw interaction object for the event
+     * @private
+     */
+    onObjectEvent: function(eventName, obj, data) {
+        this.emit('object.' + eventName, {
+            object: obj,
+            data: data
+        });
+    }
+});
+
+/**
+ * The TiledLayer is the visual tiled layer that actually displays on the screen
+ *
+ * This class will be created by the TiledMap, there shouldn't be a reason to
+ * create an instance on your own.
+ *
+ * @class TiledLayer
+ * @extends gf.Layer
+ * @namespace gf
+ * @constructor
+ * @param layer {Object} All the settings for the layer
+ */
+//see: https://github.com/GoodBoyDigital/pixi.js/issues/48
+gf.TiledLayer = function(layer) {
+    gf.Layer.call(this, layer);
+
+    /**
+     * The tile IDs of the tilemap
+     *
+     * @property name
+     * @type Uint32Array
+     */
+    this.tileIds = gf.support.typedArrays ? new Uint32Array(layer.data) : layer.data;
+
+    /**
+     * The current map of all tiles on the screen
+     *
+     * @property tiles
+     * @type Object
+     */
+    this.tiles = [];
+
+    /**
+     * The user-defined properties of this group. Usually defined in the TiledEditor
+     *
+     * @property properties
+     * @type Object
+     */
+    this.properties = gf.utils.parseTiledProperties(layer.properties) || {};
+
+    //translate some tiled properties to our inherited properties
+    this.type = layer.type;
+    this.position.x = layer.x;
+    this.position.y = layer.y;
+    this.alpha = layer.opacity;
+    this.visible = layer.visible;
+
+    this.preRender = this.properties.preRender;
+    this.chunkSize = new gf.Vector(
+        this.properties.chunkSizeX || this.properties.chunkSize || 512,
+        this.properties.chunkSizeY || this.properties.chunkSize || 512
+    );
+    this._preRendered = false;
+
+    this._tilePool = [];
+    this._buffered = { left: false, right: false, top: false, bottom: false };
+    this._panDelta = new gf.Vector();
+    this._rendered = new gf.Rectangle();
+};
+
+gf.inherits(gf.TiledLayer, gf.Layer, {
+    /**
+     * Creates all the tile sprites needed to display the layer
+     *
+     * @method resize
+     * @param width {Number} The number of tiles in the X direction to render
+     * @param height {Number} The number of tiles in the Y direction to render
+     */
+    resize: function(width, height) {
+        if(this.preRender) {
+            if(!this._preRendered)
+                this._preRender();
+
+            return;
+        }
+
+        if(!this.tileSize)
+            this.tileSize = this.parent.tileSize;
+
+        //clear all the visual tiles
+        this.clearTiles();
+
+        if(this.parent.orientation === 'isometric') {
+            this._renderIsoTiles(
+                -this.parent.position.x,
+                -this.parent.position.y,
+                width,
+                height
+            );
+        }
+        else {
+            this._renderOrthoTiles(
+                -this.parent.position.x,
+                -this.parent.position.y,
+                width,
+                height
+            );
+        }
+
+        this._updateRenderSq();
+        if(this.hasPhysics) {
+            this.parent.parent.physics.reindexStatic();
+        }
+    },
+    //render the map onto a canvas once to use as a preRendered texture
+    _preRender: function() {
+        if(!this.visible)
+            return;
+
+        this._preRendered = true;
+        this.tileSize = this.chunkSize.clone();
+
+        var world = this.parent,
+            width = world.size.x * world.tileSize.x,
+            height = world.size.y * world.tileSize.y,
+            xChunks = Math.ceil(width / this.chunkSize.x),
+            yChunks = Math.ceil(height / this.chunkSize.y);
+
+        //for each chunk
+        for(var x = 0; x < xChunks; ++x) {
+            for(var y = 0; y < yChunks; ++y) {
+                var cw = (x === xChunks - 1) ? width - (x * this.chunkSize.x) : this.chunkSize.x,
+                    ch = (y === yChunks - 1) ? height - (y * this.chunkSize.y) : this.chunkSize.y;
+
+                this._preRenderChunk(x, y, cw, ch);
+            }
+        }
+    },
+    _preRenderChunk: function(cx, cy, w, h) {
+        var world = this.parent,
+            tsx = world.tileSize.x,
+            tsy = world.tileSize.y,
+            xTiles = w / tsx,
+            yTiles = h / tsy,
+            nx = (cx * this.chunkSize.x) % tsx,
+            ny = (cy * this.chunkSize.y) % tsy,
+            tx = Math.floor(cx * this.chunkSize.x / tsx),
+            ty = Math.floor(cy * this.chunkSize.y / tsy),
+            sx = world.size.x,
+            sy = world.size.y,
+            canvas = document.createElement('canvas'),
+            ctx = canvas.getContext('2d');
+
+        canvas.width = w;
+        canvas.height = h;
+
+        //draw all the tiles in this chunk to the canvas
+        for(var x = 0; x < xTiles; ++x) {
+            for(var y = 0; y < yTiles; ++y) {
+                if(x + tx < sx && y + ty < sy) {
+                    var id = ((x + tx) + ((y + ty) * sx)),
+                        tid = this.tileIds[id],
+                        set = world.getTileset(tid),
+                        tex, frame;
+
+                    if(set) {
+                        tex = set.getTileTexture(tid);
+                        frame = tex.frame;
+
+                        ctx.drawImage(
+                            tex.baseTexture.source,
+                            frame.x,
+                            frame.y,
+                            frame.width,
+                            frame.height,
+                            (x * tsx) - nx + set.tileoffset.x,
+                            (y * tsy) - ny + set.tileoffset.y,
+                            frame.width,
+                            frame.height
+                        );
+                    }
+                }
+            }
+        }
+
+        //use the canvas as a texture for a tile to display
+        var tile = new gf.Tile(gf.Texture.fromCanvas(canvas));
+        tile.setPosition(cx * this.chunkSize.x, cy * this.chunkSize.y);
+
+        if(!this.tiles[cx])
+            this.tiles[cx] = {};
+
+        this.addChild(tile);
+        this.tiles[cx][cy] = tile;
+    },
+    _renderOrthoTiles: function(sx, sy, sw, sh) {
+        //convert to tile coords
+        sx = Math.floor(sx / this.parent.scaledTileSize.x);
+        sy = Math.floor(sy / this.parent.scaledTileSize.y);
+        //ensure we don't go below 0
+        sx = sx < 0 ? 0 : sx;
+        sy = sy < 0 ? 0 : sy;
+
+        //convert to tile coords
+        sw = Math.ceil(sw / this.parent.scaledTileSize.x) + 1;
+        sh = Math.ceil(sh / this.parent.scaledTileSize.y) + 1;
+        //ensure we don't go outside the map size
+        sw = (sx + sw > this.parent.size.x) ? (this.parent.size.x - sx) : sw;
+        sh = (sy + sh > this.parent.size.y) ? (this.parent.size.y - sy) : sh;
+
+        //render new sprites
+        var endX = sx + sw,
+            endY = sy + sh;
+
+        for(var x = sx; x < endX; ++x) {
+            for(var y = sy; y < endY; ++y) {
+                this.moveTileSprite(-1, -1, x, y);
+            }
+        }
+
+        //set rendered area
+        this._rendered.x = sx;
+        this._rendered.y = sy;
+        this._rendered.width = sw;
+        this._rendered.height = sh;
+
+        //reset buffered status
+        this._buffered.left = this._buffered.right = this._buffered.top = this._buffered.bottom = false;
+
+        //reset panDelta
+        this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
+        this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
+    },
+    _renderIsoTiles: function(sx, sy, sw, sh) {
+        this._rendered.x = sx;
+        this._rendered.y = sx;
+        this._rendered.width = sw;
+        this._rendered.height = sh;
+
+        var scaled = this.parent.scaledTileSize;
+
+        //convert to tile coords
+        sx = Math.floor(sx / (scaled.x / 2));
+        sy = Math.floor(sy / scaled.y);
+
+        //convert to tile units
+        sw = Math.ceil(sw / (scaled.x / 2));
+        sh = Math.ceil(sh / (scaled.y / 2));
+
+        //in this function i,j represents the coord system in the isometric plane
+        var iStart = Math.floor(this._isoToI(sx, sy)) - 1,
+            jStart = Math.floor(this._isoToJ(sx, sy)),
+            iMax = Math.ceil(this._isoToI(sx + sw, sy + sh)) + 1,
+            jMax = Math.ceil(this._isoToJ(sx, sy + sh)) + 2,
+            jMin = Math.floor(this._isoToJ(sx + sw, sy)),
+
+            iParentMax = this.parent.size.x,
+            jParentMax = this.parent.size.y,
+
+            nBump = false, //have we reached minimum j (the bump)
+            mBump = false, //have we reached maximum j (the bump)
+            n = 0, nBuffer = 1,
+            m = 1, mBuffer = 0;
+
+        for(var i = iStart; i < iMax; ++i) {
+            for(var j = jStart - n; j < jStart + m; ++j) {
+                if(i < 0 || j < 0 || i >= iParentMax || j >= jParentMax)
+                    continue;
+
+                this.moveTileSprite(i, j, i, j);
+            }
+
+            if(!nBump) {
+                //we have not reached lowest j point, increment n to go even lower next iteration
+                n++;
+
+                //check if we reached lowest j point
+                if((jStart - n) === jMin) {
+                    nBump = true;
+                }
+            } else {
+                //if we have reached deepest j start decreasing after the buffer is gone
+                if(nBuffer > 0) {
+                    nBuffer--;
+                }
+                //the buffer is gone, start decreasing n each iteration
+                else {
+                    n--;
+                }
+            }
+
+            if(!mBump) {
+                //we have not reached the highest j point, increase m to go even higher next iteration
+                m++;
+
+                if((jStart + m) === jMax) {
+                    mBump = true;
+                }
+            } else {
+                //we have reached max j, start decreasing m after the buffer is gone
+                if(mBuffer > 0) {
+                    mBuffer--;
+                }
+                //the buffer is gone, start decreasing m each iteration
+                else {
+                    m--;
+                }
+            }
+        }
+    },
+    _freeTile: function(tx, ty) {
+        if(this.tiles[tx] && this.tiles[tx][ty]) {
+            this.clearTile(this.tiles[tx][ty]);
+            this.tiles[tx][ty] = null;
+        }
+    },
+    _isoToI: function(x, y) {
+        // converts world isometric coordinates into the i position of the 2D-Array
+        return ((y + x) / 2);
+    },
+    _isoToJ: function(x, y) {
+        // converts world isometric coordinates into the j position of the 2D-Array
+        return ((y - x) / 2);
+    },
+    destroy: function() {
+        this.clearTiles(true);
+        gf.Layer.prototype.destroy.call(this);
+    },
+    /**
+     * Clears all the tiles currently used to render the layer
+     *
+     * @method clearTiles
+     */
+    clearTiles: function(remove) {
+        for(var c = this.children.length - 1; c > -1; --c) {
+            this.clearTile(this.children[c], remove);
+        }
+
+        this.tiles.length = 0;
+    },
+    clearTile: function(tile, remove) {
+        tile.visible = false;
+        tile.disablePhysics();
+
+        if(remove)
+            this.removeChild(tile);
+        else
+            this._tilePool.push(tile);
+    },
+    /**
+     * Moves a tile sprite from one position to another, and creates a new tile
+     * if the old position didn't have a sprite
+     *
+     * @method moveTileSprite
+     * @param fromTileX {Number} The x coord of the tile in units of tiles (not pixels) to move from
+     * @param fromTileY {Number} The y coord of the tile in units of tiles (not pixels) to move from
+     * @param toTileX {Number} The x coord of the tile in units of tiles (not pixels) to move to
+     * @param toTileY {Number} The y coord of the tile in units of tiles (not pixels) to move to
+     * @return {Tile} The sprite to display
+     */
+    moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
+        var tile,
+            id = (toTileX + (toTileY * this.size.x)),
+            tileId = this.tileIds[id],
+            set = this.parent.getTileset(tileId),
+            iso = (this.parent.orientation === 'isometric'),
+            texture,
+            props,
+            position,
+            hitArea,
+            interactive;
+
+        //if no tileset, just ensure the "from" tile is put back in the pool
+        if(!set) {
+            this._freeTile(fromTileX, fromTileY);
+            return;
+        }
+
+        //grab some values for the tile
+        texture = set.getTileTexture(tileId);
+        props = set.getTileProperties(tileId);
+        hitArea = props.hitArea || set.properties.hitArea;
+        interactive = this._getInteractive(set, props);
+        position = iso ?
+            // Isometric position
+            [
+                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + set.tileoffset.x,
+                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + set.tileoffset.y
+            ]
+            :
+            // Orthoganal position
+            [
+                (toTileX * this.parent.tileSize.x) + set.tileoffset.x,
+                (toTileY * this.parent.tileSize.y) + set.tileoffset.y
+            ];
+
+        //due to the fact that we use top-left anchors for everything, but tiled uses bottom-left
+        //we need to move the position of each tile down by a single map-tile height. That is why
+        //there is an addition of "this.parent.tileSize.y" to the coords
+        position[1] +=  this.parent.tileSize.y;
+
+        //if there is one to move in the map, lets just move it
+        if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
+            tile = this.tiles[fromTileX][fromTileY];
+            this.tiles[fromTileX][fromTileY] = null;
+            tile.disablePhysics();
+        }
+        //otherwise grab a new tile from the pool
+        else {
+            tile = this._tilePool.pop();
+        }
+
+        //if we couldn't find a tile from the pool, or one to move
+        //then create a new tile
+        if(!tile) {
+            tile = new gf.Tile(texture);
+            tile.mass = props.mass;
+            tile.inertia = props.inertia;
+            tile.anchor.y = 1;
+            this.addChild(tile);
+        }
+
+        tile.collisionType = props.type;
+        tile.visible = true;
+        tile.hitArea = hitArea;
+        tile.interactive = interactive;
+
+        tile.setTexture(texture);
+        tile.setPosition(position[0], position[1]);
+
+        if(props.mass) {
+            this.hasPhysics = true;
+            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
+        }
+
+        //pass through all events
+        if(interactive) {
+            tile.click = this.onTileEvent.bind(this, 'click', tile);
+            tile.mousedown = this.onTileEvent.bind(this, 'mousedown', tile);
+            tile.mouseup = this.onTileEvent.bind(this, 'mouseup', tile);
+            tile.mousemove = this.onTileEvent.bind(this, 'mousemove', tile);
+            tile.mouseout = this.onTileEvent.bind(this, 'mouseout', tile);
+            tile.mouseover = this.onTileEvent.bind(this, 'mouseover', tile);
+            tile.mouseupoutside = this.onTileEvent.bind(this, 'mouseupoutside', tile);
+        }
+
+        //update sprite position in the map
+        if(!this.tiles[toTileX])
+            this.tiles[toTileX] = [];
+
+        this.tiles[toTileX][toTileY] = tile;
+
+        return tile;
+    },
+    onTileEvent: function(eventName, tile, data) {
+        this.parent.onTileEvent(eventName, tile, data);
+    },
+    _getInteractive: function(set, props) {
+        //first check the lowest level value (on the tile iteself)
+        return props.interactive || //obj interactive
+                (set && set.properties.interactive) || //tileset interactive
+                this.properties.interactive || //layer interactive
+                this.parent.properties.interactive; //map interactive
+    },
+    /**
+     * Pans the layer around, rendering stuff if necessary
+     *
+     * @method pan
+     * @param dx {Number|Point} The x amount to pan, if a Point is passed the dy param is ignored
+     * @param dy {Number} The y ammount to pan
+     * @return {Layer} Returns itself for chainability
+     */
+    pan: function(dx, dy) {
+        if(this.preRender)
+            return;
+
+        //isometric pan (just re render everything)
+        if(this.parent.orientation === 'isometric')
+            return this.resize(this._rendered.width, this._rendered.height);
+
+        //optimized ortho pan, move only what is needed to move
+        this._panDelta.x += dx;
+        this._panDelta.y += dy;
+
+        //check if we need to build a buffer around the viewport
+        //usually this happens on the first pan after a full render
+
+        //moving world right, so left will be exposed
+        if(dx > 0 && !this._buffered.left)
+            this._renderLeft(this._buffered.left = true);
+        //moving world left, so right will be exposed
+        else if(dx < 0 && !this._buffered.right)
+            this._renderRight(this._buffered.right = true);
+        //moving world down, so top will be exposed
+        else if(dy > 0 && !this._buffered.top)
+            this._renderUp(this._buffered.top = true);
+        //moving world up, so bottom will be exposed
+        else if(dy < 0 && !this._buffered.bottom)
+            this._renderDown(this._buffered.bottom = true);
+
+        //moved position right, so render left
+        while(this._panDelta.x >= this.parent.scaledTileSize.x) {
+            this._renderLeft();
+            this._panDelta.x -= this.parent.scaledTileSize.x;
+        }
+
+        //moved position left, so render right
+        while(this._panDelta.x <= -this.parent.scaledTileSize.x) {
+            this._renderRight();
+            this._panDelta.x += this.parent.scaledTileSize.x;
+        }
+
+        //moved position down, so render up
+        while(this._panDelta.y >= this.parent.scaledTileSize.y) {
+            this._renderUp();
+            this._panDelta.y -= this.parent.scaledTileSize.y;
+        }
+
+        //moved position up, so render down
+        while(this._panDelta.y <= -this.parent.scaledTileSize.y) {
+            this._renderDown();
+            this._panDelta.y += this.parent.scaledTileSize.y;
+        }
+
+        if(this.hasPhysics) {
+            this.parent.parent.physics.reindexStatic();
+        }
+    },
+    _renderLeft: function(forceNew) {
+        //move all the far right tiles to the left side
+        for(var i = 0; i < this._rendered.height; ++i) {
+            this.moveTileSprite(
+                forceNew ? -1 : this._rendered.right,
+                forceNew ? -1 : this._rendered.top + i,
+                this._rendered.left - 1,
+                this._rendered.top + i
+            );
+        }
+        this._rendered.x--;
+        if(forceNew) this._rendered.width++;
+        this._updateRenderSq();
+    },
+    _renderRight: function(forceNew) {
+        //move all the far left tiles to the right side
+        for(var i = 0; i < this._rendered.height; ++i) {
+            this.moveTileSprite(
+                forceNew ? -1 : this._rendered.left,
+                forceNew ? -1 : this._rendered.top + i,
+                this._rendered.right + 1,
+                this._rendered.top + i
+            );
+        }
+        if(!forceNew) this._rendered.x++;
+        if(forceNew) this._rendered.width++;
+        this._updateRenderSq();
+    },
+    _renderUp: function(forceNew) {
+        //move all the far bottom tiles to the top side
+        for(var i = 0; i < this._rendered.width; ++i) {
+            this.moveTileSprite(
+                forceNew ? -1 : this._rendered.left + i,
+                forceNew ? -1 : this._rendered.bottom,
+                this._rendered.left + i,
+                this._rendered.top - 1
+            );
+        }
+        this._rendered.y--;
+        if(forceNew) this._rendered.height++;
+        this._updateRenderSq();
+    },
+    _renderDown: function(forceNew) {
+        //move all the far top tiles to the bottom side
+        for(var i = 0; i < this._rendered.width; ++i) {
+            this.moveTileSprite(
+                forceNew ? -1 : this._rendered.left + i,
+                forceNew ? -1 : this._rendered.top,
+                this._rendered.left + i,
+                this._rendered.bottom + 1
+            );
+        }
+        if(!forceNew) this._rendered.y++;
+        if(forceNew) this._rendered.height++;
+        this._updateRenderSq();
+    },
+    _updateRenderSq: function() {
+        this._rendered.left = this._rendered.x;
+        this._rendered.right = this._rendered.x + this._rendered.width - 1;
+        this._rendered.top = this._rendered.y;
+        this._rendered.bottom = this._rendered.y + this._rendered.height - 1;
+    }
+});
+
+/**
+ * This object represents a tileset used by a TiledMap.
+ * There can be multiple Tilesets in a map
+ *
+ * @class TiledTileset
+ * @extends gf.Texture
+ * @namespace gf
+ * @constructor
+ * @param settings {Object} All the settings for the tileset
+ */
+//TODO: Support external tilesets (TSX files) via the "source" attribute
+//see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
+gf.TiledTileset = function(settings) {
+    if(!gf.assetCache[settings.name + '_texture']) {
+        throw 'You must preload the tileset images! Try loading the world file with the AssetLoader';
+    }
+
+    //initialize the base Texture class
+    gf.Texture.call(this, gf.assetCache[settings.name + '_texture'].baseTexture);
+
+    //Tiled Editor properties
+
+    /**
+     * The first tileId in the tileset
+     *
+     * @property firstgid
+     * @type Number
+     */
+    this.firstgid = settings.firstgid;
+
+    /**
+     * The name of the tileset
+     *
+     * @property name
+     * @type String
+     */
+    this.name = settings.name;
+
+    /**
+     * The size of a tile in the tileset
+     *
+     * @property tileSize
+     * @type Vector
+     */
+    this.tileSize = new gf.Vector(settings.tilewidth, settings.tileheight);
+
+    /**
+     * The spacing around a tile in the tileset
+     *
+     * @property spacing
+     * @type Number
+     */
+    this.spacing = settings.spacing || 0;
+
+    /**
+     * The margin around a tile in the tileset
+     *
+     * @property margin
+     * @type Number
+     */
+    this.margin = settings.margin || 0;
+
+    /**
+     * The offset of tile positions when rendered
+     *
+     * @property tileoffset
+     * @type Number
+     */
+    this.tileoffset = new gf.Vector(
+        settings.tileoffset ? settings.tileoffset.x : 0,
+        settings.tileoffset ? settings.tileoffset.y : 0
+    );
+
+    //TODO: Support for "tileoffset," "terraintypes," "image"
+    //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
+
+    //Custom/Optional properties
+
+    /**
+     * The number of tiles calculated based on size, margin, and spacing
+     *
+     * @property numTiles
+     * @type Vector
+     */
+    this.numTiles = new gf.Vector(
+        ~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), //75 / 
+        ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing))
+    );
+
+    /**
+     * The last tileId in the tileset
+     *
+     * @property lastgid
+     * @type Number
+     */
+    this.lastgid = this.firstgid + (((this.numTiles.x * this.numTiles.y) - 1) || 0);
+
+    /**
+     * The properties of the tileset
+     *
+     * @property properties
+     * @type Object
+     */
+    this.properties = settings.properties || {};
+
+    /**
+     * The properties of the tiles in the tileset (like collision stuff)
+     *
+     * @property tileproperties
+     * @type Object
+     */
+    this.tileproperties = settings.tileproperties || {};
+
+    /**
+     * The size of the tileset
+     *
+     * @property size
+     * @type Vector
+     */
+    this.size = new gf.Vector(settings.imagewidth, settings.imageheight);
+
+    /**
+     * The texture instances for each tile in the set
+     *
+     * @property textures
+     * @type Array
+     */
+    this.textures = [];
+
+    //massages strings into the values they should be
+    //i.e. "true" becomes the value: true
+    this.properties = gf.utils.parseTiledProperties(this.properties);
+
+    //massage tile properties
+    for(var k in this.tileproperties) {
+        this.tileproperties[k] = gf.utils.parseTiledProperties(this.tileproperties[k]);
+    }
+
+    //generate tile textures
+    for(var t = 0, tl = this.lastgid - this.firstgid + 1; t < tl; ++t) {
+        //convert the tileId to x,y coords of the tile in the Texture
+        var y = ~~(t / this.numTiles.x),
+            x = (t - (y * this.numTiles.x));
+
+        //get location in pixels
+        x = (x * this.tileSize.x) + (x * this.spacing) + this.margin;
+        y = (y * this.tileSize.y) + (y * this.spacing) + this.margin;
+
+        this.textures.push(
+            new gf.Texture(
+                this.baseTexture,
+                new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)
+            )
+        );
+    }
+};
+
+gf.inherits(gf.TiledTileset, gf.Texture, {
+    /**
+     * Gets the tile properties for a tile based on it's ID
+     *
+     * @method getTileProperties
+     * @param tileId {Number} The id of the tile to get the properties for
+     * @return {Object} The properties of the tile
+     */
+    getTileProperties: function(tileId) {
+        if(tileId === undefined) return null;
+
+        tileId = tileId - this.firstgid;
+
+        //if less than 0, then this id isn't in this tileset
+        if(tileId < 0) return null;
+
+        return this.tileproperties[tileId] ?
+                //get this value
+                this.tileproperties[tileId] :
+                //set this id to default values and cache
+                this.tileproperties[tileId] = {
+                    collidable: false,
+                    breakable: false,
+                    type: gf.Tile.TYPE.NONE
+                };
+    },
+    /**
+     * Gets the tile texture for a tile based on it's ID
+     *
+     * @method getTileTexture
+     * @param tileId {Number} The id of the tile to get the texture for
+     * @return {Texture} The texture for the tile
+     */
+    getTileTexture: function(tileId) {
+        if(tileId === undefined) return null;
+
+        //get the internal ID of the tile in this set (0 indexed)
+        tileId = tileId - this.firstgid;
+
+        //if less than 0, then this id isn't in this tileset
+        if(tileId < 0) return null;
+
+        return this.textures[tileId];
+    }
+});
+
+/**
+ * Tiled object group is a special layer that contains entities
+ * TODO: This is all trash
+ *
+ * @class TiledObjectGroup
+ * @extends gf.Layer
+ * @namespace gf
+ * @constructor
+ * @param group {Object} All the settings for the layer
+ */
+ gf.TiledObjectGroup = function(group) {
+    gf.Layer.call(this, group);
+
+    /**
+     * The color to display objects in this group
+     *
+     * @property color
+     * @type
+     */
+    this.color = group.color;
+
+    /**
+     * The user-defined properties of this group. Usually defined in the TiledEditor
+     *
+     * @property properties
+     * @type Object
+     */
+    this.properties = group.properties || {};
+
+    /**
+     * The objects in this group that can be spawned
+     *
+     * @property objects
+     * @type Array
+     */
+    this.objects = group.objects;
+
+    //translate some tiled properties to our inherited properties
+    this.type = group.type;
+    this.alpha = group.opacity;
+    this.visible = group.visible;
+};
+
+gf.inherits(gf.TiledObjectGroup, gf.Layer, {
+    /**
+     * Spawns all the entities associated with this layer, and properly sets their attributes
+     *
+     * @method spawn
+     * @return {TiledObjectGroup} Returns itself for chainability
+     */
+    spawn: function() {
+        var game = this.parent.parent.game; //this.TiledMap.GameState.Game
+
+        //we go through these backwards so that things that are higher in the
+        //list of object gets rendered on top.
+        for(var i = this.objects.length - 1; i >= 0; --i) {
+            var o = this.objects[i],
+                props = gf.utils.parseTiledProperties(o.properties) || {},
+                set,
+                interactive,
+                obj;
+
+            props.tileprops = {};
+
+            //create a sprite with that texture
+            if(o.gid) {
+                set = this.parent.getTileset(o.gid);
+
+                if(set) {
+                    props.texture = set.getTileTexture(o.gid);
+                    props.tileprops = set.getTileProperties(o.gid);
+
+                    //if no hitArea then use the tileset's if available
+                    if(!props.hitArea) {
+                        if(props.tileprops.hitArea)
+                            props.hitArea = props.tileprops.hitArea;
+                        else
+                            props.hitArea = set.properties.hitArea;
+                    }
+                }
+            }
+            //non-sprite object (usually to define an "area" on a map)
+            else {
+                if(!props.hitArea) {
+                    //define a hitArea
+                    if(o.polyline)
+                        props.hitArea = this._getPolyline(o);
+                    else if(o.polygon)
+                        props.hitArea = this._getPolygon(o);
+                    else if(o.ellipse)
+                        props.hitArea = this._getEllipse(o);
+                    else
+                        props.hitArea = this._getRectangle(o);
+                }
+            }
+
+            //a manually specified string texture
+            if(typeof props.texture === 'string') {
+                props.texture = gf.assetCache[props.texture];
+            }
+
+            //just a regular DisplayObject
+            if(!props.texture) {
+                obj = new gf.DisplayObjectContainer();
+
+                obj.width = o.width;
+                obj.height = o.height;
+                obj.name = o.name;
+                obj.type = o.type;
+                obj.hitArea = props.hitArea;
+                obj.rotation = o.rotation;
+                obj.sensor = true;
+
+                //these are treated as sensor bodies, so always enable physics
+                obj.setPosition(o.x, o.y);
+                obj.enablePhysics(game.physics);
+                if(this.parent._showPhysics)
+                    obj.showPhysics();
+            } else {
+                //some variable for the user if they want them
+                //these will be passed through to a custom sprite if wanted
+                props.width = o.width;
+                props.height = o.height;
+                props.zIndex = this.zIndex;
+
+                obj = game.spritepool.create(o.name, props.texture, props);
+
+                //assign some values
+                obj.name = o.name;
+                obj.type = o.type;
+                obj.hitArea = props.hitArea;
+                obj.mass = props.mass || props.tileprops.mass;
+                obj.inertia = props.inertia || props.tileprops.inertia;
+                obj.friction = props.friction || props.tileprops.friction;
+                obj.sensor = props.sensor || props.tileprops.sensor;
+                obj.setPosition(o.x, o.y);
+
+                var a = props.anchor || props.tileprops.anchor;
+                obj.anchor.y = a ? a[1] : 1;
+                obj.anchor.x = a ? a[0] : (this.parent.orientation === 'isometric' ? 0.5 : 0);
+
+                if(props.mass || props.tileprops.mass) {
+                    obj.enablePhysics(game.physics);
+
+                    if(this.parent._showPhysics)
+                        obj.showPhysics();
+                }
+
+                //set some more stuffz
+                if(typeof o.rotation === 'number')
+                    obj.setRotation(o.rotation);
+            }
+
+            //visible was recently added to Tiled, default old versions to true
+            obj.visible = o.visible !== undefined ? !!o.visible : true;
+
+            if(this.parent.orientation === 'isometric') {
+                var toTileX = o.x / this.parent.tileSize.x,
+                    toTileY = o.y / this.parent.tileSize.y;
+
+                //This cannot be the simplest form of this...
+                o.x = (toTileX * this.parent.tileSize.x) - ((toTileY - 1) * (this.parent.tileSize.x / 2));
+                o.y = (toTileY * this.parent.tileSize.y / 2) + (toTileX * this.parent.tileSize.y);
+            }
+
+            interactive = this._getInteractive(set, props);
+
+            //pass through all events
+            if(interactive) {
+                obj.interactive = interactive;
+
+                obj.click = this.onObjectEvent.bind(this, 'click', obj);
+                obj.mousedown = this.onObjectEvent.bind(this, 'mousedown', obj);
+                obj.mouseup = this.onObjectEvent.bind(this, 'mouseup', obj);
+                obj.mousemove = this.onObjectEvent.bind(this, 'mousemove', obj);
+                obj.mouseout = this.onObjectEvent.bind(this, 'mouseout', obj);
+                obj.mouseover = this.onObjectEvent.bind(this, 'mouseover', obj);
+                obj.mouseupoutside = this.onObjectEvent.bind(this, 'mouseupoutside', obj);
+            }
+
+            //set custom properties
+            obj.properties = {};
+            for(var t in props.tileprops)
+                obj.properties[t] = props.tileprops[t];
+            for(var k in props)
+                if(k !== 'tileprops')
+                    obj.properties[k] = props[k];
+
+            this.addChild(obj);
+        }
+
+        return this;
+    },
+    onObjectEvent: function(eventName, obj, data) {
+        this.parent.onObjectEvent(eventName, obj, data);
+    },
+    _getPolygon: function(o) {
+        var points = [];
+        for(var i = 0, il = o.polygon.length; i < il; ++i) {
+            points.push(new gf.Point(o.polygon[i].x, o.polygon[i].y));
+        }
+
+        return new gf.Polygon(points);
+    },
+    _getPolyline: function(o) {
+        var points = [];
+        for(var i = 0, il = o.polyline.length; i < il; ++i) {
+            points.push(new gf.Point(o.polyline[i].x, o.polyline[i].y));
+        }
+
+        return new gf.Polygon(points);
+    },
+    _getEllipse: function(o) {
+        return new gf.Ellipse(0, 0, o.width, o.height);
+    },
+    _getRectangle: function(o) {
+        return new gf.Rectangle(0, 0, o.width, o.height);
+    },
+    _getInteractive: function(set, props) {
+        //first check the lowest level value (on the tile iteself)
+        return props.interactive || //obj interactive
+                props.tileprops.interactive || //tile object interactive
+                (set && set.properties.interactive) || //tileset interactive
+                this.properties.interactive || //layer interactive
+                this.parent.properties.interactive; //map interactive
+    },
+    /**
+     * Despawns all the sprites associated with this layer
+     *
+     * @method despawn
+     * @return {TiledObjectGroup} Returns itself for chainability
+     */
+    despawn: function() {
+        //remove each sprite from the game
+        for(var i = this.children.length - 1; i > -1; --i) {
+            var c = this.children[i];
+
+            if(c.destroy)
+                c.destroy();
+        }
+
+        return this;
+    },
+    destroy: function() {
+        this.despawn();
+        gf.Layer.prototype.destroy.call(this);
+    }
+});
+
+/**
+ * Holds a pool of different Objects to help reduce the number times
+ * an object is created and destroyed.
+ *
+ * @class ObjectPool
+ * @extends Object
+ * @namespace gf
+ * @constructor
+ * @param type {mixed} The object type that this pool will hold (like gf.Sprite, or gf.Tile)
+ * @param parent {mixed} The parent that the objects will be added to. Passing this in will
+ *      make the pool add any newly created objects as children to this object.
+ */
+gf.ObjectPool = function(type, parent) {
+    this.type = type;
+    this.pool = [];
+    this.parent = parent;
+};
+
+gf.inherits(gf.ObjectPool, Object, {
+    /**
+     * Creates a new instance of the pool's object type, or if available
+     * pulls one that is already created out of the pool
+     *
+     * @method create
+     */
+    create: function() {
+        var o = this.pool.pop();
+
+        if(!o) {
+            o = this._construct(this.type, arguments);
+            if(this.parent)
+                this.parent.addChild(o);
+        }
+
+        return o;
+    },
+    /**
+     * Frees an object back into the pool to be recycled
+     *
+     * @method free
+     */
+    free: function(o) {
+        this.pool.push(o);
+    },
+    //have to do this hack around to be able to use
+    //apply and new together
+    _construct: function(ctor, args) {
+        function F() {
+            return ctor.apply(this, args);
+        }
+        F.prototype = ctor.prototype;
+        return new F();
+    }
+});
+/**
+ * Holds a pool of different Sprites that can be created, makes it very
+ * easy to quickly create different registered entities
+ *
+ * @class SpritePool
+ * @extends Object
+ * @namespace gf
+ * @constructor
+ */
+gf.SpritePool = function() {
+    this.types = {};
+
+    this.add('_default', gf.Sprite);
+};
+
+gf.inherits(gf.SpritePool, Object, {
+    /**
+     * Adds an Sprite Type to the pool
+     *
+     * @method add
+     * @param name {String} The user-defined name of the Sprite Type to add
+     * @param obj {Sprite} The Sprite or decendant type to add to the pool
+     * @return {Sprite} Returns the passed sprite
+     */
+    add: function(name, obj) {
+        return this.types[name] = obj;
+    },
+    /**
+     * Checks if the Sprite Type exists in the pool
+     *
+     * @method has
+     * @param name {String} The user-defined name of the Sprite Type to check if is in the pool
+     * @return {Boolean}
+     */
+    has: function(name) {
+        return !!this.types[name];
+    },
+    /**
+     * Creates a new sprite from the pool
+     *
+     * @method create
+     * @param name {String} The user-defined name of the Sprite to check if is in the pool
+     * @param texture {Texture} The texture for the sprite
+     * @param props {Object} Extra object that will be passed along (for custom sprite options)
+     * @return {Sprite} Returns a new instance of the object from the pool
+     */
+    create: function(name, texture, props) {
+        if(!name || !this.types[name])
+            name = '_default';
+
+        return new this.types[name](texture, props);
+    },
+    //currently doesn't do any recycling unfortunately
+    free: function() {
+        return;
+    }
+});
+
 
 })(window);
