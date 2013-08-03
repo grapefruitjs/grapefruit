@@ -234,7 +234,8 @@
         return ha;
     },
     parseTiledProperties: function(obj) {
-        if(!obj) return;
+        if(!obj || obj.__tiledparsed)
+            return obj;
 
         for(var k in obj) {
             var v = obj[k];
@@ -265,6 +266,8 @@
             obj.mass = Infinity;
             obj.inertia = Infinity;
         }
+
+        obj.__tiledparsed = true;
 
         return obj;
     }
