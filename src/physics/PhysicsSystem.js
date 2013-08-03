@@ -36,6 +36,7 @@ gf.PhysicsSystem = function(options) {
     );
 
     this.actionQueue = [];
+    this._skip = 0;
 };
 
 gf.inherits(gf.PhysicsSystem, Object, {
@@ -244,6 +245,9 @@ gf.inherits(gf.PhysicsSystem, Object, {
     update: function(dt) {
         if(this._paused) return;
 
+        if(this._skip)
+            return this._skip--;
+
         //execute the physics step
         this.space.step(dt);
 
@@ -311,13 +315,19 @@ gf.inherits(gf.PhysicsSystem, Object, {
     pause: function() {
         this._paused = true;
     },
-    unpause: function() {
+    resume: function() {
         this._paused = false;
+    },
+    skip: function(num) {
+        this._skip = num;
+    },
+    skipNext: function() {
+        this.skip(1);
     },
     onPostStep: function() {
         //remove items
         while(this.actionQueue.length) {
-            var a = this.actionQueue.pop(),
+            var a = this.actionQueue.shift(),
                 act = a[0],
                 data = a[1];
 
@@ -363,7 +373,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
                     data.customShapes = null;
                     break;
 
-                case 'reindex':
+                case 'reindexStatic':
                     this.space.reindexStatic();
                     break;
 
