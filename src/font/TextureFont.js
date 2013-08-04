@@ -107,6 +107,15 @@ gf.TextureFont = function(font, settings) {
     this.lineHeight = 1;
 
     /**
+     * The fixed width for all characters, 0 means not forced monospace
+     *
+     * @property monospace
+     * @type Number
+     * @default 0
+     */
+    this.monospace = 0;
+
+    /**
      * The textures for all the characters in the alphabet
      *
      * @property textures
@@ -145,8 +154,15 @@ gf.inherits(gf.TextureFont, gf.DisplayObjectContainer, {
      * @return Sprite
      */
     _getSprite: function(ch) {
+        var offy = 0;
+
         if(this.map[ch])
             ch = this.map[ch];
+
+        if(typeof ch === 'object') {
+            offy = ch.yoffset || 0;
+            ch = ch.name;
+        }
 
         //skips spaces
         if(ch === '' || ch === ' ')
@@ -166,6 +182,10 @@ gf.inherits(gf.TextureFont, gf.DisplayObjectContainer, {
 
         spr.setTexture(texture);
         spr.visible = true;
+
+        spr.anchor.y = 1;
+        spr.position.x = 0;
+        spr.position.y = offy;
 
         return spr;
     },
@@ -192,6 +212,7 @@ gf.inherits(gf.TextureFont, gf.DisplayObjectContainer, {
      */
     setText: function(txt) {
         this.text = txt;
+        this.width = 0;
 
         //free all sprites
         for(var c = 0, cl = this.children.length; c < cl; ++c) {
@@ -215,20 +236,23 @@ gf.inherits(gf.TextureFont, gf.DisplayObjectContainer, {
                     spr = this._getSprite(ch);
 
                 if(spr !== null) {
-                    spr.position.x = x;
-                    spr.position.y = y;
+                    spr.position.x += x;
+                    spr.position.y += y;
 
                     if(spr.texture.frame.height > h)
                         h = spr.texture.frame.height;
 
-                    x += spr.texture.frame.width * this.lineWidth;
+                    x += this.monospace ? this.monospace * this.lineWidth : spr.texture.frame.width * this.lineWidth;
                 } else {
-                    x += this.spaceSize * this.lineWidth;
+                    x += this.monospace ? this.monospace * this.lineWidth : this.spaceSize * this.lineWidth;
                 }
 
             }
 
+            this.width = Math.max(x, this.width);
+
             y += h * this.lineHeight;
+            x = 0;
         }
     }
 });
