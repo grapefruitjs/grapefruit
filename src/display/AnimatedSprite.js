@@ -12,7 +12,7 @@
  */
 gf.AnimatedSprite = function(anims, speed, start) {
     if(anims instanceof Array) {
-        anims = { _default: { frames: [anims] } };
+        anims = { _default: { frames: anims } };
         start = '_default';
     } else {
         //massage animations into full format
