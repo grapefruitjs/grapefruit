@@ -117,14 +117,15 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @method flash
      * @param [color=0xffffff] {Number} The color to flash the screen with
      * @param [duration=1000] {Number} The time in milliseconds to fade away
+     * @param [alpha=1] {Number} The max opacity to start at (before fading away)
      * @param [callback] {Function} The callback to call when the flash has completed
      * @return {gf.Camera.fx.Flash} Returns the effect object
      */
-    flash: function(color, duration, cb) {
+    flash: function(color, duration, alpha, cb) {
         var flash = this.fxpools.flash.create(),
             self = this;
 
-        return flash.start(color, duration, function() {
+        return flash.start(color, duration, alpha, function() {
             self.fxpools.flash.free(flash);
             if(typeof cb === 'function')
                 cb();
@@ -136,14 +137,15 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @method fade
      * @param [color=0xffffff] {Number} The color to fade into
      * @param [duration=1000] {Number} The time in milliseconds to take to fade in
+     * @param [alpha=1] {Number} The max opacity to get to
      * @param [callback] {Function} The callback to call when the fade has completed
      * @return {gf.Camera.fx.Fade} Returns the effect object
      */
-    fade: function(color, duration, cb) {
+    fade: function(color, duration, alpha, cb) {
         var fade = this.fxpools.fade.create(),
             self = this;
 
-        return fade.start(color, duration, function() {
+        return fade.start(color, duration, alpha, function() {
             self.fxpools.fade.free(fade);
             if(typeof cb === 'function')
                 cb();
