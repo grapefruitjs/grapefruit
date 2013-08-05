@@ -163,12 +163,25 @@ gf.inherits(gf.AudioManager, Object, {
                 var player = this.sounds[key];
                 //loop through the audio nodes
                 for(var i = 0, il = player._nodes.length; i < il; ++i) {
-                    player._nodes[i].muted = m;
+                    player._nodes[i].mute();
                 }
             }
         }
 
         return this;
+    },
+    attach: function(sound) {
+        //TODO: check name collision
+        this.sounds[sound.src] = sound;
+
+        sound._manager = this;
+
+        if(gf.support.webAudio) {
+            for(var i = 0; i < sound._nodes.length; ++i) {
+                sound._nodes[i].disconnect();
+                sound._nodes[i].connect(this.masterGain);
+            }
+        }
     },
     /**
      * Creates a new audio player for a peice of audio
