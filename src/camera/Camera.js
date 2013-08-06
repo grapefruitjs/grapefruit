@@ -175,11 +175,12 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * Adds a mask that will hide the world via a close-in transition.
      *
      * @method scanlines
-     * @param [shape='circle'] {String} The shape of the transition, either 'circle' or 'rectangle'
+     * @param [shape='circle'] {String} The shape of the transition, either 'circle' or 'rectangle' or 'ellipse'
      * @param [duration=1000] {Number} The time in milliseconds it takes to close the transition
+     * @param [position] {gf.Point|gf.Vector} The position to center on, defaults to the center of the screen
      * @return {gf.Camera.fx.Close} Returns the effect object
      */
-    close: function(shape, duration, cb) {
+    close: function(shape, duration, position, cb) {
         var close = this.fxpools.close.create(),
             self = this;
 
