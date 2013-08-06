@@ -173,6 +173,20 @@ gf.inherits(gf.TiledMap, gf.Map, {
         }
     },
     /**
+     * Spawns all the objects in the TiledObjectGroups of this map
+     *
+     * @method spawnObjects
+     */
+    despawnObjects: function() {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.type === 'objectgroup') {
+                o.despawn();
+            }
+        }
+    },
+    /**
      * Called by a TiledLayer when a tile event occurs. This is so you can listen for
      * the emitted events on the world instead of the tile itself.
      *
