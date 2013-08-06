@@ -3,16 +3,23 @@ gf.Camera.fx.Close = function() {
 };
 
 gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
-    start: function(shape, duration, cb) {
+    start: function(shape, duration, pos, cb) {
         gf.Camera.fx.Effect.prototype.start.call(this);
+
+        if(typeof pos ==='function') {
+            cb = pos;
+            pos = null;
+        }
 
         if(typeof duration === 'function') {
             cb = duration;
+            pos = null;
             duration = null;
         }
 
         if(typeof shape === 'function') {
             cb = shape;
+            pos = null;
             duration = null;
             shape = null;
         }
@@ -21,19 +28,25 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
         this.duration = duration && duration > 0 ? duration : 1000;
         this.cb = cb;
 
-        if(shape === 'circle') {
-            this.cx = this.parent.size.x / 2;
-            this.cy = this.parent.size.y / 2;
-            this.radius = this.maxRadius = Math.max(this.parent.size.x / 2, this.parent.size.y / 2);
-        } else {
-            this.x = 0;
-            this.y = 0;
-            this.w = this.mx = this.parent.size.x;
-            this.h = this.my = this.parent.size.y;
-        }
+        this.cx = pos ? pos.x : this.parent.size.x / 2;
+        this.cy = pos ? pos.y : this.parent.size.y / 2;
+        this.w = this.mx = this.parent.size.x;
+        this.h = this.my = this.parent.size.y;
+        this.radius = this.maxRadius = Math.max(this.w / 2, this.h / 2);
+        console.log(this.cx, this.cy, this.radius);
 
         this.gfx.visible = true;
+        this.gfx.position.x = this.cx;
+        this.gfx.position.y = this.cy;
+
         this.parent.game.world.mask = this.gfx;
+
+        if(shape === 'ellipse') {
+            this.gfx.scale.y = 0.5;
+        }
+        else {
+            this.gfx.scale.y = 1;
+        }
 
         return this;
     },
@@ -58,6 +71,7 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
         this.gfx.beginFill(0xff00ff);
 
         switch(this.shape) {
+            case 'ellipse':
             case 'circle':
                 this.radius -= (part * this.maxRadius);
 
@@ -65,25 +79,24 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
                     this.stop();
                     this._complete();
                 } else {
-                    this.gfx.drawCircle(this.cx, this.cy, this.radius);
+                    this.gfx.drawCircle(0, 0, this.radius);
                 }
                 break;
 
             case 'rect':
             case 'rectangle':
-                this.x += (part * this.mx) / 2;
-                this.y += (part * this.my) / 2;
                 this.w -= (part * this.mx);
                 this.h -= (part * this.my);
 
-                if(this.x >= (this.mx / 2)) {
+                if(this.w <= 0) {
                     this.stop();
                     this._complete();
                 } else {
-                    this.gfx.drawRect(this.x, this.y, this.w, this.h);
+                    this.gfx.drawRect(-(this.w / 2), -(this.h / 2), this.w, this.h);
                 }
                 break;
         }
+        this.gfx.endFill();
 
         return this;
     }
