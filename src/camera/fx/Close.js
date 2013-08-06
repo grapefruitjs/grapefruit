@@ -33,7 +33,6 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
         this.w = this.mx = this.parent.size.x;
         this.h = this.my = this.parent.size.y;
         this.radius = this.maxRadius = Math.max(this.w / 2, this.h / 2);
-        console.log(this.cx, this.cy, this.radius);
 
         this.gfx.visible = true;
         this.gfx.position.x = this.cx;
