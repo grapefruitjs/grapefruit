@@ -50,15 +50,6 @@ gf.GameState = function(name, settings) {
     this.physics = new gf.PhysicsSystem({ gravity: settings.gravity });
 
     /**
-     * The input instance for this game
-     *
-     * @property input
-     * @type InputManager
-     * @readOnly
-     */
-    this.input = null; //need to be added to a game first
-
-    /**
      * The camera you view the scene through
      *
      * @property camera
@@ -105,8 +96,6 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
      */
     _setGame: function(game) {
         this._game = game;
-
-        this.input = new gf.InputManager(game.renderer.view);
 
         if(this.camera)
             this.removeChild(this.camera);
