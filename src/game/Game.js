@@ -132,6 +132,15 @@ gf.Game = function(contId, settings) {
     this.spritepool = new gf.SpritePool();
 
     /**
+     * The input instance for this game
+     *
+     * @property input
+     * @type InputManager
+     * @readOnly
+     */
+    this.input = new gf.InputManager(this.renderer.view);
+
+    /**
      * The GameStates added to the game
      *
      * @property states
@@ -174,7 +183,7 @@ gf.Game = function(contId, settings) {
 
     //define getters for common properties in GameState
     var self = this;
-    ['audio', 'input', 'physics', 'camera', 'world'].forEach(function(prop) {
+    ['audio', 'physics', 'camera', 'world'].forEach(function(prop) {
         self.__defineGetter__(prop, function() {
             return self.activeState[prop];
         });
