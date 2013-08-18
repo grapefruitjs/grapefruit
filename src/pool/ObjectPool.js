@@ -32,6 +32,8 @@ gf.inherits(gf.ObjectPool, Object, {
                 this.parent.addChild(o);
         }
 
+        o.__allocated = true;
+
         return o;
     },
     /**
@@ -40,7 +42,11 @@ gf.inherits(gf.ObjectPool, Object, {
      * @method free
      */
     free: function(o) {
-        this.pool.push(o);
+        //don't free something twice
+        if(o.__allocated) {
+            o.__allocated = false;
+            this.pool.push(o);
+        }
     },
     //have to do this hack around to be able to use
     //apply and new together
