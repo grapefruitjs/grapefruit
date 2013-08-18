@@ -172,11 +172,6 @@ gf.inherits(gf.GameState, gf.DisplayObjectContainer, {
      * @private
      */
     update: function(dt) {
-        //gather input from user
-        this.game.timings.inputStart = this.game.timings._timer.now();
-        this.input.update(dt);
-        this.game.timings.inputEnd = this.game.timings._timer.now();
-
         //update any camera effects
         this.game.timings.cameraStart = this.game.timings._timer.now();
         this.camera.update(dt);

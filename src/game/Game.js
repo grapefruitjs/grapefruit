@@ -418,9 +418,16 @@ gf.inherits(gf.Game, Object, {
         //start render loop
         window.requestAnimFrame(this._tick.bind(this));
 
+        var dt = this.clock.getDelta();
+
+        //gather input from user
+        this.timings.inputStart = this.timings._timer.now();
+        this.input.update(dt);
+        this.timings.inputEnd = this.timings._timer.now();
+
         //update this game state
         this.timings.stateStart = this.timings._timer.now();
-        this.activeState.update(this.clock.getDelta());
+        this.activeState.update(dt);
         this.timings.stateEnd = this.timings._timer.now();
 
         //render scene
