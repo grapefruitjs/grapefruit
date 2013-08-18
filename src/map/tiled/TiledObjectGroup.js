@@ -186,6 +186,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 if(k !== 'tileprops')
                     obj.properties[k] = props[k];
 
+            obj._objIndex = i;
             this.addChild(obj);
         }
 
