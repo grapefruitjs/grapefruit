@@ -184,7 +184,7 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
         var close = this.fxpools.close.create(),
             self = this;
 
-        return close.start(shape, duration, function() {
+        return close.start(shape, duration, position, function() {
             self.fxpools.close.free(close);
             if(typeof cb === 'function')
                 cb();
