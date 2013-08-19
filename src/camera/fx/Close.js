@@ -38,7 +38,7 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
         this.gfx.position.x = this.cx;
         this.gfx.position.y = this.cy;
 
-        this.parent.game.world.mask = this.gfx;
+        this.parent.game.activeState.mask = this.gfx;
 
         if(shape === 'ellipse') {
             this.gfx.scale.y = 0.5;
@@ -55,8 +55,8 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
         this.radius = this.sx = this.sy = 0;
         this.gfx.visible = false;
 
-        if(this.parent.game.world.mask === this.gfx)
-            this.parent.game.world.mask = null;
+        if(this.parent.game.activeState.mask === this.gfx)
+            this.parent.game.activeState.mask = null;
 
         return this;
     },
