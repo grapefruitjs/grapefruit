@@ -95,6 +95,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
             }
 
             o.name = o.name || props.name || props.tileprops.name;
+            o.type = o.type || props.type || props.tileprops.type;
 
             //a manually specified string texture
             if(typeof props.texture === 'string') {
