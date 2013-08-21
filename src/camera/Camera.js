@@ -323,15 +323,18 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
 
         if(!dx && !dy) return;
 
+            //world position
         var pos = this.game.world.position,
+            //new world position
             newX = pos.x - dx,
-            newY = pos.y - dy;
+            newY = pos.y - dy,
+            b = this._bounds;
 
         if(this._bounds) {
             if(this._outsideBounds(-newX, -pos.y))
-                dx = 0;
+                dx = dx < 0 ? b.x + pos.x : (b.x + b.width) - this.size.x + pos.x; //how far can we move since dx is too much
             if(this._outsideBounds(-pos.x, -newY))
-                dy = 0;
+                dy = dy < 0 ? b.y + pos.y : (b.y + b.height) - this.size.y + pos.y;
         }
 
         if(dx || dy) {
