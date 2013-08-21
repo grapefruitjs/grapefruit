@@ -166,12 +166,20 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
     getTileProperties: function(tileId) {
         if(tileId === undefined) return null;
 
+        var flags = gf.TiledTileset.FLAGS,
+            flippedX = tileId & flags.FlippedX,
+            flippedY = tileId & flags.FlippedY,
+            rotatedCW = tileId & flags.RotatedCW;
+
+        //remove flags
+        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
+
         tileId = tileId - this.firstgid;
 
         //if less than 0, then this id isn't in this tileset
         if(tileId < 0) return null;
 
-        return this.tileproperties[tileId] ?
+        var props = this.tileproperties[tileId] ?
                 //get this value
                 this.tileproperties[tileId] :
                 //set this id to default values and cache
@@ -180,6 +188,12 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
                     breakable: false,
                     type: gf.Tile.TYPE.NONE
                 };
+
+        props.flippedX = flippedX;
+        props.flippedY = flippedY;
+        props.rotatedCW = rotatedCW;
+
+        return props;
     },
     /**
      * Gets the tile texture for a tile based on it's ID
@@ -191,6 +205,11 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
     getTileTexture: function(tileId) {
         if(tileId === undefined) return null;
 
+        var flags = gf.TiledTileset.FLAGS;
+
+        //remove flags
+        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
+
         //get the internal ID of the tile in this set (0 indexed)
         tileId = tileId - this.firstgid;
 
@@ -198,5 +217,22 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
         if(tileId < 0) return null;
 
         return this.textures[tileId];
+    },
+    contains: function(tileId) {
+        if(tileId === undefined) return false;
+
+        var flags = gf.TiledTileset.FLAGS;
+
+        //remove flags
+        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
+
+        return (tileId >= this.firstgid && tileId <= this.lastgid);
     }
 });
+
+//Tileset GID flags
+gf.TiledTileset.FLAGS = {
+    FlippedX: 0x80000000,
+    FlippedY: 0x40000000,
+    RotatedCW: 0x20000000
+};
