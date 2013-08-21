@@ -94,6 +94,8 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 }
             }
 
+            o.name = o.name || props.name || props.tileprops.name;
+
             //a manually specified string texture
             if(typeof props.texture === 'string') {
                 props.texture = gf.assetCache[props.texture];
@@ -144,6 +146,29 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
                     if(this.parent._showPhysics)
                         obj.showPhysics();
+                }
+
+                if(props.tileprops) {
+                    if(props.tileprops.flippedX) {
+                        obj.scale.x = -1;
+                        obj.anchor.x = a ? a[0] : 1;
+                    }
+
+                    if(props.tileprops.flippedY) {
+                        obj.scale.y = -1;
+                        obj.anchor.y = a ? a[1] : 0;
+                    }
+
+                    //IDK if this is right
+                    if(props.tileprops.rotatedCW) {
+                        obj.rotation = gf.math.degreesToRadians(45);
+                    }
+                }
+
+                if(props.animation || props.tileprops.animation) {
+                    if(obj.gotoAndPlay) {
+                        obj.gotoAndPlay(props.animation || props.tileprops.animation);
+                    }
                 }
 
                 //set some more stuffz

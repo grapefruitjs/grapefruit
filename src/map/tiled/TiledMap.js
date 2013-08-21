@@ -131,7 +131,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
      */
     getTileset: function(tileId) {
         for(var i = 0, il = this.tilesets.length; i < il; ++i)
-            if(tileId >= this.tilesets[i].firstgid && tileId <= this.tilesets[i].lastgid)
+            if(this.tilesets[i].contains(tileId))
                 return this.tilesets[i];
     },
     /**
