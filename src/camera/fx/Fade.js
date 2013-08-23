@@ -46,11 +46,12 @@ gf.inherits(gf.Camera.fx.Fade, gf.Camera.fx.Effect, {
         return this;
     },
     update: function(dt) {
+        if(this.done) return;
+
         if(this.gfx.alpha < this.goal) {
             this.gfx.alpha += (dt * 1000) / this.duration;
 
             if(this.gfx.alpha >= this.goal) {
-                this.stop();
                 this._complete();
             }
         }

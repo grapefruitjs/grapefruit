@@ -41,31 +41,29 @@ gf.inherits(gf.Camera.fx.Shake, gf.Camera.fx.Effect, {
         return this;
     },
     update: function(dt) {
-        //update shake effect
-        if(this.duration > 0) {
-            this.duration -= (dt * 1000);
+        if(this.done) return;
 
-            //pan back to the original position
-            this.offset.x = -this.offset.x;
-            this.offset.y = -this.offset.y;
+        this.duration -= (dt * 1000);
+
+        //pan back to the original position
+        this.offset.x = -this.offset.x;
+        this.offset.y = -this.offset.y;
+        this.parent.pan(this.offset.x, this.offset.y);
+
+        //check if we are complete
+        if(this.duration <= 0) {
+            this._complete();
+        }
+        //otherwise do the shake
+        else {
+            //pan to a random offset
+            if((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.HORIZONTAL))
+                this.offset.x = gf.math.round(Math.random() * this.intensity * this.parent.size.x * 2 - this.intensity * this.parent.size.x);
+
+            if ((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.VERTICAL))
+                this.offset.y = gf.math.round(Math.random() * this.intensity * this.parent.size.y * 2 - this.intensity * this.parent.size.y);
+
             this.parent.pan(this.offset.x, this.offset.y);
-
-            //check if we are complete
-            if(this.duration <= 0) {
-                this.stop();
-                this._complete();
-            }
-            //otherwise do the shake
-            else {
-                //pan to a random offset
-                if((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.HORIZONTAL))
-                    this.offset.x = gf.math.round(Math.random() * this.intensity * this.parent.size.x * 2 - this.intensity * this.parent.size.x);
-
-                if ((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.VERTICAL))
-                    this.offset.y = gf.math.round(Math.random() * this.intensity * this.parent.size.y * 2 - this.intensity * this.parent.size.y);
-
-                this.parent.pan(this.offset.x, this.offset.y);
-            }
         }
     }
 });

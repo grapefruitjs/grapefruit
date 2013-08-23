@@ -46,11 +46,12 @@ gf.inherits(gf.Camera.fx.Flash, gf.Camera.fx.Effect, {
         return this;
     },
     update: function(dt) {
+        if(this.done) return;
+
         if(this.gfx.alpha > 0) {
             this.gfx.alpha -= (dt * 1000) / this.duration;
 
             if(this.gfx.alpha <= 0) {
-                this.stop();
                 this._complete();
             }
         }
