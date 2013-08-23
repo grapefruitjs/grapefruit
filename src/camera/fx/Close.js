@@ -61,8 +61,7 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
         return this;
     },
     update: function(dt) {
-        if(!this.gfx.visible)
-            return;
+        if(this.done) return;
 
         var part = (dt * 1000) / this.duration;
 
@@ -75,7 +74,6 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
                 this.radius -= (part * this.maxRadius);
 
                 if(this.radius <= 0) {
-                    this.stop();
                     this._complete();
                 } else {
                     this.gfx.drawCircle(0, 0, this.radius);
@@ -88,7 +86,6 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
                 this.h -= (part * this.my);
 
                 if(this.w <= 0) {
-                    this.stop();
                     this._complete();
                 } else {
                     this.gfx.drawRect(-(this.w / 2), -(this.h / 2), this.w, this.h);
