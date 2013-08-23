@@ -36,7 +36,14 @@ gf.inherits(gf.Camera.fx.Effect, gf.DisplayObjectContainer, {
     },
     _complete: function() {
         this.done = true;
-        if(typeof this.cb === 'function')
-            this.cb();
+
+        if(typeof this.cb === 'function') {
+            var ret = this.cb();
+
+            if(ret !=== false)
+                this.stop();
+        } else {
+            this.stop();
+        }
     }
 });
