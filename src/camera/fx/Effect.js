@@ -40,7 +40,7 @@ gf.inherits(gf.Camera.fx.Effect, gf.DisplayObjectContainer, {
         if(typeof this.cb === 'function') {
             var ret = this.cb();
 
-            if(ret !=== false)
+            if(ret !== false)
                 this.stop();
         } else {
             this.stop();
