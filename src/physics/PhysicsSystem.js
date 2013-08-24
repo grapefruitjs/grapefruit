@@ -264,10 +264,6 @@ gf.inherits(gf.PhysicsSystem, Object, {
             spr.rotation = shape.body.a;
 
             spr.emit('physUpdate');
-
-            if(spr._showHit) {
-                spr.showPhysics();
-            }
         });
     },
     onCollisionBegin: function(arbiter) {//, space) {
@@ -350,10 +346,6 @@ gf.inherits(gf.PhysicsSystem, Object, {
                     }
 
                     data.spr._phys = data;
-
-                    if(data.spr._showHit) {
-                        data.spr.showPhysics();
-                    }
                     break;
 
                 case 'remove':
