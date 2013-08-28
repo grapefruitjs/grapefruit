@@ -349,6 +349,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Tile} The sprite to display
      */
     moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
+        //if off the map, just ignore it
+        if(toTileX < 0 || toTileY < 0 || toTileX >= this.parent.size.x || toTileY >= this.parent.size.y) {
+            return;
+        }
+
         var tile,
             id = (toTileX + (toTileY * this.size.x)),
             tileId = this.tileIds[id],
