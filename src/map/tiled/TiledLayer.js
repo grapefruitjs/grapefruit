@@ -74,31 +74,32 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             return;
         }
 
+        //copy down our tilesize
         if(!this.tileSize)
             this.tileSize = this.parent.tileSize;
 
         //clear all the visual tiles
         this.clearTiles();
 
+        //render the tiles on the screen
+        var fn;
         if(this.parent.orientation === 'isometric') {
-            this._renderIsoTiles(
-                -this.parent.position.x,
-                -this.parent.position.y,
-                width,
-                height
-            );
-        }
-        else {
-            this._renderOrthoTiles(
-                -this.parent.position.x,
-                -this.parent.position.y,
-                width,
-                height
-            );
+            fn = '_renderIsoTiles';
+        } else {
+            fn = '_renderOrthoTiles';
         }
 
+        this[fn](
+            -this.parent.position.x,
+            -this.parent.position.y,
+            width,
+            height
+        );
+
         this._updateRenderSq();
+
         if(this.hasPhysics) {
+            //this -> map -> state -> physics
             this.parent.parent.physics.reindexStatic();
         }
     },
@@ -187,13 +188,15 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //convert to tile coords
         sx = Math.floor(sx / this.parent.scaledTileSize.x);
         sy = Math.floor(sy / this.parent.scaledTileSize.y);
+
         //ensure we don't go below 0
         sx = sx < 0 ? 0 : sx;
         sy = sy < 0 ? 0 : sy;
 
-        //convert to tile coords
+        //convert to tile sizes
         sw = Math.ceil(sw / this.parent.scaledTileSize.x) + 1;
         sh = Math.ceil(sh / this.parent.scaledTileSize.y) + 1;
+
         //ensure we don't go outside the map size
         sw = (sx + sw > this.parent.size.x) ? (this.parent.size.x - sx) : sw;
         sh = (sy + sh > this.parent.size.y) ? (this.parent.size.y - sy) : sh;
@@ -222,6 +225,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
     _renderIsoTiles: function(sx, sy, sw, sh) {
+        //set the rendered area
         this._rendered.x = sx;
         this._rendered.y = sx;
         this._rendered.width = sw;
