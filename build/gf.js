@@ -4,7 +4,7 @@
  * Copyright (c) 2012, Chad Engler
  * https://github.com/englercj/grapefruit
  *
- * Compiled: 2013-08-18
+ * Compiled: 2013-09-01
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -18323,10 +18323,6 @@ gf.inherits(gf.PhysicsSystem, Object, {
             spr.rotation = shape.body.a;
 
             spr.emit('physUpdate');
-
-            if(spr._showHit) {
-                spr.showPhysics();
-            }
         });
     },
     onCollisionBegin: function(arbiter) {//, space) {
@@ -18409,10 +18405,6 @@ gf.inherits(gf.PhysicsSystem, Object, {
                     }
 
                     data.spr._phys = data;
-
-                    if(data.spr._showHit) {
-                        data.spr.showPhysics();
-                    }
                     break;
 
                 case 'remove':
@@ -20742,15 +20734,18 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
 
         if(!dx && !dy) return;
 
+            //world position
         var pos = this.game.world.position,
+            //new world position
             newX = pos.x - dx,
-            newY = pos.y - dy;
+            newY = pos.y - dy,
+            b = this._bounds;
 
         if(this._bounds) {
             if(this._outsideBounds(-newX, -pos.y))
-                dx = 0;
+                dx = dx < 0 ? b.x + pos.x : (b.x + b.width) - this.size.x + pos.x; //how far can we move since dx is too much
             if(this._outsideBounds(-pos.x, -newY))
-                dy = 0;
+                dy = dy < 0 ? b.y + pos.y : (b.y + b.height) - this.size.y + pos.y;
         }
 
         if(dx || dy) {
@@ -20923,21 +20918,33 @@ gf.Camera.fx.Effect = function() {
 
     this.addChild(this.gfx = new PIXI.Graphics());
     this.gfx.visible = false;
+
+    this.done = true;
 };
 
 gf.inherits(gf.Camera.fx.Effect, gf.DisplayObjectContainer, {
     start: function() {
+        this.done = false;
         return this;
     },
     stop: function() {
+        this.done = true;
         return this;
     },
     update: function() {
         return this;
     },
     _complete: function() {
-        if(typeof this.cb === 'function')
-            this.cb();
+        this.done = true;
+
+        if(typeof this.cb === 'function') {
+            var ret = this.cb();
+
+            if(ret !== false)
+                this.stop();
+        } else {
+            this.stop();
+        }
     }
 });
 gf.Camera.fx.Close = function() {
@@ -21003,8 +21010,7 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
         return this;
     },
     update: function(dt) {
-        if(!this.gfx.visible)
-            return;
+        if(this.done) return;
 
         var part = (dt * 1000) / this.duration;
 
@@ -21017,7 +21023,6 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
                 this.radius -= (part * this.maxRadius);
 
                 if(this.radius <= 0) {
-                    this.stop();
                     this._complete();
                 } else {
                     this.gfx.drawCircle(0, 0, this.radius);
@@ -21030,7 +21035,6 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
                 this.h -= (part * this.my);
 
                 if(this.w <= 0) {
-                    this.stop();
                     this._complete();
                 } else {
                     this.gfx.drawRect(-(this.w / 2), -(this.h / 2), this.w, this.h);
@@ -21090,11 +21094,12 @@ gf.inherits(gf.Camera.fx.Fade, gf.Camera.fx.Effect, {
         return this;
     },
     update: function(dt) {
+        if(this.done) return;
+
         if(this.gfx.alpha < this.goal) {
             this.gfx.alpha += (dt * 1000) / this.duration;
 
             if(this.gfx.alpha >= this.goal) {
-                this.stop();
                 this._complete();
             }
         }
@@ -21150,11 +21155,12 @@ gf.inherits(gf.Camera.fx.Flash, gf.Camera.fx.Effect, {
         return this;
     },
     update: function(dt) {
+        if(this.done) return;
+
         if(this.gfx.alpha > 0) {
             this.gfx.alpha -= (dt * 1000) / this.duration;
 
             if(this.gfx.alpha <= 0) {
-                this.stop();
                 this._complete();
             }
         }
@@ -21251,31 +21257,29 @@ gf.inherits(gf.Camera.fx.Shake, gf.Camera.fx.Effect, {
         return this;
     },
     update: function(dt) {
-        //update shake effect
-        if(this.duration > 0) {
-            this.duration -= (dt * 1000);
+        if(this.done) return;
 
-            //pan back to the original position
-            this.offset.x = -this.offset.x;
-            this.offset.y = -this.offset.y;
+        this.duration -= (dt * 1000);
+
+        //pan back to the original position
+        this.offset.x = -this.offset.x;
+        this.offset.y = -this.offset.y;
+        this.parent.pan(this.offset.x, this.offset.y);
+
+        //check if we are complete
+        if(this.duration <= 0) {
+            this._complete();
+        }
+        //otherwise do the shake
+        else {
+            //pan to a random offset
+            if((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.HORIZONTAL))
+                this.offset.x = gf.math.round(Math.random() * this.intensity * this.parent.size.x * 2 - this.intensity * this.parent.size.x);
+
+            if ((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.VERTICAL))
+                this.offset.y = gf.math.round(Math.random() * this.intensity * this.parent.size.y * 2 - this.intensity * this.parent.size.y);
+
             this.parent.pan(this.offset.x, this.offset.y);
-
-            //check if we are complete
-            if(this.duration <= 0) {
-                this.stop();
-                this._complete();
-            }
-            //otherwise do the shake
-            else {
-                //pan to a random offset
-                if((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.HORIZONTAL))
-                    this.offset.x = gf.math.round(Math.random() * this.intensity * this.parent.size.x * 2 - this.intensity * this.parent.size.x);
-
-                if ((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.VERTICAL))
-                    this.offset.y = gf.math.round(Math.random() * this.intensity * this.parent.size.y * 2 - this.intensity * this.parent.size.y);
-
-                this.parent.pan(this.offset.x, this.offset.y);
-            }
         }
     }
 });
@@ -23782,7 +23786,7 @@ gf.inherits(gf.TiledMap, gf.Map, {
      */
     getTileset: function(tileId) {
         for(var i = 0, il = this.tilesets.length; i < il; ++i)
-            if(tileId >= this.tilesets[i].firstgid && tileId <= this.tilesets[i].lastgid)
+            if(this.tilesets[i].contains(tileId))
                 return this.tilesets[i];
     },
     /**
@@ -23947,31 +23951,32 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             return;
         }
 
+        //copy down our tilesize
         if(!this.tileSize)
             this.tileSize = this.parent.tileSize;
 
         //clear all the visual tiles
         this.clearTiles();
 
+        //render the tiles on the screen
+        var fn;
         if(this.parent.orientation === 'isometric') {
-            this._renderIsoTiles(
-                -this.parent.position.x,
-                -this.parent.position.y,
-                width,
-                height
-            );
-        }
-        else {
-            this._renderOrthoTiles(
-                -this.parent.position.x,
-                -this.parent.position.y,
-                width,
-                height
-            );
+            fn = '_renderIsoTiles';
+        } else {
+            fn = '_renderOrthoTiles';
         }
 
+        this[fn](
+            -this.parent.position.x,
+            -this.parent.position.y,
+            width,
+            height
+        );
+
         this._updateRenderSq();
+
         if(this.hasPhysics) {
+            //this -> map -> state -> physics
             this.parent.parent.physics.reindexStatic();
         }
     },
@@ -24060,13 +24065,15 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //convert to tile coords
         sx = Math.floor(sx / this.parent.scaledTileSize.x);
         sy = Math.floor(sy / this.parent.scaledTileSize.y);
+
         //ensure we don't go below 0
         sx = sx < 0 ? 0 : sx;
         sy = sy < 0 ? 0 : sy;
 
-        //convert to tile coords
+        //convert to tile sizes
         sw = Math.ceil(sw / this.parent.scaledTileSize.x) + 1;
         sh = Math.ceil(sh / this.parent.scaledTileSize.y) + 1;
+
         //ensure we don't go outside the map size
         sw = (sx + sw > this.parent.size.x) ? (this.parent.size.x - sx) : sw;
         sh = (sy + sh > this.parent.size.y) ? (this.parent.size.y - sy) : sh;
@@ -24095,8 +24102,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
     _renderIsoTiles: function(sx, sy, sw, sh) {
+        //set the rendered area
         this._rendered.x = sx;
-        this._rendered.y = sx;
+        this._rendered.y = sy;
         this._rendered.width = sw;
         this._rendered.height = sh;
 
@@ -24111,10 +24119,10 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         sh = Math.ceil(sh / (scaled.y / 2));
 
         //in this function i,j represents the coord system in the isometric plane
-        var iStart = Math.floor(this._isoToI(sx, sy)) - 1,
+        var iStart = Math.floor(this._isoToI(sx, sy)),
             jStart = Math.floor(this._isoToJ(sx, sy)),
-            iMax = Math.ceil(this._isoToI(sx + sw, sy + sh)) + 1,
-            jMax = Math.ceil(this._isoToJ(sx, sy + sh)) + 2,
+            iMax = Math.ceil(this._isoToI(sx + sw, sy + sh)),
+            jMax = Math.ceil(this._isoToJ(sx, sy + sh)),
             jMin = Math.floor(this._isoToJ(sx + sw, sy)),
 
             iParentMax = this.parent.size.x,
@@ -24123,14 +24131,15 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             nBump = false, //have we reached minimum j (the bump)
             mBump = false, //have we reached maximum j (the bump)
             n = 0, nBuffer = 1,
-            m = 1, mBuffer = 0;
+            m = 2, mBuffer = 0;
 
         for(var i = iStart; i < iMax; ++i) {
+            //render all the tiles for this iteration
             for(var j = jStart - n; j < jStart + m; ++j) {
                 if(i < 0 || j < 0 || i >= iParentMax || j >= jParentMax)
                     continue;
 
-                this.moveTileSprite(i, j, i, j);
+                this.moveTileSprite(-1, -1, i, j);
             }
 
             if(!nBump) {
@@ -24138,7 +24147,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 n++;
 
                 //check if we reached lowest j point
-                if((jStart - n) === jMin) {
+                if((jStart - n) === jMin - 1) {
                     nBump = true;
                 }
             } else {
@@ -24156,7 +24165,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 //we have not reached the highest j point, increase m to go even higher next iteration
                 m++;
 
-                if((jStart + m) === jMax) {
+                if((jStart + m) === jMax + 1) {
                     mBump = true;
                 }
             } else {
@@ -24222,6 +24231,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
      * @return {Tile} The sprite to display
      */
     moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
+        //if off the map, just ignore it
+        if(toTileX < 0 || toTileY < 0 || toTileX >= this.parent.size.x || toTileY >= this.parent.size.y) {
+            return;
+        }
+
         var tile,
             id = (toTileX + (toTileY * this.size.x)),
             tileId = this.tileIds[id],
@@ -24337,16 +24351,38 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(this.preRender)
             return;
 
-        //isometric pan (just re render everything)
-        if(this.parent.orientation === 'isometric')
-            return this.resize(this._rendered.width, this._rendered.height);
-
-        //optimized ortho pan, move only what is needed to move
+        //track panning delta so we know when to render
         this._panDelta.x += dx;
         this._panDelta.y += dy;
 
+        //Due to the way isometric tiles fit together we have to render a
+        //direction if they move half of a tile. We do that calculation here
+        //so that we can use it later to check if we have moved enough. If the
+        //map is ortho, then the scaled tile size is used normally.
+
+        var iso = this.parent.orientation === 'isometric',
+            factor = iso ? 0.5 : 1,
+            tszX = this.parent.scaledTileSize.x * factor,
+            tszY = this.parent.scaledTileSize.y * factor;
+
+        if(iso) {
+            if(
+                this._panDelta.x >= tszX || this._panDelta.x <= -tszX ||
+                this._panDelta.y >= tszY || this._panDelta.y <= -tszY
+            )
+            {
+                this.resize(this._rendered.width, this._rendered.height);
+            }
+
+            return;
+        }
+
         //check if we need to build a buffer around the viewport
         //usually this happens on the first pan after a full render
+        //caused by a viewport resize. WE do this buffering here instead
+        //of in the initial render because in the initial render, the buffer
+        //may try to go negative which has no tiles. Plus doing it here
+        //reduces the number of tiles that need to be created initially.
 
         //moving world right, so left will be exposed
         if(dx > 0 && !this._buffered.left)
@@ -24361,28 +24397,34 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         else if(dy < 0 && !this._buffered.bottom)
             this._renderDown(this._buffered.bottom = true);
 
+        //Here is where the actual panning gets done, we check if the pan
+        //delta is greater than a scaled tile and if so pan that direction.
+        //The reason we do it in a while loop is because the delta can be
+        //large than 1 scaled tile and may require multiple render pans
+        //(this can happen if you can .pan(x, y) with large values)
+
         //moved position right, so render left
-        while(this._panDelta.x >= this.parent.scaledTileSize.x) {
+        while(this._panDelta.x >= tszX) {
             this._renderLeft();
-            this._panDelta.x -= this.parent.scaledTileSize.x;
+            this._panDelta.x -= tszX;
         }
 
         //moved position left, so render right
-        while(this._panDelta.x <= -this.parent.scaledTileSize.x) {
+        while(this._panDelta.x <= -tszX) {
             this._renderRight();
-            this._panDelta.x += this.parent.scaledTileSize.x;
+            this._panDelta.x += tszX;
         }
 
         //moved position down, so render up
-        while(this._panDelta.y >= this.parent.scaledTileSize.y) {
+        while(this._panDelta.y >= tszY) {
             this._renderUp();
-            this._panDelta.y -= this.parent.scaledTileSize.y;
+            this._panDelta.y -= tszY;
         }
 
         //moved position up, so render down
-        while(this._panDelta.y <= -this.parent.scaledTileSize.y) {
+        while(this._panDelta.y <= -tszY) {
             this._renderDown();
-            this._panDelta.y += this.parent.scaledTileSize.y;
+            this._panDelta.y += tszY;
         }
 
         if(this.hasPhysics) {
@@ -24621,12 +24663,20 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
     getTileProperties: function(tileId) {
         if(tileId === undefined) return null;
 
+        var flags = gf.TiledTileset.FLAGS,
+            flippedX = tileId & flags.FlippedX,
+            flippedY = tileId & flags.FlippedY,
+            rotatedCW = tileId & flags.RotatedCW;
+
+        //remove flags
+        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
+
         tileId = tileId - this.firstgid;
 
         //if less than 0, then this id isn't in this tileset
         if(tileId < 0) return null;
 
-        return this.tileproperties[tileId] ?
+        var props = this.tileproperties[tileId] ?
                 //get this value
                 this.tileproperties[tileId] :
                 //set this id to default values and cache
@@ -24635,6 +24685,12 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
                     breakable: false,
                     type: gf.Tile.TYPE.NONE
                 };
+
+        props.flippedX = flippedX;
+        props.flippedY = flippedY;
+        props.rotatedCW = rotatedCW;
+
+        return props;
     },
     /**
      * Gets the tile texture for a tile based on it's ID
@@ -24646,6 +24702,11 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
     getTileTexture: function(tileId) {
         if(tileId === undefined) return null;
 
+        var flags = gf.TiledTileset.FLAGS;
+
+        //remove flags
+        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
+
         //get the internal ID of the tile in this set (0 indexed)
         tileId = tileId - this.firstgid;
 
@@ -24653,9 +24714,25 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
         if(tileId < 0) return null;
 
         return this.textures[tileId];
+    },
+    contains: function(tileId) {
+        if(tileId === undefined) return false;
+
+        var flags = gf.TiledTileset.FLAGS;
+
+        //remove flags
+        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
+
+        return (tileId >= this.firstgid && tileId <= this.lastgid);
     }
 });
 
+//Tileset GID flags
+gf.TiledTileset.FLAGS = {
+    FlippedX: 0x80000000,
+    FlippedY: 0x40000000,
+    RotatedCW: 0x20000000
+};
 /**
  * Tiled object group is a special layer that contains entities
  * TODO: This is all trash
@@ -24752,6 +24829,9 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
                 }
             }
 
+            o.name = o.name || props.name || props.tileprops.name;
+            o.type = o.type || props.type || props.tileprops.type;
+
             //a manually specified string texture
             if(typeof props.texture === 'string') {
                 props.texture = gf.assetCache[props.texture];
@@ -24802,6 +24882,29 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
                     if(this.parent._showPhysics)
                         obj.showPhysics();
+                }
+
+                if(props.tileprops) {
+                    if(props.tileprops.flippedX) {
+                        obj.scale.x = -1;
+                        obj.anchor.x = a ? a[0] : 1;
+                    }
+
+                    if(props.tileprops.flippedY) {
+                        obj.scale.y = -1;
+                        obj.anchor.y = a ? a[1] : 0;
+                    }
+
+                    //IDK if this is right
+                    if(props.tileprops.rotatedCW) {
+                        obj.rotation = gf.math.degreesToRadians(45);
+                    }
+                }
+
+                if(props.animation || props.tileprops.animation) {
+                    if(obj.gotoAndPlay) {
+                        obj.gotoAndPlay(props.animation || props.tileprops.animation);
+                    }
                 }
 
                 //set some more stuffz
