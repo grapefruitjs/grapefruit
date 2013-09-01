@@ -21,7 +21,8 @@ gf.input.GP_BUTTON = {
     PAD_TOP: 12, // Directional (discrete) pad
     PAD_BOTTOM: 13,
     PAD_LEFT: 14,
-    PAD_RIGHT: 15
+    PAD_RIGHT: 15,
+    SYSTEM_MENU: 16   // on console controllers this would be the button to open the system menu
 };
 gf.input.getGpButtonName = function(i) {
     for(var k in gf.input.GP_BUTTON) {
