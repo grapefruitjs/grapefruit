@@ -74,31 +74,32 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             return;
         }
 
+        //copy down our tilesize
         if(!this.tileSize)
             this.tileSize = this.parent.tileSize;
 
         //clear all the visual tiles
         this.clearTiles();
 
+        //render the tiles on the screen
+        var fn;
         if(this.parent.orientation === 'isometric') {
-            this._renderIsoTiles(
-                -this.parent.position.x,
-                -this.parent.position.y,
-                width,
-                height
-            );
-        }
-        else {
-            this._renderOrthoTiles(
-                -this.parent.position.x,
-                -this.parent.position.y,
-                width,
-                height
-            );
+            fn = '_renderIsoTiles';
+        } else {
+            fn = '_renderOrthoTiles';
         }
 
+        this[fn](
+            -this.parent.position.x,
+            -this.parent.position.y,
+            width,
+            height
+        );
+
         this._updateRenderSq();
+
         if(this.hasPhysics) {
+            //this -> map -> state -> physics
             this.parent.parent.physics.reindexStatic();
         }
     },
@@ -187,13 +188,15 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         //convert to tile coords
         sx = Math.floor(sx / this.parent.scaledTileSize.x);
         sy = Math.floor(sy / this.parent.scaledTileSize.y);
+
         //ensure we don't go below 0
         sx = sx < 0 ? 0 : sx;
         sy = sy < 0 ? 0 : sy;
 
-        //convert to tile coords
+        //convert to tile sizes
         sw = Math.ceil(sw / this.parent.scaledTileSize.x) + 1;
         sh = Math.ceil(sh / this.parent.scaledTileSize.y) + 1;
+
         //ensure we don't go outside the map size
         sw = (sx + sw > this.parent.size.x) ? (this.parent.size.x - sx) : sw;
         sh = (sy + sh > this.parent.size.y) ? (this.parent.size.y - sy) : sh;
@@ -222,8 +225,9 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
     _renderIsoTiles: function(sx, sy, sw, sh) {
+        //set the rendered area
         this._rendered.x = sx;
-        this._rendered.y = sx;
+        this._rendered.y = sy;
         this._rendered.width = sw;
         this._rendered.height = sh;
 
@@ -238,10 +242,10 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         sh = Math.ceil(sh / (scaled.y / 2));
 
         //in this function i,j represents the coord system in the isometric plane
-        var iStart = Math.floor(this._isoToI(sx, sy)) - 1,
+        var iStart = Math.floor(this._isoToI(sx, sy)),
             jStart = Math.floor(this._isoToJ(sx, sy)),
-            iMax = Math.ceil(this._isoToI(sx + sw, sy + sh)) + 1,
-            jMax = Math.ceil(this._isoToJ(sx, sy + sh)) + 2,
+            iMax = Math.ceil(this._isoToI(sx + sw, sy + sh)),
+            jMax = Math.ceil(this._isoToJ(sx, sy + sh)),
             jMin = Math.floor(this._isoToJ(sx + sw, sy)),
 
             iParentMax = this.parent.size.x,
@@ -250,14 +254,15 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             nBump = false, //have we reached minimum j (the bump)
             mBump = false, //have we reached maximum j (the bump)
             n = 0, nBuffer = 1,
-            m = 1, mBuffer = 0;
+            m = 2, mBuffer = 0;
 
         for(var i = iStart; i < iMax; ++i) {
+            //render all the tiles for this iteration
             for(var j = jStart - n; j < jStart + m; ++j) {
                 if(i < 0 || j < 0 || i >= iParentMax || j >= jParentMax)
                     continue;
 
-                this.moveTileSprite(i, j, i, j);
+                this.moveTileSprite(-1, -1, i, j);
             }
 
             if(!nBump) {
@@ -265,7 +270,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 n++;
 
                 //check if we reached lowest j point
-                if((jStart - n) === jMin) {
+                if((jStart - n) === jMin - 1) {
                     nBump = true;
                 }
             } else {
@@ -283,7 +288,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
                 //we have not reached the highest j point, increase m to go even higher next iteration
                 m++;
 
-                if((jStart + m) === jMax) {
+                if((jStart + m) === jMax + 1) {
                     mBump = true;
                 }
             } else {
@@ -469,16 +474,38 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         if(this.preRender)
             return;
 
-        //isometric pan (just re render everything)
-        if(this.parent.orientation === 'isometric')
-            return this.resize(this._rendered.width, this._rendered.height);
-
-        //optimized ortho pan, move only what is needed to move
+        //track panning delta so we know when to render
         this._panDelta.x += dx;
         this._panDelta.y += dy;
 
+        //Due to the way isometric tiles fit together we have to render a
+        //direction if they move half of a tile. We do that calculation here
+        //so that we can use it later to check if we have moved enough. If the
+        //map is ortho, then the scaled tile size is used normally.
+
+        var iso = this.parent.orientation === 'isometric',
+            factor = iso ? 0.5 : 1,
+            tszX = this.parent.scaledTileSize.x * factor,
+            tszY = this.parent.scaledTileSize.y * factor;
+
+        if(iso) {
+            if(
+                this._panDelta.x >= tszX || this._panDelta.x <= -tszX ||
+                this._panDelta.y >= tszY || this._panDelta.y <= -tszY
+            )
+            {
+                this.resize(this._rendered.width, this._rendered.height);
+            }
+
+            return;
+        }
+
         //check if we need to build a buffer around the viewport
         //usually this happens on the first pan after a full render
+        //caused by a viewport resize. WE do this buffering here instead
+        //of in the initial render because in the initial render, the buffer
+        //may try to go negative which has no tiles. Plus doing it here
+        //reduces the number of tiles that need to be created initially.
 
         //moving world right, so left will be exposed
         if(dx > 0 && !this._buffered.left)
@@ -493,28 +520,34 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         else if(dy < 0 && !this._buffered.bottom)
             this._renderDown(this._buffered.bottom = true);
 
+        //Here is where the actual panning gets done, we check if the pan
+        //delta is greater than a scaled tile and if so pan that direction.
+        //The reason we do it in a while loop is because the delta can be
+        //large than 1 scaled tile and may require multiple render pans
+        //(this can happen if you can .pan(x, y) with large values)
+
         //moved position right, so render left
-        while(this._panDelta.x >= this.parent.scaledTileSize.x) {
+        while(this._panDelta.x >= tszX) {
             this._renderLeft();
-            this._panDelta.x -= this.parent.scaledTileSize.x;
+            this._panDelta.x -= tszX;
         }
 
         //moved position left, so render right
-        while(this._panDelta.x <= -this.parent.scaledTileSize.x) {
+        while(this._panDelta.x <= -tszX) {
             this._renderRight();
-            this._panDelta.x += this.parent.scaledTileSize.x;
+            this._panDelta.x += tszX;
         }
 
         //moved position down, so render up
-        while(this._panDelta.y >= this.parent.scaledTileSize.y) {
+        while(this._panDelta.y >= tszY) {
             this._renderUp();
-            this._panDelta.y -= this.parent.scaledTileSize.y;
+            this._panDelta.y -= tszY;
         }
 
         //moved position up, so render down
-        while(this._panDelta.y <= -this.parent.scaledTileSize.y) {
+        while(this._panDelta.y <= -tszY) {
             this._renderDown();
-            this._panDelta.y += this.parent.scaledTileSize.y;
+            this._panDelta.y += tszY;
         }
 
         if(this.hasPhysics) {
