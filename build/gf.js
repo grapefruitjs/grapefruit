@@ -20522,6 +20522,16 @@ gf.Camera = function(game, settings) {
 };
 
 gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
+    _fxCallback: function(fx, type, cb) {
+        var ret;
+
+        if(typeof cb === 'function')
+            ret = cb();
+
+        this.fxpools[type].free(fx);
+
+        return ret;
+    },
     /**
      * Makes the camera flash with a certain color
      *
@@ -20533,14 +20543,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {gf.Camera.fx.Flash} Returns the effect object
      */
     flash: function(color, duration, alpha, cb) {
-        var flash = this.fxpools.flash.create(),
-            self = this;
+        var flash = this.fxpools.flash.create();
 
-        return flash.start(color, duration, alpha, function() {
-            self.fxpools.flash.free(flash);
-            if(typeof cb === 'function')
-                cb();
-        });
+        return flash.start(color, duration, alpha, this._fxCallback.bind(this, flash, 'flash', cb));
     },
     /**
      * Makes the camera fade into a color
@@ -20553,14 +20558,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {gf.Camera.fx.Fade} Returns the effect object
      */
     fade: function(color, duration, alpha, cb) {
-        var fade = this.fxpools.fade.create(),
-            self = this;
+        var fade = this.fxpools.fade.create();
 
-        return fade.start(color, duration, alpha, function() {
-            self.fxpools.fade.free(fade);
-            if(typeof cb === 'function')
-                cb();
-        });
+        return fade.start(color, duration, alpha, this._fxCallback.bind(this, fade, 'fade', cb));
     },
     /**
      * Shakes the camera around a bit, to show it who is boss.
@@ -20573,14 +20573,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {gf.Camera.fx.Shake} Returns the effect object
      */
     shake: function(intensity, duration, direction, cb) {
-        var shake = this.fxpools.shake.create(),
-            self = this;
+        var shake = this.fxpools.shake.create();
 
-        return shake.start(intensity, duration, direction, function() {
-            self.fxpools.shake.free(shake);
-            if(typeof cb === 'function')
-                cb();
-        });
+        return shake.start(intensity, duration, direction, this._fxCallback.bind(this, shake, 'shake', cb));
     },
     /**
      * Adds a mask that will hide the world via a close-in transition.
@@ -20592,14 +20587,9 @@ gf.inherits(gf.Camera, gf.DisplayObjectContainer, {
      * @return {gf.Camera.fx.Close} Returns the effect object
      */
     close: function(shape, duration, position, cb) {
-        var close = this.fxpools.close.create(),
-            self = this;
+        var close = this.fxpools.close.create();
 
-        return close.start(shape, duration, position, function() {
-            self.fxpools.close.free(close);
-            if(typeof cb === 'function')
-                cb();
-        });
+        return close.start(shape, duration, position, this._fxCallback.bind(this, close, 'close', cb));
     },
     /**
      * Shows scanlines accross the screen, retro arcade style
