@@ -23951,14 +23951,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this.clearTiles();
 
         //render the tiles on the screen
-        var fn;
-        if(this.parent.orientation === 'isometric') {
-            fn = '_renderIsoTiles';
-        } else {
-            fn = '_renderOrthoTiles';
-        }
-
-        this[fn](
+        this._renderTiles(
             -this.parent.position.x,
             -this.parent.position.y,
             width,
@@ -24053,7 +24046,7 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this.addChild(tile);
         this.tiles[cx][cy] = tile;
     },
-    _renderOrthoTiles: function(sx, sy, sw, sh) {
+    _renderTiles: function(sx, sy, sw, sh) {
         //convert to tile coords
         sx = Math.floor(sx / this.parent.scaledTileSize.x);
         sy = Math.floor(sy / this.parent.scaledTileSize.y);
@@ -24093,98 +24086,11 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
         this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
     },
-    _renderIsoTiles: function(sx, sy, sw, sh) {
-        //set the rendered area
-        this._rendered.x = sx;
-        this._rendered.y = sy;
-        this._rendered.width = sw;
-        this._rendered.height = sh;
-
-        var scaled = this.parent.scaledTileSize;
-
-        //convert to tile coords
-        sx = Math.floor(sx / (scaled.x / 2));
-        sy = Math.floor(sy / scaled.y);
-
-        //convert to tile units
-        sw = Math.ceil(sw / (scaled.x / 2));
-        sh = Math.ceil(sh / (scaled.y / 2));
-
-        //in this function i,j represents the coord system in the isometric plane
-        var iStart = Math.floor(this._isoToI(sx, sy)),
-            jStart = Math.floor(this._isoToJ(sx, sy)),
-            iMax = Math.ceil(this._isoToI(sx + sw, sy + sh)),
-            jMax = Math.ceil(this._isoToJ(sx, sy + sh)),
-            jMin = Math.floor(this._isoToJ(sx + sw, sy)),
-
-            iParentMax = this.parent.size.x,
-            jParentMax = this.parent.size.y,
-
-            nBump = false, //have we reached minimum j (the bump)
-            mBump = false, //have we reached maximum j (the bump)
-            n = 0, nBuffer = 1,
-            m = 2, mBuffer = 0;
-
-        for(var i = iStart; i < iMax; ++i) {
-            //render all the tiles for this iteration
-            for(var j = jStart - n; j < jStart + m; ++j) {
-                if(i < 0 || j < 0 || i >= iParentMax || j >= jParentMax)
-                    continue;
-
-                this.moveTileSprite(-1, -1, i, j);
-            }
-
-            if(!nBump) {
-                //we have not reached lowest j point, increment n to go even lower next iteration
-                n++;
-
-                //check if we reached lowest j point
-                if((jStart - n) === jMin - 1) {
-                    nBump = true;
-                }
-            } else {
-                //if we have reached deepest j start decreasing after the buffer is gone
-                if(nBuffer > 0) {
-                    nBuffer--;
-                }
-                //the buffer is gone, start decreasing n each iteration
-                else {
-                    n--;
-                }
-            }
-
-            if(!mBump) {
-                //we have not reached the highest j point, increase m to go even higher next iteration
-                m++;
-
-                if((jStart + m) === jMax + 1) {
-                    mBump = true;
-                }
-            } else {
-                //we have reached max j, start decreasing m after the buffer is gone
-                if(mBuffer > 0) {
-                    mBuffer--;
-                }
-                //the buffer is gone, start decreasing m each iteration
-                else {
-                    m--;
-                }
-            }
-        }
-    },
     _freeTile: function(tx, ty) {
         if(this.tiles[tx] && this.tiles[tx][ty]) {
             this.clearTile(this.tiles[tx][ty]);
             this.tiles[tx][ty] = null;
         }
-    },
-    _isoToI: function(x, y) {
-        // converts world isometric coordinates into the i position of the 2D-Array
-        return ((y + x) / 2);
-    },
-    _isoToJ: function(x, y) {
-        // converts world isometric coordinates into the j position of the 2D-Array
-        return ((y - x) / 2);
     },
     destroy: function() {
         this.clearTiles(true);
@@ -24232,7 +24138,6 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
             id = (toTileX + (toTileY * this.size.x)),
             tileId = this.tileIds[id],
             set = this.parent.getTileset(tileId),
-            iso = (this.parent.orientation === 'isometric'),
             texture,
             props,
             position,
@@ -24250,18 +24155,10 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         props = set.getTileProperties(tileId);
         hitArea = props.hitArea || set.properties.hitArea;
         interactive = this._getInteractive(set, props);
-        position = iso ?
-            // Isometric position
-            [
-                (toTileX * (this.parent.tileSize.x / 2)) - (toTileY * (this.parent.tileSize.x / 2)) + set.tileoffset.x,
-                (toTileY * (this.parent.tileSize.y / 2)) + (toTileX * (this.parent.tileSize.y / 2)) + set.tileoffset.y
-            ]
-            :
-            // Orthoganal position
-            [
-                (toTileX * this.parent.tileSize.x) + set.tileoffset.x,
-                (toTileY * this.parent.tileSize.y) + set.tileoffset.y
-            ];
+        position = [
+            (toTileX * this.parent.tileSize.x) + set.tileoffset.x,
+            (toTileY * this.parent.tileSize.y) + set.tileoffset.y
+        ];
 
         //due to the fact that we use top-left anchors for everything, but tiled uses bottom-left
         //we need to move the position of each tile down by a single map-tile height. That is why
@@ -24347,27 +24244,8 @@ gf.inherits(gf.TiledLayer, gf.Layer, {
         this._panDelta.x += dx;
         this._panDelta.y += dy;
 
-        //Due to the way isometric tiles fit together we have to render a
-        //direction if they move half of a tile. We do that calculation here
-        //so that we can use it later to check if we have moved enough. If the
-        //map is ortho, then the scaled tile size is used normally.
-
-        var iso = this.parent.orientation === 'isometric',
-            factor = iso ? 0.5 : 1,
-            tszX = this.parent.scaledTileSize.x * factor,
-            tszY = this.parent.scaledTileSize.y * factor;
-
-        if(iso) {
-            if(
-                this._panDelta.x >= tszX || this._panDelta.x <= -tszX ||
-                this._panDelta.y >= tszY || this._panDelta.y <= -tszY
-            )
-            {
-                this.resize(this._rendered.width, this._rendered.height);
-            }
-
-            return;
-        }
+        var tszX = this.parent.scaledTileSize.x,
+            tszY = this.parent.scaledTileSize.y;
 
         //check if we need to build a buffer around the viewport
         //usually this happens on the first pan after a full render
