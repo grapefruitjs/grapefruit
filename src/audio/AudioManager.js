@@ -1,6 +1,6 @@
 //you can only have 1 audio context on a page, so we store one for use in each manager
-gf.__AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
-gf.__audioctx = gf.support.webAudio ? new gf.__AudioCtx() : null;
+var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext,
+    __audioctx = support.webAudio ? new __AudioCtx() : null;
 
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
@@ -189,7 +189,7 @@ gf.inherits(gf.AudioManager, Object, {
      * @method create
      * @param [name] {String} An name to uniquely identify this audio, if omitted one will be ranomly chosen
      * @param settings {Object} All the settings for the audio player
-     * @param settings.urls {Array<String>} All the url possible for this audio (so we can choose the one this browser supports)
+     * @param settings.urls {Array<String>} All the urls possible for this audio (so we can choose the one this browser supports)
      * @param [settings.volume] {Number} The volume of this audio clip
      * @param [settings.autoplay] {Boolean} Automatically start playing after loaded
      * @param [settings.loop] {Boolean} Replay the audio when it finishes

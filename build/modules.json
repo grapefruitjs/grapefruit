@@ -1,0 +1,29 @@
+{
+    "core": {
+        "description": "The core of Grapefruit"
+    },
+    "audio": {
+        "description": "Adds html5/web audio support"
+    },
+    "font": {
+        "description": "Adds Bitmap font support"
+    },
+    "gui": {
+        "description": "Adds gui support"
+    },
+    "input": {
+        "description": "Adds input handling support (for keyboard, and gamepad)"
+    },
+    "loader": {
+        "description": "A asset preloader to help load game assets"
+    },
+    "physics": {
+        "description": "Adds physics simulations to the world"
+    },
+    "tiled": {
+        "description": "Adds support for importing TiledEditor maps"
+    },
+    "effects": {
+        "description": "Adds a variety of effects to different areas"
+    }
+}

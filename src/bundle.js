@@ -1,0 +1,1 @@
+module.exports={core:require("core/core")};

@@ -1,14 +1,6 @@
 var path = require('path');
 
 module.exports = function(grunt) {
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
-    grunt.loadNpmTasks('grunt-contrib-yuidoc');
-    grunt.loadNpmTasks('grunt-replace');
-
     //explicity set source files because order is important
     var srcFiles = [
         '<%= dirs.src %>/core.js',
@@ -100,7 +92,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         dirs: {
-            build: 'build',
+            dist: 'build/dist',
             docs: 'docs',
             src: 'src',
             test: 'test',
@@ -111,10 +103,8 @@ module.exports = function(grunt) {
             vendorBlob: '<%= dirs.vendor %>/**/*js',
             srcBlob: '<%= dirs.src %>/**/*.js',
             testBlob: '<%= dirs.test %>/unit/**/*.js',
-            intro: '<%= dirs.src %>/intro.js',
-            outro: '<%= dirs.src %>/outro.js',
-            build: '<%= dirs.build %>/<%= pkg.name %>.js',
-            buildMin: '<%= dirs.build %>/<%= pkg.name %>.min.js'
+            dev: '<%= dirs.dist %>/<%= pkg.name %>.js',
+            dist: '<%= dirs.dist %>/<%= pkg.name %>.min.js'
         },
         replace: {
             dist: {
@@ -128,33 +118,14 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         flatten: true,
-                        src: ['<%= files.build %>', '<%= files.buildMin %>'],
-                        dest: '<%= dirs.build %>'
+                        src: ['<%= files.dev %>', '<%= files.dist %>'],
+                        dest: '<%= dirs.dist %>'
                     }
                 ]
             }
         },
-        concat: {
-            options: {
-                banner: banner
-            },
-            dist: {
-                src: ['<%= files.intro %>'].concat(vendorFiles).concat(srcFiles).concat(['<%= files.outro %>']),
-                dest: '<%= files.build %>'
-            }
-        },
-        uglify: {
-            options: {
-                banner: banner,
-                mangle: false
-            },
-            dist: {
-                src: '<%= files.build %>',
-                dest: '<%= files.buildMin %>'
-            }
-        },
         jshint: {
-            beforeconcat: srcFiles.filter(function(e) { return e.indexOf('debug.js') === -1; }),
+            src: ['<%= files.srcBlob %>'],
             test: ['<%= files.testBlob %>'],
             options: {
                 /* Enforcement options */
@@ -206,24 +177,11 @@ module.exports = function(grunt) {
             }
         },
         connect: {
-            qunit: {
-                options: {
-                    port: grunt.option('port-test') || 9002,
-                    base: './'
-                }
-            },
             test: {
                 options: {
                     port: grunt.option('port-test') || 9002,
                     base: './',
                     keepalive: true
-                }
-            }
-        },
-        qunit: {
-            all: {
-                options: {
-                    urls: ['http://localhost:' + (grunt.option('port-test') || 9002) + '/test/index.html']
                 }
             }
         },
@@ -239,12 +197,60 @@ module.exports = function(grunt) {
                     outdir: '<%= dirs.docs %>'
                 }
             }
+        },
+        urequire: {
+            dev: {
+                template: 'combined',
+                path: '<%= dirs.src %>',
+                dstPath: '<%= files.dev %>',
+                main: 'bundle.js'
+            },
+
+            dist: {
+                template: 'combined',
+                path: '<%= dirs.src %>',
+                dstPath: '<%= files.dist %>',
+                main: 'bundle.js',
+                optimize: true
+            },
+
+            _defaults: {
+                build: {
+                    debugLevel: 0,
+                    verbose: true,
+                    scanAllow: true,
+                    allNodeRequires: true,
+                    noRootExports: false,
+                    rootExports: 'gf'
+                }
+            }
+        },
+        build: {
+            dev: {
+                dest: '<%= files.dev %>',
+                src: '<%= dirs.src %>'
+            },
+            dist: {
+                dest: '<%= files.dist %>',
+                src: '<%= dirs.src %>'
+            }
         }
     });
 
-    //Load tasks
-    grunt.registerTask('default', ['build', 'test']);
-    grunt.registerTask('build', ['jshint', 'concat', 'uglify', 'replace']);
-    grunt.registerTask('test', ['connect:qunit', 'qunit']);
+    //load npm tasks
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-yuidoc');
+    grunt.loadNpmTasks('grunt-replace');
+    grunt.loadNpmTasks('grunt-urequire');
+
+    //load project tasks
+    grunt.loadTasks('build/tasks');
+
+    //setup shortcut tasks
+    grunt.registerTask('default', ['build']);
+    //grunt.registerTask('build', ['jshint:src', 'bundle:*', 'urequire:combined', 'urequire:combinedMin', 'replace:dist']);
     grunt.registerTask('docs', ['yuidoc']);
+
+    grunt.registerTask('testing', ['build']);
 };
