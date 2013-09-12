@@ -1,7 +1,6 @@
 var AudioPlayer = require('./AudioPlayer'),
     core = require('../core/core'),
-    support = core.support,
-    utils = core.utils;
+    support = core.support;
 
 //you can only have 1 audio context on a page, so we store one for use in each manager
 var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext,
@@ -99,7 +98,7 @@ var AudioManager = module.exports = function() {
     this.sounds = {};
 };
 
-utils.inherits(AudioManager, Object, {
+core.inherits(AudioManager, Object, {
     /**
      * Returns the current master volume
      *

@@ -5,7 +5,7 @@ var Fade = module.exports = function() {
     Effect.call(this);
 };
 
-core.utils.inherits(Fade, Effect, {
+core.inherits(Fade, Effect, {
     start: function(color, duration, alpha, cb) {
         Effect.prototype.start.call(this);
 

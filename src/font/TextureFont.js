@@ -147,7 +147,7 @@ var TextureFont = module.exports = function(font, settings) {
         this.setText(settings.text);
 };
 
-core.utils.inherits(TextureFont, core.DisplayObjectContainer, {
+core.inherits(TextureFont, core.DisplayObjectContainer, {
     /**
      * Gets a sprite from the pool for the character pased
      *

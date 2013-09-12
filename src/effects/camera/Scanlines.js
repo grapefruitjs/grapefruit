@@ -5,7 +5,7 @@ var Scanlines = module.exports = function() {
     Effect.call(this);
 };
 
-core.utils.inherits(Scanlines, Effect, {
+core.inherits(Scanlines, Effect, {
     start: function(color, direction, spacing, thickness, alpha) {
         Effect.prototype.start.call(this);
 

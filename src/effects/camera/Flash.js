@@ -5,7 +5,7 @@ var Flash = module.exports = function() {
     Effect.call(this);
 };
 
-core.utils.inherits(Flash, Effect, {
+core.inherits(Flash, Effect, {
     start: function(color, duration, alpha, cb) {
         Effect.prototype.start.call(this);
 

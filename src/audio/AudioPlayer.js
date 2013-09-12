@@ -106,7 +106,7 @@ var AudioPlayer = module.exports = function(manager, settings) {
     this._onendTimer = [];
 
     //mixin user's settings
-    gf.utils.setValues(this, settings);
+    utils.setValues(this, settings);
 
     if(this._webAudio) {
         this._setupAudioNode();
@@ -115,7 +115,7 @@ var AudioPlayer = module.exports = function(manager, settings) {
     this.load();
 };
 
-utils.inherits(AudioPlayer, Object, {
+core.inherits(AudioPlayer, Object, {
     /**
      * Load the audio file for this player, this is called from the ctor
      * there is no reason to call it manually.
@@ -844,7 +844,7 @@ if(support.webAudio) {
             //load the buffer from the URL
             var self = this;
 
-            gf.utils.ajax({
+            utils.ajax({
                 method: 'GET',
                 url: url,
                 dataType: 'arraybuffer',

@@ -5,7 +5,7 @@ var Close = module.exports = function() {
     Effect.call(this);
 };
 
-core.utils.inherits(Close, Effect, {
+core.inherits(Close, Effect, {
     start: function(shape, duration, pos, cb) {
         Effect.prototype.start.call(this);
 
