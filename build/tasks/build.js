@@ -30,7 +30,7 @@ module.exports = function(grunt) {
 
         Object.keys(mods).forEach(function(f) {
             if(modules[f]) {
-                str += f + ':require("' + f + '/' + f + '"),';
+                str += f + ':require("./' + f + '/' + f + '"),';
             }
         });
 

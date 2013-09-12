@@ -105,7 +105,7 @@ module.exports = function(grunt) {
             testBlob: '<%= dirs.test %>/unit/**/*.js',
             dev: '<%= dirs.dist %>/<%= pkg.name %>.js',
             dist: '<%= dirs.dist %>/<%= pkg.name %>.min.js',
-            bundle: '<%= dirs.src %>/bundle.js'
+            bundle: 'bundle.js'
         },
         replace: {
             dist: {
@@ -230,12 +230,12 @@ module.exports = function(grunt) {
             dev: {
                 dest: '<%= files.dev %>',
                 src: '<%= dirs.src %>',
-                main: '<%= files.bundle %>'
+                main: '<%= dirs.src %>/<%= files.bundle %>'
             },
             dist: {
                 dest: '<%= files.dist %>',
                 src: '<%= dirs.src %>',
-                main: '<%= files.bundle %>'
+                main: '<%= dirs.src %>/<%= files.bundle %>'
             }
         }
     });

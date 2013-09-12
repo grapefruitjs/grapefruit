@@ -17,6 +17,8 @@
         "url": "https://github.com/englercj/grapefruit.git"
     },
 
+    "main": "build/dist/gf.js",
+
     "dependencies": {},
     "devDependencies": {
         "grunt": "0.4.x",
