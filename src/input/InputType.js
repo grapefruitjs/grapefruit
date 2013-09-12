@@ -1,7 +1,4 @@
-/**
- * input object
- */
-gf.input = {};
+var core = require('../core/core');
 
 /**
  * The base Input object, holds common functions and properties between input types
@@ -13,8 +10,8 @@ gf.input = {};
  * @constructor
  * @param view {DOMElement} The DOMElement to bind input events to
  */
-gf.input.Input = function(view) {
-    gf.EventEmitter.call(this);
+var InputType = module.exports = function(view) {
+    core.EventEmitter.call(this);
 
     /**
      * For backwards compatibility
@@ -33,7 +30,7 @@ gf.input.Input = function(view) {
     this.view = view;
 };
 
-gf.inherits(gf.input.Input, Object, {
+core.inherits(InputType, Object, {
     /**
      * Prevents the default action of an event
      *

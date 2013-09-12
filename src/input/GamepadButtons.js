@@ -1,38 +1,6 @@
-/**
- * Bindable Gamepad Buttons
- *
- * @property GP_BUTTON
- * @type Object
- * @static
- */
-gf.input.GP_BUTTON = {
-    FACE_1: 0, // Face (main) buttons
-    FACE_2: 1,
-    FACE_3: 2,
-    FACE_4: 3,
-    LEFT_SHOULDER: 4, // Top shoulder buttons
-    RIGHT_SHOULDER: 5,
-    LEFT_TRIGGER: 6, // Bottom shoulder buttons
-    RIGHT_TRIGGER: 7,
-    SELECT: 8,
-    START: 9,
-    LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
-    RIGHT_ANALOGUE_STICK: 11,
-    PAD_TOP: 12, // Directional (discrete) pad
-    PAD_BOTTOM: 13,
-    PAD_LEFT: 14,
-    PAD_RIGHT: 15,
-    SYSTEM_MENU: 16   // on console controllers this would be the button to open the system menu
-};
-gf.input.getGpButtonName = function(i) {
-    for(var k in gf.input.GP_BUTTON) {
-        if(gf.input.GP_BUTTON[k] === i) {
-            return k;
-        }
-    }
+var core = require('../core/core'),
+    Input = require('./InputType');
 
-    return '';
-};
 /**
  * Controls gamepad button input
  *
@@ -41,8 +9,8 @@ gf.input.getGpButtonName = function(i) {
  * @namespace gf.input
  * @constructor
  */
- gf.input.GamepadButtons = function() {
-    gf.input.Input.call(this);
+ var GamepadButtons = module.exports = function() {
+    Input.call(this);
 
     /**
      * The threshold at which we consider a button "pressed"
@@ -63,9 +31,9 @@ gf.input.getGpButtonName = function(i) {
     this.buttons = {};
 
     //setup default objects for each axis
-    for(var bt in gf.input.GP_BUTTON) {
-        this.buttons[gf.input.GP_BUTTON[bt]] = {
-            code: gf.input.GP_BUTTON[bt],
+    for(var bt in GamepadButtons.BUTTON) {
+        this.buttons[GamepadButtons.BUTTON[bt]] = {
+            code: GamepadButtons.BUTTON[bt],
             name: bt,
             down: false,
             value: 0
@@ -73,7 +41,7 @@ gf.input.getGpButtonName = function(i) {
     }
 };
 
-gf.inherits(gf.input.GamepadButtons, gf.input.Input, {
+core.inherits(GamepadButtons, Input, {
     /**
      * Polls the gamepad object for status updates and emits events when they occur
      *
@@ -96,3 +64,40 @@ gf.inherits(gf.input.GamepadButtons, gf.input.Input, {
         }
     }
 });
+
+/**
+ * Bindable Gamepad Buttons
+ *
+ * @property GP_BUTTON
+ * @type Object
+ * @static
+ */
+GamepadButtons.BUTTON = {
+    FACE_1: 0, // Face (main) buttons
+    FACE_2: 1,
+    FACE_3: 2,
+    FACE_4: 3,
+    LEFT_SHOULDER: 4, // Top shoulder buttons
+    RIGHT_SHOULDER: 5,
+    LEFT_TRIGGER: 6, // Bottom shoulder buttons
+    RIGHT_TRIGGER: 7,
+    SELECT: 8,
+    START: 9,
+    LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
+    RIGHT_ANALOGUE_STICK: 11,
+    PAD_TOP: 12, // Directional (discrete) pad
+    PAD_BOTTOM: 13,
+    PAD_LEFT: 14,
+    PAD_RIGHT: 15,
+    SYSTEM_MENU: 16   // on console controllers this would be the button to open the system menu
+};
+
+GamepadButtons.getGpButtonName = function(i) {
+    for(var k in GamepadButtons.BUTTON) {
+        if(GamepadButtons.BUTTON[k] === i) {
+            return k;
+        }
+    }
+
+    return '';
+};

@@ -1,3 +1,7 @@
+var core = require('../core/core'),
+    Keyboard = require('./Keyboard'),
+    Gamepad = require('./Gamepad');
+
 /**
  * Manages all input handlers in a unified way
  *
@@ -7,7 +11,7 @@
  * @constructor
  * @param view {DOMElement} The DOMElement to bind input events to
  */
-gf.InputManager = function(view) {
+var InputManager = module.exports = function(view) {
     /**
      * The dom element to bind events to
      *
@@ -35,7 +39,7 @@ gf.InputManager = function(view) {
     this.gamepad = new gf.input.Gamepad();
 };
 
-gf.inherits(gf.InputManager, Object, {
+core.inherits(InputManager, Object, {
     /**
      * Called each frame to update state info for some input methods
      *
