@@ -1,25 +1,6 @@
-/**
- * Bindable Gamepad Axes
- *
- * @property GP_AXIS
- * @type Object
- * @static
- */
- gf.input.GP_AXIS = {
-    LEFT_ANALOGUE_HOR: 0,
-    LEFT_ANALOGUE_VERT: 1,
-    RIGHT_ANALOGUE_HOR: 2,
-    RIGHT_ANALOGUE_VERT: 3
-};
-gf.input.getGpAxisName = function(i) {
-    for(var k in gf.input.GP_AXIS) {
-        if(gf.input.GP_AXIS[k] === i) {
-            return k;
-        }
-    }
+var core = require('../core/core'),
+    Input = require('./InputType');
 
-    return '';
-};
 /**
  * Controls gamepad stick input
  *
@@ -28,8 +9,8 @@ gf.input.getGpAxisName = function(i) {
  * @namespace gf.input
  * @constructor
  */
- gf.input.GamepadSticks = function() {
-    gf.input.Input.call(this);
+var GamepadSticks = module.exports = function() {
+    Input.call(this);
 
     /**
      * The threshold at which we consider a stick moved from center
@@ -50,16 +31,16 @@ gf.input.getGpAxisName = function(i) {
     this.axes = {};
 
     //setup default objects for each axis
-    for(var ax in gf.input.GP_AXIS) {
-        this.axes[gf.input.GP_AXIS[ax]] = {
-            code: gf.input.GP_AXIS[ax],
+    for(var ax in GamepadSticks.AXIS) {
+        this.axes[GamepadSticks.AXIS[ax]] = {
+            code: GamepadSticks.AXIS[ax],
             name: ax,
             value: 0
         };
     }
 };
 
-gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
+core.inherits(GamepadSticks, Input, {
     /**
      * Polls the gamepad object for status updates and emits events when they occur
      *
@@ -84,3 +65,27 @@ gf.inherits(gf.input.GamepadSticks, gf.input.Input, {
         }
     }
 });
+
+/**
+ * Bindable Gamepad Axes
+ *
+ * @property GP_AXIS
+ * @type Object
+ * @static
+ */
+GamepadSticks.AXIS = {
+    LEFT_ANALOGUE_HOR: 0,
+    LEFT_ANALOGUE_VERT: 1,
+    RIGHT_ANALOGUE_HOR: 2,
+    RIGHT_ANALOGUE_VERT: 3
+};
+
+GamepadSticks.getGpAxisName = function(i) {
+    for(var k in GamepadSticks.AXIS) {
+        if(GamepadSticks.AXIS[k] === i) {
+            return k;
+        }
+    }
+
+    return '';
+};

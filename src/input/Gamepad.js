@@ -1,3 +1,8 @@
+var core = require('../core/core'),
+    Input = require('./InputType'),
+    GamepadButtons = require('./GamepadButtons'),
+    GamepadSticks = require('./GamepadSticks');
+
 /**
  * Controls input from gamepads
  *
@@ -6,8 +11,8 @@
  * @namespace gf.input
  * @constructor
  */
-gf.input.Gamepad = function() {
-    gf.input.Input.call(this);
+var Gamepad = module.exports = function() {
+    Input.call(this);
 
     /**
      * Tracks if we are polling for status/connections
@@ -43,7 +48,7 @@ gf.input.Gamepad = function() {
      * @type GamepadButtons
      * @readOnly
      */
-    this.buttons = new gf.input.GamepadButtons();
+    this.buttons = new GamepadButtons();
 
     /**
      * Holds the stick handler for gamepad stick events
@@ -52,7 +57,7 @@ gf.input.Gamepad = function() {
      * @type GamepadSticks
      * @readOnly
      */
-    this.sticks = new gf.input.GamepadSticks();
+    this.sticks = new GamepadSticks();
 
     //Firefox uses connect/disconnect events so listen to those
     window.addEventListener('MozGamepadConnected', this.onGamepadConnect.bind(this), false);
@@ -64,7 +69,7 @@ gf.input.Gamepad = function() {
     }
 };
 
-gf.inherits(gf.input.Gamepad, gf.input.Input, {
+core.inherits(Gamepad, Input, {
     /**
      * Called when a gamepad connects (FF Only)
      *

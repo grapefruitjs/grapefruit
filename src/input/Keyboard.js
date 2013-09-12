@@ -1,3 +1,122 @@
+var core = require('../core/core'),
+    Input = require('./InputType');
+
+/**
+ * Controls keyboard input
+ *
+ * @class Keyboard
+ * @extends gf.input.Input
+ * @namespace gf.input
+ * @constructor
+ * @param view {DOMElement} The DOMElement to bind input events to
+ */
+var Keyboard = module.exports = function(view) {
+    Input.call(this, view);
+
+    /**
+     * The current sequence of keys that have been pressed
+     *
+     * @property sequence
+     * @type Array<Number>
+     * @readOnly
+     */
+    this.sequence = [];
+
+    /**
+     * The amount of time it takes for the sequence to clear out, in ms
+     *
+     * @property sequenceTimeout
+     * @type Number
+     * @default 500
+     */
+    this.sequenceTimeout = 500;
+
+    /**
+     * The timeout ID for the wait to clear the input sequence
+     *
+     * @property _clearSq
+     * @type Number
+     * @private 
+     */
+    this._clearSq = null;
+
+    view.addEventListener('keydown', this.onKeyDown.bind(this), false);
+    view.addEventListener('keyup', this.onKeyUp.bind(this), false);
+};
+
+core.inherits(Keyboard, Input, {
+    /**
+     * Called when a key is pressed down
+     *
+     * @method onKeyDown
+     * @param event {DOMEvent}
+     * @param override {Number} The key code to use instead of checking event data
+     * @private
+     */
+    onKeyDown: function(e, override) {
+        //if(e.target === this.view.parentElement)
+            return this.modifyKey(e, override || e.keyCode || e.which, true);
+    },
+    /**
+     * Called when a key is released
+     *
+     * @method onKeyUp
+     * @param event {DOMEvent}
+     * @param override {Number} The key code to use instead of checking event data
+     * @private
+     */
+    onKeyUp: function(e, override) {
+        //if(e.target === this.view.parentElement)
+            return this.modifyKey(e, override || e.keyCode || e.which, false);
+    },
+    /**
+     * Called when a key state has changed, updates current sequence and emits events
+     *
+     * @method modifyKey
+     * @param event {DOMEvent}
+     * @param key {Number} The key code that has changed
+     * @param down {Boolean} Whether the key has been pressed or not
+     * @private
+     */
+    modifyKey: function(e, key, down) {
+        //emit single key event
+        this.emit(key, {
+            input: this,
+            originalEvent: e,
+            down: down
+        });
+
+        //when pressed is when we process a key for a sequence
+        if(down) {
+            //update the key sequence
+            this.sequence.push(key);
+
+            //process current sequence
+            var s = this.sequence.toString();
+            if(s !== key.toString()) {
+                this.emit(s, {
+                    input: this,
+                    originalEvent: e,
+                    down: down
+                });
+            }
+
+            //set timeout to clear sequence
+            clearTimeout(this._clearSq);
+            this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
+        }
+    },
+    /**
+     * Clears the current sequence so that a new one can start
+     *
+     * @method _clearSequence
+     * @private
+     */
+    _clearSequence: function() {
+        this.sequence.length = 0;
+    }
+});
+
 /**
  * Bindable keycodes
  *
@@ -5,7 +124,7 @@
  * @type Object
  * @static
  */
-gf.input.KEY = {
+Keyboard.KEY = {
     BACKSPACE: 8,
     TAB: 9,
     ENTER: 13,
@@ -84,119 +203,3 @@ gf.input.KEY = {
     MINUS: 173,
     TILDE: 192
 };
-
-/**
- * Controls keyboard input
- *
- * @class Keyboard
- * @extends gf.input.Input
- * @namespace gf.input
- * @constructor
- * @param view {DOMElement} The DOMElement to bind input events to
- */
-gf.input.Keyboard = function(view) {
-    gf.input.Input.call(this, view);
-
-    /**
-     * The current sequence of keys that have been pressed
-     *
-     * @property sequence
-     * @type Array<Number>
-     * @readOnly
-     */
-    this.sequence = [];
-
-    /**
-     * The amount of time it takes for the sequence to clear out, in ms
-     *
-     * @property sequenceTimeout
-     * @type Number
-     * @default 500
-     */
-    this.sequenceTimeout = 500;
-
-    /**
-     * The timeout ID for the wait to clear the input sequence
-     *
-     * @property _clearSq
-     * @type Number
-     * @private 
-     */
-    this._clearSq = null;
-
-    view.addEventListener('keydown', this.onKeyDown.bind(this), false);
-    view.addEventListener('keyup', this.onKeyUp.bind(this), false);
-};
-
-gf.inherits(gf.input.Keyboard, gf.input.Input, {
-    /**
-     * Called when a key is pressed down
-     *
-     * @method onKeyDown
-     * @param event {DOMEvent}
-     * @param override {Number} The key code to use instead of checking event data
-     * @private
-     */
-    onKeyDown: function(e, override) {
-        //if(e.target === this.view.parentElement)
-            return this.modifyKey(e, override || e.keyCode || e.which, true);
-    },
-    /**
-     * Called when a key is released
-     *
-     * @method onKeyUp
-     * @param event {DOMEvent}
-     * @param override {Number} The key code to use instead of checking event data
-     * @private
-     */
-    onKeyUp: function(e, override) {
-        //if(e.target === this.view.parentElement)
-            return this.modifyKey(e, override || e.keyCode || e.which, false);
-    },
-    /**
-     * Called when a key state has changed, updates current sequence and emits events
-     *
-     * @method modifyKey
-     * @param event {DOMEvent}
-     * @param key {Number} The key code that has changed
-     * @param down {Boolean} Whether the key has been pressed or not
-     * @private
-     */
-    modifyKey: function(e, key, down) {
-        //emit single key event
-        this.emit(key, {
-            input: this,
-            originalEvent: e,
-            down: down
-        });
-
-        //when pressed is when we process a key for a sequence
-        if(down) {
-            //update the key sequence
-            this.sequence.push(key);
-
-            //process current sequence
-            var s = this.sequence.toString();
-            if(s !== key.toString()) {
-                this.emit(s, {
-                    input: this,
-                    originalEvent: e,
-                    down: down
-                });
-            }
-
-            //set timeout to clear sequence
-            clearTimeout(this._clearSq);
-            this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
-        }
-    },
-    /**
-     * Clears the current sequence so that a new one can start
-     *
-     * @method _clearSequence
-     * @private
-     */
-    _clearSequence: function() {
-        this.sequence.length = 0;
-    }
-});
