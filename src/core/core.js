@@ -28,10 +28,14 @@
 *       - Opera 12+
 */
 
+var globals = require('./globals');
+
 module.exports = {
-    //misc
-    version: '@@VERSION',
-    assetCache: {},
+    //globals
+    version: globals.version,
+    cache: globals.cache,
+
+    //plugin
     plugin: require('./plugin'),
 
     //camera

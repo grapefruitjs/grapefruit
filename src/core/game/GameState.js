@@ -1,5 +1,6 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
-    utils = require('../utils/utils');
+    utils = require('../utils/utils'),
+    cache = require('../globals').cache;
 
     //TOINC: AudioManager, PhysicsSyste
 
@@ -138,8 +139,8 @@ utils.inherits(GameState, DisplayObjectContainer, {
      */
     loadWorld: function(world) {
         if(typeof world === 'string'){
-            if(gf.assetCache[world]) {
-                world = gf.assetCache[world];
+            if(cache[world]) {
+                world = cache[world];
             } else {
                 throw 'World "' + world + '" needs to be preloaded before being added to a game!';
             }
