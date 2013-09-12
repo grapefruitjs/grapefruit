@@ -9,7 +9,7 @@ var Effect = module.exports = function() {
     this.done = true;
 };
 
-core.utils.inherits(Effect, core.DisplayObjectContainer, {
+core.inherits(Effect, core.DisplayObjectContainer, {
     start: function() {
         this.done = false;
         return this;

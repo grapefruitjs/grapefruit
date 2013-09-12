@@ -21,4 +21,4 @@ var GuiContainer = module.exports = function(name) {
     core.DisplayObjectContainer.call(this);
 };
 
-core.utils.inherits(Gui, core.DisplayObjectContainer);
+core.inherits(Gui, core.DisplayObjectContainer);

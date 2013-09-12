@@ -34,6 +34,7 @@ module.exports = {
     //globals
     version: globals.version,
     cache: globals.cache,
+    inherits: globals.inherits,
 
     //plugin
     plugin: require('./plugin'),

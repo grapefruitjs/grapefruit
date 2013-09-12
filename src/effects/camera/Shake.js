@@ -6,7 +6,7 @@ var Shake = module.exports = function() {
     this.offset = new gf.Vector();
 };
 
-core.utils.inherits(Shake, Effect, {
+core.inherits(Shake, Effect, {
     start: function(intensity, duration, direction, cb) {
         Effect.prototype.start.call(this);
 

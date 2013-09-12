@@ -35,7 +35,7 @@ var GuiItem = module.exports = function(texture, interactive) {
     this.interactive = interactive;
 };
 
-core.utils.inherits(GuiItem, core.Sprite, {
+core.inherits(GuiItem, core.Sprite, {
     mousedown: function(e) {
         core.Sprite.prototype.mousedown.call(this, e);
 
