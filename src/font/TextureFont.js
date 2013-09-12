@@ -1,3 +1,5 @@
+var core = require('../core/core');
+
 /**
  * A texture font makes it easy to use a texture for writing generic text. Basically
  * this holds an array of textures each one representing a character, that all share
@@ -24,10 +26,10 @@
  * @param [settings.lineHeight] {Number} The height factor of characters, default is 1 which is normal spacing
  * @param [settings.text] {String} Starting text of the font
  */
-gf.TextureFont = function(font, settings) {
+var TextureFont = module.exports = function(font, settings) {
     if(typeof font === 'string') {
-        if(gf.assetCache[font])
-            font = gf.assetCache[font];
+        if(core.cache[font])
+            font = core.cache[font];
         else
             throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
     }
@@ -133,10 +135,10 @@ gf.TextureFont = function(font, settings) {
      * @readOnly
      * @private
      */
-    this.sprites = new gf.ObjectPool(gf.Sprite, this);
+    this.sprites = new core.ObjectPool(core.Sprite, this);
 
     //call base ctor
-    gf.DisplayObjectContainer.call(this, settings);
+    core.DisplayObjectContainer.call(this, settings);
 
     if(this.ext && this.ext.charAt(0) !== '.')
         this.ext = '.' + this.ext;
@@ -145,7 +147,7 @@ gf.TextureFont = function(font, settings) {
         this.setText(settings.text);
 };
 
-gf.inherits(gf.TextureFont, gf.DisplayObjectContainer, {
+core.utils.inherits(TextureFont, core.DisplayObjectContainer, {
     /**
      * Gets a sprite from the pool for the character pased
      *
@@ -196,7 +198,7 @@ gf.inherits(gf.TextureFont, gf.DisplayObjectContainer, {
      * @return TextureFont
      */
     clone: function() {
-        return new gf.TextureFont(this.textures, {
+        return new TextureFont(this.textures, {
             ext: this.ext,
             map: this.map,
             text: this.text,
