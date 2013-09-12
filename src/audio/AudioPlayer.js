@@ -1,3 +1,8 @@
+var AudioPlayer = require('./AudioPlayer'),
+    core = require('../core/core'),
+    support = core.support,
+    utils = core.utils;
+
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
  * The GF Audio API was based on
@@ -11,8 +16,8 @@
  * @param manager {AudioManager} AudioManager instance for this audio player
  * @param settings {Object} All the settings for this player instance
  */
-gf.AudioPlayer = function(manager, settings) {
-    gf.EventEmitter.call(this);
+var AudioPlayer = module.exports = function(manager, settings) {
+    core.EventEmitter.call(this);
 
     /**
      * The source of the audio, the actual URL to load up
@@ -96,7 +101,7 @@ gf.AudioPlayer = function(manager, settings) {
     this._manager = manager;
     this._canPlay = manager.canPlay;
     this._codecs = manager.codecs;
-    this._webAudio = gf.support.webAudio && !this.buffer;
+    this._webAudio = support.webAudio && !this.buffer;
     this._nodes = [];
     this._onendTimer = [];
 
@@ -110,7 +115,7 @@ gf.AudioPlayer = function(manager, settings) {
     this.load();
 };
 
-gf.inherits(gf.AudioPlayer, Object, {
+utils.inherits(AudioPlayer, Object, {
     /**
      * Load the audio file for this player, this is called from the ctor
      * there is no reason to call it manually.
@@ -822,7 +827,7 @@ gf.inherits(gf.AudioPlayer, Object, {
 });
 
 //define some prototype functions that are only available when using the WebAudio API
-if(gf.support.webAudio) {
+if(support.webAudio) {
     /**
      * Buffer a sound from URL (or from cache) and decode to audio source (Web Audio API).
      *
@@ -830,10 +835,10 @@ if(gf.support.webAudio) {
      * @param url {String} The path to the sound file.
      * @private
      */
-    gf.AudioPlayer.prototype.loadBuffer = function(url) {
+    AudioPlayer.prototype.loadBuffer = function(url) {
         //load from cache
-        if(url in gf.assetCache) {
-            this._duration = gf.assetCache[url].duration;
+        if(url in core.cache) {
+            this._duration = core.cache[url].duration;
             this.loadSound();
         } else {
             //load the buffer from the URL
@@ -847,7 +852,7 @@ if(gf.support.webAudio) {
                     //decode the buffer into an audio source
                     self._manager.ctx.decodeAudioData(data, function(buffer) {
                         if(buffer) {
-                            gf.assetCache[url] = buffer;
+                            core.cache[url] = buffer;
                             self.loadSound(buffer);
                         }
                     });
@@ -872,7 +877,7 @@ if(gf.support.webAudio) {
      * @param buffer {Object} The decoded buffer sound source.
      * @private
      */
-    gf.AudioPlayer.prototype.loadSound = function(buffer) {
+    AudioPlayer.prototype.loadSound = function(buffer) {
         this._duration = buffer ? buffer.duration : this._duration;
 
         //setup a default sprite
@@ -901,12 +906,12 @@ if(gf.support.webAudio) {
      * @param [id] {String} The play instance ID.
      * @private
      */
-    gf.AudioPlayer.prototype.refreshBuffer = function(loop, id) {
+    AudioPlayer.prototype.refreshBuffer = function(loop, id) {
         var node = this._nodeById(id);
 
         //setup the buffer source for playback
         node.bufferSource = this._manager.ctx.createBufferSource();
-        node.bufferSource.buffer = gf.assetCache[this.src];
+        node.bufferSource.buffer = core.cache[this.src];
         node.bufferSource.connect(node.panner);
         node.bufferSource.loop = loop[0];
 

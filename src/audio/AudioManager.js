@@ -1,3 +1,8 @@
+var AudioPlayer = require('./AudioPlayer'),
+    core = require('../core/core'),
+    support = core.support,
+    utils = core.utils;
+
 //you can only have 1 audio context on a page, so we store one for use in each manager
 var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext,
     __audioctx = support.webAudio ? new __AudioCtx() : null;
@@ -12,7 +17,7 @@ var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozA
  * @namespace gf
  * @constructor
  */
-gf.AudioManager = function() {
+var AudioManager = module.exports = function() {
     /**
      * Whether the player is muted or not
      *
@@ -52,7 +57,7 @@ gf.AudioManager = function() {
      * @type AudioContext
      * @readOnly
      */
-    this.ctx = gf.__audioctx;
+    this.ctx = __audioctx;
 
     /**
      * If we have some way of playing audio
@@ -61,7 +66,7 @@ gf.AudioManager = function() {
      * @type Boolean
      * @readOnly
      */
-    this.canPlay = gf.support.webAudio || gf.support.htmlAudio;
+    this.canPlay = support.webAudio || support.htmlAudio;
 
     /**
      * The codecs that the browser supports
@@ -84,7 +89,7 @@ gf.AudioManager = function() {
     }
 
     //if we are using web audio, we need a master gain node
-    if(gf.support.webAudio) {
+    if(support.webAudio) {
         this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
         this.masterGain.gain.value = 1;
         this.masterGain.connect(this.ctx.destination);
@@ -94,7 +99,7 @@ gf.AudioManager = function() {
     this.sounds = {};
 };
 
-gf.inherits(gf.AudioManager, Object, {
+utils.inherits(AudioManager, Object, {
     /**
      * Returns the current master volume
      *
@@ -115,7 +120,7 @@ gf.inherits(gf.AudioManager, Object, {
         if(!isNaN(v) && v >= 0 && v <= 1) {
             this._volume = v;
 
-            if(gf.support.webAudio)
+            if(support.webAudio)
                 this.masterGain.gain.value = v;
 
             //go through each audio element and change their volume
@@ -154,7 +159,7 @@ gf.inherits(gf.AudioManager, Object, {
     setMuted: function(m) {
         this._muted = m = !!m;
 
-        if(gf.support.webAudio)
+        if(support.webAudio)
             this.masterGain.gain.value = m ? 0 : this._volume;
 
         //go through each audio element and mute/unmute them
@@ -176,7 +181,7 @@ gf.inherits(gf.AudioManager, Object, {
 
         sound._manager = this;
 
-        if(gf.support.webAudio) {
+        if(support.webAudio) {
             for(var i = 0; i < sound._nodes.length; ++i) {
                 sound._nodes[i].disconnect();
                 sound._nodes[i].connect(this.masterGain);
@@ -245,10 +250,10 @@ gf.inherits(gf.AudioManager, Object, {
         }
 
         //check if we already created a player for this audio
-        if(gf.assetCache[src])
-            return gf.assetCache[src];
+        if(core.cache[src])
+            return core.cache[src];
 
         settings.src = src;
-        return this.sounds[name] = gf.assetCache[src] = new gf.AudioPlayer(this, settings);
+        return this.sounds[name] = core.cache[src] = new AudioPlayer(this, settings);
     }
 });
