@@ -1,13 +1,16 @@
-gf.Camera.fx.Scanlines = function() {
-    gf.Camera.fx.Effect.call(this);
+var Effect = require('./Effect'),
+    core = require('../../core/core');
+
+var Scanlines = module.exports = function() {
+    Effect.call(this);
 };
 
-gf.inherits(gf.Camera.fx.Scanlines, gf.Camera.fx.Effect, {
+core.utils.inherits(Scanlines, Effect, {
     start: function(color, direction, spacing, thickness, alpha) {
-        gf.Camera.fx.Effect.prototype.start.call(this);
+        Effect.prototype.start.call(this);
 
         color = color || 0x000000;
-        direction = direction || gf.Camera.fx.DIRECTION.HORIZONTAL;
+        direction = direction || Effect.DIRECTION.HORIZONTAL;
         spacing = spacing || 4;
         thickness = thickness || 1;
         alpha = alpha || 0.3;
@@ -20,13 +23,13 @@ gf.inherits(gf.Camera.fx.Scanlines, gf.Camera.fx.Effect, {
         this.gfx.beginFill(color, alpha);
 
         //draw the lines
-        if((direction === gf.Camera.fx.DIRECTION.BOTH) || (direction === gf.Camera.fx.DIRECTION.VERTICAL)) {
+        if((direction === Effect.DIRECTION.BOTH) || (direction === Effect.DIRECTION.VERTICAL)) {
             for(var x = 0; x < sx; x += spacing) {
                 this.gfx.drawRect(x, 0, thickness, sy);
             }
         }
 
-        if((direction === gf.Camera.fx.DIRECTION.BOTH) || (direction === gf.Camera.fx.DIRECTION.HORIZONTAL)) {
+        if((direction === Effect.DIRECTION.BOTH) || (direction === Effect.DIRECTION.HORIZONTAL)) {
             for(var y = 0; y < sy; y += spacing) {
                 this.gfx.drawRect(0, y, sx, thickness);
             }
@@ -36,7 +39,7 @@ gf.inherits(gf.Camera.fx.Scanlines, gf.Camera.fx.Effect, {
         return this;
     },
     stop: function() {
-        gf.Camera.fx.Effect.prototype.stop.call(this);
+        Effect.prototype.stop.call(this);
 
         this.gfx.visible = false;
 

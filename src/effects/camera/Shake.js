@@ -1,11 +1,14 @@
-gf.Camera.fx.Shake = function() {
-    gf.Camera.fx.Effect.call(this);
+var Effect = require('./Effect'),
+    core = require('../../core/core');
+
+var Shake = module.exports = function() {
+    Effect.call(this);
     this.offset = new gf.Vector();
 };
 
-gf.inherits(gf.Camera.fx.Shake, gf.Camera.fx.Effect, {
+core.utils.inherits(Shake, Effect, {
     start: function(intensity, duration, direction, cb) {
-        gf.Camera.fx.Effect.prototype.start.call(this);
+        Effect.prototype.start.call(this);
 
         if(typeof direction === 'function') {
             cb = direction;
@@ -27,14 +30,14 @@ gf.inherits(gf.Camera.fx.Shake, gf.Camera.fx.Effect, {
 
         this.intensity = intensity || 0.01;
         this.duration = duration || 1000;
-        this.direction = direction || gf.Camera.fx.DIRECTION.BOTH;
+        this.direction = direction || Effect.DIRECTION.BOTH;
         this.offset.x = this.offset.y = 0;
         this.cb = cb;
 
         return this;
     },
     stop: function() {
-        gf.Camera.fx.Effect.prototype.stop.call(this);
+        Effect.prototype.stop.call(this);
 
         this.duration = this.offset.x = this.offset.y = 0;
 
@@ -57,11 +60,11 @@ gf.inherits(gf.Camera.fx.Shake, gf.Camera.fx.Effect, {
         //otherwise do the shake
         else {
             //pan to a random offset
-            if((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.HORIZONTAL))
-                this.offset.x = gf.math.round(Math.random() * this.intensity * this.parent.size.x * 2 - this.intensity * this.parent.size.x);
+            if((this.direction === Effect.DIRECTION.BOTH) || (this.direction === Effect.DIRECTION.HORIZONTAL))
+                this.offset.x = core.math.round(Math.random() * this.intensity * this.parent.size.x * 2 - this.intensity * this.parent.size.x);
 
-            if ((this.direction === gf.Camera.fx.DIRECTION.BOTH) || (this.direction === gf.Camera.fx.DIRECTION.VERTICAL))
-                this.offset.y = gf.math.round(Math.random() * this.intensity * this.parent.size.y * 2 - this.intensity * this.parent.size.y);
+            if ((this.direction === Effect.DIRECTION.BOTH) || (this.direction === Effect.DIRECTION.VERTICAL))
+                this.offset.y = core.math.round(Math.random() * this.intensity * this.parent.size.y * 2 - this.intensity * this.parent.size.y);
 
             this.parent.pan(this.offset.x, this.offset.y);
         }
@@ -75,7 +78,7 @@ gf.inherits(gf.Camera.fx.Shake, gf.Camera.fx.Effect, {
  * @type Object
  * @static
  */
-gf.Camera.fx.SHAKE = {
+SHAKE = {
     BOTH: 0,
     HORIZONTAL: 1,
     VERTICAL: 2

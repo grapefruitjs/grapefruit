@@ -1,10 +1,13 @@
-gf.Camera.fx.Fade = function() {
-    gf.Camera.fx.Effect.call(this);
+var Effect = require('./Effect'),
+    core = require('../../core/core');
+
+var Fade = module.exports = function() {
+    Effect.call(this);
 };
 
-gf.inherits(gf.Camera.fx.Fade, gf.Camera.fx.Effect, {
+core.utils.inherits(Fade, Effect, {
     start: function(color, duration, alpha, cb) {
-        gf.Camera.fx.Effect.prototype.start.call(this);
+        Effect.prototype.start.call(this);
 
         if(typeof alpha === 'function') {
             cb = duration;
@@ -38,7 +41,7 @@ gf.inherits(gf.Camera.fx.Fade, gf.Camera.fx.Effect, {
         return this;
     },
     stop: function() {
-        gf.Camera.fx.Effect.prototype.stop.call(this);
+        Effect.prototype.stop.call(this);
 
         this.gfx.alpha = 0;
         this.gfx.visible = false;
