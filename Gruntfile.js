@@ -104,7 +104,8 @@ module.exports = function(grunt) {
             srcBlob: '<%= dirs.src %>/**/*.js',
             testBlob: '<%= dirs.test %>/unit/**/*.js',
             dev: '<%= dirs.dist %>/<%= pkg.name %>.js',
-            dist: '<%= dirs.dist %>/<%= pkg.name %>.min.js'
+            dist: '<%= dirs.dist %>/<%= pkg.name %>.min.js',
+            bundle: '<%= dirs.src %>/bundle.js'
         },
         replace: {
             dist: {
@@ -203,21 +204,21 @@ module.exports = function(grunt) {
                 template: 'combined',
                 path: '<%= dirs.src %>',
                 dstPath: '<%= files.dev %>',
-                main: 'bundle.js'
+                main: '<%= files.bundle %>'
             },
 
             dist: {
                 template: 'combined',
                 path: '<%= dirs.src %>',
                 dstPath: '<%= files.dist %>',
-                main: 'bundle.js',
+                main: '<%= files.bundle %>',
                 optimize: true
             },
 
             _defaults: {
                 build: {
                     debugLevel: 0,
-                    verbose: true,
+                    verbose: false,
                     scanAllow: true,
                     allNodeRequires: true,
                     noRootExports: false,
@@ -228,11 +229,13 @@ module.exports = function(grunt) {
         build: {
             dev: {
                 dest: '<%= files.dev %>',
-                src: '<%= dirs.src %>'
+                src: '<%= dirs.src %>',
+                main: '<%= files.bundle %>'
             },
             dist: {
                 dest: '<%= files.dist %>',
-                src: '<%= dirs.src %>'
+                src: '<%= dirs.src %>',
+                main: '<%= files.bundle %>'
             }
         }
     });
@@ -248,9 +251,9 @@ module.exports = function(grunt) {
     grunt.loadTasks('build/tasks');
 
     //setup shortcut tasks
-    grunt.registerTask('default', ['build']);
+    grunt.registerTask('default', ['build:dist:*']);
     //grunt.registerTask('build', ['jshint:src', 'bundle:*', 'urequire:combined', 'urequire:combinedMin', 'replace:dist']);
     grunt.registerTask('docs', ['yuidoc']);
 
-    grunt.registerTask('testing', ['build']);
+    grunt.registerTask('testing', ['build:*']);
 };
