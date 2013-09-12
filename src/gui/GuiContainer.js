@@ -1,3 +1,5 @@
+var core = require('../core/core');
+
 /**
  * The base Gui that holds GuiItems to be added to the Camera
  *
@@ -6,7 +8,7 @@
  * @namespace gf
  * @constructor
  */
-gf.Gui = function(name) {
+var GuiContainer = module.exports = function(name) {
     /**
      * The name of the Gui
      *
@@ -16,7 +18,7 @@ gf.Gui = function(name) {
      */
     this.name = name || '';
 
-    gf.DisplayObjectContainer.call(this);
+    core.DisplayObjectContainer.call(this);
 };
 
-gf.inherits(gf.Gui, gf.DisplayObjectContainer);
+core.utils.inherits(Gui, core.DisplayObjectContainer);

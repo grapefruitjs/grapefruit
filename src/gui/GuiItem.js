@@ -1,3 +1,5 @@
+var core = require('../core/core');
+
 /**
  * The base GuiItem that represents an element of a gui on the screen.
  *
@@ -8,7 +10,7 @@
  * @param texture {Texture} The texture to set the sprite to
  * @param interactive {Boolean} Whether this item should repsond to mouse events
  */
-gf.GuiItem = function(texture, interactive) {
+var GuiItem = module.exports = function(texture, interactive) {
     /**
      * Sets whether or not you can drag the GuiItem around
      *
@@ -29,13 +31,13 @@ gf.GuiItem = function(texture, interactive) {
      */
     this.dragging = false;
 
-    gf.Sprite.call(this, texture);
+    core.Sprite.call(this, texture);
     this.interactive = interactive;
 };
 
-gf.inherits(gf.GuiItem, gf.Sprite, {
+core.utils.inherits(GuiItem, core.Sprite, {
     mousedown: function(e) {
-        gf.Sprite.prototype.mousedown.call(this, e);
+        core.Sprite.prototype.mousedown.call(this, e);
 
         if(!this.draggable)
             return;
@@ -43,12 +45,12 @@ gf.inherits(gf.GuiItem, gf.Sprite, {
         this.dragging = e.data.getLocalPosition(e.object.parent);
     },
     mouseup: function(e) {
-        gf.Sprite.prototype.mouseup.call(this, e);
+        core.Sprite.prototype.mouseup.call(this, e);
 
         this.dragging = false;
     },
     mousemove: function(e) {
-        gf.Sprite.prototype.mousemove.call(this, e);
+        core.Sprite.prototype.mousemove.call(this, e);
 
         if(!this.draggable || !this.dragging)
             return;
