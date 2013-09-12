@@ -1,4 +1,4 @@
-var utils = require('./utils');
+var globals = require('../globals');
 
 /**
  * High performance clock, from mrdoob's Three.js:
@@ -28,7 +28,7 @@ var Clock = module.exports = function(autoStart) {
     this.timer = window.performance && window.performance.now ? window.performance : Date;
 };
 
-utils.inherits(Clock, Object, {
+globals.inherits(Clock, Object, {
     /**
      * Gets the current time from the underlying timer
      *

@@ -1,5 +1,6 @@
 var EventEmitter = require('../utils/EventEmitter'),
-    utils = require('../utils/utils');
+    utils = require('../utils/utils'),
+    globals = require('../globals');
 
 /**
  * The base display object, that anything being put on the screen inherits from
@@ -124,7 +125,7 @@ var DisplayObjectContainer = module.exports = function(settings) {
      */
 };
 
-utils.inherits(DisplayObjectContainer, PIXI.DisplayObjectContainer, {
+globals.inherits(DisplayObjectContainer, PIXI.DisplayObjectContainer, {
     /**
      * Base resize function, all this does is ensure that all children resize functions get called as well
      *

@@ -3,7 +3,8 @@ var GameState = require('./GameState'),
     Clock = require('../utils/Clock'),
     SpritePool = require('../utils/SpritePool'),
     support = require('../utils/support'),
-    utils = require('../utils/utils');
+    utils = require('../utils/utils'),
+    globals = require('../globals');
 
     //TOINC: AssetLoader, InputManager
 
@@ -260,7 +261,7 @@ var Game = module.exports = function(contId, settings) {
     }, false);
 };
 
-utils.inherits(Game, Object, {
+globals.inherits(Game, Object, {
     /**
      * Allows you to resize the game area
      *

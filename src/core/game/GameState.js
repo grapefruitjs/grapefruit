@@ -1,6 +1,6 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
-    utils = require('../utils/utils'),
-    cache = require('../globals').cache;
+    globals = require('../globals'),
+    cache = globals.cache;
 
     //TOINC: AudioManager, PhysicsSyste
 
@@ -92,7 +92,7 @@ var GameState = module.exports = function(name, settings) {
     this.disable();
 };
 
-utils.inherits(GameState, DisplayObjectContainer, {
+globals.inherits(GameState, DisplayObjectContainer, {
     /**
      * The setter for the game property, sets up the input and camera objects
      *

@@ -1,4 +1,4 @@
-var utils = require('./utils'),
+var globals = require('../globals'),
     Sprite = require('../display/Sprite');
 
 /**
@@ -16,7 +16,7 @@ var SpritePool = module.exports = function() {
     this.add('_default', Sprite);
 };
 
-utils.inherits(SpritePool, Object, {
+globals.inherits(SpritePool, Object, {
     /**
      * Adds an Sprite Type to the pool
      *

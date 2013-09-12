@@ -1,6 +1,6 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     Vector = require('../math/Vector'),
-    utils = require('../utils/utils');
+    globals = require('../globals');
 
 /**
  * Base Map implementation, provides common functions for all Map types
@@ -25,7 +25,7 @@ var Map = module.exports = function(map) {
     DisplayObjectContainer.call(this, map);
 };
 
-utils.inherits(Map, DisplayObjectContainer, {
+globals.inherits(Map, DisplayObjectContainer, {
     /**
      * Pans the map around
      *
