@@ -1,6 +1,6 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     ObjectPool = require('../utils/ObjectPool'),
-    utils = require('../utils/utils');
+    globals = require('../globals');
 
 /**
  * A basic Camera object that provides some effects. It also will contain the HUD and GUI
@@ -114,7 +114,7 @@ var Camera = module.exports = function(game, settings) {
     */
 };
 
-utils.inherits(Camera, DisplayObjectContainer, {
+globals.inherits(Camera, DisplayObjectContainer, {
     /**
      * Follows an sprite with the camera, ensuring they are always center view. You can
      * pass a follow style to change the area an sprite can move around in before we start

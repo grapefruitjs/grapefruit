@@ -1,5 +1,5 @@
 var Sprite = require('../display/Sprite'),
-    utils = require('../utils/utils');
+    globals = require('../globals');
 
 /**
  * Base Tile implementation, a tile is a single tile in a tilemap layer
@@ -19,7 +19,7 @@ var Tile = module.exports = function(texture) {
     this.type = Sprite.TYPE.TILE;
 };
 
-utils.inherits(Tile, Sprite, {
+globals.inherits(Tile, Sprite, {
     /**
      * On Collision Event
      *      called when this sprite collides into another, or is being collided into by another.

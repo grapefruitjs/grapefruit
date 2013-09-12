@@ -1,5 +1,5 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
-    utils = require('../utils/utils');
+    globals = require('../globals');
 
 /**
  * Base Layer implementation, provides common functions for all Layer types
@@ -33,7 +33,7 @@ var Layer = module.exports = function(layer) {
     DisplayObjectContainer.call(this, layer);
 };
 
-utils.inherits(Layer, DisplayObjectContainer, {
+globals.inherits(Layer, DisplayObjectContainer, {
     /**
      * Pans the layer around, rendering stuff if necessary
      *

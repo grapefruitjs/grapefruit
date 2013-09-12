@@ -1,4 +1,4 @@
-var utils = require('./utils');
+var globals = require('../globals');
 
 /**
  * Holds a pool of different Objects to help reduce the number times
@@ -18,7 +18,7 @@ var ObjectPool = function(type, parent) {
     this.parent = parent;
 };
 
-utils.inherits(ObjectPool, Object, {
+globals.inherits(ObjectPool, Object, {
     /**
      * Creates a new instance of the pool's object type, or if available
      * pulls one that is already created out of the pool

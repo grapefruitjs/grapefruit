@@ -1,5 +1,5 @@
 var Sprite = require('./Sprite'),
-    utils = require('../utils/utils');
+    globals = require('../globals');
 
 /**
  * The base AnimatedSprite class
@@ -90,7 +90,7 @@ var AnimatedSprite = module.exports = function(anims, speed, start) {
     this.playing = false;
 };
 
-utils.inherits(AnimatedSprite, Sprite, {
+globals.inherits(AnimatedSprite, Sprite, {
     /**
      * Adds a new animation to this animated sprite
      *

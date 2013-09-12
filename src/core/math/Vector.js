@@ -1,4 +1,4 @@
-var utils = require('../utils/utils');
+var globals = require('../globals');
 
 /**
  * A 2d Vector implementation stolen directly from mrdoob's THREE.js
@@ -15,8 +15,8 @@ var Vector = module.exports = function(x, y) {
     this.x = x || 0;
     this.y = y || 0;
 };
-
-utils.inherits(Vector, Object, {
+console.log(globals);
+globals.inherits(Vector, Object, {
     /**
      * Sets the value of the vector
      *

@@ -1,5 +1,5 @@
 var EventEmitter = require('../utils/EventEmitter'),
-    utils = require('../utils/utils');
+    globals = require('../globals');
 
 /**
  * The base Sprite class. This class is the base for all images on the screen
@@ -29,7 +29,7 @@ var Sprite = module.exports = function(tx) {
     this.type = Sprite.TYPE.NEUTRAL;
 };
 
-utils.inherits(Sprite, PIXI.Sprite, {
+globals.inherits(Sprite, PIXI.Sprite, {
     /**
      * Removes this sprite from the stage and the physics system
      *
