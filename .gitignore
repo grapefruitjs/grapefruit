@@ -18,3 +18,5 @@ npm-debug.log
 #project ignores
 node_modules/
 !.gitkeep
+*__temp
+src/bundle.js
