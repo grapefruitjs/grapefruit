@@ -1,10 +1,13 @@
-gf.Camera.fx.Close = function() {
-    gf.Camera.fx.Effect.call(this);
+var Effect = require('./Effect'),
+    core = require('../../core/core');
+
+var Close = module.exports = function() {
+    Effect.call(this);
 };
 
-gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
+core.utils.inherits(Close, Effect, {
     start: function(shape, duration, pos, cb) {
-        gf.Camera.fx.Effect.prototype.start.call(this);
+        Effect.prototype.start.call(this);
 
         if(typeof pos ==='function') {
             cb = pos;
@@ -50,7 +53,7 @@ gf.inherits(gf.Camera.fx.Close, gf.Camera.fx.Effect, {
         return this;
     },
     stop: function() {
-        gf.Camera.fx.Effect.prototype.stop.call(this);
+        Effect.prototype.stop.call(this);
 
         this.radius = this.sx = this.sy = 0;
         this.gfx.visible = false;

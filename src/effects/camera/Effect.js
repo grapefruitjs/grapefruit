@@ -1,20 +1,7 @@
-gf.Camera.fx = {
-    /**
-     * Camera directions, used for certain effects (like shake and scanlines)
-     *
-     * @property DIRECTION
-     * @type Object
-     * @static
-     */
-    DIRECTION: {
-        BOTH: 0,
-        HORIZONTAL: 1,
-        VERTICAL: 2
-    }
-};
+var core = require('../../core/core');
 
-gf.Camera.fx.Effect = function() {
-    gf.DisplayObjectContainer.call(this);
+var Effect = module.exports = function() {
+    core.DisplayObjectContainer.call(this);
 
     this.addChild(this.gfx = new PIXI.Graphics());
     this.gfx.visible = false;
@@ -22,7 +9,7 @@ gf.Camera.fx.Effect = function() {
     this.done = true;
 };
 
-gf.inherits(gf.Camera.fx.Effect, gf.DisplayObjectContainer, {
+core.utils.inherits(Effect, core.DisplayObjectContainer, {
     start: function() {
         this.done = false;
         return this;
@@ -47,3 +34,16 @@ gf.inherits(gf.Camera.fx.Effect, gf.DisplayObjectContainer, {
         }
     }
 });
+
+/**
+ * Camera directions, used for certain effects (like shake and scanlines)
+ *
+ * @property DIRECTION
+ * @type Object
+ * @static
+ */
+Effect.DIRECTION = {
+    BOTH: 0,
+    HORIZONTAL: 1,
+    VERTICAL: 2
+};
