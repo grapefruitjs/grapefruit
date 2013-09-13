@@ -1,6 +1,7 @@
 var EventEmitter = require('../utils/EventEmitter'),
     utils = require('../utils/utils'),
-    globals = require('../globals');
+    globals = require('../globals'),
+    PIXI = require('../../vendor/pixi');
 
 /**
  * The base display object, that anything being put on the screen inherits from

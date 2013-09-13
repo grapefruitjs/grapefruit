@@ -1,1 +1,1 @@
-module.exports = PIXI.Rectangle;
+module.exports = require('../../vendor/pixi').Rectangle;
