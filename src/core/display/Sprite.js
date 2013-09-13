@@ -1,5 +1,6 @@
 var EventEmitter = require('../utils/EventEmitter'),
-    globals = require('../globals');
+    globals = require('../globals'),
+    PIXI = require('../../vendor/pixi');
 
 /**
  * The base Sprite class. This class is the base for all images on the screen

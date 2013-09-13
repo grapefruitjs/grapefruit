@@ -1,1 +1,1 @@
-module.exports = PIXI.Ellipse;
+module.exports = require('../../vendor/pixi').Ellipse;

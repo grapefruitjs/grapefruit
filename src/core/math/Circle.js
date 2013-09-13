@@ -1,1 +1,1 @@
-module.exports = PIXI.Circle;
+module.exports = require('../../vendor/pixi').Circle;

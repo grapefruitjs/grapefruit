@@ -4,7 +4,8 @@ var GameState = require('./GameState'),
     SpritePool = require('../utils/SpritePool'),
     support = require('../utils/support'),
     utils = require('../utils/utils'),
-    globals = require('../globals');
+    globals = require('../globals'),
+    PIXI = require('../../vendor/pixi');
 
     //TOINC: AssetLoader, InputManager
 

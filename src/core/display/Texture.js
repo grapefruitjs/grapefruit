@@ -1,1 +1,1 @@
-module.exports = PIXI.Texture;
+module.exports = require('../../vendor/pixi').Texture;
