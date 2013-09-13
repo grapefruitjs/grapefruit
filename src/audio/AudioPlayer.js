@@ -99,8 +99,6 @@ var AudioPlayer = module.exports = function(manager, settings) {
     this._duration = 0;
     this._loaded = false;
     this._manager = manager;
-    this._canPlay = manager.canPlay;
-    this._codecs = manager.codecs;
     this._webAudio = support.webAudio && !this.buffer;
     this._nodes = [];
     this._onendTimer = [];

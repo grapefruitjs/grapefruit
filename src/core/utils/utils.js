@@ -80,11 +80,19 @@ var utils = module.exports = {
                 if(xhr.status !== 200)
                     err = 'Non-200 status code returned: ' + xhr.status;
 
-                if(!err && typeof res === 'string' && sets.dataType === 'json') {
-                    try {
-                        res = JSON.parse(res);
-                    } catch(e) {
-                        err = e;
+                if(!err && typeof res === 'string') {
+                    if(sets.dataType === 'json') {
+                        try {
+                            res = JSON.parse(res);
+                        } catch(e) {
+                            err = e;
+                        }
+                    } else if(sets.dataType === 'xml') {
+                        try {
+                            res = utils.parseXML(res);
+                        } catch(e) {
+                            err = e;
+                        }
                     }
                 }
 
@@ -96,9 +104,11 @@ var utils = module.exports = {
             }
         };
 
-        //chrome doesn't support json responseType
-        if(sets.dataType !== 'json')
+        //chrome doesn't support json responseType, some browsers choke on XML type
+        if(sets.dataType !== 'json' && sets.dataType !== 'xml')
             xhr.responseType = sets.dataType;
+        else
+            xhr.responseType = 'text';
 
         xhr.open(sets.method, sets.url, true);
         xhr.send();
@@ -275,19 +285,15 @@ var utils = module.exports = {
         obj.__tiledparsed = true;
 
         return obj;
-    },
-    parseXML: function(str) {
-        return (new DOMParser()).parseFromString(str, 'text/xml');
     }
 };
 
-/* If I need IE support:
 //XML Parser
-if (typeof window.DOMParser != "undefined") {
+if(typeof window.DOMParser != "undefined") {
     utils.parseXML = function(xmlStr) {
-        return ( new window.DOMParser() ).parseFromString(xmlStr, "text/xml");
+        return (new window.DOMParser()).parseFromString(xmlStr, "text/xml");
     };
-} else if (typeof window.ActiveXObject != "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
+} else if(typeof window.ActiveXObject != "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
     utils.parseXML = function(xmlStr) {
         var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
         xmlDoc.async = "false";
@@ -297,4 +303,3 @@ if (typeof window.DOMParser != "undefined") {
 } else {
     throw new Error("No XML parser found");
 }
-*/

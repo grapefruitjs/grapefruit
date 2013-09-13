@@ -30,5 +30,18 @@ module.exports = {
 
         //create the prototype
         child.prototype = Object.create(parent.prototype, desc);
+    },
+
+    //types
+    FORMAT: {
+        JSON: 0,
+        XML: 1,
+        CSV: 2
+    },
+
+    ATLAS_FORMAT: {
+        JSON_ARRAY: 0,
+        JSON_HASH: 1,
+        STARLING_XML: 2
     }
 }

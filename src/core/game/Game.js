@@ -1,5 +1,6 @@
 var GameState = require('./GameState'),
     EventEmitter = require('../utils/EventEmitter'),
+    Cache = require('../utils/Cache'),
     Clock = require('../utils/Clock'),
     SpritePool = require('../utils/SpritePool'),
     support = require('../utils/support'),
@@ -73,13 +74,40 @@ var Game = module.exports = function(contId, settings) {
     );
 
     /**
-     * Raw Clock instance for internal timing
+     * Clock instance for internal timing
      *
      * @property clock
      * @type Clock
      * @readOnly
      */
     this.clock = new Clock(false);
+
+    /**
+     * Cache instance for storing assets
+     *
+     * @property cache
+     * @type Cache
+     * @readOnly
+     */
+    this.cache = new Cache(this);
+
+    /**
+     * The loader for this game instance
+     *
+     * @property loader
+     * @type AssetLoader
+     * @readOnly
+     */
+    this.load = new AssetLoader(this);
+
+    /**
+     * The input instance for this game
+     *
+     * @property input
+     * @type InputManager
+     * @readOnly
+     */
+    this.input = new InputManager(this.renderer.view);
 
     /**
      * Raw rendering engine
@@ -125,15 +153,6 @@ var Game = module.exports = function(contId, settings) {
     this.MAX_Z = 500;
 
     /**
-     * The loader for this game instance
-     *
-     * @property loader
-     * @type AssetLoader
-     * @readOnly
-     */
-    this.loader = new AssetLoader();
-
-    /**
      * The sprite pool to use to create registered entities
      *
      * @property spritepool
@@ -141,15 +160,6 @@ var Game = module.exports = function(contId, settings) {
      * @readOnly
      */
     this.spritepool = new SpritePool();
-
-    /**
-     * The input instance for this game
-     *
-     * @property input
-     * @type InputManager
-     * @readOnly
-     */
-    this.input = new InputManager(this.renderer.view);
 
     /**
      * The GameStates added to the game
