@@ -1,3 +1,8 @@
+var core = require('../core/core'),
+    AudioLoader = require('./AudioLoader'),
+    JsonLoader = require('./JsonLoader'),
+    TextureLoader = require('./TextureLoader');
+
 /**
  * The AssetLoader loads and parses different game assets, such as sounds, textures,
  * TMX World JSON file (exported from the <a target="_blank" href="http://mapeditor.org">Tiled Editor</a>),
@@ -16,57 +21,79 @@
  *      var loader = new AssetLoader();
  *      loader.load(['/my/texture.png']);
  */
-gf.AssetLoader = function() {
-    gf.EventEmitter.call(this);
+var AssetLoader = module.exports = function() {
+    core.EventEmitter.call(this);
 
     /**
-     * The array of assets to load
+     * The array of asset keys
      *
      * @property assets
      * @type Array
      */
-    this.assets = [];
+    this.keys = [];
 
     /**
-     * The count of remaining assets to load
+     * The asset data
+     *
+     * @property assets
+     * @type Array
+     */
+    this.assets = {};
+
+    /**
+     * Number of assets remaining to load
      *
      * @property remaining
      * @type Number
-     * @readOnly
      */
     this.remaining = 0;
 
     /**
-     * A mapping of extensions to types
+     * Whether the loader is actively loading the assets
      *
-     * @property loaders
-     * @type Object
-     * @readOnly
-     * @private
+     * @property isLoading
+     * @type Boolean
      */
-    this.loaders = {
-        'texture': gf.TextureLoader,
-        'jpeg': gf.TextureLoader,
-        'jpg': gf.TextureLoader,
-        'png': gf.TextureLoader,
-        'gif': gf.TextureLoader,
+    this.isLoading = false;
 
-        'audio': gf.AudioLoader,
-        'music': gf.AudioLoader,
-        'mp3': gf.AudioLoader,
-        'ogg': gf.AudioLoader,
-        'wma': gf.AudioLoader,
-        'wav': gf.AudioLoader,
+    /**
+     * Whether the loader has finished loading
+     *
+     * @property isLoading
+     * @type Boolean
+     */
+    this.hasLoaded = false;
 
-        'json': gf.JsonLoader
-    };
+    /**
+     * The progress of the loader (0 - 100)
+     *
+     * @property progress
+     * @type Number
+     */
+    this.progress = 0;
+
+    /**
+     * The cross origin value for loading images
+     *
+     * @property crossorigin
+     * @type String
+     */
+    this.crossorigin = '';
+
+    /**
+     * The base URL to prepend to a url, requires the trailing slash
+     *
+     * @property baseUrl
+     * @type String
+     */
+    this.baseUrl = '';
 
     /**
      * Fired if a loader encounters an error
      *
      * @event error
      * @param eventData {Object}
-     * @param eventData.assetType {String} The type of asset (loader name)
+     * @param eventData.assetType {String} The type of asset
      * @param eventData.message {String} The message of the error
      */
 
@@ -75,7 +102,7 @@ gf.AssetLoader = function() {
      *
      * @event progress
      * @param eventData {Object}
-     * @param eventData.assetType {String} The type of asset (loader name)
+     * @param eventData.assetType {String} The type of asset
      * @param eventData.url {String} The url the asset loaded from
      * @param eventData.data {mixed} The data that was loaded
      */
@@ -87,20 +114,164 @@ gf.AssetLoader = function() {
      */
 };
 
-gf.inherits(gf.AssetLoader, Object, {
+core.inherits(AssetLoader, Object, {
     /**
-     * Adds a resource to the assets array.
+     * Check whether asset exists with a specific key.
+     *
+     * @method hasKey
+     * @param key {String} Key of the asset you want to check.
+     * @return {bool} Return true if exists, otherwise return false.
+     */
+    hasKey: function(key) {
+        return !!this.assets[key];
+    },
+
+    /**
+     * Reset loader, this will remove all loaded assets.
+     *
+     * @method reset
+     */
+    reset: function() {
+        this.remaining = 0;
+        this.isLoading = false;
+    },
+
+    /**
+     * Adds an asset to be loaded
      *
      * @method add
-     * @param name {String} The name of the resource (to use as the key in the cache)
-     * @param url {String} The URL to load the resource from (cross-domain not supported yet)
+     * @param type {String} The type of asset ot load (image, spritesheet, textureatlas, bitmapfont, tilemap, tileset, audio, etc)
+     * @param key {String} The unique key of the asset to identify it
+     * @param url {String} The URL to load the resource from
+     * @param [options] {Object} Extra options to apply to the asset (such as crossorigin)
+     * @param [options.crossorigin=false] {Boolean} True if an image load should be treated as crossorigin
      */
-    add: function(name, url) {
-        this.assets.push({
-            name: name,
-            src: url
-        });
+    add: function(type, key, url, opts) {
+        var entry = {
+            type: type,
+            key: key,
+            url: url,
+            data: null,
+            error: false,
+            loaded: false
+        };
+
+        if(opts !== undefined) {
+            for(var p in opts) {
+                entry[p] = opts[p];
+            }
+        }
+
+        this.assets[key] = entry;
+        this.keys.push(key);
+        this.remaining++;
     },
+
+    /**
+     * Add an image to the Loader.
+     *
+     * @method image
+     * @param key {String} Unique asset key of this image file.
+     * @param url {String} URL of image file.
+     * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+     */
+    image: function(key, url, overwrite) {
+        if(overwrite || !this.hasKey(key))
+            this.add('image', key, url);
+    },
+
+    /**
+     * Add a text file to the Loader.
+     *
+     * @method text
+     * @param key {String} Unique asset key of this image file.
+     * @param url {String} URL of image file.
+     * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+     */
+    text: function(key, url, overwrite) {
+        if(overwrite || !this.hasKey(key))
+            this.add('text', key, url);
+    },
+
+    /**
+     * Add a sprite sheet image to the Loader.
+     *
+     * @method spritesheet
+     * @param key {String} Unique asset key of this image file.
+     * @param url {String} URL of image file.
+     * @param frameWidth {Number} Width of each single frame.
+     * @param frameHeight {Number} Height of each single frame.
+     * @param frameMax {Number} How many frames in this sprite sheet.
+     * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+     */
+    spritesheet: function(key, url, frameWidth, frameHeight, frameMax, overwrite) {
+        if(overwrite || !this.hasKey(key))
+            this.add('spritesheet', key, url, {
+                frameWidth: frameWidth,
+                frameHeight: frameHeight,
+                frameMax: frameMax
+            });
+    },
+
+    /**
+     * Add an audio file to the Loader.
+     *
+     * @method audio
+     * @param key {String} Unique asset key of this image file.
+     * @param url {String} URL of image file.
+     * @param [autoDecode=false] {Boolean}
+     *      When using Web Audio the audio files can either be decoded at load time or run-time.
+     *      They can't be played until they are decoded, but this let's you control when that happens. Decoding is a
+     *      non-blocking async process.
+     * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it
+     */
+    audio: function(key, url, autoDecode, overwrite) {
+        if(overwrite || !this.hasKey(key))
+            this.add('audio', key, url, {
+                buffer: null,
+                autoDecode: autoDecode
+            });
+    },
+
+    /**
+    * Add a tilemap to the Loader.
+    *
+    * @method tilemap
+    * @param key {String} Unique asset key of the tilemap data.
+    * @param tilesetURL {String} The url of the tile set image file.
+    * @param [mapDataUrl] {String} The url of the map data file (csv/json/xml)
+    * @param [mapData] {String|Object} The data for the map, (to use instead of loading from a URL)
+    * @param [format='json'] {String} The format of the map data.
+    * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+    */
+    tilemap: function(key, tilesetURL, mapDataUrl, mapData, format) {
+        if(overwrite || !this.hasKey(key)) {
+
+            if(!format) format = 'json';
+
+            if(mapData && typeof mapData === 'string') {
+                switch(format) {
+                    case 'xml':
+                        mapData = core.utils.parseXML(mapData);
+                        break;
+
+                    case 'csv':
+                        break;
+
+                    case 'json':
+                        mapData = JSON.parse(mapData);
+                        break;
+                }
+            }
+
+            this.add('tilemap', key, tilesetURL, {
+                mapDataUrl: mapDataUrl,
+                mapData: mapData,
+                format: format
+            });
+        }
+    },
+
     /**
      * Starts the loading festivities. If called without any arguments it will load
      * the assets passed in at the ctor. If an array of assets are passed it will
