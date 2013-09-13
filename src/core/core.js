@@ -33,8 +33,9 @@ var globals = require('./globals');
 module.exports = {
     //globals
     version: globals.version,
-    cache: globals.cache,
     inherits: globals.inherits,
+    FORMAT: globals.FORMAT,
+    ATLAS_FORMAT: globals.ATLAS_FORMAT,
 
     //plugin
     plugin: require('./plugin'),
@@ -68,6 +69,7 @@ module.exports = {
     //utils
     utils:          require('./utils/utils'),
     support:        require('./utils/support'),
+    Cache:          require('./utils/Cache'),
     Clock:          require('./utils/Clock'),
     EventEmitter:   require('./utils/EventEmitter'),
     ObjectPool:     require('./utils/ObjectPool'),
