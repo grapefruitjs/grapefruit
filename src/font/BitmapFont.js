@@ -75,7 +75,7 @@ var BitmapFont = module.exports = function(font, settings) {
         '|': 'pipe',
         ':': 'colon',
         ';': 'semicolon',
-        ''': 'quote',
+        '"': 'quote',
         '\'': 'single-quote',
         '<': 'less-than',
         '>': 'greater-than',
@@ -179,7 +179,7 @@ core.inherits(BitmapFont, core.DisplayObjectContainer, {
 
         //if no match, error
         if(!texture)
-            throw 'There is no texture for character '' + ch + '' with extension '' + this.ext + ''';
+            throw 'There is no texture for character "' + ch + '" with extension "' + this.ext + '"';
 
         var spr = this.sprites.create(texture);
 
