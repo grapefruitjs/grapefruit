@@ -182,6 +182,4 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['build:dist:*']);
     //grunt.registerTask('build', ['jshint:src', 'bundle:*', 'urequire:combined', 'urequire:combinedMin', 'replace:dist']);
     grunt.registerTask('docs', ['yuidoc']);
-
-    grunt.registerTask('testing', ['build:*']);
 };
