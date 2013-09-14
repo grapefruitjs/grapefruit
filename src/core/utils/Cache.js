@@ -71,6 +71,8 @@ var Cache = module.exports = function(game) {
      * @private
      */
     this._tilemaps = {};
+
+    this.addDefaultImage();
 };
 
 globals.inherits(Cache, Object, {
@@ -100,8 +102,6 @@ globals.inherits(Cache, Object, {
      */
     addSpriteSheet: function(obj) {
         var key = obj.key;
-
-        obj.spriteSheet = true;
 
         PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
         PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
@@ -159,30 +159,34 @@ globals.inherits(Cache, Object, {
 
     /**
      * Add a new texture atlas.
-     * @param key  {String} Asset key for the texture atlas.
-     * @param url  {String} URL of this texture atlas file.
-     * @param data {object} Extra texture atlas data.
-     * @param atlasData {object} Texture atlas frames data.
+     *
+     * @method addTextureAtlas
+     * @param obj {Object} The texture atlas file object
+     * @param obj.key  {String} Asset key for the texture atlas.
+     * @param obj.url  {String} URL of this texture atlas file.
+     * @param obj.format {Number} The format of the atlas data ATLAS_FORMAT.JSON_ARRAY, ATLAS_FORMAT.JSON_HASH, or ATLAS_FORMAT.STARLING_XML
+     * @param obj.data {Object} The texture atlas data exported from TexturePacker
+     * @param obj.image {Image} The texture image
      */
-    /*addTextureAtlas: function(obj) {
+    addTextureAtlas: function(obj) {
         var key = obj.key;
-
-        obj.spriteSheet = true;
-        this._images[key] = obj;
 
         PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
         PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
+        obj.texture = PIXI.TextureCache[key];
 
         if(format === globals.ATLAS_FORMAT.JSON_ARRAY) {
-            this._images[key].frameData = Phaser.Animation.Parser.JSONData(this.game, atlasData, key);
+            this._images[key].frameData = Animation.fromJSON(obj.data);
         }
         else if(format === globals.ATLAS_FORMAT.JSON_HASH) {
-            this._images[key].frameData = Phaser.Animation.Parser.JSONDataHash(this.game, atlasData, key);
+            this._images[key].frameData = Animation.fromJSON(obj.data);
         }
         else if (format ===  globals.ATLAS_FORMAT.STARLING_XML) {
-            this._images[key].frameData = Phaser.Animation.Parser.XMLData(this.game, atlasData, key);
+            this._images[key].frameData = Animation.fromXML(obj.data);
         }
-    },*/
+
+        this._images[key] = obj;
+    },
 
     /**
      * Add a new Bitmap Font.
@@ -191,19 +195,17 @@ globals.inherits(Cache, Object, {
      * @param obj {Object} The bitmap font file object
      * @param obj.key  {String} Asset key for the font texture.
      * @param obj.url  {String} URL of this font xml file.
-     * @param obj.data {object} Extra font data.
+     * @param obj.data {Object} Extra font data.
      * @param obj.format {Number} The format of the bitmap font data
      */
     addBitmapFont: function(obj) {
         var key = obj.key;
 
-        obj.spriteSheet = true;
-
         PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
         PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
         obj.texture = PIXI.TextureCache[key];
 
-        obj.font = TextureFont.fromXML(obj.data);
+        obj.font = BitmapFont.fromXML(obj.data, obj.texture);
 
         this._images[key] = obj;
     },
@@ -266,6 +268,29 @@ globals.inherits(Cache, Object, {
      */    
     addText: function(obj) {
         this._text[obj.key] = obj;
+    },
+
+    /**
+     * Adds a default image to be used when a key is wrong / missing.
+     * Is mapped to the key __default
+     */
+    addDefaultImage: function () {
+        var key = '__default',
+            w = 32,
+            h = 32;
+
+        this._images[key] = {
+            frame: new AnimationFrame(0, 0, w, h, '', '')
+        };
+
+        var base = new BaseTexture();
+        base.width = w;
+        base.height = h;
+        base.hasLoaded = true; // avoids a hanging event listener
+
+        PIXI.BaseTextureCache[key] = base;
+        PIXI.TextureCache[key] = new Texture(base);
+
     },
 
     /**
