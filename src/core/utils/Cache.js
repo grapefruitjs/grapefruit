@@ -80,12 +80,13 @@ globals.inherits(Cache, Object, {
      * Add a new canvas.
      *
      * @method addCanvas
-     * @param key {String} Asset key for this canvas.
-     * @param canvas {HTMLCanvasElement} Canvas DOM element.
-     * @param context {CanvasRenderingContext2D} Render context of this canvas.
+     * @param obj {Object} The spritesheet object
+     * @param obj.key {String} Asset key for this canvas.
+     * @param obj.canvas {HTMLCanvasElement} Canvas DOM element.
+     * @param obj.context {CanvasRenderingContext2D} Render context of this canvas.
      */
-    addCanvas: function(key, canvas, context) {
-        this._canvases[key] = { canvas: canvas, context: context };
+    addCanvas: function(obj) {
+        this._canvases[obj.key] = obj;
     },
 
     /**
@@ -175,14 +176,11 @@ globals.inherits(Cache, Object, {
         PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
         obj.texture = PIXI.TextureCache[key];
 
-        if(format === globals.ATLAS_FORMAT.JSON_ARRAY) {
-            this._images[key].frameData = Animation.fromJSON(obj.data);
-        }
-        else if(format === globals.ATLAS_FORMAT.JSON_HASH) {
-            this._images[key].frameData = Animation.fromJSON(obj.data);
+        if(format === globals.ATLAS_FORMAT.JSON_ARRAY || format === globals.ATLAS_FORMAT.JSON_HASH) {
+            obj.textures = Texture.fromJSON(key, obj.data, obj.texture.baseTexture);
         }
         else if (format ===  globals.ATLAS_FORMAT.STARLING_XML) {
-            this._images[key].frameData = Animation.fromXML(obj.data);
+            obj.textures = Texture.fromXML(key, obj.data, obj.texture.baseTexture);
         }
 
         this._images[key] = obj;
@@ -327,6 +325,18 @@ globals.inherits(Cache, Object, {
     getTexture: function(key) {
         if(this._images[key])
             return this._images[key].texture;
+    },
+
+    /**
+    * Get a Texture by key.
+    *
+    * @method
+    * @param key {String} Asset key of the RenderTexture you want.
+    * @return {Texture}
+    */
+    getTextures: function(key) {
+        if(this._images[key])
+            return this._images[key].textures;
     },
 
     /**
