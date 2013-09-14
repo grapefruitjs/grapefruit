@@ -1,3 +1,3 @@
 module.exports = {
-    TextureFont: require('./TextureFont')
+    BitmapFont: require('./BitmapFont')
 };

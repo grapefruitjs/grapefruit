@@ -1,4 +1,5 @@
-var core = require('../core/core');
+var core = require('../core/core'),
+    PIXI = require('../vendor/pixi');
 
 /**
  * A texture font makes it easy to use a texture for writing generic text. Basically
@@ -13,7 +14,7 @@ var core = require('../core/core');
  * would just work automagically. There is a default map already that you can view in the source,
  * and if you follow that naming convention, it will work without modification as well.
  *
- * @class TextureFont
+ * @class BitmapFont
  * @extends gf.DisplayObjectContainer
  * @namespace gf
  * @constructor
@@ -26,7 +27,7 @@ var core = require('../core/core');
  * @param [settings.lineHeight] {Number} The height factor of characters, default is 1 which is normal spacing
  * @param [settings.text] {String} Starting text of the font
  */
-var TextureFont = module.exports = function(font, settings) {
+var BitmapFont = module.exports = function(font, settings) {
     if(typeof font === 'string') {
         if(core.cache[font])
             font = core.cache[font];
@@ -74,7 +75,7 @@ var TextureFont = module.exports = function(font, settings) {
         '|': 'pipe',
         ':': 'colon',
         ';': 'semicolon',
-        '"': 'quote',
+        ''': 'quote',
         '\'': 'single-quote',
         '<': 'less-than',
         '>': 'greater-than',
@@ -147,7 +148,7 @@ var TextureFont = module.exports = function(font, settings) {
         this.setText(settings.text);
 };
 
-core.inherits(TextureFont, core.DisplayObjectContainer, {
+core.inherits(BitmapFont, core.DisplayObjectContainer, {
     /**
      * Gets a sprite from the pool for the character pased
      *
@@ -178,7 +179,7 @@ core.inherits(TextureFont, core.DisplayObjectContainer, {
 
         //if no match, error
         if(!texture)
-            throw 'There is no texture for character "' + ch + '" with extension "' + this.ext + '"';
+            throw 'There is no texture for character '' + ch + '' with extension '' + this.ext + ''';
 
         var spr = this.sprites.create(texture);
 
@@ -195,10 +196,10 @@ core.inherits(TextureFont, core.DisplayObjectContainer, {
      * Clones this font to get another just like it
      *
      * @method clone
-     * @return TextureFont
+     * @return BitmapFont
      */
     clone: function() {
-        return new TextureFont(this.textures, {
+        return new BitmapFont(this.textures, {
             ext: this.ext,
             map: this.map,
             text: this.text,
@@ -258,3 +259,62 @@ core.inherits(TextureFont, core.DisplayObjectContainer, {
         }
     }
 });
+
+BitmapFont.fromXML = function(xml, texture) {
+    var btx = texture.baseTexture;
+
+    if(!xml.getElementsByTagName('font')) {
+        core.utils.warn('Invalid XML for BitmapFont.fromXML(), missing <font> tag. Full XML:', xml);
+    }
+
+    var data = {},
+        info = xml.getElementsByTagName('info')[0],
+        common = xml.getElementsByTagName('common')[0];
+
+    data.font = info.attributes.getNamedItem('face').nodeValue;
+    data.size = parseInt(info.attributes.getNamedItem('size').nodeValue, 10);
+    data.lineHeight = parseInt(common.attributes.getNamedItem('lineHeight').nodeValue, 10);
+    data.chars = {};
+
+    //parse characters
+    var chars = xml.getElementsByTagName('char');
+
+    for(var i = 0, il = chars.length; i < il; ++i) {
+        var letter = chars[i],
+            attrs = letter.attributes.getNamedItem,
+            code = parseInt(attrs('id').nodeValue, 10),
+            rect = new core.Rectangle(
+                parseInt(attrs('x').nodeValue, 10),
+                parseInt(attrs('y').nodeValue, 10),
+                parseInt(attrs('width').nodeValue, 10),
+                parseInt(attrs('height').nodeValue, 10)
+            ),
+            tx = PIXI.TextureCache[obj.key + '_' + code] = new core.Texture(btx, rect);
+
+        data.chars[code] = {
+            xOffset: parseInt(attrs('xoffset').nodeValue, 10),
+            yOffset: parseInt(attrs('yoffset').nodeValue, 10),
+            xAdvance: parseInt(attrs('xadvance').nodeValue, 10),
+            kerning: {},
+            texture: tx
+        };
+    }
+
+    //parse kernings
+    var kernings = xml.getElementsByTagName('kerning');
+
+    for(i = 0, il = kernings.length; i < il; ++i) {
+        var kern = kernings[i],
+            attrs = kern.attributes.getNamedItem,
+            first = parseInt(attrs('first').nodeValue, 10),
+            second = parseInt(attrs('second').nodeValue, 10),
+            amount = parseInt(attrs('amount').nodeValue, 10);
+
+        data.chars[second].kerning[first] = amount;
+    }
+
+    PIXI.BitmapText.fonts[data.font] = data;
+
+    //TODO: Instantiate a bitmapfont instance, need to make this BitmapFont
+    //  class able to do both texture based fonts, and exported xml based fonts
+};
