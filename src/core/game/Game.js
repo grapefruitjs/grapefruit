@@ -188,7 +188,7 @@ var Game = module.exports = function(contId, settings) {
      * @readOnly
      */
     this.timings = {
-        _timer: window.performance && window.performance.now ? window.performance : Date
+        _timer: __global.performance && __global.performance.now ? __global.performance : Date
     };
 
     //append the renderer view only if the user didn't pass their own
@@ -437,7 +437,7 @@ globals.inherits(Game, Object, {
         this.timings.tickStart = this.timings._timer.now();
 
         //start render loop
-        window.requestAnimFrame(this._tick.bind(this));
+        __global.requestAnimFrame(this._tick.bind(this));
 
         var dt = this.clock.getDelta();
 

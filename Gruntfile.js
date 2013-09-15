@@ -179,7 +179,7 @@ module.exports = function(grunt) {
     grunt.loadTasks('build/tasks');
 
     //setup shortcut tasks
-    grunt.registerTask('default', ['build:dist:*']);
+    grunt.registerTask('default', ['build:dist:*', 'build:dev:*']);
     //grunt.registerTask('build', ['jshint:src', 'bundle:*', 'urequire:combined', 'urequire:combinedMin', 'replace:dist']);
     grunt.registerTask('docs', ['yuidoc']);
 };

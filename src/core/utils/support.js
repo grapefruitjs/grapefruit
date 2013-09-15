@@ -11,7 +11,8 @@ var support = module.exports = {
      * @property ua
      * @type String
      */
-    ua: navigator.userAgent.toLowerCase(),
+    //__global is set by urequire
+    ua: __global.navigator ? __global.navigator.userAgent.toLowerCase() : 'nodejs',
 
     /**
      * Whether or not canvas is supported
@@ -19,7 +20,7 @@ var support = module.exports = {
      * @property canvas
      * @type Boolean
      */
-    canvas: (function () { try { return !!window.CanvasRenderingContext2D && !!document.createElement('canvas').getContext('2d'); } catch(e) { return false; } })(),
+    canvas: (function () { try { return !!__global.CanvasRenderingContext2D && !!document.createElement('canvas').getContext('2d'); } catch(e) { return false; } })(),
 
     /**
      * Whether or not webgl is supported
@@ -27,7 +28,7 @@ var support = module.exports = {
      * @property webgl
      * @type Boolean
      */
-    webgl: (function () { try { return !!window.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl'); } catch(e) { return false; } })(),
+    webgl: (function () { try { return !!__global.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl'); } catch(e) { return false; } })(),
 
     /**
      * Whether or not web workers are supported
@@ -35,7 +36,7 @@ var support = module.exports = {
      * @property workers
      * @type Boolean
      */
-    workers: !!window.Worker,
+    workers: !!__global.Worker,
 
     /**
      * Whether or not Blob URLs are supported
@@ -43,7 +44,7 @@ var support = module.exports = {
      * @property blobs
      * @type Boolean
      */
-    blobUrls: !!window.Blob && !!window.URL && !!window.URL.createObjectURL,
+    blobUrls: !!__global.Blob && !!__global.URL && !!__global.URL.createObjectURL,
 
     /**
      * Whether or not typed arrays are supported
@@ -51,7 +52,7 @@ var support = module.exports = {
      * @property typedArrays
      * @type Boolean
      */
-    typedArrays: !!window.ArrayBuffer,
+    typedArrays: !!__global.ArrayBuffer,
 
     /**
      * Whether or not the filesystem API is supported
@@ -59,7 +60,7 @@ var support = module.exports = {
      * @property fileapi
      * @type Boolean
      */
-    fileapi: !!window.File && !!window.FileReader && !!window.FileList && !!window.Blob,
+    fileapi: !!__global.File && !!__global.FileReader && !!__global.FileList && !!__global.Blob,
 
     /**
      * Whether or not the Web Audio API is supported
@@ -67,7 +68,7 @@ var support = module.exports = {
      * @property webAudio
      * @type Boolean
      */
-    webAudio: !!window.AudioContext || !!window.webkitAudioContext || !!window.mozAudioContext,
+    webAudio: !!__global.AudioContext || !!__global.webkitAudioContext || !!__global.mozAudioContext,
 
     /**
      * Whether html Audio is supported in this browser
@@ -83,7 +84,7 @@ var support = module.exports = {
      * @property localStorage
      * @type Boolean
      */
-    localStorage: !!window.localStorage,
+    localStorage: !!__global.localStorage,
 
     /**
      * Whether or not touch is supported

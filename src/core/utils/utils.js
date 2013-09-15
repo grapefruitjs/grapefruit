@@ -127,10 +127,10 @@ var utils = module.exports = {
         var activexmodes = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP'];
 
         //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
-        if(window.ActiveXObject) {
+        if(__global.ActiveXObject) {
             for(var i=0; i<activexmodes.length; i++) {
                 try {
-                    return new window.ActiveXObject(activexmodes[i]);
+                    return new __global.ActiveXObject(activexmodes[i]);
                 }
                 catch(e) {
                     //suppress error
@@ -138,7 +138,7 @@ var utils = module.exports = {
             }
         }
         // if Mozilla, Safari etc
-        else if(window.XMLHttpRequest) {
+        else if(__global.XMLHttpRequest) {
             return new XMLHttpRequest();
         }
         else {
@@ -289,17 +289,21 @@ var utils = module.exports = {
 };
 
 //XML Parser
-if(typeof window.DOMParser != "undefined") {
+if(typeof __global.DOMParser != "undefined") {
     utils.parseXML = function(xmlStr) {
-        return (new window.DOMParser()).parseFromString(xmlStr, "text/xml");
+        return (new __global.DOMParser()).parseFromString(xmlStr, "text/xml");
     };
-} else if(typeof window.ActiveXObject != "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
+} else if(typeof __global.ActiveXObject != "undefined" && new __global.ActiveXObject("Microsoft.XMLDOM")) {
     utils.parseXML = function(xmlStr) {
-        var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+        var xmlDoc = new __global.ActiveXObject("Microsoft.XMLDOM");
         xmlDoc.async = "false";
         xmlDoc.loadXML(xmlStr);
         return xmlDoc;
     };
 } else {
-    throw new Error("No XML parser found");
+    //node.js environment
+    utils.parseXML = function(xmlStr) {
+        var DOMParser = require('xmldom').DOMParser;
+        return (new DOMParser()).parseFromString(xmlStr, "text/xml");
+    };
 }

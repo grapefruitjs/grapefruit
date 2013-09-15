@@ -19,7 +19,9 @@
 
     "main": "build/dist/gf.js",
 
-    "dependencies": {},
+    "dependencies": {
+        "xmldom": "0.1.16"
+    },
     "devDependencies": {
         "grunt": "0.4.x",
         "grunt-contrib-jshint": "0.x",

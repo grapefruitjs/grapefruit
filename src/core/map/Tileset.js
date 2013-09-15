@@ -172,7 +172,7 @@ var Tileset = module.exports = function(texture, settings) {
     }
 };
 
-globals.inherits(TiledTileset, Texture, {
+globals.inherits(Tileset, Texture, {
     /**
      * Gets the tile properties for a tile based on it's ID
      *
