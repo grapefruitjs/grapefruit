@@ -5,10 +5,9 @@ var Sprite = require('../display/Sprite'),
  * Base Tile implementation, a tile is a single tile in a tilemap layer
  *
  * @class Tile
- * @extends gf.Sprite
- * @namespace gf
+ * @extends Sprite
  * @constructor
- * @param tile {Object} All the settings for the tile
+ * @param texture {Texture} The texture of the tile
  */
 var Tile = module.exports = function(texture) {
     this.collisionType = Tile.TYPE.NONE;
