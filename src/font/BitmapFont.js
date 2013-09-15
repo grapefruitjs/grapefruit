@@ -1,4 +1,9 @@
-var core = require('../core/core'),
+var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+    Sprite = require('../display/Sprite'),
+    ObjectPool = require('../utils/ObjectPool'),
+    Rectangle = require('../math/Rectangle'),
+    Texture = require('../display/Texture'),
+    utils = require('../utils/utils'),
     PIXI = require('../vendor/pixi');
 
 /**
@@ -15,8 +20,7 @@ var core = require('../core/core'),
  * and if you follow that naming convention, it will work without modification as well.
  *
  * @class BitmapFont
- * @extends gf.DisplayObjectContainer
- * @namespace gf
+ * @extends DisplayObjectContainer
  * @constructor
  * @param texture {Texture|String} The sprite sheet to use, if you pass a string make sure to preload it first
  * @param [settings] {Object} All the settings for the font
@@ -136,10 +140,10 @@ var BitmapFont = module.exports = function(font, settings) {
      * @readOnly
      * @private
      */
-    this.sprites = new core.ObjectPool(core.Sprite, this);
+    this.sprites = new ObjectPool(Sprite, this);
 
     //call base ctor
-    core.DisplayObjectContainer.call(this, settings);
+    DisplayObjectContainer.call(this, settings);
 
     if(this.ext && this.ext.charAt(0) !== '.')
         this.ext = '.' + this.ext;
@@ -148,7 +152,7 @@ var BitmapFont = module.exports = function(font, settings) {
         this.setText(settings.text);
 };
 
-core.inherits(BitmapFont, core.DisplayObjectContainer, {
+utils.inherits(BitmapFont, DisplayObjectContainer, {
     /**
      * Gets a sprite from the pool for the character pased
      *
@@ -264,7 +268,7 @@ BitmapFont.fromXML = function(xml, texture) {
     var btx = texture.baseTexture;
 
     if(!xml.getElementsByTagName('font')) {
-        core.utils.warn('Invalid XML for BitmapFont.fromXML(), missing <font> tag. Full XML:', xml);
+        utils.warn('Invalid XML for BitmapFont.fromXML(), missing <font> tag. Full XML:', xml);
     }
 
     var data = {},
@@ -283,13 +287,13 @@ BitmapFont.fromXML = function(xml, texture) {
         var letter = chars[i],
             attrs = letter.attributes.getNamedItem,
             code = parseInt(attrs('id').nodeValue, 10),
-            rect = new core.Rectangle(
+            rect = new Rectangle(
                 parseInt(attrs('x').nodeValue, 10),
                 parseInt(attrs('y').nodeValue, 10),
                 parseInt(attrs('width').nodeValue, 10),
                 parseInt(attrs('height').nodeValue, 10)
             ),
-            tx = PIXI.TextureCache[obj.key + '_' + code] = new core.Texture(btx, rect);
+            tx = PIXI.TextureCache[obj.key + '_' + code] = new Texture(btx, rect);
 
         data.chars[code] = {
             xOffset: parseInt(attrs('xoffset').nodeValue, 10),

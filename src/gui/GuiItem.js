@@ -1,4 +1,5 @@
-var core = require('../core/core');
+var utils = require('../utils/utils'),
+    Sprite = require('../display/Sprite');
 
 /**
  * The base GuiItem that represents an element of a gui on the screen.
@@ -31,13 +32,13 @@ var GuiItem = module.exports = function(texture, interactive) {
      */
     this.dragging = false;
 
-    core.Sprite.call(this, texture);
+    Sprite.call(this, texture);
     this.interactive = interactive;
 };
 
-core.inherits(GuiItem, core.Sprite, {
+utils.inherits(GuiItem, Sprite, {
     mousedown: function(e) {
-        core.Sprite.prototype.mousedown.call(this, e);
+        Sprite.prototype.mousedown.call(this, e);
 
         if(!this.draggable)
             return;
@@ -45,12 +46,12 @@ core.inherits(GuiItem, core.Sprite, {
         this.dragging = e.data.getLocalPosition(e.object.parent);
     },
     mouseup: function(e) {
-        core.Sprite.prototype.mouseup.call(this, e);
+        Sprite.prototype.mouseup.call(this, e);
 
         this.dragging = false;
     },
     mousemove: function(e) {
-        core.Sprite.prototype.mousemove.call(this, e);
+        Sprite.prototype.mousemove.call(this, e);
 
         if(!this.draggable || !this.dragging)
             return;
