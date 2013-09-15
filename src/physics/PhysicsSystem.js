@@ -1,8 +1,11 @@
-gf.PhysicsSystem = function(options) {
+var core = require('../core/core'),
+    cp = require('../vendor/cp');
+
+var PhysicsSystem = module.exports = function(options) {
     options = options || {};
 
     this.space = new cp.Space();
-    this.space.gravity = gf.utils.ensureVector(options.gravity !== undefined ? options.gravity : 9.87);
+    this.space.gravity = core.utils.ensureVector(options.gravity !== undefined ? options.gravity : 9.87);
 
     //Time a body must remain idle to fall asleep
     //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#a928d74741904aae266a9efff5b5f68f7
@@ -17,8 +20,8 @@ gf.PhysicsSystem = function(options) {
 
     //sprite - sprite collisions
     this.space.addCollisionHandler(
-        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
-        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
+        PhysicsSystem.COLLISION_TYPE.SPRITE,
+        PhysicsSystem.COLLISION_TYPE.SPRITE,
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         this.onCollisionPostSolve.bind(this), //postSolve
@@ -27,8 +30,8 @@ gf.PhysicsSystem = function(options) {
 
     //sprite - tile collisions
     this.space.addCollisionHandler(
-        gf.PhysicsSystem.COLLISION_TYPE.SPRITE,
-        gf.PhysicsSystem.COLLISION_TYPE.TILE,
+        PhysicsSystem.COLLISION_TYPE.SPRITE,
+        PhysicsSystem.COLLISION_TYPE.TILE,
         this.onCollisionBegin.bind(this), //begin
         null, //preSolve
         this.onCollisionPostSolve.bind(this), //postSolve
@@ -40,7 +43,7 @@ gf.PhysicsSystem = function(options) {
     this._skip = 0;
 };
 
-gf.inherits(gf.PhysicsSystem, Object, {
+core.inherits(PhysicsSystem, Object, {
     _createBody: function(spr) {
         var body = new cp.Body(
             spr.mass || 1,
@@ -67,7 +70,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
         //specified shape
         if(hit) {
-            if(hit instanceof gf.Rectangle) {
+            if(hit instanceof core.Rectangle) {
                 //convert the top-left anchored rectangle to left,right,bottom,top values
                 //for chipmunk space that will corospond to our own
                 var l = hit.x,
@@ -83,16 +86,16 @@ gf.inherits(gf.PhysicsSystem, Object, {
 
                 shape = new cp.BoxShape2(body, new cp.BB(l, b, r, t));
             }
-            else if(hit instanceof gf.Circle) {
+            else if(hit instanceof core.Circle) {
                 //the offset needs to move the circle to the sprite center based on the sprite's anchor (bottom-left)
-                var offset = new gf.Vector(
+                var offset = new core.Vector(
                     ((spr.width / 2) - aw) + hit.x,
                     ((spr.height / 2) - ah) + hit.y
                 );
 
                 shape = new cp.CircleShape(body, hit.radius, offset);
             }
-            else if(hit instanceof gf.Polygon) {
+            else if(hit instanceof core.Polygon) {
                 //cp shapes anchors are 0.5,0.5, but a polygon uses 0,0 as the topleft
                 //of the bounding rect so we have to convert
                 var points = [],
@@ -134,10 +137,10 @@ gf.inherits(gf.PhysicsSystem, Object, {
         this.act();
     },
     getCollisionType: function(spr) {
-        if(spr instanceof gf.Tile) {
-            return gf.PhysicsSystem.COLLISION_TYPE.TILE;
+        if(spr instanceof core.Tile) {
+            return PhysicsSystem.COLLISION_TYPE.TILE;
         } else {
-            return gf.PhysicsSystem.COLLISION_TYPE.SPRITE;
+            return PhysicsSystem.COLLISION_TYPE.SPRITE;
         }
     },
     add: function(spr) {
@@ -389,7 +392,7 @@ gf.inherits(gf.PhysicsSystem, Object, {
     }
 });
 
-gf.PhysicsSystem.COLLISION_TYPE = {
+PhysicsSystem.COLLISION_TYPE = {
     SPRITE: 0,
     TILE: 1
 };

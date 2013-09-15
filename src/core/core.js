@@ -47,6 +47,7 @@ module.exports = {
     DisplayObjectContainer: require('./display/DisplayObjectContainer'),
     Sprite:         require('./display/Sprite'),
     AnimatedSprite: require('./display/AnimatedSprite'),
+    BaseTexture:    require('./display/BaseTexture'),
     Texture:        require('./display/Texture'),
 
     //game
@@ -54,9 +55,11 @@ module.exports = {
     GameState: require('./game/GameState'),
 
     //map
-    Tile:   require('./map/Tile'),
-    Layer:  require('./map/Layer'),
-    Map:    require('./map/Map'),
+    Tile:       require('./map/Tile'),
+    Layer:      require('./map/Layer'),
+    Map:        require('./map/Map'),
+    Tileset:    require('./map/Tileset'),
+    ObjectGroup: require('./map/ObjectGroup'),
 
     //math
     math:       require('./math/math'),
