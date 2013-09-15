@@ -25,7 +25,7 @@ var Clock = module.exports = function(autoStart) {
 
     this.running = false;
 
-    this.timer = window.performance && window.performance.now ? window.performance : Date;
+    this.timer = __global.performance && __global.performance.now ? __global.performance : Date;
 };
 
 globals.inherits(Clock, Object, {

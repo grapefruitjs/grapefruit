@@ -15,7 +15,7 @@ var Vector = module.exports = function(x, y) {
     this.x = x || 0;
     this.y = y || 0;
 };
-console.log(globals);
+
 globals.inherits(Vector, Object, {
     /**
      * Sets the value of the vector

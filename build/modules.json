@@ -20,9 +20,6 @@
     "physics": {
         "description": "Adds physics simulations to the world"
     },
-    "tiled": {
-        "description": "Adds support for importing TiledEditor maps"
-    },
     "effects": {
         "description": "Adds a variety of effects to different areas"
     }

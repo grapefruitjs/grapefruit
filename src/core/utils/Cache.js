@@ -4,8 +4,8 @@
 var globals = require('../globals'),
     Texture = require('../display/Texture'),
     BaseTexture = require('../display/BaseTexture'),
-    Tileset = require('../tilemap/Tileset'),
-    Tilemap = require('../tilemap/Tilemap');
+    Tileset = require('../map/Tileset'),
+    Tilemap = require('../map/Map');
 
 /**
  * Cache
