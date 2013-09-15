@@ -1,25 +1,12 @@
+var core = require('../core/core');
+
 /**
  * Physics mixin. This will add physics capabilities to the class it mixes into.
  *
  * @class PhysicsTarget
- * @namespace gf
  * @constructor
- * @example
- *      function MyObject(clr) {
- *          this.color = clr;
- *      }
- *
- *      gf.inherits(MyObject, Object, {
- *          something: function(s) {
- *          }
- *      });
- *      gf.PhysicsTarget.call(MyObject.prototype); //adds properties
- *
- *      //then later
- *      var o = new MyObject('red');
- *      o.enablePhysics(game.physics);
  */
- gf.PhysicsTarget = function() {
+ var PhysicsTarget = module.exports = function() {
     /**
      * The physics system that this object is a part of. This is advisory only
      * please use enablePhysics() or disablePhysics() and do not set this value
@@ -112,7 +99,7 @@
      */
     this.setVelocity = function(vel) {
         if(this._psystem) {
-            this._psystem.setVelocity(this, gf.utils.ensureVector(vel));
+            this._psystem.setVelocity(this, core.utils.ensureVector(vel));
         }
     };
 
@@ -160,7 +147,7 @@
      * @param myShape {Sprite} Your physics shape that caused the collision
      */
     this.onCollision = function(obj, vec, colShape, myShape) {
-        if(obj.type === gf.Sprite.TYPE.COLLECTABLE)
+        if(obj.type === core.Sprite.TYPE.COLLECTABLE)
             obj.destroy();
 
         this.emit('collision', obj, vec, colShape, myShape);
