@@ -1,22 +1,36 @@
+var globals = require('../globals'),
+    utils = require('../utils/utils'),
+    Texture = require('../display/Texture'),
+    Vector = require('../math/Vector');
+
 /**
  * This object represents a tileset used by a TiledMap.
  * There can be multiple Tilesets in a map
  *
- * @class TiledTileset
- * @extends gf.Texture
- * @namespace gf
+ * @class Tileset
+ * @extends Texture
  * @constructor
+ * @param texture {Texture} The texture to use for the tileset
  * @param settings {Object} All the settings for the tileset
+ * @param settings.tilewidth {Number} The width of a single tile in the set
+ * @param settings.tileheight {Number} The height of a single tile in the set
+ * @param [settings.firstgid=1] {Number} The id of the first tile in the set, defaults to 1
+ * @param [settings.spacing=0] {Number} The spacing around tiles in the tileset (in pixels)
+ * @param [settings.margin=0] {Number} The margin around a tile in the tileset (in pixels)
+ * @param [settings.tileoffset] {Object} The offset to apply to a tile rendered from this tileset
+ * @param [settings.tileoffset.x=0] {Number} The X offset to apply to the tile
+ * @param [settings.tileoffset.y=0] {Number} The Y offset to apply to the tile
+ * @param [settings.properties] {Object} User-defined, custom properties that apply to the tileset
+ * @param [settings.tileproperties] {Object} User-defined, custom properties that apply to tiles in the tileset
+ *  The keys of this object should the tile id to apply to
+ * @param [settings.imagewidth] {Number} An override for the image width
+ * @param [settings.imageheight] {Number} An override for the image height
  */
 //TODO: Support external tilesets (TSX files) via the "source" attribute
 //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
-gf.TiledTileset = function(settings) {
-    if(!gf.assetCache[settings.name + '_texture']) {
-        throw 'You must preload the tileset images! Try loading the world file with the AssetLoader';
-    }
-
+var Tileset = module.exports = function(texture, settings) {
     //initialize the base Texture class
-    gf.Texture.call(this, gf.assetCache[settings.name + '_texture'].baseTexture);
+    Texture.call(this, texture.baseTexture || texture);
 
     //Tiled Editor properties
 
@@ -26,7 +40,7 @@ gf.TiledTileset = function(settings) {
      * @property firstgid
      * @type Number
      */
-    this.firstgid = settings.firstgid;
+    this.firstgid = settings.firstgid || 1;
 
     /**
      * The name of the tileset
@@ -42,7 +56,7 @@ gf.TiledTileset = function(settings) {
      * @property tileSize
      * @type Vector
      */
-    this.tileSize = new gf.Vector(settings.tilewidth, settings.tileheight);
+    this.tileSize = new Vector(settings.tilewidth, settings.tileheight);
 
     /**
      * The spacing around a tile in the tileset
@@ -66,7 +80,7 @@ gf.TiledTileset = function(settings) {
      * @property tileoffset
      * @type Number
      */
-    this.tileoffset = new gf.Vector(
+    this.tileoffset = new Vector(
         settings.tileoffset ? settings.tileoffset.x : 0,
         settings.tileoffset ? settings.tileoffset.y : 0
     );
@@ -82,7 +96,7 @@ gf.TiledTileset = function(settings) {
      * @property numTiles
      * @type Vector
      */
-    this.numTiles = new gf.Vector(
+    this.numTiles = new Vector(
         ~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), //75 / 
         ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing))
     );
@@ -92,7 +106,7 @@ gf.TiledTileset = function(settings) {
      *
      * @property lastgid
      * @type Number
-     */
+     */ 
     this.lastgid = this.firstgid + (((this.numTiles.x * this.numTiles.y) - 1) || 0);
 
     /**
@@ -117,7 +131,10 @@ gf.TiledTileset = function(settings) {
      * @property size
      * @type Vector
      */
-    this.size = new gf.Vector(settings.imagewidth, settings.imageheight);
+    this.size = new Vector(
+        settings.imagewidth || this.baseTexture.source.width,
+        settings.imageheight || this.baseTexture.source.height
+    );
 
     /**
      * The texture instances for each tile in the set
@@ -129,11 +146,11 @@ gf.TiledTileset = function(settings) {
 
     //massages strings into the values they should be
     //i.e. "true" becomes the value: true
-    this.properties = gf.utils.parseTiledProperties(this.properties);
+    this.properties = utils.parseTiledProperties(this.properties);
 
     //massage tile properties
     for(var k in this.tileproperties) {
-        this.tileproperties[k] = gf.utils.parseTiledProperties(this.tileproperties[k]);
+        this.tileproperties[k] = utils.parseTiledProperties(this.tileproperties[k]);
     }
 
     //generate tile textures
@@ -147,7 +164,7 @@ gf.TiledTileset = function(settings) {
         y = (y * this.tileSize.y) + (y * this.spacing) + this.margin;
 
         this.textures.push(
-            new gf.Texture(
+            new Texture(
                 this.baseTexture,
                 new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)
             )
@@ -155,7 +172,7 @@ gf.TiledTileset = function(settings) {
     }
 };
 
-gf.inherits(gf.TiledTileset, gf.Texture, {
+globals.inherits(TiledTileset, Texture, {
     /**
      * Gets the tile properties for a tile based on it's ID
      *
@@ -164,9 +181,9 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
      * @return {Object} The properties of the tile
      */
     getTileProperties: function(tileId) {
-        if(tileId === undefined) return null;
+        if(!tileId) return null;
 
-        var flags = gf.TiledTileset.FLAGS,
+        var flags = Tileset.FLAGS,
             flippedX = tileId & flags.FlippedX,
             flippedY = tileId & flags.FlippedY,
             rotatedCW = tileId & flags.RotatedCW;
@@ -186,7 +203,7 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
                 this.tileproperties[tileId] = {
                     collidable: false,
                     breakable: false,
-                    type: gf.Tile.TYPE.NONE
+                    type: Tile.TYPE.NONE
                 };
 
         props.flippedX = flippedX;
@@ -203,9 +220,9 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
      * @return {Texture} The texture for the tile
      */
     getTileTexture: function(tileId) {
-        if(tileId === undefined) return null;
+        if(!tileId) return null;
 
-        var flags = gf.TiledTileset.FLAGS;
+        var flags = Tileset.FLAGS;
 
         //remove flags
         tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
@@ -219,9 +236,9 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
         return this.textures[tileId];
     },
     contains: function(tileId) {
-        if(tileId === undefined) return false;
+        if(!tileId) return false;
 
-        var flags = gf.TiledTileset.FLAGS;
+        var flags = Tileset.FLAGS;
 
         //remove flags
         tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
@@ -231,7 +248,7 @@ gf.inherits(gf.TiledTileset, gf.Texture, {
 });
 
 //Tileset GID flags
-gf.TiledTileset.FLAGS = {
+Tileset.FLAGS = {
     FlippedX: 0x80000000,
     FlippedY: 0x40000000,
     RotatedCW: 0x20000000

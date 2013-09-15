@@ -1,15 +1,23 @@
+var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+    Vector = require('../math/Vector'),
+    Polygon = require('../math/Polygon'),
+    Ellipse = require('../math/Ellipse'),
+    Rectangle = require('../math/Rectangle'),
+    utils = require('../utils/utils'),
+    math = require('../math/math'),
+    globals = require('../globals');
+
 /**
  * Tiled object group is a special layer that contains entities
  * TODO: This is all trash
  *
- * @class TiledObjectGroup
- * @extends gf.Layer
- * @namespace gf
+ * @class ObjectGroup
+ * @extends DisplayObjectContainer
  * @constructor
  * @param group {Object} All the settings for the layer
  */
- gf.TiledObjectGroup = function(group) {
-    gf.Layer.call(this, group);
+ var ObjectGroup = module.exports = function(group) {
+    DisplayObjectContainer.call(this, group);
 
     /**
      * The color to display objects in this group
@@ -41,7 +49,7 @@
     this.visible = group.visible;
 };
 
-gf.inherits(gf.TiledObjectGroup, gf.Layer, {
+globals.inherits(ObjectGroup, DisplayObjectContainer, {
     /**
      * Spawns all the entities associated with this layer, and properly sets their attributes
      *
@@ -55,7 +63,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
         //list of object gets rendered on top.
         for(var i = this.objects.length - 1; i >= 0; --i) {
             var o = this.objects[i],
-                props = gf.utils.parseTiledProperties(o.properties) || {},
+                props = utils.parseTiledProperties(o.properties) || {},
                 set,
                 interactive,
                 obj;
@@ -104,7 +112,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
             //just a regular DisplayObject
             if(!props.texture) {
-                obj = new gf.DisplayObjectContainer();
+                obj = new DisplayObjectContainer();
 
                 obj.width = o.width;
                 obj.height = o.height;
@@ -162,7 +170,7 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
 
                     //IDK if this is right
                     if(props.tileprops.rotatedCW) {
-                        obj.rotation = gf.math.degreesToRadians(45);
+                        obj.rotation = math.degreesToRadians(45);
                     }
                 }
 
@@ -224,24 +232,24 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
     _getPolygon: function(o) {
         var points = [];
         for(var i = 0, il = o.polygon.length; i < il; ++i) {
-            points.push(new gf.Point(o.polygon[i].x, o.polygon[i].y));
+            points.push(new Vector(o.polygon[i].x, o.polygon[i].y));
         }
 
-        return new gf.Polygon(points);
+        return new Polygon(points);
     },
     _getPolyline: function(o) {
         var points = [];
         for(var i = 0, il = o.polyline.length; i < il; ++i) {
-            points.push(new gf.Point(o.polyline[i].x, o.polyline[i].y));
+            points.push(new Vector(o.polyline[i].x, o.polyline[i].y));
         }
 
-        return new gf.Polygon(points);
+        return new Polygon(points);
     },
     _getEllipse: function(o) {
-        return new gf.Ellipse(0, 0, o.width, o.height);
+        return new Ellipse(0, 0, o.width, o.height);
     },
     _getRectangle: function(o) {
-        return new gf.Rectangle(0, 0, o.width, o.height);
+        return new Rectangle(0, 0, o.width, o.height);
     },
     _getInteractive: function(set, props) {
         //first check the lowest level value (on the tile iteself)
@@ -270,6 +278,6 @@ gf.inherits(gf.TiledObjectGroup, gf.Layer, {
     },
     destroy: function() {
         this.despawn();
-        gf.Layer.prototype.destroy.call(this);
+        DisplayObjectContainer.prototype.destroy.call(this);
     }
 });
