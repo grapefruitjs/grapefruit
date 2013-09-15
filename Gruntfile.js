@@ -20,7 +20,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         dirs: {
-            dist: 'build/dist',
+            dist: 'build',
             docs: 'docs',
             src: 'src',
             test: 'test',
@@ -33,7 +33,7 @@ module.exports = function(grunt) {
             testBlob: '<%= dirs.test %>/unit/**/*.js',
             dev: '<%= dirs.dist %>/<%= pkg.name %>.js',
             dist: '<%= dirs.dist %>/<%= pkg.name %>.min.js',
-            bundle: 'bundle.js'
+            main: 'core.js'
         },
         replace: {
             dist: {
@@ -132,14 +132,14 @@ module.exports = function(grunt) {
                 template: 'combined',
                 path: '<%= dirs.src %>',
                 dstPath: '<%= files.dev %>',
-                main: '<%= files.bundle %>'
+                main: '<%= files.main %>'
             },
 
             dist: {
                 template: 'combined',
                 path: '<%= dirs.src %>',
                 dstPath: '<%= files.dist %>',
-                main: '<%= files.bundle %>',
+                main: '<%= files.main %>',
                 optimize: true
             },
 
@@ -153,7 +153,7 @@ module.exports = function(grunt) {
                     rootExports: 'gf'
                 }
             }
-        },
+        }/*,
         build: {
             dev: {
                 dest: '<%= files.dev %>',
@@ -165,7 +165,7 @@ module.exports = function(grunt) {
                 src: '<%= dirs.src %>',
                 main: '<%= dirs.src %>/<%= files.bundle %>'
             }
-        }
+        }*/
     });
 
     //load npm tasks
@@ -175,11 +175,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-urequire');
 
-    //load project tasks
-    grunt.loadTasks('build/tasks');
-
     //setup shortcut tasks
-    grunt.registerTask('default', ['build:dist:*', 'build:dev:*']);
-    //grunt.registerTask('build', ['jshint:src', 'bundle:*', 'urequire:combined', 'urequire:combinedMin', 'replace:dist']);
+    grunt.registerTask('default', ['build']);
+    grunt.registerTask('build', ['urequire:dev', 'urequire:dist', 'replace:dist']);
     grunt.registerTask('docs', ['yuidoc']);
 };

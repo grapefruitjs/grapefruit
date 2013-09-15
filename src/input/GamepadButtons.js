@@ -1,5 +1,5 @@
-var core = require('../core/core'),
-    Input = require('./InputType');
+var utils = require('../utils/utils'),
+    Input = require('./Input');
 
 /**
  * Controls gamepad button input
@@ -41,7 +41,7 @@ var core = require('../core/core'),
     }
 };
 
-core.inherits(GamepadButtons, Input, {
+utils.inherits(GamepadButtons, Input, {
     /**
      * Polls the gamepad object for status updates and emits events when they occur
      *

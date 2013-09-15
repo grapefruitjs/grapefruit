@@ -1,4 +1,4 @@
-var core = require('../core/core'),
+var utils = require('../utils/utils'),
     Keyboard = require('./Keyboard'),
     Gamepad = require('./Gamepad');
 
@@ -39,7 +39,7 @@ var InputManager = module.exports = function(view) {
     this.gamepad = new gf.input.Gamepad();
 };
 
-core.inherits(InputManager, Object, {
+utils.inherits(InputManager, Object, {
     /**
      * Called each frame to update state info for some input methods
      *

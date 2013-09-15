@@ -1,7 +1,7 @@
 var AudioPlayer = require('./AudioPlayer'),
-    core = require('../core/core'),
-    support = core.support,
-    utils = core.utils;
+    EventEmitter = require('../utils/EventEmitter'),
+    utils = require('../utils/utils'),
+    support = require('../utils/support');
 
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
@@ -10,14 +10,13 @@ var AudioPlayer = require('./AudioPlayer'),
  *
  * @class AudoPlayer
  * @extends Object
- * @uses gf.EventEmitter
- * @namespace gf
+ * @uses EventEmitter
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
  * @param settings {Object} All the settings for this player instance
  */
 var AudioPlayer = module.exports = function(manager, settings) {
-    core.EventEmitter.call(this);
+    EventEmitter.call(this);
 
     /**
      * The source of the audio, the actual URL to load up
@@ -113,7 +112,7 @@ var AudioPlayer = module.exports = function(manager, settings) {
     this.load();
 };
 
-core.inherits(AudioPlayer, Object, {
+utils.inherits(AudioPlayer, Object, {
     /**
      * Load the audio file for this player, this is called from the ctor
      * there is no reason to call it manually.

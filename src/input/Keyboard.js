@@ -1,5 +1,5 @@
-var core = require('../core/core'),
-    Input = require('./InputType');
+var utils = require('../utils/utils'),
+    Input = require('./Input');
 
 /**
  * Controls keyboard input
@@ -44,7 +44,7 @@ var Keyboard = module.exports = function(view) {
     view.addEventListener('keyup', this.onKeyUp.bind(this), false);
 };
 
-core.inherits(Keyboard, Input, {
+utils.inherits(Keyboard, Input, {
     /**
      * Called when a key is pressed down
      *

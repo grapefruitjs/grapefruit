@@ -1,4 +1,5 @@
-var core = require('../core/core');
+var utils = require('../utils/utils'),
+    Sprite = require('../display/Sprite');
 
 /**
  * Physics mixin. This will add physics capabilities to the class it mixes into.
@@ -99,7 +100,7 @@ var core = require('../core/core');
      */
     this.setVelocity = function(vel) {
         if(this._psystem) {
-            this._psystem.setVelocity(this, core.utils.ensureVector(vel));
+            this._psystem.setVelocity(this, utils.ensureVector(vel));
         }
     };
 
@@ -147,7 +148,7 @@ var core = require('../core/core');
      * @param myShape {Sprite} Your physics shape that caused the collision
      */
     this.onCollision = function(obj, vec, colShape, myShape) {
-        if(obj.type === core.Sprite.TYPE.COLLECTABLE)
+        if(obj.type === Sprite.TYPE.COLLECTABLE)
             obj.destroy();
 
         this.emit('collision', obj, vec, colShape, myShape);
