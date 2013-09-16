@@ -19,4 +19,3 @@ npm-debug.log
 node_modules/
 !.gitkeep
 *__temp
-src/bundle.js
