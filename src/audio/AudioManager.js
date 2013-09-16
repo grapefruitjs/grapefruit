@@ -1,4 +1,5 @@
 var AudioPlayer = require('./AudioPlayer'),
+    math = require('../math/math'),
     utils = require('../utils/utils'),
     support = require('../utils/support');
 
@@ -15,7 +16,15 @@ var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozA
  * @extends Object
  * @constructor
  */
-var AudioManager = module.exports = function() {
+var AudioManager = module.exports = function(game) {
+    /**
+     * The game instance this manager belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
+
     /**
      * Whether the player is muted or not
      *
@@ -190,9 +199,9 @@ utils.inherits(AudioManager, Object, {
      * Creates a new audio player for a peice of audio
      *
      * @method create
+     * @param key {String} The cache key for the preloaded audio
      * @param [name] {String} An name to uniquely identify this audio, if omitted one will be ranomly chosen
-     * @param settings {Object} All the settings for the audio player
-     * @param settings.urls {Array<String>} All the urls possible for this audio (so we can choose the one this browser supports)
+     * @param [settings] {Object} All the settings for the audio player
      * @param [settings.volume] {Number} The volume of this audio clip
      * @param [settings.autoplay] {Boolean} Automatically start playing after loaded
      * @param [settings.loop] {Boolean} Replay the audio when it finishes
@@ -202,7 +211,7 @@ utils.inherits(AudioManager, Object, {
      * @param [settings.format] {String} Force an extension override
      * @return {AudioPlayer} Will return the new audio player, or false if we couldn't determine a compatible url
      */
-    create: function(name, settings) {
+    create: function(key, name, settings) {
         //if we can't play audio return false
         if(!this.canPlay) {
             return false;
@@ -216,42 +225,13 @@ utils.inherits(AudioManager, Object, {
 
         //make up an ID if none was passed
         if(!name)
-            name = Math.round(Date.now() * Math.random()) + '';
+            name = math.randomString();
 
-        var src;
+        var audio = this.game.cache.getAudio(key);
 
-        //loop through each source url and pick the first that is compatible
-        for(var i = 0, il = settings.urls.length; i < il; ++i) {
-            var url = settings.urls[i],
-                ext;
+        if(!audio.player)
+            audio.player = new AudioPlayer(this, audio, settings);
 
-            //if they pass a format override, use that
-            if(settings.format) {
-                ext = settings.format;
-            }
-            //otherwise extract the format from the url
-            else {
-                ext = url.match(/.+\.([^?]+)(\?|$)/);
-                ext = (ext && ext.length >= 2) ? ext[1] : url.match(/data\:audio\/([^?]+);/)[1];
-            }
-
-            //if we can play this url, then set the source of the player
-            if(this.codecs[ext]) {
-                src = url;
-                break;
-            }
-        }
-
-        //check if we found a usable url, if not return false
-        if(!src) {
-            return false;
-        }
-
-        //check if we already created a player for this audio
-        if(core.cache[src])
-            return core.cache[src];
-
-        settings.src = src;
-        return this.sounds[name] = core.cache[src] = new AudioPlayer(this, settings);
+        return this.sounds[name] = audio.player;
     }
 });

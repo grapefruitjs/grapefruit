@@ -18,8 +18,16 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
-var Tilelayer = module.exports = function(layer) {
+var Tilelayer = module.exports = function(game, layer) {
     DisplayObjectContainer.call(this, layer);
+
+    /**
+     * The game instance this tilemap belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
 
     /**
      * The name of the layer

@@ -6,6 +6,7 @@ var GameState = require('./GameState'),
     Gui = require('../gui/Gui'),
     Loader = require('../loader/Loader'),
     InputManager = require('../input/InputManager'),
+    AudioManager = require('../audio/AudioManager'),
     support = require('../utils/support'),
     utils = require('../utils/utils'),
     PIXI = require('../vendor/pixi');
@@ -80,6 +81,15 @@ var Game = module.exports = function(contId, settings) {
      * @readOnly
      */
     this.clock = new Clock(false);
+
+    /**
+     * The audio player for this game instance
+     *
+     * @property audio
+     * @type AudioPlayer
+     * @readOnly
+     */
+    this.audio = new AudioManager(this);
 
     /**
      * Cache instance for storing assets
@@ -203,7 +213,7 @@ var Game = module.exports = function(contId, settings) {
 
     //define getters for common properties in GameState
     var self = this;
-    ['audio', 'physics', 'camera', 'world'].forEach(function(prop) {
+    ['physics', 'camera', 'world'].forEach(function(prop) {
         self.__defineGetter__(prop, function() {
             return self.activeState[prop];
         });

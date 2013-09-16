@@ -4,11 +4,11 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     Gui = require('../gui/Gui'),
     Rectangle = require('../math/Rectangle'),
     PhysicsSystem = require('../physics/PhysicsSystem'),
-    AudioManager = require('../audio/AudioManager'),
+    math = require('../math/math'),
     utils = require('../utils/utils');
 
 /**
- * GameStates are different , controls the entire instance of the game
+ * GameStates are containers that represent different states of a game
  *
  * @class GameState
  * @extends DisplayObjectContainer
@@ -26,7 +26,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
 var GameState = module.exports = function(name, settings) {
     if(typeof name === 'object') {
         settings = name;
-        name = Math.floor(Date.now() * Math.random()).toString();
+        name = math.randomString();
     }
 
     settings = settings || {};
@@ -38,15 +38,6 @@ var GameState = module.exports = function(name, settings) {
      * @type String
      */
     this.name = name;
-
-    /**
-     * The audio player for this game instance
-     *
-     * @property audio
-     * @type AudioPlayer
-     * @readOnly
-     */
-    this.audio = new AudioManager();
 
     /**
      * The physics system to simulate stuffs
@@ -140,15 +131,15 @@ utils.inherits(GameState, DisplayObjectContainer, {
      * @param world {String|Object} The world to load, if you pass a string be sure to preload it first
      */
     loadWorld: function(world) {
+        var tilemap;
         if(typeof world === 'string'){
-            if(cache[world]) {
-                world = cache[world];
-            } else {
+            tilemap = this.game.cache.getTilemap(world);
+            if(!tilemap) {
                 throw 'World "' + world + '" needs to be preloaded before being added to a game!';
             }
         }
 
-        this.world = new Tilemap(world);
+        this.world = tilemap;
         this.addChild(this.world);
 
         this.world.resize(this._game.renderer.width, this._game.renderer.height);

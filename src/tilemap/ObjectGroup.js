@@ -15,8 +15,16 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * @constructor
  * @param group {Object} All the settings for the layer
  */
- var ObjectGroup = module.exports = function(group) {
+ var ObjectGroup = module.exports = function(game, group) {
     DisplayObjectContainer.call(this, group);
+
+    /**
+     * The game instance this tilemap belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
 
     /**
      * The color to display objects in this group
@@ -56,7 +64,7 @@ utils.inherits(ObjectGroup, DisplayObjectContainer, {
      * @return {TiledObjectGroup} Returns itself for chainability
      */
     spawn: function() {
-        var game = this.parent.parent.game; //this.Tilemap.GameState.Game
+        var game = this.game; //this.Tilemap.GameState.Game
 
         //we go through these backwards so that things that are higher in the
         //list of object gets rendered on top.
@@ -106,7 +114,7 @@ utils.inherits(ObjectGroup, DisplayObjectContainer, {
 
             //a manually specified string texture
             if(typeof props.texture === 'string') {
-                props.texture = gf.assetCache[props.texture];
+                props.texture = game.cache.getTexture(props.texture);
             }
 
             //just a regular DisplayObject

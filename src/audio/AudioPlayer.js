@@ -13,9 +13,13 @@ var AudioPlayer = require('./AudioPlayer'),
  * @uses EventEmitter
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
+ * @param audio {ArrayBuffer|Audio} The preloaded audio file object
+ * @param audio.data {ArrayBuffer|Audio} The actual audio data
+ * @param audio.webAudio {Boolean} Whether the file is using webAudio or not
+ * @param audio.decoded {Boolean} Whether the data has been decoded yet or not
  * @param settings {Object} All the settings for this player instance
  */
-var AudioPlayer = module.exports = function(manager, settings) {
+var AudioPlayer = module.exports = function(manager, audio, settings) {
     EventEmitter.call(this);
 
     /**
@@ -27,6 +31,14 @@ var AudioPlayer = module.exports = function(manager, settings) {
     this.src = '';
 
     /**
+     * The game instance this player belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = manager.game;
+
+    /**
      * Play the audio immediately after loading
      *
      * @property autoplay
@@ -34,16 +46,6 @@ var AudioPlayer = module.exports = function(manager, settings) {
      * @default false
      */
     this.autoplay = false;
-
-    /**
-     * Buffer forces use of HTML5Audio which will buffer and play
-     * instead of loading the entire file and then playing
-     *
-     * @property buffer
-     * @type Boolean
-     * @default false
-     */
-    this.buffer = false;
 
     /**
      * Override the format determined from the extension with this extension
@@ -94,11 +96,20 @@ var AudioPlayer = module.exports = function(manager, settings) {
         set: this.setVolume.bind(this)
     });
 
+    /**
+     * The preloaded audio file object
+     *
+     * @property _file
+     * @type Object
+     * @private
+     */
+    this._file = audio;
+
     this._volume = 1;
     this._duration = 0;
     this._loaded = false;
     this._manager = manager;
-    this._webAudio = support.webAudio && !this.buffer;
+    this._webAudio = support.webAudio;
     this._nodes = [];
     this._onendTimer = [];
 
@@ -122,48 +133,52 @@ utils.inherits(AudioPlayer, Object, {
      * @private
      */
     load: function() {
+        var self = this,
+            audio = this._file;
+
         //if using web audio, load up the buffer
-        if(this._webAudio) {
-            this.loadBuffer(this.src);
+        if(audio.webAudio) {
+            if(!audio.decoded) {
+                this.ctx.decodeAudioData(audio.data, function(buffer) {
+                    if(buffer) {
+                        audio.data = buffer;
+                        audio.decoded = true;
+                        self.loadSoundBuffer(buffer);
+                    }
+                });
+            } else {
+                this.loadSoundBuffer(audio.data);
+            }
         }
         //otherwise create some Audio nodes
         else {
             //create a new adio node
-            var node = new Audio();
+            var node = audio.data.cloneNode();
             this._nodes.push(node);
 
             //setup the audio node
-            node.src = this.src;
             node._pos = 0;
-            node.preload = 'auto';
             node.volume = this._manager.muted ? 0 : this._volume * this._manager.volume;
 
             //setup the event listener to start playing the sound when it has buffered
-            var self = this, evt = function() {
-                self._duration = node.duration;
+            this._duration = node.duration;
 
-                //setup a default sprite
-                self.sprite._default = [0, node.duration * 1000];
+            //setup a default sprite
+            this.sprite._default = [0, node.duration * 1000];
 
-                //check if loaded
-                if(!self._loaded) {
-                    self._loaded = true;
-                    self.emit('load', {
-                        message: 'Audio file loaded.',
-                        data: self.src
-                    });
-                }
+            //check if loaded
+            if(!this._loaded) {
+                this._loaded = true;
+                this.emit('load', {
+                    message: 'Audio file loaded.',
+                    data: this.src
+                });
+            }
 
-                //if autoplay then start it
-                if(self.autoplay) {
-                    self.play();
-                }
-
-                //clear the event listener
-                node.removeEventListener('canplaythrough', evt, false);
-            };
-            node.addEventListener('canplaythrough', evt, false);
-            node.load();
+            //if autoplay then start it
+            if(this.autoplay) {
+                this.play();
+            }
         }
 
         return this;
@@ -820,53 +835,7 @@ utils.inherits(AudioPlayer, Object, {
         node[i].panner.connect(node[i]);
 
         return node[i];
-    }
-});
-
-//define some prototype functions that are only available when using the WebAudio API
-if(support.webAudio) {
-    /**
-     * Buffer a sound from URL (or from cache) and decode to audio source (Web Audio API).
-     *
-     * @method loadBuffer
-     * @param url {String} The path to the sound file.
-     * @private
-     */
-    AudioPlayer.prototype.loadBuffer = function(url) {
-        //load from cache
-        if(url in core.cache) {
-            this._duration = core.cache[url].duration;
-            this.loadSound();
-        } else {
-            //load the buffer from the URL
-            var self = this;
-
-            utils.ajax({
-                method: 'GET',
-                url: url,
-                dataType: 'arraybuffer',
-                load: function(data) {
-                    //decode the buffer into an audio source
-                    self._manager.ctx.decodeAudioData(data, function(buffer) {
-                        if(buffer) {
-                            core.cache[url] = buffer;
-                            self.loadSound(buffer);
-                        }
-                    });
-                },
-                error: function() {
-                    //if there was an error, switch to HTML Audio
-                    if(self._webAudio) {
-                        self._buffer = true;
-                        self._webAudio = false;
-                        self._nodes = [];
-                        self.load();
-                    }
-                }
-            });
-        }
-    };
-
+    },
     /**
      * Finishes loading the Web Audio API sound and fires the loaded event
      *
@@ -874,7 +843,7 @@ if(support.webAudio) {
      * @param buffer {Object} The decoded buffer sound source.
      * @private
      */
-    AudioPlayer.prototype.loadSound = function(buffer) {
+    loadSoundBuffer: function(buffer) {
         this._duration = buffer ? buffer.duration : this._duration;
 
         //setup a default sprite
@@ -889,12 +858,11 @@ if(support.webAudio) {
             });
         }
 
-        //autoplay is appropriate
+        //if autoplay is appropriate
         if(this.autoplay) {
             this.play();
         }
-    };
-
+    },
     /**
      * Load the sound back into the buffer source.
      *
@@ -903,12 +871,12 @@ if(support.webAudio) {
      * @param [id] {String} The play instance ID.
      * @private
      */
-    AudioPlayer.prototype.refreshBuffer = function(loop, id) {
+    refreshBuffer: function(loop, id) {
         var node = this._nodeById(id);
 
         //setup the buffer source for playback
         node.bufferSource = this._manager.ctx.createBufferSource();
-        node.bufferSource.buffer = core.cache[this.src];
+        node.bufferSource.buffer = this._file.data;
         node.bufferSource.connect(node.panner);
         node.bufferSource.loop = loop[0];
 
@@ -916,5 +884,5 @@ if(support.webAudio) {
             node.bufferSource.loopStart = loop[1];
             node.bufferSource.loopEnd = loop[1] + loop[2];
         }
-    };
-}
+    }
+});
