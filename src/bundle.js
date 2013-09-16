@@ -1,0 +1,1 @@
+module.exports={audio:require("./audio/audio"),effects:require("./effects/effects"),font:require("./font/font"),core:require("./core/core")};

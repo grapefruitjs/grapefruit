@@ -483,7 +483,7 @@ utils.inherits(AssetLoader, Object, {
             ext = (ext && ext.length >= 2) ? ext[1] : url.match(/data\:audio\/([^?]+);/)[1];
 
             //if we can play this url, then set the source of the player
-            if(support.codecs[ext]) {
+            if(support.codec[ext]) {
                 return url;
             }
         }
