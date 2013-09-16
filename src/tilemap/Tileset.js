@@ -5,7 +5,7 @@ var utils = require('../utils/utils'),
     C = require('../constants');
 
 /**
- * This object represents a tileset used by a TiledMap.
+ * This object represents a tileset used by a Tilemap.
  * There can be multiple Tilesets in a map
  *
  * @class Tileset

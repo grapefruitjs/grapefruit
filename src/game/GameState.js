@@ -1,6 +1,6 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     Camera = require('../camera/Camera'),
-    Map = require('../map/Map'),
+    Tilemap = require('../tilemap/Tilemap'),
     Gui = require('../gui/Gui'),
     Rectangle = require('../math/Rectangle'),
     PhysicsSystem = require('../physics/PhysicsSystem'),
@@ -70,7 +70,7 @@ var GameState = module.exports = function(name, settings) {
      * The world instance that holds all entites and the map
      *
      * @property world
-     * @type Map
+     * @type Tilemap
      * @readOnly
      */
     this.world = null;
@@ -125,7 +125,7 @@ utils.inherits(GameState, DisplayObjectContainer, {
             //we add the camera in the ctor and the map later when
             //.loadWorld is called. This way the camera is always the
             //last child of stage, so it is rendered on top!
-            if(obj instanceof Camera || obj instanceof Map)
+            if(obj instanceof Camera || obj instanceof Tilemap)
                 this.addChildAt(obj, 0);
             else if(obj instanceof Gui)
                 this.camera.addChild(obj);
@@ -148,7 +148,7 @@ utils.inherits(GameState, DisplayObjectContainer, {
             }
         }
 
-        this.world = new Map(world);
+        this.world = new Tilemap(world);
         this.addChild(this.world);
 
         this.world.resize(this._game.renderer.width, this._game.renderer.height);

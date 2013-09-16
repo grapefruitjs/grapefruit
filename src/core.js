@@ -85,11 +85,11 @@ module.exports = {
     Loader: require('./loader/Loader'),
 
     //map
-    Tile:       require('./map/Tile'),
-    Layer:      require('./map/Layer'),
-    Map:        require('./map/Map'),
-    Tileset:    require('./map/Tileset'),
-    ObjectGroup: require('./map/ObjectGroup'),
+    Tile:       require('./tilemap/Tile'),
+    Tilelayer:  require('./tilemap/Tilelayer'),
+    Tilemap:    require('./tilemap/Tilemap'),
+    Tileset:    require('./tilemap/Tileset'),
+    ObjectGroup: require('./tilemap/ObjectGroup'),
 
     //math
     math:       require('./math/math'),

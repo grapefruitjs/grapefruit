@@ -2,7 +2,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     ObjectGroup = require('./ObjectGroup'),
     Sprite = require('../display/Sprite'),
     Vector = require('../math/Vector'),
-    Layer = require('./Layer'),
+    Tilelayer = require('./Tilelayer'),
     Tileset = require('./Tileset'),
     utils = require('../utils/utils');
 
@@ -11,12 +11,12 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * The loader knows to load all textures and other resources when loading a world TMX
  * file, and this expets that to already be done.
  *
- * @class Map
+ * @class Tilemap
  * @extends DisplayObjectContainer
  * @constructor
  * @param map {Object} All the settings for the map
  */
-var Map = module.exports = function(map) {
+var Tilemap = module.exports = function(map) {
     //call base ctor
     DisplayObjectContainer.call(this, map);
 
@@ -118,7 +118,7 @@ var Map = module.exports = function(map) {
 
         switch(map.layers[i].type) {
             case 'tilelayer':
-                lyr = new Layer(map.layers[i]);
+                lyr = new Tilelayer(map.layers[i]);
                 break;
 
             case 'objectgroup':
@@ -136,7 +136,7 @@ var Map = module.exports = function(map) {
     this._showPhysics = false;
 };
 
-utils.inherits(Map, DisplayObjectContainer, {
+utils.inherits(Tilemap, DisplayObjectContainer, {
     /**
      * Gets the tileset that an ID is associated with
      *
@@ -202,7 +202,7 @@ utils.inherits(Map, DisplayObjectContainer, {
         }
     },
     /**
-     * Called by a TiledLayer when a tile event occurs. This is so you can listen for
+     * Called by a Tilelayer when a tile event occurs. This is so you can listen for
      * the emitted events on the world instead of the tile itself.
      *
      * @method onTileEvent
@@ -239,7 +239,7 @@ utils.inherits(Map, DisplayObjectContainer, {
      * @method pan
      * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
      * @param y {Number} The y ammount to pan
-     * @return {Map} Returns itself for chainability
+     * @return {Tilemap} Returns itself for chainability
      */
     pan: function(x, y) {
         y = x.y !== undefined ? x.y : (y || 0);
@@ -260,7 +260,7 @@ utils.inherits(Map, DisplayObjectContainer, {
      *
      * @method findLayer
      * @param name {String} The name of the layer to find
-     * @return {Layer}
+     * @return {Tilelayer|ObjectGroup|Sprite}
      */
     findLayer: function(name) {
         for(var i = 0, il = this.children.length; i < il; ++i) {
