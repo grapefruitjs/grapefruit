@@ -5,7 +5,7 @@ var utils = require('./utils'),
     C = require('../constants'),
     Texture = require('../display/Texture'),
     BaseTexture = require('../display/BaseTexture'),
-    Tilemap = require('../map/Map'),
+    Tilemap = require('../tilemap/Tilemap'),
     BitmapFont = require('../font/BitmapFont'),
     PIXI = require('../vendor/pixi');
 

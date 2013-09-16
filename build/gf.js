@@ -7768,7 +7768,7 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('map/ObjectGroup',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../math/Vector', '../math/Polygon', '../math/Ellipse', '../math/Rectangle', '../utils/utils', '../math/math'], 
+  define('tilemap/ObjectGroup',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../math/Vector', '../math/Polygon', '../math/Ellipse', '../math/Rectangle', '../utils/utils', '../math/math'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
 var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Vector = require("../math/Vector"), Polygon = require("../math/Polygon"), Ellipse = require("../math/Ellipse"), Rectangle = require("../math/Rectangle"), utils = require("../utils/utils"), math = require("../math/math");
@@ -7931,7 +7931,7 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('map/Tile',['require', 'exports', 'module', '../display/Sprite', '../utils/utils', '../constants'], 
+  define('tilemap/Tile',['require', 'exports', 'module', '../display/Sprite', '../utils/utils', '../constants'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
 var Sprite = require("../display/Sprite"), utils = require("../utils/utils"), C = require("../constants");
@@ -7960,12 +7960,12 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('map/Layer',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../math/Vector', '../math/Rectangle', '../display/Texture', './Tile', '../utils/utils', '../utils/support'], 
+  define('tilemap/Tilelayer',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../math/Vector', '../math/Rectangle', '../display/Texture', './Tile', '../utils/utils', '../utils/support'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
 var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Vector = require("../math/Vector"), Rectangle = require("../math/Rectangle"), Texture = require("../display/Texture"), Tile = require("./Tile"), utils = require("../utils/utils"), support = require("../utils/support");
 
-var Layer = module.exports = function(layer) {
+var Tilelayer = module.exports = function(layer) {
     DisplayObjectContainer.call(this, layer);
     this.name = "";
     this.size = new Vector(layer.width || 0, layer.height || 0);
@@ -7991,7 +7991,7 @@ var Layer = module.exports = function(layer) {
     this._rendered = new Rectangle;
 };
 
-utils.inherits(Layer, DisplayObjectContainer, {
+utils.inherits(Tilelayer, DisplayObjectContainer, {
     resize: function(width, height) {
         if (this.preRender) {
             if (!this._preRendered) this._preRender();
@@ -8070,7 +8070,7 @@ utils.inherits(Layer, DisplayObjectContainer, {
     },
     destroy: function() {
         this.clearTiles(true);
-        Layer.prototype.destroy.call(this);
+        DisplayObjectContainer.prototype.destroy.call(this);
     },
     clearTiles: function(remove) {
         for (var c = this.children.length - 1; c > -1; --c) {
@@ -8214,7 +8214,7 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('map/Tileset',['require', 'exports', 'module', '../utils/utils', '../display/Texture', '../math/Vector', '../vendor/pixi', '../constants'], 
+  define('tilemap/Tileset',['require', 'exports', 'module', '../utils/utils', '../display/Texture', '../math/Vector', '../vendor/pixi', '../constants'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
 var utils = require("../utils/utils"), Texture = require("../display/Texture"), Vector = require("../math/Vector"), PIXI = require("../vendor/pixi"), C = require("../constants");
@@ -8291,12 +8291,12 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('map/Map',['require', 'exports', 'module', '../display/DisplayObjectContainer', './ObjectGroup', '../display/Sprite', '../math/Vector', './Layer', './Tileset', '../utils/utils'], 
+  define('tilemap/Tilemap',['require', 'exports', 'module', '../display/DisplayObjectContainer', './ObjectGroup', '../display/Sprite', '../math/Vector', './Tilelayer', './Tileset', '../utils/utils'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var DisplayObjectContainer = require("../display/DisplayObjectContainer"), ObjectGroup = require("./ObjectGroup"), Sprite = require("../display/Sprite"), Vector = require("../math/Vector"), Layer = require("./Layer"), Tileset = require("./Tileset"), utils = require("../utils/utils");
+var DisplayObjectContainer = require("../display/DisplayObjectContainer"), ObjectGroup = require("./ObjectGroup"), Sprite = require("../display/Sprite"), Vector = require("../math/Vector"), Tilelayer = require("./Tilelayer"), Tileset = require("./Tileset"), utils = require("../utils/utils");
 
-var Map = module.exports = function(map) {
+var Tilemap = module.exports = function(map) {
     DisplayObjectContainer.call(this, map);
     this.properties = utils.parseTiledProperties(map.properties) || {};
     this.scale.x = this.properties.scale || 1;
@@ -8316,7 +8316,7 @@ var Map = module.exports = function(map) {
         var lyr;
         switch (map.layers[i].type) {
           case "tilelayer":
-            lyr = new Layer(map.layers[i]);
+            lyr = new Tilelayer(map.layers[i]);
             break;
           case "objectgroup":
             lyr = new ObjectGroup(map.layers[i]);
@@ -8330,7 +8330,7 @@ var Map = module.exports = function(map) {
     this._showPhysics = false;
 };
 
-utils.inherits(Map, DisplayObjectContainer, {
+utils.inherits(Tilemap, DisplayObjectContainer, {
     getTileset: function(tileId) {
         for (var i = 0, il = this.tilesets.length; i < il; ++i) if (this.tilesets[i].contains(tileId)) return this.tilesets[i];
     },
@@ -11724,10 +11724,10 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('physics/PhysicsSystem',['require', 'exports', 'module', '../math/Rectangle', '../math/Circle', '../math/Polygon', '../math/Vector', '../map/Tile', '../utils/utils', '../vendor/cp'], 
+  define('physics/PhysicsSystem',['require', 'exports', 'module', '../math/Rectangle', '../math/Circle', '../math/Polygon', '../math/Vector', '../tilemap/Tile', '../utils/utils', '../vendor/cp'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var Rectangle = require("../math/Rectangle"), Circle = require("../math/Circle"), Polygon = require("../math/Polygon"), Vector = require("../math/Vector"), Tile = require("../map/Tile"), utils = require("../utils/utils"), cp = require("../vendor/cp");
+var Rectangle = require("../math/Rectangle"), Circle = require("../math/Circle"), Polygon = require("../math/Polygon"), Vector = require("../math/Vector"), Tile = require("../tilemap/Tile"), utils = require("../utils/utils"), cp = require("../vendor/cp");
 
 var PhysicsSystem = module.exports = function(options) {
     options = options || {};
@@ -11976,10 +11976,10 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('game/GameState',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../camera/Camera', '../map/Map', '../gui/Gui', '../math/Rectangle', '../physics/PhysicsSystem', '../audio/AudioManager', '../utils/utils'], 
+  define('game/GameState',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../camera/Camera', '../tilemap/Tilemap', '../gui/Gui', '../math/Rectangle', '../physics/PhysicsSystem', '../audio/AudioManager', '../utils/utils'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Camera = require("../camera/Camera"), Map = require("../map/Map"), Gui = require("../gui/Gui"), Rectangle = require("../math/Rectangle"), PhysicsSystem = require("../physics/PhysicsSystem"), AudioManager = require("../audio/AudioManager"), utils = require("../utils/utils");
+var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Camera = require("../camera/Camera"), Tilemap = require("../tilemap/Tilemap"), Gui = require("../gui/Gui"), Rectangle = require("../math/Rectangle"), PhysicsSystem = require("../physics/PhysicsSystem"), AudioManager = require("../audio/AudioManager"), utils = require("../utils/utils");
 
 var GameState = module.exports = function(name, settings) {
     if (typeof name === "object") {
@@ -12015,7 +12015,7 @@ utils.inherits(GameState, DisplayObjectContainer, {
     },
     addChild: function(obj) {
         if (obj) {
-            if (obj instanceof Camera || obj instanceof Map) this.addChildAt(obj, 0); else if (obj instanceof Gui) this.camera.addChild(obj); else this.world.addChild(obj);
+            if (obj instanceof Camera || obj instanceof Tilemap) this.addChildAt(obj, 0); else if (obj instanceof Gui) this.camera.addChild(obj); else this.world.addChild(obj);
         }
     },
     loadWorld: function(world) {
@@ -12026,7 +12026,7 @@ utils.inherits(GameState, DisplayObjectContainer, {
                 throw 'World "' + world + '" needs to be preloaded before being added to a game!';
             }
         }
-        this.world = new Map(world);
+        this.world = new Tilemap(world);
         this.addChild(this.world);
         this.world.resize(this._game.renderer.width, this._game.renderer.height);
         this.camera.constrain(new Rectangle(0, 0, this.world.realSize.x, this.world.realSize.y), true);
@@ -12055,10 +12055,10 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('utils/Cache',['require', 'exports', 'module', './utils', '../constants', '../display/Texture', '../display/BaseTexture', '../map/Map', '../font/BitmapFont', '../vendor/pixi'], 
+  define('utils/Cache',['require', 'exports', 'module', './utils', '../constants', '../display/Texture', '../display/BaseTexture', '../tilemap/Tilemap', '../font/BitmapFont', '../vendor/pixi'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var utils = require("./utils"), C = require("../constants"), Texture = require("../display/Texture"), BaseTexture = require("../display/BaseTexture"), Tilemap = require("../map/Map"), BitmapFont = require("../font/BitmapFont"), PIXI = require("../vendor/pixi");
+var utils = require("./utils"), C = require("../constants"), Texture = require("../display/Texture"), BaseTexture = require("../display/BaseTexture"), Tilemap = require("../tilemap/Tilemap"), BitmapFont = require("../font/BitmapFont"), PIXI = require("../vendor/pixi");
 
 var Cache = module.exports = function(game) {
     this.game = game;
@@ -13319,7 +13319,7 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('core.js',['require', 'exports', 'module', './constants', './audio/AudioManager', './audio/AudioPlayer', './camera/Camera', './display/BaseTexture', './display/Texture', './display/DisplayObjectContainer', './display/Sprite', './display/AnimatedSprite', './font/BitmapFont', './fx/camera/Effect', './fx/camera/Close', './fx/camera/Fade', './fx/camera/Flash', './fx/camera/Scanlines', './fx/camera/Shake', './game/Game', './game/GameState', './gui/Gui', './gui/GuiItem', './input/Input', './input/InputManager', './input/Keyboard', './input/Gamepad', './input/GamepadButtons', './input/GamepadSticks', './loader/Loader', './map/Tile', './map/Layer', './map/Map', './map/Tileset', './map/ObjectGroup', './math/math', './math/Circle', './math/Ellipse', './math/Polygon', './math/Rectangle', './math/Vector', './physics/PhysicsSystem', './physics/PhysicsTarget', './utils/utils', './utils/support', './utils/Cache', './utils/Clock', './utils/EventEmitter', './utils/ObjectPool', './utils/SpritePool', './vendor/cp', './vendor/pixi'], 
+  define('core.js',['require', 'exports', 'module', './constants', './audio/AudioManager', './audio/AudioPlayer', './camera/Camera', './display/BaseTexture', './display/Texture', './display/DisplayObjectContainer', './display/Sprite', './display/AnimatedSprite', './font/BitmapFont', './fx/camera/Effect', './fx/camera/Close', './fx/camera/Fade', './fx/camera/Flash', './fx/camera/Scanlines', './fx/camera/Shake', './game/Game', './game/GameState', './gui/Gui', './gui/GuiItem', './input/Input', './input/InputManager', './input/Keyboard', './input/Gamepad', './input/GamepadButtons', './input/GamepadSticks', './loader/Loader', './tilemap/Tile', './tilemap/Tilelayer', './tilemap/Tilemap', './tilemap/Tileset', './tilemap/ObjectGroup', './math/math', './math/Circle', './math/Ellipse', './math/Polygon', './math/Rectangle', './math/Vector', './physics/PhysicsSystem', './physics/PhysicsTarget', './utils/utils', './utils/support', './utils/Cache', './utils/Clock', './utils/EventEmitter', './utils/ObjectPool', './utils/SpritePool', './vendor/cp', './vendor/pixi'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
 var constants = require("./constants");
@@ -13358,11 +13358,11 @@ module.exports = {
     GamepadButtons: require("./input/GamepadButtons"),
     GamepadSticks: require("./input/GamepadSticks"),
     Loader: require("./loader/Loader"),
-    Tile: require("./map/Tile"),
-    Layer: require("./map/Layer"),
-    Map: require("./map/Map"),
-    Tileset: require("./map/Tileset"),
-    ObjectGroup: require("./map/ObjectGroup"),
+    Tile: require("./tilemap/Tile"),
+    Tilelayer: require("./tilemap/Tilelayer"),
+    Tilemap: require("./tilemap/Tilemap"),
+    Tileset: require("./tilemap/Tileset"),
+    ObjectGroup: require("./tilemap/ObjectGroup"),
     math: require("./math/math"),
     Circle: require("./math/Circle"),
     Ellipse: require("./math/Ellipse"),

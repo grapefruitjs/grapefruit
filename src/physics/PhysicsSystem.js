@@ -2,7 +2,7 @@ var Rectangle = require('../math/Rectangle'),
     Circle = require('../math/Circle'),
     Polygon = require('../math/Polygon'),
     Vector = require('../math/Vector'),
-    Tile = require('../map/Tile'),
+    Tile = require('../tilemap/Tile'),
     utils = require('../utils/utils'),
     cp = require('../vendor/cp');
 

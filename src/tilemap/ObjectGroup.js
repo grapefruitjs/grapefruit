@@ -56,7 +56,7 @@ utils.inherits(ObjectGroup, DisplayObjectContainer, {
      * @return {TiledObjectGroup} Returns itself for chainability
      */
     spawn: function() {
-        var game = this.parent.parent.game; //this.TiledMap.GameState.Game
+        var game = this.parent.parent.game; //this.Tilemap.GameState.Game
 
         //we go through these backwards so that things that are higher in the
         //list of object gets rendered on top.

@@ -7,18 +7,18 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     support = require('../utils/support');
 
 /**
- * The TiledLayer is the visual tiled layer that actually displays on the screen
+ * The Tilelayer is the visual tiled layer that actually displays on the screen
  *
- * This class will be created by the TiledMap, there shouldn't be a reason to
+ * This class will be created by the Tilemap, there shouldn't be a reason to
  * create an instance on your own.
  *
- * @class Layer
+ * @class Tilelayer
  * @extends DisplayObjectContainer
  * @constructor
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
-var Layer = module.exports = function(layer) {
+var Tilelayer = module.exports = function(layer) {
     DisplayObjectContainer.call(this, layer);
 
     /**
@@ -83,7 +83,7 @@ var Layer = module.exports = function(layer) {
     this._rendered = new Rectangle();
 };
 
-utils.inherits(Layer, DisplayObjectContainer, {
+utils.inherits(Tilelayer, DisplayObjectContainer, {
     /**
      * Creates all the tile sprites needed to display the layer
      *
@@ -250,7 +250,7 @@ utils.inherits(Layer, DisplayObjectContainer, {
     },
     destroy: function() {
         this.clearTiles(true);
-        Layer.prototype.destroy.call(this);
+        DisplayObjectContainer.prototype.destroy.call(this);
     },
     /**
      * Clears all the tiles currently used to render the layer
@@ -352,7 +352,7 @@ utils.inherits(Layer, DisplayObjectContainer, {
 
         if(props.mass) {
             this.hasPhysics = true;
-            tile.enablePhysics(this.parent.parent.physics); //this.TiledMap.GameState.physics
+            tile.enablePhysics(this.parent.parent.physics); //this.Tilemap.GameState.physics
         }
 
         //pass through all events
@@ -390,7 +390,7 @@ utils.inherits(Layer, DisplayObjectContainer, {
      * @method pan
      * @param dx {Number|Point} The x amount to pan, if a Point is passed the dy param is ignored
      * @param dy {Number} The y ammount to pan
-     * @return {Layer} Returns itself for chainability
+     * @return {Tilelayer} Returns itself for chainability
      */
     pan: function(dx, dy) {
         if(this.preRender)

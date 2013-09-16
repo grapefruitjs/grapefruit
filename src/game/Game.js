@@ -252,7 +252,7 @@ var Game = module.exports = function(contId, settings) {
      * (refers to the active GameState's world instance)
      *
      * @property world
-     * @type Map
+     * @type Tilemap
      * @readOnly
      */
 
