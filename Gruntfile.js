@@ -1,20 +1,21 @@
-var path = require('path');
-
 module.exports = function(grunt) {
-    var banner = [
-        '/**',
-        ' * @license',
-        ' * <%= pkg.longName %> - v<%= pkg.version %>',
-        ' * Copyright (c) 2012, Chad Engler',
-        ' * <%= pkg.homepage %>',
-        ' *',
-        ' * Compiled: <%= grunt.template.today("yyyy-mm-dd") %>',
-        ' *',
-        ' * <%= pkg.longName %> is licensed under the <%= pkg.license %> License.',
-        ' * <%= pkg.licenseUrl %>',
-        ' */',
-        ''
-    ].join('\n');
+    var path = require('path'),
+        glob = require('glob'),
+        source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1 }),
+        banner = [
+            '/**',
+            ' * @license',
+            ' * <%= pkg.longName %> - v<%= pkg.version %>',
+            ' * Copyright (c) 2012, Chad Engler',
+            ' * <%= pkg.homepage %>',
+            ' *',
+            ' * Compiled: <%= grunt.template.today("yyyy-mm-dd") %>',
+            ' *',
+            ' * <%= pkg.longName %> is licensed under the <%= pkg.license %> License.',
+            ' * <%= pkg.licenseUrl %>',
+            ' */',
+            ''
+        ].join('\n');
 
     //Project Configuration
     grunt.initConfig({
@@ -28,8 +29,6 @@ module.exports = function(grunt) {
             vendor: 'vendor'
         },
         files: {
-            vendorBlob: '<%= dirs.vendor %>/**/*js',
-            srcBlob: '<%= dirs.src %>/**/*.js',
             testBlob: '<%= dirs.test %>/unit/**/*.js',
             dev: '<%= dirs.dist %>/<%= pkg.name %>.js',
             dist: '<%= dirs.dist %>/<%= pkg.name %>.min.js',
@@ -54,8 +53,8 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            src: ['<%= files.srcBlob %>'],
-            test: ['<%= files.testBlob %>'],
+            src: source,
+            //test: ['<%= files.testBlob %>'],
             options: {
                 /* Enforcement options */
                 bitwise: false,     //allow bitwise operators

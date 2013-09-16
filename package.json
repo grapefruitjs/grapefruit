@@ -20,7 +20,7 @@
     "main": "build/dist/gf.js",
 
     "dependencies": {
-        "xmldom": "0.1.16"
+        "glob": "*"
     },
     "devDependencies": {
         "grunt": "0.4.x",
