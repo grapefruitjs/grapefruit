@@ -3,7 +3,6 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     Tilemap = require('../tilemap/Tilemap'),
     Gui = require('../gui/Gui'),
     Rectangle = require('../math/Rectangle'),
-    PhysicsSystem = require('../physics/PhysicsSystem'),
     math = require('../math/math'),
     utils = require('../utils/utils');
 
@@ -38,15 +37,6 @@ var GameState = module.exports = function(name, settings) {
      * @type String
      */
     this.name = name;
-
-    /**
-     * The physics system to simulate stuffs
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @readOnly
-     */
-    this.physics = new PhysicsSystem({ gravity: settings.gravity });
 
     /**
      * The camera you view the scene through

@@ -6,19 +6,25 @@ var Rectangle = require('../math/Rectangle'),
     utils = require('../utils/utils'),
     cp = require('../vendor/cp');
 
-var PhysicsSystem = module.exports = function(options) {
-    options = options || {};
+var PhysicsSystem = module.exports = function(game, gravity) {
+    /**
+     * The game instance this system belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
 
     this.space = new cp.Space();
-    this.space.gravity = utils.ensureVector(options.gravity !== undefined ? options.gravity : 9.87);
+    this.space.gravity = utils.ensureVector(gravity !== undefined ? gravity : 9.87);
 
     //Time a body must remain idle to fall asleep
     //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#a928d74741904aae266a9efff5b5f68f7
-    this.space.sleepTimeThreshold = options.sleepTimeThreshold || 0.2;
+    this.space.sleepTimeThreshold = 0.2;
 
     //Amount of encouraged penetration between colliding shapes.
     //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#af1bec644a24e12bfc642a942a88520f7
-    this.space.collisionSlop = options.collisionSlop || 0.1;
+    this.space.collisionSlop = 0.1;
 
     //These two collision scenarios are separate because we don't
     //want tiles to collide with tiles all the time

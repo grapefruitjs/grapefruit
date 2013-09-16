@@ -10,8 +10,16 @@ var utils = require('./utils'),
  * @namespace gf
  * @constructor
  */
-var SpritePool = module.exports = function() {
+var SpritePool = module.exports = function(game) {
     this.types = {};
+
+    /**
+     * The game instance this pool belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
 
     this.add('_default', Sprite);
 };

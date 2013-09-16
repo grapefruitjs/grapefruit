@@ -1,6 +1,12 @@
 module.exports = {
     version: '@@VERSION',
 
+    RENDERER: {
+        AUTO: 'auto',
+        CANVAS: 'canvas',
+        WEBGL: 'webgl'
+    },
+
     FILE_FORMAT: {
         JSON: 0,
         XML: 1,

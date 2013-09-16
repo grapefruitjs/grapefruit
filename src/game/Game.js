@@ -1,4 +1,4 @@
-var GameState = require('./GameState'),
+var StateManager = require('./StateManager'),
     EventEmitter = require('../utils/EventEmitter'),
     Cache = require('../utils/Cache'),
     Clock = require('../utils/Clock'),
@@ -7,9 +7,11 @@ var GameState = require('./GameState'),
     Loader = require('../loader/Loader'),
     InputManager = require('../input/InputManager'),
     AudioManager = require('../audio/AudioManager'),
+    PhysicsSystem = require('../physics/PhysicsSystem'),
     support = require('../utils/support'),
     utils = require('../utils/utils'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('../vendor/pixi'),
+    C = require('../constants');
 
 /**
  * Main game object, controls the entire instance of the game
@@ -22,14 +24,25 @@ var GameState = require('./GameState'),
  * @param settings {Object} All the settings for the game instance
  * @param settings.width {Number} The width of the viewport
  * @param settings.height {Number} The height of the viewport
- * @param [settings.view] {DOMElement} The canvas to render into
- * @param [settings.transparent] {Boolean} Whether the viewport should be transparent or not
- * @param [settings.renderMethod] {String} Can be 'canvas' or 'webgl' to force that render method
- * @param [settings.background] {Number} The background color of the stage
+ * @param [settings.renderer=RENDERER.AUTO] {String} The renderer to use either RENDERER.AUTO, RENDERER.CANVAS, or RENDERER.WEBGL
+ * @param [settings.transparent=false] {Boolean} Should the render element have a transparent background
+ * @param [settings.background='#FFF'] {Number} The background color of the stage
+ * @param [settings.antialias=true] {Boolean} Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality)
+ * @param [settings.canvas] {DOMElement} The canvas to render into, if not specified one is created
  * @param [settings.interactive] {Boolean} Whether the game will use mouse events or not
  */
-var Game = module.exports = function(contId, settings) {
+var Game = module.exports = function(container, settings) {
     EventEmitter.call(this);
+
+    //setup settings defaults
+    settings = settings || {};
+    settings.width = settings.width || 800;
+    settings.height = settings.height || 600;
+    settings.renderer = settings.renderer || C.RENDERER.AUTO;
+    settings.transparent = settings.transparent || false;
+    settings.background = settings.background || '#FFF';
+    settings.antialias = settings.antialias !== undefined ? settings.antialias : true;
+    settings.canvas = settings.canvas || null; //passing null to renderer, lets the renderer make one
 
     /**
      * The domElement that we are putting our rendering canvas into (the container)
@@ -38,40 +51,90 @@ var Game = module.exports = function(contId, settings) {
      * @type DOMELement
      * @readOnly
      */
-    this.container = document.getElementById(contId);
+    this.container = typeof container === 'string' ? document.getElementById(container) : container;
 
     if(!this.container)
         this.container = document.body;
+
+    /**
+     * The width of the render viewport
+     *
+     * @property width
+     * @type Number
+     * @default 800
+     */
+    this.width = settings.width;
+
+    /**
+     * The height of the render viewport
+     *
+     * @property height
+     * @type Number
+     * @default 600
+     */
+    this.height = settings.height;
 
     /**
      * The method used to render values to the screen (either webgl, or canvas)
      *
      * @property renderMethod
      * @type String
-     * @default 'webgl'
+     * @default RENDERER.AUTO
      */
-    this.renderMethod = 'webgl';
+    this.renderMethod = settings.renderer;
 
     /**
-     * The player entities added into the game
+     * Whether the canvas has a transparent background or not
      *
-     * @property players
-     * @type {Array}
+     * @property transparent
+     * @type Boolean
+     * @default false
+     */
+    this.transparent = settings.transparent;
+
+    /**
+     * The background of the stage
+     *
+     * @property background
+     * @type Boolean
+     * @default false
+     */
+    this.background = settings.background;
+
+    /**
+     * Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality)
+     *
+     * @property antialias
+     * @type Boolean
+     * @default true
+     */
+    this.antialias = settings.antialias;
+
+    /**
+     * The canvas to render into
+     *
+     * @property canvas
+     * @type HTMLCanvasElement
+     */
+    this.canvas = settings.canvas;
+
+    /**
+     * Raw rendering engine, the underlying PIXI renderer that draws for us
+     *
+     * @property renderer
+     * @type PIXI.WebGLRenderer|PIXI.CanvasRenderer
      * @readOnly
      */
-    this.players = [];
+    this.renderer = this._createRenderer();
 
     /**
-     * Raw PIXI.stage instance
+     * Raw PIXI.stage instance, the root of all things in the scene graph
      *
      * @property stage
      * @type PIXI.Stage
      * @readOnly
      */
-    this.stage = new PIXI.Stage(
-        settings.background,
-        settings.interactive !== undefined ? settings.interactive : true
-    );
+    this.stage = new PIXI.Stage(this.background, this.interactive);
 
     /**
      * Clock instance for internal timing
@@ -80,28 +143,20 @@ var Game = module.exports = function(contId, settings) {
      * @type Clock
      * @readOnly
      */
-    this.clock = new Clock(false);
+    this.clock = new Clock();
 
     /**
-     * The audio player for this game instance
+     * The audio manager for this game instance, used to play and control
+     * all the audio in a game.
      *
      * @property audio
-     * @type AudioPlayer
+     * @type AudioManager
      * @readOnly
      */
     this.audio = new AudioManager(this);
 
     /**
-     * Cache instance for storing assets
-     *
-     * @property cache
-     * @type Cache
-     * @readOnly
-     */
-    this.cache = new Cache(this);
-
-    /**
-     * The loader for this game instance
+     * The loader for this game instance, used to preload assets into the cache
      *
      * @property loader
      * @type Loader
@@ -110,56 +165,22 @@ var Game = module.exports = function(contId, settings) {
     this.load = new Loader(this);
 
     /**
+     * Cache instance for storing/retrieving assets
+     *
+     * @property cache
+     * @type Cache
+     * @readOnly
+     */
+    this.cache = new Cache(this);
+
+    /**
      * The input instance for this game
      *
      * @property input
      * @type InputManager
      * @readOnly
      */
-    this.input = new InputManager(this.renderer.view);
-
-    /**
-     * Raw rendering engine
-     *
-     * @property renderer
-     * @type PIXI.WebGLRenderer|PIXI.CanvasRenderer
-     * @readOnly
-     */
-    this.renderer = null;
-
-    //if they speciy a method, check if it is available
-    if(settings.renderMethod) {
-        if(!support[settings.renderMethod]) {
-            throw 'Render method ' + settings.renderMethod + ' is not supported by this browser!';
-        }
-        this.renderMethod = settings.renderMethod;
-    }
-    //if they don't specify a method, guess the best to use
-    else {
-        if(support.webgl) this.renderMethod = 'webgl';
-        else if(support.canvas) this.renderMethod = 'canvas';
-        else {
-            throw 'Neither WebGL nor Canvas is supported by this browser!';
-        }
-    }
-
-    //initialize the correct renderer
-    if(this.renderMethod === 'webgl') {
-        this.renderer = new PIXI.WebGLRenderer(settings.width, settings.height, settings.view, settings.transparent);
-    } else if(this.renderMethod === 'canvas') {
-        this.renderer = new PIXI.CanvasRenderer(settings.width, settings.height, settings.view, settings.transparent);
-    }
-
-    /**
-     * Maximum Z value
-     *
-     * @property MAX_Z
-     * @type {Number}
-     * @default 500
-     * @private
-     * @readOnly
-     */
-    this.MAX_Z = 500;
+    this.input = new InputManager(this);
 
     /**
      * The sprite pool to use to create registered entities
@@ -168,26 +189,36 @@ var Game = module.exports = function(contId, settings) {
      * @type SpritePool
      * @readOnly
      */
-    this.spritepool = new SpritePool();
+    this.spritepool = new SpritePool(this);
 
     /**
-     * The GameStates added to the game
+     * The state manager, to switch between game states
      *
-     * @property states
+     * @property state
      * @type Array
      * @readOnly
      */
-    this.states = {};
+    this.state = new StateManager(this);
 
     /**
-     * The currently active GameState
+     * The physics system to simulate the world
      *
-     * @property activeState
-     * @type GameState
+     * @property physics
+     * @type PhysicsSystem
      * @readOnly
      */
-    this.activeState = null;
-    this._defaultState = new GameState('_default');
+    this.physics = new PhysicsSystem(this);
+
+    //TODO:
+    //
+    //add (obj factory?)
+    //world (doc for objs?)
+    //camera (should a world own this?)
+    //debug (moved in from gf-debug)
+    //particles (TODO)
+    //
+    //implement state manager, remove state code from here
+    //
 
     /**
      * Holds timing data for the previous loop
@@ -196,82 +227,11 @@ var Game = module.exports = function(contId, settings) {
      * @type Object
      * @readOnly
      */
-    this.timings = {
-        _timer: window.performance && window.performance.now ? window.performance : Date
-    };
+    this.timings = {};
 
-    //append the renderer view only if the user didn't pass their own
-    if(!settings.view)
-        this.container.appendChild(this.renderer.view);
-
-    //mixin user settings
-    utils.setValues(this, settings);
-
-    //enable default state
-    this.addState(this._defaultState);
-    this.enableState('_default');
-
-    //define getters for common properties in GameState
-    var self = this;
-    ['physics', 'camera', 'world'].forEach(function(prop) {
-        self.__defineGetter__(prop, function() {
-            return self.activeState[prop];
-        });
-    });
-
-    //some docs for the getters above
-
-    /**
-     * The audio player for this game instance
-     * (refers to the active GameState's audio instance)
-     *
-     * @property audio
-     * @type AudioPlayer
-     * @readOnly
-     */
-
-    /**
-     * The input instance for this game
-     * (refers to the active GameState's input instance)
-     *
-     * @property input
-     * @type InputManager
-     * @readOnly
-     */
-
-    /**
-     * The physics system to simulate stuffs
-     * (refers to the active GameState's physics instance)
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @readOnly
-     */
-
-    /**
-     * The camera you view the scene through
-     * (refers to the active GameState's camera instance)
-     *
-     * @property camera
-     * @type Camera
-     * @readOnly
-     */
-
-    /**
-     * The world instance that holds all sprites and the map
-     * (refers to the active GameState's world instance)
-     *
-     * @property world
-     * @type Tilemap
-     * @readOnly
-     */
-
-     //pixi does some prevent default on mousedown, so we need to
-     //make sure mousedown will focus the canvas or keyboard events break
-
-
-    //ensure that key events will work
-    var view = this.renderer.view;
+    //pixi does some prevent default on mousedown, so we need to
+    //make sure mousedown will focus the canvas or keyboard events break
+    var view = this.canvas;
     if(!view.getAttribute('tabindex'))
         view.setAttribute('tabindex','1');
 
@@ -282,6 +242,35 @@ var Game = module.exports = function(contId, settings) {
 };
 
 utils.inherits(Game, Object, {
+    _createRenderer: function() {
+        var method = this.renderMethod,
+            render = null;
+
+        //no support
+        if(!support.webgl && !support.canvas) {
+            throw 'Neither WebGL nor Canvas is supported by this browser!';
+        }
+        else if((method === C.RENDERER.WEBGL || method === C.RENDERER.AUTO) && support.webgl) {
+            method = C.RENDERER.WEBGL;
+            render = new PIXI.WebGLRenderer(this.width, this.height, this.canvas, this.transparent, this.antialias);
+        }
+        else if((method === C.RENDERER.CANVAS || method === C.RENDERER.AUTO) && support.canvas) {
+            method = C.RENDERER.CANVAS;
+            render = new PIXI.CanvasRenderer(this.width, this.height, this.canvas, this.transparent);
+            //TODO: setSmoothingEnabled based on this.antialias
+        }
+        else {
+            throw 'Your render method ("' + method + '") is not supported by this browser!';
+        }
+
+        //append the renderer view only if the user didn't pass their own
+        if(!this.canvas) {
+            this.container.appendChild(render.view);
+            this.canvas = render.view;
+        }
+
+        return render;
+    },
     /**
      * Allows you to resize the game area
      *
@@ -443,28 +432,25 @@ utils.inherits(Game, Object, {
      * @private
      */
     _tick: function() {
-        this.timings.tickStart = this.timings._timer.now();
-
         //start render loop
         window.requestAnimFrame(this._tick.bind(this));
 
         var dt = this.clock.getDelta();
 
+        this.clock.push();
+
         //gather input from user
-        this.timings.inputStart = this.timings._timer.now();
         this.input.update(dt);
-        this.timings.inputEnd = this.timings._timer.now();
+        this.timings.input = this.clock.getDelta();
 
         //update this game state
-        this.timings.stateStart = this.timings._timer.now();
         this.activeState.update(dt);
-        this.timings.stateEnd = this.timings._timer.now();
+        this.timings.state = this.clock.getDelta();
 
         //render scene
-        this.timings.renderStart = this.timings._timer.now();
         this.renderer.render(this.stage);
-        this.timings.renderEnd = this.timings._timer.now();
+        this.timings.render = this.clock.getDelta();
 
-        this.timings.tickEnd =  this.timings._timer.now();
+        this.clock.pop();
     }
 });
