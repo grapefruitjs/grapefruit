@@ -151,11 +151,11 @@ utils.inherits(Cache, Object, {
         }
 
         if(fmt === C.FILE_FORMAT.JSON)
-            obj.tilemap = new Tilemap(obj.data);
+            obj.tilemap = new Tilemap(this.game, obj.data);
         else if(fmt === C.FILE_FORMAT.XML)
-            obj.tilemap = Tilemap.fromXML(obj.data);
+            obj.tilemap = Tilemap.fromXML(this.game, obj.data);
         else if(fmt === C.FILE_FORMAT.CSV)
-            obj.tilemap = Tilemap.fromCSV(obj.data);
+            obj.tilemap = Tilemap.fromCSV(this.game, obj.data);
 
         this._tilemaps[key] = obj;
     },
@@ -232,7 +232,7 @@ utils.inherits(Cache, Object, {
     /**
      * Add a new sound.
      *
-     * @method addSound
+     * @method addAudio
      * @param obj {Object} The audio file object
      * @param obj.key {String} Asset key for the audio.
      * @param obj.url {String} URL of this audio file.
@@ -240,7 +240,7 @@ utils.inherits(Cache, Object, {
      * @param obj.webAudio {Boolean} Is this a webAudio ArrayBuffer for a sound?
      * @param obj.decoded {Boolean} Is the data decoded yet?
      */
-    addSound: function(obj) {
+    addAudio: function(obj) {
         var key = obj.key;
 
         if(!obj.webAudio) {
@@ -365,22 +365,22 @@ utils.inherits(Cache, Object, {
     /**
      * Get sound by key.
      *
-     * @method getSound
+     * @method getAudio
      * @param key {String} Asset key of the sound you want.
      * @return {Object}
      */
-    getSound: function(key) {
+    getAudio: function(key) {
         return this._sounds[key];
     },
 
     /**
      * Get sound data by key.
      *
-     * @method getSoundData
+     * @method getAudioData
      * @param key {String} Asset key of the sound you want.
      * @return {ArrayBuffer|Audio}
      */
-    getSoundData: function(key) {
+    getAudioData: function(key) {
         if(this._sounds[key])
             return this._sounds[key].data;
     },

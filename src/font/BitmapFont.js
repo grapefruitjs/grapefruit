@@ -22,7 +22,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * @class BitmapFont
  * @extends DisplayObjectContainer
  * @constructor
- * @param texture {Texture|String} The sprite sheet to use, if you pass a string make sure to preload it first
+ * @param textures {Object<Texture>} The textures to use for the font, each key should be a character in the map
  * @param [settings] {Object} All the settings for the font
  * @param [settings.ext] {String} The extension used for the different texture names
  * @param [settings.map] {Object} Maps a special character to a string name
@@ -31,14 +31,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * @param [settings.lineHeight] {Number} The height factor of characters, default is 1 which is normal spacing
  * @param [settings.text] {String} Starting text of the font
  */
-var BitmapFont = module.exports = function(font, settings) {
-    if(typeof font === 'string') {
-        if(core.cache[font])
-            font = core.cache[font];
-        else
-            throw 'Unknown texture ' + font + ', please load the sprite sheet first!';
-    }
-
+var BitmapFont = module.exports = function(textures, settings) {
     /**
      * The extension to use with texture names
      *
@@ -130,7 +123,7 @@ var BitmapFont = module.exports = function(font, settings) {
      * @readOnly
      * @private
      */
-    this.textures = font;
+    this.textures = textures;
 
     /**
      * The sprite pool to grab character sprites from

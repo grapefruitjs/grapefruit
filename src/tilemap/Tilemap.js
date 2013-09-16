@@ -16,9 +16,18 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * @constructor
  * @param map {Object} All the settings for the map
  */
-var Tilemap = module.exports = function(map) {
+var Tilemap = module.exports = function(game, map) {
     //call base ctor
     DisplayObjectContainer.call(this, map);
+
+    /**
+     * The game instance this tilemap belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
+
 
     //Tiled Editor properties
 
@@ -118,11 +127,11 @@ var Tilemap = module.exports = function(map) {
 
         switch(map.layers[i].type) {
             case 'tilelayer':
-                lyr = new Tilelayer(map.layers[i]);
+                lyr = new Tilelayer(this.game, map.layers[i]);
                 break;
 
             case 'objectgroup':
-                lyr = new ObjectGroup(map.layers[i]);
+                lyr = new ObjectGroup(this.game, map.layers[i]);
                 break;
 
             case 'imagelayer':

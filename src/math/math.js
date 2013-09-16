@@ -179,6 +179,16 @@ var math = module.exports = {
         return math.randomBool(chance) ? 1 : -1;
     },
     /**
+     * Returns a random string based on a random value between 0 and 1, multiplied
+     * by the current date. Ex: "1158014093337", "86371874178", etc
+     *
+     * @method randomString
+     * @return {String} A random string
+     */
+    randomString: function() {
+        return Math.floor(Date.now() * Math.random()).toString();
+    },
+    /**
      * Returns a random element of an array.
      *
      * @method randomElement

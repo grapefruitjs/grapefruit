@@ -236,19 +236,12 @@ utils.inherits(AssetLoader, Object, {
      *
      * @method audio
      * @param key {String} Unique asset key of this image file.
-     * @param url {String} URL of image file.
-     * @param [autoDecode=false] {Boolean}
-     *      When using Web Audio the audio files can either be decoded at load time or run-time.
-     *      They can't be played until they are decoded, but this let's you control when that happens. Decoding is a
-     *      non-blocking async process.
+     * @param urls {Array<String>} URLs of audio files.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it
      */
-    audio: function(key, url, autoDecode, overwrite) {
+    audio: function(key, urls, overwrite) {
         if(overwrite || !this.hasKey(key))
-            this.add('audio', key, url, {
-                buffer: null,
-                autoDecode: autoDecode
-            });
+            this.add('audio', key, urls);
     },
 
     /**
@@ -573,7 +566,7 @@ utils.inherits(AssetLoader, Object, {
                     file.data.removeEventListener('canplaythrough', file._bndComplete);
                 }
 
-                this.game.cache.addSound(file);
+                this.game.cache.addAudio(file);
                 break;
 
             case 'text':
