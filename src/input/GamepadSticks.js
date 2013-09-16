@@ -5,8 +5,7 @@ var utils = require('../utils/utils'),
  * Controls gamepad stick input
  *
  * @class GamepadSticks
- * @extends gf.input.Input
- * @namespace gf.input
+ * @extends Input
  * @constructor
  */
 var GamepadSticks = module.exports = function() {

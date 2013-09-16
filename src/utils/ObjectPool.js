@@ -8,7 +8,7 @@ var utils = require('./utils');
  * @extends Object
  * @namespace gf
  * @constructor
- * @param type {mixed} The object type that this pool will hold (like gf.Sprite, or gf.Tile)
+ * @param type {mixed} The object type that this pool will hold (like Sprite, or Tile)
  * @param parent {mixed} The parent that the objects will be added to. Passing this in will
  *      make the pool add any newly created objects as children to this object.
  */

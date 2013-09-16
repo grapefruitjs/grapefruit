@@ -156,11 +156,11 @@ var utils = module.exports = {
      * @param values {Object} The values to put into the object
      * @return {Object} returns the updated object
      * @example
-     *      var obj = { vec: new gf.Vector(), arr: [] },
+     *      var obj = { vec: new Vector(), arr: [] },
      *          vals = { vec: '2|5', arr: '5|10|11' };
-     *      gf.setValues(obj, vals);
+     *      utils.setValues(obj, vals);
      *      //now obj is:
-     *      // { vec: gf.Vector(2, 5), arr: [5, 10, 11] }
+     *      // { vec: Vector(2, 5), arr: [5, 10, 11] }
      *      
      */
     //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
@@ -199,14 +199,14 @@ var utils = module.exports = {
                     curVal.set(newVal, newVal);
                 }
                 //massage points
-                else if(curVal instanceof Point && newVal instanceof Array) {
+                else if(curVal.x !== undefined && newVal instanceof Array) {
                     curVal.x = parseFloat(newVal[0], 10) || 0;
                     curVal.y = parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0;
-                } else if(curVal instanceof Point && typeof newVal === 'string') {
+                } else if(curVal.x !== undefined && typeof newVal === 'string') {
                     var a2 = newVal.split(utils._arrayDelim, 2);
                     curVal.x = parseFloat(a2[0], 10) || 0;
                     curVal.y = parseFloat(a2[1], 10) || parseFloat(a2[0], 10) || 0;
-                } else if(curVal instanceof Point && typeof newVal === 'number') {
+                } else if(curVal.x !== undefined && typeof newVal === 'number') {
                     curVal.x = newVal;
                     curVal.y = newVal;
                 }
@@ -319,14 +319,14 @@ var utils = module.exports = {
 };
 
 //XML Parser
-if(typeof window.DOMParser != "undefined") {
+if(typeof window.DOMParser !== 'undefined') {
     utils.parseXML = function(xmlStr) {
-        return (new window.DOMParser()).parseFromString(xmlStr, "text/xml");
+        return (new window.DOMParser()).parseFromString(xmlStr, 'text/xml');
     };
-} else if(typeof window.ActiveXObject != "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
+} else if(typeof window.ActiveXObject !== 'undefined' && new window.ActiveXObject('Microsoft.XMLDOM')) {
     utils.parseXML = function(xmlStr) {
-        var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
-        xmlDoc.async = "false";
+        var xmlDoc = new window.ActiveXObject('Microsoft.XMLDOM');
+        xmlDoc.async = 'false';
         xmlDoc.loadXML(xmlStr);
         return xmlDoc;
     };

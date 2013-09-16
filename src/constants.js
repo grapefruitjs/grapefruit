@@ -33,5 +33,14 @@ module.exports = {
         NEUTRAL: 'neutral',
         COLLECTABLE: 'collectable',
         TILE: 'tile'
+    },
+
+    COLLISION_TYPE: {
+        NONE: 'none',
+        SOLID: 'solid',
+        CLIFF: 'cliff',
+        LADDER: 'ladder',
+        WATER: 'water',
+        DEEP_WATER: 'deep_water'
     }
 };

@@ -5,8 +5,7 @@ var utils = require('../utils/utils'),
  * The base Gui that holds GuiItems to be added to the Camera
  *
  * @class Gui
- * @extends gf.DisplayObjectContainer
- * @namespace gf
+ * @extends DisplayObjectContainer
  * @constructor
  */
 var GuiContainer = module.exports = function(name) {

@@ -6,8 +6,7 @@ var utils = require('../utils/utils'),
  *
  * @class Input
  * @extends Object
- * @uses gf.EventEmitter
- * @namespace gf.input
+ * @uses EventEmitter
  * @constructor
  * @param view {DOMElement} The DOMElement to bind input events to
  */

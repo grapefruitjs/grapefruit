@@ -1,6 +1,8 @@
 var utils = require('../utils/utils'),
     Texture = require('../display/Texture'),
-    Vector = require('../math/Vector');
+    Vector = require('../math/Vector'),
+    PIXI = require('../vendor/pixi'),
+    C = require('../constants');
 
 /**
  * This object represents a tileset used by a TiledMap.
@@ -105,7 +107,7 @@ var Tileset = module.exports = function(texture, settings) {
      *
      * @property lastgid
      * @type Number
-     */ 
+     */
     this.lastgid = this.firstgid + (((this.numTiles.x * this.numTiles.y) - 1) || 0);
 
     /**
@@ -202,7 +204,7 @@ utils.inherits(Tileset, Texture, {
                 this.tileproperties[tileId] = {
                     collidable: false,
                     breakable: false,
-                    type: Tile.TYPE.NONE
+                    type: C.COLLISION_TYPE.NONE
                 };
 
         props.flippedX = flippedX;

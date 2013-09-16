@@ -5,8 +5,9 @@ var utils = require('./utils'),
     C = require('../constants'),
     Texture = require('../display/Texture'),
     BaseTexture = require('../display/BaseTexture'),
-    Tileset = require('../map/Tileset'),
-    Tilemap = require('../map/Map');
+    Tilemap = require('../map/Map'),
+    BitmapFont = require('../font/BitmapFont'),
+    PIXI = require('../vendor/pixi');
 
 /**
  * Cache
@@ -109,7 +110,7 @@ utils.inherits(Cache, Object, {
         PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
         obj.texture = PIXI.TextureCache[key];
 
-        obj.animation = Animation.fromImage(obj);
+        obj.textures = Texture.fromSpritesheet(obj);
 
         this._images[key] = obj;
     },
@@ -177,10 +178,10 @@ utils.inherits(Cache, Object, {
         PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
         obj.texture = PIXI.TextureCache[key];
 
-        if(format === C.ATLAS_FORMAT.JSON_ARRAY || format === C.ATLAS_FORMAT.JSON_HASH) {
+        if(obj.format === C.ATLAS_FORMAT.JSON_ARRAY || obj.format === C.ATLAS_FORMAT.JSON_HASH) {
             obj.textures = Texture.fromJSON(key, obj.data, obj.texture.baseTexture);
         }
-        else if (format ===  C.ATLAS_FORMAT.STARLING_XML) {
+        else if (obj.format ===  C.ATLAS_FORMAT.STARLING_XML) {
             obj.textures = Texture.fromXML(key, obj.data, obj.texture.baseTexture);
         }
 
@@ -204,7 +205,7 @@ utils.inherits(Cache, Object, {
         PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
         obj.texture = PIXI.TextureCache[key];
 
-        obj.font = BitmapFont.fromXML(obj.data, obj.texture);
+        obj.font = BitmapFont.fromXML(key, obj.data, obj.texture);
 
         this._images[key] = obj;
     },
@@ -264,7 +265,7 @@ utils.inherits(Cache, Object, {
      * @param obj.key {String} Asset key for the text data.
      * @param obj.url {String} URL of this text data file.
      * @param obj.data {object} Extra text data.
-     */    
+     */
     addText: function(obj) {
         this._text[obj.key] = obj;
     },
@@ -274,22 +275,19 @@ utils.inherits(Cache, Object, {
      * Is mapped to the key __default
      */
     addDefaultImage: function () {
-        var key = '__default',
-            w = 32,
-            h = 32;
-
-        this._images[key] = {
-            frame: new AnimationFrame(0, 0, w, h, '', '')
-        };
+        var key = '__default';
 
         var base = new BaseTexture();
-        base.width = w;
-        base.height = h;
+        base.width = 32;
+        base.height = 32;
         base.hasLoaded = true; // avoids a hanging event listener
 
         PIXI.BaseTextureCache[key] = base;
         PIXI.TextureCache[key] = new Texture(base);
 
+        this._images[key] = {
+            texture: PIXI.TextureCache[key]
+        };
     },
 
     /**
@@ -310,7 +308,7 @@ utils.inherits(Cache, Object, {
      * @method getImage
      * @param key {String} Asset key of the image you want.
      * @return {Image}
-     */    
+     */
     getImage: function(key) {
         if(this._images[key])
             return this._images[key].image;

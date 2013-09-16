@@ -1,11 +1,12 @@
 var Effect = require('./Effect'),
+    Vector = require('../../math/Vector'),
     utils = require('../../utils/utils'),
     math = require('../../math/math'),
     C = require('../../constants');
 
 var Shake = module.exports = function() {
     Effect.call(this);
-    this.offset = new gf.Vector();
+    this.offset = new Vector();
 };
 
 utils.inherits(Shake, Effect, {

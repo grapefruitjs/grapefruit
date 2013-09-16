@@ -1,5 +1,6 @@
 var DisplayObjectContainer = require('../../display/DisplayObjectContainer'),
-    utils = require('../../utils/utils');
+    utils = require('../../utils/utils'),
+    PIXI = require('../../vendor/pixi');
 
 var Effect = module.exports = function() {
     DisplayObjectContainer.call(this);

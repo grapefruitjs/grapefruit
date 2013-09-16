@@ -1,20 +1,23 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+    Camera = require('../camera/Camera'),
+    Map = require('../map/Map'),
+    Gui = require('../gui/Gui'),
+    Rectangle = require('../math/Rectangle'),
+    PhysicsSystem = require('../physics/PhysicsSystem'),
+    AudioManager = require('../audio/AudioManager'),
     utils = require('../utils/utils');
-
-    //TOINC: AudioManager, PhysicsSyste
 
 /**
  * GameStates are different , controls the entire instance of the game
  *
  * @class GameState
- * @extends gf.DisplayObjectContainer
- * @namespace gf
+ * @extends DisplayObjectContainer
  * @constructor
  * @param [name] {String} The name of this state
  * @param [settings] {Object} All the settings for this game state
  * @param [settings.gravity] {Number} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
  * @example
- *      var state = new gf.GameState(game, 'battle');
+ *      var state = new GameState(game, 'battle');
  *      state.addChild(battlePlayer);
  *      state.addChild(enemy);
  *
@@ -43,7 +46,7 @@ var GameState = module.exports = function(name, settings) {
      * @type AudioPlayer
      * @readOnly
      */
-    //this.audio = new AudioManager();
+    this.audio = new AudioManager();
 
     /**
      * The physics system to simulate stuffs
@@ -105,14 +108,14 @@ utils.inherits(GameState, DisplayObjectContainer, {
         if(this.camera)
             this.removeChild(this.camera);
 
-        this.camera = new gf.Camera(game);
+        this.camera = new Camera(game);
         this.addChild(this.camera);
         this.camera.resize(game.renderer.width, game.renderer.height);
     },
     /**
      * Adds a child object to the GameState, this will add objects to either
      * the Camera or the Map depending on the type. Anything inheriting from
-     * gf.Gui will be put to the camera, everything else goes in the world.
+     * Gui will be put to the camera, everything else goes in the world.
      *
      * @method addChild
      * @param obj {DisplayObject} Any generic object to add to the game state
@@ -122,9 +125,9 @@ utils.inherits(GameState, DisplayObjectContainer, {
             //we add the camera in the ctor and the map later when
             //.loadWorld is called. This way the camera is always the
             //last child of stage, so it is rendered on top!
-            if(obj instanceof gf.Camera || obj instanceof gf.Map)
+            if(obj instanceof Camera || obj instanceof Map)
                 this.addChildAt(obj, 0);
-            else if(obj instanceof gf.Gui)
+            else if(obj instanceof Gui)
                 this.camera.addChild(obj);
             else
                 this.world.addChild(obj);
@@ -145,12 +148,12 @@ utils.inherits(GameState, DisplayObjectContainer, {
             }
         }
 
-        this.world = new gf.TiledMap(world);
+        this.world = new Map(world);
         this.addChild(this.world);
 
         this.world.resize(this._game.renderer.width, this._game.renderer.height);
 
-        this.camera.constrain(new gf.Rectangle(0, 0, this.world.realSize.x, this.world.realSize.y), true);
+        this.camera.constrain(new Rectangle(0, 0, this.world.realSize.x, this.world.realSize.y), true);
 
         return this;
     },

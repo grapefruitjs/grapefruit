@@ -248,4 +248,3 @@ utils.inherits(DisplayObjectContainer, PIXI.DisplayObjectContainer, {
  * @event touchendoutside
  * @param interactionData {InteractionData}
  */
- 

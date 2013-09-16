@@ -3,8 +3,8 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     Rectangle = require('../math/Rectangle'),
     Polygon = require('../math/Polygon'),
     Vector = require('../math/Vector'),
-    ObjectPool = require('../utils/ObjectPool'),
     utils = require('../utils/utils'),
+    math = require('../math/math'),
     C = require('../constants');
 
 /**
@@ -22,7 +22,7 @@ var Camera = module.exports = function(game, settings) {
      * The bounds of that the camera can move to
      *
      * @property bounds
-     * @type gf.Rectangle
+     * @type Rectangle
      * @readOnly
      * @private
      */
@@ -33,7 +33,7 @@ var Camera = module.exports = function(game, settings) {
      * before the camera moves to track it.
      *
      * @property _deadzone
-     * @type gf.Rectangle
+     * @type Rectangle
      * @readOnly
      * @private
      */
@@ -43,7 +43,7 @@ var Camera = module.exports = function(game, settings) {
      * The target that the camera will follow
      *
      * @property _target
-     * @type gf.Sprite
+     * @type Sprite
      * @readOnly
      * @private
      */
@@ -53,7 +53,7 @@ var Camera = module.exports = function(game, settings) {
      * The size of the camera
      *
      * @property size
-     * @type gf.Vector
+     * @type Vector
      * @readOnly
      */
     this.size = new Vector(0, 0);
@@ -62,7 +62,7 @@ var Camera = module.exports = function(game, settings) {
      * Half of the size of the camera
      *
      * @property hSize
-     * @type gf.Vector
+     * @type Vector
      * @readOnly
      */
     this.hSize = new Vector(0, 0);
@@ -71,51 +71,12 @@ var Camera = module.exports = function(game, settings) {
      * The game this camera views
      *
      * @property game
-     * @type gf.Game
+     * @type Game
      * @readOnly
      */
     this.game = game;
 
-    /**
-     * The fxpools for doing camera effects
-     *
-     * @property fxpools
-     * @type Object
-     * @private
-     * @readOnly
-     */
-    this.fxpools = {
-        flash: new ObjectPool(gf.Camera.fx.Flash, this),
-        fade: new ObjectPool(gf.Camera.fx.Fade, this),
-        shake: new ObjectPool(gf.Camera.fx.Shake, this),
-        scanlines: new ObjectPool(gf.Camera.fx.Scanlines, this),
-        close: new ObjectPool(gf.Camera.fx.Close, this)
-    };
-
     DisplayObjectContainer.call(this, settings);
-
-    /*
-     * Dynamic addition of fx shortcuts
-    var self = this;
-    Object.keys(this.fxpools).forEach(function(key) {
-        self[key] = function() {
-            var e = self.fxpools[key].create(),
-                args = Array.prototype.slice.call(arguments),
-                cb = args.pop();
-
-            if(typeof cb !== 'function')
-                args.push(cb);
-
-            args.push(function() {
-                self.fxpools[key].free(e);
-                if(typeof cb === 'function')
-                    cb();
-            });
-
-            return e.start.apply(e, args);
-        };
-    });
-    */
 };
 
 utils.inherits(Camera, DisplayObjectContainer, {
@@ -125,12 +86,12 @@ utils.inherits(Camera, DisplayObjectContainer, {
      * to move with them.
      *
      * @method follow
-     * @param sprite {gf.Sprite} The sprite to follow
-     * @param [style=gf.Camera.FOLLOW.LOCKON] {gf.Camera.FOLLOW} The style of following
-     * @return {gf.Camera} Returns iteself for chainability
+     * @param sprite {Sprite} The sprite to follow
+     * @param [style=CAMERA_FOLLOW.LOCKON] {CAMERA_FOLLOW} The style of following
+     * @return {Camera} Returns iteself for chainability
      */
     follow: function(spr, style) {
-        if(!(spr instanceof gf.Sprite))
+        if(!(spr instanceof Sprite))
             return this;
 
         this._target = spr;
@@ -139,7 +100,7 @@ utils.inherits(Camera, DisplayObjectContainer, {
             case C.CAMERA_FOLLOW.PLATFORMER:
                 var w = this.size.x / 8;
                 var h = this.size.y / 3;
-                this._deadzone = new gf.Rectangle(
+                this._deadzone = new Rectangle(
                     (this.size.x - w) / 2,
                     (this.size.y - h) / 2 - (h / 4),
                     w,
@@ -148,7 +109,7 @@ utils.inherits(Camera, DisplayObjectContainer, {
                 break;
             case C.CAMERA_FOLLOW.TOPDOWN:
                 var sq4 = Math.max(this.size.x, this.size.y) / 4;
-                this._deadzone = new gf.Rectangle(
+                this._deadzone = new Rectangle(
                     (this.size.x - sq4) / 2,
                     (this.size.y - sq4) / 2,
                     sq4,
@@ -157,7 +118,7 @@ utils.inherits(Camera, DisplayObjectContainer, {
                 break;
             case C.CAMERA_FOLLOW.TOPDOWN_TIGHT:
                 var sq8 = Math.max(this.size.x, this.size.y) / 8;
-                this._deadzone = new gf.Rectangle(
+                this._deadzone = new Rectangle(
                     (this.size.x - sq8) / 2,
                     (this.size.y - sq8) / 2,
                     sq8,
@@ -179,7 +140,7 @@ utils.inherits(Camera, DisplayObjectContainer, {
      * Stops following any sprites
      *
      * @method unfollow
-     * @return {gf.Camera} Returns iteself for chainability
+     * @return {Camera} Returns iteself for chainability
      */
     unfollow: function() {
         this._target = null;
@@ -189,13 +150,13 @@ utils.inherits(Camera, DisplayObjectContainer, {
      * Focuses the camera on a sprite.
      *
      * @method focusSprite
-     * @param sprite {gf.Sprite} The sprite to focus on
-     * @return {gf.Camera} Returns iteself for chainability
+     * @param sprite {Sprite} The sprite to focus on
+     * @return {Camera} Returns iteself for chainability
      */
     focusSprite: function(spr) {
         return this.focus(
-            gf.math.round(spr.position.x) * this.game.world.scale.x,
-            gf.math.round(spr.position.y) * this.game.world.scale.y
+            math.round(spr.position.x) * this.game.world.scale.x,
+            math.round(spr.position.y) * this.game.world.scale.y
         );
     },
     /**
@@ -203,9 +164,9 @@ utils.inherits(Camera, DisplayObjectContainer, {
      * not go outside the bounds set with setBounds()
      *
      * @method focus
-     * @param x {Number|gf.Point} The x coord to focus on, if a Point is passed the y param is ignored
+     * @param x {Number|Vector} The x coord to focus on, if a Point is passed the y param is ignored
      * @param y {Number} The y coord to focus on
-     * @return {gf.Camera} Returns iteself for chainability
+     * @return {Camera} Returns iteself for chainability
      */
     focus: function(x, y) {
         y = x.y !== undefined ? x.y : (y || 0);
@@ -226,9 +187,9 @@ utils.inherits(Camera, DisplayObjectContainer, {
      * not go outside the bounds set with setBounds()
      *
      * @method pan
-     * @param x {Number|gf.Point} The x amount to pan, if a Point is passed the y param is ignored
+     * @param x {Number|Vector} The x amount to pan, if a Point is passed the y param is ignored
      * @param y {Number} The y ammount to pan
-     * @return {gf.Camera} Returns iteself for chainability
+     * @return {Camera} Returns iteself for chainability
      */
     pan: function(dx, dy) {
         dy = dx.y !== undefined ? dx.y : (dy || 0);
@@ -280,7 +241,7 @@ utils.inherits(Camera, DisplayObjectContainer, {
      * @private
      * @param w {Number} The new width
      * @param h {Number} The new height
-     * @return {gf.Camera} Returns iteself for chainability
+     * @return {Camera} Returns iteself for chainability
      */
     resize: function(w, h) {
         this.size.set(w, h);
@@ -296,8 +257,8 @@ utils.inherits(Camera, DisplayObjectContainer, {
      * min and max, and is set for you.
      *
      * @method constrain
-     * @param shape {gf.Rectangle|gf.Polygon|gf.Circle|gf.Ellipse} The shape to constrain the camera into
-     * @return {gf.Camera} Returns iteself for chainability
+     * @param shape {Rectangle|Polygon|Circle|Ellipse} The shape to constrain the camera into
+     * @return {Camera} Returns iteself for chainability
      */
     constrain: function(shape, scaled) {
         this._bounds = shape;

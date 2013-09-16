@@ -8,9 +8,8 @@ var EventEmitter = require('../utils/EventEmitter'),
  *
  * @class Sprite
  * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html">PIXI.Sprite</a>
- * @uses gf.EventEmitter
- * @uses gf.PhysicsTarget
- * @namespace gf
+ * @uses EventEmitter
+ * @uses PhysicsTarget
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
  * @example
@@ -140,4 +139,3 @@ utils.inherits(Sprite, PIXI.Sprite, {
  * @event touchendoutside
  * @param interactionData {InteractionData}
  */
- 
