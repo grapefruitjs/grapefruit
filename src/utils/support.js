@@ -105,7 +105,7 @@ var support = module.exports = {
 
 var audioTest = new Audio();
 
-support.codecs = {
+support.codec = {
     mp3: !!audioTest.canPlayType('audio/mpeg;').replace(/^no$/,''),
     opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/,''),
     ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,''),

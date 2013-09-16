@@ -75,26 +75,6 @@ var AudioManager = module.exports = function(game) {
      */
     this.canPlay = support.webAudio || support.htmlAudio;
 
-    /**
-     * The codecs that the browser supports
-     *
-     * @property codecs
-     * @type Object<Boolean>
-     * @readOnly
-     */
-    if(this.canPlay) {
-        var audioTest = new Audio();
-
-        this.codecs = {
-            mp3: !!audioTest.canPlayType('audio/mpeg;').replace(/^no$/,''),
-            opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/,''),
-            ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,''),
-            wav: !!audioTest.canPlayType('audio/wav; codecs="1"').replace(/^no$/,''),
-            m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),
-            webm: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')
-        };
-    }
-
     //if we are using web audio, we need a master gain node
     if(support.webAudio) {
         this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
