@@ -3,19 +3,19 @@ var GameState = require('./GameState'),
     Cache = require('../utils/Cache'),
     Clock = require('../utils/Clock'),
     SpritePool = require('../utils/SpritePool'),
+    Gui = require('../gui/Gui'),
+    Loader = require('../loader/Loader'),
+    InputManager = require('../input/InputManager'),
     support = require('../utils/support'),
     utils = require('../utils/utils'),
     PIXI = require('../vendor/pixi');
-
-    //TOINC: AssetLoader, InputManager
 
 /**
  * Main game object, controls the entire instance of the game
  *
  * @class Game
  * @extends Object
- * @uses gf.EventEmitter
- * @namespace gf
+ * @uses EventEmitter
  * @constructor
  * @param contId {String} The container for the new canvas we will create for the game
  * @param settings {Object} All the settings for the game instance
@@ -94,10 +94,10 @@ var Game = module.exports = function(contId, settings) {
      * The loader for this game instance
      *
      * @property loader
-     * @type AssetLoader
+     * @type Loader
      * @readOnly
      */
-    this.load = new AssetLoader(this);
+    this.load = new Loader(this);
 
     /**
      * The input instance for this game

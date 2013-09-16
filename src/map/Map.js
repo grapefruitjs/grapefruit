@@ -1,4 +1,5 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+    ObjectGroup = require('./ObjectGroup'),
     Sprite = require('../display/Sprite'),
     Vector = require('../math/Vector'),
     Layer = require('./Layer'),

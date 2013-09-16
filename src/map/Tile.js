@@ -1,5 +1,6 @@
 var Sprite = require('../display/Sprite'),
-    utils = require('../utils/utils');
+    utils = require('../utils/utils'),
+    C = require('../constants');
 
 /**
  * Base Tile implementation, a tile is a single tile in a tilemap layer
@@ -10,7 +11,7 @@ var Sprite = require('../display/Sprite'),
  * @param texture {Texture} The texture of the tile
  */
 var Tile = module.exports = function(texture) {
-    this.collisionType = Tile.TYPE.NONE;
+    this.collisionType = C.COLLISION_TYPE.NONE;
 
     //call base ctor
     Sprite.call(this, texture);
@@ -34,25 +35,9 @@ utils.inherits(Tile, Sprite, {
         //I did a switch-case here because I feel like I
         //will be adding more defaults later
         switch(this.collisionType) {
-            case Tile.TYPE.SOLID:
+            case C.COLLISION_TYPE.SOLID:
                 obj.setVelocity(0);
                 break;
         }
     }
 });
-
-/**
- * Tile collision types
- *
- * @property TYPE
- * @type Object
- * @static
- */
-Tile.TYPE = {
-    NONE: 'none',
-    SOLID: 'solid',
-    CLIFF: 'cliff',
-    LADDER: 'ladder',
-    WATER: 'water',
-    DEEP_WATER: 'deep_water'
-};

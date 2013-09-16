@@ -463,6 +463,14 @@ module.exports = {
         NEUTRAL: "neutral",
         COLLECTABLE: "collectable",
         TILE: "tile"
+    },
+    COLLISION_TYPE: {
+        NONE: "none",
+        SOLID: "solid",
+        CLIFF: "cliff",
+        LADDER: "ladder",
+        WATER: "water",
+        DEEP_WATER: "deep_water"
     }
 };
 // uRequire: end body of original nodejs module
@@ -476,7 +484,7 @@ return module.exports;
   define(
   'utils/EventEmitter',['require','exports','module'],function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var EventEmitter = module.exports = function() {
+module.exports = function() {
     this._events = this._events || {};
     this.addEventListener = this.on = function(type, listener) {
         if (typeof listener !== "function") throw new TypeError("listener must be a function");
@@ -5952,14 +5960,14 @@ var utils = module.exports = {
                     curVal.set(parseFloat(a[0], 10) || 0, parseFloat(a[1], 10) || parseFloat(a[0], 10) || 0);
                 } else if (curVal instanceof Vector && typeof newVal === "number") {
                     curVal.set(newVal, newVal);
-                } else if (curVal instanceof Point && newVal instanceof Array) {
+                } else if (curVal.x !== undefined && newVal instanceof Array) {
                     curVal.x = parseFloat(newVal[0], 10) || 0;
                     curVal.y = parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0;
-                } else if (curVal instanceof Point && typeof newVal === "string") {
+                } else if (curVal.x !== undefined && typeof newVal === "string") {
                     var a2 = newVal.split(utils._arrayDelim, 2);
                     curVal.x = parseFloat(a2[0], 10) || 0;
                     curVal.y = parseFloat(a2[1], 10) || parseFloat(a2[0], 10) || 0;
-                } else if (curVal instanceof Point && typeof newVal === "number") {
+                } else if (curVal.x !== undefined && typeof newVal === "number") {
                     curVal.x = newVal;
                     curVal.y = newVal;
                 } else if (curVal instanceof Array && typeof newVal === "string") {
@@ -6026,11 +6034,11 @@ var utils = module.exports = {
     }
 };
 
-if (typeof window.DOMParser != "undefined") {
+if (typeof window.DOMParser !== "undefined") {
     utils.parseXML = function(xmlStr) {
         return (new window.DOMParser).parseFromString(xmlStr, "text/xml");
     };
-} else if (typeof window.ActiveXObject != "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
+} else if (typeof window.ActiveXObject !== "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
     utils.parseXML = function(xmlStr) {
         var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
         xmlDoc.async = "false";
@@ -6774,41 +6782,69 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('utils/ObjectPool',['require', 'exports', 'module', './utils'], 
-  function (require, exports, module) {
+  define(
+  'math/math',['require','exports','module'],function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var utils = require("./utils");
-
-var ObjectPool = function(type, parent) {
-    this.type = type;
-    this.pool = [];
-    this.parent = parent;
-};
-
-utils.inherits(ObjectPool, Object, {
-    create: function() {
-        var o = this.pool.pop();
-        if (!o) {
-            o = this._construct(this.type, arguments);
-            if (this.parent) this.parent.addChild(o);
-        }
-        o.__allocated = true;
-        return o;
+var math = module.exports = {
+    DEG_TO_RAD: Math.PI / 180,
+    RAD_TO_DEG: 180 / Math.PI,
+    SEED: Math.random(),
+    round: function(n) {
+        return ~~(n + (n > 0 ? .5 : -.5));
     },
-    free: function(o) {
-        if (o.__allocated) {
-            o.__allocated = false;
-            this.pool.push(o);
-        }
+    clamp: function(n, min, max) {
+        return Math.max(min, Math.min(max, n));
     },
-    _construct: function(ctor, args) {
-        function F() {
-            return ctor.apply(this, args);
-        }
-        F.prototype = ctor.prototype;
-        return new F;
+    truncate: function(n) {
+        return n > 0 ? Math.floor(n) : Math.ceil(n);
+    },
+    snap: function(n, gap, offset) {
+        if (gap === 0) return n;
+        n -= offset;
+        n = gap * Math.round(n / gap);
+        return offset + n;
+    },
+    snapFloor: function(n, gap, offset) {
+        if (gap === 0) return n;
+        n -= offset;
+        n = gap * Math.floor(n / gap);
+        return offset + n;
+    },
+    snapCeil: function(n, gap, offset) {
+        if (gap === 0) return n;
+        n -= offset;
+        n = gap * Math.ceil(n / gap);
+        return offset + n;
+    },
+    radiansToDegrees: function(angle) {
+        return angle * math.RAD_TO_DEG;
+    },
+    degreesToRadians: function(angle) {
+        return angle * math.DEG_TO_RAD;
+    },
+    angleBetween: function(pos1, pos2) {
+        return Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x);
+    },
+    randomBool: function(chance) {
+        if (chance === undefined) chance = 50;
+        if (chance <= 0) return false;
+        if (chance >= 100) return true;
+        if (Math.random() * 100 >= chance) return false;
+        return true;
+    },
+    randomInt: function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    },
+    randomSign: function(chance) {
+        return math.randomBool(chance) ? 1 : -1;
+    },
+    randomElement: function(array, start, len) {
+        if (!start || start < 0) start = start || 0;
+        if (!len || len < 1 || len > array.length - start) len = array.length - start;
+        if (!array || len < 1) return null;
+        return array[start + Math.floor(Math.random() * len)];
     }
-});
+};
 // uRequire: end body of original nodejs module
 
 
@@ -6817,10 +6853,10 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('camera/Camera',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../display/Sprite', '../math/Rectangle', '../math/Polygon', '../math/Vector', '../utils/ObjectPool', '../utils/utils', '../constants'], 
+  define('camera/Camera',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../display/Sprite', '../math/Rectangle', '../math/Polygon', '../math/Vector', '../utils/utils', '../math/math', '../constants'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Sprite = require("../display/Sprite"), Rectangle = require("../math/Rectangle"), Polygon = require("../math/Polygon"), Vector = require("../math/Vector"), ObjectPool = require("../utils/ObjectPool"), utils = require("../utils/utils"), C = require("../constants");
+var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Sprite = require("../display/Sprite"), Rectangle = require("../math/Rectangle"), Polygon = require("../math/Polygon"), Vector = require("../math/Vector"), utils = require("../utils/utils"), math = require("../math/math"), C = require("../constants");
 
 var Camera = module.exports = function(game, settings) {
     this._bounds = new Rectangle(0, 0, 0, 0);
@@ -6829,33 +6865,26 @@ var Camera = module.exports = function(game, settings) {
     this.size = new Vector(0, 0);
     this.hSize = new Vector(0, 0);
     this.game = game;
-    this.fxpools = {
-        flash: new ObjectPool(gf.Camera.fx.Flash, this),
-        fade: new ObjectPool(gf.Camera.fx.Fade, this),
-        shake: new ObjectPool(gf.Camera.fx.Shake, this),
-        scanlines: new ObjectPool(gf.Camera.fx.Scanlines, this),
-        close: new ObjectPool(gf.Camera.fx.Close, this)
-    };
     DisplayObjectContainer.call(this, settings);
 };
 
 utils.inherits(Camera, DisplayObjectContainer, {
     follow: function(spr, style) {
-        if (!(spr instanceof gf.Sprite)) return this;
+        if (!(spr instanceof Sprite)) return this;
         this._target = spr;
         switch (style) {
           case C.CAMERA_FOLLOW.PLATFORMER:
             var w = this.size.x / 8;
             var h = this.size.y / 3;
-            this._deadzone = new gf.Rectangle((this.size.x - w) / 2, (this.size.y - h) / 2 - h / 4, w, h);
+            this._deadzone = new Rectangle((this.size.x - w) / 2, (this.size.y - h) / 2 - h / 4, w, h);
             break;
           case C.CAMERA_FOLLOW.TOPDOWN:
             var sq4 = Math.max(this.size.x, this.size.y) / 4;
-            this._deadzone = new gf.Rectangle((this.size.x - sq4) / 2, (this.size.y - sq4) / 2, sq4, sq4);
+            this._deadzone = new Rectangle((this.size.x - sq4) / 2, (this.size.y - sq4) / 2, sq4, sq4);
             break;
           case C.CAMERA_FOLLOW.TOPDOWN_TIGHT:
             var sq8 = Math.max(this.size.x, this.size.y) / 8;
-            this._deadzone = new gf.Rectangle((this.size.x - sq8) / 2, (this.size.y - sq8) / 2, sq8, sq8);
+            this._deadzone = new Rectangle((this.size.x - sq8) / 2, (this.size.y - sq8) / 2, sq8, sq8);
             break;
           case C.CAMERA_FOLLOW.LOCKON:
           default:
@@ -6870,7 +6899,7 @@ utils.inherits(Camera, DisplayObjectContainer, {
         return this;
     },
     focusSprite: function(spr) {
-        return this.focus(gf.math.round(spr.position.x) * this.game.world.scale.x, gf.math.round(spr.position.y) * this.game.world.scale.y);
+        return this.focus(math.round(spr.position.x) * this.game.world.scale.x, math.round(spr.position.y) * this.game.world.scale.y);
     },
     focus: function(x, y) {
         y = x.y !== undefined ? x.y : y || 0;
@@ -6978,7 +7007,7 @@ return module.exports;
   define('display/Texture',['require', 'exports', 'module', '../vendor/pixi', '../utils/utils'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var Texture = module.exports = require("../vendor/pixi").Texture, utils = require("../utils/utils");
+var Texture = module.exports = require("../vendor/pixi").Texture, utils = require("../utils/utils"), PIXI = require("../vendor/pixi");
 
 Texture.fromJSON = function(key, json, baseTexture) {
     if (!json.frames) {
@@ -7023,7 +7052,7 @@ Texture.fromXML = function(key, xml, baseTexture) {
     }
     var frames = xml.getElementsByTagName("SubTexture") || xml.getElementsByTagName("sprite"), textures = {};
     for (var i = 0; i < frames.length; i++) {
-        var frame = frames[i], attrs = frame.attributes.getNamedItem, name = attrs("name") || attrs("n"), x = attrs("x"), y = attrs("y"), width = attrs("width") || attrs("w"), width = attrs("height") || attrs("h"), ox = attrs("frameX") || attrs("oX"), oy = attrs("frameY") || attrs("oY"), owidth = attrs("frameWidth") || attrs("oW"), height = attrs("frameHeight") || attrs("oH"), rotated = !!attrs("r");
+        var frame = frames[i], attrs = frame.attributes.getNamedItem, name = attrs("name") || attrs("n"), x = attrs("x"), y = attrs("y"), width = attrs("width") || attrs("w"), height = attrs("height") || attrs("h"), ox = attrs("frameX") || attrs("oX"), oy = attrs("frameY") || attrs("oY"), owidth = attrs("frameWidth") || attrs("oW"), oheight = attrs("frameHeight") || attrs("oH"), rotated = !!attrs("r");
         var tx = textures[name] = PIXI.TextureCache[key + "_" + name] = new Texture(baseTexture, {
             x: parseInt(x.nodeValue, 10),
             y: parseInt(y.nodeValue, 10),
@@ -7047,6 +7076,10 @@ Texture.fromXML = function(key, xml, baseTexture) {
     }
     return textures;
 };
+
+Texture.fromSpritesheet = function(obj) {
+    return obj;
+};
 // uRequire: end body of original nodejs module
 
 
@@ -7055,10 +7088,10 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('display/AnimatedSprite',['require', 'exports', 'module', './Sprite', './Texture', '../utils/utils'], 
+  define('display/AnimatedSprite',['require', 'exports', 'module', './Sprite', './Texture', '../utils/utils', '../math/math'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var Sprite = require("./Sprite"), Texture = require("./Texture"), utils = require("../utils/utils");
+var Sprite = require("./Sprite"), Texture = require("./Texture"), utils = require("../utils/utils"), math = require("../math/math");
 
 var AnimatedSprite = module.exports = function(anims, speed, start) {
     if (anims instanceof Array) {
@@ -7106,7 +7139,7 @@ utils.inherits(AnimatedSprite, Sprite, {
             this.currentFrame = anim;
         } else {
             this.currentFrame = frame || 0;
-            this.lastRound = gf.math.round(frame || 0);
+            this.lastRound = math.round(frame || 0);
             this.currentAnimation = anim;
         }
         this.playing = true;
@@ -7118,7 +7151,7 @@ utils.inherits(AnimatedSprite, Sprite, {
             this.currentFrame = anim;
         } else {
             this.currentFrame = frame || 0;
-            this.lastRound = gf.math.round(frame || 0);
+            this.lastRound = math.round(frame || 0);
             this.currentAnimation = anim;
         }
         this.playing = false;
@@ -7132,11 +7165,11 @@ utils.inherits(AnimatedSprite, Sprite, {
         this.playing = false;
     },
     updateTransform: function() {
-        gf.Sprite.prototype.updateTransform.call(this);
+        Sprite.prototype.updateTransform.call(this);
         if (!this.playing) return;
         var anim = this.animations[this.currentAnimation], round, loop = anim.loop !== undefined ? anim.loop : this.loop;
         this.currentFrame += anim.speed || this.speed;
-        round = gf.math.round(this.currentFrame);
+        round = math.round(this.currentFrame);
         if (round < anim.frames.length) {
             if (round !== this.lastRound) {
                 this.lastRound = round;
@@ -7151,6 +7184,49 @@ utils.inherits(AnimatedSprite, Sprite, {
                 this.emit("complete", this.currentAnimation);
             }
         }
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('utils/ObjectPool',['require', 'exports', 'module', './utils'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("./utils");
+
+var ObjectPool = function(type, parent) {
+    this.type = type;
+    this.pool = [];
+    this.parent = parent;
+};
+
+utils.inherits(ObjectPool, Object, {
+    create: function() {
+        var o = this.pool.pop();
+        if (!o) {
+            o = this._construct(this.type, arguments);
+            if (this.parent) this.parent.addChild(o);
+        }
+        o.__allocated = true;
+        return o;
+    },
+    free: function(o) {
+        if (o.__allocated) {
+            o.__allocated = false;
+            this.pool.push(o);
+        }
+    },
+    _construct: function(ctor, args) {
+        function F() {
+            return ctor.apply(this, args);
+        }
+        F.prototype = ctor.prototype;
+        return new F;
     }
 });
 // uRequire: end body of original nodejs module
@@ -7274,7 +7350,7 @@ utils.inherits(BitmapFont, DisplayObjectContainer, {
     }
 });
 
-BitmapFont.fromXML = function(xml, texture) {
+BitmapFont.fromXML = function(key, xml, texture) {
     var btx = texture.baseTexture;
     if (!xml.getElementsByTagName("font")) {
         utils.warn("Invalid XML for BitmapFont.fromXML(), missing <font> tag. Full XML:", xml);
@@ -7286,7 +7362,7 @@ BitmapFont.fromXML = function(xml, texture) {
     data.chars = {};
     var chars = xml.getElementsByTagName("char");
     for (var i = 0, il = chars.length; i < il; ++i) {
-        var letter = chars[i], attrs = letter.attributes.getNamedItem, code = parseInt(attrs("id").nodeValue, 10), rect = new Rectangle(parseInt(attrs("x").nodeValue, 10), parseInt(attrs("y").nodeValue, 10), parseInt(attrs("width").nodeValue, 10), parseInt(attrs("height").nodeValue, 10)), tx = PIXI.TextureCache[obj.key + "_" + code] = new Texture(btx, rect);
+        var letter = chars[i], attrs = letter.attributes.getNamedItem, code = parseInt(attrs("id").nodeValue, 10), rect = new Rectangle(parseInt(attrs("x").nodeValue, 10), parseInt(attrs("y").nodeValue, 10), parseInt(attrs("width").nodeValue, 10), parseInt(attrs("height").nodeValue, 10)), tx = PIXI.TextureCache[key + "_" + code] = new Texture(btx, rect);
         data.chars[code] = {
             xOffset: parseInt(attrs("xoffset").nodeValue, 10),
             yOffset: parseInt(attrs("yoffset").nodeValue, 10),
@@ -7297,7 +7373,7 @@ BitmapFont.fromXML = function(xml, texture) {
     }
     var kernings = xml.getElementsByTagName("kerning");
     for (i = 0, il = kernings.length; i < il; ++i) {
-        var kern = kernings[i], attrs = kern.attributes.getNamedItem, first = parseInt(attrs("first").nodeValue, 10), second = parseInt(attrs("second").nodeValue, 10), amount = parseInt(attrs("amount").nodeValue, 10);
+        var kern = kernings[i], attrs2 = kern.attributes.getNamedItem, first = parseInt(attrs2("first").nodeValue, 10), second = parseInt(attrs2("second").nodeValue, 10), amount = parseInt(attrs2("amount").nodeValue, 10);
         data.chars[second].kerning[first] = amount;
     }
     PIXI.BitmapText.fonts[data.font] = data;
@@ -7310,10 +7386,10 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('fx/camera/Effect',['require', 'exports', 'module', '../../display/DisplayObjectContainer', '../../utils/utils'], 
+  define('fx/camera/Effect',['require', 'exports', 'module', '../../display/DisplayObjectContainer', '../../utils/utils', '../../vendor/pixi'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var DisplayObjectContainer = require("../../display/DisplayObjectContainer"), utils = require("../../utils/utils");
+var DisplayObjectContainer = require("../../display/DisplayObjectContainer"), utils = require("../../utils/utils"), PIXI = require("../../vendor/pixi");
 
 var Effect = module.exports = function() {
     DisplayObjectContainer.call(this);
@@ -7617,85 +7693,14 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define(
-  'math/math',['require','exports','module'],function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var math = module.exports = {
-    DEG_TO_RAD: Math.PI / 180,
-    RAD_TO_DEG: 180 / Math.PI,
-    SEED: Math.random(),
-    round: function(n) {
-        return ~~(n + (n > 0 ? .5 : -.5));
-    },
-    clamp: function(n, min, max) {
-        return Math.max(min, Math.min(max, n));
-    },
-    truncate: function(n) {
-        return n > 0 ? Math.floor(n) : Math.ceil(n);
-    },
-    snap: function(n, gap, offset) {
-        if (gap === 0) return n;
-        n -= offset;
-        n = gap * Math.round(n / gap);
-        return offset + n;
-    },
-    snapFloor: function(n, gap, offset) {
-        if (gap === 0) return n;
-        n -= offset;
-        n = gap * Math.floor(n / gap);
-        return offset + n;
-    },
-    snapCeil: function(n, gap, offset) {
-        if (gap === 0) return n;
-        n -= offset;
-        n = gap * Math.ceil(n / gap);
-        return offset + n;
-    },
-    radiansToDegrees: function(angle) {
-        return angle * math.RAD_TO_DEG;
-    },
-    degreesToRadians: function(angle) {
-        return angle * math.DEG_TO_RAD;
-    },
-    angleBetween: function(pos1, pos2) {
-        return Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x);
-    },
-    randomBool: function(chance) {
-        if (chance === undefined) chance = 50;
-        if (chance <= 0) return false;
-        if (chance >= 100) return true;
-        if (Math.random() * 100 >= chance) return false;
-        return true;
-    },
-    randomInt: function(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    },
-    randomSign: function(chance) {
-        return math.randomBool(chance) ? 1 : -1;
-    },
-    randomElement: function(array, start, len) {
-        if (!start || start < 0) start = start || 0;
-        if (!len || len < 1 || len > array.length - start) len = array.length - start;
-        if (!array || len < 1) return null;
-        return array[start + Math.floor(Math.random() * len)];
-    }
-};
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('fx/camera/Shake',['require', 'exports', 'module', './Effect', '../../utils/utils', '../../math/math', '../../constants'], 
+  define('fx/camera/Shake',['require', 'exports', 'module', './Effect', '../../math/Vector', '../../utils/utils', '../../math/math', '../../constants'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var Effect = require("./Effect"), utils = require("../../utils/utils"), math = require("../../math/math"), C = require("../../constants");
+var Effect = require("./Effect"), Vector = require("../../math/Vector"), utils = require("../../utils/utils"), math = require("../../math/math"), C = require("../../constants");
 
 var Shake = module.exports = function() {
     Effect.call(this);
-    this.offset = new gf.Vector;
+    this.offset = new Vector;
 };
 
 utils.inherits(Shake, Effect, {
@@ -7751,74 +7756,171 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('game/GameState',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../utils/utils'], 
+  define('math/Ellipse',['require', 'exports', 'module', '../vendor/pixi'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var DisplayObjectContainer = require("../display/DisplayObjectContainer"), utils = require("../utils/utils");
+module.exports = require("../vendor/pixi").Ellipse;
+// uRequire: end body of original nodejs module
 
-var GameState = module.exports = function(name, settings) {
-    if (typeof name === "object") {
-        settings = name;
-        name = Math.floor(Date.now() * Math.random()).toString();
-    }
-    settings = settings || {};
-    this.name = name;
-    this.physics = new PhysicsSystem({
-        gravity: settings.gravity
-    });
-    this.camera = null;
-    this.world = null;
-    Object.defineProperty(this, "game", {
-        get: function() {
-            return this._game;
-        },
-        set: this._setGame.bind(this),
-        enumerable: true
-    });
-    DisplayObjectContainer.call(this, settings);
-    this.disable();
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('map/ObjectGroup',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../math/Vector', '../math/Polygon', '../math/Ellipse', '../math/Rectangle', '../utils/utils', '../math/math'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Vector = require("../math/Vector"), Polygon = require("../math/Polygon"), Ellipse = require("../math/Ellipse"), Rectangle = require("../math/Rectangle"), utils = require("../utils/utils"), math = require("../math/math");
+
+var ObjectGroup = module.exports = function(group) {
+    DisplayObjectContainer.call(this, group);
+    this.color = group.color;
+    this.properties = group.properties || {};
+    this.objects = group.objects;
+    this.type = group.type;
+    this.alpha = group.opacity;
+    this.visible = group.visible;
 };
 
-utils.inherits(GameState, DisplayObjectContainer, {
-    _setGame: function(game) {
-        this._game = game;
-        if (this.camera) this.removeChild(this.camera);
-        this.camera = new gf.Camera(game);
-        this.addChild(this.camera);
-        this.camera.resize(game.renderer.width, game.renderer.height);
-    },
-    addChild: function(obj) {
-        if (obj) {
-            if (obj instanceof gf.Camera || obj instanceof gf.Map) this.addChildAt(obj, 0); else if (obj instanceof gf.Gui) this.camera.addChild(obj); else this.world.addChild(obj);
-        }
-    },
-    loadWorld: function(world) {
-        if (typeof world === "string") {
-            if (cache[world]) {
-                world = cache[world];
+utils.inherits(ObjectGroup, DisplayObjectContainer, {
+    spawn: function() {
+        var game = this.parent.parent.game;
+        for (var i = this.objects.length - 1; i >= 0; --i) {
+            var o = this.objects[i], props = utils.parseTiledProperties(o.properties) || {}, set, interactive, obj;
+            props.tileprops = {};
+            if (o.gid) {
+                set = this.parent.getTileset(o.gid);
+                if (set) {
+                    props.texture = set.getTileTexture(o.gid);
+                    props.tileprops = set.getTileProperties(o.gid);
+                    if (!props.hitArea) {
+                        if (props.tileprops.hitArea) props.hitArea = props.tileprops.hitArea; else props.hitArea = set.properties.hitArea;
+                    }
+                }
             } else {
-                throw 'World "' + world + '" needs to be preloaded before being added to a game!';
+                if (!props.hitArea) {
+                    if (o.polyline) props.hitArea = this._getPolyline(o); else if (o.polygon) props.hitArea = this._getPolygon(o); else if (o.ellipse) props.hitArea = this._getEllipse(o); else props.hitArea = this._getRectangle(o);
+                }
             }
+            o.name = o.name || props.name || props.tileprops.name;
+            o.type = o.type || props.type || props.tileprops.type;
+            if (typeof props.texture === "string") {
+                props.texture = gf.assetCache[props.texture];
+            }
+            if (!props.texture) {
+                obj = new DisplayObjectContainer;
+                obj.width = o.width;
+                obj.height = o.height;
+                obj.name = o.name;
+                obj.type = o.type;
+                obj.hitArea = props.hitArea;
+                obj.rotation = o.rotation;
+                obj.sensor = true;
+                obj.setPosition(o.x, o.y);
+                obj.enablePhysics(game.physics);
+                if (this.parent._showPhysics) obj.showPhysics();
+            } else {
+                props.width = o.width;
+                props.height = o.height;
+                props.zIndex = this.zIndex;
+                obj = game.spritepool.create(o.name, props.texture, props);
+                obj.name = o.name;
+                obj.type = o.type;
+                obj.hitArea = props.hitArea;
+                obj.mass = props.mass || props.tileprops.mass;
+                obj.inertia = props.inertia || props.tileprops.inertia;
+                obj.friction = props.friction || props.tileprops.friction;
+                obj.sensor = props.sensor || props.tileprops.sensor;
+                obj.setPosition(o.x, o.y);
+                var a = props.anchor || props.tileprops.anchor;
+                obj.anchor.y = a ? a[1] : 1;
+                obj.anchor.x = a ? a[0] : this.parent.orientation === "isometric" ? .5 : 0;
+                if (props.mass || props.tileprops.mass) {
+                    obj.enablePhysics(game.physics);
+                    if (this.parent._showPhysics) obj.showPhysics();
+                }
+                if (props.tileprops) {
+                    if (props.tileprops.flippedX) {
+                        obj.scale.x = -1;
+                        obj.anchor.x = a ? a[0] : 1;
+                    }
+                    if (props.tileprops.flippedY) {
+                        obj.scale.y = -1;
+                        obj.anchor.y = a ? a[1] : 0;
+                    }
+                    if (props.tileprops.rotatedCW) {
+                        obj.rotation = math.degreesToRadians(45);
+                    }
+                }
+                if (props.animation || props.tileprops.animation) {
+                    if (obj.gotoAndPlay) {
+                        obj.gotoAndPlay(props.animation || props.tileprops.animation);
+                    }
+                }
+                if (typeof o.rotation === "number") obj.setRotation(o.rotation);
+            }
+            obj.visible = o.visible !== undefined ? !!o.visible : true;
+            if (this.parent.orientation === "isometric") {
+                var toTileX = o.x / this.parent.tileSize.x, toTileY = o.y / this.parent.tileSize.y;
+                o.x = toTileX * this.parent.tileSize.x - (toTileY - 1) * (this.parent.tileSize.x / 2);
+                o.y = toTileY * this.parent.tileSize.y / 2 + toTileX * this.parent.tileSize.y;
+            }
+            interactive = this._getInteractive(set, props);
+            if (interactive) {
+                obj.interactive = interactive;
+                obj.click = this.onObjectEvent.bind(this, "click", obj);
+                obj.mousedown = this.onObjectEvent.bind(this, "mousedown", obj);
+                obj.mouseup = this.onObjectEvent.bind(this, "mouseup", obj);
+                obj.mousemove = this.onObjectEvent.bind(this, "mousemove", obj);
+                obj.mouseout = this.onObjectEvent.bind(this, "mouseout", obj);
+                obj.mouseover = this.onObjectEvent.bind(this, "mouseover", obj);
+                obj.mouseupoutside = this.onObjectEvent.bind(this, "mouseupoutside", obj);
+            }
+            obj.properties = {};
+            for (var t in props.tileprops) obj.properties[t] = props.tileprops[t];
+            for (var k in props) if (k !== "tileprops") obj.properties[k] = props[k];
+            obj._objIndex = i;
+            this.addChild(obj);
         }
-        this.world = new gf.TiledMap(world);
-        this.addChild(this.world);
-        this.world.resize(this._game.renderer.width, this._game.renderer.height);
-        this.camera.constrain(new gf.Rectangle(0, 0, this.world.realSize.x, this.world.realSize.y), true);
         return this;
     },
-    enable: function() {
-        this.visible = true;
+    onObjectEvent: function(eventName, obj, data) {
+        this.parent.onObjectEvent(eventName, obj, data);
     },
-    disable: function() {
-        this.visible = false;
+    _getPolygon: function(o) {
+        var points = [];
+        for (var i = 0, il = o.polygon.length; i < il; ++i) {
+            points.push(new Vector(o.polygon[i].x, o.polygon[i].y));
+        }
+        return new Polygon(points);
     },
-    update: function(dt) {
-        this.game.timings.cameraStart = this.game.timings._timer.now();
-        this.camera.update(dt);
-        this.game.timings.cameraEnd = this.game.timings._timer.now();
-        this.game.timings.physicsStart = this.game.timings._timer.now();
-        this.physics.update(dt);
-        this.game.timings.physicsEnd = this.game.timings._timer.now();
+    _getPolyline: function(o) {
+        var points = [];
+        for (var i = 0, il = o.polyline.length; i < il; ++i) {
+            points.push(new Vector(o.polyline[i].x, o.polyline[i].y));
+        }
+        return new Polygon(points);
+    },
+    _getEllipse: function(o) {
+        return new Ellipse(0, 0, o.width, o.height);
+    },
+    _getRectangle: function(o) {
+        return new Rectangle(0, 0, o.width, o.height);
+    },
+    _getInteractive: function(set, props) {
+        return props.interactive || props.tileprops.interactive || set && set.properties.interactive || this.properties.interactive || this.parent.properties.interactive;
+    },
+    despawn: function() {
+        for (var i = this.children.length - 1; i > -1; --i) {
+            var c = this.children[i];
+            if (c.destroy) c.destroy();
+        }
+        return this;
+    },
+    destroy: function() {
+        this.despawn();
+        DisplayObjectContainer.prototype.destroy.call(this);
     }
 });
 // uRequire: end body of original nodejs module
@@ -7829,90 +7931,13 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('map/Tileset',['require', 'exports', 'module', '../utils/utils', '../display/Texture', '../math/Vector'], 
+  define('map/Tile',['require', 'exports', 'module', '../display/Sprite', '../utils/utils', '../constants'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var utils = require("../utils/utils"), Texture = require("../display/Texture"), Vector = require("../math/Vector");
-
-var Tileset = module.exports = function(texture, settings) {
-    Texture.call(this, texture.baseTexture || texture);
-    this.firstgid = settings.firstgid || 1;
-    this.name = settings.name;
-    this.tileSize = new Vector(settings.tilewidth, settings.tileheight);
-    this.spacing = settings.spacing || 0;
-    this.margin = settings.margin || 0;
-    this.tileoffset = new Vector(settings.tileoffset ? settings.tileoffset.x : 0, settings.tileoffset ? settings.tileoffset.y : 0);
-    this.numTiles = new Vector(~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing)));
-    this.lastgid = this.firstgid + (this.numTiles.x * this.numTiles.y - 1 || 0);
-    this.properties = settings.properties || {};
-    this.tileproperties = settings.tileproperties || {};
-    this.size = new Vector(settings.imagewidth || this.baseTexture.source.width, settings.imageheight || this.baseTexture.source.height);
-    this.textures = [];
-    this.properties = utils.parseTiledProperties(this.properties);
-    for (var k in this.tileproperties) {
-        this.tileproperties[k] = utils.parseTiledProperties(this.tileproperties[k]);
-    }
-    for (var t = 0, tl = this.lastgid - this.firstgid + 1; t < tl; ++t) {
-        var y = ~~(t / this.numTiles.x), x = t - y * this.numTiles.x;
-        x = x * this.tileSize.x + x * this.spacing + this.margin;
-        y = y * this.tileSize.y + y * this.spacing + this.margin;
-        this.textures.push(new Texture(this.baseTexture, new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)));
-    }
-};
-
-utils.inherits(Tileset, Texture, {
-    getTileProperties: function(tileId) {
-        if (!tileId) return null;
-        var flags = Tileset.FLAGS, flippedX = tileId & flags.FlippedX, flippedY = tileId & flags.FlippedY, rotatedCW = tileId & flags.RotatedCW;
-        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
-        tileId = tileId - this.firstgid;
-        if (tileId < 0) return null;
-        var props = this.tileproperties[tileId] ? this.tileproperties[tileId] : this.tileproperties[tileId] = {
-            collidable: false,
-            breakable: false,
-            type: Tile.TYPE.NONE
-        };
-        props.flippedX = flippedX;
-        props.flippedY = flippedY;
-        props.rotatedCW = rotatedCW;
-        return props;
-    },
-    getTileTexture: function(tileId) {
-        if (!tileId) return null;
-        var flags = Tileset.FLAGS;
-        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
-        tileId = tileId - this.firstgid;
-        if (tileId < 0) return null;
-        return this.textures[tileId];
-    },
-    contains: function(tileId) {
-        if (!tileId) return false;
-        var flags = Tileset.FLAGS;
-        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
-        return tileId >= this.firstgid && tileId <= this.lastgid;
-    }
-});
-
-Tileset.FLAGS = {
-    FlippedX: 2147483648,
-    FlippedY: 1073741824,
-    RotatedCW: 536870912
-};
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('map/Tile',['require', 'exports', 'module', '../display/Sprite', '../utils/utils'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var Sprite = require("../display/Sprite"), utils = require("../utils/utils");
+var Sprite = require("../display/Sprite"), utils = require("../utils/utils"), C = require("../constants");
 
 var Tile = module.exports = function(texture) {
-    this.collisionType = Tile.TYPE.NONE;
+    this.collisionType = C.COLLISION_TYPE.NONE;
     Sprite.call(this, texture);
     this.type = Sprite.TYPE.TILE;
 };
@@ -7921,21 +7946,12 @@ utils.inherits(Tile, Sprite, {
     onCollision: function(obj) {
         Sprite.prototype.onCollision.call(this, obj);
         switch (this.collisionType) {
-          case Tile.TYPE.SOLID:
+          case C.COLLISION_TYPE.SOLID:
             obj.setVelocity(0);
             break;
         }
     }
 });
-
-Tile.TYPE = {
-    NONE: "none",
-    SOLID: "solid",
-    CLIFF: "cliff",
-    LADDER: "ladder",
-    WATER: "water",
-    DEEP_WATER: "deep_water"
-};
 // uRequire: end body of original nodejs module
 
 
@@ -7944,10 +7960,10 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('map/Layer',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../display/Sprite', '../math/Vector', '../math/Rectangle', '../display/Texture', './Tile', '../utils/utils', '../utils/support'], 
+  define('map/Layer',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../math/Vector', '../math/Rectangle', '../display/Texture', './Tile', '../utils/utils', '../utils/support'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Sprite = require("../display/Sprite"), Vector = require("../math/Vector"), Rectangle = require("../math/Rectangle"), Texture = require("../display/Texture"), Tile = require("./Tile"), utils = require("../utils/utils"), support = require("../utils/support");
+var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Vector = require("../math/Vector"), Rectangle = require("../math/Rectangle"), Texture = require("../display/Texture"), Tile = require("./Tile"), utils = require("../utils/utils"), support = require("../utils/support");
 
 var Layer = module.exports = function(layer) {
     DisplayObjectContainer.call(this, layer);
@@ -8198,10 +8214,87 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('map/Map',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../display/Sprite', '../math/Vector', './Layer', './Tileset', '../utils/utils'], 
+  define('map/Tileset',['require', 'exports', 'module', '../utils/utils', '../display/Texture', '../math/Vector', '../vendor/pixi', '../constants'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
-var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Sprite = require("../display/Sprite"), Vector = require("../math/Vector"), Layer = require("./Layer"), Tileset = require("./Tileset"), utils = require("../utils/utils");
+var utils = require("../utils/utils"), Texture = require("../display/Texture"), Vector = require("../math/Vector"), PIXI = require("../vendor/pixi"), C = require("../constants");
+
+var Tileset = module.exports = function(texture, settings) {
+    Texture.call(this, texture.baseTexture || texture);
+    this.firstgid = settings.firstgid || 1;
+    this.name = settings.name;
+    this.tileSize = new Vector(settings.tilewidth, settings.tileheight);
+    this.spacing = settings.spacing || 0;
+    this.margin = settings.margin || 0;
+    this.tileoffset = new Vector(settings.tileoffset ? settings.tileoffset.x : 0, settings.tileoffset ? settings.tileoffset.y : 0);
+    this.numTiles = new Vector(~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing)));
+    this.lastgid = this.firstgid + (this.numTiles.x * this.numTiles.y - 1 || 0);
+    this.properties = settings.properties || {};
+    this.tileproperties = settings.tileproperties || {};
+    this.size = new Vector(settings.imagewidth || this.baseTexture.source.width, settings.imageheight || this.baseTexture.source.height);
+    this.textures = [];
+    this.properties = utils.parseTiledProperties(this.properties);
+    for (var k in this.tileproperties) {
+        this.tileproperties[k] = utils.parseTiledProperties(this.tileproperties[k]);
+    }
+    for (var t = 0, tl = this.lastgid - this.firstgid + 1; t < tl; ++t) {
+        var y = ~~(t / this.numTiles.x), x = t - y * this.numTiles.x;
+        x = x * this.tileSize.x + x * this.spacing + this.margin;
+        y = y * this.tileSize.y + y * this.spacing + this.margin;
+        this.textures.push(new Texture(this.baseTexture, new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)));
+    }
+};
+
+utils.inherits(Tileset, Texture, {
+    getTileProperties: function(tileId) {
+        if (!tileId) return null;
+        var flags = Tileset.FLAGS, flippedX = tileId & flags.FlippedX, flippedY = tileId & flags.FlippedY, rotatedCW = tileId & flags.RotatedCW;
+        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
+        tileId = tileId - this.firstgid;
+        if (tileId < 0) return null;
+        var props = this.tileproperties[tileId] ? this.tileproperties[tileId] : this.tileproperties[tileId] = {
+            collidable: false,
+            breakable: false,
+            type: C.COLLISION_TYPE.NONE
+        };
+        props.flippedX = flippedX;
+        props.flippedY = flippedY;
+        props.rotatedCW = rotatedCW;
+        return props;
+    },
+    getTileTexture: function(tileId) {
+        if (!tileId) return null;
+        var flags = Tileset.FLAGS;
+        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
+        tileId = tileId - this.firstgid;
+        if (tileId < 0) return null;
+        return this.textures[tileId];
+    },
+    contains: function(tileId) {
+        if (!tileId) return false;
+        var flags = Tileset.FLAGS;
+        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
+        return tileId >= this.firstgid && tileId <= this.lastgid;
+    }
+});
+
+Tileset.FLAGS = {
+    FlippedX: 2147483648,
+    FlippedY: 1073741824,
+    RotatedCW: 536870912
+};
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('map/Map',['require', 'exports', 'module', '../display/DisplayObjectContainer', './ObjectGroup', '../display/Sprite', '../math/Vector', './Layer', './Tileset', '../utils/utils'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var DisplayObjectContainer = require("../display/DisplayObjectContainer"), ObjectGroup = require("./ObjectGroup"), Sprite = require("../display/Sprite"), Vector = require("../math/Vector"), Layer = require("./Layer"), Tileset = require("./Tileset"), utils = require("../utils/utils");
 
 var Map = module.exports = function(map) {
     DisplayObjectContainer.call(this, map);
@@ -8309,395 +8402,6 @@ return module.exports;
 );
 })(__global);
 (function (window) {
-  define('utils/Cache',['require', 'exports', 'module', './utils', '../constants', '../display/Texture', '../display/BaseTexture', '../map/Tileset', '../map/Map'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("./utils"), C = require("../constants"), Texture = require("../display/Texture"), BaseTexture = require("../display/BaseTexture"), Tileset = require("../map/Tileset"), Tilemap = require("../map/Map");
-
-var Cache = module.exports = function(game) {
-    this.game = game;
-    this._canvases = {};
-    this._images = {};
-    this._sounds = {};
-    this._text = {};
-    this._tilemaps = {};
-    this.addDefaultImage();
-};
-
-utils.inherits(Cache, Object, {
-    addCanvas: function(obj) {
-        this._canvases[obj.key] = obj;
-    },
-    addSpriteSheet: function(obj) {
-        var key = obj.key;
-        PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
-        PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
-        obj.texture = PIXI.TextureCache[key];
-        obj.animation = Animation.fromImage(obj);
-        this._images[key] = obj;
-    },
-    addTilemap: function(obj) {
-        var key = obj.key, fmt = obj.format, tsets, name;
-        if (fmt === C.FILE_FORMAT.XML) tsets = obj.data.getElementsByTagName("tilesets"); else if (fmt === C.FILE_FORMAT.JSON) tsets = obj.data.tilesets;
-        obj.textures = {};
-        for (var i = 0, il = obj.images.length; i < il; ++i) {
-            PIXI.BaseTextureCache[key] = new BaseTexture(obj.images[i]);
-            PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
-            if (fmt === C.FILE_FORMAT.JSON) name = tsets[i].name; else if (fmt === C.FILE_FORMAT.XML) name = tsets[i].attributes.getNamedItem("name").nodeValue;
-            obj.textures[name] = PIXI.TextureCache[key];
-        }
-        if (fmt === C.FILE_FORMAT.JSON) obj.tilemap = new Tilemap(obj.data); else if (fmt === C.FILE_FORMAT.XML) obj.tilemap = Tilemap.fromXML(obj.data); else if (fmt === C.FILE_FORMAT.CSV) obj.tilemap = Tilemap.fromCSV(obj.data);
-        this._tilemaps[key] = obj;
-    },
-    addTextureAtlas: function(obj) {
-        var key = obj.key;
-        PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
-        PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
-        obj.texture = PIXI.TextureCache[key];
-        if (format === C.ATLAS_FORMAT.JSON_ARRAY || format === C.ATLAS_FORMAT.JSON_HASH) {
-            obj.textures = Texture.fromJSON(key, obj.data, obj.texture.baseTexture);
-        } else if (format === C.ATLAS_FORMAT.STARLING_XML) {
-            obj.textures = Texture.fromXML(key, obj.data, obj.texture.baseTexture);
-        }
-        this._images[key] = obj;
-    },
-    addBitmapFont: function(obj) {
-        var key = obj.key;
-        PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
-        PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
-        obj.texture = PIXI.TextureCache[key];
-        obj.font = BitmapFont.fromXML(obj.data, obj.texture);
-        this._images[key] = obj;
-    },
-    addImage: function(obj) {
-        var key = obj.key;
-        PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
-        PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
-        obj.texture = PIXI.TextureCache[key];
-        this._images[key] = obj;
-    },
-    addSound: function(obj) {
-        var key = obj.key;
-        if (!obj.webAudio) {
-            obj.decoded = true;
-        }
-        obj.isDecoding = false;
-        this._sounds[key] = obj;
-    },
-    updateSound: function(key, property, value) {
-        if (this._sounds[key]) this._sounds[key][property] = value;
-    },
-    addText: function(obj) {
-        this._text[obj.key] = obj;
-    },
-    addDefaultImage: function() {
-        var key = "__default", w = 32, h = 32;
-        this._images[key] = {
-            frame: new AnimationFrame(0, 0, w, h, "", "")
-        };
-        var base = new BaseTexture;
-        base.width = w;
-        base.height = h;
-        base.hasLoaded = true;
-        PIXI.BaseTextureCache[key] = base;
-        PIXI.TextureCache[key] = new Texture(base);
-    },
-    getCanvas: function(key) {
-        if (this._canvases[key]) return this._canvases[key].canvas;
-    },
-    getImage: function(key) {
-        if (this._images[key]) return this._images[key].image;
-    },
-    getTexture: function(key) {
-        if (this._images[key]) return this._images[key].texture;
-    },
-    getTextures: function(key) {
-        if (this._images[key]) return this._images[key].textures;
-    },
-    getBitmapFont: function(key) {
-        if (this._images[key]) return this._images[key].font;
-    },
-    getTilemap: function(key) {
-        if (this._images[key]) return this._tilemaps[key].tilemap;
-    },
-    getSound: function(key) {
-        return this._sounds[key];
-    },
-    getSoundData: function(key) {
-        if (this._sounds[key]) return this._sounds[key].data;
-    },
-    getText: function(key) {
-        if (this._text[key]) return this._text[key].data;
-    },
-    removeCanvas: function(key) {
-        delete this._canvases[key];
-    },
-    removeImage: function(key) {
-        delete this._images[key];
-    },
-    removeSound: function(key) {
-        delete this._sounds[key];
-    },
-    removeText: function(key) {
-        delete this._text[key];
-    },
-    destroy: function() {
-        this._canvases = {};
-        this._images = {};
-        this._sounds = {};
-        this._text = {};
-        this._tilemaps = {};
-    }
-});
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('utils/Clock',['require', 'exports', 'module', './utils'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("./utils");
-
-var Clock = module.exports = function(autoStart) {
-    this.autoStart = autoStart !== undefined ? autoStart : true;
-    this.startTime = 0;
-    this.oldTime = 0;
-    this.elapsedTime = 0;
-    this.running = false;
-    this.timer = window.performance && window.performance.now ? window.performance : Date;
-};
-
-utils.inherits(Clock, Object, {
-    now: function() {
-        return this.timer.now();
-    },
-    start: function() {
-        this.startTime = this.now();
-        this.oldTime = this.startTime;
-        this.running = true;
-    },
-    stop: function() {
-        this.getElapsedTime();
-        this.running = false;
-    },
-    getElapsedTime: function() {
-        this.getDelta();
-        return this.elapsedTime;
-    },
-    getDelta: function() {
-        var diff = 0;
-        if (this.autoStart && !this.running) {
-            this.start();
-        }
-        if (this.running) {
-            var newTime = this.now();
-            diff = .001 * (newTime - this.oldTime);
-            this.oldTime = newTime;
-            this.elapsedTime += diff;
-        }
-        return diff;
-    }
-});
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('utils/SpritePool',['require', 'exports', 'module', './utils', '../display/Sprite'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("./utils"), Sprite = require("../display/Sprite");
-
-var SpritePool = module.exports = function() {
-    this.types = {};
-    this.add("_default", Sprite);
-};
-
-utils.inherits(SpritePool, Object, {
-    add: function(name, obj) {
-        return this.types[name] = obj;
-    },
-    has: function(name) {
-        return !!this.types[name];
-    },
-    create: function(name, texture, props) {
-        if (!name || !this.types[name]) name = "_default";
-        return new this.types[name](texture, props);
-    },
-    free: function() {
-        return;
-    }
-});
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('game/Game',['require', 'exports', 'module', './GameState', '../utils/EventEmitter', '../utils/Cache', '../utils/Clock', '../utils/SpritePool', '../utils/support', '../utils/utils', '../vendor/pixi'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var GameState = require("./GameState"), EventEmitter = require("../utils/EventEmitter"), Cache = require("../utils/Cache"), Clock = require("../utils/Clock"), SpritePool = require("../utils/SpritePool"), support = require("../utils/support"), utils = require("../utils/utils"), PIXI = require("../vendor/pixi");
-
-var Game = module.exports = function(contId, settings) {
-    EventEmitter.call(this);
-    this.container = document.getElementById(contId);
-    if (!this.container) this.container = document.body;
-    this.renderMethod = "webgl";
-    this.players = [];
-    this.stage = new PIXI.Stage(settings.background, settings.interactive !== undefined ? settings.interactive : true);
-    this.clock = new Clock(false);
-    this.cache = new Cache(this);
-    this.load = new AssetLoader(this);
-    this.input = new InputManager(this.renderer.view);
-    this.renderer = null;
-    if (settings.renderMethod) {
-        if (!support[settings.renderMethod]) {
-            throw "Render method " + settings.renderMethod + " is not supported by this browser!";
-        }
-        this.renderMethod = settings.renderMethod;
-    } else {
-        if (support.webgl) this.renderMethod = "webgl"; else if (support.canvas) this.renderMethod = "canvas"; else {
-            throw "Neither WebGL nor Canvas is supported by this browser!";
-        }
-    }
-    if (this.renderMethod === "webgl") {
-        this.renderer = new PIXI.WebGLRenderer(settings.width, settings.height, settings.view, settings.transparent);
-    } else if (this.renderMethod === "canvas") {
-        this.renderer = new PIXI.CanvasRenderer(settings.width, settings.height, settings.view, settings.transparent);
-    }
-    this.MAX_Z = 500;
-    this.spritepool = new SpritePool;
-    this.states = {};
-    this.activeState = null;
-    this._defaultState = new GameState("_default");
-    this.timings = {
-        _timer: window.performance && window.performance.now ? window.performance : Date
-    };
-    if (!settings.view) this.container.appendChild(this.renderer.view);
-    utils.setValues(this, settings);
-    this.addState(this._defaultState);
-    this.enableState("_default");
-    var self = this;
-    [ "audio", "physics", "camera", "world" ].forEach(function(prop) {
-        self.__defineGetter__(prop, function() {
-            return self.activeState[prop];
-        });
-    });
-    var view = this.renderer.view;
-    if (!view.getAttribute("tabindex")) view.setAttribute("tabindex", "1");
-    view.focus();
-    view.addEventListener("click", function() {
-        view.focus();
-    }, false);
-};
-
-utils.inherits(Game, Object, {
-    resize: function(w, h) {
-        this.renderer.resize(w, h);
-        for (var i = 0, il = this.stage.children.length; i < il; ++i) {
-            var o = this.stage.children[i];
-            if (o.resize) o.resize(w, h);
-        }
-        return this;
-    },
-    addChild: function(obj) {
-        this.activeState.addChild(obj);
-        return this;
-    },
-    removeChild: function(obj) {
-        if (obj) {
-            if (obj instanceof Gui) this.camera.removeChild(obj); else this.world.removeChild(obj);
-        }
-        return this;
-    },
-    requestFullscreen: function() {
-        var elem = this.renderer.view;
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.mozRequestFullScreen) {
-            elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) {
-            elem.webkitRequestFullscreen();
-        }
-    },
-    addState: function(state) {
-        var name = state.name;
-        if (!name) {
-            throw "No state name could be determined, did you give the state a name when you created it?";
-        } else if (this.states[name]) {
-            throw 'A state with the name "' + name + '" already exists, did you try to add it twice?';
-        } else {
-            this.states[name] = state;
-            this.stage.addChild(state);
-            state.game = this;
-        }
-        return this;
-    },
-    removeState: function(state) {
-        var name = typeof state === "string" ? state : state.name;
-        if (!name) {
-            throw "No state name could be determined, are you sure you passed me a game state?";
-        } else if (!this.states[name]) {
-            throw 'A state with the name "' + name + '" does not exist, are you sure you added it?';
-        } else {
-            if (name === "_default") return;
-            if (name === this.activeState.name) {
-                this.enableState("_default");
-            }
-            delete this.states[name];
-        }
-        return this;
-    },
-    enableState: function(state) {
-        var name = typeof state === "string" ? state : state.name;
-        if (this.activeState) this.activeState.disable();
-        this.activeState = this.states[name];
-        this.activeState.enable();
-        return this;
-    },
-    loadWorld: function(world) {
-        this.activeState.loadWorld(world);
-        return this;
-    },
-    render: function() {
-        this.clock.start();
-        this._tick();
-        return this;
-    },
-    _tick: function() {
-        this.timings.tickStart = this.timings._timer.now();
-        window.requestAnimFrame(this._tick.bind(this));
-        var dt = this.clock.getDelta();
-        this.timings.inputStart = this.timings._timer.now();
-        this.input.update(dt);
-        this.timings.inputEnd = this.timings._timer.now();
-        this.timings.stateStart = this.timings._timer.now();
-        this.activeState.update(dt);
-        this.timings.stateEnd = this.timings._timer.now();
-        this.timings.renderStart = this.timings._timer.now();
-        this.renderer.render(this.stage);
-        this.timings.renderEnd = this.timings._timer.now();
-        this.timings.tickEnd = this.timings._timer.now();
-    }
-});
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
   define('gui/Gui',['require', 'exports', 'module', '../utils/utils', '../display/DisplayObjectContainer'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
@@ -8709,989 +8413,6 @@ var GuiContainer = module.exports = function(name) {
 };
 
 utils.inherits(GuiContainer, DisplayObjectContainer);
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('gui/GuiItem',['require', 'exports', 'module', '../utils/utils', '../display/Sprite'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("../utils/utils"), Sprite = require("../display/Sprite");
-
-var GuiItem = module.exports = function(texture, interactive) {
-    this.draggable = false;
-    this.dragging = false;
-    Sprite.call(this, texture);
-    this.interactive = interactive;
-};
-
-utils.inherits(GuiItem, Sprite, {
-    mousedown: function(e) {
-        Sprite.prototype.mousedown.call(this, e);
-        if (!this.draggable) return;
-        this.dragging = e.data.getLocalPosition(e.object.parent);
-    },
-    mouseup: function(e) {
-        Sprite.prototype.mouseup.call(this, e);
-        this.dragging = false;
-    },
-    mousemove: function(e) {
-        Sprite.prototype.mousemove.call(this, e);
-        if (!this.draggable || !this.dragging) return;
-        var pos = e.data.getLocalPosition(this.parent);
-        this.setPosition(this.position.x + (pos.x - this.dragging.x), this.position.y + (pos.y - this.dragging.y));
-        this.dragging = pos;
-    }
-});
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('input/Input',['require', 'exports', 'module', '../utils/utils', '../utils/EventEmitter'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("../utils/utils"), EventEmitter = require("../utils/EventEmitter");
-
-var InputType = module.exports = function(view) {
-    EventEmitter.call(this);
-    this.bind = this.on;
-    this.view = view;
-};
-
-utils.inherits(InputType, Object, {
-    preventDefault: function(e) {
-        if (e.preventDefault) e.preventDefault(); else e.returnValue = false;
-        return false;
-    },
-    stopPropogation: function(e) {
-        if (e.stopPropagation) e.stopPropagation(); else e.cancelBubble = true;
-    }
-});
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('input/Keyboard',['require', 'exports', 'module', '../utils/utils', './Input'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("../utils/utils"), Input = require("./Input");
-
-var Keyboard = module.exports = function(view) {
-    Input.call(this, view);
-    this.sequence = [];
-    this.sequenceTimeout = 500;
-    this._clearSq = null;
-    view.addEventListener("keydown", this.onKeyDown.bind(this), false);
-    view.addEventListener("keyup", this.onKeyUp.bind(this), false);
-};
-
-utils.inherits(Keyboard, Input, {
-    onKeyDown: function(e, override) {
-        return this.modifyKey(e, override || e.keyCode || e.which, true);
-    },
-    onKeyUp: function(e, override) {
-        return this.modifyKey(e, override || e.keyCode || e.which, false);
-    },
-    modifyKey: function(e, key, down) {
-        this.emit(key, {
-            input: this,
-            originalEvent: e,
-            down: down
-        });
-        if (down) {
-            this.sequence.push(key);
-            var s = this.sequence.toString();
-            if (s !== key.toString()) {
-                this.emit(s, {
-                    input: this,
-                    originalEvent: e,
-                    down: down
-                });
-            }
-            clearTimeout(this._clearSq);
-            this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
-        }
-    },
-    _clearSequence: function() {
-        this.sequence.length = 0;
-    }
-});
-
-Keyboard.KEY = {
-    BACKSPACE: 8,
-    TAB: 9,
-    ENTER: 13,
-    SHIFT: 16,
-    CTRL: 17,
-    ALT: 18,
-    PAUSE: 19,
-    ESC: 27,
-    SPACE: 32,
-    PAGE_UP: 33,
-    PAGE_DOWN: 34,
-    END: 35,
-    HOME: 36,
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    INSERT: 45,
-    DELETE: 46,
-    NUM0: 48,
-    NUM1: 49,
-    NUM2: 50,
-    NUM3: 51,
-    NUM4: 52,
-    NUM5: 53,
-    NUM6: 54,
-    NUM7: 55,
-    NUM8: 56,
-    NUM9: 57,
-    PLUS: 61,
-    A: 65,
-    B: 66,
-    C: 67,
-    D: 68,
-    E: 69,
-    F: 70,
-    G: 71,
-    H: 72,
-    I: 73,
-    J: 74,
-    K: 75,
-    L: 76,
-    M: 77,
-    N: 78,
-    O: 79,
-    P: 80,
-    Q: 81,
-    R: 82,
-    S: 83,
-    T: 84,
-    U: 85,
-    V: 86,
-    W: 87,
-    X: 88,
-    Y: 89,
-    Z: 90,
-    NUMPAD0: 96,
-    NUMPAD1: 97,
-    NUMPAD2: 98,
-    NUMPAD3: 99,
-    NUMPAD4: 100,
-    NUMPAD5: 101,
-    NUMPAD6: 102,
-    NUMPAD7: 103,
-    NUMPAD8: 104,
-    NUMPAD9: 105,
-    NUMPAD_STAR: 106,
-    NUMPAD_PLUS: 107,
-    NUMPAD_MINUS: 109,
-    NUMPAD_DOT: 110,
-    NUMPAD_SLASH: 111,
-    F1: 112,
-    F2: 113,
-    F3: 114,
-    F4: 115,
-    MINUS: 173,
-    TILDE: 192
-};
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('input/GamepadButtons',['require', 'exports', 'module', '../utils/utils', './Input'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("../utils/utils"), Input = require("./Input");
-
-var GamepadButtons = module.exports = function() {
-    Input.call(this);
-    this.threshold = .4;
-    this.buttons = {};
-    for (var bt in GamepadButtons.BUTTON) {
-        this.buttons[GamepadButtons.BUTTON[bt]] = {
-            code: GamepadButtons.BUTTON[bt],
-            name: bt,
-            down: false,
-            value: 0
-        };
-    }
-};
-
-utils.inherits(GamepadButtons, Input, {
-    pollStatus: function(pad) {
-        for (var b = 0, bl = pad.buttons.length; b < bl; ++b) {
-            var down = pad.buttons[b] > this.threshold, status = this.buttons[b];
-            status.value = pad.buttons[b];
-            if (status.down !== down) {
-                status.down = down;
-                this.emit(b, status);
-            }
-        }
-    }
-});
-
-GamepadButtons.BUTTON = {
-    FACE_1: 0,
-    FACE_2: 1,
-    FACE_3: 2,
-    FACE_4: 3,
-    LEFT_SHOULDER: 4,
-    RIGHT_SHOULDER: 5,
-    LEFT_TRIGGER: 6,
-    RIGHT_TRIGGER: 7,
-    SELECT: 8,
-    START: 9,
-    LEFT_ANALOGUE_STICK: 10,
-    RIGHT_ANALOGUE_STICK: 11,
-    PAD_TOP: 12,
-    PAD_BOTTOM: 13,
-    PAD_LEFT: 14,
-    PAD_RIGHT: 15,
-    SYSTEM_MENU: 16
-};
-
-GamepadButtons.getGpButtonName = function(i) {
-    for (var k in GamepadButtons.BUTTON) {
-        if (GamepadButtons.BUTTON[k] === i) {
-            return k;
-        }
-    }
-    return "";
-};
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('input/GamepadSticks',['require', 'exports', 'module', '../utils/utils', './Input'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("../utils/utils"), Input = require("./Input");
-
-var GamepadSticks = module.exports = function() {
-    Input.call(this);
-    this.threshold = .5;
-    this.axes = {};
-    for (var ax in GamepadSticks.AXIS) {
-        this.axes[GamepadSticks.AXIS[ax]] = {
-            code: GamepadSticks.AXIS[ax],
-            name: ax,
-            value: 0
-        };
-    }
-};
-
-utils.inherits(GamepadSticks, Input, {
-    pollStatus: function(pad) {
-        for (var a = 0, al = pad.axes.length; a < al; ++a) {
-            var ax = pad.axes[a], status = this.axes[a];
-            if (Math.abs(ax) >= this.threshold) {
-                status.value = ax;
-            } else {
-                status.value = 0;
-            }
-            this.emit(a, status);
-        }
-    }
-});
-
-GamepadSticks.AXIS = {
-    LEFT_ANALOGUE_HOR: 0,
-    LEFT_ANALOGUE_VERT: 1,
-    RIGHT_ANALOGUE_HOR: 2,
-    RIGHT_ANALOGUE_VERT: 3
-};
-
-GamepadSticks.getGpAxisName = function(i) {
-    for (var k in GamepadSticks.AXIS) {
-        if (GamepadSticks.AXIS[k] === i) {
-            return k;
-        }
-    }
-    return "";
-};
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('input/Gamepad',['require', 'exports', 'module', '../utils/utils', './Input', './GamepadButtons', './GamepadSticks'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("../utils/utils"), Input = require("./Input"), GamepadButtons = require("./GamepadButtons"), GamepadSticks = require("./GamepadSticks");
-
-var Gamepad = module.exports = function() {
-    Input.call(this);
-    this.ticking = false;
-    this.pads = [];
-    this.prevTimestamps = [];
-    this.buttons = new GamepadButtons;
-    this.sticks = new GamepadSticks;
-    window.addEventListener("MozGamepadConnected", this.onGamepadConnect.bind(this), false);
-    window.addEventListener("MozGamepadDisconnected", this.onGamepadDisconnect.bind(this), false);
-    if (!!navigator.webkitGamepads || !!navigator.webkitGetGamepads) {
-        this.startPolling();
-    }
-};
-
-utils.inherits(Gamepad, Input, {
-    onGamepadConnect: function(event) {
-        this.pads.push(event.gamepad);
-        this.startPolling();
-    },
-    onGamepadDisconnect: function(event) {
-        for (var i = 0, il = this.pads.length; i < il; ++i) {
-            if (this.pads[i].index === event.gamepad.index) {
-                this.pads.splice(i, 1);
-                break;
-            }
-        }
-        if (this.pads.length === 0) this.stopPolling();
-    },
-    startPolling: function() {
-        if (this.ticking) return;
-        this.ticking = true;
-        this.update();
-    },
-    stopPolling: function() {
-        this.ticking = false;
-    },
-    pollGamepads: function() {
-        var rawPads = navigator.webkitGetGamepads && navigator.webkitGetGamepads() || navigator.webkitGamepads;
-        if (rawPads) {
-            this.pads.length = 0;
-            for (var i = 0, il = rawPads.length; i < il; ++i) {
-                if (rawPads[i]) {
-                    this.pads.push(rawPads[i]);
-                }
-            }
-        }
-    },
-    pollStatus: function() {
-        for (var i = 0, il = this.pads.length; i < il; ++i) {
-            var pad = this.pads[i];
-            if (pad.timestamp && pad.timestamp === this.prevTimestamps[i]) continue;
-            this.prevTimestamps[i] = pad.timestamp;
-            this.buttons.pollStatus(pad);
-            this.sticks.pollStatus(pad);
-        }
-    },
-    update: function() {
-        if (!this.ticking) return;
-        this.pollGamepads();
-        this.pollStatus();
-    }
-});
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('input/InputManager',['require', 'exports', 'module', '../utils/utils', './Keyboard', './Gamepad'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("../utils/utils"), Keyboard = require("./Keyboard"), Gamepad = require("./Gamepad");
-
-var InputManager = module.exports = function(view) {
-    this.view = view;
-    this.keyboard = new gf.input.Keyboard(view);
-    this.gamepad = new gf.input.Gamepad;
-};
-
-utils.inherits(InputManager, Object, {
-    update: function(dt) {
-        this.gamepad.update(dt);
-    }
-});
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('loader/Loader',['require', 'exports', 'module', '../utils/utils', '../utils/support', '../utils/EventEmitter', '../constants'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var utils = require("../utils/utils"), support = require("../utils/support"), EventEmitter = require("../utils/EventEmitter"), C = require("../constants");
-
-var AssetLoader = module.exports = function(game) {
-    EventEmitter.call(this);
-    this.game = game;
-    this.keys = [];
-    this.assets = {};
-    this.total = 0;
-    this.done = 0;
-    this.isLoading = false;
-    this.hasLoaded = false;
-    this.progress = 0;
-    this.crossOrigin = "";
-    this.baseUrl = "";
-};
-
-utils.inherits(AssetLoader, Object, {
-    hasKey: function(key) {
-        return !!this.assets[key];
-    },
-    reset: function() {
-        this.progress = 0;
-        this.total = 0;
-        this.done = 0;
-        this.hasLoaded = false;
-        this.isLoading = false;
-        this.assets = {};
-        this.keys.length = 0;
-    },
-    add: function(type, key, url, opts) {
-        var entry = {
-            type: type,
-            key: key,
-            url: url,
-            image: null,
-            data: null,
-            error: false,
-            loaded: false
-        };
-        if (opts !== undefined) {
-            for (var p in opts) {
-                entry[p] = opts[p];
-            }
-        }
-        this.assets[key] = entry;
-        this.keys.push(key);
-        this.total++;
-    },
-    image: function(key, url, overwrite) {
-        if (overwrite || !this.hasKey(key)) this.add("image", key, url);
-    },
-    text: function(key, url, overwrite) {
-        if (overwrite || !this.hasKey(key)) this.add("text", key, url);
-    },
-    spritesheet: function(key, url, frameWidth, frameHeight, frameMax, overwrite) {
-        if (overwrite || !this.hasKey(key)) this.add("spritesheet", key, url, {
-            frameWidth: frameWidth,
-            frameHeight: frameHeight,
-            frameMax: frameMax
-        });
-    },
-    audio: function(key, url, autoDecode, overwrite) {
-        if (overwrite || !this.hasKey(key)) this.add("audio", key, url, {
-            buffer: null,
-            autoDecode: autoDecode
-        });
-    },
-    tilemap: function(key, url, data, format) {
-        if (overwrite || !this.hasKey(key)) {
-            if (!format) format = C.FILE_FORMAT.JSON;
-            if (typeof data === "string") {
-                switch (format) {
-                  case C.FILE_FORMAT.JSON:
-                    data = JSON.parse(data);
-                    break;
-                  case C.FILE_FORMAT.XML:
-                    data = C.utils.parseXML(data);
-                    break;
-                  case C.FILE_FORMAT.CSV:
-                    break;
-                }
-            }
-            this.add("tilemap", key, tilesetUrl, {
-                url: url,
-                data: data,
-                format: format
-            });
-        }
-    },
-    bitmapFont: function(key, textureUrl, dataUrl, data, format, overwrite) {
-        if (overwrite || !this.hasKey(key)) {
-            if (!format) format = C.FILE_FORMAT.XML;
-            if (typeof data === "string") {
-                switch (format) {
-                  case C.FILE_FORMAT.XML:
-                    data = utils.parseXML(data);
-                    break;
-                  case C.FILE_FORMAT.JSON:
-                    data = JSON.parse(data);
-                    break;
-                }
-            }
-            this.add("bitmapfont", key, textureUrl, {
-                dataUrl: dataUrl,
-                data: data,
-                format: format
-            });
-        }
-    },
-    atlasJSONArray: function(key, textureURL, atlasURL, atlasData) {
-        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.JSON_ARRAY);
-    },
-    atlasJSONHash: function(key, textureURL, atlasURL, atlasData) {
-        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.JSON_HASH);
-    },
-    atlasXML: function(key, textureURL, atlasURL, atlasData) {
-        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.STARLING_XML);
-    },
-    atlas: function(key, textureUrl, dataUrl, data, format, overwrite) {
-        if (overwrite || !this.hasKey(key)) {
-            if (!format) format = C.ATLAS_FORMAT.JSON_ARRAY;
-            if (typeof data === "string") {
-                switch (format) {
-                  case C.ATLAS_FORMAT.STARLING_XML:
-                    data = utils.parseXML(data);
-                    break;
-                  case C.ATLAS_FORMAT.JSON_ARRAY:
-                  case C.ATLAS_FORMAT.JSON_HASH:
-                    data = JSON.parse(data);
-                    break;
-                }
-            }
-            this.add("textureatlas", key, textureUrl, {
-                dataUrl: dataUrl,
-                data: data,
-                format: format
-            });
-        }
-    },
-    start: function() {
-        if (this.isLoading) return;
-        this.progress = 0;
-        this.hasLoaded = false;
-        this.isLoading = true;
-        this.emit("start", this.keys.length);
-        if (this.keys.length > 0) {
-            while (this._keys.length > 0) this.loadFile();
-        } else {
-            this.progress = 100;
-            this.hasLoaded = true;
-            this.emit("complete");
-        }
-    },
-    loadFile: function() {
-        var file = this.assets[this.keys.shift()], self = this;
-        switch (file.type) {
-          case "image":
-          case "spritesheet":
-          case "textureatlas":
-          case "bitmapfont":
-            file.image = new Image;
-            file.image.name = file.key;
-            file.image.addEventListener("load", this.fileComplete.bind(this, file.key), false);
-            file.image.addEventListener("error", this.fileError.bind(this, file.key), false);
-            file.image.crossOrigin = file.crossOrigin !== undefined ? file.crossOrigin : this.crossOrigin;
-            file.image.src = this.baseUrl + file.url;
-          case "tilemap":
-            utils.ajax({
-                url: this.baseUrl + file.url,
-                dataType: this._getFormatAjaxType(file.format),
-                load: function(data) {
-                    file.data = data;
-                    self.fileComplete(file.key);
-                },
-                error: function() {
-                    self.fileError(file.key);
-                }
-            });
-            break;
-          case "audio":
-            file.url = this.getAudioURL(file.url);
-            if (file.url) {
-                if (support.webAudio) {
-                    utils.ajax({
-                        url: this.baseURL + file.url,
-                        dataType: "arraybuffer",
-                        load: function(data) {
-                            file.data = data;
-                            self.fileComplete(file.key);
-                        },
-                        error: function() {
-                            self.fileError(file.key);
-                        }
-                    });
-                } else if (support.htmlAudio) {
-                    file.data = new Audio;
-                    file.data.name = file.key;
-                    file.data.preload = "auto";
-                    file.data.src = this.baseUrl + file.url;
-                    file.data.addEventListener("error", file._bndError = this.fileError.bind(this, file.key), false);
-                    file.data.addEventListener("canplaythrough", file._bndComplete = this.fileComplete.bind(this, file.key), false);
-                    file.data.load();
-                }
-            } else {
-                this.fileError(file.key);
-            }
-            break;
-          case "text":
-            utils.ajax({
-                url: this.baseURL + file.url,
-                dataType: "text",
-                load: function(data) {
-                    file.data = data;
-                    self.fileComplete(file.key);
-                },
-                error: function() {
-                    self.fileError(file.key);
-                }
-            });
-            break;
-        }
-    },
-    getAudioUrl: function(urls) {
-        for (var i = 0, il = urls.length; i < il; ++i) {
-            var url = urls[i], ext = url.match(/.+\.([^?]+)(\?|$)/);
-            ext = ext && ext.length >= 2 ? ext[1] : url.match(/data\:audio\/([^?]+);/)[1];
-            if (support.codecs[ext]) {
-                return url;
-            }
-        }
-    },
-    fileError: function(key) {
-        this.assets[key].loaded = true;
-        this.assets[key].error = true;
-        this.emit("error", key);
-        utils.warn("Error loading file", key);
-        this.fileDone(key, true);
-    },
-    fileComplete: function(key) {
-        if (!this.assets[key]) return utils.warn("fileComplete key is invalid!", key);
-        this.assets[key].loaded = true;
-        var file = this.assets[key], done = true, self = this;
-        switch (file.type) {
-          case "image":
-            this.game.cache.addImage(file);
-            break;
-          case "spritesheet":
-            this.game.cache.addSpriteSheet(file);
-            break;
-          case "tilemap":
-            file.baseUrl = file.url.replace(/[^\/]*$/, "");
-            file.numImages = file.numLoaded = 0;
-            file.images = [];
-            if (file.format === C.FILE_FORMAT.JSON) {
-                done = false;
-                this._loadJsonTilesets(file);
-            } else if (file.format === C.FILE_FORMAT.XML) {
-                done = false;
-                this._loadXmlTilesets(file);
-            }
-            break;
-          case "textureatlas":
-            done = false;
-            this._dataget(file, function() {
-                this.game.cache.addTextureAtlas(file);
-            });
-            break;
-          case "bitmapfont":
-            done = false;
-            this._dataget(file, function() {
-                this.game.cache.addBitmapFont(file);
-            });
-            break;
-          case "audio":
-            if (support.webAudio) {
-                file.webAudio = true;
-                file.decoded = false;
-            } else {
-                file.data.removeEventListener("error", file._bndError);
-                file.data.removeEventListener("canplaythrough", file._bndComplete);
-            }
-            this.game.cache.addSound(file);
-            break;
-          case "text":
-            this.game.cache.addText(file);
-            break;
-        }
-        if (done) {
-            this.fileDone(file.key);
-        }
-    },
-    fileDone: function(key, fail) {
-        this.done++;
-        this.progress = Math.round(this.done / this.total * 100);
-        if (this.progress >= 100) {
-            this.progress = 100;
-            this.hasLoaded = true;
-            this.isLoading = false;
-            this.emit("complete");
-        }
-    },
-    _getFormatAjaxType: function(type) {
-        switch (type) {
-          case C.ATLAS_FORMAT.JSON_ARRAY:
-          case C.ATLAS_FORMAT.JSON_HASH:
-          case C.FILE_FORMAT.JSON:
-            return "json";
-          case C.ATLAS_FORMAT.STARLING_XML:
-          case C.FILE_FORMAT.XML:
-            return "xml";
-          case C.FILE_FORMAT.CSV:
-            return "text";
-        }
-    },
-    _dataget: function(file, cb) {
-        var self = this;
-        if (!file.dataUrl) {
-            setTimeout(cb);
-        } else {
-            done = false;
-            utils.ajax({
-                url: this.baseUrl + file.dataUrl,
-                dataType: this._getFormatAjaxType(file.format),
-                load: function(data) {
-                    file.data = data;
-                    if (cb) cb();
-                    self.fileDone(file.key);
-                },
-                error: function() {
-                    self.fileError(file.key);
-                }
-            });
-        }
-    },
-    _loadJsonTilesets: function(file) {
-        var data = file.data, baseUrl = file.baseUrl;
-        for (var i = 0, il = data.tilesets.length; i < il; ++i) {
-            var set = data.tilesets[i], img;
-            if (!set.image) continue;
-            file.numImages++;
-            img = new Image;
-            img.addEventListener("load", this._onTilesetLoaded.bind(this, file), false);
-            img.addEventListener("error", this._onTilesetError.bind(this, file), false);
-            img.crossOrigin = file.crossOrigin !== undefined ? file.crossOrigin : this.crossOrigin;
-            img.src = this.baseUrl + baseUrl + set.image;
-            file.images.push(img);
-        }
-    },
-    _loadXmlTilesets: function(file) {
-        var data = file.data, baseUrl = file.baseUrl, tilesets = data.getElementsByTagName("tileset");
-        for (var i = 0, il = tileset.length; i < il; ++i) {
-            var set = tileset[i], imgElm = set.getElementsByTagName("image")[0], img;
-            if (!imgElm) continue;
-            file.numImages++;
-            img = new Image;
-            img.addEventListener("load", this._onTilesetLoaded.bind(this, file), false);
-            img.addEventListener("error", this._onTilesetError.bind(this, file), false);
-            img.crossOrigin = file.crossOrigin !== undefined ? file.crossOrigin : this.crossOrigin;
-            img.src = this.baseUrl + baseUrl + imgElm.attributes.getNamedItem("source").nodeValue;
-            file.images.push(img);
-        }
-    },
-    _onTilesetLoaded: function(file) {
-        file.numLoaded++;
-        if (file.numImages === file.numLoaded) {
-            this.fileDone(file.key, file.error);
-        }
-    },
-    _onTilesetError: function(file) {
-        file.error = true;
-        file.numLoaded++;
-        if (file.numImages === file.numLoaded) {
-            this.fileDone(file.key, file.error);
-        }
-    }
-});
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('math/Ellipse',['require', 'exports', 'module', '../vendor/pixi'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-module.exports = require("../vendor/pixi").Ellipse;
-// uRequire: end body of original nodejs module
-
-
-return module.exports;
-}
-);
-})(__global);
-(function (window) {
-  define('map/ObjectGroup',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../math/Vector', '../math/Polygon', '../math/Ellipse', '../math/Rectangle', '../utils/utils', '../math/math'], 
-  function (require, exports, module) {
-  // uRequire: start body of original nodejs module
-var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Vector = require("../math/Vector"), Polygon = require("../math/Polygon"), Ellipse = require("../math/Ellipse"), Rectangle = require("../math/Rectangle"), utils = require("../utils/utils"), math = require("../math/math");
-
-var ObjectGroup = module.exports = function(group) {
-    DisplayObjectContainer.call(this, group);
-    this.color = group.color;
-    this.properties = group.properties || {};
-    this.objects = group.objects;
-    this.type = group.type;
-    this.alpha = group.opacity;
-    this.visible = group.visible;
-};
-
-utils.inherits(ObjectGroup, DisplayObjectContainer, {
-    spawn: function() {
-        var game = this.parent.parent.game;
-        for (var i = this.objects.length - 1; i >= 0; --i) {
-            var o = this.objects[i], props = utils.parseTiledProperties(o.properties) || {}, set, interactive, obj;
-            props.tileprops = {};
-            if (o.gid) {
-                set = this.parent.getTileset(o.gid);
-                if (set) {
-                    props.texture = set.getTileTexture(o.gid);
-                    props.tileprops = set.getTileProperties(o.gid);
-                    if (!props.hitArea) {
-                        if (props.tileprops.hitArea) props.hitArea = props.tileprops.hitArea; else props.hitArea = set.properties.hitArea;
-                    }
-                }
-            } else {
-                if (!props.hitArea) {
-                    if (o.polyline) props.hitArea = this._getPolyline(o); else if (o.polygon) props.hitArea = this._getPolygon(o); else if (o.ellipse) props.hitArea = this._getEllipse(o); else props.hitArea = this._getRectangle(o);
-                }
-            }
-            o.name = o.name || props.name || props.tileprops.name;
-            o.type = o.type || props.type || props.tileprops.type;
-            if (typeof props.texture === "string") {
-                props.texture = gf.assetCache[props.texture];
-            }
-            if (!props.texture) {
-                obj = new DisplayObjectContainer;
-                obj.width = o.width;
-                obj.height = o.height;
-                obj.name = o.name;
-                obj.type = o.type;
-                obj.hitArea = props.hitArea;
-                obj.rotation = o.rotation;
-                obj.sensor = true;
-                obj.setPosition(o.x, o.y);
-                obj.enablePhysics(game.physics);
-                if (this.parent._showPhysics) obj.showPhysics();
-            } else {
-                props.width = o.width;
-                props.height = o.height;
-                props.zIndex = this.zIndex;
-                obj = game.spritepool.create(o.name, props.texture, props);
-                obj.name = o.name;
-                obj.type = o.type;
-                obj.hitArea = props.hitArea;
-                obj.mass = props.mass || props.tileprops.mass;
-                obj.inertia = props.inertia || props.tileprops.inertia;
-                obj.friction = props.friction || props.tileprops.friction;
-                obj.sensor = props.sensor || props.tileprops.sensor;
-                obj.setPosition(o.x, o.y);
-                var a = props.anchor || props.tileprops.anchor;
-                obj.anchor.y = a ? a[1] : 1;
-                obj.anchor.x = a ? a[0] : this.parent.orientation === "isometric" ? .5 : 0;
-                if (props.mass || props.tileprops.mass) {
-                    obj.enablePhysics(game.physics);
-                    if (this.parent._showPhysics) obj.showPhysics();
-                }
-                if (props.tileprops) {
-                    if (props.tileprops.flippedX) {
-                        obj.scale.x = -1;
-                        obj.anchor.x = a ? a[0] : 1;
-                    }
-                    if (props.tileprops.flippedY) {
-                        obj.scale.y = -1;
-                        obj.anchor.y = a ? a[1] : 0;
-                    }
-                    if (props.tileprops.rotatedCW) {
-                        obj.rotation = math.degreesToRadians(45);
-                    }
-                }
-                if (props.animation || props.tileprops.animation) {
-                    if (obj.gotoAndPlay) {
-                        obj.gotoAndPlay(props.animation || props.tileprops.animation);
-                    }
-                }
-                if (typeof o.rotation === "number") obj.setRotation(o.rotation);
-            }
-            obj.visible = o.visible !== undefined ? !!o.visible : true;
-            if (this.parent.orientation === "isometric") {
-                var toTileX = o.x / this.parent.tileSize.x, toTileY = o.y / this.parent.tileSize.y;
-                o.x = toTileX * this.parent.tileSize.x - (toTileY - 1) * (this.parent.tileSize.x / 2);
-                o.y = toTileY * this.parent.tileSize.y / 2 + toTileX * this.parent.tileSize.y;
-            }
-            interactive = this._getInteractive(set, props);
-            if (interactive) {
-                obj.interactive = interactive;
-                obj.click = this.onObjectEvent.bind(this, "click", obj);
-                obj.mousedown = this.onObjectEvent.bind(this, "mousedown", obj);
-                obj.mouseup = this.onObjectEvent.bind(this, "mouseup", obj);
-                obj.mousemove = this.onObjectEvent.bind(this, "mousemove", obj);
-                obj.mouseout = this.onObjectEvent.bind(this, "mouseout", obj);
-                obj.mouseover = this.onObjectEvent.bind(this, "mouseover", obj);
-                obj.mouseupoutside = this.onObjectEvent.bind(this, "mouseupoutside", obj);
-            }
-            obj.properties = {};
-            for (var t in props.tileprops) obj.properties[t] = props.tileprops[t];
-            for (var k in props) if (k !== "tileprops") obj.properties[k] = props[k];
-            obj._objIndex = i;
-            this.addChild(obj);
-        }
-        return this;
-    },
-    onObjectEvent: function(eventName, obj, data) {
-        this.parent.onObjectEvent(eventName, obj, data);
-    },
-    _getPolygon: function(o) {
-        var points = [];
-        for (var i = 0, il = o.polygon.length; i < il; ++i) {
-            points.push(new Vector(o.polygon[i].x, o.polygon[i].y));
-        }
-        return new Polygon(points);
-    },
-    _getPolyline: function(o) {
-        var points = [];
-        for (var i = 0, il = o.polyline.length; i < il; ++i) {
-            points.push(new Vector(o.polyline[i].x, o.polyline[i].y));
-        }
-        return new Polygon(points);
-    },
-    _getEllipse: function(o) {
-        return new Ellipse(0, 0, o.width, o.height);
-    },
-    _getRectangle: function(o) {
-        return new Rectangle(0, 0, o.width, o.height);
-    },
-    _getInteractive: function(set, props) {
-        return props.interactive || props.tileprops.interactive || set && set.properties.interactive || this.properties.interactive || this.parent.properties.interactive;
-    },
-    despawn: function() {
-        for (var i = this.children.length - 1; i > -1; --i) {
-            var c = this.children[i];
-            if (c.destroy) c.destroy();
-        }
-        return this;
-    },
-    destroy: function() {
-        this.despawn();
-        DisplayObjectContainer.prototype.destroy.call(this);
-    }
-});
 // uRequire: end body of original nodejs module
 
 
@@ -13255,12 +11976,1290 @@ return module.exports;
 );
 })(__global);
 (function (window) {
+  define('game/GameState',['require', 'exports', 'module', '../display/DisplayObjectContainer', '../camera/Camera', '../map/Map', '../gui/Gui', '../math/Rectangle', '../physics/PhysicsSystem', '../audio/AudioManager', '../utils/utils'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var DisplayObjectContainer = require("../display/DisplayObjectContainer"), Camera = require("../camera/Camera"), Map = require("../map/Map"), Gui = require("../gui/Gui"), Rectangle = require("../math/Rectangle"), PhysicsSystem = require("../physics/PhysicsSystem"), AudioManager = require("../audio/AudioManager"), utils = require("../utils/utils");
+
+var GameState = module.exports = function(name, settings) {
+    if (typeof name === "object") {
+        settings = name;
+        name = Math.floor(Date.now() * Math.random()).toString();
+    }
+    settings = settings || {};
+    this.name = name;
+    this.audio = new AudioManager;
+    this.physics = new PhysicsSystem({
+        gravity: settings.gravity
+    });
+    this.camera = null;
+    this.world = null;
+    Object.defineProperty(this, "game", {
+        get: function() {
+            return this._game;
+        },
+        set: this._setGame.bind(this),
+        enumerable: true
+    });
+    DisplayObjectContainer.call(this, settings);
+    this.disable();
+};
+
+utils.inherits(GameState, DisplayObjectContainer, {
+    _setGame: function(game) {
+        this._game = game;
+        if (this.camera) this.removeChild(this.camera);
+        this.camera = new Camera(game);
+        this.addChild(this.camera);
+        this.camera.resize(game.renderer.width, game.renderer.height);
+    },
+    addChild: function(obj) {
+        if (obj) {
+            if (obj instanceof Camera || obj instanceof Map) this.addChildAt(obj, 0); else if (obj instanceof Gui) this.camera.addChild(obj); else this.world.addChild(obj);
+        }
+    },
+    loadWorld: function(world) {
+        if (typeof world === "string") {
+            if (cache[world]) {
+                world = cache[world];
+            } else {
+                throw 'World "' + world + '" needs to be preloaded before being added to a game!';
+            }
+        }
+        this.world = new Map(world);
+        this.addChild(this.world);
+        this.world.resize(this._game.renderer.width, this._game.renderer.height);
+        this.camera.constrain(new Rectangle(0, 0, this.world.realSize.x, this.world.realSize.y), true);
+        return this;
+    },
+    enable: function() {
+        this.visible = true;
+    },
+    disable: function() {
+        this.visible = false;
+    },
+    update: function(dt) {
+        this.game.timings.cameraStart = this.game.timings._timer.now();
+        this.camera.update(dt);
+        this.game.timings.cameraEnd = this.game.timings._timer.now();
+        this.game.timings.physicsStart = this.game.timings._timer.now();
+        this.physics.update(dt);
+        this.game.timings.physicsEnd = this.game.timings._timer.now();
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('utils/Cache',['require', 'exports', 'module', './utils', '../constants', '../display/Texture', '../display/BaseTexture', '../map/Map', '../font/BitmapFont', '../vendor/pixi'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("./utils"), C = require("../constants"), Texture = require("../display/Texture"), BaseTexture = require("../display/BaseTexture"), Tilemap = require("../map/Map"), BitmapFont = require("../font/BitmapFont"), PIXI = require("../vendor/pixi");
+
+var Cache = module.exports = function(game) {
+    this.game = game;
+    this._canvases = {};
+    this._images = {};
+    this._sounds = {};
+    this._text = {};
+    this._tilemaps = {};
+    this.addDefaultImage();
+};
+
+utils.inherits(Cache, Object, {
+    addCanvas: function(obj) {
+        this._canvases[obj.key] = obj;
+    },
+    addSpriteSheet: function(obj) {
+        var key = obj.key;
+        PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
+        PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
+        obj.texture = PIXI.TextureCache[key];
+        obj.textures = Texture.fromSpritesheet(obj);
+        this._images[key] = obj;
+    },
+    addTilemap: function(obj) {
+        var key = obj.key, fmt = obj.format, tsets, name;
+        if (fmt === C.FILE_FORMAT.XML) tsets = obj.data.getElementsByTagName("tilesets"); else if (fmt === C.FILE_FORMAT.JSON) tsets = obj.data.tilesets;
+        obj.textures = {};
+        for (var i = 0, il = obj.images.length; i < il; ++i) {
+            PIXI.BaseTextureCache[key] = new BaseTexture(obj.images[i]);
+            PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
+            if (fmt === C.FILE_FORMAT.JSON) name = tsets[i].name; else if (fmt === C.FILE_FORMAT.XML) name = tsets[i].attributes.getNamedItem("name").nodeValue;
+            obj.textures[name] = PIXI.TextureCache[key];
+        }
+        if (fmt === C.FILE_FORMAT.JSON) obj.tilemap = new Tilemap(obj.data); else if (fmt === C.FILE_FORMAT.XML) obj.tilemap = Tilemap.fromXML(obj.data); else if (fmt === C.FILE_FORMAT.CSV) obj.tilemap = Tilemap.fromCSV(obj.data);
+        this._tilemaps[key] = obj;
+    },
+    addTextureAtlas: function(obj) {
+        var key = obj.key;
+        PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
+        PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
+        obj.texture = PIXI.TextureCache[key];
+        if (obj.format === C.ATLAS_FORMAT.JSON_ARRAY || obj.format === C.ATLAS_FORMAT.JSON_HASH) {
+            obj.textures = Texture.fromJSON(key, obj.data, obj.texture.baseTexture);
+        } else if (obj.format === C.ATLAS_FORMAT.STARLING_XML) {
+            obj.textures = Texture.fromXML(key, obj.data, obj.texture.baseTexture);
+        }
+        this._images[key] = obj;
+    },
+    addBitmapFont: function(obj) {
+        var key = obj.key;
+        PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
+        PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
+        obj.texture = PIXI.TextureCache[key];
+        obj.font = BitmapFont.fromXML(key, obj.data, obj.texture);
+        this._images[key] = obj;
+    },
+    addImage: function(obj) {
+        var key = obj.key;
+        PIXI.BaseTextureCache[key] = new BaseTexture(obj.image);
+        PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
+        obj.texture = PIXI.TextureCache[key];
+        this._images[key] = obj;
+    },
+    addSound: function(obj) {
+        var key = obj.key;
+        if (!obj.webAudio) {
+            obj.decoded = true;
+        }
+        obj.isDecoding = false;
+        this._sounds[key] = obj;
+    },
+    updateSound: function(key, property, value) {
+        if (this._sounds[key]) this._sounds[key][property] = value;
+    },
+    addText: function(obj) {
+        this._text[obj.key] = obj;
+    },
+    addDefaultImage: function() {
+        var key = "__default";
+        var base = new BaseTexture;
+        base.width = 32;
+        base.height = 32;
+        base.hasLoaded = true;
+        PIXI.BaseTextureCache[key] = base;
+        PIXI.TextureCache[key] = new Texture(base);
+        this._images[key] = {
+            texture: PIXI.TextureCache[key]
+        };
+    },
+    getCanvas: function(key) {
+        if (this._canvases[key]) return this._canvases[key].canvas;
+    },
+    getImage: function(key) {
+        if (this._images[key]) return this._images[key].image;
+    },
+    getTexture: function(key) {
+        if (this._images[key]) return this._images[key].texture;
+    },
+    getTextures: function(key) {
+        if (this._images[key]) return this._images[key].textures;
+    },
+    getBitmapFont: function(key) {
+        if (this._images[key]) return this._images[key].font;
+    },
+    getTilemap: function(key) {
+        if (this._images[key]) return this._tilemaps[key].tilemap;
+    },
+    getSound: function(key) {
+        return this._sounds[key];
+    },
+    getSoundData: function(key) {
+        if (this._sounds[key]) return this._sounds[key].data;
+    },
+    getText: function(key) {
+        if (this._text[key]) return this._text[key].data;
+    },
+    removeCanvas: function(key) {
+        delete this._canvases[key];
+    },
+    removeImage: function(key) {
+        delete this._images[key];
+    },
+    removeSound: function(key) {
+        delete this._sounds[key];
+    },
+    removeText: function(key) {
+        delete this._text[key];
+    },
+    destroy: function() {
+        this._canvases = {};
+        this._images = {};
+        this._sounds = {};
+        this._text = {};
+        this._tilemaps = {};
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('utils/Clock',['require', 'exports', 'module', './utils'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("./utils");
+
+var Clock = module.exports = function(autoStart) {
+    this.autoStart = autoStart !== undefined ? autoStart : true;
+    this.startTime = 0;
+    this.oldTime = 0;
+    this.elapsedTime = 0;
+    this.running = false;
+    this.timer = window.performance && window.performance.now ? window.performance : Date;
+};
+
+utils.inherits(Clock, Object, {
+    now: function() {
+        return this.timer.now();
+    },
+    start: function() {
+        this.startTime = this.now();
+        this.oldTime = this.startTime;
+        this.running = true;
+    },
+    stop: function() {
+        this.getElapsedTime();
+        this.running = false;
+    },
+    getElapsedTime: function() {
+        this.getDelta();
+        return this.elapsedTime;
+    },
+    getDelta: function() {
+        var diff = 0;
+        if (this.autoStart && !this.running) {
+            this.start();
+        }
+        if (this.running) {
+            var newTime = this.now();
+            diff = .001 * (newTime - this.oldTime);
+            this.oldTime = newTime;
+            this.elapsedTime += diff;
+        }
+        return diff;
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('utils/SpritePool',['require', 'exports', 'module', './utils', '../display/Sprite'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("./utils"), Sprite = require("../display/Sprite");
+
+var SpritePool = module.exports = function() {
+    this.types = {};
+    this.add("_default", Sprite);
+};
+
+utils.inherits(SpritePool, Object, {
+    add: function(name, obj) {
+        return this.types[name] = obj;
+    },
+    has: function(name) {
+        return !!this.types[name];
+    },
+    create: function(name, texture, props) {
+        if (!name || !this.types[name]) name = "_default";
+        return new this.types[name](texture, props);
+    },
+    free: function() {
+        return;
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('loader/Loader',['require', 'exports', 'module', '../utils/utils', '../utils/support', '../utils/EventEmitter', '../constants'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("../utils/utils"), support = require("../utils/support"), EventEmitter = require("../utils/EventEmitter"), C = require("../constants");
+
+var AssetLoader = module.exports = function(game) {
+    EventEmitter.call(this);
+    this.game = game;
+    this.keys = [];
+    this.assets = {};
+    this.total = 0;
+    this.done = 0;
+    this.isLoading = false;
+    this.hasLoaded = false;
+    this.progress = 0;
+    this.crossOrigin = "";
+    this.baseUrl = "";
+};
+
+utils.inherits(AssetLoader, Object, {
+    hasKey: function(key) {
+        return !!this.assets[key];
+    },
+    reset: function() {
+        this.progress = 0;
+        this.total = 0;
+        this.done = 0;
+        this.hasLoaded = false;
+        this.isLoading = false;
+        this.assets = {};
+        this.keys.length = 0;
+    },
+    add: function(type, key, url, opts) {
+        var entry = {
+            type: type,
+            key: key,
+            url: url,
+            image: null,
+            data: null,
+            error: false,
+            loaded: false
+        };
+        if (opts !== undefined) {
+            for (var p in opts) {
+                entry[p] = opts[p];
+            }
+        }
+        this.assets[key] = entry;
+        this.keys.push(key);
+        this.total++;
+    },
+    image: function(key, url, overwrite) {
+        if (overwrite || !this.hasKey(key)) this.add("image", key, url);
+    },
+    text: function(key, url, overwrite) {
+        if (overwrite || !this.hasKey(key)) this.add("text", key, url);
+    },
+    spritesheet: function(key, url, frameWidth, frameHeight, numFrames, overwrite) {
+        if (overwrite || !this.hasKey(key)) this.add("spritesheet", key, url, {
+            frameWidth: frameWidth,
+            frameHeight: frameHeight,
+            numFrames: numFrames
+        });
+    },
+    audio: function(key, url, autoDecode, overwrite) {
+        if (overwrite || !this.hasKey(key)) this.add("audio", key, url, {
+            buffer: null,
+            autoDecode: autoDecode
+        });
+    },
+    tilemap: function(key, url, data, format, overwrite) {
+        if (overwrite || !this.hasKey(key)) {
+            if (!format) format = C.FILE_FORMAT.JSON;
+            if (typeof data === "string") {
+                switch (format) {
+                  case C.FILE_FORMAT.JSON:
+                    data = JSON.parse(data);
+                    break;
+                  case C.FILE_FORMAT.XML:
+                    data = C.utils.parseXML(data);
+                    break;
+                  case C.FILE_FORMAT.CSV:
+                    break;
+                }
+            }
+            this.add("tilemap", key, url, {
+                data: data,
+                format: format
+            });
+        }
+    },
+    bitmapFont: function(key, textureUrl, dataUrl, data, format, overwrite) {
+        if (overwrite || !this.hasKey(key)) {
+            if (!format) format = C.FILE_FORMAT.XML;
+            if (typeof data === "string") {
+                switch (format) {
+                  case C.FILE_FORMAT.XML:
+                    data = utils.parseXML(data);
+                    break;
+                  case C.FILE_FORMAT.JSON:
+                    data = JSON.parse(data);
+                    break;
+                }
+            }
+            this.add("bitmapfont", key, textureUrl, {
+                dataUrl: dataUrl,
+                data: data,
+                format: format
+            });
+        }
+    },
+    atlasJSONArray: function(key, textureURL, atlasURL, atlasData) {
+        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.JSON_ARRAY);
+    },
+    atlasJSONHash: function(key, textureURL, atlasURL, atlasData) {
+        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.JSON_HASH);
+    },
+    atlasXML: function(key, textureURL, atlasURL, atlasData) {
+        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.STARLING_XML);
+    },
+    atlas: function(key, textureUrl, dataUrl, data, format, overwrite) {
+        if (overwrite || !this.hasKey(key)) {
+            if (!format) format = C.ATLAS_FORMAT.JSON_ARRAY;
+            if (typeof data === "string") {
+                switch (format) {
+                  case C.ATLAS_FORMAT.STARLING_XML:
+                    data = utils.parseXML(data);
+                    break;
+                  case C.ATLAS_FORMAT.JSON_ARRAY:
+                  case C.ATLAS_FORMAT.JSON_HASH:
+                    data = JSON.parse(data);
+                    break;
+                }
+            }
+            this.add("textureatlas", key, textureUrl, {
+                dataUrl: dataUrl,
+                data: data,
+                format: format
+            });
+        }
+    },
+    start: function() {
+        if (this.isLoading) return;
+        this.progress = 0;
+        this.hasLoaded = false;
+        this.isLoading = true;
+        this.emit("start", this.keys.length);
+        if (this.keys.length > 0) {
+            while (this._keys.length > 0) this.loadFile();
+        } else {
+            this.progress = 100;
+            this.hasLoaded = true;
+            this.emit("complete");
+        }
+    },
+    loadFile: function() {
+        var file = this.assets[this.keys.shift()], self = this;
+        switch (file.type) {
+          case "image":
+          case "spritesheet":
+          case "textureatlas":
+          case "bitmapfont":
+            file.image = new Image;
+            file.image.name = file.key;
+            file.image.addEventListener("load", this.fileComplete.bind(this, file.key), false);
+            file.image.addEventListener("error", this.fileError.bind(this, file.key), false);
+            file.image.crossOrigin = file.crossOrigin !== undefined ? file.crossOrigin : this.crossOrigin;
+            file.image.src = this.baseUrl + file.url;
+            break;
+          case "tilemap":
+            utils.ajax({
+                url: this.baseUrl + file.url,
+                dataType: this._getFormatAjaxType(file.format),
+                load: function(data) {
+                    file.data = data;
+                    self.fileComplete(file.key);
+                },
+                error: function() {
+                    self.fileError(file.key);
+                }
+            });
+            break;
+          case "audio":
+            file.url = this.getAudioURL(file.url);
+            if (file.url) {
+                if (support.webAudio) {
+                    utils.ajax({
+                        url: this.baseURL + file.url,
+                        dataType: "arraybuffer",
+                        load: function(data) {
+                            file.data = data;
+                            self.fileComplete(file.key);
+                        },
+                        error: function() {
+                            self.fileError(file.key);
+                        }
+                    });
+                } else if (support.htmlAudio) {
+                    file.data = new Audio;
+                    file.data.name = file.key;
+                    file.data.preload = "auto";
+                    file.data.src = this.baseUrl + file.url;
+                    file.data.addEventListener("error", file._bndError = this.fileError.bind(this, file.key), false);
+                    file.data.addEventListener("canplaythrough", file._bndComplete = this.fileComplete.bind(this, file.key), false);
+                    file.data.load();
+                }
+            } else {
+                this.fileError(file.key);
+            }
+            break;
+          case "text":
+            utils.ajax({
+                url: this.baseURL + file.url,
+                dataType: "text",
+                load: function(data) {
+                    file.data = data;
+                    self.fileComplete(file.key);
+                },
+                error: function() {
+                    self.fileError(file.key);
+                }
+            });
+            break;
+        }
+    },
+    getAudioUrl: function(urls) {
+        for (var i = 0, il = urls.length; i < il; ++i) {
+            var url = urls[i], ext = url.match(/.+\.([^?]+)(\?|$)/);
+            ext = ext && ext.length >= 2 ? ext[1] : url.match(/data\:audio\/([^?]+);/)[1];
+            if (support.codecs[ext]) {
+                return url;
+            }
+        }
+    },
+    fileError: function(key) {
+        this.assets[key].loaded = true;
+        this.assets[key].error = true;
+        this.emit("error", key);
+        utils.warn("Error loading file", key);
+        this.fileDone(key, true);
+    },
+    fileComplete: function(key) {
+        if (!this.assets[key]) return utils.warn("fileComplete key is invalid!", key);
+        this.assets[key].loaded = true;
+        var file = this.assets[key], done = true, self = this;
+        switch (file.type) {
+          case "image":
+            this.game.cache.addImage(file);
+            break;
+          case "spritesheet":
+            this.game.cache.addSpriteSheet(file);
+            break;
+          case "tilemap":
+            file.baseUrl = file.url.replace(/[^\/]*$/, "");
+            file.numImages = file.numLoaded = 0;
+            file.images = [];
+            if (file.format === C.FILE_FORMAT.JSON) {
+                done = false;
+                this._loadJsonTilesets(file);
+            } else if (file.format === C.FILE_FORMAT.XML) {
+                done = false;
+                this._loadXmlTilesets(file);
+            }
+            break;
+          case "textureatlas":
+            done = false;
+            this._dataget(file, function() {
+                self.game.cache.addTextureAtlas(file);
+            });
+            break;
+          case "bitmapfont":
+            done = false;
+            this._dataget(file, function() {
+                self.game.cache.addBitmapFont(file);
+            });
+            break;
+          case "audio":
+            if (support.webAudio) {
+                file.webAudio = true;
+                file.decoded = false;
+            } else {
+                file.data.removeEventListener("error", file._bndError);
+                file.data.removeEventListener("canplaythrough", file._bndComplete);
+            }
+            this.game.cache.addSound(file);
+            break;
+          case "text":
+            this.game.cache.addText(file);
+            break;
+        }
+        if (done) {
+            this.fileDone(file.key);
+        }
+    },
+    fileDone: function(key, fail) {
+        this.done++;
+        this.progress = Math.round(this.done / this.total * 100);
+        if (fail) {
+            this.emit("error", key);
+        }
+        if (this.progress >= 100) {
+            this.progress = 100;
+            this.hasLoaded = true;
+            this.isLoading = false;
+            this.emit("complete");
+        }
+    },
+    _getFormatAjaxType: function(type) {
+        switch (type) {
+          case C.ATLAS_FORMAT.JSON_ARRAY:
+          case C.ATLAS_FORMAT.JSON_HASH:
+          case C.FILE_FORMAT.JSON:
+            return "json";
+          case C.ATLAS_FORMAT.STARLING_XML:
+          case C.FILE_FORMAT.XML:
+            return "xml";
+          case C.FILE_FORMAT.CSV:
+            return "text";
+        }
+    },
+    _dataget: function(file, cb) {
+        var self = this;
+        if (!file.dataUrl) {
+            setTimeout(cb);
+        } else {
+            utils.ajax({
+                url: this.baseUrl + file.dataUrl,
+                dataType: this._getFormatAjaxType(file.format),
+                load: function(data) {
+                    file.data = data;
+                    if (cb) cb();
+                    self.fileDone(file.key);
+                },
+                error: function() {
+                    self.fileError(file.key);
+                }
+            });
+        }
+    },
+    _loadJsonTilesets: function(file) {
+        var data = file.data, baseUrl = file.baseUrl;
+        for (var i = 0, il = data.tilesets.length; i < il; ++i) {
+            var set = data.tilesets[i], img;
+            if (!set.image) continue;
+            file.numImages++;
+            img = new Image;
+            img.addEventListener("load", this._onTilesetLoaded.bind(this, file), false);
+            img.addEventListener("error", this._onTilesetError.bind(this, file), false);
+            img.crossOrigin = file.crossOrigin !== undefined ? file.crossOrigin : this.crossOrigin;
+            img.src = this.baseUrl + baseUrl + set.image;
+            file.images.push(img);
+        }
+    },
+    _loadXmlTilesets: function(file) {
+        var data = file.data, baseUrl = file.baseUrl, tilesets = data.getElementsByTagName("tileset");
+        for (var i = 0, il = tilesets.length; i < il; ++i) {
+            var set = tilesets[i], imgElm = set.getElementsByTagName("image")[0], img;
+            if (!imgElm) continue;
+            file.numImages++;
+            img = new Image;
+            img.addEventListener("load", this._onTilesetLoaded.bind(this, file), false);
+            img.addEventListener("error", this._onTilesetError.bind(this, file), false);
+            img.crossOrigin = file.crossOrigin !== undefined ? file.crossOrigin : this.crossOrigin;
+            img.src = this.baseUrl + baseUrl + imgElm.attributes.getNamedItem("source").nodeValue;
+            file.images.push(img);
+        }
+    },
+    _onTilesetLoaded: function(file) {
+        file.numLoaded++;
+        if (file.numImages === file.numLoaded) {
+            this.fileDone(file.key, file.error);
+        }
+    },
+    _onTilesetError: function(file) {
+        file.error = true;
+        file.numLoaded++;
+        if (file.numImages === file.numLoaded) {
+            this.fileDone(file.key, file.error);
+        }
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('input/Input',['require', 'exports', 'module', '../utils/utils', '../utils/EventEmitter'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("../utils/utils"), EventEmitter = require("../utils/EventEmitter");
+
+var InputType = module.exports = function(view) {
+    EventEmitter.call(this);
+    this.bind = this.on;
+    this.view = view;
+};
+
+utils.inherits(InputType, Object, {
+    preventDefault: function(e) {
+        if (e.preventDefault) e.preventDefault(); else e.returnValue = false;
+        return false;
+    },
+    stopPropogation: function(e) {
+        if (e.stopPropagation) e.stopPropagation(); else e.cancelBubble = true;
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('input/Keyboard',['require', 'exports', 'module', '../utils/utils', './Input'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("../utils/utils"), Input = require("./Input");
+
+var Keyboard = module.exports = function(view) {
+    Input.call(this, view);
+    this.sequence = [];
+    this.sequenceTimeout = 500;
+    this._clearSq = null;
+    view.addEventListener("keydown", this.onKeyDown.bind(this), false);
+    view.addEventListener("keyup", this.onKeyUp.bind(this), false);
+};
+
+utils.inherits(Keyboard, Input, {
+    onKeyDown: function(e, override) {
+        return this.modifyKey(e, override || e.keyCode || e.which, true);
+    },
+    onKeyUp: function(e, override) {
+        return this.modifyKey(e, override || e.keyCode || e.which, false);
+    },
+    modifyKey: function(e, key, down) {
+        this.emit(key, {
+            input: this,
+            originalEvent: e,
+            down: down
+        });
+        if (down) {
+            this.sequence.push(key);
+            var s = this.sequence.toString();
+            if (s !== key.toString()) {
+                this.emit(s, {
+                    input: this,
+                    originalEvent: e,
+                    down: down
+                });
+            }
+            clearTimeout(this._clearSq);
+            this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
+        }
+    },
+    _clearSequence: function() {
+        this.sequence.length = 0;
+    }
+});
+
+Keyboard.KEY = {
+    BACKSPACE: 8,
+    TAB: 9,
+    ENTER: 13,
+    SHIFT: 16,
+    CTRL: 17,
+    ALT: 18,
+    PAUSE: 19,
+    ESC: 27,
+    SPACE: 32,
+    PAGE_UP: 33,
+    PAGE_DOWN: 34,
+    END: 35,
+    HOME: 36,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    INSERT: 45,
+    DELETE: 46,
+    NUM0: 48,
+    NUM1: 49,
+    NUM2: 50,
+    NUM3: 51,
+    NUM4: 52,
+    NUM5: 53,
+    NUM6: 54,
+    NUM7: 55,
+    NUM8: 56,
+    NUM9: 57,
+    PLUS: 61,
+    A: 65,
+    B: 66,
+    C: 67,
+    D: 68,
+    E: 69,
+    F: 70,
+    G: 71,
+    H: 72,
+    I: 73,
+    J: 74,
+    K: 75,
+    L: 76,
+    M: 77,
+    N: 78,
+    O: 79,
+    P: 80,
+    Q: 81,
+    R: 82,
+    S: 83,
+    T: 84,
+    U: 85,
+    V: 86,
+    W: 87,
+    X: 88,
+    Y: 89,
+    Z: 90,
+    NUMPAD0: 96,
+    NUMPAD1: 97,
+    NUMPAD2: 98,
+    NUMPAD3: 99,
+    NUMPAD4: 100,
+    NUMPAD5: 101,
+    NUMPAD6: 102,
+    NUMPAD7: 103,
+    NUMPAD8: 104,
+    NUMPAD9: 105,
+    NUMPAD_STAR: 106,
+    NUMPAD_PLUS: 107,
+    NUMPAD_MINUS: 109,
+    NUMPAD_DOT: 110,
+    NUMPAD_SLASH: 111,
+    F1: 112,
+    F2: 113,
+    F3: 114,
+    F4: 115,
+    MINUS: 173,
+    TILDE: 192
+};
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('input/GamepadButtons',['require', 'exports', 'module', '../utils/utils', './Input'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("../utils/utils"), Input = require("./Input");
+
+var GamepadButtons = module.exports = function() {
+    Input.call(this);
+    this.threshold = .4;
+    this.buttons = {};
+    for (var bt in GamepadButtons.BUTTON) {
+        this.buttons[GamepadButtons.BUTTON[bt]] = {
+            code: GamepadButtons.BUTTON[bt],
+            name: bt,
+            down: false,
+            value: 0
+        };
+    }
+};
+
+utils.inherits(GamepadButtons, Input, {
+    pollStatus: function(pad) {
+        for (var b = 0, bl = pad.buttons.length; b < bl; ++b) {
+            var down = pad.buttons[b] > this.threshold, status = this.buttons[b];
+            status.value = pad.buttons[b];
+            if (status.down !== down) {
+                status.down = down;
+                this.emit(b, status);
+            }
+        }
+    }
+});
+
+GamepadButtons.BUTTON = {
+    FACE_1: 0,
+    FACE_2: 1,
+    FACE_3: 2,
+    FACE_4: 3,
+    LEFT_SHOULDER: 4,
+    RIGHT_SHOULDER: 5,
+    LEFT_TRIGGER: 6,
+    RIGHT_TRIGGER: 7,
+    SELECT: 8,
+    START: 9,
+    LEFT_ANALOGUE_STICK: 10,
+    RIGHT_ANALOGUE_STICK: 11,
+    PAD_TOP: 12,
+    PAD_BOTTOM: 13,
+    PAD_LEFT: 14,
+    PAD_RIGHT: 15,
+    SYSTEM_MENU: 16
+};
+
+GamepadButtons.getGpButtonName = function(i) {
+    for (var k in GamepadButtons.BUTTON) {
+        if (GamepadButtons.BUTTON[k] === i) {
+            return k;
+        }
+    }
+    return "";
+};
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('input/GamepadSticks',['require', 'exports', 'module', '../utils/utils', './Input'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("../utils/utils"), Input = require("./Input");
+
+var GamepadSticks = module.exports = function() {
+    Input.call(this);
+    this.threshold = .5;
+    this.axes = {};
+    for (var ax in GamepadSticks.AXIS) {
+        this.axes[GamepadSticks.AXIS[ax]] = {
+            code: GamepadSticks.AXIS[ax],
+            name: ax,
+            value: 0
+        };
+    }
+};
+
+utils.inherits(GamepadSticks, Input, {
+    pollStatus: function(pad) {
+        for (var a = 0, al = pad.axes.length; a < al; ++a) {
+            var ax = pad.axes[a], status = this.axes[a];
+            if (Math.abs(ax) >= this.threshold) {
+                status.value = ax;
+            } else {
+                status.value = 0;
+            }
+            this.emit(a, status);
+        }
+    }
+});
+
+GamepadSticks.AXIS = {
+    LEFT_ANALOGUE_HOR: 0,
+    LEFT_ANALOGUE_VERT: 1,
+    RIGHT_ANALOGUE_HOR: 2,
+    RIGHT_ANALOGUE_VERT: 3
+};
+
+GamepadSticks.getGpAxisName = function(i) {
+    for (var k in GamepadSticks.AXIS) {
+        if (GamepadSticks.AXIS[k] === i) {
+            return k;
+        }
+    }
+    return "";
+};
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('input/Gamepad',['require', 'exports', 'module', '../utils/utils', './Input', './GamepadButtons', './GamepadSticks'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("../utils/utils"), Input = require("./Input"), GamepadButtons = require("./GamepadButtons"), GamepadSticks = require("./GamepadSticks");
+
+var Gamepad = module.exports = function() {
+    Input.call(this);
+    this.ticking = false;
+    this.pads = [];
+    this.prevTimestamps = [];
+    this.buttons = new GamepadButtons;
+    this.sticks = new GamepadSticks;
+    window.addEventListener("MozGamepadConnected", this.onGamepadConnect.bind(this), false);
+    window.addEventListener("MozGamepadDisconnected", this.onGamepadDisconnect.bind(this), false);
+    if (!!navigator.webkitGamepads || !!navigator.webkitGetGamepads) {
+        this.startPolling();
+    }
+};
+
+utils.inherits(Gamepad, Input, {
+    onGamepadConnect: function(event) {
+        this.pads.push(event.gamepad);
+        this.startPolling();
+    },
+    onGamepadDisconnect: function(event) {
+        for (var i = 0, il = this.pads.length; i < il; ++i) {
+            if (this.pads[i].index === event.gamepad.index) {
+                this.pads.splice(i, 1);
+                break;
+            }
+        }
+        if (this.pads.length === 0) this.stopPolling();
+    },
+    startPolling: function() {
+        if (this.ticking) return;
+        this.ticking = true;
+        this.update();
+    },
+    stopPolling: function() {
+        this.ticking = false;
+    },
+    pollGamepads: function() {
+        var rawPads = navigator.webkitGetGamepads && navigator.webkitGetGamepads() || navigator.webkitGamepads;
+        if (rawPads) {
+            this.pads.length = 0;
+            for (var i = 0, il = rawPads.length; i < il; ++i) {
+                if (rawPads[i]) {
+                    this.pads.push(rawPads[i]);
+                }
+            }
+        }
+    },
+    pollStatus: function() {
+        for (var i = 0, il = this.pads.length; i < il; ++i) {
+            var pad = this.pads[i];
+            if (pad.timestamp && pad.timestamp === this.prevTimestamps[i]) continue;
+            this.prevTimestamps[i] = pad.timestamp;
+            this.buttons.pollStatus(pad);
+            this.sticks.pollStatus(pad);
+        }
+    },
+    update: function() {
+        if (!this.ticking) return;
+        this.pollGamepads();
+        this.pollStatus();
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('input/InputManager',['require', 'exports', 'module', '../utils/utils', './Keyboard', './Gamepad'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("../utils/utils"), Keyboard = require("./Keyboard"), Gamepad = require("./Gamepad");
+
+var InputManager = module.exports = function(view) {
+    this.view = view;
+    this.keyboard = new Keyboard(view);
+    this.gamepad = new Gamepad;
+};
+
+utils.inherits(InputManager, Object, {
+    update: function(dt) {
+        this.gamepad.update(dt);
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('game/Game',['require', 'exports', 'module', './GameState', '../utils/EventEmitter', '../utils/Cache', '../utils/Clock', '../utils/SpritePool', '../gui/Gui', '../loader/Loader', '../input/InputManager', '../utils/support', '../utils/utils', '../vendor/pixi'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var GameState = require("./GameState"), EventEmitter = require("../utils/EventEmitter"), Cache = require("../utils/Cache"), Clock = require("../utils/Clock"), SpritePool = require("../utils/SpritePool"), Gui = require("../gui/Gui"), Loader = require("../loader/Loader"), InputManager = require("../input/InputManager"), support = require("../utils/support"), utils = require("../utils/utils"), PIXI = require("../vendor/pixi");
+
+var Game = module.exports = function(contId, settings) {
+    EventEmitter.call(this);
+    this.container = document.getElementById(contId);
+    if (!this.container) this.container = document.body;
+    this.renderMethod = "webgl";
+    this.players = [];
+    this.stage = new PIXI.Stage(settings.background, settings.interactive !== undefined ? settings.interactive : true);
+    this.clock = new Clock(false);
+    this.cache = new Cache(this);
+    this.load = new Loader(this);
+    this.input = new InputManager(this.renderer.view);
+    this.renderer = null;
+    if (settings.renderMethod) {
+        if (!support[settings.renderMethod]) {
+            throw "Render method " + settings.renderMethod + " is not supported by this browser!";
+        }
+        this.renderMethod = settings.renderMethod;
+    } else {
+        if (support.webgl) this.renderMethod = "webgl"; else if (support.canvas) this.renderMethod = "canvas"; else {
+            throw "Neither WebGL nor Canvas is supported by this browser!";
+        }
+    }
+    if (this.renderMethod === "webgl") {
+        this.renderer = new PIXI.WebGLRenderer(settings.width, settings.height, settings.view, settings.transparent);
+    } else if (this.renderMethod === "canvas") {
+        this.renderer = new PIXI.CanvasRenderer(settings.width, settings.height, settings.view, settings.transparent);
+    }
+    this.MAX_Z = 500;
+    this.spritepool = new SpritePool;
+    this.states = {};
+    this.activeState = null;
+    this._defaultState = new GameState("_default");
+    this.timings = {
+        _timer: window.performance && window.performance.now ? window.performance : Date
+    };
+    if (!settings.view) this.container.appendChild(this.renderer.view);
+    utils.setValues(this, settings);
+    this.addState(this._defaultState);
+    this.enableState("_default");
+    var self = this;
+    [ "audio", "physics", "camera", "world" ].forEach(function(prop) {
+        self.__defineGetter__(prop, function() {
+            return self.activeState[prop];
+        });
+    });
+    var view = this.renderer.view;
+    if (!view.getAttribute("tabindex")) view.setAttribute("tabindex", "1");
+    view.focus();
+    view.addEventListener("click", function() {
+        view.focus();
+    }, false);
+};
+
+utils.inherits(Game, Object, {
+    resize: function(w, h) {
+        this.renderer.resize(w, h);
+        for (var i = 0, il = this.stage.children.length; i < il; ++i) {
+            var o = this.stage.children[i];
+            if (o.resize) o.resize(w, h);
+        }
+        return this;
+    },
+    addChild: function(obj) {
+        this.activeState.addChild(obj);
+        return this;
+    },
+    removeChild: function(obj) {
+        if (obj) {
+            if (obj instanceof Gui) this.camera.removeChild(obj); else this.world.removeChild(obj);
+        }
+        return this;
+    },
+    requestFullscreen: function() {
+        var elem = this.renderer.view;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+        }
+    },
+    addState: function(state) {
+        var name = state.name;
+        if (!name) {
+            throw "No state name could be determined, did you give the state a name when you created it?";
+        } else if (this.states[name]) {
+            throw 'A state with the name "' + name + '" already exists, did you try to add it twice?';
+        } else {
+            this.states[name] = state;
+            this.stage.addChild(state);
+            state.game = this;
+        }
+        return this;
+    },
+    removeState: function(state) {
+        var name = typeof state === "string" ? state : state.name;
+        if (!name) {
+            throw "No state name could be determined, are you sure you passed me a game state?";
+        } else if (!this.states[name]) {
+            throw 'A state with the name "' + name + '" does not exist, are you sure you added it?';
+        } else {
+            if (name === "_default") return;
+            if (name === this.activeState.name) {
+                this.enableState("_default");
+            }
+            delete this.states[name];
+        }
+        return this;
+    },
+    enableState: function(state) {
+        var name = typeof state === "string" ? state : state.name;
+        if (this.activeState) this.activeState.disable();
+        this.activeState = this.states[name];
+        this.activeState.enable();
+        return this;
+    },
+    loadWorld: function(world) {
+        this.activeState.loadWorld(world);
+        return this;
+    },
+    render: function() {
+        this.clock.start();
+        this._tick();
+        return this;
+    },
+    _tick: function() {
+        this.timings.tickStart = this.timings._timer.now();
+        window.requestAnimFrame(this._tick.bind(this));
+        var dt = this.clock.getDelta();
+        this.timings.inputStart = this.timings._timer.now();
+        this.input.update(dt);
+        this.timings.inputEnd = this.timings._timer.now();
+        this.timings.stateStart = this.timings._timer.now();
+        this.activeState.update(dt);
+        this.timings.stateEnd = this.timings._timer.now();
+        this.timings.renderStart = this.timings._timer.now();
+        this.renderer.render(this.stage);
+        this.timings.renderEnd = this.timings._timer.now();
+        this.timings.tickEnd = this.timings._timer.now();
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
+  define('gui/GuiItem',['require', 'exports', 'module', '../utils/utils', '../display/Sprite'], 
+  function (require, exports, module) {
+  // uRequire: start body of original nodejs module
+var utils = require("../utils/utils"), Sprite = require("../display/Sprite");
+
+var GuiItem = module.exports = function(texture, interactive) {
+    this.draggable = false;
+    this.dragging = false;
+    Sprite.call(this, texture);
+    this.interactive = interactive;
+};
+
+utils.inherits(GuiItem, Sprite, {
+    mousedown: function(e) {
+        Sprite.prototype.mousedown.call(this, e);
+        if (!this.draggable) return;
+        this.dragging = e.data.getLocalPosition(e.object.parent);
+    },
+    mouseup: function(e) {
+        Sprite.prototype.mouseup.call(this, e);
+        this.dragging = false;
+    },
+    mousemove: function(e) {
+        Sprite.prototype.mousemove.call(this, e);
+        if (!this.draggable || !this.dragging) return;
+        var pos = e.data.getLocalPosition(this.parent);
+        this.setPosition(this.position.x + (pos.x - this.dragging.x), this.position.y + (pos.y - this.dragging.y));
+        this.dragging = pos;
+    }
+});
+// uRequire: end body of original nodejs module
+
+
+return module.exports;
+}
+);
+})(__global);
+(function (window) {
   define('physics/PhysicsTarget',['require', 'exports', 'module', '../utils/utils', '../display/Sprite'], 
   function (require, exports, module) {
   // uRequire: start body of original nodejs module
 var utils = require("../utils/utils"), Sprite = require("../display/Sprite");
 
-var PhysicsTarget = module.exports = function() {
+module.exports = function() {
     this._psystem = null;
     this.mass = 0;
     this.inertia = 0;

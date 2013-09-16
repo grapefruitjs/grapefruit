@@ -1,6 +1,7 @@
 var Sprite = require('./Sprite'),
     Texture = require('./Texture'),
-    utils = require('../utils/utils');
+    utils = require('../utils/utils'),
+    math = require('../math/math');
 
 /**
  * The base AnimatedSprite class
@@ -124,7 +125,7 @@ utils.inherits(AnimatedSprite, Sprite, {
             this.currentFrame = anim;
         } else {
             this.currentFrame = frame || 0;
-            this.lastRound = gf.math.round(frame || 0);
+            this.lastRound = math.round(frame || 0);
             this.currentAnimation = anim;
         }
         this.playing = true;
@@ -144,7 +145,7 @@ utils.inherits(AnimatedSprite, Sprite, {
             this.currentFrame = anim;
         } else {
             this.currentFrame = frame || 0;
-            this.lastRound = gf.math.round(frame || 0);
+            this.lastRound = math.round(frame || 0);
             this.currentAnimation = anim;
         }
         this.playing = false;
@@ -175,7 +176,7 @@ utils.inherits(AnimatedSprite, Sprite, {
      * @private
      */
     updateTransform: function() {
-        gf.Sprite.prototype.updateTransform.call(this);
+        Sprite.prototype.updateTransform.call(this);
 
         if(!this.playing) return;
 
@@ -184,7 +185,7 @@ utils.inherits(AnimatedSprite, Sprite, {
             loop = anim.loop !== undefined ? anim.loop : this.loop;
 
         this.currentFrame += anim.speed || this.speed;
-        round = gf.math.round(this.currentFrame);
+        round = math.round(this.currentFrame);
 
         if(round < anim.frames.length) {
             if(round !== this.lastRound) {

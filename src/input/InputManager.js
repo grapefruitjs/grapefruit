@@ -27,7 +27,7 @@ var InputManager = module.exports = function(view) {
      * @type Keyboard
      * @readOnly
      */
-    this.keyboard = new gf.input.Keyboard(view);
+    this.keyboard = new Keyboard(view);
 
     /**
      * Holds the gamepad handler for gamepad events
@@ -36,7 +36,7 @@ var InputManager = module.exports = function(view) {
      * @type Keyboard
      * @readOnly
      */
-    this.gamepad = new gf.input.Gamepad();
+    this.gamepad = new Gamepad();
 };
 
 utils.inherits(InputManager, Object, {

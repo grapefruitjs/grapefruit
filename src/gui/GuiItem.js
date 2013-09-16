@@ -5,8 +5,7 @@ var utils = require('../utils/utils'),
  * The base GuiItem that represents an element of a gui on the screen.
  *
  * @class GuiItem
- * @extends gf.Sprite
- * @namespace gf
+ * @extends Sprite
  * @constructor
  * @param texture {Texture} The texture to set the sprite to
  * @param interactive {Boolean} Whether this item should repsond to mouse events

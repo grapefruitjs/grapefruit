@@ -5,8 +5,7 @@ var utils = require('../utils/utils'),
  * Controls keyboard input
  *
  * @class Keyboard
- * @extends gf.input.Input
- * @namespace gf.input
+ * @extends Input
  * @constructor
  * @param view {DOMElement} The DOMElement to bind input events to
  */

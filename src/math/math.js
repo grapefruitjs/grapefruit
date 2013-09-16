@@ -202,5 +202,4 @@ var math = module.exports = {
 
         return array[start + Math.floor(Math.random() * len)];
     }
- };
- 
+};

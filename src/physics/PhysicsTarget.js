@@ -7,7 +7,7 @@ var utils = require('../utils/utils'),
  * @class PhysicsTarget
  * @constructor
  */
- var PhysicsTarget = module.exports = function() {
+ module.exports = function() {
     /**
      * The physics system that this object is a part of. This is advisory only
      * please use enablePhysics() or disablePhysics() and do not set this value

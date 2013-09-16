@@ -1,5 +1,6 @@
 var Texture = module.exports = require('../vendor/pixi').Texture,
-    utils = require('../utils/utils');
+    utils = require('../utils/utils'),
+    PIXI = require('../vendor/pixi');
 
 //These create arrays of textures based on texture atlas data
 
@@ -65,12 +66,12 @@ Texture.fromXML = function(key, xml, baseTexture) {
             x = attrs('x'),
             y = attrs('y'),
             width = attrs('width') || attrs('w'),
-            width = attrs('height') || attrs('h'),
+            height = attrs('height') || attrs('h'),
             //trim
             ox = attrs('frameX') || attrs('oX'),
             oy = attrs('frameY') || attrs('oY'),
             owidth = attrs('frameWidth') || attrs('oW'),
-            height = attrs('frameHeight') || attrs('oH'),
+            oheight = attrs('frameHeight') || attrs('oH'),
             //rotated (generic xml export)
             rotated = !!attrs('r');
 
@@ -100,4 +101,15 @@ Texture.fromXML = function(key, xml, baseTexture) {
     }
 
     return textures;
+};
+
+// create textures from sprite sheet
+//obj.key
+//obj.texture
+//obj.image
+//obj.frameWidth
+//obj.frameHeight
+//obj.numFrames
+Texture.fromSpritesheet = function(obj) {
+    return obj;
 };

@@ -89,19 +89,8 @@ module.exports = function(grunt) {
                 /* Globals */
                 undef: true,
                 globals: {
-                    /* For tests */
-                    requirejs: false,
-                    require: false,
-                    define: false,
-                    QUnit: false,
-                    Q: false,
-                    $: false,
-                    gf: false,
-
-                    /* For the library */
-                    PIXI: false,
-                    cp: false,
-                    semver: false
+                    module: false,
+                    require: false
                 }
             }
         },
@@ -176,7 +165,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-urequire');
 
     //setup shortcut tasks
-    grunt.registerTask('default', ['build']);
+    grunt.registerTask('default', ['jshint', 'build']);
     grunt.registerTask('build', ['urequire:dev', 'urequire:dist', 'replace:dist']);
     grunt.registerTask('docs', ['yuidoc']);
 };

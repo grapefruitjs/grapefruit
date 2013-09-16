@@ -6,7 +6,7 @@
  * @class EventEmitter
  * @constructor
  */
-var EventEmitter = module.exports = function() {
+module.exports = function() {
     this._events = this._events || {};
 
     /**

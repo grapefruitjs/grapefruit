@@ -264,7 +264,7 @@ utils.inherits(BitmapFont, DisplayObjectContainer, {
     }
 });
 
-BitmapFont.fromXML = function(xml, texture) {
+BitmapFont.fromXML = function(key, xml, texture) {
     var btx = texture.baseTexture;
 
     if(!xml.getElementsByTagName('font')) {
@@ -293,7 +293,7 @@ BitmapFont.fromXML = function(xml, texture) {
                 parseInt(attrs('width').nodeValue, 10),
                 parseInt(attrs('height').nodeValue, 10)
             ),
-            tx = PIXI.TextureCache[obj.key + '_' + code] = new Texture(btx, rect);
+            tx = PIXI.TextureCache[key + '_' + code] = new Texture(btx, rect);
 
         data.chars[code] = {
             xOffset: parseInt(attrs('xoffset').nodeValue, 10),
@@ -309,10 +309,10 @@ BitmapFont.fromXML = function(xml, texture) {
 
     for(i = 0, il = kernings.length; i < il; ++i) {
         var kern = kernings[i],
-            attrs = kern.attributes.getNamedItem,
-            first = parseInt(attrs('first').nodeValue, 10),
-            second = parseInt(attrs('second').nodeValue, 10),
-            amount = parseInt(attrs('amount').nodeValue, 10);
+            attrs2 = kern.attributes.getNamedItem,
+            first = parseInt(attrs2('first').nodeValue, 10),
+            second = parseInt(attrs2('second').nodeValue, 10),
+            amount = parseInt(attrs2('amount').nodeValue, 10);
 
         data.chars[second].kerning[first] = amount;
     }

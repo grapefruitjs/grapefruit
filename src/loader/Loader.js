@@ -13,8 +13,7 @@ var utils = require('../utils/utils'),
  *
  * @class AssetLoader
  * @extends Object
- * @uses gf.EventEmitter
- * @namespace gf
+ * @uses EventEmitter
  * @constructor
  * @param game {Game} Game instance this belongs to
  */
@@ -220,15 +219,15 @@ utils.inherits(AssetLoader, Object, {
      * @param url {String} URL of image file.
      * @param frameWidth {Number} Width of each single frame.
      * @param frameHeight {Number} Height of each single frame.
-     * @param frameMax {Number} How many frames in this sprite sheet.
+     * @param numFrames {Number} How many frames in this sprite sheet.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
      */
-    spritesheet: function(key, url, frameWidth, frameHeight, frameMax, overwrite) {
+    spritesheet: function(key, url, frameWidth, frameHeight, numFrames, overwrite) {
         if(overwrite || !this.hasKey(key))
             this.add('spritesheet', key, url, {
                 frameWidth: frameWidth,
                 frameHeight: frameHeight,
-                frameMax: frameMax
+                numFrames: numFrames
             });
     },
 
@@ -262,7 +261,7 @@ utils.inherits(AssetLoader, Object, {
      * @param [format=FILE_FORMAT.JSON] {Number} The format of the map data.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
      */
-    tilemap: function(key, url, data, format) {
+    tilemap: function(key, url, data, format, overwrite) {
         if(overwrite || !this.hasKey(key)) {
             if(!format) format = C.FILE_FORMAT.JSON;
 
@@ -281,8 +280,7 @@ utils.inherits(AssetLoader, Object, {
                 }
             }
 
-            this.add('tilemap', key, tilesetUrl, {
-                url: url,
+            this.add('tilemap', key, url, {
                 data: data,
                 format: format
             });
@@ -414,6 +412,7 @@ utils.inherits(AssetLoader, Object, {
                 file.image.addEventListener('error', this.fileError.bind(this, file.key), false);
                 file.image.crossOrigin = file.crossOrigin !== undefined ? file.crossOrigin : this.crossOrigin;
                 file.image.src = this.baseUrl + file.url;
+                break;
 
             //load tilemap
             case 'tilemap':
@@ -554,14 +553,14 @@ utils.inherits(AssetLoader, Object, {
             case 'textureatlas':
                 done = false;
                 this._dataget(file, function() {
-                    this.game.cache.addTextureAtlas(file);
+                    self.game.cache.addTextureAtlas(file);
                 });
                 break;
 
             case 'bitmapfont':
                 done = false;
                 this._dataget(file, function() {
-                    this.game.cache.addBitmapFont(file);
+                    self.game.cache.addBitmapFont(file);
                 });
                 break;
 
@@ -570,7 +569,7 @@ utils.inherits(AssetLoader, Object, {
                     file.webAudio = true;
                     file.decoded = false;
                 } else {
-                    file.data.removeEventListener('error', file._bndError)
+                    file.data.removeEventListener('error', file._bndError);
                     file.data.removeEventListener('canplaythrough', file._bndComplete);
                 }
 
@@ -597,6 +596,10 @@ utils.inherits(AssetLoader, Object, {
     fileDone: function(key, fail) {
         this.done++;
         this.progress = Math.round((this.done / this.total) * 100);
+
+        if(fail) {
+            this.emit('error', key);
+        }
 
         if(this.progress >= 100) {
             this.progress = 100;
@@ -629,7 +632,6 @@ utils.inherits(AssetLoader, Object, {
         if(!file.dataUrl) {
             setTimeout(cb);
         } else {
-            done = false;
             utils.ajax({
                 url: this.baseUrl + file.dataUrl,
                 dataType: this._getFormatAjaxType(file.format),
@@ -673,8 +675,8 @@ utils.inherits(AssetLoader, Object, {
             baseUrl = file.baseUrl,
             tilesets = data.getElementsByTagName('tileset');
 
-        for(var i = 0, il = tileset.length; i < il; ++i) {
-            var set = tileset[i],
+        for(var i = 0, il = tilesets.length; i < il; ++i) {
+            var set = tilesets[i],
                 imgElm = set.getElementsByTagName('image')[0],
                 img;
 
