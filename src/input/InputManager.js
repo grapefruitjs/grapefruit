@@ -11,14 +11,22 @@ var utils = require('../utils/utils'),
  * @constructor
  * @param view {DOMElement} The DOMElement to bind input events to
  */
-var InputManager = module.exports = function(view) {
+var InputManager = module.exports = function(game) {
+    /**
+     * The game instance this manager belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = game;
+
     /**
      * The dom element to bind events to
      *
-     * @property view
+     * @property canvas
      * @type Game
      */
-    this.view = view;
+    this.canvas = game.canvas;
 
     /**
      * Holds the keyboard handler for keyboard events
@@ -27,7 +35,7 @@ var InputManager = module.exports = function(view) {
      * @type Keyboard
      * @readOnly
      */
-    this.keyboard = new Keyboard(view);
+    this.keyboard = new Keyboard(this.canvas);
 
     /**
      * Holds the gamepad handler for gamepad events

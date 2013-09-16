@@ -7,16 +7,15 @@ var utils = require('./utils');
  * @class Clock
  * @extends Object
  * @constructor
- * @param autoStart {Boolean} Automatically start the counter or not
  */
-var Clock = module.exports = function(autoStart) {
-    this.autoStart = (autoStart !== undefined) ? autoStart : true;
-
+var Clock = module.exports = function() {
     this.startTime = 0;
     this.oldTime = 0;
     this.elapsedTime = 0;
 
     this.running = false;
+
+    this.states = [];
 
     this.timer = window.performance && window.performance.now ? window.performance : Date;
 };
@@ -40,9 +39,7 @@ utils.inherits(Clock, Object, {
      *      clock.start();
      */
     start: function() {
-        this.startTime = this.now();
-
-        this.oldTime = this.startTime;
+        this.startTime = this.oldTime = this.now();
         this.running = true;
     },
     /**
@@ -55,6 +52,48 @@ utils.inherits(Clock, Object, {
     stop: function() {
         this.getElapsedTime();
         this.running = false;
+    },
+    /**
+     * Resets the timer
+     *
+     * @method stop
+     * @example
+     *      clock.stop();
+     */
+    reset: function() {
+        this.elapsedTime = 0;
+        this.startTime = this.oldTime = this.now();
+    },
+    /**
+     * Stores the current state to be set back later
+     *
+     * @method push
+     * @example
+     *      clock.push();
+     */
+    push: function() {
+        this.getElapsedTime();
+        this.states.push({
+            startTime: this.startTime,
+            oldTime: this.oldTime,
+            elapsedTime: this.elapsedTime,
+            running: this.running
+        });
+    },
+    /**
+     * Resets to the last saved (pushed) state
+     *
+     * @method pop
+     * @example
+     *      clock.pop();
+     */
+    pop: function() {
+        var s = this.states.pop();
+
+        this.startTime = s.startTime;
+        this.oldTime = s.oldTime;
+        this.elapsedTime = s.elapsedTime;
+        this.running = s.running;
     },
     /**
      * Gets the total time that the timer has been running
@@ -79,10 +118,6 @@ utils.inherits(Clock, Object, {
      */
     getDelta: function() {
         var diff = 0;
-
-        if(this.autoStart && !this.running) {
-            this.start();
-        }
 
         if(this.running) {
             var newTime = this.now();
