@@ -1,6 +1,7 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     Camera = require('../camera/Camera'),
     Tilemap = require('../tilemap/Tilemap'),
+    ObjectFactory = require('../utils/ObjectFactory'),
     Gui = require('../gui/Gui'),
     Rectangle = require('../math/Rectangle'),
     math = require('../math/math'),
@@ -22,13 +23,9 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  *
  *      game.enableState(state); //or you can use the name from the ctor 'battle'
  */
-var GameState = module.exports = function(name, settings) {
-    if(typeof name === 'object') {
-        settings = name;
+var State = module.exports = function(name) {
+    if(!name)
         name = math.randomString();
-    }
-
-    settings = settings || {};
 
     /**
      * The name of this game state
@@ -39,80 +36,66 @@ var GameState = module.exports = function(name, settings) {
     this.name = name;
 
     /**
-     * The camera you view the scene through
+     * The game instance that this state belongs too, will be set
+     * when setup() is called with a game instance.
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = null;
+
+    /**
+     * The camera you view the scene through, will be set
+     * when setup() is called with a game instance.
      *
      * @property camera
      * @type Camera
      * @readOnly
      */
-    this.camera = null; //need to be added to a game first
+    this.camera = new Camera();
 
     /**
-     * The world instance that holds all entites and the map
+     * The container that holds all non-gui sprites and the tilemap
      *
      * @property world
      * @type Tilemap
      * @readOnly
      */
-    this.world = null;
+    this.world = new DisplayObjectContainer();
 
     /**
-     * The game instance that this state belongs too
+     * An object factory for creating game objects
      *
-     * @property game
-     * @type Game
+     * @property add
+     * @type ObjectFactory
      */
-    Object.defineProperty(this, 'game', {
-        get: function() { return this._game; },
-        set: this._setGame.bind(this),
-        enumerable: true
-    });
+    this.add = new ObjectFactory(this);
 
     //call base ctor
-    DisplayObjectContainer.call(this, settings);
+    DisplayObjectContainer.call(this);
 
     //start disabled
     this.disable();
+
+    //add world/camera
+    this.addChild(this.camera);
+    this.addChild(this.world);
 };
 
-utils.inherits(GameState, DisplayObjectContainer, {
+utils.inherits(State, DisplayObjectContainer, {
     /**
-     * The setter for the game property, sets up the input and camera objects
+     * Links this state to a game, and sets up the camera and the world
      *
-     * @method _setGame
+     * @method setup
      * @param game {Game}
      * @private
      */
-    _setGame: function(game) {
-        this._game = game;
+    setup: function(game) {
+        this.game = game;
 
-        if(this.camera)
-            this.removeChild(this.camera);
+        this.camera.resize(game.width, game.height);
 
-        this.camera = new Camera(game);
-        this.addChild(this.camera);
-        this.camera.resize(game.renderer.width, game.renderer.height);
-    },
-    /**
-     * Adds a child object to the GameState, this will add objects to either
-     * the Camera or the Map depending on the type. Anything inheriting from
-     * Gui will be put to the camera, everything else goes in the world.
-     *
-     * @method addChild
-     * @param obj {DisplayObject} Any generic object to add to the game state
-     */
-    addChild: function(obj) {
-        if(obj) {
-            //we add the camera in the ctor and the map later when
-            //.loadWorld is called. This way the camera is always the
-            //last child of stage, so it is rendered on top!
-            if(obj instanceof Camera || obj instanceof Tilemap)
-                this.addChildAt(obj, 0);
-            else if(obj instanceof Gui)
-                this.camera.addChild(obj);
-            else
-                this.world.addChild(obj);
-        }
+        return this;
     },
     /**
      * Loads a game world into the state
@@ -132,7 +115,7 @@ utils.inherits(GameState, DisplayObjectContainer, {
         this.world = tilemap;
         this.addChild(this.world);
 
-        this.world.resize(this._game.renderer.width, this._game.renderer.height);
+        this.world.resize(this.game.width, this.game.height);
 
         this.camera.constrain(new Rectangle(0, 0, this.world.realSize.x, this.world.realSize.y), true);
 
@@ -145,6 +128,8 @@ utils.inherits(GameState, DisplayObjectContainer, {
      */
     enable: function() {
         this.visible = true;
+
+        return this;
     },
     /**
      * Disables (hides) the game state
@@ -153,22 +138,21 @@ utils.inherits(GameState, DisplayObjectContainer, {
      */
     disable: function() {
         this.visible = false;
+
+        return this;
     },
     /**
-     * Called by the game each frame to update the input, camera, and physics objects
+     * Called by the game each frame to update the camera object
      *
      * @method update
      * @private
      */
     update: function(dt) {
         //update any camera effects
-        this.game.timings.cameraStart = this.game.timings._timer.now();
+        this.game.timings.cameraStart = this.game.clock.now();
         this.camera.update(dt);
-        this.game.timings.cameraEnd = this.game.timings._timer.now();
+        this.game.timings.cameraEnd = this.game.clock.now();
 
-        //simulate physics and detect/resolve collisions
-        this.game.timings.physicsStart = this.game.timings._timer.now();
-        this.physics.update(dt);
-        this.game.timings.physicsEnd = this.game.timings._timer.now();
+        return this;
     }
 });
