@@ -281,6 +281,8 @@ utils.inherits(Game, Object, {
      */
     resize: function(w, h) {
         this.renderer.resize(w, h);
+        this.width = w;
+        this.height = h;
 
         for(var i = 0, il = this.stage.children.length; i < il; ++i) {
             var o = this.stage.children[i];
@@ -437,20 +439,38 @@ utils.inherits(Game, Object, {
 
         var dt = this.clock.getDelta();
 
-        this.clock.push();
-
         //gather input from user
+        this.timings.inputStart = this.clock.now();
         this.input.update(dt);
-        this.timings.input = this.clock.getDelta();
+        this.timings.inputEnd = this.clock.now();
+
+        //simulate physics and detect/resolve collisions
+        this.game.timings.physicsStart = this.clock.now();
+        this.physics.update(dt);
+        this.game.timings.physicsEnd = this.clock.now();
 
         //update this game state
-        this.activeState.update(dt);
-        this.timings.state = this.clock.getDelta();
+        this.timings.stateStart = this.clock.now();
+        this.state.active.update(dt);
+        this.timings.stateEnd = this.clock.now();
 
         //render scene
+        this.timings.renderStart = this.clock.now();
         this.renderer.render(this.stage);
-        this.timings.render = this.clock.getDelta();
+        this.timings.renderEnd = this.clock.now();
+    }
+});
 
-        this.clock.pop();
+/**
+ * Alias for the active State's add namespace. Instead of using
+ * `game.state.active.add.sprite`, you can use `game.add.sprite`
+ *
+ * @property add
+ * @type Object
+ * @readOnly
+ */
+Object.defineProperty(Game.prototype, 'add', {
+    get: function() {
+        return this.state.active.add;
     }
 });

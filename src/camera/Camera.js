@@ -14,10 +14,8 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * @class Camera
  * @extends DisplayObjectContainer
  * @constructor
- * @param game {Game} The game this camera belongs to
- * @param settings {Object} Any settings you want to override the default properties with
  */
-var Camera = module.exports = function(game, settings) {
+var Camera = module.exports = function() {
     /**
      * The bounds of that the camera can move to
      *
@@ -67,16 +65,7 @@ var Camera = module.exports = function(game, settings) {
      */
     this.hSize = new Vector(0, 0);
 
-    /**
-     * The game this camera views
-     *
-     * @property game
-     * @type Game
-     * @readOnly
-     */
-    this.game = game;
-
-    DisplayObjectContainer.call(this, settings);
+    DisplayObjectContainer.call(this);
 };
 
 utils.inherits(Camera, DisplayObjectContainer, {

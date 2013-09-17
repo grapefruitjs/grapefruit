@@ -150,6 +150,18 @@ utils.inherits(DisplayObjectContainer, PIXI.DisplayObjectContainer, {
 
         if(this.parent)
             this.parent.removeChild(this);
+    },
+
+    /**
+     * Add a shortcut to addChild that overrides the return type as well
+     *
+     * @method add
+     * @param child {DisplayObjectContainer} Any display object
+     */
+    add: function(child) {
+        PIXI.DisplayObjectContainer.apply(this, arguments);
+
+        return child;
     }
 });
 

@@ -15,8 +15,6 @@ var Clock = module.exports = function() {
 
     this.running = false;
 
-    this.states = [];
-
     this.timer = window.performance && window.performance.now ? window.performance : Date;
 };
 
@@ -63,37 +61,6 @@ utils.inherits(Clock, Object, {
     reset: function() {
         this.elapsedTime = 0;
         this.startTime = this.oldTime = this.now();
-    },
-    /**
-     * Stores the current state to be set back later
-     *
-     * @method push
-     * @example
-     *      clock.push();
-     */
-    push: function() {
-        this.getElapsedTime();
-        this.states.push({
-            startTime: this.startTime,
-            oldTime: this.oldTime,
-            elapsedTime: this.elapsedTime,
-            running: this.running
-        });
-    },
-    /**
-     * Resets to the last saved (pushed) state
-     *
-     * @method pop
-     * @example
-     *      clock.pop();
-     */
-    pop: function() {
-        var s = this.states.pop();
-
-        this.startTime = s.startTime;
-        this.oldTime = s.oldTime;
-        this.elapsedTime = s.elapsedTime;
-        this.running = s.running;
     },
     /**
      * Gets the total time that the timer has been running
