@@ -124,9 +124,11 @@ var Tilemap = module.exports = function(game, map) {
     this.ctx = this.canvas.getContext('2d');
     this.btx = new BaseTexture(this.canvas);
     this.tx = new Texture(this.btx);
+    this.addChild(this.spr = new Sprite(this.tx));
 
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
-        this.tilesets.push(new Tileset(map.tilesets[t]));
+        var ts = map.tilesets[t];
+        this.tilesets.push(new Tileset(obj.textures[ts.name], ts));
     }
 
     for(var i = 0, il = map.layers.length; i < il; ++i) {
@@ -293,7 +295,7 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.width);
 
         //render the layers
-        for(var i = this.children.length - 1; i > -1; --i) {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
             if(o.render)
