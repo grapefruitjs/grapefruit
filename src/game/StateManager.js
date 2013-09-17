@@ -1,4 +1,5 @@
-var utils = require('../utils/utils');
+var utils = require('../utils/utils'),
+    State = require('./State');
 
 var StateManager = module.exports = function(game) {
     /**
@@ -42,17 +43,20 @@ utils.inherits(StateManager, Object, {
 
         return this;
     },
-    add: function(state, enable) {
+    add: function(Name, enable) {
+        var state;
+
         //create a state if a string is passed
-        if(typeof state === 'string') {
-            state = new State(this.game, state);
+        if(typeof Name === 'string') {
+            state = new State(this.game, Name);
         }
         //create a state of the instance passed
-        else if(typeof state === 'function') {
-            state = new state(this.game);
+        else if(typeof Name === 'function') {
+            state = new Name(this.game);
         }
         //a pre-created state, ensure game is set correctly
         else {
+            state = Name;
             state.game = this.game;
         }
 

@@ -1,5 +1,4 @@
 var AudioPlayer = require('./AudioPlayer'),
-    math = require('../math/math'),
     utils = require('../utils/utils'),
     support = require('../utils/support');
 

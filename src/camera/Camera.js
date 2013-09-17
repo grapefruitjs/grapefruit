@@ -1,7 +1,7 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     Sprite = require('../display/Sprite'),
+    Gui = require('../gui/Gui'),
     Rectangle = require('../math/Rectangle'),
-    Polygon = require('../math/Polygon'),
     Vector = require('../math/Vector'),
     utils = require('../utils/utils'),
     math = require('../math/math'),
@@ -64,6 +64,15 @@ var Camera = module.exports = function() {
      * @readOnly
      */
     this.hSize = new Vector(0, 0);
+
+    /**
+     * The GUI that contains all GUI items
+     *
+     * @property gui
+     * @type Gui
+     * @readOnly
+     */
+    this.gui = new Gui();
 
     DisplayObjectContainer.call(this);
 };
@@ -249,28 +258,8 @@ utils.inherits(Camera, DisplayObjectContainer, {
      * @param shape {Rectangle|Polygon|Circle|Ellipse} The shape to constrain the camera into
      * @return {Camera} Returns iteself for chainability
      */
-    constrain: function(shape, scaled) {
+    constrain: function(shape) {
         this._bounds = shape;
-
-        //scale the points
-        if(!scaled) {
-            if(shape instanceof Rectangle) {
-                shape.x *= this.game.world.scale.x;
-                shape.y *= this.game.world.scale.y;
-                shape.width *= this.game.world.scale.x;
-                shape.height *= this.game.world.scale.y;
-            } else if(shape instanceof Polygon) {
-                for(var i = 0; i < shape.points.length; ++i) {
-                    var p = shape.points[i];
-
-                    p.x *= this.game.world.scale.x;
-                    p.y *= this.game.world.scale.y;
-                }
-            } else {
-                shape.x *= this.game.world.scale.x;
-                shape.y *= this.game.world.scale.y;
-            }
-        }
 
         return this;
     },

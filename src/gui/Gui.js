@@ -8,7 +8,7 @@ var utils = require('../utils/utils'),
  * @extends DisplayObjectContainer
  * @constructor
  */
-var GuiContainer = module.exports = function(name) {
+var Gui = module.exports = function(name) {
     /**
      * The name of the Gui
      *
@@ -21,4 +21,4 @@ var GuiContainer = module.exports = function(name) {
     DisplayObjectContainer.call(this);
 };
 
-utils.inherits(GuiContainer, DisplayObjectContainer);
+utils.inherits(Gui, DisplayObjectContainer);

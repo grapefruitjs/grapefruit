@@ -1,9 +1,6 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     Camera = require('../camera/Camera'),
-    Tilemap = require('../tilemap/Tilemap'),
     ObjectFactory = require('../utils/ObjectFactory'),
-    Gui = require('../gui/Gui'),
-    Rectangle = require('../math/Rectangle'),
     math = require('../math/math'),
     utils = require('../utils/utils');
 

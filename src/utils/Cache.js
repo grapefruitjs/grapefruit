@@ -5,7 +5,6 @@ var utils = require('./utils'),
     C = require('../constants'),
     Texture = require('../display/Texture'),
     BaseTexture = require('../display/BaseTexture'),
-    Tilemap = require('../tilemap/Tilemap'),
     BitmapFont = require('../font/BitmapFont'),
     PIXI = require('../vendor/pixi');
 
@@ -139,23 +138,18 @@ utils.inherits(Cache, Object, {
 
         obj.textures = {};
         for(var i = 0, il = obj.images.length; i < il; ++i) {
-            PIXI.BaseTextureCache[key] = new BaseTexture(obj.images[i]);
-            PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
-
             if(fmt === C.FILE_FORMAT.JSON)
                 name = tsets[i].name;
             else if(fmt === C.FILE_FORMAT.XML)
                 name = tsets[i].attributes.getNamedItem('name').nodeValue;
 
-            obj.textures[name] = PIXI.TextureCache[key];
-        }
+            var k = key + '_' + name;
 
-        if(fmt === C.FILE_FORMAT.JSON)
-            obj.tilemap = new Tilemap(this.game, obj.data);
-        else if(fmt === C.FILE_FORMAT.XML)
-            obj.tilemap = Tilemap.fromXML(this.game, obj.data);
-        else if(fmt === C.FILE_FORMAT.CSV)
-            obj.tilemap = Tilemap.fromCSV(this.game, obj.data);
+            PIXI.BaseTextureCache[k] = new BaseTexture(obj.images[i]);
+            PIXI.TextureCache[k] = new Texture(PIXI.BaseTextureCache[k]);
+
+            obj.textures[name] = PIXI.TextureCache[k];
+        }
 
         this._tilemaps[key] = obj;
     },
@@ -359,7 +353,7 @@ utils.inherits(Cache, Object, {
      */
     getTilemap: function(key) {
         if(this._images[key])
-            return this._tilemaps[key].tilemap;
+            return this._tilemaps[key];
     },
 
     /**

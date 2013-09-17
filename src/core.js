@@ -28,14 +28,7 @@
 *       - Opera 12+
 */
 
-var constants = require('./constants');
-
 module.exports = {
-    //constants
-    version: constants.version,
-    FILE_FORMAT: constants.FILE_FORMAT,
-    ATLAS_FORMAT: constants.ATLAS_FORMAT,
-
     //audio
     AudioManager:   require('./audio/AudioManager'),
     AudioPlayer:    require('./audio/AudioPlayer'),
@@ -67,7 +60,8 @@ module.exports = {
 
     //game
     Game:       require('./game/Game'),
-    GameState:  require('./game/GameState'),
+    State:      require('./game/State'),
+    StateManager: require('./game/StateManager'),
 
     //gui
     Gui:        require('./gui/Gui'),
@@ -111,8 +105,16 @@ module.exports = {
     EventEmitter:   require('./utils/EventEmitter'),
     ObjectPool:     require('./utils/ObjectPool'),
     SpritePool:     require('./utils/SpritePool'),
+    ObjectFactory:  require('./utils/ObjectFactory'),
 
     //vendor files
     cp:     require('./vendor/cp'),
     PIXI:   require('./vendor/pixi')
 };
+
+//copy over constants
+var C = require('./constants');
+
+for(var k in C) {
+    module.exports[k] = C[k];
+}

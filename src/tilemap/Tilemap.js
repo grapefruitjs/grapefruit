@@ -280,3 +280,13 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
         }
     }
 });
+
+/*
+Tilemap.fromXML = function(game, data) {
+
+};
+
+Tilemap.fromCSV = function(game, data) {
+
+};
+*/
