@@ -199,7 +199,7 @@ utils.inherits(Cache, Object, {
         PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
         obj.texture = PIXI.TextureCache[key];
 
-        obj.font = BitmapFont.fromXML(key, obj.data, obj.texture);
+        obj.font = BitmapText.parseXML(key, obj.data, obj.texture);
 
         this._images[key] = obj;
     },
@@ -309,36 +309,36 @@ utils.inherits(Cache, Object, {
     },
 
     /**
-    * Get a Texture by key.
-    *
-    * @method
-    * @param key {String} Asset key of the RenderTexture you want.
-    * @return {Texture}
-    */
+     * Get a Texture by key.
+     *
+     * @method
+     * @param key {String} Asset key of the RenderTexture you want.
+     * @return {Texture}
+     */
     getTexture: function(key) {
         if(this._images[key])
             return this._images[key].texture;
     },
 
     /**
-    * Get a Texture by key.
-    *
-    * @method
-    * @param key {String} Asset key of the RenderTexture you want.
-    * @return {Texture}
-    */
+     * Get a Texture by key.
+     *
+     * @method
+     * @param key {String} Asset key of the RenderTexture you want.
+     * @return {Texture}
+     */
     getTextures: function(key) {
         if(this._images[key])
             return this._images[key].textures;
     },
 
     /**
-    * Get a Bitmap Font by key.
-    *
-    * @method
-    * @param key {String} Asset key of the Bitmap Font you want.
-    * @return {Texture}
-    */
+     * Get a Bitmap Font by key.
+     *
+     * @method
+     * @param key {String} Asset key of the Bitmap Font you want.
+     * @return {Texture}
+     */
     getBitmapFont: function(key) {
         if(this._images[key])
             return this._images[key].font;
