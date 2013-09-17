@@ -61,6 +61,7 @@ utils.inherits(StateManager, Object, {
         }
 
         this.states[state.name] = state;
+        this.game.stage.addChild(state);
 
         if(enable)
             this.enable(state);
@@ -68,10 +69,13 @@ utils.inherits(StateManager, Object, {
         return this;
     },
     remove: function(state) {
-        if(typeof state !== 'string')
-            state = state.name;
+        if(typeof state === 'string')
+            state = this.states[state];
 
-        delete this.states[state];
+        if(state.parent)
+            state.parent.removeChild(state);
+
+        delete this.states[state.name];
     },
     enable: function(state) {
         if(typeof state !== 'string')

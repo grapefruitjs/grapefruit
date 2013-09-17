@@ -6,7 +6,9 @@ var utils = require('../utils/utils'),
     C = require('../constants');
 
 var ObjectFactory = module.exports = function(state) {
-    this.state = state;
+    this.game = state.game;
+    this.world = state.world;
+    this.camera = state.camera;
 };
 
 utils.inherits(ObjectFactory, Object, {
@@ -18,7 +20,7 @@ utils.inherits(ObjectFactory, Object, {
      * @param [camera=false] {Boolean} If false, the object is added to the world, if true it is added to the camera
      */
     obj: function(obj, camera) {
-        return camera ? this.state.camera.add(obj) : this.state.world.add(obj);
+        return camera ? this.camera.add(obj) : this.state.world.add(obj);
     },
     /**
      * Creates a new sprite and adds it to the game world
@@ -30,7 +32,7 @@ utils.inherits(ObjectFactory, Object, {
      */
     sprite: function(tx, frame) {
         var spr,
-            game = this.state.game;
+            game = this.game;
 
         if(typeof tx === 'string') {
             if(frame !== undefined)
@@ -41,7 +43,7 @@ utils.inherits(ObjectFactory, Object, {
 
         spr = new Sprite(tx);
 
-        return this.state.world.add(spr);
+        return this.world.add(spr);
     },
     /**
      * Creates a new AudioPlayer to play the sound passed in
@@ -51,7 +53,7 @@ utils.inherits(ObjectFactory, Object, {
      * @param [settings] {Object} All the settings for the audio player (see AudioManager.add for all settings)
      */
     audio: function(key, settings) {
-        return this.state.game.audio.add(key, settings);
+        return this.game.audio.add(key, settings);
     },
     /**
      * Creates a new tilemap to add to the world
@@ -61,7 +63,7 @@ utils.inherits(ObjectFactory, Object, {
      * @param [constrain=false] {Boolean} Should the camera be constrained to this tilemap's size?
      */
     tilemap: function(key, constrain) {
-        var obj = this.state.game.cache.getTilemap(key) || {},
+        var obj = this.game.cache.getTilemap(key) || {},
             fmt = obj.format,
             data = obj.data,
             tilemap;
@@ -77,10 +79,10 @@ utils.inherits(ObjectFactory, Object, {
         }
 
         if(constrain) {
-            this.state.camera.constrain(new Rectangle(0, 0, tilemap.realSize.x, tilemap.realSize.y));
+            this.camera.constrain(new Rectangle(0, 0, tilemap.realSize.x, tilemap.realSize.y));
         }
 
-        return this.state.world.add(tilemap);
+        return this.world.add(tilemap);
     },
     /**
      * Creates a new gui item and adds it to the Camera's GUI
@@ -91,8 +93,8 @@ utils.inherits(ObjectFactory, Object, {
      */
     gui: function(tx, interact) {
         if(typeof tx === 'string')
-            tx = this.state.game.cache.getTexture(tx);
+            tx = this.game.cache.getTexture(tx);
 
-        return this.state.camera.gui.add(new GuiItem(tx, interact));
+        return this.camera.gui.add(new GuiItem(tx, interact));
     }
 });

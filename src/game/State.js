@@ -49,7 +49,7 @@ var State = module.exports = function(game, name) {
      * @type Camera
      * @readOnly
      */
-    this.camera = new Camera();
+    this.camera = new Camera(this);
 
     /**
      * The container that holds all non-gui sprites and the tilemap
