@@ -127,25 +127,18 @@ var DisplayObjectContainer = module.exports = function(settings) {
 
 utils.inherits(DisplayObjectContainer, PIXI.DisplayObjectContainer, {
     /**
-     * Base resize function, all this does is ensure that all children resize functions get called as well
-     *
-     * @method resize
-     */
-    resize: function() {
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.resize)
-                o.resize.apply(o, arguments);
-        }
-    },
-
-    /**
      * Removes this object from the stage and the physics system
      *
      * @method destroy
      */
     destroy: function() {
+        for(var i = this.children.length - 1; i > -1; --i) {
+            var o = this.children[i];
+
+            if(o.destroy)
+                o.destroy();
+        }
+
         this.disablePhysics();
 
         if(this.parent)

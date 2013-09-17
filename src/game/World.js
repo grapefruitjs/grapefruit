@@ -1,0 +1,75 @@
+var utils = require('../utils/utils'),
+    DisplayObjectContainer = require('../display/DisplayObjectContainer');
+
+/**
+ * The world is the container for all game objects
+ *
+ * @class World
+ * @extends DisplayObjectContainer
+ * @constructor
+ */
+var World = module.exports = function(state) {
+    /**
+     * The game instance this loader belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = state.game;
+
+    DisplayObjectContainer.call(this);
+};
+
+utils.inherits(World, DisplayObjectContainer, {
+    /**
+     * Pans the world around
+     *
+     * @method pan
+     * @param x {Number|Point} The x amount to pan, if a Vector is passed the y param is ignored
+     * @param y {Number} The y ammount to pan
+     * @return {World} Returns itself for chainability
+     */
+    pan: function(x, y) {
+        y = x.y !== undefined ? x.y : (y || 0);
+        x = x.x !== undefined ? x.x : (x || 0);
+
+        this.position.x += x * this.scale.x;
+        this.position.y += y * this.scale.y;
+
+        return this;
+    },
+    /**
+     * Renders each of the tilemaps in the world, called internally by state.update()
+     *
+     * @method update
+     * @return {World} Returns itself for chainability
+     */
+    update: function() {
+        for(var i = this.children.length - 1; i > -1; --i) {
+            var o = this.children[i];
+
+            if(o.render)
+                o.render(-this.position.x, -this.position.y, this.game.camera.size.x, this.game.camera.size.y);
+        }
+
+        return this;
+    },
+    /**
+     * Resizes the children of the world, called by game.resize()
+     *
+     * @method resize
+     * @param width {Number} Width to resize to
+     * @param height {Number} Height to resize to
+     * @return {World} Returns itself for chainability
+     */
+    resize: function(w, h) {
+        for(var i = this.children.length - 1; i > -1; --i) {
+            var o = this.children[i];
+
+            if(o.resize)
+                o.resize(w, h);
+        }
+
+        return this;
+    }
+});

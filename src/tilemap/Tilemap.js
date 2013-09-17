@@ -1,10 +1,14 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     ObjectGroup = require('./ObjectGroup'),
+    BaseTexture = require('../display/BaseTexture'),
+    Texture = require('../display/Texture'),
     Sprite = require('../display/Sprite'),
     Vector = require('../math/Vector'),
     Tilelayer = require('./Tilelayer'),
     Tileset = require('./Tileset'),
-    utils = require('../utils/utils');
+    PIXI = require('../vendor/pixi'),
+    utils = require('../utils/utils'),
+    C = require('../constants');
 
 /**
  * Tiled map, expects a Tiled TMX file loaded by the loader as the argument.
@@ -48,10 +52,7 @@ var Tilemap = module.exports = function(game, map) {
      * @property tileSize
      * @type Vector
      */
-    this.tileSize = new Vector(
-        map.tilewidth,
-        map.tileheight
-    );
+    this.tileSize = new Vector(map.tilewidth, map.tileheight);
 
     /**
      * The size of the map
@@ -118,6 +119,12 @@ var Tilemap = module.exports = function(game, map) {
         this.size.y * this.scaledTileSize.y
     );
 
+    //the buffer to draw to
+    this.canvas = document.createElement('canvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.btx = new BaseTexture(this.canvas);
+    this.tx = new Texture(this.btx);
+
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
         this.tilesets.push(new Tileset(map.tilesets[t]));
     }
@@ -127,7 +134,7 @@ var Tilemap = module.exports = function(game, map) {
 
         switch(map.layers[i].type) {
             case 'tilelayer':
-                lyr = new Tilelayer(this.game, map.layers[i]);
+                lyr = new Tilelayer(this, map.layers[i]);
                 break;
 
             case 'objectgroup':
@@ -142,7 +149,13 @@ var Tilemap = module.exports = function(game, map) {
         this.addChild(lyr);
     }
 
-    this._showPhysics = false;
+    //cache the last rendered x/y so we don't do duplicates
+    this._cache = {
+        x: null,
+        y: null,
+        width: null,
+        height: null
+    };
 };
 
 utils.inherits(Tilemap, DisplayObjectContainer, {
@@ -151,7 +164,7 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
      *
      * @method getTileset
      * @param tileId {Number} The id of the tile to find the tileset for
-     * @return {TiledTileset}
+     * @return {TiledTileset} Returns the tileset if found, undefined if not
      */
     getTileset: function(tileId) {
         for(var i = 0, il = this.tilesets.length; i < il; ++i)
@@ -159,28 +172,23 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
                 return this.tilesets[i];
     },
     /**
-     * Notifies the map it needs to resize, re renders the viewport
+     * Destroys the tilemap instance
      *
-     * @method resize
+     * @method destroy
      */
-    resize: function(width, height) {
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.type === 'tilelayer') {
-                o.resize(width, height);
-            }
-        }
-    },
     destroy: function() {
         DisplayObjectContainer.prototype.destroy.call(this);
 
-        for(var i = this.children.length - 1; i > -1; --i) {
-            var o = this.children[i];
-
-            if(o.destroy)
-                o.destroy();
-        }
+        this.game = null;
+        this.properties = null;
+        this.tileSize = null;
+        this.size = null;
+        this.orientation = null;
+        this.version = null;
+        this.backgroundColor = null;
+        this.tilesets = null;
+        this.scaledTileSize = null;
+        this.realSize = null;
     },
     /**
      * Spawns all the objects in the TiledObjectGroups of this map
@@ -195,11 +203,13 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
                 o.spawn();
             }
         }
+
+        return this;
     },
     /**
      * Spawns all the objects in the TiledObjectGroups of this map
      *
-     * @method spawnObjects
+     * @method despawnObjects
      */
     despawnObjects: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
@@ -209,6 +219,8 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
                 o.despawn();
             }
         }
+
+        return this;
     },
     /**
      * Called by a Tilelayer when a tile event occurs. This is so you can listen for
@@ -243,33 +255,11 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
         });
     },
     /**
-     * Pans the map around
-     *
-     * @method pan
-     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
-     * @param y {Number} The y ammount to pan
-     * @return {Tilemap} Returns itself for chainability
-     */
-    pan: function(x, y) {
-        y = x.y !== undefined ? x.y : (y || 0);
-        x = x.x !== undefined ? x.x : (x || 0);
-
-        this.position.x += x;
-        this.position.y += y;
-
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.pan)
-                o.pan(x, y);
-        }
-    },
-    /**
      * Finds a layer based on the string name
      *
      * @method findLayer
      * @param name {String} The name of the layer to find
-     * @return {Tilelayer|ObjectGroup|Sprite}
+     * @return {Tilelayer|ObjectGroup|Sprite} Returns the layer if found, undefined if not
      */
     findLayer: function(name) {
         for(var i = 0, il = this.children.length; i < il; ++i) {
@@ -278,6 +268,57 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
             if(o.name === name)
                 return o;
         }
+    },
+    /**
+     * Called each frame to render the texture of the world map
+     *
+     * @method render
+     * @param x {Number} The x offset to consider the top-left
+     * @param y {Number} The y offset to consider the top-left
+     * @param width {Number} The width (in pixels) to render
+     * @param height {Number} The height (in pixels) to render
+     * @return {Tilemap}
+     */
+    render: function(x, y, width, height) {
+        if(this._cache.x === x && this._cache.y === y && this._cache.w === width && this._cache.h === height)
+            return this;
+
+        //update cache
+        this._cache.x = x;
+        this._cache.y = y;
+        this._cache.w = width;
+        this._cache.h = height;
+
+        //clear the canvas
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.width);
+
+        //render the layers
+        for(var i = this.children.length - 1; i > -1; --i) {
+            var o = this.children[i];
+
+            if(o.render)
+                o.render(this.ctx, x, y, width, height);
+        }
+
+        //tell pixi to update this texture
+        if(this.game.renderMethod === C.RENDERER.WEBGL)
+            PIXI.texturesToUpdate.push(this.btx);
+
+        return this;
+    },
+    /**
+     * Resizes the canvas used for the tilemap texture
+     *
+     * @method resize
+     * @param width {Number} Width to resize to
+     * @param height {Number} Height to resize to
+     * @return {Tilemap}
+     */
+    resize: function(w, h) {
+        this.canvas.width = w;
+        this.canvas.height = h;
+
+        return this;
     }
 });
 

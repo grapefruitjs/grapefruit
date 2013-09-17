@@ -1,4 +1,5 @@
 var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+    World = require('./World'),
     Camera = require('../camera/Camera'),
     ObjectFactory = require('../utils/ObjectFactory'),
     math = require('../math/math'),
@@ -58,7 +59,7 @@ var State = module.exports = function(game, name) {
      * @type Tilemap
      * @readOnly
      */
-    this.world = new DisplayObjectContainer();
+    this.world = new World(this);
 
     /**
      * An object factory for creating game objects
@@ -103,6 +104,10 @@ utils.inherits(State, DisplayObjectContainer, {
 
         return this;
     },
+    resize: function(w, h) {
+        this.camera.resize(w, h);
+        this.world.resize(w, h);
+    },
     /**
      * Called by the game each frame to update the camera object
      *
@@ -114,6 +119,10 @@ utils.inherits(State, DisplayObjectContainer, {
         this.game.timings.cameraStart = this.game.clock.now();
         this.camera.update(dt);
         this.game.timings.cameraEnd = this.game.clock.now();
+
+        this.game.timings.worldStart = this.game.clock.now();
+        this.world.update(dt);
+        this.game.timings.worldEnd = this.game.clock.now();
 
         return this;
     }
