@@ -291,7 +291,7 @@ utils.inherits(AssetLoader, Object, {
      * @param [format=FILE_FORMAT.XML] {FILE_FORMAT} The format of the bitmap font data.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
      */
-    bitmapFont: function (key, textureUrl, dataUrl, data, format, overwrite) {
+    bitmapFont: function(key, textureUrl, dataUrl, data, format, overwrite) {
         if(overwrite || !this.hasKey(key)) {
             if(!format) format = C.FILE_FORMAT.XML;
 

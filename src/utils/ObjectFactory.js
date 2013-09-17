@@ -96,5 +96,11 @@ utils.inherits(ObjectFactory, Object, {
             tx = this.game.cache.getTexture(tx);
 
         return this.camera.gui.add(new GuiItem(tx, interact));
+    },
+    bitmaptext: function(text, font, style) {
+        if(typeof font === 'string')
+            font = this.game.cache.getBitmapFont(font);
+
+        return this.world.add(new BitmapText(text, font, style));
     }
 });
