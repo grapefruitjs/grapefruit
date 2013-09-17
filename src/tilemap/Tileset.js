@@ -189,10 +189,7 @@ utils.inherits(Tileset, Texture, {
             flippedY = tileId & flags.FlippedY,
             rotatedCW = tileId & flags.RotatedCW;
 
-        //remove flags
-        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
-
-        tileId = tileId - this.firstgid;
+        tileId = (tileId & ~Tileset.FLAGS.ALL) - this.firstgid;
 
         //if less than 0, then this id isn't in this tileset
         if(tileId < 0) return null;
@@ -223,13 +220,8 @@ utils.inherits(Tileset, Texture, {
     getTileTexture: function(tileId) {
         if(!tileId) return null;
 
-        var flags = Tileset.FLAGS;
-
-        //remove flags
-        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
-
         //get the internal ID of the tile in this set (0 indexed)
-        tileId = tileId - this.firstgid;
+        tileId = (tileId & ~Tileset.FLAGS.ALL) - this.firstgid;
 
         //if less than 0, then this id isn't in this tileset
         if(tileId < 0) return null;
@@ -239,10 +231,7 @@ utils.inherits(Tileset, Texture, {
     contains: function(tileId) {
         if(!tileId) return false;
 
-        var flags = Tileset.FLAGS;
-
-        //remove flags
-        tileId &= ~(flags.FlippedX | flags.FlippedY | flags.RotatedCW);
+        tileId &= ~Tileset.FLAGS.ALL;
 
         return (tileId >= this.firstgid && tileId <= this.lastgid);
     }
@@ -254,3 +243,10 @@ Tileset.FLAGS = {
     FlippedY: 0x40000000,
     RotatedCW: 0x20000000
 };
+
+var mask = 0;
+for(var f in Tileset.FLAGS) {
+    mask |= Tileset.FLAGS[f];
+}
+
+Tileset.FLAGS.ALL = mask;

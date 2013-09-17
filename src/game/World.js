@@ -45,7 +45,7 @@ utils.inherits(World, DisplayObjectContainer, {
      * @return {World} Returns itself for chainability
      */
     update: function() {
-        for(var i = this.children.length - 1; i > -1; --i) {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
             if(o.render)
@@ -63,7 +63,7 @@ utils.inherits(World, DisplayObjectContainer, {
      * @return {World} Returns itself for chainability
      */
     resize: function(w, h) {
-        for(var i = this.children.length - 1; i > -1; --i) {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
             if(o.resize)
