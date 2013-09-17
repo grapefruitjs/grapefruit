@@ -23,7 +23,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  *
  *      game.enableState(state); //or you can use the name from the ctor 'battle'
  */
-var State = module.exports = function(name) {
+var State = module.exports = function(game, name) {
     if(!name)
         name = math.randomString();
 
@@ -42,7 +42,7 @@ var State = module.exports = function(name) {
      * @property game
      * @type Game
      */
-    this.game = null;
+    this.game = game;
 
     /**
      * The camera you view the scene through, will be set
@@ -80,47 +80,12 @@ var State = module.exports = function(name) {
     //add world/camera
     this.addChild(this.camera);
     this.addChild(this.world);
+
+    //ensure the camera is the right size
+    this.camera.resize(game.width, game.height);
 };
 
 utils.inherits(State, DisplayObjectContainer, {
-    /**
-     * Links this state to a game, and sets up the camera and the world
-     *
-     * @method setup
-     * @param game {Game}
-     * @private
-     */
-    setup: function(game) {
-        this.game = game;
-
-        this.camera.resize(game.width, game.height);
-
-        return this;
-    },
-    /**
-     * Loads a game world into the state
-     *
-     * @method loadWorld
-     * @param world {String|Object} The world to load, if you pass a string be sure to preload it first
-     */
-    loadWorld: function(world) {
-        var tilemap;
-        if(typeof world === 'string'){
-            tilemap = this.game.cache.getTilemap(world);
-            if(!tilemap) {
-                throw 'World "' + world + '" needs to be preloaded before being added to a game!';
-            }
-        }
-
-        this.world = tilemap;
-        this.addChild(this.world);
-
-        this.world.resize(this.game.width, this.game.height);
-
-        this.camera.constrain(new Rectangle(0, 0, this.world.realSize.x, this.world.realSize.y), true);
-
-        return this;
-    },
     /**
      * Enables (shows) the game state
      *

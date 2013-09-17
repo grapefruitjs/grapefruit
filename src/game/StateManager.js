@@ -44,10 +44,18 @@ utils.inherits(StateManager, Object, {
     },
     add: function(state, enable) {
         //create a state if a string is passed
-        if(typeof state === 'string')
-            state = new State(state);
+        if(typeof state === 'string') {
+            state = new State(this.game, state);
+        }
+        //create a state of the instance passed
+        else if(typeof state === 'function') {
+            state = new state(this.game);
+        }
+        //a pre-created state, ensure game is set correctly
+        else {
+            state.game = this.game;
+        }
 
-        state.setup(this.game);
         this.states[state.name] = state;
 
         if(enable)
