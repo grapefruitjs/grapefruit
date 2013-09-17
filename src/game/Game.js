@@ -474,3 +474,31 @@ Object.defineProperty(Game.prototype, 'add', {
         return this.state.active.add;
     }
 });
+
+/**
+ * Alias for the active State's camera object. Instead of using
+ * `game.state.active.camera`, you can use `game.camera`
+ *
+ * @property camera
+ * @type Camera
+ * @readOnly
+ */
+Object.defineProperty(Game.prototype, 'camera', {
+    get: function() {
+        return this.state.active.camera;
+    }
+});
+
+/**
+ * Alias for the active State's world object. Instead of using
+ * `game.state.active.world`, you can use `game.world`
+ *
+ * @property world
+ * @type World
+ * @readOnly
+ */
+Object.defineProperty(Game.prototype, 'world', {
+    get: function() {
+        return this.state.active.world;
+    }
+});

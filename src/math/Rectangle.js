@@ -1,4 +1,4 @@
-module.exports = require('../vendor/pixi').Rectangle;
+var Rectangle = module.exports = require('../vendor/pixi').Rectangle;
 
 /**
  * Returns the right most X coord
