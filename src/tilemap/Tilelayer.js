@@ -122,8 +122,6 @@ utils.inherits(Tilelayer, DisplayObjectContainer, {
             height
         );
 
-        this._updateRenderSq();
-
         if(this.hasPhysics) {
             //this -> map -> state -> physics
             this.parent.parent.physics.reindexStatic();
@@ -477,7 +475,6 @@ utils.inherits(Tilelayer, DisplayObjectContainer, {
         }
         this._rendered.x--;
         if(forceNew) this._rendered.width++;
-        this._updateRenderSq();
     },
     _renderRight: function(forceNew) {
         //move all the far left tiles to the right side
@@ -491,7 +488,6 @@ utils.inherits(Tilelayer, DisplayObjectContainer, {
         }
         if(!forceNew) this._rendered.x++;
         if(forceNew) this._rendered.width++;
-        this._updateRenderSq();
     },
     _renderUp: function(forceNew) {
         //move all the far bottom tiles to the top side
@@ -505,7 +501,6 @@ utils.inherits(Tilelayer, DisplayObjectContainer, {
         }
         this._rendered.y--;
         if(forceNew) this._rendered.height++;
-        this._updateRenderSq();
     },
     _renderDown: function(forceNew) {
         //move all the far top tiles to the bottom side
@@ -519,12 +514,5 @@ utils.inherits(Tilelayer, DisplayObjectContainer, {
         }
         if(!forceNew) this._rendered.y++;
         if(forceNew) this._rendered.height++;
-        this._updateRenderSq();
-    },
-    _updateRenderSq: function() {
-        this._rendered.left = this._rendered.x;
-        this._rendered.right = this._rendered.x + this._rendered.width - 1;
-        this._rendered.top = this._rendered.y;
-        this._rendered.bottom = this._rendered.y + this._rendered.height - 1;
     }
 });

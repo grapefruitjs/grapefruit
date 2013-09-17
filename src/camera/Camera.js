@@ -15,7 +15,9 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * @extends DisplayObjectContainer
  * @constructor
  */
-var Camera = module.exports = function() {
+var Camera = module.exports = function(state) {
+    this.world = state.world;
+
     /**
      * The bounds of that the camera can move to
      *
@@ -153,8 +155,8 @@ utils.inherits(Camera, DisplayObjectContainer, {
      */
     focusSprite: function(spr) {
         return this.focus(
-            math.round(spr.position.x) * this.game.world.scale.x,
-            math.round(spr.position.y) * this.game.world.scale.y
+            math.round(spr.position.x),
+            math.round(spr.position.y)
         );
     },
     /**
@@ -162,21 +164,19 @@ utils.inherits(Camera, DisplayObjectContainer, {
      * not go outside the bounds set with setBounds()
      *
      * @method focus
-     * @param x {Number|Vector} The x coord to focus on, if a Point is passed the y param is ignored
+     * @param x {Number|Vector} The x coord to focus on, if a Vector is passed the y param is ignored
      * @param y {Number} The y coord to focus on
      * @return {Camera} Returns iteself for chainability
      */
     focus: function(x, y) {
         y = x.y !== undefined ? x.y : (y || 0);
         x = x.x !== undefined ? x.x : (x || 0);
-        //x += (x > 0) ? 0.0000001 : -0.0000001;
-        //y += (y > 0) ? 0.0000001 : -0.0000001;
 
         //calculate how much we need to pan
         var goToX = x - this.hSize.x,
             goToY = y - this.hSize.y,
-            dx = goToX + this.game.world.position.x, //world pos is negative
-            dy = goToY + this.game.world.position.y;
+            dx = goToX + this.world.position.x, //world pos is negative
+            dy = goToY + this.world.position.y;
 
         return this.pan(dx, dy);
     },
@@ -196,34 +196,33 @@ utils.inherits(Camera, DisplayObjectContainer, {
         if(!dx && !dy) return;
 
             //world position
-        var pos = this.game.world.position,
+        var pos = this.world.position,
             //new world position
             newX = pos.x - dx,
             newY = pos.y - dy,
             b = this._bounds;
 
-        if(this._bounds) {
-            if(this._outsideBounds(-newX, -pos.y))
-                dx = dx < 0 ? b.x + pos.x : (b.x + b.width) - this.size.x + pos.x; //how far can we move since dx is too much
-            if(this._outsideBounds(-pos.x, -newY))
-                dy = dy < 0 ? b.y + pos.y : (b.y + b.height) - this.size.y + pos.y;
+        if(b) {
+            //check if X movement is illegal
+            if(this._outsideBounds(-newX, -pos.y)) {
+                dx = (dx < 0 ? b.x : b.right - this.size.x) + pos.x; //how far can we move since dx is too much
+            }
+            //check if Y movement is illegal
+            if(this._outsideBounds(-pos.x, -newY)) {
+                dy = (dy < 0 ? b.y : b.bottom - this.size.y) + pos.y;
+            }
         }
 
-        if(dx || dy) {
-            //if we move a lot, then just force a re render (less expensive then panning all the way there)
-            if(Math.abs(dx) > this.hSize.x || Math.abs(dy) > this.hSize.y) {
-                this.game.world.setPosition(this.game.world.position.x - dx, this.game.world.position.y - dy);
-                this.game.world.resize(this.size.x, this.size.y);
-            }
-            //otherwise just pan
-            else {
-                this.game.world.pan(-dx, -dy);
-            }
-        }
+        //prevent NaN
+        if(!dx) dx = 0;
+        if(!dy) dy = 0;
+
+        this.world.pan(-dx, -dy);
 
         return this;
     },
     _outsideBounds: function(x, y) {
+        //check if each corner of the camera is within the bounds
         return (
             !this._bounds.contains(x, y) || //top left
             !this._bounds.contains(x, y + this.size.y) || //bottom left
@@ -244,15 +243,15 @@ utils.inherits(Camera, DisplayObjectContainer, {
     resize: function(w, h) {
         this.size.set(w, h);
         this.hSize.set(
-            Math.round(this.size.x / 2),
-            Math.round(this.size.y / 2)
+            math.round(this.size.x / 2),
+            math.round(this.size.y / 2)
         );
 
         return this;
     },
     /**
      * Sets the bounds the camera is allowed to go. Usually this is the world's
-     * min and max, and is set for you.
+     * size unless you set it manually.
      *
      * @method constrain
      * @param shape {Rectangle|Polygon|Circle|Ellipse} The shape to constrain the camera into
@@ -263,6 +262,12 @@ utils.inherits(Camera, DisplayObjectContainer, {
 
         return this;
     },
+    /**
+     * Removes the constraints of the camera, to allow free movement around the world
+     *
+     * @method unconstrain
+     * @return {Camera} Returns iteself for chainability
+     */
     unconstrain: function() {
         this._bounds = null;
 
@@ -285,8 +290,8 @@ utils.inherits(Camera, DisplayObjectContainer, {
                 var moveX, moveY,
                     dx, dy,
                     //get the x,y of the sprite on the screen
-                    camX = (this._target.position.x + (this.game.world.position.x / this.game.world.scale.x)) * this.game.world.scale.x,
-                    camY = (this._target.position.y + (this.game.world.position.y / this.game.world.scale.y)) * this.game.world.scale.y;
+                    camX = this._target.position.x + this.world.position.x,
+                    camY = this._target.position.y + this.world.position.y;
 
                 moveX = moveY = dx = dy = 0;
 
@@ -309,8 +314,8 @@ utils.inherits(Camera, DisplayObjectContainer, {
                     moveY = dy;
 
                 this.pan(
-                    Math.round(moveX),
-                    Math.round(moveY)
+                    math.round(moveX),
+                    math.round(moveY)
                 );
             }
         }
