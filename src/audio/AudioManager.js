@@ -179,8 +179,7 @@ utils.inherits(AudioManager, Object, {
      * Creates a new audio player for a peice of audio
      *
      * @method create
-     * @param key {String} The cache key for the preloaded audio
-     * @param [name] {String} An name to uniquely identify this audio, if omitted one will be ranomly chosen
+     * @param key {String} The unique cache key for the preloaded audio
      * @param [settings] {Object} All the settings for the audio player
      * @param [settings.volume] {Number} The volume of this audio clip
      * @param [settings.autoplay] {Boolean} Automatically start playing after loaded
@@ -191,27 +190,17 @@ utils.inherits(AudioManager, Object, {
      * @param [settings.format] {String} Force an extension override
      * @return {AudioPlayer} Will return the new audio player, or false if we couldn't determine a compatible url
      */
-    create: function(key, name, settings) {
+    add: function(key, settings) {
         //if we can't play audio return false
         if(!this.canPlay) {
             return false;
         }
-
-        //name is "optional"
-        if(typeof name !== 'string') {
-            settings = name;
-            name = null;
-        }
-
-        //make up an ID if none was passed
-        if(!name)
-            name = math.randomString();
 
         var audio = this.game.cache.getAudio(key);
 
         if(!audio.player)
             audio.player = new AudioPlayer(this, audio, settings);
 
-        return this.sounds[name] = audio.player;
+        return this.sounds[key] = audio.player;
     }
 });
