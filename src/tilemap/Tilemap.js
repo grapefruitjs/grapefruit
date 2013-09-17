@@ -128,7 +128,7 @@ var Tilemap = module.exports = function(game, map) {
 
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
         var ts = map.tilesets[t];
-        this.tilesets.push(new Tileset(obj.textures[ts.name], ts));
+        this.tilesets.push(new Tileset(map.textures[ts.name], ts));
     }
 
     for(var i = 0, il = map.layers.length; i < il; ++i) {
