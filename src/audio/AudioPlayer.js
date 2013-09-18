@@ -39,6 +39,14 @@ var AudioPlayer = module.exports = function(manager, audio, settings) {
     this.game = manager.game;
 
     /**
+     * The cache key that uniquely identifies this piece of audio
+     *
+     * @property key
+     * @type String
+     */
+    this.key = audio.key;
+
+    /**
      * Play the audio immediately after loading
      *
      * @property autoplay

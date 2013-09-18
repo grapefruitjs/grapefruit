@@ -163,7 +163,7 @@ utils.inherits(AudioManager, Object, {
     },
     attach: function(sound) {
         //TODO: check name collision
-        this.sounds[sound.src] = sound;
+        this.sounds[sound.key] = sound;
 
         sound._manager = this;
 
@@ -201,5 +201,14 @@ utils.inherits(AudioManager, Object, {
             audio.player = new AudioPlayer(this, audio, settings);
 
         return this.sounds[key] = audio.player;
+    },
+    remove: function(key) {
+        var audio = this.sounds[key];
+
+        if(audio) {
+            audio.stop();
+        }
+
+        delete this.sounds[key];
     }
 });
