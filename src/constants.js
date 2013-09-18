@@ -26,11 +26,23 @@ module.exports = {
         LOCKON: 3
     },
 
-    DIRECTION: {
-        BOTH: 0,
-        HORIZONTAL: 1,
-        VERTICAL: 2
+    //Axis flags
+    AXIS: {
+        NONE: 0,        // 0000
+        HORIZONTAL: 1,  // 0001
+        VERTICAL: 2,    // 0010
+        BOTH: 3         // 0011
     },
+
+    //Directional Flags
+    DIRECTION: {
+        NONE: 0,        // 0000
+        LEFT: 1,        // 0001
+        RIGHT: 2,       // 0010
+        TOP: 4,         // 0100
+        BOTTOM: 8,      // 1000
+        ALL: 15         // 1111
+    }
 
     SPRITE_TYPE: {
         PLAYER: 'player',
@@ -48,5 +60,16 @@ module.exports = {
         LADDER: 'ladder',
         WATER: 'water',
         DEEP_WATER: 'deep_water'
+    },
+
+    PHYSICS_TYPE: {
+        STATIC: 0,      //doesn't move
+        KINEMATIC: 1,   //gravity doesn't effect it, and solver doesn't solve it
+        DYNAMIC: 2,     //totally dynamic (moves and gravity etc)
+    },
+
+    SOLVE_TYPE: {
+        DISPLACE: 0,    //displace solver, only move outside another's space and set 0 vel
+        ELASTIC: 1,     //elastic will displace and bounce the collider based on bounce
     }
 };

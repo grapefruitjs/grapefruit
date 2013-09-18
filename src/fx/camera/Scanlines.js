@@ -11,7 +11,7 @@ utils.inherits(Scanlines, Effect, {
         Effect.prototype.start.call(this);
 
         color = color || 0x000000;
-        direction = direction || C.DIRECTION.HORIZONTAL;
+        direction = direction || C.AXIS.HORIZONTAL;
         spacing = spacing || 4;
         thickness = thickness || 1;
         alpha = alpha || 0.3;
@@ -24,13 +24,13 @@ utils.inherits(Scanlines, Effect, {
         this.gfx.beginFill(color, alpha);
 
         //draw the lines
-        if((direction === C.DIRECTION.BOTH) || (direction === C.DIRECTION.VERTICAL)) {
+        if(direction & C.AXIS.VERTICAL) {
             for(var x = 0; x < sx; x += spacing) {
                 this.gfx.drawRect(x, 0, thickness, sy);
             }
         }
 
-        if((direction === C.DIRECTION.BOTH) || (direction === C.DIRECTION.HORIZONTAL)) {
+        if(direction & C.AXIS.HORIZONTAL) {
             for(var y = 0; y < sy; y += spacing) {
                 this.gfx.drawRect(0, y, sx, thickness);
             }
