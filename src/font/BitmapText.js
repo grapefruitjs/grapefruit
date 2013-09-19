@@ -1,4 +1,4 @@
-var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+var Container = require('../display/Container'),
 
 /**
  * A Text Object will create (a) line(s) of text using bitmap font. To split a line you can use "\n", "\r" or "\r\n"
@@ -7,7 +7,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * [http://www.bmglyph.com/] for mac.
  *
  * @class BitmapText
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  * @param text {String} The copy that you would like the text to display
  * @param font {Object} The font data object (this is generally grabbed from `game.cache.getBitmapFont('mykey')`);
@@ -20,7 +20,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * @param [style.align="left"] {String} An alignment of the multiline text ("left", "center" or "right")
  */
 var BitmapText = function(text, font, style) {
-    DisplayObjectContainer.call(this);
+    Container.call(this);
 
     this.dirty = true;
     this.font = font;
@@ -40,7 +40,7 @@ var BitmapText = function(text, font, style) {
     this.setStyle(style);
 };
 
-utils.inherits(BitmapText, DisplayObjectContainer, {
+utils.inherits(BitmapText, Container, {
     setStyle: function(style) {
         style = style || {};
 
@@ -176,7 +176,7 @@ utils.inherits(BitmapText, DisplayObjectContainer, {
             this.dirty = false;
         }
 
-        DisplayObjectContainer.prototype.updateTransform.call(this);
+        Container.prototype.updateTransform.call(this);
     }
 });
 

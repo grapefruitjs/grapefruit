@@ -1,4 +1,4 @@
-var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+var Container = require('../display/Container'),
     Sprite = require('../display/Sprite'),
     Gui = require('../gui/Gui'),
     Rectangle = require('../math/Rectangle'),
@@ -12,7 +12,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * to ensure they are using "screen-coords".
  *
  * @class Camera
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  */
 var Camera = module.exports = function(state) {
@@ -76,10 +76,10 @@ var Camera = module.exports = function(state) {
      */
     this.gui = new Gui();
 
-    DisplayObjectContainer.call(this);
+    Container.call(this);
 };
 
-utils.inherits(Camera, DisplayObjectContainer, {
+utils.inherits(Camera, Container, {
     /**
      * Follows an sprite with the camera, ensuring they are always center view. You can
      * pass a follow style to change the area an sprite can move around in before we start

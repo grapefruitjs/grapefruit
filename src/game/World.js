@@ -1,11 +1,11 @@
 var utils = require('../utils/utils'),
-    DisplayObjectContainer = require('../display/DisplayObjectContainer');
+    Container = require('../display/Container');
 
 /**
  * The world is the container for all game objects
  *
  * @class World
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  */
 var World = module.exports = function(state) {
@@ -17,10 +17,10 @@ var World = module.exports = function(state) {
      */
     this.game = state.game;
 
-    DisplayObjectContainer.call(this);
+    Container.call(this);
 };
 
-utils.inherits(World, DisplayObjectContainer, {
+utils.inherits(World, Container, {
     /**
      * Pans the world around
      *

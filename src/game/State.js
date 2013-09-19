@@ -1,4 +1,4 @@
-var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+var Container = require('../display/Container'),
     World = require('./World'),
     Camera = require('../camera/Camera'),
     ObjectFactory = require('../utils/ObjectFactory'),
@@ -9,7 +9,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * GameStates are containers that represent different states of a game
  *
  * @class GameState
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  * @param [name] {String} The name of this state
  * @param [settings] {Object} All the settings for this game state
@@ -70,7 +70,7 @@ var State = module.exports = function(game, name) {
     this.add = new ObjectFactory(this);
 
     //call base ctor
-    DisplayObjectContainer.call(this);
+    Container.call(this);
 
     //start disabled
     this.disable();
@@ -83,7 +83,7 @@ var State = module.exports = function(game, name) {
     this.camera.resize(game.width, game.height);
 };
 
-utils.inherits(State, DisplayObjectContainer, {
+utils.inherits(State, Container, {
     /**
      * Enables (shows) the game state
      *
