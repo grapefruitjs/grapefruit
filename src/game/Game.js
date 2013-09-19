@@ -444,6 +444,11 @@ utils.inherits(Game, Object, {
         this.input.update(dt);
         this.timings.inputEnd = this.clock.now();
 
+        //TODO: plugins
+        //this.timings.pluginsStart = this.clock.now();
+        //this.plugins.update(dt);
+        //this.timings.pluginsEnd = this.clock.now();
+
         //simulate physics and detect/resolve collisions
         this.game.timings.physicsStart = this.clock.now();
         this.physics.update(dt);

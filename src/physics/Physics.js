@@ -33,11 +33,5 @@ utils.inherits(Physics, Object, {
                 this.tree.insert(body);
             }
         }
-
-        //detect collisions
-
-        //solve collisions
-
-        //update sprite positions
     }
 });
