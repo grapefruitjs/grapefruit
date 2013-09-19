@@ -42,7 +42,7 @@ var Rectangle = require('../math/Rectangle'),
 *
 * @class QuadTree
 * @constructor
-* @param bounds {Object|Rectangle} The bounds of the quad tree
+* @param bounds {Rectangle} The bounds of the quad tree
 * @param [maxObjects=10] {Number} Max objects a node can hold before splitting into 4 subnodes
 * @param [maxLevels=4] {Number} Total max levels inside root QuadTree
 * @param [level] {Number} Deepth level, required for subnodes  
@@ -52,18 +52,7 @@ var QuadTree = module.exports = function(bounds, maxObjects, maxLevels, level) {
     this.maxLevels = maxLevels || 4;
     this.level = level || 0;
 
-    this.bounds = bounds;
-
-    //precalculate some bounds values
-    bounds.x = math.round(bounds.x);
-    bounds.y = math.round(bounds.y);
-    bounds.width = math.round(bounds.width);
-    bounds.height = math.round(bounds.height);
-
-    bounds.subWidth = Math.floor(bounds.width / 2);
-    bounds.subHeight = Math.floor(bounds.height / 2);
-    bounds.right = bounds.x + bounds.subWidth;
-    bounds.bottom = bounds.y + bounds.subHeight;
+    this.setBounds(bounds);
 
     this.objects = [];
     this.nodes = [];
@@ -84,16 +73,16 @@ utils.inherits(QuadTree, Object, {
         this._nextLevel++;
 
         //top right node
-        this.nodes[0] = new QuadTree(new Rectangle(b.right, b.y, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
+        this.nodes[0] = new QuadTree(new Rectangle(b.midX, b.y, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
 
         //top left node
         this.nodes[1] = new QuadTree(new Rectangle(b.x, b.y, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
 
         //bottom left node
-        this.nodes[2] = new QuadTree(new Rectangle(b.x, b.bottom, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
+        this.nodes[2] = new QuadTree(new Rectangle(b.x, b.midY, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
 
         //bottom right node
-        this.nodes[3] = new QuadTree(new Rectangle(b.right, b.bottom, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
+        this.nodes[3] = new QuadTree(new Rectangle(b.midX, b.midY, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
     },
 
     /*
@@ -151,24 +140,24 @@ utils.inherits(QuadTree, Object, {
         var index = -1;
 
         //body can completely fit within left quadrants
-        if(body.x < this.bounds.right && body.right < this.bounds.right) {
+        if(body.x < this.bounds.midX && body.right < this.bounds.midX) {
             //body fits within the top-left quadrant of this quadtree
-            if((body.y < this.bounds.bottom && body.bottom < this.bounds.bottom)) {
+            if((body.y < this.bounds.midY && body.bottom < this.bounds.midY)) {
                 index = 1;
             }
             //body fits within the bottom-left quadrant of this quadtree
-            else if((body.y > this.bounds.bottom)) {
+            else if((body.y > this.bounds.midY)) {
                 index = 2;
             }
         }
         //body can completely fit within the right quadrants
-        else if (body.x > this.bounds.right) {
+        else if (body.x > this.bounds.midX) {
             //body fits within the top-right quadrant of this quadtree
-            if((body.y < this.bounds.bottom && body.bottom < this.bounds.bottom)) {
+            if((body.y < this.bounds.midY && body.bottom < this.bounds.midY)) {
                 index = 0;
             }
             //body fits within the bottom-right quadrant of this quadtree
-            else if((body.y > this.bounds.bottom)) {
+            else if((body.y > this.bounds.midY)) {
                 index = 3;
             }
         }
@@ -221,5 +210,19 @@ utils.inherits(QuadTree, Object, {
         //clear arrays
         this.objects.length = 0;
         this.nodes.length = 0;
+    },
+    setBounds: function(bounds) {
+        this.bounds = bounds;
+
+        //precalculate some bounds values
+        bounds.x = math.round(bounds.x);
+        bounds.y = math.round(bounds.y);
+        bounds.width = math.round(bounds.width);
+        bounds.height = math.round(bounds.height);
+
+        bounds.subWidth = Math.floor(bounds.width / 2);
+        bounds.subHeight = Math.floor(bounds.height / 2);
+        bounds.midX = bounds.x + bounds.subWidth;
+        bounds.midY = bounds.y + bounds.subHeight;
     }
 });
