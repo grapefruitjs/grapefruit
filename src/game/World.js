@@ -1,5 +1,6 @@
 var utils = require('../utils/utils'),
-    Container = require('../display/Container');
+    Container = require('../display/Container'),
+    Rectangle = require('../math/Rectangle');
 
 /**
  * The world is the container for all game objects
@@ -16,6 +17,14 @@ var World = module.exports = function(state) {
      * @type Game
      */
     this.game = state.game;
+
+    /**
+     * The bounds of the world
+     *
+     * @property bounds
+     * @type Rectangle
+     */
+    this.bounds = new Rectangle(0, 0, state.game.width, state.game.height);
 
     Container.call(this);
 };
