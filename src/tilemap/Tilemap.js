@@ -126,11 +126,13 @@ var Tilemap = module.exports = function(game, map) {
     this.tx = new Texture(this.btx);
     this.addChild(this.spr = new Sprite(this.tx));
 
+    //create each tileset
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
         var ts = map.tilesets[t];
         this.tilesets.push(new Tileset(map.textures[ts.name], ts));
     }
 
+    //create each layer
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr;
 
@@ -158,6 +160,11 @@ var Tilemap = module.exports = function(game, map) {
         width: null,
         height: null
     };
+
+    //update the world bounds
+    var w = this.game.state.active.world;
+    w.bounds.width = Math.max(w.bounds.width, this.realSize.x);
+    w.bounds.height = Math.max(w.bounds.height, this.realSize.y);
 };
 
 utils.inherits(Tilemap, Container, {
