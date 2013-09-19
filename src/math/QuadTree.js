@@ -33,7 +33,8 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var math = require('./math'),
+var Rectangle = require('../math/Rectangle'),
+    math = require('./math'),
     utils = require('../utils/utils');
 
 /*
@@ -103,7 +104,8 @@ utils.inherits(QuadTree, Object, {
      * @param body {Body} The physics body to add to the tree
      */
     insert: function(body) {
-        var index;
+        var i = 0,
+            index = -1;
 
         //if we have subnodes ...
         if(this.nodes[0]) {
@@ -187,15 +189,15 @@ utils.inherits(QuadTree, Object, {
 
         if(this.nodes[0]) {
             //if body fits into a subnode
-            if(sprite.body.quadTreeIndex !== -1) {
-                returnObjects = returnObjects.concat(this.nodes[sprite.body.quadTreeIndex].retrieve(sprite));
+            if(index !== -1) {
+                returnObjects = returnObjects.concat(this.nodes[index].retrieve(body));
             }
             //if body does not fit into a subnode, check it against all subnodes (unrolled for speed)
             else {
-                returnObjects = returnObjects.concat(this.nodes[0].retrieve(sprite));
-                returnObjects = returnObjects.concat(this.nodes[1].retrieve(sprite));
-                returnObjects = returnObjects.concat(this.nodes[2].retrieve(sprite));
-                returnObjects = returnObjects.concat(this.nodes[3].retrieve(sprite));
+                returnObjects = returnObjects.concat(this.nodes[0].retrieve(body));
+                returnObjects = returnObjects.concat(this.nodes[1].retrieve(body));
+                returnObjects = returnObjects.concat(this.nodes[2].retrieve(body));
+                returnObjects = returnObjects.concat(this.nodes[3].retrieve(body));
             }
         }
 

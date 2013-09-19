@@ -3,6 +3,7 @@ var utils = require('../utils/utils'),
     Sprite = require('../display/Sprite'),
     Tilemap = require('../tilemap/Tilemap'),
     Rectangle = require('../math/Rectangle'),
+    BitmapText = require('../font/BitmapText'),
     C = require('../constants');
 
 var ObjectFactory = module.exports = function(state) {

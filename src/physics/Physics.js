@@ -3,11 +3,7 @@
 // ChipmunkJS: https://github.com/josephg/Chipmunk-js
 // IBM Article: http://www.ibm.com/developerworks/library/wa-build2dphysicsengine/
 
-var Rectangle = require('../math/Rectangle'),
-    Vector = require('../math/Vector'),
-    math = require('../math/math'),
-    utils = require('../utils/utils'),
-    C = require('../constants');
+var utils = require('../utils/utils');
 
 var Physics = module.exports = function(game) {
     this.game = game;
@@ -24,7 +20,7 @@ utils.inherits(Physics, Object, {
         var bods = this.bodies;
 
         for(var i = 0, il = bods.length, body; i < il; ++i) {
-            var body = bods[i];
+            body = bods[i];
 
             body[i].computeVelocity(dt);
             body[i].update(dt);

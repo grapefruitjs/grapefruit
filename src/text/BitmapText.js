@@ -1,4 +1,11 @@
 var Container = require('../display/Container'),
+    ObjectPool = require('../utils/ObjectPool'),
+    Texture = require('../display/Texture'),
+    Sprite = require('../display/Sprite'),
+    Vector = require('../math/Vector'),
+    Rectangle = require('../math/Rectangle'),
+    utils = require('../utils/utils'),
+    PIXI = require('../vendor/pixi');
 
 /**
  * A Text Object will create (a) line(s) of text using bitmap font. To split a line you can use "\n", "\r" or "\r\n"
@@ -123,7 +130,7 @@ utils.inherits(BitmapText, Container, {
             if(align === 'right')
                 offset = maxLineWidth - lineWidths[i];
             else if(align === 'center')
-                offset = (maxLineWidth - lineWidths[i]) / 2
+                offset = (maxLineWidth - lineWidths[i]) / 2;
 
             lineAlignOffsets.push(offset);
         }
