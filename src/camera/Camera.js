@@ -16,7 +16,29 @@ var Container = require('../display/Container'),
  * @constructor
  */
 var Camera = module.exports = function(state) {
+    /**
+     * The world instance this camera is tied to
+     *
+     * @property world
+     * @type World
+     */
     this.world = state.world;
+
+    /**
+     * The game instance this camera belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = state.game;
+
+    /**
+     * The game state this camera belongs to
+     *
+     * @property state
+     * @type State
+     */
+    this.state = state;
 
     /**
      * The bounds of that the camera can move to
@@ -26,7 +48,7 @@ var Camera = module.exports = function(state) {
      * @readOnly
      * @private
      */
-    this._bounds = new Rectangle(0, 0, 0, 0);
+    this._bounds = state.world._bounds.clone();
 
     /**
      * When following a sprite this is the space within the camera that it can move around
@@ -68,15 +90,26 @@ var Camera = module.exports = function(state) {
     this.hSize = new Vector(0, 0);
 
     /**
-     * The GUI that contains all GUI items
+     * The container that holds all the GUI items, direct children of Camera are effects
      *
      * @property gui
-     * @type Gui
+     * @type Container
      * @readOnly
      */
-    this.gui = new Gui();
+    this.gui = new Container();
+
+    /**
+     * An object factory for creating game objects
+     *
+     * @property add
+     * @type ObjectFactory
+     */
+    this.add = new ObjectFactory(state, this.gui);
 
     Container.call(this);
+
+    //add the gui child
+    this.addChild(this.gui);
 };
 
 utils.inherits(Camera, Container, {

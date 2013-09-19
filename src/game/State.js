@@ -2,6 +2,7 @@ var Container = require('../display/Container'),
     World = require('./World'),
     Camera = require('../camera/Camera'),
     ObjectFactory = require('../utils/ObjectFactory'),
+    Physics = require('../physics/Physics'),
     math = require('../math/math'),
     utils = require('../utils/utils');
 
@@ -43,16 +44,6 @@ var State = module.exports = function(game, name) {
     this.game = game;
 
     /**
-     * The camera you view the scene through, will be set
-     * when setup() is called with a game instance.
-     *
-     * @property camera
-     * @type Camera
-     * @readOnly
-     */
-    this.camera = new Camera(this);
-
-    /**
      * The container that holds all non-gui sprites and the tilemap
      *
      * @property world
@@ -62,12 +53,23 @@ var State = module.exports = function(game, name) {
     this.world = new World(this);
 
     /**
-     * An object factory for creating game objects
+     * The physics system to simulate the world physics
      *
-     * @property add
-     * @type ObjectFactory
+     * @property physics
+     * @type Physics
+     * @readOnly
      */
-    this.add = new ObjectFactory(this);
+    this.physics = new Physics(this);
+
+    /**
+     * The camera you view the scene through, will be set
+     * when setup() is called with a game instance.
+     *
+     * @property camera
+     * @type Camera
+     * @readOnly
+     */
+    this.camera = new Camera(this);
 
     //call base ctor
     Container.call(this);
@@ -120,9 +122,15 @@ utils.inherits(State, Container, {
         this.camera.update(dt);
         this.game.timings.cameraEnd = this.game.clock.now();
 
+        //update the world
         this.game.timings.worldStart = this.game.clock.now();
         this.world.update(dt);
         this.game.timings.worldEnd = this.game.clock.now();
+
+        //simulate physics and detect/resolve collisions
+        this.game.timings.physicsStart = this.clock.now();
+        this.physics.update(dt);
+        this.game.timings.physicsEnd = this.clock.now();
 
         return this;
     }
