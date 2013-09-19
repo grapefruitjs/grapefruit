@@ -99,7 +99,7 @@ utils.inherits(Body, Object, {
         this._vDelta = (this.computeVelocity(dt, this.velocity.y, this.accel.y, this.drag.y, this.maxVelocity.y) - this.velocity.y) / 2;
         this.velocity.y += this._vDelta;
         this.pos.y += this.velocity.y * dt;
-    }
+    },
     update: function(dt) {
         this.wasTouching = this.touching;
         this.touching = C.DIRECTION.NONE;

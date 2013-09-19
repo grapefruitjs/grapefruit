@@ -42,7 +42,7 @@ module.exports = {
         TOP: 4,         // 0100
         BOTTOM: 8,      // 1000
         ALL: 15         // 1111
-    }
+    },
 
     SPRITE_TYPE: {
         PLAYER: 'player',
