@@ -5,14 +5,14 @@ var EventEmitter = require('../utils/EventEmitter'),
 /**
  * The base display object, that anything being put on the screen inherits from
  *
- * @class DisplayObjectContainer
+ * @class Container
  * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a>
  * @uses EventEmitter
  * @uses PhysicsTarget
  * @namespace gf
  * @constructor
  */
-var DisplayObjectContainer = module.exports = function(settings) {
+var Container = module.exports = function(settings) {
     PIXI.DisplayObjectContainer.call(this);
     //gf.PhysicsTarget.call(this);
     EventEmitter.call(this);
@@ -125,7 +125,7 @@ var DisplayObjectContainer = module.exports = function(settings) {
      */
 };
 
-utils.inherits(DisplayObjectContainer, PIXI.DisplayObjectContainer, {
+utils.inherits(Container, PIXI.DisplayObjectContainer, {
     /**
      * Removes this object from the stage and the physics system
      *
@@ -146,10 +146,10 @@ utils.inherits(DisplayObjectContainer, PIXI.DisplayObjectContainer, {
     },
 
     /**
-     * Add a shortcut to addChild that overrides the return type as well
+     * A shortcut to addChild that returns the child after adding
      *
      * @method add
-     * @param child {DisplayObjectContainer} Any display object
+     * @param child {Container|Sprite} Any container or sprite
      */
     add: function(child) {
         PIXI.DisplayObjectContainer.apply(this, arguments);
@@ -160,7 +160,7 @@ utils.inherits(DisplayObjectContainer, PIXI.DisplayObjectContainer, {
 
 //Add event echos
 ['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
-    DisplayObjectContainer.prototype[evtname] = module.exports = function(e) {
+    Container.prototype[evtname] = module.exports = function(e) {
         this.emit(evtname, e);
     };
 });

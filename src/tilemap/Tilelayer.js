@@ -1,4 +1,4 @@
-var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+var Container = require('../display/Container'),
     Vector = require('../math/Vector'),
     utils = require('../utils/utils'),
     support = require('../utils/support');
@@ -10,13 +10,13 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * create an instance on your own.
  *
  * @class Tilelayer
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
 var Tilelayer = module.exports = function(map, layer) {
-    DisplayObjectContainer.call(this, layer);
+    Container.call(this, layer);
 
     /**
      * The map instance this tilelayer belongs to
@@ -76,7 +76,7 @@ var Tilelayer = module.exports = function(map, layer) {
     this.visible = layer.visible;
 };
 
-utils.inherits(Tilelayer, DisplayObjectContainer, {
+utils.inherits(Tilelayer, Container, {
     /**
      * Renders a layer onto a context
      *
@@ -125,7 +125,7 @@ utils.inherits(Tilelayer, DisplayObjectContainer, {
         }
     },
     destroy: function() {
-        DisplayObjectContainer.prototype.destroy.call(this);
+        Container.prototype.destroy.call(this);
 
         this.game = null;
         this.name = null;

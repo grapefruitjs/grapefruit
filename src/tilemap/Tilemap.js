@@ -1,4 +1,4 @@
-var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+var Container = require('../display/Container'),
     ObjectGroup = require('./ObjectGroup'),
     BaseTexture = require('../display/BaseTexture'),
     Texture = require('../display/Texture'),
@@ -16,13 +16,13 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * file, and this expets that to already be done.
  *
  * @class Tilemap
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  * @param map {Object} All the settings for the map
  */
 var Tilemap = module.exports = function(game, map) {
     //call base ctor
-    DisplayObjectContainer.call(this, map);
+    Container.call(this, map);
 
     /**
      * The game instance this tilemap belongs to
@@ -160,7 +160,7 @@ var Tilemap = module.exports = function(game, map) {
     };
 };
 
-utils.inherits(Tilemap, DisplayObjectContainer, {
+utils.inherits(Tilemap, Container, {
     /**
      * Gets the tileset that an ID is associated with
      *
@@ -179,7 +179,7 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
      * @method destroy
      */
     destroy: function() {
-        DisplayObjectContainer.prototype.destroy.call(this);
+        Container.prototype.destroy.call(this);
 
         this.game = null;
         this.properties = null;
@@ -193,7 +193,7 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
         this.realSize = null;
     },
     /**
-     * Spawns all the objects in the TiledObjectGroups of this map
+     * Spawns all the objects in the ObjectGroups of this map
      *
      * @method spawnObjects
      */
@@ -209,7 +209,7 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
         return this;
     },
     /**
-     * Spawns all the objects in the TiledObjectGroups of this map
+     * Spawns all the objects in the ObjectGroups of this map
      *
      * @method despawnObjects
      */
@@ -241,12 +241,12 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
         });
     },
     /**
-     * Called by a TiledObjectGroup when an object event occurs. This is so you can listen for
+     * Called by a ObjectGroup when an object event occurs. This is so you can listen for
      * the emitted events on the world instead of the tile itself.
      *
      * @method onObjectEvent
      * @param eventName {String} The event name to emit, the prefix 'object.' will be added to it
-     * @param obj {Sprite|DisplayObjectContainer} The object that has the event
+     * @param obj {Sprite|Container} The object that has the event
      * @param data {InteractionData} The raw interaction object for the event
      * @private
      */

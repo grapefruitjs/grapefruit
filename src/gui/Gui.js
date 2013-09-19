@@ -1,11 +1,11 @@
 var utils = require('../utils/utils'),
-    DisplayObjectContainer = require('../display/DisplayObjectContainer');
+    Container = require('../display/Container');
 
 /**
  * The base Gui that holds GuiItems to be added to the Camera
  *
  * @class Gui
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  */
 var Gui = module.exports = function(name) {
@@ -18,7 +18,7 @@ var Gui = module.exports = function(name) {
      */
     this.name = name || '';
 
-    DisplayObjectContainer.call(this);
+    Container.call(this);
 };
 
-utils.inherits(Gui, DisplayObjectContainer);
+utils.inherits(Gui, Container);

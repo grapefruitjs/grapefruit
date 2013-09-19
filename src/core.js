@@ -39,7 +39,7 @@ module.exports = {
     //display
     BaseTexture:    require('./display/BaseTexture'),
     Texture:        require('./display/Texture'),
-    DisplayObjectContainer: require('./display/DisplayObjectContainer'),
+    Container:      require('./display/Container'),
     Sprite:         require('./display/Sprite'),
     AnimatedSprite: require('./display/AnimatedSprite'),
 
