@@ -10,19 +10,20 @@ var Rectangle = require('../math/Rectangle'),
     C = require('../constants');
 
 var Body = module.exports = function(sprite) {
+    Rectangle.call(this, sprite.position.x, sprite.position.y, sprite.width, sprite.height);
+
     this.sprite = sprite;
     this.size = sprite.currentFrame;
 
     this.type = C.PHYSICS_TYPE.DYNAMIC;
     this.solveType = C.SOLVE_TYPE.DISPLACE;
 
-    this.pos = new Vector();
-
     this.velocity = new Vector();
     this.accel = new Vector();
     this.drag = new Vector();
     this.gravity = new Vector();
     this.bounce = new Vector();
+    this.offset = new Vector();
     this.maxVelocity = new Vector(10000, 10000);
 
     this.angularVelocity = 0;
@@ -43,8 +44,6 @@ var Body = module.exports = function(sprite) {
 
     this.lastPos = new Vector();
 
-    this.shape = sprite.hitArea || new Rectangle(0, 0, sprite.width, sprite.height);
-
     //some temp vars to prevent having to create a bunch each update
     this._accel = 0;
     this._drag = 0;
@@ -53,7 +52,7 @@ var Body = module.exports = function(sprite) {
     this._accel = 0;
 };
 
-utils.inherits(Body, Object, {
+utils.inherits(Body, Rectangle, {
     computeVelocity: function(dt, vel, accel, drag, maxVel) {
         this._accel = accel * dt;
         this._drag = drag * dt;
@@ -93,21 +92,21 @@ utils.inherits(Body, Object, {
         // compute X velocity
         this._vDelta = (this.computeVelocity(dt, this.velocity.x, this.accel.x, this.drag.x, this.maxVelocity.x) - this.velocity.x) / 2;
         this.velocity.x += this._vDelta;
-        this.pos.x += this.velocity.x * dt;
+        this.x += this.velocity.x * dt;
 
         // compute Y velocity
         this._vDelta = (this.computeVelocity(dt, this.velocity.y, this.accel.y, this.drag.y, this.maxVelocity.y) - this.velocity.y) / 2;
         this.velocity.y += this._vDelta;
-        this.pos.y += this.velocity.y * dt;
+        this.y += this.velocity.y * dt;
     },
     update: function(dt) {
         this.wasTouching = this.touching;
         this.touching = C.DIRECTION.NONE;
 
-        this.lastPos.copy(this.pos);
+        this.lastPos.set(this.x, this.y);
 
-        this.pos.x = (this.sprite.position.x - (this.sprite.anchor.x * this.shape.width)) + this.shape.x;
-        this.pos.y = (this.sprite.position.y - (this.sprite.anchor.y * this.shape.height)) + this.shape.y;
+        this.x = (this.sprite.position.x - (this.sprite.anchor.x * this._width)) + this.offset.x;
+        this.y = (this.sprite.position.y - (this.sprite.anchor.y * this._height)) + this.offset.y;
 
         this.rotation = this.sprite.angle;
 
@@ -118,8 +117,8 @@ utils.inherits(Body, Object, {
         this.syncSprite();
     },
     syncSprite: function() {
-        this.sprite.position.x = this.pos.x - this.shape.x + (this.sprite.anchor.x * this.shape.width);
-        this.sprite.position.y = this.pos.y - this.shape.y + (this.sprite.anchor.y * this.shape.height);
+        this.sprite.position.x = this.x - this.offset.x + (this.sprite.anchor.x * this._width);
+        this.sprite.position.y = this.y - this.offset.y + (this.sprite.anchor.y * this._height);
 
         if(this.allowRotation) {
             this.sprite.angle = this.rotation;

@@ -71,5 +71,17 @@ module.exports = {
     SOLVE_TYPE: {
         DISPLACE: 0,    //displace solver, only move outside another's space and set 0 vel
         ELASTIC: 1,     //elastic will displace and bounce the collider based on bounce
+    },
+
+    PHYSICS: {
+        MAX_QUAD_OBJECTS: 10,   //max number of objects before a quadrant splits in the physics quad tree
+        MAX_QUAD_LEVELS: 4      //max levels deep the physics quad tree can go
+    },
+
+    TYPES: {
+        NONE: 0,
+        CONTAINER: 1,
+        SPRITE: 2,
+        TILEMAP: 3
     }
 };
