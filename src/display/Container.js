@@ -146,13 +146,14 @@ utils.inherits(Container, PIXI.DisplayObjectContainer, {
     },
 
     /**
-     * A shortcut to addChild that returns the child after adding
+     * Adds a child to the container and returns the child
      *
-     * @method add
+     * @method addChild
      * @param child {Container|Sprite} Any container or sprite
+     * @return {Container|Sprite} The child that was added
      */
-    add: function(child) {
-        PIXI.DisplayObjectContainer.apply(this, arguments);
+    addChild: function(child) {
+        PIXI.DisplayObjectContainer.prototype.addChild.apply(this, arguments);
 
         return child;
     }

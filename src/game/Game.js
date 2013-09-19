@@ -7,7 +7,6 @@ var StateManager = require('./StateManager'),
     Loader = require('../loader/Loader'),
     InputManager = require('../input/InputManager'),
     AudioManager = require('../audio/AudioManager'),
-    PhysicsSystem = require('../physics/PhysicsSystem'),
     support = require('../utils/support'),
     utils = require('../utils/utils'),
     PIXI = require('../vendor/pixi'),
@@ -199,15 +198,6 @@ var Game = module.exports = function(container, settings) {
      * @readOnly
      */
     this.state = new StateManager(this);
-
-    /**
-     * The physics system to simulate the world
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @readOnly
-     */
-    this.physics = new PhysicsSystem(this);
 
     //TODO:
     //
@@ -449,11 +439,6 @@ utils.inherits(Game, Object, {
         //this.plugins.update(dt);
         //this.timings.pluginsEnd = this.clock.now();
 
-        //simulate physics and detect/resolve collisions
-        this.game.timings.physicsStart = this.clock.now();
-        this.physics.update(dt);
-        this.game.timings.physicsEnd = this.clock.now();
-
         //update this game state
         this.timings.stateStart = this.clock.now();
         this.state.active.update(dt);
@@ -463,20 +448,6 @@ utils.inherits(Game, Object, {
         this.timings.renderStart = this.clock.now();
         this.renderer.render(this.stage);
         this.timings.renderEnd = this.clock.now();
-    }
-});
-
-/**
- * Alias for the active State's add namespace. Instead of using
- * `game.state.active.add.sprite`, you can use `game.add.sprite`
- *
- * @property add
- * @type Object
- * @readOnly
- */
-Object.defineProperty(Game.prototype, 'add', {
-    get: function() {
-        return this.state.active.add;
     }
 });
 

@@ -11,12 +11,20 @@ var utils = require('../utils/utils'),
  */
 var World = module.exports = function(state) {
     /**
-     * The game instance this loader belongs to
+     * The game instance this world belongs to
      *
      * @property game
      * @type Game
      */
     this.game = state.game;
+
+    /**
+     * The game state this world belongs to
+     *
+     * @property state
+     * @type State
+     */
+    this.state = state;
 
     /**
      * The bounds of the world
@@ -25,6 +33,14 @@ var World = module.exports = function(state) {
      * @type Rectangle
      */
     this.bounds = new Rectangle(0, 0, state.game.width, state.game.height);
+
+    /**
+     * An object factory for creating game objects
+     *
+     * @property add
+     * @type ObjectFactory
+     */
+    this.add = new ObjectFactory(this.game, this);
 
     Container.call(this);
 };
