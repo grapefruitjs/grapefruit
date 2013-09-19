@@ -102,6 +102,14 @@ utils.inherits(ObjectFactory, Object, {
 
         return this.camera.gui.add(new GuiItem(tx, interact));
     },
+    /**
+     * Creates a new instance of BitmapText
+     *
+     * @method bitmaptext
+     * @param text {String} The text for the BitmapText to display
+     * @param font {String} The key for the bitmap font loaded into the cache
+     * @param interactive {Boolean} Can the item be interacted with by mouse (clicked, dragged, etc)
+     */
     bitmaptext: function(text, font, style) {
         if(typeof font === 'string')
             font = this.game.cache.getBitmapFont(font);
