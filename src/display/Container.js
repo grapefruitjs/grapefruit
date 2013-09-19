@@ -1,6 +1,7 @@
 var EventEmitter = require('../utils/EventEmitter'),
     utils = require('../utils/utils'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('../vendor/pixi'),
+    C = require('../constants');
 
 /**
  * The base display object, that anything being put on the screen inherits from
@@ -14,11 +15,18 @@ var EventEmitter = require('../utils/EventEmitter'),
  */
 var Container = module.exports = function(settings) {
     PIXI.DisplayObjectContainer.call(this);
-    //gf.PhysicsTarget.call(this);
     EventEmitter.call(this);
 
     //mixin user's settings
     utils.setValues(this, settings);
+
+    /**
+     * The class type for fast checking
+     *
+     * @property _type
+     * @private
+     */
+    this._type = C.TYPES.CONTAINER;
 
     //Add these properties in so that all objects can see them in the docs
     //these properties are inherited from PIXI.DisplayObjectContainer
@@ -97,32 +105,6 @@ var Container = module.exports = function(settings) {
      * @type Boolean
      * @default false
      */
-
-    /**
-     * Inherited Methods
-     */
-
-    /**
-     * Adds a child to the object.
-     *
-     * @method addChild
-     * @param child {DisplayObject}
-     */
-
-    /**
-     * Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown
-     *
-     * @method addChildAt
-     * @param child {DisplayObject}
-     * @param index {Number}
-     */
-
-    /**
-     * Removes a child from the object.
-     *
-     * @method removeChild
-     * @param child {DisplayObject}
-     */
 };
 
 utils.inherits(Container, PIXI.DisplayObjectContainer, {
@@ -153,11 +135,90 @@ utils.inherits(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     addChild: function(child) {
-        PIXI.DisplayObjectContainer.prototype.addChild.apply(this, arguments);
+        if(child._container !== this) {
+            child._container = this;
+            PIXI.DisplayObjectContainer.prototype.addChild.apply(this, arguments);
+        }
 
         return child;
+    },
+
+    /**
+     * Adds a child to the object at a specified index. If the index is out of bounds an error will be thrown
+     *
+     * @method addChildAt
+     * @param child {Container|Sprite} Any container or sprite
+     * @param index {Number}
+     * @return {Container|Sprite} The child that was added
+     */
+    addChildAt: function(child) {
+        if(child._container !== this) {
+            child._container = this;
+            PIXI.DisplayObjectContainer.prototype.addChildAt.apply(this, arguments);
+        }
+
+        return child;
+    },
+
+    /**
+     * Removes a child from the object.
+     *
+     * @method removeChild
+     * @param child {Container|Sprite} Any container or sprite
+     * @return {Container|Sprite} The child that was added
+     */
+    removeChild: function(child) {
+        if(child._container === this) {
+            child._container = null;
+            PIXI.DisplayObjectContainer.prototype.removeChild.apply(this, arguments);
+        }
+
+        return child;
+    },
+
+    /**
+     * Removes a child from the object.
+     *
+     * @method removeChild
+     * @param child {Container|Sprite} Any container or sprite
+     * @return {Container} Returns iteself
+     */
+    removeAllChildren: function(child) {
+        while(this.children.length) {
+            if(this.children[0].destroy)
+                this.children[0].destroy();
+
+            this.removeChild(this.children[0]);
+        }
+
+        return this;
+    },
+
+    /**
+     * Brings a child to the top of the Z pile
+     *
+     * @method bringChildToTop
+     * @param child {Container|Sprite} Any container or sprite
+     * @return {Container|Sprite} The child that was added
+     */
+    bringChildToTop: function(child) {
+        if(child._container === this) {
+            this.removeChild(child);
+            this.addChild(child);
+        }
+
+        return child;
+    },
+
+    /**
+     * Destroys this objects
+     *
+     * @method destroy
+     */
+    destroy: function() {
+        this.removeAllChildren();
     }
-});
+ });
 
 //Add event echos
 ['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {

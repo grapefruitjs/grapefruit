@@ -28,6 +28,14 @@ var Sprite = module.exports = function(tx) {
      * @default 'neutral'
      */
     this.type = C.SPRITE_TYPE.NEUTRAL;
+
+    /**
+     * The class type for fast checking
+     *
+     * @property _type
+     * @private
+     */
+    this._type = C.TYPES.SPRITE;
 };
 
 utils.inherits(Sprite, PIXI.Sprite, {
