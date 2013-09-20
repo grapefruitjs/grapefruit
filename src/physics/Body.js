@@ -1,7 +1,6 @@
-// Based heavily off of PhotonStorm's Phaser Arcade Physics, ChipmunkJS, and an IBM Article
+// Based heavily off of PhotonStorm's Phaser Arcade Physics, and ChipmunkJS (mostly the former)
 // Phaser: https://github.com/photonstorm/phaser 
 // ChipmunkJS: https://github.com/josephg/Chipmunk-js
-// IBM Article: http://www.ibm.com/developerworks/library/wa-build2dphysicsengine/
 
 var Rectangle = require('../math/Rectangle'),
     Vector = require('../math/Vector'),
@@ -36,7 +35,7 @@ var Body = module.exports = function(sprite) {
     this.allowRotation = true;
 
     //touching/canCollide directional flags
-    this.canCollide = C.DIRECTION.ALL;
+    this.allowCollide = C.DIRECTION.ALL;
     this.touching = C.DIRECTION.NONE;
     this.wasTouching = C.DIRECTION.NONE;
 
@@ -123,5 +122,11 @@ utils.inherits(Body, Rectangle, {
         if(this.allowRotation) {
             this.sprite.angle = this.rotation;
         }
+    },
+    deltaX: function() {
+        return this.x - this.lastPos.x;
+    },
+    deltaY: function() {
+        return this.y - this.lastPos.y;
     }
 });

@@ -28,6 +28,8 @@ var Sprite = module.exports = function(tx) {
      * @default 'neutral'
      */
     this.type = C.SPRITE_TYPE.NEUTRAL;
+
+    this.hitArea = this.hitArea || new Rectangle(0, 0, this.width, this.height);
 };
 
 utils.inherits(Sprite, PIXI.Sprite, {

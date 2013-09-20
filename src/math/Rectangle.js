@@ -91,6 +91,13 @@ utils.inherits(Rectangle, Object, {
         }
 
         return false;
+    },
+
+    overlaps: function(rect) {
+        return this.right > rect.x &&
+                this.x < rect.right &&
+                this.bottom > rect.y &&
+                this.y < rect.bottom;
     }
 });
 

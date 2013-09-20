@@ -119,6 +119,16 @@ var Tilemap = module.exports = function(game, map) {
         this.size.y * this.scaledTileSize.y
     );
 
+    /**
+     * The layer that should contain collision data
+     * This is determined by finding a tile layer with 'collide' or 'collision'
+     * in the name. If no tile layer like that exists, the first layer is chosen
+     *
+     * @property collisionLayer
+     * @type Tilelayer
+     */
+    this.collisionLayer = null;
+
     //the buffer to draw to
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
@@ -134,11 +144,21 @@ var Tilemap = module.exports = function(game, map) {
 
     //create each layer
     for(var i = 0, il = map.layers.length; i < il; ++i) {
-        var lyr;
+        var lyr,
+            name = map.layers[i].name ? map.layers[i].name.toLower() : '';
 
         switch(map.layers[i].type) {
             case 'tilelayer':
                 lyr = new Tilelayer(this, map.layers[i]);
+
+                //default choice
+                if(!this.collisionLayer)
+                    this.collisionLayer = lyr;
+
+                //real choice if available
+                if(name.indexOf('collide') !== -1 || name.indexOf('collision') !== -1)
+                    this.collisionLayer = lyr;
+
                 break;
 
             case 'objectgroup':
