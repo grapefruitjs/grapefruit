@@ -1,4 +1,5 @@
 var EventEmitter = require('../utils/EventEmitter'),
+    Rectangle = require('../math/Rectangle'),
     utils = require('../utils/utils'),
     PIXI = require('../vendor/pixi'),
     C = require('../constants');

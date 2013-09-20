@@ -3,7 +3,12 @@
 // ChipmunkJS: https://github.com/josephg/Chipmunk-js
 
 var QuadTree = require('../math/QuadTree'),
+    Rectangle = require('../math/Rectangle'),
+    Container = require('../display/Container'),
+    Sprite = require('../display/Sprite'),
+    Tilemap = require('../tilemap/Tilemap'),
     utils = require('../utils/utils'),
+    math = require('../math/math'),
     C = require('../constants');
 
 var Physics = module.exports = function(state) {
@@ -238,8 +243,8 @@ utils.inherits(Physics, Object, {
             //TODO: Flag to prevent out solve?
 
             //set velocities
-            this._velocity1 = body1.velocity.x;
-            this._velocity2 = body2.velocity.x;
+            this._velocity1 = b1.velocity.x;
+            this._velocity2 = b2.velocity.x;
 
             //static entities do not move
             if(b1.type !== C.PHYSICS_TYPE.STATIC && b2.type !== C.PHYSICS_TYPE.STATIC) {
@@ -263,7 +268,7 @@ utils.inherits(Physics, Object, {
                 b1.velocity.x = this._velocity2 - (this._velocity1 * b1.bounce.x);
             }
             //if body 2 isn't static
-            else if(b2.type !== C>PHYSICS_TYPE.STATIC) {
+            else if(b2.type !== C.PHYSICS_TYPE.STATIC) {
                 b2.x += this._overlap;
                 b2.velocity.x = this._velocity1 - (this._velocity2 * b2.bounce.x);
             }
@@ -273,7 +278,7 @@ utils.inherits(Physics, Object, {
 
         return false;
     },
-    _separateY: function() {
+    _separateY: function(b1, b2) {
         //static bodies don't collide with eachother
         if(b1.type === C.PHYSICS_TYPE.STATIC && b2.type === C.PHYSICS_TYPE.STATIC)
             return;
@@ -289,13 +294,13 @@ utils.inherits(Physics, Object, {
             return false;
 
         //update first body
-        this._bounds1.x = b1.x
+        this._bounds1.x = b1.x;
         this._bounds1.y = b1.y - (dy1 > 0 ? dy1 : 0);
         this._bounds1.width = b1.with;
         this._bounds1.height = b1.height + math.abs(dy1);
 
         //update second body
-        this._bounds2.x = b2.x
+        this._bounds2.x = b2.x;
         this._bounds2.y = b2.y - (dy2 > 0 ? dy2 : 0);
         this._bounds2.width = b2.with;
         this._bounds2.height = b2.height + math.abs(dy2);
@@ -336,8 +341,8 @@ utils.inherits(Physics, Object, {
             //TODO: Flag to prevent out solve?
 
             //set velocities
-            this._velocity1 = body1.velocity.y;
-            this._velocity2 = body2.velocity.y;
+            this._velocity1 = b1.velocity.y;
+            this._velocity2 = b2.velocity.y;
 
             //static entities do not move
             if(b1.type !== C.PHYSICS_TYPE.STATIC && b2.type !== C.PHYSICS_TYPE.STATIC) {
@@ -428,10 +433,10 @@ utils.inherits(Physics, Object, {
 
             do {
                 if(node instanceof Sprite)
-                    this.collideSpriteVsGroup(node, group2, collideCallback, processCallback, callbackContext);
+                    this.collideSpriteVsGroup(node, container2, onCollision);
 
                 node = node._iNext;
-            } while (node != container1.last._iNext);
+            } while (node !== container1.last._iNext);
         }
     }
 });
