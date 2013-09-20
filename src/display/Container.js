@@ -20,14 +20,6 @@ var Container = module.exports = function(settings) {
     //mixin user's settings
     utils.setValues(this, settings);
 
-    /**
-     * The class type for fast checking
-     *
-     * @property _type
-     * @private
-     */
-    this._type = C.TYPES.CONTAINER;
-
     //Add these properties in so that all objects can see them in the docs
     //these properties are inherited from PIXI.DisplayObjectContainer
     //most of these blocks are copied straight from PIXI source

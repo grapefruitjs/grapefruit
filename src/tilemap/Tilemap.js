@@ -25,14 +25,6 @@ var Tilemap = module.exports = function(game, map) {
     Container.call(this, map);
 
     /**
-     * The class type for fast checking
-     *
-     * @property _type
-     * @private
-     */
-    this._type = C.TYPES.TILEMAP;
-
-    /**
      * The game instance this tilemap belongs to
      *
      * @property game
