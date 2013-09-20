@@ -1,7 +1,6 @@
 var EventEmitter = require('../utils/EventEmitter'),
     utils = require('../utils/utils'),
-    PIXI = require('../vendor/pixi'),
-    C = require('../constants');
+    PIXI = require('../vendor/pixi');
 
 /**
  * The base display object, that anything being put on the screen inherits from
@@ -101,25 +100,6 @@ var Container = module.exports = function(settings) {
 
 utils.inherits(Container, PIXI.DisplayObjectContainer, {
     /**
-     * Removes this object from the stage and the physics system
-     *
-     * @method destroy
-     */
-    destroy: function() {
-        for(var i = this.children.length - 1; i > -1; --i) {
-            var o = this.children[i];
-
-            if(o.destroy)
-                o.destroy();
-        }
-
-        this.disablePhysics();
-
-        if(this.parent)
-            this.parent.removeChild(this);
-    },
-
-    /**
      * Adds a child to the container and returns the child
      *
      * @method addChild
@@ -171,11 +151,10 @@ utils.inherits(Container, PIXI.DisplayObjectContainer, {
     /**
      * Removes a child from the object.
      *
-     * @method removeChild
-     * @param child {Container|Sprite} Any container or sprite
+     * @method removeAllChildren
      * @return {Container} Returns iteself
      */
-    removeAllChildren: function(child) {
+    removeAllChildren: function() {
         while(this.children.length) {
             if(this.children[0].destroy)
                 this.children[0].destroy();

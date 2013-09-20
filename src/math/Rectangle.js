@@ -1,5 +1,7 @@
 //var Rectangle = module.exports = require('../vendor/pixi').Rectangle;
 
+var utils = require('../utils/utils');
+
 /**
  * the Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its width and its height.
  *
@@ -10,8 +12,7 @@
  * @param width {Number} The overall wisth of this rectangle
  * @param height {Number} The overall height of this rectangle
  */
-var Rectangle = module.exports = function(x, y, width, height)
-{
+var Rectangle = module.exports = function(x, y, width, height) {
     /**
      * @property x
      * @type Number
@@ -55,7 +56,7 @@ var Rectangle = module.exports = function(x, y, width, height)
      * @default 0
      */
     this.halfHeight = this._height / 2;
-}
+};
 
 utils.inherits(Rectangle, Object, {
     /**
@@ -64,7 +65,7 @@ utils.inherits(Rectangle, Object, {
      * @method clone
      * @return {Rectangle} a copy of the rectangle
      */
-    clone = function() {
+    clone: function() {
         return new Rectangle(this.x, this.y, this._width, this._height);
     },
 
