@@ -44,7 +44,7 @@ module.exports = {
     AnimatedSprite: require('./display/AnimatedSprite'),
 
     //font
-    BitmapFont: require('./font/BitmapFont'),
+    BitmapText:     require('./text/BitmapText'),
 
     //fx
     fx: {
@@ -64,7 +64,6 @@ module.exports = {
     StateManager: require('./game/StateManager'),
 
     //gui
-    Gui:        require('./gui/Gui'),
     GuiItem:    require('./gui/GuiItem'),
 
     //input
@@ -94,8 +93,8 @@ module.exports = {
     Vector:     require('./math/Vector'),
 
     //physics
-    PhysicsSystem: require('./physics/PhysicsSystem'),
-    PhysicsTarget: require('./physics/PhysicsTarget'),
+    Physics:    require('./physics/Physics'),
+    Body:       require('./physics/Body'),
 
     //utils
     utils:          require('./utils/utils'),
@@ -108,7 +107,6 @@ module.exports = {
     ObjectFactory:  require('./utils/ObjectFactory'),
 
     //vendor files
-    cp:     require('./vendor/cp'),
     PIXI:   require('./vendor/pixi')
 };
 
