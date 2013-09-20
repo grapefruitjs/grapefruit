@@ -1,7 +1,6 @@
 var Container = require('../display/Container'),
     World = require('./World'),
     Camera = require('../camera/Camera'),
-    ObjectFactory = require('../utils/ObjectFactory'),
     Physics = require('../physics/Physics'),
     math = require('../math/math'),
     utils = require('../utils/utils');

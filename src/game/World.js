@@ -1,6 +1,7 @@
 var utils = require('../utils/utils'),
     Container = require('../display/Container'),
-    Rectangle = require('../math/Rectangle');
+    Rectangle = require('../math/Rectangle'),
+    ObjectFactory = require('../utils/ObjectFactory');
 
 /**
  * The world is the container for all game objects

@@ -1,8 +1,8 @@
 var Container = require('../display/Container'),
     Sprite = require('../display/Sprite'),
-    Gui = require('../gui/Gui'),
     Rectangle = require('../math/Rectangle'),
     Vector = require('../math/Vector'),
+    ObjectFactory = require('../utils/ObjectFactory'),
     utils = require('../utils/utils'),
     math = require('../math/math'),
     C = require('../constants');
