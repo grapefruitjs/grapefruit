@@ -5,7 +5,7 @@ var utils = require('./utils'),
     C = require('../constants'),
     Texture = require('../display/Texture'),
     BaseTexture = require('../display/BaseTexture'),
-    BitmapText = require('../font/BitmapText'),
+    BitmapText = require('../text/BitmapText'),
     PIXI = require('../vendor/pixi');
 
 /**
