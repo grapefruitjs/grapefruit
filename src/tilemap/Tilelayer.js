@@ -1,5 +1,6 @@
 var Container = require('../display/Container'),
     Vector = require('../math/Vector'),
+    math = require('../math/math'),
     utils = require('../utils/utils'),
     support = require('../utils/support');
 
@@ -195,21 +196,23 @@ utils.inherits(Tilelayer, Container, {
     getTempBlock: function (x, y, width, height, collisionOnly) {
         collisionOnly = collisionOnly || false;
 
+        var map = this.map,
+            sx = map.size.x,
+            sy = map.size.y;
+
         if(x < 0)
             x = 0;
 
         if(y < 0)
             y = 0;
 
-        if(width > this.this.map.size.x)
-            width = this.this.map.size.x;
+        if(width > sx)
+            width = sx;
 
-        if (height > this.this.map.size.y)
-            height = this.this.map.size.y;
+        if (height > sy)
+            height = sy;
 
         this._tempTileBlock.length = 0;
-
-        var sx = map.size.x;
 
         for(var ty = y; ty < y + height; ty++) {
             for(var tx = x; tx < x + width; tx++) {
