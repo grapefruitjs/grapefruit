@@ -1,4 +1,4 @@
-var utils = require('../utils/utils'),
+var inherit = require('../utils/inherit'),
     Container = require('../display/Container'),
     Rectangle = require('../math/Rectangle'),
     ObjectFactory = require('../utils/ObjectFactory');
@@ -46,7 +46,7 @@ var World = module.exports = function(state) {
     Container.call(this);
 };
 
-utils.inherits(World, Container, {
+inherit(World, Container, {
     /**
      * Pans the world around
      *

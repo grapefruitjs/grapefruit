@@ -13,35 +13,6 @@ var Vector = require('../math/Vector'),
 var utils = module.exports = {
     _arrayDelim: /[|,]/,
     /**
-     * Ensures that some input is a vector, converts strings and arrays into vector objects
-     *
-     * @method ensureVector
-     * @param vec {Array|String|Vector} The object to ensure becomes a vector
-     * @return {Vector} The vector created with the passed values, if the values can't be made
-     *      into a Vector, then a new Vector with 0,0 is returned
-     */
-    ensureVector: function(vec) {
-        if(vec instanceof Vector)
-            return vec;
-
-        var a = vec;
-        if(typeof vec === 'string')
-            a = vec.split(utils._arrayDelim);
-
-        if(a instanceof Array) {
-            switch(a.length) {
-                case 1: return new Vector(parseFloat(a[0], 10) || 0, parseFloat(a[0], 10) || 0);
-                case 2: return new Vector(parseFloat(a[0], 10) || 0, parseFloat(a[1], 10) || 0);
-            }
-        }
-        else if(typeof a === 'number') {
-            return new Vector(a, a);
-        }
-        else {
-            return new Vector();
-        }
-    },
-    /**
      * An empty function that performs no action
      *
      * @method noop
@@ -285,36 +256,6 @@ var utils = module.exports = {
         obj.__tiledparsed = true;
 
         return obj;
-    },
-    /**
-     * Inherits the prototype of a parent object.
-     *
-     * @method inherits
-     * @param child {Function} The Child to inherit the prototype
-     * @param parent {Function} The Parent to inherit from
-     * @param proto {Object} The prototype to apply to the child
-     */
-    inherits: function(child, parent, proto) {
-        proto = proto || {};
-
-        //get the property descriptors from the child proto and the passed proto
-        var desc = {};
-        [child.prototype, proto].forEach(function (s) {
-            Object.getOwnPropertyNames(s).forEach(function (k) {
-                desc[k] = Object.getOwnPropertyDescriptor(s, k);
-            });
-        });
-
-        //set the constructor descriptor
-        desc.constructor = {
-            value: child,
-            enumerable: false,
-            writable: true,
-            configurable: true
-        };
-
-        //create the prototype
-        child.prototype = Object.create(parent.prototype, desc);
     }
 };
 

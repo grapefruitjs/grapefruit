@@ -1,4 +1,4 @@
-var utils = require('../utils/utils'),
+var inherit = require('../utils/inherit'),
     Keyboard = require('./Keyboard'),
     Gamepad = require('./Gamepad');
 
@@ -47,7 +47,7 @@ var InputManager = module.exports = function(game) {
     this.gamepad = new Gamepad();
 };
 
-utils.inherits(InputManager, Object, {
+inherit(InputManager, Object, {
     /**
      * Called each frame to update state info for some input methods
      *

@@ -3,7 +3,7 @@ var Container = require('../display/Container'),
     Rectangle = require('../math/Rectangle'),
     Vector = require('../math/Vector'),
     ObjectFactory = require('../utils/ObjectFactory'),
-    utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     math = require('../math/math'),
     C = require('../constants');
 
@@ -112,7 +112,7 @@ var Camera = module.exports = function(state) {
     this.addChild(this.gui);
 };
 
-utils.inherits(Camera, Container, {
+inherit(Camera, Container, {
     /**
      * Follows an sprite with the camera, ensuring they are always center view. You can
      * pass a follow style to change the area an sprite can move around in before we start

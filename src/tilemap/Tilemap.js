@@ -8,6 +8,7 @@ var Container = require('../display/Container'),
     Tileset = require('./Tileset'),
     PIXI = require('../vendor/pixi'),
     utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     C = require('../constants');
 
 /**
@@ -187,7 +188,7 @@ var Tilemap = module.exports = function(game, map) {
     w.bounds.height = Math.max(w.bounds.height, this.realSize.y);
 };
 
-utils.inherits(Tilemap, Container, {
+inherit(Tilemap, Container, {
     /**
      * Gets the tileset that an ID is associated with
      *

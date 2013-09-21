@@ -5,6 +5,7 @@ var Container = require('../display/Container'),
     Vector = require('../math/Vector'),
     Rectangle = require('../math/Rectangle'),
     utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     PIXI = require('../vendor/pixi');
 
 /**
@@ -47,7 +48,7 @@ var BitmapText = function(text, font, style) {
     this.setStyle(style);
 };
 
-utils.inherits(BitmapText, Container, {
+inherit(BitmapText, Container, {
     setStyle: function(style) {
         style = style || {};
 

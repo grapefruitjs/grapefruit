@@ -1,6 +1,6 @@
 var Effect = require('./Effect'),
     Vector = require('../../math/Vector'),
-    utils = require('../../utils/utils'),
+    inherit = require('../../utils/inherit'),
     math = require('../../math/math'),
     C = require('../../constants');
 
@@ -9,7 +9,7 @@ var Shake = module.exports = function() {
     this.offset = new Vector();
 };
 
-utils.inherits(Shake, Effect, {
+inherit(Shake, Effect, {
     start: function(intensity, duration, direction, cb) {
         Effect.prototype.start.call(this);
 

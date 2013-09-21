@@ -1,4 +1,4 @@
-var utils = require('../utils/utils'),
+var inherit = require('./inherit'),
     GuiItem = require('../gui/GuiItem'),
     Sprite = require('../display/Sprite'),
     Tilemap = require('../tilemap/Tilemap'),
@@ -12,7 +12,7 @@ var ObjectFactory = module.exports = function(state, parent) {
     this.parent = parent;
 };
 
-utils.inherits(ObjectFactory, Object, {
+inherit(ObjectFactory, Object, {
     /**
      * Adds a generic object to the world or camera
      *

@@ -1,4 +1,4 @@
-var utils = require('../utils/utils'),
+var inherit = require('../utils/inherit'),
     Input = require('./Input'),
     GamepadButtons = require('./GamepadButtons'),
     GamepadSticks = require('./GamepadSticks');
@@ -68,7 +68,7 @@ var Gamepad = module.exports = function() {
     }
 };
 
-utils.inherits(Gamepad, Input, {
+inherit(Gamepad, Input, {
     /**
      * Called when a gamepad connects (FF Only)
      *

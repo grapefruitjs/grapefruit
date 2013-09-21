@@ -4,6 +4,7 @@ var Container = require('../display/Container'),
     Ellipse = require('../math/Ellipse'),
     Rectangle = require('../math/Rectangle'),
     utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     math = require('../math/math');
 
 /**
@@ -56,7 +57,7 @@ var Container = require('../display/Container'),
     this.visible = group.visible;
 };
 
-utils.inherits(ObjectGroup, Container, {
+inherit(ObjectGroup, Container, {
     /**
      * Spawns all the entities associated with this layer, and properly sets their attributes
      *

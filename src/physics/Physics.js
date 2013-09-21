@@ -7,7 +7,7 @@ var QuadTree = require('../math/QuadTree'),
     Container = require('../display/Container'),
     Sprite = require('../display/Sprite'),
     Tilemap = require('../tilemap/Tilemap'),
-    utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     math = require('../math/math'),
     C = require('../constants');
 
@@ -66,7 +66,7 @@ var Physics = module.exports = function(state) {
     this._bounds2 = new Rectangle();
 };
 
-utils.inherits(Physics, Object, {
+inherit(Physics, Object, {
     /**
      * Called each frame by the engine to calculate the quadtree, and update physical bodies
      *
@@ -198,13 +198,13 @@ utils.inherits(Physics, Object, {
         //update first body
         this._bounds1.x = b1.x - (dx1 > 0 ? dx1 : 0);
         this._bounds1.y = b1.lastPos.y;
-        this._bounds1.width = b1.with + (dx1 > 0 ? dx1 : -dx1);
+        this._bounds1.width = b1.width + (dx1 > 0 ? dx1 : -dx1);
         this._bounds1.height = b1.height;
 
         //update second body
         this._bounds2.x = b2.x - (dx2 > 0 ? dx2 : 0);
         this._bounds2.y = b2.lastPos.y;
-        this._bounds2.width = b2.with + (dx2 > 0 ? dx2 : -dx2);
+        this._bounds2.width = b2.width + (dx2 > 0 ? dx2 : -dx2);
         this._bounds2.height = b2.height;
 
         //check for overlap (detect collisions)
@@ -296,13 +296,13 @@ utils.inherits(Physics, Object, {
         //update first body
         this._bounds1.x = b1.x;
         this._bounds1.y = b1.y - (dy1 > 0 ? dy1 : 0);
-        this._bounds1.width = b1.with;
+        this._bounds1.width = b1.width;
         this._bounds1.height = b1.height + math.abs(dy1);
 
         //update second body
         this._bounds2.x = b2.x;
         this._bounds2.y = b2.y - (dy2 > 0 ? dy2 : 0);
-        this._bounds2.width = b2.with;
+        this._bounds2.width = b2.width;
         this._bounds2.height = b2.height + math.abs(dy2);
 
         //check for overlap (detect collisions)

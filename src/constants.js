@@ -65,12 +65,12 @@ module.exports = {
     PHYSICS_TYPE: {
         STATIC: 0,      //doesn't move
         KINEMATIC: 1,   //gravity doesn't effect it, and solver doesn't solve it
-        DYNAMIC: 2,     //totally dynamic (moves and gravity etc)
+        DYNAMIC: 2      //totally dynamic (moves and gravity etc)
     },
 
     SOLVE_TYPE: {
         DISPLACE: 0,    //displace solver, only move outside another's space and set 0 vel
-        ELASTIC: 1,     //elastic will displace and bounce the collider based on bounce
+        ELASTIC: 1      //elastic will displace and bounce the collider based on bounce
     },
 
     PHYSICS: {

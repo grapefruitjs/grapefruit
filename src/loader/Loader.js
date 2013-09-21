@@ -2,6 +2,7 @@
 // heavily insprite by (stolen from): https://github.com/photonstorm/phaser/blob/master/src/loader/Loader.js
 
 var utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     support = require('../utils/support'),
     EventEmitter = require('../utils/EventEmitter'),
     C = require('../constants');
@@ -126,7 +127,7 @@ var AssetLoader = module.exports = function(game) {
      */
 };
 
-utils.inherits(AssetLoader, Object, {
+inherit(AssetLoader, Object, {
     /**
      * Check whether asset exists with a specific key.
      *

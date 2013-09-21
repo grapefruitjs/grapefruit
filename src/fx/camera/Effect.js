@@ -1,5 +1,5 @@
 var Container = require('../../display/Container'),
-    utils = require('../../utils/utils'),
+    inherit = require('../../utils/inherit'),
     PIXI = require('../../vendor/pixi');
 
 var Effect = module.exports = function() {
@@ -11,7 +11,7 @@ var Effect = module.exports = function() {
     this.done = true;
 };
 
-utils.inherits(Effect, Container, {
+inherit(Effect, Container, {
     start: function() {
         this.done = false;
         return this;
