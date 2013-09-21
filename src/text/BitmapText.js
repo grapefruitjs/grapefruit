@@ -27,7 +27,7 @@ var Container = require('../display/Container'),
  * @param [style.size=null] {Number} The font size of the text, overrides the font's size
  * @param [style.align="left"] {String} An alignment of the multiline text ("left", "center" or "right")
  */
-var BitmapText = function(text, font, style) {
+var BitmapText = module.exports = function(text, font, style) {
     Container.call(this);
 
     this.dirty = true;

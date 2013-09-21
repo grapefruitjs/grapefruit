@@ -99,6 +99,7 @@ module.exports = {
     //utils
     utils:          require('./utils/utils'),
     support:        require('./utils/support'),
+    inherit:        require('./utils/inherit'),
     Cache:          require('./utils/Cache'),
     Clock:          require('./utils/Clock'),
     EventEmitter:   require('./utils/EventEmitter'),
