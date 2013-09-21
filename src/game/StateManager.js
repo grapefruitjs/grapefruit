@@ -1,4 +1,4 @@
-var utils = require('../utils/utils'),
+var inherit = require('../utils/inherit'),
     State = require('./State');
 
 var StateManager = module.exports = function(game) {
@@ -30,7 +30,7 @@ var StateManager = module.exports = function(game) {
     this._createDefault();
 };
 
-utils.inherits(StateManager, Object, {
+inherit(StateManager, Object, {
     _createDefault: function() {
         var state = new State('__default');
         state.setup(this.game);

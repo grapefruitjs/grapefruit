@@ -1,4 +1,4 @@
-var utils = require('../utils/utils'),
+var inherit = require('../utils/inherit'),
     Sprite = require('../display/Sprite');
 
 /**
@@ -35,7 +35,7 @@ var GuiItem = module.exports = function(texture, interactive) {
     this.interactive = interactive;
 };
 
-utils.inherits(GuiItem, Sprite, {
+inherit(GuiItem, Sprite, {
     mousedown: function(e) {
         Sprite.prototype.mousedown.call(this, e);
 

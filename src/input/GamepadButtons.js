@@ -1,4 +1,4 @@
-var utils = require('../utils/utils'),
+var inherit = require('../utils/inherit'),
     Input = require('./Input');
 
 /**
@@ -40,7 +40,7 @@ var utils = require('../utils/utils'),
     }
 };
 
-utils.inherits(GamepadButtons, Input, {
+inherit(GamepadButtons, Input, {
     /**
      * Polls the gamepad object for status updates and emits events when they occur
      *

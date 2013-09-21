@@ -1,6 +1,7 @@
 var AudioPlayer = require('./AudioPlayer'),
     EventEmitter = require('../utils/EventEmitter'),
     utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     support = require('../utils/support');
 
 /**
@@ -123,7 +124,7 @@ var AudioPlayer = module.exports = function(manager, audio, settings) {
     this.load();
 };
 
-utils.inherits(AudioPlayer, Object, {
+inherit(AudioPlayer, Object, {
     /**
      * Load the audio file for this player, this is called from the ctor
      * there is no reason to call it manually.

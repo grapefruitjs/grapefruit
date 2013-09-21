@@ -2,6 +2,7 @@ var Container = require('../display/Container'),
     Vector = require('../math/Vector'),
     math = require('../math/math'),
     utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     support = require('../utils/support');
 
 /**
@@ -85,7 +86,7 @@ var Tilelayer = module.exports = function(map, layer) {
     this._tempTileH = 0;
 };
 
-utils.inherits(Tilelayer, Container, {
+inherit(Tilelayer, Container, {
     /**
      * Renders a layer onto a context
      *

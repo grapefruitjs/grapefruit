@@ -3,7 +3,7 @@ var Container = require('../display/Container'),
     Camera = require('../camera/Camera'),
     Physics = require('../physics/Physics'),
     math = require('../math/math'),
-    utils = require('../utils/utils');
+    inherit = require('../utils/inherit');
 
 /**
  * GameStates are containers that represent different states of a game
@@ -84,7 +84,7 @@ var State = module.exports = function(game, name) {
     this.camera.resize(game.width, game.height);
 };
 
-utils.inherits(State, Container, {
+inherit(State, Container, {
     /**
      * Enables (shows) the game state
      *

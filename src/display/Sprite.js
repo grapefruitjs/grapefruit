@@ -1,6 +1,6 @@
 var EventEmitter = require('../utils/EventEmitter'),
     Rectangle = require('../math/Rectangle'),
-    utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     PIXI = require('../vendor/pixi'),
     C = require('../constants');
 
@@ -33,7 +33,7 @@ var Sprite = module.exports = function(tx) {
     this.hitArea = this.hitArea || new Rectangle(0, 0, this.width, this.height);
 };
 
-utils.inherits(Sprite, PIXI.Sprite, {
+inherit(Sprite, PIXI.Sprite, {
     /**
      * Removes this sprite from the stage and the physics system
      *

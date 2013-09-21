@@ -1,5 +1,6 @@
 var EventEmitter = require('../utils/EventEmitter'),
     utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     PIXI = require('../vendor/pixi');
 
 /**
@@ -98,7 +99,7 @@ var Container = module.exports = function(settings) {
      */
 };
 
-utils.inherits(Container, PIXI.DisplayObjectContainer, {
+inherit(Container, PIXI.DisplayObjectContainer, {
     /**
      * Adds a child to the container and returns the child
      *

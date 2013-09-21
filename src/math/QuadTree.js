@@ -9,7 +9,7 @@
  *
  * Original version at https://github.com/timohausmann/quadtree-js/
  */
- 
+
 /*
  Copyright © 2012 Timo Hausmann
 
@@ -35,7 +35,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var Rectangle = require('../math/Rectangle'),
     math = require('./math'),
-    utils = require('../utils/utils');
+    inherit = require('../utils/inherit');
 
 /*
 * QuadTree
@@ -61,7 +61,7 @@ var QuadTree = module.exports = function(bounds, maxObjects, maxLevels, level) {
     this._nextLevel = this.level;
 };
 
-utils.inherits(QuadTree, Object, {
+inherit(QuadTree, Object, {
     /**
      * Split the node into 4 subnodes
      *

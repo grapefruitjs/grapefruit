@@ -7,7 +7,7 @@ var StateManager = require('./StateManager'),
     InputManager = require('../input/InputManager'),
     AudioManager = require('../audio/AudioManager'),
     support = require('../utils/support'),
-    utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     PIXI = require('../vendor/pixi'),
     C = require('../constants');
 
@@ -230,7 +230,7 @@ var Game = module.exports = function(container, settings) {
     }, false);
 };
 
-utils.inherits(Game, Object, {
+inherit(Game, Object, {
     _createRenderer: function() {
         var method = this.renderMethod,
             render = null;

@@ -5,7 +5,7 @@
 var Rectangle = require('../math/Rectangle'),
     Vector = require('../math/Vector'),
     math = require('../math/math'),
-    utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     C = require('../constants');
 
 var Body = module.exports = function(sprite) {
@@ -51,7 +51,7 @@ var Body = module.exports = function(sprite) {
     this._accel = 0;
 };
 
-utils.inherits(Body, Rectangle, {
+inherit(Body, Rectangle, {
     computeVelocity: function(dt, vel, accel, drag, maxVel) {
         this._accel = accel * dt;
         this._drag = drag * dt;

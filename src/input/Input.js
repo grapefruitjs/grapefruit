@@ -1,4 +1,4 @@
-var utils = require('../utils/utils'),
+var inherit = require('../utils/inherit'),
     EventEmitter = require('../utils/EventEmitter');
 
 /**
@@ -30,7 +30,7 @@ var InputType = module.exports = function(view) {
     this.view = view;
 };
 
-utils.inherits(InputType, Object, {
+inherit(InputType, Object, {
     /**
      * Prevents the default action of an event
      *

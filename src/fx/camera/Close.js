@@ -1,11 +1,11 @@
 var Effect = require('./Effect'),
-    utils = require('../../utils/utils');
+    inherit = require('../../utils/inherit');
 
 var Close = module.exports = function() {
     Effect.call(this);
 };
 
-utils.inherits(Close, Effect, {
+inherit(Close, Effect, {
     start: function(shape, duration, pos, cb) {
         Effect.prototype.start.call(this);
 

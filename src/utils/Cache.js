@@ -1,7 +1,7 @@
 // Thanks to PhotonStorm (http://photonstorm.com/) for this loader!
 // heavily insprite by (stolen from): https://github.com/photonstorm/phaser/blob/master/src/loader/Cache.js
 
-var utils = require('./utils'),
+var inherit = require('./inherit'),
     C = require('../constants'),
     Texture = require('../display/Texture'),
     BaseTexture = require('../display/BaseTexture'),
@@ -76,7 +76,7 @@ var Cache = module.exports = function(game) {
     this.addDefaultImage();
 };
 
-utils.inherits(Cache, Object, {
+inherit(Cache, Object, {
     /**
      * Add a new canvas.
      *

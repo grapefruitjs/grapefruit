@@ -1,12 +1,12 @@
 var Effect = require('./Effect'),
-    utils = require('../../utils/utils'),
+    inherit = require('../../utils/inherit'),
     C = require('../../constants');
 
 var Scanlines = module.exports = function() {
     Effect.call(this);
 };
 
-utils.inherits(Scanlines, Effect, {
+inherit(Scanlines, Effect, {
     start: function(color, direction, spacing, thickness, alpha) {
         Effect.prototype.start.call(this);
 
