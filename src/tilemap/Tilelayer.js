@@ -43,7 +43,7 @@ var Tilelayer = module.exports = function(map, layer) {
      * @type String
      * @default ''
      */
-    this.name = '';
+    this.name = layer.name || '';
 
     /**
      * The size of the layer
@@ -57,7 +57,7 @@ var Tilelayer = module.exports = function(map, layer) {
     /**
      * The tile IDs of the tilemap
      *
-     * @property name
+     * @property tileIds
      * @type Uint32Array
      */
     this.tileIds = support.typedArrays ? new Uint32Array(layer.data) : layer.data;

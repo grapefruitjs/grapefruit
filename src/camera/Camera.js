@@ -48,7 +48,7 @@ var Camera = module.exports = function(state) {
      * @readOnly
      * @private
      */
-    this._bounds = state.world.bounds.clone();
+    this.bounds = state.world.bounds.clone();
 
     /**
      * When following a sprite this is the space within the camera that it can move around
@@ -233,7 +233,7 @@ inherit(Camera, Container, {
             //new world position
             newX = pos.x - dx,
             newY = pos.y - dy,
-            b = this._bounds;
+            b = this.bounds;
 
         if(b) {
             //check if X movement is illegal
@@ -257,10 +257,10 @@ inherit(Camera, Container, {
     _outsideBounds: function(x, y) {
         //check if each corner of the camera is within the bounds
         return (
-            !this._bounds.contains(x, y) || //top left
-            !this._bounds.contains(x, y + this.size.y) || //bottom left
-            !this._bounds.contains(x + this.size.x, y) || //top right
-            !this._bounds.contains(x + this.size.x, y + this.size.y) //bottom right
+            !this.bounds.contains(x, y) || //top left
+            !this.bounds.contains(x, y + this.size.y) || //bottom left
+            !this.bounds.contains(x + this.size.x, y) || //top right
+            !this.bounds.contains(x + this.size.x, y + this.size.y) //bottom right
         );
     },
     /**
@@ -291,7 +291,7 @@ inherit(Camera, Container, {
      * @return {Camera} Returns iteself for chainability
      */
     constrain: function(shape) {
-        this._bounds = shape;
+        this.bounds = shape;
 
         return this;
     },
@@ -302,7 +302,7 @@ inherit(Camera, Container, {
      * @return {Camera} Returns iteself for chainability
      */
     unconstrain: function() {
-        this._bounds = null;
+        this.bounds = null;
 
         return this;
     },

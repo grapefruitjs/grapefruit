@@ -325,10 +325,16 @@ inherit(Game, Object, {
 
         var dt = this.clock.getDelta();
 
+        this.timings.lastDelta = dt;
+
         //gather input from user
         this.timings.inputStart = this.clock.now();
         this.input.update(dt);
         this.timings.inputEnd = this.clock.now();
+
+        this.timings.userFuncsStart = this.clock.now();
+        this.emit('tick', dt);
+        this.timings.userFuncsEnd = this.clock.now();
 
         //TODO: plugins
         //this.timings.pluginsStart = this.clock.now();

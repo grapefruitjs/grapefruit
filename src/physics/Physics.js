@@ -7,6 +7,7 @@ var QuadTree = require('../math/QuadTree'),
     Container = require('../display/Container'),
     Sprite = require('../display/Sprite'),
     Tilemap = require('../tilemap/Tilemap'),
+    Body = require('./Body'),
     inherit = require('../utils/inherit'),
     math = require('../math/math'),
     C = require('../constants');
@@ -83,8 +84,8 @@ inherit(Physics, Object, {
         for(var i = 0, il = bods.length, body; i < il; ++i) {
             body = bods[i];
 
-            body[i].computeVelocity(dt);
-            body[i].update(dt);
+            body.computeVelocity(dt);
+            body.update(dt);
 
             if(body.canCollide && body.sprite.visible) {
                 this.tree.insert(body);
@@ -98,7 +99,11 @@ inherit(Physics, Object, {
      * @param sprite {Sprite} The sprite to add to the simulation
      */
     addSprite: function(sprite) {
+        if(!sprite.body)
+            sprite.body = new Body(sprite);
+
         this.bodies.push(sprite.body);
+        sprite._physics = this;
     },
     /**
      * Removes a sprite from the physics simulation
