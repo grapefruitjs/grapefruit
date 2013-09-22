@@ -40,7 +40,10 @@ inherit(Sprite, PIXI.Sprite, {
      * @method destroy
      */
     destroy: function() {
-        this.disablePhysics();
+        if(this._physics) {
+            this._physics.removeSprite(this);
+            this._physics = null;
+        }
 
         if(this.parent)
             this.parent.removeChild(this);

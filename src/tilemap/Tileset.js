@@ -1,5 +1,6 @@
 var utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
+    math = require('../math/math'),
     Texture = require('../display/Texture'),
     Vector = require('../math/Vector'),
     PIXI = require('../vendor/pixi'),
@@ -99,8 +100,8 @@ var Tileset = module.exports = function(texture, settings) {
      * @type Vector
      */
     this.numTiles = new Vector(
-        ~~((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), //75 / 
-        ~~((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing))
+        math.floor((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), //75 / 
+        math.floor((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing))
     );
 
     /**
@@ -158,7 +159,7 @@ var Tileset = module.exports = function(texture, settings) {
     //generate tile textures
     for(var t = 0, tl = this.lastgid - this.firstgid + 1; t < tl; ++t) {
         //convert the tileId to x,y coords of the tile in the Texture
-        var y = ~~(t / this.numTiles.x),
+        var y = math.floor(t / this.numTiles.x),
             x = (t - (y * this.numTiles.x));
 
         //get location in pixels

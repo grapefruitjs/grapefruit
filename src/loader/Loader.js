@@ -692,6 +692,7 @@ inherit(AssetLoader, Object, {
         file.numLoaded++;
 
         if(file.numImages === file.numLoaded) {
+            this.game.cache.addTilemap(file);
             this.fileDone(file.key, file.error);
         }
     },

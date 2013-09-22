@@ -28,6 +28,15 @@ var Container = require('../display/Container'),
     this.game = game;
 
     /**
+     * The name of the group
+     *
+     * @property name
+     * @type String
+     * @default ''
+     */
+    this.name = group.name || '';
+
+    /**
      * The color to display objects in this group
      *
      * @property color

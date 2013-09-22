@@ -21,7 +21,7 @@ var Container = require('../display/Container'),
  * @constructor
  * @param map {Object} All the settings for the map
  */
-var Tilemap = module.exports = function(game, map) {
+var Tilemap = module.exports = function(game, map, tilesetTextures) {
     //call base ctor
     Container.call(this, map);
 
@@ -140,13 +140,13 @@ var Tilemap = module.exports = function(game, map) {
     //create each tileset
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
         var ts = map.tilesets[t];
-        this.tilesets.push(new Tileset(map.textures[ts.name], ts));
+        this.tilesets.push(new Tileset(tilesetTextures[ts.name], ts));
     }
 
     //create each layer
     for(var i = 0, il = map.layers.length; i < il; ++i) {
         var lyr,
-            name = map.layers[i].name ? map.layers[i].name.toLower() : '';
+            name = map.layers[i].name ? map.layers[i].name.toLowerCase() : '';
 
         switch(map.layers[i].type) {
             case 'tilelayer':
@@ -181,6 +181,9 @@ var Tilemap = module.exports = function(game, map) {
         width: null,
         height: null
     };
+
+    //size the canvas and texture
+    this.resize(this.game.width, this.game.height);
 
     //update the world bounds
     var w = this.game.state.active.world;
@@ -320,7 +323,7 @@ inherit(Tilemap, Container, {
         this._cache.h = height;
 
         //clear the canvas
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.width);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         //render the layers
         for(var i = 0, il = this.children.length; i < il; ++i) {
@@ -347,6 +350,12 @@ inherit(Tilemap, Container, {
     resize: function(w, h) {
         this.canvas.width = w;
         this.canvas.height = h;
+
+        this.btx.width = w;
+        this.btx.height = h;
+
+        this.tx.frame.width = w;
+        this.tx.frame.height = h;
 
         return this;
     }

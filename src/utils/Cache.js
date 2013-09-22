@@ -352,8 +352,7 @@ inherit(Cache, Object, {
      * @return {object} The tilemap file data. The map data is in the `data` property, the images (for tileset) are in `images`
      */
     getTilemap: function(key) {
-        if(this._images[key])
-            return this._tilemaps[key];
+        return this._tilemaps[key];
     },
 
     /**

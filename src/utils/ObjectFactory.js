@@ -77,16 +77,17 @@ inherit(ObjectFactory, Object, {
         var obj = this.game.cache.getTilemap(key) || {},
             fmt = obj.format,
             data = obj.data,
+            txs = obj.textures,
             tilemap;
 
         if(fmt === C.FILE_FORMAT.JSON) {
-            tilemap = new Tilemap(this.game, data);
+            tilemap = new Tilemap(this.game, data, txs);
         }
         else if(fmt === C.FILE_FORMAT.XML) {
-            tilemap = Tilemap.fromXML(this.game, data);
+            tilemap = Tilemap.fromXML(this.game, data, txs);
         }
         else if(fmt === C.FILE_FORMAT.CSV) {
-            tilemap = Tilemap.fromCSV(this.game, data);
+            tilemap = Tilemap.fromCSV(this.game, data, txs);
         }
 
         if(constrain) {
