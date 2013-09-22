@@ -1586,7 +1586,7 @@ PIXI.blendModes.SCREEN = 1;
  * The SPrite object is the base for all textured objects that are rendered to the screen
  *
  * @class Sprite
- * @extends DisplayObjectContainer
+ * @extends Group
  * @constructor
  * @param texture {Texture} The texture for this sprite
  * @type String
@@ -2231,7 +2231,7 @@ PIXI.Text.heightCache = {};
  * http://www.bmglyph.com/ for mac.
  *
  * @class BitmapText
- * @extends DisplayObjectContainer
+ * @extends Group
  * @constructor
  * @param text {String} The copy that you would like the text to display
  * @param style {Object} The style parameters
@@ -3048,7 +3048,7 @@ PIXI.InteractionData.prototype.constructor = PIXI.InteractionData;
  * A Stage represents the root of the display tree. Everything connected to the stage is rendered
  *
  * @class Stage
- * @extends DisplayObjectContainer
+ * @extends Group
  * @constructor
  * @param backgroundColor {Number} the background color of the stage, easiest way to pass this in is in hex format
  *		like: 0xFFFFFF for white
@@ -6873,7 +6873,7 @@ PIXI.CanvasGraphics.renderGraphicsMask = function(graphics, context)
  * Complex polys will not be filled. Heres an example of a complex poly: http://www.goodboydigital.com/wp-content/uploads/2013/06/complexPolygon.png
  *
  * @class Graphics 
- * @extends DisplayObjectContainer
+ * @extends Group
  * @constructor
  */
 PIXI.Graphics = function()
@@ -7367,7 +7367,7 @@ PIXI.Rope.prototype.setTexture = function(texture)
  * A tiling sprite is a fast way of rendering a tiling image
  *
  * @class TilingSprite
- * @extends DisplayObjectContainer
+ * @extends Group
  * @constructor
  * @param texture {Texture} the texture of the tiling sprite
  * @param width {Number}  the width of the tiling sprite
@@ -7470,7 +7470,7 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function(event)
  * See example 12 (http://www.goodboydigital.com/pixijs/examples/12/) to see a working example and check out the source
  *
  * @class Spine
- * @extends DisplayObjectContainer
+ * @extends Group
  * @constructor
  * @param url {String} The url of the spine anim file to be used
  */

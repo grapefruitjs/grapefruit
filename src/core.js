@@ -1,3 +1,4 @@
+({urequire: { rootExports: 'gf' } });
 /**
 * @license GrapeFruit Game Engine
 * Copyright (c) 2012-2014, Chad Engler
@@ -39,12 +40,12 @@ module.exports = {
     //display
     BaseTexture:    require('./display/BaseTexture'),
     Texture:        require('./display/Texture'),
-    DisplayObjectContainer: require('./display/DisplayObjectContainer'),
+    Container:      require('./display/Container'),
     Sprite:         require('./display/Sprite'),
     AnimatedSprite: require('./display/AnimatedSprite'),
 
     //font
-    BitmapFont: require('./font/BitmapFont'),
+    BitmapText:     require('./text/BitmapText'),
 
     //fx
     fx: {
@@ -64,7 +65,6 @@ module.exports = {
     StateManager: require('./game/StateManager'),
 
     //gui
-    Gui:        require('./gui/Gui'),
     GuiItem:    require('./gui/GuiItem'),
 
     //input
@@ -94,12 +94,13 @@ module.exports = {
     Vector:     require('./math/Vector'),
 
     //physics
-    PhysicsSystem: require('./physics/PhysicsSystem'),
-    PhysicsTarget: require('./physics/PhysicsTarget'),
+    Physics:    require('./physics/Physics'),
+    Body:       require('./physics/Body'),
 
     //utils
     utils:          require('./utils/utils'),
     support:        require('./utils/support'),
+    inherit:        require('./utils/inherit'),
     Cache:          require('./utils/Cache'),
     Clock:          require('./utils/Clock'),
     EventEmitter:   require('./utils/EventEmitter'),
@@ -108,7 +109,6 @@ module.exports = {
     ObjectFactory:  require('./utils/ObjectFactory'),
 
     //vendor files
-    cp:     require('./vendor/cp'),
     PIXI:   require('./vendor/pixi')
 };
 

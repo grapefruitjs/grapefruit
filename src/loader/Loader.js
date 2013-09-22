@@ -2,6 +2,7 @@
 // heavily insprite by (stolen from): https://github.com/photonstorm/phaser/blob/master/src/loader/Loader.js
 
 var utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     support = require('../utils/support'),
     EventEmitter = require('../utils/EventEmitter'),
     C = require('../constants');
@@ -126,7 +127,7 @@ var AssetLoader = module.exports = function(game) {
      */
 };
 
-utils.inherits(AssetLoader, Object, {
+inherit(AssetLoader, Object, {
     /**
      * Check whether asset exists with a specific key.
      *
@@ -375,7 +376,7 @@ utils.inherits(AssetLoader, Object, {
         this.emit('start', this.keys.length);
 
         if(this.keys.length > 0) {
-            while(this._keys.length > 0)
+            while(this.keys.length > 0)
                 this.loadFile();
         } else {
             this.progress = 100;
@@ -416,8 +417,8 @@ utils.inherits(AssetLoader, Object, {
                         file.data = data;
                         self.fileComplete(file.key);
                     },
-                    error: function() {
-                        self.fileError(file.key);
+                    error: function(err) {
+                        self.fileError(file.key, err);
                     }
                 });
                 break;
@@ -435,8 +436,8 @@ utils.inherits(AssetLoader, Object, {
                                 file.data = data;
                                 self.fileComplete(file.key);
                             },
-                            error: function() {
-                                self.fileError(file.key);
+                            error: function(err) {
+                                self.fileError(file.key, err);
                             }
                         });
                     } else if(support.htmlAudio) {
@@ -450,7 +451,7 @@ utils.inherits(AssetLoader, Object, {
                         file.data.load();
                     }
                 } else {
-                    this.fileError(file.key);
+                    this.fileError(file.key, 'No supported audio URL could be determined!');
                 }
                 break;
 
@@ -462,8 +463,8 @@ utils.inherits(AssetLoader, Object, {
                         file.data = data;
                         self.fileComplete(file.key);
                     },
-                    error: function() {
-                        self.fileError(file.key);
+                    error: function(err) {
+                        self.fileError(file.key, err);
                     }
                 });
                 break;
@@ -495,13 +496,13 @@ utils.inherits(AssetLoader, Object, {
      * @method fileError
      * @param key {String} Key of the error loading file.
      */
-    fileError: function(key) {
+    fileError: function(key, error) {
         this.assets[key].loaded = true;
         this.assets[key].error = true;
 
         this.emit('error', key);
 
-        utils.warn('Error loading file', key);
+        utils.warn('Error loading file "' + key + '", error received:', error);
 
         this.fileDone(key, true);
     },
@@ -633,8 +634,8 @@ utils.inherits(AssetLoader, Object, {
                     if(cb) cb();
                     self.fileDone(file.key);
                 },
-                error: function() {
-                    self.fileError(file.key);
+                error: function(err) {
+                    self.fileError(file.key, err);
                 }
             });
         }

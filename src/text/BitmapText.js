@@ -1,4 +1,12 @@
-var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+var Container = require('../display/Container'),
+    ObjectPool = require('../utils/ObjectPool'),
+    Texture = require('../display/Texture'),
+    Sprite = require('../display/Sprite'),
+    Vector = require('../math/Vector'),
+    Rectangle = require('../math/Rectangle'),
+    utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
+    PIXI = require('../vendor/pixi');
 
 /**
  * A Text Object will create (a) line(s) of text using bitmap font. To split a line you can use "\n", "\r" or "\r\n"
@@ -7,7 +15,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * [http://www.bmglyph.com/] for mac.
  *
  * @class BitmapText
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  * @param text {String} The copy that you would like the text to display
  * @param font {Object} The font data object (this is generally grabbed from `game.cache.getBitmapFont('mykey')`);
@@ -19,8 +27,8 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * @param [style.size=null] {Number} The font size of the text, overrides the font's size
  * @param [style.align="left"] {String} An alignment of the multiline text ("left", "center" or "right")
  */
-var BitmapText = function(text, font, style) {
-    DisplayObjectContainer.call(this);
+var BitmapText = module.exports = function(text, font, style) {
+    Container.call(this);
 
     this.dirty = true;
     this.font = font;
@@ -40,7 +48,7 @@ var BitmapText = function(text, font, style) {
     this.setStyle(style);
 };
 
-utils.inherits(BitmapText, DisplayObjectContainer, {
+inherit(BitmapText, Container, {
     setStyle: function(style) {
         style = style || {};
 
@@ -123,7 +131,7 @@ utils.inherits(BitmapText, DisplayObjectContainer, {
             if(align === 'right')
                 offset = maxLineWidth - lineWidths[i];
             else if(align === 'center')
-                offset = (maxLineWidth - lineWidths[i]) / 2
+                offset = (maxLineWidth - lineWidths[i]) / 2;
 
             lineAlignOffsets.push(offset);
         }
@@ -176,7 +184,7 @@ utils.inherits(BitmapText, DisplayObjectContainer, {
             this.dirty = false;
         }
 
-        DisplayObjectContainer.prototype.updateTransform.call(this);
+        Container.prototype.updateTransform.call(this);
     }
 });
 

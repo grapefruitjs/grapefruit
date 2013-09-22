@@ -1,4 +1,4 @@
-var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+var Container = require('../display/Container'),
     ObjectGroup = require('./ObjectGroup'),
     BaseTexture = require('../display/BaseTexture'),
     Texture = require('../display/Texture'),
@@ -8,6 +8,7 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     Tileset = require('./Tileset'),
     PIXI = require('../vendor/pixi'),
     utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     C = require('../constants');
 
 /**
@@ -16,13 +17,13 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * file, and this expets that to already be done.
  *
  * @class Tilemap
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  * @param map {Object} All the settings for the map
  */
 var Tilemap = module.exports = function(game, map) {
     //call base ctor
-    DisplayObjectContainer.call(this, map);
+    Container.call(this, map);
 
     /**
      * The game instance this tilemap belongs to
@@ -119,6 +120,16 @@ var Tilemap = module.exports = function(game, map) {
         this.size.y * this.scaledTileSize.y
     );
 
+    /**
+     * The layer that should contain collision data
+     * This is determined by finding a tile layer with 'collide' or 'collision'
+     * in the name. If no tile layer like that exists, the first layer is chosen
+     *
+     * @property collisionLayer
+     * @type Tilelayer
+     */
+    this.collisionLayer = null;
+
     //the buffer to draw to
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
@@ -126,17 +137,29 @@ var Tilemap = module.exports = function(game, map) {
     this.tx = new Texture(this.btx);
     this.addChild(this.spr = new Sprite(this.tx));
 
+    //create each tileset
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
         var ts = map.tilesets[t];
         this.tilesets.push(new Tileset(map.textures[ts.name], ts));
     }
 
+    //create each layer
     for(var i = 0, il = map.layers.length; i < il; ++i) {
-        var lyr;
+        var lyr,
+            name = map.layers[i].name ? map.layers[i].name.toLower() : '';
 
         switch(map.layers[i].type) {
             case 'tilelayer':
                 lyr = new Tilelayer(this, map.layers[i]);
+
+                //default choice
+                if(!this.collisionLayer)
+                    this.collisionLayer = lyr;
+
+                //real choice if available
+                if(name.indexOf('collide') !== -1 || name.indexOf('collision') !== -1)
+                    this.collisionLayer = lyr;
+
                 break;
 
             case 'objectgroup':
@@ -158,9 +181,14 @@ var Tilemap = module.exports = function(game, map) {
         width: null,
         height: null
     };
+
+    //update the world bounds
+    var w = this.game.state.active.world;
+    w.bounds.width = Math.max(w.bounds.width, this.realSize.x);
+    w.bounds.height = Math.max(w.bounds.height, this.realSize.y);
 };
 
-utils.inherits(Tilemap, DisplayObjectContainer, {
+inherit(Tilemap, Container, {
     /**
      * Gets the tileset that an ID is associated with
      *
@@ -179,7 +207,7 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
      * @method destroy
      */
     destroy: function() {
-        DisplayObjectContainer.prototype.destroy.call(this);
+        Container.prototype.destroy.call(this);
 
         this.game = null;
         this.properties = null;
@@ -193,7 +221,7 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
         this.realSize = null;
     },
     /**
-     * Spawns all the objects in the TiledObjectGroups of this map
+     * Spawns all the objects in the ObjectGroups of this map
      *
      * @method spawnObjects
      */
@@ -209,7 +237,7 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
         return this;
     },
     /**
-     * Spawns all the objects in the TiledObjectGroups of this map
+     * Spawns all the objects in the ObjectGroups of this map
      *
      * @method despawnObjects
      */
@@ -241,12 +269,12 @@ utils.inherits(Tilemap, DisplayObjectContainer, {
         });
     },
     /**
-     * Called by a TiledObjectGroup when an object event occurs. This is so you can listen for
+     * Called by a ObjectGroup when an object event occurs. This is so you can listen for
      * the emitted events on the world instead of the tile itself.
      *
      * @method onObjectEvent
      * @param eventName {String} The event name to emit, the prefix 'object.' will be added to it
-     * @param obj {Sprite|DisplayObjectContainer} The object that has the event
+     * @param obj {Sprite|Container} The object that has the event
      * @param data {InteractionData} The raw interaction object for the event
      * @private
      */

@@ -1,9 +1,10 @@
-var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+var Container = require('../display/Container'),
     Vector = require('../math/Vector'),
     Polygon = require('../math/Polygon'),
     Ellipse = require('../math/Ellipse'),
     Rectangle = require('../math/Rectangle'),
     utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     math = require('../math/math');
 
 /**
@@ -11,12 +12,12 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * TODO: This is all trash
  *
  * @class ObjectGroup
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  * @param group {Object} All the settings for the layer
  */
  var ObjectGroup = module.exports = function(game, group) {
-    DisplayObjectContainer.call(this, group);
+    Container.call(this, group);
 
     /**
      * The game instance this tilemap belongs to
@@ -56,12 +57,12 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
     this.visible = group.visible;
 };
 
-utils.inherits(ObjectGroup, DisplayObjectContainer, {
+inherit(ObjectGroup, Container, {
     /**
      * Spawns all the entities associated with this layer, and properly sets their attributes
      *
      * @method spawn
-     * @return {TiledObjectGroup} Returns itself for chainability
+     * @return {ObjectGroup} Returns itself for chainability
      */
     spawn: function() {
         var game = this.game; //this.Tilemap.GameState.Game
@@ -119,7 +120,7 @@ utils.inherits(ObjectGroup, DisplayObjectContainer, {
 
             //just a regular DisplayObject
             if(!props.texture) {
-                obj = new DisplayObjectContainer();
+                obj = new Container();
 
                 obj.width = o.width;
                 obj.height = o.height;
@@ -270,7 +271,7 @@ utils.inherits(ObjectGroup, DisplayObjectContainer, {
      * Despawns all the sprites associated with this layer
      *
      * @method despawn
-     * @return {TiledObjectGroup} Returns itself for chainability
+     * @return {ObjectGroup} Returns itself for chainability
      */
     despawn: function() {
         //remove each sprite from the game
@@ -285,6 +286,6 @@ utils.inherits(ObjectGroup, DisplayObjectContainer, {
     },
     destroy: function() {
         this.despawn();
-        DisplayObjectContainer.prototype.destroy.call(this);
+        Container.prototype.destroy.call(this);
     }
 });

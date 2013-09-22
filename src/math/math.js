@@ -10,6 +10,56 @@ var math = module.exports = {
     RAD_TO_DEG: 180 / Math.PI,
     SEED: Math.random(),
     /**
+     * Alias some native functions for great justice (or incase we want to override)
+     *
+     */
+    /**
+     * Applys a Floor operation to a value, currently uses native Math.floor
+     * since it deals with all edge cases
+     *
+     * @method floor
+     * @param num {Number} The number to floor
+     * @return {Number} The floored value
+     */
+    floor: Math.floor,
+    /**
+     * Applys a Ceiling operation to a value, currently uses native Math.ceil
+     * since it deals with all edge cases
+     *
+     * @method ceil
+     * @param num {Number} The number to ceil
+     * @return {Number} The ceiling value
+     */
+    ceil: Math.ceil,
+    /**
+     * Generates a random number between 0 and 1, NON DETERMINISTIC
+     *
+     * @method random
+     * @return {Number} The random value
+     */
+    random: Math.random,
+    /**
+     * Returns the absolute value of a number, currently uses native Math.abs
+     * since it is more performant than tricks you can use.
+     * see:
+     *      http://jsperf.com/math-abs-vs-bitwise/7
+     *      http://jsperf.com/abs-value
+     *      http://jsperf.com/math-abs-vs-bitwise/3
+     *
+     * @method abs
+     * @param num {Number} The number to get the absolute value for
+     * @return {Number} The absolute value
+     */
+    abs: Math.abs,
+    /**
+     * Returns the square root of a number, currently uses native Math.sqrt
+     *
+     * @method sqrt
+     * @param num {Number} The number to get the sqrt of
+     * @return {Number} The sqrt value
+     */
+    sqrt: Math.sqrt,
+    /**
      * Quickly rounds a number. This is about twice as fast as Math.round()
      *
      * @method round
@@ -49,11 +99,13 @@ var math = module.exports = {
      * @method snap
      * @param num {Number} The number to snap
      * @param gap {Number} The gap size of the grid (the tile size)
-     * @param offset {Number} The starting offset of a grid slice (aka tile)
+     * @param [offset=0] {Number} The starting offset of a grid slice (aka tile)
      * @return {Number} The snapped value
      */
     snap: function(n, gap, offset) {
         if(gap === 0) return n;
+
+        offset = offset || 0;
 
         n -= offset;
         n = gap * Math.round(n / gap);
@@ -68,11 +120,13 @@ var math = module.exports = {
      * @method snapFloor
      * @param num {Number} The number to snap
      * @param gap {Number} The gap size of the grid (the tile size)
-     * @param offset {Number} The starting offset of a grid slice (aka tile)
+     * @param [offset=0] {Number} The starting offset of a grid slice (aka tile)
      * @return {Number} The snapped value
      */
     snapFloor: function(n, gap, offset) {
         if(gap === 0) return n;
+
+        offset = offset || 0;
 
         n -= offset;
         n = gap * Math.floor(n / gap);
@@ -87,11 +141,13 @@ var math = module.exports = {
      * @method snapCeil
      * @param num {Number} The number to snap
      * @param gap {Number} The gap size of the grid (the tile size)
-     * @param offset {Number} The starting offset of a grid slice (aka tile)
+     * @param [offset=0] {Number} The starting offset of a grid slice (aka tile)
      * @return {Number} The snapped value
      */
     snapCeil: function(n, gap, offset) {
         if(gap === 0) return n;
+
+        offset = offset || 0;
 
         n -= offset;
         n = gap * Math.ceil(n / gap);

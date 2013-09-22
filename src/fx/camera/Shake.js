@@ -1,6 +1,6 @@
 var Effect = require('./Effect'),
     Vector = require('../../math/Vector'),
-    utils = require('../../utils/utils'),
+    inherit = require('../../utils/inherit'),
     math = require('../../math/math'),
     C = require('../../constants');
 
@@ -9,7 +9,7 @@ var Shake = module.exports = function() {
     this.offset = new Vector();
 };
 
-utils.inherits(Shake, Effect, {
+inherit(Shake, Effect, {
     start: function(intensity, duration, direction, cb) {
         Effect.prototype.start.call(this);
 
@@ -33,7 +33,7 @@ utils.inherits(Shake, Effect, {
 
         this.intensity = intensity || 0.01;
         this.duration = duration || 1000;
-        this.direction = direction || C.DIRECTION.BOTH;
+        this.direction = direction || C.AXIS.BOTH;
         this.offset.x = this.offset.y = 0;
         this.cb = cb;
 
@@ -63,10 +63,10 @@ utils.inherits(Shake, Effect, {
         //otherwise do the shake
         else {
             //pan to a random offset
-            if((this.direction === C.DIRECTION.BOTH) || (this.direction === C.DIRECTION.HORIZONTAL))
+            if(this.direction & C.AXIS.HORIZONTAL)
                 this.offset.x = math.round(Math.random() * this.intensity * this.parent.size.x * 2 - this.intensity * this.parent.size.x);
 
-            if ((this.direction === C.DIRECTION.BOTH) || (this.direction === C.DIRECTION.VERTICAL))
+            if (this.direction & C.AXIS.VERTICAL)
                 this.offset.y = math.round(Math.random() * this.intensity * this.parent.size.y * 2 - this.intensity * this.parent.size.y);
 
             this.parent.pan(this.offset.x, this.offset.y);

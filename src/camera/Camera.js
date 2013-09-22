@@ -1,9 +1,9 @@
-var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+var Container = require('../display/Container'),
     Sprite = require('../display/Sprite'),
-    Gui = require('../gui/Gui'),
     Rectangle = require('../math/Rectangle'),
     Vector = require('../math/Vector'),
-    utils = require('../utils/utils'),
+    ObjectFactory = require('../utils/ObjectFactory'),
+    inherit = require('../utils/inherit'),
     math = require('../math/math'),
     C = require('../constants');
 
@@ -12,11 +12,33 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * to ensure they are using "screen-coords".
  *
  * @class Camera
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  */
 var Camera = module.exports = function(state) {
+    /**
+     * The world instance this camera is tied to
+     *
+     * @property world
+     * @type World
+     */
     this.world = state.world;
+
+    /**
+     * The game instance this camera belongs to
+     *
+     * @property game
+     * @type Game
+     */
+    this.game = state.game;
+
+    /**
+     * The game state this camera belongs to
+     *
+     * @property state
+     * @type State
+     */
+    this.state = state;
 
     /**
      * The bounds of that the camera can move to
@@ -26,7 +48,7 @@ var Camera = module.exports = function(state) {
      * @readOnly
      * @private
      */
-    this._bounds = new Rectangle(0, 0, 0, 0);
+    this._bounds = state.world.bounds.clone();
 
     /**
      * When following a sprite this is the space within the camera that it can move around
@@ -68,18 +90,29 @@ var Camera = module.exports = function(state) {
     this.hSize = new Vector(0, 0);
 
     /**
-     * The GUI that contains all GUI items
+     * The container that holds all the GUI items, direct children of Camera are effects
      *
      * @property gui
-     * @type Gui
+     * @type Container
      * @readOnly
      */
-    this.gui = new Gui();
+    this.gui = new Container();
 
-    DisplayObjectContainer.call(this);
+    /**
+     * An object factory for creating game objects
+     *
+     * @property add
+     * @type ObjectFactory
+     */
+    this.add = new ObjectFactory(state, this.gui);
+
+    Container.call(this);
+
+    //add the gui child
+    this.addChild(this.gui);
 };
 
-utils.inherits(Camera, DisplayObjectContainer, {
+inherit(Camera, Container, {
     /**
      * Follows an sprite with the camera, ensuring they are always center view. You can
      * pass a follow style to change the area an sprite can move around in before we start

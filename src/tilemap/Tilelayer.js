@@ -1,6 +1,8 @@
-var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
+var Container = require('../display/Container'),
     Vector = require('../math/Vector'),
+    math = require('../math/math'),
     utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     support = require('../utils/support');
 
 /**
@@ -10,13 +12,13 @@ var DisplayObjectContainer = require('../display/DisplayObjectContainer'),
  * create an instance on your own.
  *
  * @class Tilelayer
- * @extends DisplayObjectContainer
+ * @extends Container
  * @constructor
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
 var Tilelayer = module.exports = function(map, layer) {
-    DisplayObjectContainer.call(this, layer);
+    Container.call(this, layer);
 
     /**
      * The map instance this tilelayer belongs to
@@ -74,9 +76,17 @@ var Tilelayer = module.exports = function(map, layer) {
     this.position.y = layer.y;
     this.alpha = layer.opacity;
     this.visible = layer.visible;
+
+    //temp vars for overlap testing
+    this._overlaps = [];
+    this._tempTileBlock = [];
+    this._tempTileX = 0;
+    this._tempTileY = 0;
+    this._tempTileW = 0;
+    this._tempTileH = 0;
 };
 
-utils.inherits(Tilelayer, DisplayObjectContainer, {
+inherit(Tilelayer, Container, {
     /**
      * Renders a layer onto a context
      *
@@ -124,8 +134,111 @@ utils.inherits(Tilelayer, DisplayObjectContainer, {
             }
         }
     },
+    /**
+     * Get tiles overlaps the given sprite.
+     *
+     * @method getTileOverlaps
+     * @param sprite {Sprite} Tiles you want to get that overlaps this.
+     * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
+     */
+    getTileOverlaps: function(sprite) {
+
+        this._overlaps.length = 0;
+
+        //If the sprite is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
+        if(sprite.body.x < 0 || sprite.body.x > this.map.realSize.x || sprite.body.y < 0 || sprite.body.y > this.map.realSize.y) {
+            return this._overlaps;
+        }
+
+        //What tiles do we need to check against?
+        this._tempTileX = math.snapFloor(sprite.body.x, this.map.tileSize.x) / this.map.tileSize.x;
+        this._tempTileY = math.snapFloor(sprite.body.y, this.map.tileSize.y) / this.map.tileSize.y;
+        this._tempTileW = (math.snapCeil(sprite.body.width, this.map.tileSize.x) + this.map.tileSize.x) / this.map.tileSize.x;
+        this._tempTileH = (math.snapCeil(sprite.body.height, this.map.tileSize.y) + this.map.tileSize.y) / this.map.tileSize.y;
+
+        //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
+        this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
+
+        for(var i = 0, il = this._tempTileBlock.length; i < il; ++i) {
+            var block = this._tempTileBlock[i];
+            //separateTile: function (sprite, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY)            
+            if(
+                this.game.physics.separateTile(
+                    sprite,
+                    block.x * this.map.tileSize.x,
+                    block.y * this.map.tileSize.y,
+                    this.map.tileSize.x,
+                    this.map.tileSize.y,
+                    block.tile.mass || 1,
+                    block.tile.collideLeft,
+                    block.tile.collideRight,
+                    block.tile.collideUp,
+                    block.tile.collideDown,
+                    block.tile.separateX,
+                    block.tile.separateY
+                )
+            ) {
+                this._overlaps.push(block);
+            }
+        }
+
+        return this._overlaps;
+    },
+    /**
+     * Get a tile block with its position and size. (This method does not return, it'll set result to _tempTileBlock)
+     *
+     * @method getTempBlock
+     * @param x {number} X position of block's left-top corner.
+     * @param y {number} Y position of block's left-top corner.
+     * @param width {number} Width of block.
+     * @param height {number} Height of block.
+     * @param collisionOnly {bool} Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
+     */
+    getTempBlock: function (x, y, width, height, collisionOnly) {
+        collisionOnly = collisionOnly || false;
+
+        var map = this.map,
+            sx = map.size.x,
+            sy = map.size.y;
+
+        if(x < 0)
+            x = 0;
+
+        if(y < 0)
+            y = 0;
+
+        if(width > sx)
+            width = sx;
+
+        if (height > sy)
+            height = sy;
+
+        this._tempTileBlock.length = 0;
+
+        for(var ty = y; ty < y + height; ty++) {
+            for(var tx = x; tx < x + width; tx++) {
+                var id = (tx + (ty * sx)),
+                    tid = this.tileIds[id],
+                    set = map.getTileset(tid),
+                    props;
+
+                if(!set)
+                    continue;
+
+                props = set.getTileProperties(tid);
+
+                if(!collisionOnly || props.collidable) {
+                    this._tempTileBlock.push({
+                        x: tx,
+                        y: ty,
+                        tile: props
+                    });
+                }
+            }
+        }
+    },
     destroy: function() {
-        DisplayObjectContainer.prototype.destroy.call(this);
+        Container.prototype.destroy.call(this);
 
         this.game = null;
         this.name = null;
