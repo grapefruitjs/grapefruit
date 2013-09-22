@@ -35,10 +35,14 @@ utils.inherits(ObjectFactory, Object, {
             game = this.game;
 
         if(typeof tx === 'string') {
-            if(frame !== undefined)
+            if(!frame && frame !== 0)
                 tx = game.cache.getTextures(tx)[frame];
             else
                 tx = game.cache.getTexture(tx);
+        }
+
+        if(!tx) {
+            tx = game.cache.getTexture('__default');
         }
 
         spr = new Sprite(tx);
