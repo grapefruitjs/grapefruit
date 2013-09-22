@@ -1,4 +1,5 @@
 var utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     Texture = require('../display/Texture'),
     Vector = require('../math/Vector'),
     PIXI = require('../vendor/pixi'),
@@ -173,7 +174,7 @@ var Tileset = module.exports = function(texture, settings) {
     }
 };
 
-utils.inherits(Tileset, Texture, {
+inherit(Tileset, Texture, {
     /**
      * Gets the tile properties for a tile based on it's ID
      *

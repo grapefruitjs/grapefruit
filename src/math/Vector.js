@@ -1,4 +1,4 @@
-var utils = require('../utils/utils');
+var inherit = require('../utils/inherit');
 
 /**
  * A 2d Vector implementation stolen directly from mrdoob's THREE.js
@@ -16,7 +16,7 @@ var Vector = module.exports = function(x, y) {
     this.y = y || 0;
 };
 
-utils.inherits(Vector, Object, {
+inherit(Vector, Object, {
     /**
      * Sets the value of the vector
      *

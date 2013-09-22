@@ -1,6 +1,6 @@
 var Sprite = require('./Sprite'),
     Texture = require('./Texture'),
-    utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     math = require('../math/math');
 
 /**
@@ -91,7 +91,7 @@ var AnimatedSprite = module.exports = function(anims, speed, start) {
     this.playing = false;
 };
 
-utils.inherits(AnimatedSprite, Sprite, {
+inherit(AnimatedSprite, Sprite, {
     /**
      * Adds a new animation to this animated sprite
      *

@@ -1,11 +1,11 @@
 var Effect = require('./Effect'),
-    utils = require('../../utils/utils');
+    inherit = require('../../utils/inherit');
 
 var Fade = module.exports = function() {
     Effect.call(this);
 };
 
-utils.inherits(Fade, Effect, {
+inherit(Fade, Effect, {
     start: function(color, duration, alpha, cb) {
         Effect.prototype.start.call(this);
 

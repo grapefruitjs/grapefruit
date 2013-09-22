@@ -3,13 +3,11 @@ var StateManager = require('./StateManager'),
     Cache = require('../utils/Cache'),
     Clock = require('../utils/Clock'),
     SpritePool = require('../utils/SpritePool'),
-    Gui = require('../gui/Gui'),
     Loader = require('../loader/Loader'),
     InputManager = require('../input/InputManager'),
     AudioManager = require('../audio/AudioManager'),
-    PhysicsSystem = require('../physics/PhysicsSystem'),
     support = require('../utils/support'),
-    utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     PIXI = require('../vendor/pixi'),
     C = require('../constants');
 
@@ -200,15 +198,6 @@ var Game = module.exports = function(container, settings) {
      */
     this.state = new StateManager(this);
 
-    /**
-     * The physics system to simulate the world
-     *
-     * @property physics
-     * @type PhysicsSystem
-     * @readOnly
-     */
-    this.physics = new PhysicsSystem(this);
-
     //TODO:
     //
     //add (obj factory?)
@@ -241,7 +230,7 @@ var Game = module.exports = function(container, settings) {
     }, false);
 };
 
-utils.inherits(Game, Object, {
+inherit(Game, Object, {
     _createRenderer: function() {
         var method = this.renderMethod,
             render = null;
@@ -294,34 +283,11 @@ utils.inherits(Game, Object, {
         return this;
     },
     /**
-     * Adds an object to the current stage
+     * Requests that the browser go into fullscreen mode
      *
-     * @method addChild
-     * @param obj {Sprite} The sprite to the stage
+     * @method requestFullscreen
      * @return {Game} Returns itself for chainability
      */
-    addChild: function(obj) {
-        this.activeState.addChild(obj);
-
-        return this;
-    },
-    /**
-     * Removes a sprite from the stage
-     *
-     * @method removeChild
-     * @param obj {Sprite} The sprite to the stage
-     * @return {Game} Returns itself for chainability
-     */
-    removeChild: function(obj) {
-        if(obj) {
-            if(obj instanceof Gui)
-                this.camera.removeChild(obj);
-            else
-                this.world.removeChild(obj);
-        }
-
-        return this;
-    },
     requestFullscreen: function() {
         var elem = this.renderer.view;
 
@@ -332,86 +298,6 @@ utils.inherits(Game, Object, {
         } else if(elem.webkitRequestFullscreen) {
           elem.webkitRequestFullscreen();
         }
-    },
-    /**
-     * Adds a new game state to this game to be later enabled
-     *
-     * @method addState
-     * @param state {GameState} The state to add to this game
-     * @return {Game} Returns itself for chainability
-     */
-    addState: function(state) {
-        var name = state.name;
-
-        if(!name) {
-            throw 'No state name could be determined, did you give the state a name when you created it?';
-        } else if(this.states[name]) {
-            throw 'A state with the name "' + name + '" already exists, did you try to add it twice?';
-        } else {
-            this.states[name] = state;
-            this.stage.addChild(state);
-
-            state.game = this;
-        }
-
-        return this;
-    },
-    /**
-     * Removes a game state from the game
-     *
-     * @method removeState
-     * @param state {GameState|String} The state to remove from the game, or the name of a state to remove
-     * @return {Game} Returns itself for chainability
-     */
-    removeState: function(state) {
-        var name = (typeof state === 'string') ? state : state.name;
-
-        if(!name) {
-            throw 'No state name could be determined, are you sure you passed me a game state?';
-        } else if(!this.states[name]) {
-            throw 'A state with the name "' + name + '" does not exist, are you sure you added it?';
-        } else {
-            //don't remove the default state
-            if(name === '_default') return;
-
-            //if this is the active state, revert to the default state
-            if(name === this.activeState.name) {
-                this.enableState('_default');
-            }
-
-            delete this.states[name];
-        }
-
-        return this;
-    },
-    /**
-     * Enables a state that has been added to the game
-     *
-     * @method enableState
-     * @param state {GameState|String} The state to enable, or the name of a state to enable
-     * @return {Game} Returns itself for chainability
-     */
-    enableState: function(state) {
-        var name = (typeof state === 'string') ? state : state.name;
-
-        if(this.activeState)
-            this.activeState.disable();
-
-        this.activeState = this.states[name];
-
-        this.activeState.enable();
-
-        return this;
-    },
-    /**
-     * Loads the world map into the game
-     *
-     * @method loadWorld
-     * @param world {String|Map} The map to load as the current world
-     * @return {Game} Returns itself for chainability
-     */
-    loadWorld: function(world) {
-        this.activeState.loadWorld(world);
 
         return this;
     },
@@ -444,10 +330,10 @@ utils.inherits(Game, Object, {
         this.input.update(dt);
         this.timings.inputEnd = this.clock.now();
 
-        //simulate physics and detect/resolve collisions
-        this.game.timings.physicsStart = this.clock.now();
-        this.physics.update(dt);
-        this.game.timings.physicsEnd = this.clock.now();
+        //TODO: plugins
+        //this.timings.pluginsStart = this.clock.now();
+        //this.plugins.update(dt);
+        //this.timings.pluginsEnd = this.clock.now();
 
         //update this game state
         this.timings.stateStart = this.clock.now();
@@ -458,20 +344,6 @@ utils.inherits(Game, Object, {
         this.timings.renderStart = this.clock.now();
         this.renderer.render(this.stage);
         this.timings.renderEnd = this.clock.now();
-    }
-});
-
-/**
- * Alias for the active State's add namespace. Instead of using
- * `game.state.active.add.sprite`, you can use `game.add.sprite`
- *
- * @property add
- * @type Object
- * @readOnly
- */
-Object.defineProperty(Game.prototype, 'add', {
-    get: function() {
-        return this.state.active.add;
     }
 });
 

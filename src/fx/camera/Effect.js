@@ -1,9 +1,9 @@
-var DisplayObjectContainer = require('../../display/DisplayObjectContainer'),
-    utils = require('../../utils/utils'),
+var Container = require('../../display/Container'),
+    inherit = require('../../utils/inherit'),
     PIXI = require('../../vendor/pixi');
 
 var Effect = module.exports = function() {
-    DisplayObjectContainer.call(this);
+    Container.call(this);
 
     this.addChild(this.gfx = new PIXI.Graphics());
     this.gfx.visible = false;
@@ -11,7 +11,7 @@ var Effect = module.exports = function() {
     this.done = true;
 };
 
-utils.inherits(Effect, DisplayObjectContainer, {
+inherit(Effect, Container, {
     start: function() {
         this.done = false;
         return this;

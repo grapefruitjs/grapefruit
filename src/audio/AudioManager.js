@@ -1,5 +1,5 @@
 var AudioPlayer = require('./AudioPlayer'),
-    utils = require('../utils/utils'),
+    inherit = require('../utils/inherit'),
     support = require('../utils/support');
 
 //you can only have 1 audio context on a page, so we store one for use in each manager
@@ -85,7 +85,7 @@ var AudioManager = module.exports = function(game) {
     this.sounds = {};
 };
 
-utils.inherits(AudioManager, Object, {
+inherit(AudioManager, Object, {
     /**
      * Returns the current master volume
      *

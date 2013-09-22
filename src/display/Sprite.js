@@ -1,5 +1,6 @@
 var EventEmitter = require('../utils/EventEmitter'),
-    utils = require('../utils/utils'),
+    Rectangle = require('../math/Rectangle'),
+    inherit = require('../utils/inherit'),
     PIXI = require('../vendor/pixi'),
     C = require('../constants');
 
@@ -28,9 +29,11 @@ var Sprite = module.exports = function(tx) {
      * @default 'neutral'
      */
     this.type = C.SPRITE_TYPE.NEUTRAL;
+
+    this.hitArea = this.hitArea || new Rectangle(0, 0, this.width, this.height);
 };
 
-utils.inherits(Sprite, PIXI.Sprite, {
+inherit(Sprite, PIXI.Sprite, {
     /**
      * Removes this sprite from the stage and the physics system
      *
@@ -45,11 +48,13 @@ utils.inherits(Sprite, PIXI.Sprite, {
 });
 
 //Add event echos
+/*
 ['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
     Sprite.prototype[evtname] = module.exports = function(e) {
         this.emit(evtname, e);
     };
 });
+*/
 
 /*
  * MOUSE Callbacks
