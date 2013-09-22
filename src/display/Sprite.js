@@ -48,11 +48,13 @@ inherit(Sprite, PIXI.Sprite, {
 });
 
 //Add event echos
+/*
 ['click', 'mousedown', 'mouseup', 'mouseupoutside', 'mouseover', 'mouseout', 'mousemove', 'tap', 'touchstart', 'touchend', 'touchendoutside'].forEach(function(evtname) {
     Sprite.prototype[evtname] = module.exports = function(e) {
         this.emit(evtname, e);
     };
 });
+*/
 
 /*
  * MOUSE Callbacks

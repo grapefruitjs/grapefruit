@@ -32,16 +32,7 @@ var StateManager = module.exports = function(game) {
 
 inherit(StateManager, Object, {
     _createDefault: function() {
-        var state = new State('__default');
-        state.setup(this.game);
-        this._push(state).enable(state);
-
-        return this;
-    },
-    _push: function(state) {
-        this.states[state.name] = state;
-
-        return this;
+        return this.add('__default', true);
     },
     add: function(Name, enable) {
         var state;
