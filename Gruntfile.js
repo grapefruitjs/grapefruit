@@ -137,23 +137,10 @@ module.exports = function(grunt) {
                     verbose: false,
                     scanAllow: true,
                     allNodeRequires: true,
-                    noRootExports: false,
-                    rootExports: 'gf'
+                    noRootExports: false
                 }
             }
-        }/*,
-        build: {
-            dev: {
-                dest: '<%= files.dev %>',
-                src: '<%= dirs.src %>',
-                main: '<%= dirs.src %>/<%= files.bundle %>'
-            },
-            dist: {
-                dest: '<%= files.dist %>',
-                src: '<%= dirs.src %>',
-                main: '<%= dirs.src %>/<%= files.bundle %>'
-            }
-        }*/
+        }
     });
 
     //load npm tasks

@@ -376,7 +376,7 @@ inherit(AssetLoader, Object, {
         this.emit('start', this.keys.length);
 
         if(this.keys.length > 0) {
-            while(this._keys.length > 0)
+            while(this.keys.length > 0)
                 this.loadFile();
         } else {
             this.progress = 100;
@@ -417,8 +417,8 @@ inherit(AssetLoader, Object, {
                         file.data = data;
                         self.fileComplete(file.key);
                     },
-                    error: function() {
-                        self.fileError(file.key);
+                    error: function(err) {
+                        self.fileError(file.key, err);
                     }
                 });
                 break;
@@ -436,8 +436,8 @@ inherit(AssetLoader, Object, {
                                 file.data = data;
                                 self.fileComplete(file.key);
                             },
-                            error: function() {
-                                self.fileError(file.key);
+                            error: function(err) {
+                                self.fileError(file.key, err);
                             }
                         });
                     } else if(support.htmlAudio) {
@@ -451,7 +451,7 @@ inherit(AssetLoader, Object, {
                         file.data.load();
                     }
                 } else {
-                    this.fileError(file.key);
+                    this.fileError(file.key, 'No supported audio URL could be determined!');
                 }
                 break;
 
@@ -463,8 +463,8 @@ inherit(AssetLoader, Object, {
                         file.data = data;
                         self.fileComplete(file.key);
                     },
-                    error: function() {
-                        self.fileError(file.key);
+                    error: function(err) {
+                        self.fileError(file.key, err);
                     }
                 });
                 break;
@@ -496,13 +496,13 @@ inherit(AssetLoader, Object, {
      * @method fileError
      * @param key {String} Key of the error loading file.
      */
-    fileError: function(key) {
+    fileError: function(key, error) {
         this.assets[key].loaded = true;
         this.assets[key].error = true;
 
         this.emit('error', key);
 
-        utils.warn('Error loading file', key);
+        utils.warn('Error loading file "' + key + '", error received:', error);
 
         this.fileDone(key, true);
     },
@@ -634,8 +634,8 @@ inherit(AssetLoader, Object, {
                     if(cb) cb();
                     self.fileDone(file.key);
                 },
-                error: function() {
-                    self.fileError(file.key);
+                error: function(err) {
+                    self.fileError(file.key, err);
                 }
             });
         }

@@ -45,6 +45,8 @@ Texture._createFrame = function(key, data, baseTexture) {
         tx.rotated = data.rotated;
         tx.sourceSize = data.sourceSize;
         tx.realSize = data.spriteSourceSize;
+
+        return tx;
     }
 };
 

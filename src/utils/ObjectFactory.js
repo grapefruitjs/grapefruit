@@ -36,7 +36,7 @@ inherit(ObjectFactory, Object, {
             game = this.game;
 
         if(typeof tx === 'string') {
-            if(!frame && frame !== 0)
+            if(frame || frame === 0)
                 tx = game.cache.getTextures(tx)[frame];
             else
                 tx = game.cache.getTexture(tx);

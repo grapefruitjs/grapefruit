@@ -41,7 +41,7 @@ var World = module.exports = function(state) {
      * @property add
      * @type ObjectFactory
      */
-    this.add = new ObjectFactory(this.game, this);
+    this.add = new ObjectFactory(state, this);
 
     Container.call(this);
 };

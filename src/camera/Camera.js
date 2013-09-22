@@ -48,7 +48,7 @@ var Camera = module.exports = function(state) {
      * @readOnly
      * @private
      */
-    this._bounds = state.world._bounds.clone();
+    this._bounds = state.world.bounds.clone();
 
     /**
      * When following a sprite this is the space within the camera that it can move around

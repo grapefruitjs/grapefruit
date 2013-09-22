@@ -19,6 +19,18 @@ var utils = module.exports = {
      */
     noop: function() {},
     /**
+     * Gets the absolute url from a relative one
+     *
+     * @method getAbsoluteUrl
+     * @param url {String} The relative url to translate into absolute
+     * @return {String} The absolute url (fully qualified)
+     */
+    getAbsoluteUrl: function(url) {
+        var a = document.createElement('a');
+        a.href = url;
+        return a.href;
+    },
+    /**
      * Performs an ajax request, and manages the callbacks passed in
      *
      * @method ajax
@@ -41,14 +53,16 @@ var utils = module.exports = {
         sets.abort = sets.abort || utils.noop;
         sets.complete = sets.complete || utils.noop;
 
-        var xhr = utils.createAjaxRequest();
+        var xhr = utils.createAjaxRequest(),
+            protocol = utils.getAbsoluteUrl(sets.url).split('/')[0];
 
         xhr.onreadystatechange = function() {
             if(xhr.readyState === 4) {
                 var res = xhr.response || xhr.responseText,
                     err = null;
 
-                if(xhr.status !== 200)
+                //The 'file:' protocol doesn't give response codes
+                if(protocol !== 'file:' && xhr.status !== 200)
                     err = 'Non-200 status code returned: ' + xhr.status;
 
                 if(!err && typeof res === 'string') {
@@ -256,6 +270,17 @@ var utils = module.exports = {
         obj.__tiledparsed = true;
 
         return obj;
+    },
+    //logging
+    logger: window.console || {},
+    log: function() {
+        utils.logger.log && utils.logger.log.apply(utils.logger, arguments);
+    },
+    warn: function() {
+        utils.logger.warn && utils.logger.warn.apply(utils.logger, arguments);
+    },
+    error: function() {
+        utils.logger.error && utils.logger.error.apply(utils.logger, arguments);
     }
 };
 
