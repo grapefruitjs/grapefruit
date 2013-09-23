@@ -271,17 +271,9 @@ var utils = module.exports = {
 
         return obj;
     },
-    //logging
-    logger: window.console || {},
-    log: function() {
-        utils.logger.log && utils.logger.log.apply(utils.logger, arguments);
-    },
-    warn: function() {
-        utils.logger.warn && utils.logger.warn.apply(utils.logger, arguments);
-    },
-    error: function() {
-        utils.logger.error && utils.logger.error.apply(utils.logger, arguments);
-    }
+    log: window.console && window.console.log,
+    warn: window.console && window.console.warn,
+    error: window.console && window.console.error
 };
 
 //XML Parser

@@ -1,15 +1,11 @@
 var Container = require('../display/Container'),
     ObjectGroup = require('./ObjectGroup'),
-    BaseTexture = require('../display/BaseTexture'),
-    Texture = require('../display/Texture'),
     Sprite = require('../display/Sprite'),
     Vector = require('../math/Vector'),
     Tilelayer = require('./Tilelayer'),
     Tileset = require('./Tileset'),
-    PIXI = require('../vendor/pixi'),
     utils = require('../utils/utils'),
-    inherit = require('../utils/inherit'),
-    C = require('../constants');
+    inherit = require('../utils/inherit');
 
 /**
  * Tiled map, expects a Tiled TMX file loaded by the loader as the argument.
@@ -136,8 +132,7 @@ var Tilemap = module.exports = function(state, map, tilesetTextures) {
 
     //create each layer
     for(var i = 0, il = map.layers.length; i < il; ++i) {
-        var lyr,
-            name = map.layers[i].name ? map.layers[i].name.toLowerCase() : '';
+        var lyr;
 
         switch(map.layers[i].type) {
             case 'tilelayer':

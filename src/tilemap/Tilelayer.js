@@ -99,7 +99,7 @@ var Tilelayer = module.exports = function(map, layer) {
 
     //prerender settings
     this.preRender = this.properties.preRender;
-    this.chunkSize = new gf.Vector(
+    this.chunkSize = new Vector(
         this.properties.chunkSizeX || this.properties.chunkSize || 512,
         this.properties.chunkSizeY || this.properties.chunkSize || 512
     );
@@ -107,8 +107,8 @@ var Tilelayer = module.exports = function(map, layer) {
 
     this._tilePool = [];
     this._buffered = { left: false, right: false, top: false, bottom: false };
-    this._panDelta = new gf.Vector();
-    this._rendered = new gf.Rectangle();
+    this._panDelta = new Vector();
+    this._rendered = new Rectangle();
 };
 
 inherit(Tilelayer, Container, {
@@ -148,8 +148,8 @@ inherit(Tilelayer, Container, {
         var world = this.parent,
             width = world.size.x * world.tileSize.x,
             height = world.size.y * world.tileSize.y,
-            xChunks = Math.ceil(width / this.chunkSize.x),
-            yChunks = Math.ceil(height / this.chunkSize.y);
+            xChunks = math.ceil(width / this.chunkSize.x),
+            yChunks = math.ceil(height / this.chunkSize.y);
 
         //for each chunk
         for(var x = 0; x < xChunks; ++x) {
@@ -169,8 +169,8 @@ inherit(Tilelayer, Container, {
             yTiles = h / tsy,
             nx = (cx * this.chunkSize.x) % tsx,
             ny = (cy * this.chunkSize.y) % tsy,
-            tx = Math.floor(cx * this.chunkSize.x / tsx),
-            ty = Math.floor(cy * this.chunkSize.y / tsy),
+            tx = math.floor(cx * this.chunkSize.x / tsx),
+            ty = math.floor(cy * this.chunkSize.y / tsy),
             sx = world.size.x,
             sy = world.size.y,
             canvas = document.createElement('canvas'),
@@ -221,16 +221,16 @@ inherit(Tilelayer, Container, {
     },
     _renderTiles: function(sx, sy, sw, sh) {
         //convert to tile coords
-        sx = Math.floor(sx / this.parent.scaledTileSize.x);
-        sy = Math.floor(sy / this.parent.scaledTileSize.y);
+        sx = math.floor(sx / this.parent.scaledTileSize.x);
+        sy = math.floor(sy / this.parent.scaledTileSize.y);
 
         //ensure we don't go below 0
         sx = sx < 0 ? 0 : sx;
         sy = sy < 0 ? 0 : sy;
 
         //convert to tile sizes
-        sw = Math.ceil(sw / this.parent.scaledTileSize.x) + 1;
-        sh = Math.ceil(sh / this.parent.scaledTileSize.y) + 1;
+        sw = math.ceil(sw / this.parent.scaledTileSize.x) + 1;
+        sh = math.ceil(sh / this.parent.scaledTileSize.y) + 1;
 
         //ensure we don't go outside the map size
         sw = (sx + sw > this.parent.size.x) ? (this.parent.size.x - sx) : sw;

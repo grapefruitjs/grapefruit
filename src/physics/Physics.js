@@ -3,10 +3,8 @@
 // ChipmunkJS: https://github.com/josephg/Chipmunk-js
 
 var QuadTree = require('../math/QuadTree'),
-    Rectangle = require('../math/Rectangle'),
     Container = require('../display/Container'),
     Sprite = require('../display/Sprite'),
-    Tilemap = require('../tilemap/Tilemap'),
     Body = require('./Body'),
     Vector = require('../math/Vector'),
     inherit = require('../utils/inherit'),
