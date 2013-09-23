@@ -33,13 +33,15 @@ var Body = module.exports = function(sprite) {
     this.rotation = 0;
     this.allowRotation = true;
 
+    this.embedded = false;
+    this.carry = false;
+
     //touching/allowCollide directional flags
     this.allowCollide = C.DIRECTION.ALL;
     this.touching = C.DIRECTION.NONE;
     this.wasTouching = C.DIRECTION.NONE;
 
     this.overlap = new Vector();
-
     this.lastPos = new Vector();
 
     //some temp vars to prevent having to create a bunch each update
@@ -100,6 +102,7 @@ inherit(Body, Rectangle, {
     update: function(dt, gravity) {
         this.wasTouching = this.touching;
         this.touching = C.DIRECTION.NONE;
+        this.embedded = false;
 
         this.x = (this.sprite.position.x - (this.sprite.anchor.x * this._width)) + this.offset.x;
         this.y = (this.sprite.position.y - (this.sprite.anchor.y * this._height)) + this.offset.y;

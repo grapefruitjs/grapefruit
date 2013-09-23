@@ -57,7 +57,6 @@ var Physics = module.exports = function(state) {
     this.gravity = new Vector(0, 9.87);
 
     //some temp vars to prevent have to declare a lot
-    this._result = false;
     this._total = 0;
     this._overlap = 0;
     this._maxOverlap = 0;
@@ -68,12 +67,7 @@ var Physics = module.exports = function(state) {
     this._newVelocity2 = 0;
 
     this._average = 0;
-
-    this._mapData = null;
     this._potentials = null;
-
-    this._bounds1 = new Rectangle();
-    this._bounds2 = new Rectangle();
 };
 
 inherit(Physics, Object, {
@@ -134,6 +128,8 @@ inherit(Physics, Object, {
      * @param onCollision {Function} The callback to call whenever a collision occurs
      */
     collide: function(obj1, obj2, onCollision) {
+        this._total = 0;
+
         if(obj1 && obj2) {
             //sprite collisions
             if(obj1 instanceof Sprite) {
@@ -154,6 +150,8 @@ inherit(Physics, Object, {
                 }
             }
         }
+
+        return this._total;
     },
     /**
      * The core separation function to separate two physics bodies.
@@ -164,13 +162,15 @@ inherit(Physics, Object, {
      * @returns {Boolean} Returns true if the bodies were separated, otherwise false.
      */
     separate: function(b1, b2) {
-        this._result = (this._separateX(b1, b2) || this._separateY(b1, b2));
-
         //make sure the sprite is updated after the collision solve
-        if(this._result) {
+        if(this._separateX(b1, b2) || this._separateY(b1, b2)) {
             b1.syncSprite();
             b2.syncSprite();
+
+            return true;
         }
+
+        return false;
     },
     _hit: function(obj1, obj2, cb) {
         this._total++;
@@ -181,7 +181,7 @@ inherit(Physics, Object, {
     _separateX: function(b1, b2) {
         //static bodies don't collide with eachother
         if(b1.type === C.PHYSICS_TYPE.STATIC && b2.type === C.PHYSICS_TYPE.STATIC)
-            return;
+            return false;
 
         //delta of the two body locations
         this._overlap = 0;
@@ -189,28 +189,17 @@ inherit(Physics, Object, {
         var dx1 = b1.deltaX(),
             dx2 = b2.deltaX();
 
-        //if they have moved the same amount, no overlap
-        if(dx1 === dx2)
-            return false;
-
-        //update first body
-        this._bounds1.x = b1.x - (dx1 > 0 ? dx1 : 0);
-        this._bounds1.y = b1.lastPos.y;
-        this._bounds1.width = b1.width + (dx1 > 0 ? dx1 : -dx1);
-        this._bounds1.height = b1.height;
-
-        //update second body
-        this._bounds2.x = b2.x - (dx2 > 0 ? dx2 : 0);
-        this._bounds2.y = b2.lastPos.y;
-        this._bounds2.width = b2.width + (dx2 > 0 ? dx2 : -dx2);
-        this._bounds2.height = b2.height;
-
         //check for overlap (detect collisions)
-        if(this._bounds1.overlaps(this._bounds2)) {
+        if(b1.overlaps(b2)) {
             this._maxOverlap = math.abs(dx1) + math.abs(dx2) + C.PHYSICS.OVERLAP_BIAS;
 
+            //the overlap but neither are moving
+            if(dx1 === 0 && dx2 === 0) {
+                b1.embedded = true;
+                b2.embedded = true;
+            }
             //if they did overlap to the right
-            if(dx1 > dx2) {
+            else if(dx1 > dx2) {
                 this._overlap = b1.right - b2.x;
 
                 //check collision flags, if touching set such
@@ -237,8 +226,6 @@ inherit(Physics, Object, {
         //adjust positions and velocity according to collisions (solve collisions)
         if(this._overlap) {
             b1.overlap.x = b2.overlap.x = this._overlap;
-
-            //TODO: Flag to prevent out solve?
 
             //set velocities
             this._velocity1 = b1.velocity.x;
@@ -279,7 +266,7 @@ inherit(Physics, Object, {
     _separateY: function(b1, b2) {
         //static bodies don't collide with eachother
         if(b1.type === C.PHYSICS_TYPE.STATIC && b2.type === C.PHYSICS_TYPE.STATIC)
-            return;
+            return false;
 
         //delta of the two body locations
         this._overlap = 0;
@@ -287,28 +274,17 @@ inherit(Physics, Object, {
         var dy1 = b1.deltaY(),
             dy2 = b2.deltaY();
 
-        //if they have moved the same amount, no overlap
-        if(dy1 === dy2)
-            return false;
-
-        //update first body
-        this._bounds1.x = b1.x;
-        this._bounds1.y = b1.y - (dy1 > 0 ? dy1 : 0);
-        this._bounds1.width = b1.width;
-        this._bounds1.height = b1.height + math.abs(dy1);
-
-        //update second body
-        this._bounds2.x = b2.x;
-        this._bounds2.y = b2.y - (dy2 > 0 ? dy2 : 0);
-        this._bounds2.width = b2.width;
-        this._bounds2.height = b2.height + math.abs(dy2);
-
         //check for overlap (detect collisions)
-        if(this._bounds1.overlaps(this._bounds2)) {
+        if(b1.overlaps(b2)) {
             this._maxOverlap = math.abs(dy1) + math.abs(dy2) + C.PHYSICS.OVERLAP_BIAS;
 
+            //they overlap but neither are moving
+            if(dy1 === 0 && dy2 === 0) {
+                b1.embedded = true;
+                b2.embedded = true;
+            }
             //if they did overlap down
-            if(dy1 > dy2) {
+            else if(dy1 > dy2) {
                 this._overlap = b1.bottom - b2.y;
 
                 //check collision flags, if touching set such
@@ -335,8 +311,6 @@ inherit(Physics, Object, {
         //adjust positions and velocity according to collisions (solve collisions)
         if(this._overlap) {
             b1.overlap.y = b2.overlap.y = this._overlap;
-
-            //TODO: Flag to prevent out solve?
 
             //set velocities
             this._velocity1 = b1.velocity.y;
@@ -385,9 +359,7 @@ inherit(Physics, Object, {
         return false;
     },
     _collideSpriteVsSprite: function(sprite1, sprite2, onCollision) {
-        this.separate(sprite1.body, sprite2.body);
-
-        if(this._result) {
+        if(this.separate(sprite1.body, sprite2.body)) {
             this._hit(sprite1, sprite2, onCollision);
         }
     },
@@ -396,9 +368,7 @@ inherit(Physics, Object, {
 
         for(var i = 0, il = this._potentials.length; i < il; ++i) {
             if(this._spriteInChain(this._potentials[i].sprite, container)) {
-                this.separate(sprite.body, this._potentials[i]);
-
-                if(this._result) {
+                if(this.separate(sprite.body, this._potentials[i])) {
                     this._hit(sprite, container, onCollision);
                 }
             }
