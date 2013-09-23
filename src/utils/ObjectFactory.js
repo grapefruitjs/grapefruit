@@ -81,18 +81,26 @@ inherit(ObjectFactory, Object, {
             tilemap;
 
         if(fmt === C.FILE_FORMAT.JSON) {
-            tilemap = new Tilemap(this.game, data, txs);
+            tilemap = new Tilemap(this.state, data, txs);
         }
         else if(fmt === C.FILE_FORMAT.XML) {
-            tilemap = Tilemap.fromXML(this.game, data, txs);
+            tilemap = Tilemap.fromXML(this.state, data, txs);
         }
         else if(fmt === C.FILE_FORMAT.CSV) {
-            tilemap = Tilemap.fromCSV(this.game, data, txs);
+            tilemap = Tilemap.fromCSV(this.state, data, txs);
         }
 
         if(constrain) {
             this.state.camera.constrain(new Rectangle(0, 0, tilemap.realSize.x, tilemap.realSize.y));
         }
+
+        //force render of tilemap
+        tilemap.render(
+            -this.state.world.position.x,
+            -this.state.world.position.x,
+            this.game.width,
+            this.game.height
+        );
 
         return this.parent.addChild(tilemap);
     },

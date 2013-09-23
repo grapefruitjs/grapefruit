@@ -21,9 +21,17 @@ var Container = require('../display/Container'),
  * @constructor
  * @param map {Object} All the settings for the map
  */
-var Tilemap = module.exports = function(game, map, tilesetTextures) {
+var Tilemap = module.exports = function(state, map, tilesetTextures) {
     //call base ctor
     Container.call(this, map);
+
+    /**
+     * The state instance this tilemap belongs to
+     *
+     * @property state
+     * @type Game
+     */
+    this.state = state;
 
     /**
      * The game instance this tilemap belongs to
@@ -31,7 +39,7 @@ var Tilemap = module.exports = function(game, map, tilesetTextures) {
      * @property game
      * @type Game
      */
-    this.game = game;
+    this.game = state.game;
 
 
     //Tiled Editor properties
@@ -120,23 +128,6 @@ var Tilemap = module.exports = function(game, map, tilesetTextures) {
         this.size.y * this.scaledTileSize.y
     );
 
-    /**
-     * The layer that should contain collision data
-     * This is determined by finding a tile layer with 'collide' or 'collision'
-     * in the name. If no tile layer like that exists, the first layer is chosen
-     *
-     * @property collisionLayer
-     * @type Tilelayer
-     */
-    this.collisionLayer = null;
-
-    //the buffer to draw to
-    this.canvas = document.createElement('canvas');
-    this.ctx = this.canvas.getContext('2d');
-    this.btx = new BaseTexture(this.canvas);
-    this.tx = new Texture(this.btx);
-    this.addChild(this.spr = new Sprite(this.tx));
-
     //create each tileset
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
         var ts = map.tilesets[t];
@@ -151,19 +142,10 @@ var Tilemap = module.exports = function(game, map, tilesetTextures) {
         switch(map.layers[i].type) {
             case 'tilelayer':
                 lyr = new Tilelayer(this, map.layers[i]);
-
-                //default choice
-                if(!this.collisionLayer)
-                    this.collisionLayer = lyr;
-
-                //real choice if available
-                if(name.indexOf('collide') !== -1 || name.indexOf('collision') !== -1)
-                    this.collisionLayer = lyr;
-
                 break;
 
             case 'objectgroup':
-                lyr = new ObjectGroup(this.game, map.layers[i]);
+                lyr = new ObjectGroup(this, map.layers[i]);
                 break;
 
             case 'imagelayer':
@@ -174,21 +156,12 @@ var Tilemap = module.exports = function(game, map, tilesetTextures) {
         this.addChild(lyr);
     }
 
-    //cache the last rendered x/y so we don't do duplicates
-    this._cache = {
-        x: null,
-        y: null,
-        width: null,
-        height: null
-    };
-
-    //size the canvas and texture
-    this.resize(this.game.width, this.game.height);
-
     //update the world bounds
     var w = this.game.state.active.world;
     w.bounds.width = Math.max(w.bounds.width, this.realSize.x);
     w.bounds.height = Math.max(w.bounds.height, this.realSize.y);
+
+    this.state.physics.tree.setBounds(w.bounds.clone());
 };
 
 inherit(Tilemap, Container, {
@@ -303,7 +276,25 @@ inherit(Tilemap, Container, {
         }
     },
     /**
-     * Called each frame to render the texture of the world map
+     * Pans the map around
+     *
+     * @method pan
+     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
+     * @param y {Number} The y ammount to pan
+     * @return {Tilemap} Returns itself for chainability
+     */
+    pan: function(x, y) {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.pan)
+                o.pan(x, y);
+        }
+
+        return this;
+    },
+    /**
+     * Called on resize to render the viewport again
      *
      * @method render
      * @param x {Number} The x offset to consider the top-left
@@ -313,60 +304,24 @@ inherit(Tilemap, Container, {
      * @return {Tilemap}
      */
     render: function(x, y, width, height) {
-        if(this._cache.x === x && this._cache.y === y && this._cache.w === width && this._cache.h === height)
-            return this;
-
-        //update cache
-        this._cache.x = x;
-        this._cache.y = y;
-        this._cache.w = width;
-        this._cache.h = height;
-
-        //clear the canvas
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
         //render the layers
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
             if(o.render)
-                o.render(this.ctx, x, y, width, height);
+                o.render(x, y, width, height);
         }
-
-        //tell pixi to update this texture
-        if(this.game.renderMethod === C.RENDERER.WEBGL)
-            PIXI.texturesToUpdate.push(this.btx);
-
-        return this;
-    },
-    /**
-     * Resizes the canvas used for the tilemap texture
-     *
-     * @method resize
-     * @param width {Number} Width to resize to
-     * @param height {Number} Height to resize to
-     * @return {Tilemap}
-     */
-    resize: function(w, h) {
-        this.canvas.width = w;
-        this.canvas.height = h;
-
-        this.btx.width = w;
-        this.btx.height = h;
-
-        this.tx.frame.width = w;
-        this.tx.frame.height = h;
 
         return this;
     }
 });
 
 /*
-Tilemap.fromXML = function(game, data) {
+Tilemap.fromXML = function(state, data) {
 
 };
 
-Tilemap.fromCSV = function(game, data) {
+Tilemap.fromCSV = function(state, data) {
 
 };
 */

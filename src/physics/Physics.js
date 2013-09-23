@@ -8,6 +8,7 @@ var QuadTree = require('../math/QuadTree'),
     Sprite = require('../display/Sprite'),
     Tilemap = require('../tilemap/Tilemap'),
     Body = require('./Body'),
+    Vector = require('../math/Vector'),
     inherit = require('../utils/inherit'),
     math = require('../math/math'),
     C = require('../constants');
@@ -47,6 +48,14 @@ var Physics = module.exports = function(state) {
      */
     this.bodies = [];
 
+    /**
+     * The gravity that the system will simulate
+     *
+     * @property gravity
+     * @type Vector
+     */
+    this.gravity = new Vector(0, 9.87);
+
     //some temp vars to prevent have to declare a lot
     this._result = false;
     this._total = 0;
@@ -84,10 +93,9 @@ inherit(Physics, Object, {
         for(var i = 0, il = bods.length, body; i < il; ++i) {
             body = bods[i];
 
-            body.computeVelocity(dt);
-            body.update(dt);
+            body.update(dt, this.gravity);
 
-            if(body.canCollide && body.sprite.visible) {
+            if(body.allowCollide && body.sprite.visible) {
                 this.tree.insert(body);
             }
         }
@@ -121,8 +129,8 @@ inherit(Physics, Object, {
      * Checks for collisions between objects such as Sprites or Containers.
      *
      * @method collide
-     * @param object1 {Sprite|Container|Tilemap} The first object to check
-     * @param object2 {Sprite|Container|Tilemap} The first object to check
+     * @param object1 {Sprite|Container} The first object to check
+     * @param object2 {Sprite|Container} The first object to check
      * @param onCollision {Function} The callback to call whenever a collision occurs
      */
     collide: function(obj1, obj2, onCollision) {
@@ -132,29 +140,14 @@ inherit(Physics, Object, {
                 if(obj2 instanceof Sprite) {
                     this._collideSpriteVsSprite(obj1, obj2, onCollision);
                 }
-                else if(obj2 instanceof Tilemap) {
-                    this._collideSpriteVsTilemap(obj1, obj2, onCollision);
-                }
                 else if(obj2 instanceof Container) {
                     this._collideSpriteVsContainer(obj1, obj2, onCollision);
-                }
-            }
-            //tilemap collisions
-            else if(obj1 instanceof Tilemap) {
-                if(obj2 instanceof Sprite) {
-                    this._collideSpriteVsTilemap(obj2, obj1, onCollision);
-                }
-                else if(obj2 instanceof Container) {
-                    this._collideContainerVsTilemap(obj2, obj1, onCollision);
                 }
             }
             //container collisions
             else if(obj1 instanceof Container) {
                 if(obj2 instanceof Sprite) {
                     this._collideSpriteVsContainer(obj2, obj1, onCollision);
-                }
-                else if(obj2 instanceof Tilemap) {
-                    this._collideContainerVsTilemap(obj1, obj2, onCollision);
                 }
                 else if(obj2 instanceof Container) {
                     this._collideContainerVsContainer(obj1, obj2, onCollision);
@@ -213,7 +206,7 @@ inherit(Physics, Object, {
         this._bounds2.height = b2.height;
 
         //check for overlap (detect collisions)
-        if(this._bounds1.overlap(this._bounds2)) {
+        if(this._bounds1.overlaps(this._bounds2)) {
             this._maxOverlap = math.abs(dx1) + math.abs(dx2) + C.PHYSICS.OVERLAP_BIAS;
 
             //if they did overlap to the right
@@ -311,7 +304,7 @@ inherit(Physics, Object, {
         this._bounds2.height = b2.height + math.abs(dy2);
 
         //check for overlap (detect collisions)
-        if(this._bounds1.overlap(this._bounds2)) {
+        if(this._bounds1.overlaps(this._bounds2)) {
             this._maxOverlap = math.abs(dy1) + math.abs(dy2) + C.PHYSICS.OVERLAP_BIAS;
 
             //if they did overlap down
@@ -319,22 +312,22 @@ inherit(Physics, Object, {
                 this._overlap = b1.bottom - b2.y;
 
                 //check collision flags, if touching set such
-                if((this._overlap > this._maxOverlap) || !(b1.allowCollide & C.DIRECTION.DOWN) || !(b2.allowCollide & C.DIRECTION.UP)) {
+                if((this._overlap > this._maxOverlap) || !(b1.allowCollide & C.DIRECTION.BOTTOM) || !(b2.allowCollide & C.DIRECTION.TOP)) {
                     this._overlap = 0;
                 } else {
-                    b1.touching |= C.DIRECTION.DOWN;
-                    b2.touching |= C.DIRECTION.UP;
+                    b1.touching |= C.DIRECTION.BOTTOM;
+                    b2.touching |= C.DIRECTION.TOP;
                 }
             }
             //if they did overlap up
             else if(dy1 < dy2) {
                 this._overlap = b1.y - b2.height - b2.y;
 
-                if((-this._overlap > this._maxOverlap) || !(b1.allowCollide & C.DIRECTION.UP) || !(b2.allowCollide & C.DIRECTION.DOWN)) {
+                if((-this._overlap > this._maxOverlap) || !(b1.allowCollide & C.DIRECTION.TOP) || !(b2.allowCollide & C.DIRECTION.BOTTOM)) {
                     this._overlap = 0;
                 } else {
-                    b1.touching |= C.DIRECTION.UP;
-                    b2.touching |= C.DIRECTION.DOWN;
+                    b1.touching |= C.DIRECTION.TOP;
+                    b2.touching |= C.DIRECTION.BOTTOM;
                 }
             }
         }
@@ -398,32 +391,11 @@ inherit(Physics, Object, {
             this._hit(sprite1, sprite2, onCollision);
         }
     },
-    _collideSpriteVsTilemap: function(sprite, tilemap, onCollision) {
-        this._mapData = tilemap.collisionLayer.getTileOverlaps(sprite);
-
-        for(var i = 0, il = this._mapData.length; i < il; ++i) {
-            this._hit(sprite, this._mapData[i].tile, onCollision);
-        }
-    },
-    _collideContainerVsTilemap: function(container, tilemap, onCollision) {
-        if(container.first._iNext) {
-            var node = container.first._iNext;
-
-            do {
-                if(node instanceof Sprite)
-                    this.collideSpriteVsTilemap(node, tilemap, onCollision);
-                //else if(node instanceof Container)
-                //    this._collideContainerVsTilemap(node, tilemap, onCollision);
-
-                node = node._iNext;
-            } while(node !== container.last._iNext);
-        }
-    },
     _collideSpriteVsContainer: function(sprite, container, onCollision) {
-        this._potentials = this.tree.retrieve(sprite);
+        this._potentials = this.tree.retrieve(sprite.body);
 
         for(var i = 0, il = this._potentials.length; i < il; ++i) {
-            if(this._potentials[i].sprite._container === container) {
+            if(this._spriteInChain(this._potentials[i].sprite, container)) {
                 this.separate(sprite.body, this._potentials[i]);
 
                 if(this._result) {
@@ -443,5 +415,17 @@ inherit(Physics, Object, {
                 node = node._iNext;
             } while (node !== container1.last._iNext);
         }
+    },
+    _spriteInChain: function(spr, container) {
+        var c = spr._container;
+
+        while(c) {
+            if(c === container)
+                return true;
+
+            c = c.parent;
+        }
+
+        return false;
     }
 });

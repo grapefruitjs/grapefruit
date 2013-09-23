@@ -12,7 +12,6 @@ var Body = module.exports = function(sprite) {
     Rectangle.call(this, sprite.position.x, sprite.position.y, sprite.width, sprite.height);
 
     this.sprite = sprite;
-    this.size = sprite.currentFrame;
 
     this.type = C.PHYSICS_TYPE.DYNAMIC;
     this.solveType = C.SOLVE_TYPE.DISPLACE;
@@ -30,11 +29,11 @@ var Body = module.exports = function(sprite) {
     this.angularDrag = 0;
     this.maxAngular = 1000;
 
-    this.mass = 1;
+    this.mass = sprite.mass || 1;
     this.rotation = 0;
     this.allowRotation = true;
 
-    //touching/canCollide directional flags
+    //touching/allowCollide directional flags
     this.allowCollide = C.DIRECTION.ALL;
     this.touching = C.DIRECTION.NONE;
     this.wasTouching = C.DIRECTION.NONE;
@@ -76,11 +75,11 @@ inherit(Body, Rectangle, {
 
         return vel;
     },
-    updateMotion: function(dt) {
+    updateMotion: function(dt, gravity) {
         //apply gravity
         if(this.type === C.PHYSICS_TYPE.DYNAMIC) {
-            this.velocity.x += this.gravity.x * dt;
-            this.velocity.y += this.gravity.y * dt;
+            this.velocity.x += gravity.x + this.gravity.x;
+            this.velocity.y += gravity.y + this.gravity.y;
         }
 
         // compute angular velocity
@@ -98,7 +97,7 @@ inherit(Body, Rectangle, {
         this.velocity.y += this._vDelta;
         this.y += this.velocity.y * dt;
     },
-    update: function(dt) {
+    update: function(dt, gravity) {
         this.wasTouching = this.touching;
         this.touching = C.DIRECTION.NONE;
 
@@ -107,10 +106,10 @@ inherit(Body, Rectangle, {
         this.x = (this.sprite.position.x - (this.sprite.anchor.x * this._width)) + this.offset.x;
         this.y = (this.sprite.position.y - (this.sprite.anchor.y * this._height)) + this.offset.y;
 
-        this.rotation = this.sprite.angle;
+        this.rotation = this.sprite.rotation;
 
         if(this.type !== C.PHYSICS_TYPE.STATIC)
-            this.updateMotion(dt);
+            this.updateMotion(dt, gravity);
 
         //update sprite position/rotation
         this.syncSprite();
@@ -120,7 +119,7 @@ inherit(Body, Rectangle, {
         this.sprite.position.y = this.y - this.offset.y + (this.sprite.anchor.y * this._height);
 
         if(this.allowRotation) {
-            this.sprite.angle = this.rotation;
+            this.sprite.rotation = this.rotation;
         }
     },
     deltaX: function() {
