@@ -1,6 +1,5 @@
 var Sprite = require('../display/Sprite'),
-    inherit = require('../utils/inherit'),
-    C = require('../constants');
+    inherit = require('../utils/inherit');
 
 /**
  * Base Tile implementation, a tile is a single tile in a tilemap layer

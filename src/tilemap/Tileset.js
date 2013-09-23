@@ -3,8 +3,7 @@ var utils = require('../utils/utils'),
     math = require('../math/math'),
     Texture = require('../display/Texture'),
     Vector = require('../math/Vector'),
-    PIXI = require('../vendor/pixi'),
-    C = require('../constants');
+    PIXI = require('../vendor/pixi');
 
 /**
  * This object represents a tileset used by a Tilemap.

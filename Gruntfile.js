@@ -1,7 +1,6 @@
 module.exports = function(grunt) {
-    var path = require('path'),
-        glob = require('glob'),
-        source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1 }),
+    var glob = require('glob'),
+        source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; }),
         banner = [
             '/**',
             ' * @license',
@@ -53,8 +52,7 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            src: source,
-            //test: ['<%= files.testBlob %>'],
+            src: source.concat('Gruntfile.js'),
             options: {
                 /* Enforcement options */
                 bitwise: false,     //allow bitwise operators
@@ -73,10 +71,11 @@ module.exports = function(grunt) {
                 unused: true,       //warn about declared but not used variables
                 strict: false,      //do not require functions to be able to run in strict-mode
                 trailing: true,     //help prevent weird whitespace errors in multi-line strings using \ 
-                maxlen: 200,        //no line should be longer than 120 characters
+                maxlen: 200,        //no line should be longer than 200 characters
 
                 /* Relaxing Options */
-                boss: true,        //do not warn about the use of assignments in cases where comparisons are expected
+                boss: true,         //do not warn about the use of assignments in cases where comparisons are expected (eg: `return this.types[name] = obj;` is OK)
+                expr: true,         //do not warn about expressions as programs (mainly for urequire root exports in core.js)
 
                 /* Environments */
                 browser: true,      //this runs in a browser :)
