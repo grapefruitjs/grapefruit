@@ -127,7 +127,7 @@ Object.defineProperty(Rectangle.prototype, 'width', {
  */
 Object.defineProperty(Rectangle.prototype, 'height', {
     get: function() {
-        return this._y;
+        return this._height;
     },
     set: function(h) {
         this._height = h || 0;

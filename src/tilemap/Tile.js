@@ -16,7 +16,7 @@ var Tile = module.exports = function(texture) {
     //call base ctor
     Sprite.call(this, texture);
 
-    this.type = Sprite.TYPE.TILE;
+    this.type = C.SPRITE_TYPE.TILE;
 };
 
 inherit(Tile, Sprite, {

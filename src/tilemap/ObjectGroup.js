@@ -16,16 +16,32 @@ var Container = require('../display/Container'),
  * @constructor
  * @param group {Object} All the settings for the layer
  */
- var ObjectGroup = module.exports = function(game, group) {
+ var ObjectGroup = module.exports = function(map, group) {
     Container.call(this, group);
 
     /**
-     * The game instance this tilemap belongs to
+     * The map instance this object group belongs to
+     *
+     * @property map
+     * @type Tilemap
+     */
+    this.map = map;
+
+    /**
+     * The game instance this object group belongs to
      *
      * @property game
      * @type Game
      */
-    this.game = game;
+    this.game = map.game;
+
+    /**
+     * The state instance this object group belongs to
+     *
+     * @property state
+     * @type Game
+     */
+    this.state = map.state;
 
     /**
      * The name of the group

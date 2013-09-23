@@ -62,20 +62,11 @@ inherit(World, Container, {
         this.position.x += x * this.scale.x;
         this.position.y += y * this.scale.y;
 
-        return this;
-    },
-    /**
-     * Renders each of the tilemaps in the world, called internally by state.update()
-     *
-     * @method update
-     * @return {World} Returns itself for chainability
-     */
-    update: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
-            if(o.render)
-                o.render(-this.position.x, -this.position.y, this.game.camera.size.x, this.game.camera.size.y);
+            if(o.pan)
+                o.pan(x, y);
         }
 
         return this;
@@ -92,8 +83,8 @@ inherit(World, Container, {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
-            if(o.resize)
-                o.resize(w, h);
+            if(o.render)
+                o.render(-this.position.x, -this.position.y, w, h);
         }
 
         return this;

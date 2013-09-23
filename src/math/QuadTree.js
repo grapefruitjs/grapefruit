@@ -56,9 +56,6 @@ var QuadTree = module.exports = function(bounds, maxObjects, maxLevels, level) {
 
     this.objects = [];
     this.nodes = [];
-
-    //some caches to not have to create local vars a bunch
-    this._nextLevel = this.level;
 };
 
 inherit(QuadTree, Object, {
@@ -68,21 +65,20 @@ inherit(QuadTree, Object, {
      * @method split
      */
     split: function() {
-        var b = this.bounds;
-
-        this._nextLevel++;
+        var b = this.bounds,
+            next = this.level + 1;
 
         //top right node
-        this.nodes[0] = new QuadTree(new Rectangle(b.midX, b.y, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
+        this.nodes[0] = new QuadTree(new Rectangle(b.midX, b.y, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, next);
 
         //top left node
-        this.nodes[1] = new QuadTree(new Rectangle(b.x, b.y, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
+        this.nodes[1] = new QuadTree(new Rectangle(b.x, b.y, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, next);
 
         //bottom left node
-        this.nodes[2] = new QuadTree(new Rectangle(b.x, b.midY, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
+        this.nodes[2] = new QuadTree(new Rectangle(b.x, b.midY, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, next);
 
         //bottom right node
-        this.nodes[3] = new QuadTree(new Rectangle(b.midX, b.midY, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, this._nextLevel);
+        this.nodes[3] = new QuadTree(new Rectangle(b.midX, b.midY, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, next);
     },
 
     /*

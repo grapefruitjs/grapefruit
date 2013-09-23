@@ -332,10 +332,6 @@ inherit(Game, Object, {
         this.input.update(dt);
         this.timings.inputEnd = this.clock.now();
 
-        this.timings.userFuncsStart = this.clock.now();
-        this.emit('tick', dt);
-        this.timings.userFuncsEnd = this.clock.now();
-
         //TODO: plugins
         //this.timings.pluginsStart = this.clock.now();
         //this.plugins.update(dt);
@@ -346,10 +342,28 @@ inherit(Game, Object, {
         this.state.active.update(dt);
         this.timings.stateEnd = this.clock.now();
 
+        this.timings.userFuncsStart = this.clock.now();
+        this.emit('tick', dt);
+        this.timings.userFuncsEnd = this.clock.now();
+
         //render scene
         this.timings.renderStart = this.clock.now();
         this.renderer.render(this.stage);
         this.timings.renderEnd = this.clock.now();
+    }
+});
+
+/**
+ * Alias for the active State's physics object. Instead of using
+ * `game.state.active.physics`, you can use `game.physics`
+ *
+ * @property physics
+ * @type Physics
+ * @readOnly
+ */
+Object.defineProperty(Game.prototype, 'physics', {
+    get: function() {
+        return this.state.active.physics;
     }
 });
 
