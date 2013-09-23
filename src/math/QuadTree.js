@@ -81,7 +81,7 @@ inherit(QuadTree, Object, {
         this.nodes[3] = new QuadTree(new Rectangle(b.midX, b.midY, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, next);
     },
 
-    /*
+    /**
      * Insert an object into the node. If the node exceeds the max capacity, it will split and add all
      * objects to their corresponding subnodes.
      *
@@ -124,7 +124,7 @@ inherit(QuadTree, Object, {
         }
      },
 
-    /*
+    /**
      * Determine which node the object belongs to
      *
      * @method getIndex
@@ -161,7 +161,7 @@ inherit(QuadTree, Object, {
         return index;
     },
 
-     /*
+    /**
      * Return all objects that could collide with the given body
      *
      * @method retrieve
@@ -189,7 +189,7 @@ inherit(QuadTree, Object, {
         return returnObjects;
     },
 
-    /*
+    /**
      * Clear the quadtree, removing all bodies
      *
      * @method clear
@@ -207,6 +207,12 @@ inherit(QuadTree, Object, {
         this.objects.length = 0;
         this.nodes.length = 0;
     },
+
+    /**
+     * Sets the bounds of the quad tree
+     *
+     * @method setBounds
+     */
     setBounds: function(bounds) {
         this.bounds = bounds;
 
@@ -216,8 +222,8 @@ inherit(QuadTree, Object, {
         bounds.width = math.round(bounds.width);
         bounds.height = math.round(bounds.height);
 
-        bounds.subWidth = Math.floor(bounds.width / 2);
-        bounds.subHeight = Math.floor(bounds.height / 2);
+        bounds.subWidth = math.floor(bounds.width / 2);
+        bounds.subHeight = math.floor(bounds.height / 2);
         bounds.midX = bounds.x + bounds.subWidth;
         bounds.midY = bounds.y + bounds.subHeight;
     }
