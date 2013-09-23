@@ -202,8 +202,7 @@ inherit(Tileset, Texture, {
                 //set this id to default values and cache
                 this.tileproperties[tileId] = {
                     collidable: false,
-                    breakable: false,
-                    type: C.COLLISION_TYPE.NONE
+                    breakable: false
                 };
 
         props.flippedX = flippedX;

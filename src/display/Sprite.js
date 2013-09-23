@@ -1,8 +1,9 @@
 var EventEmitter = require('../utils/EventEmitter'),
     Rectangle = require('../math/Rectangle'),
     inherit = require('../utils/inherit'),
-    PIXI = require('../vendor/pixi'),
-    C = require('../constants');
+    Texture = require('./Texture'),
+    math = require('../math/math'),
+    PIXI = require('../vendor/pixi');
 
 /**
  * The base Sprite class. This class is the base for all images on the screen
@@ -10,36 +11,212 @@ var EventEmitter = require('../utils/EventEmitter'),
  * @class Sprite
  * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html">PIXI.Sprite</a>
  * @uses EventEmitter
- * @uses PhysicsTarget
  * @constructor
- * @param texture {Texture} The texture to set the sprite to
+ * @param textures {Texture|Array<Texture>|Object} The texture for the sprite to display, an array of texture to animation through, or an animation object.
+ *      The later looks like: `{ animationName: { frames: [frame1, frame2], rate: 2 } }` where each frame is a Texture object
+ * @param [speed] {Number} The speed of the animations (can be overriden on a specific animations)
+ * @param [start] {String} The animation to start with, defaults to the first found key otherwise
  * @example
  *      var spr = new gf.Sprite(texture);
  */
-var Sprite = module.exports = function(tx) {
-    PIXI.Sprite.call(this, tx);
-    //gf.PhysicsTarget.call(this);
+var Sprite = module.exports = function(anims, speed, start) {
     EventEmitter.call(this);
 
+    //parse tx into correct format
+    if(anims instanceof Texture) {
+        anims = { _default: { frames: [anims] } };
+        speed = 1;
+        start = '_default';
+    }
+    else if(anims instanceof Array) {
+        anims = { _default: { frames: anims } };
+        speed = 1;
+        start = '_default';
+    } else {
+        //massage animations into full format
+        for(var a in anims) {
+            if(start === undefined)
+                start = a;
+
+            var anim = anims[a];
+
+            if(anim instanceof Array)
+                anims[a] = { frames: anim };
+            else if(anim instanceof Texture)
+                anims[a] = { frames: [anim] };
+        }
+    }
+
+    PIXI.Sprite.call(this, anims[start].frames[0]);
+
     /**
-     * The type of the sprite
+     * The name of the sprite
      *
-     * @property type
+     * @property name
      * @type String
-     * @default 'neutral'
+     * @default ''
      */
-    this.type = C.SPRITE_TYPE.NEUTRAL;
+    this.name = '';
+
+    /**
+     * The lifetime of the sprite. Once it reaches 0 (after being set)
+     * the sprite's visible property is set to false, so that it will
+     * no longer be rendered. NOT YET IMPLEMENTED
+     *
+     * @property lifetime
+     * @type Number
+     * @default 0
+     * @private
+     */
+    this.lifetime = 0;
+
+    /**
+     * The animation speed for this sprite
+     *
+     * @property speed
+     * @type Number
+     * @default 1
+     */
+    this.speed = speed || 1;
+
+    /**
+     * Whether or not to loop the animations. This can be overriden
+     * on a per-animation level
+     *
+     * @property loop
+     * @type Boolean
+     * @default false
+     */
+    this.loop = false;
+
+    /**
+     * The registerd animations for this AnimatedSprite
+     *
+     * @property animations
+     * @type Object
+     * @readOnly
+     */
+    this.animations = anims;
+
+    /**
+     * The currently playing animation
+     *
+     * @property currentAnimation
+     * @type String
+     * @readOnly
+     */
+    this.currentAnimation = start;
+
+    /**
+     * The current frame being shown
+     *
+     * @property currentFrame
+     * @type Number
+     * @readOnly
+     */
+    this.currentFrame = 0;
+
+    /**
+     * Whether or not the animation is currently playing
+     *
+     * @property playing
+     * @type Boolean
+     * @readOnly
+     */
+    this.playing = false;
 
     this.hitArea = this.hitArea || new Rectangle(0, 0, this.width, this.height);
+
+    //start playing
+    this.gotoAndPlay(this.currentAnimation);
 };
 
 inherit(Sprite, PIXI.Sprite, {
+    /**
+     * Adds a new animation to this animated sprite
+     *
+     * @method addAnimation
+     * @param name {String} The string name of the animation
+     * @param frames {Array<Texture>} The array of texture frames
+     * @param [speed] {Number} The animation speed
+     * @param [loop] {Boolean} Loop the animation or not
+     */
+    addAnimation: function(name, frames, speed, loop) {
+        if(typeof name === 'object') {
+            this.animations[name.name] = name;
+        } else {
+            this.animations[name] = {
+                name: name,
+                frames: frames,
+                speed: speed,
+                loop: loop
+            };
+        }
+    },
+    /**
+     * Goes to a frame and starts playing the animation from there
+     *
+     * @method gotoAndPlay
+     * @param [name] {String} The string name of the animation to play
+     * @param frame {Number} The index of the frame to start on
+     */
+    gotoAndPlay: function(anim, frame) {
+        if(typeof anim === 'number') {
+            this.currentFrame = anim;
+        } else {
+            this.currentFrame = frame || 0;
+            this.lastRound = math.round(frame || 0);
+            this.currentAnimation = anim;
+        }
+        this.playing = true;
+
+        this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
+        this.emit('frame', this.currentAnimation, this.lastRound);
+    },
+    /**
+     * Goes to a frame and stops playing the animation
+     *
+     * @method gotoAndStop
+     * @param [name] {String} The string name of the animation to go to
+     * @param frame {Number} The index of the frame to stop on
+     */
+    gotoAndStop: function(anim, frame) {
+        if(typeof anim === 'number') {
+            this.currentFrame = anim;
+        } else {
+            this.currentFrame = frame || 0;
+            this.lastRound = math.round(frame || 0);
+            this.currentAnimation = anim;
+        }
+        this.playing = false;
+
+        this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
+        this.emit('frame', this.currentAnimation, this.lastRound);
+    },
+    /**
+     * Starts playing the currently active animation
+     *
+     * @method play
+     */
+    play: function() {
+        this.playing = true;
+    },
+    /**
+     * Stops playing the currently active animation
+     *
+     * @method stop
+     */
+    stop: function() {
+        this.playing = false;
+    },
     /**
      * Removes this sprite from the stage and the physics system
      *
      * @method destroy
      */
     destroy: function() {
+        this.stop();
+
         if(this._physics) {
             this._physics.removeSprite(this);
             this._physics = null;
@@ -47,6 +224,50 @@ inherit(Sprite, PIXI.Sprite, {
 
         if(this.parent)
             this.parent.removeChild(this);
+
+        this.name = null;
+        this.lifetime = null;
+        this.speed = null;
+        this.loop = null;
+        this.animations = null;
+        this.currentAnimation = null;
+        this.currentFrame = null;
+        this.playing = null;
+        this.hitArea = null;
+    },
+    /**
+     * Called by PIXI to update our textures and do the actual animation
+     *
+     * @method updateTransform
+     * @private
+     */
+    updateTransform: function() {
+        Sprite.prototype.updateTransform.call(this);
+
+        if(!this.playing) return;
+
+        var anim = this.animations[this.currentAnimation],
+            round,
+            loop = anim.loop !== undefined ? anim.loop : this.loop;
+
+        this.currentFrame += anim.speed || this.speed;
+        round = math.round(this.currentFrame);
+
+        if(round < anim.frames.length) {
+            if(round !== this.lastRound) {
+                this.lastRound = round;
+                this.setTexture(anim.frames[round]);
+                this.emit('frame', this.currentAnimation, round);
+            }
+        }
+        else {
+            if(loop) {
+                this.gotoAndPlay(0);
+            } else {
+                this.stop();
+                this.emit('complete', this.currentAnimation);
+            }
+        }
     }
 });
 

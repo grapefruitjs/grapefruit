@@ -44,24 +44,6 @@ module.exports = {
         ALL: 15         // 1111
     },
 
-    SPRITE_TYPE: {
-        PLAYER: 'player',
-        ENEMY: 'enemy',
-        FRIENDLY: 'friendly',
-        NEUTRAL: 'neutral',
-        COLLECTABLE: 'collectable',
-        TILE: 'tile'
-    },
-
-    COLLISION_TYPE: {
-        NONE: 'none',
-        SOLID: 'solid',
-        CLIFF: 'cliff',
-        LADDER: 'ladder',
-        WATER: 'water',
-        DEEP_WATER: 'deep_water'
-    },
-
     PHYSICS_TYPE: {
         STATIC: 0,      //doesn't move
         KINEMATIC: 1,   //gravity doesn't effect it, and solver doesn't solve it

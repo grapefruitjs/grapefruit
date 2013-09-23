@@ -189,6 +189,9 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      */
     destroy: function() {
         this.removeAllChildren();
+
+        if(this.parent)
+            this.parent.removeChild(this);
     }
  });
 
