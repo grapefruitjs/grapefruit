@@ -43,6 +43,15 @@ var State = module.exports = function(game, name) {
     this.game = game;
 
     /**
+     * The audio manager for this game state
+     *
+     * @property audio
+     * @type AudioManager
+     * @readOnly
+     */
+    this.audio = new AudioManager(game, game.audio);
+
+    /**
      * The container that holds all non-gui sprites and the tilemap
      *
      * @property world
