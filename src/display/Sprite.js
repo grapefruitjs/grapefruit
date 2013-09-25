@@ -65,10 +65,10 @@ var Sprite = module.exports = function(anims, speed, start) {
      *
      * @property lifetime
      * @type Number
-     * @default 0
+     * @default Infinity
      * @private
      */
-    this.lifetime = 0;
+    this.lifetime = Infinity;
 
     /**
      * The animation speed for this sprite
