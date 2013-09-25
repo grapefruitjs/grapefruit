@@ -15,7 +15,7 @@ var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozA
  * @extends Object
  * @constructor
  */
-var AudioManager = module.exports = function(game) {
+var AudioManager = module.exports = function(game, parent) {
     /**
      * The game instance this manager belongs to
      *
@@ -23,6 +23,14 @@ var AudioManager = module.exports = function(game) {
      * @type Game
      */
     this.game = game;
+
+    /**
+     * The parent for this audio manager
+     *
+     * @property parent
+     * @type AudioManager
+     */
+    this.parent = parent;
 
     /**
      * Whether the player is muted or not
@@ -78,7 +86,7 @@ var AudioManager = module.exports = function(game) {
     if(support.webAudio) {
         this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
         this.masterGain.gain.value = 1;
-        this.masterGain.connect(this.ctx.destination);
+        this.setParent(parent);
     }
 
     //map of elements to play audio with
@@ -161,6 +169,36 @@ inherit(AudioManager, Object, {
 
         return this;
     },
+    /**
+     * Sets the parent of this audio manager, if using webAudio this
+     * means that we connect to the parent masterGain node and inherit
+     * anything that happens to it (such as muting).
+     *
+     * @method setParent
+     * @param parent {AudioManager} The parent to connect to, or `null` to connect to the global context
+     */
+    setParent: function(parent) {
+        this.parent = parent;
+
+        if(support.webAudio) {
+            //attach to parent gain
+            if(parent && parent.masterGain) {
+                this.masterGain.connect(parent.masterGain);
+            }
+            //attach to audio context
+            else {
+                this.masterGain.connect(this.ctx.destination);
+            }
+        }
+    },
+    /**
+     * Attaches an AudioPlayer to this manager, if using webAudio this means
+     * that the sound will connect to this masterGain node and inherit anything
+     * that happens to it (such as muting).
+     *
+     * @method attach
+     * @param sound {AudioPlayer} The player to attach to this manager
+     */
     attach: function(sound) {
         //TODO: check name collision
         this.sounds[sound.key] = sound;
