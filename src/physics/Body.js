@@ -101,10 +101,10 @@ inherit(Body, Rectangle, {
         this.wasTouching = this.touching;
         this.touching = C.DIRECTION.NONE;
 
-        this.lastPos.set(this.x, this.y);
-
         this.x = (this.sprite.position.x - (this.sprite.anchor.x * this._width)) + this.offset.x;
         this.y = (this.sprite.position.y - (this.sprite.anchor.y * this._height)) + this.offset.y;
+
+        this.lastPos.set(this.x, this.y);
 
         this.rotation = this.sprite.rotation;
 
