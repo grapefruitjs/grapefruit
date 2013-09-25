@@ -152,46 +152,29 @@ inherit(Sprite, PIXI.Sprite, {
                 loop: loop
             };
         }
+
+        return this;
     },
     /**
-     * Goes to a frame and starts playing the animation from there
+     * Goes to a frame and starts playing the animation from there. You can optionally
+     * pass the name of a new aniamtion to start playing.
      *
-     * @method gotoAndPlay
-     * @param [name] {String} The string name of the animation to play
+     * @method goto
      * @param frame {Number} The index of the frame to start on
-     */
-    gotoAndPlay: function(anim, frame) {
-        if(typeof anim === 'number') {
-            this.currentFrame = anim;
-        } else {
-            this.currentFrame = frame || 0;
-            this.lastRound = math.round(frame || 0);
-            this.currentAnimation = anim;
-        }
-        this.playing = true;
-
-        this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
-        this.emit('frame', this.currentAnimation, this.lastRound);
-    },
-    /**
-     * Goes to a frame and stops playing the animation
-     *
-     * @method gotoAndStop
      * @param [name] {String} The string name of the animation to go to
-     * @param frame {Number} The index of the frame to stop on
      */
-    gotoAndStop: function(anim, frame) {
-        if(typeof anim === 'number') {
-            this.currentFrame = anim;
-        } else {
-            this.currentFrame = frame || 0;
-            this.lastRound = math.round(frame || 0);
+    goto: function(frame, anim) {
+        this.currentFrame = frame || 0;
+        this.lastRound = math.round(frame || 0);
+
+        if(anim) {
             this.currentAnimation = anim;
         }
-        this.playing = false;
 
         this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
         this.emit('frame', this.currentAnimation, this.lastRound);
+
+        return this;
     },
     /**
      * Starts playing the currently active animation
@@ -200,6 +183,7 @@ inherit(Sprite, PIXI.Sprite, {
      */
     play: function() {
         this.playing = true;
+        return this;
     },
     /**
      * Stops playing the currently active animation
@@ -208,6 +192,7 @@ inherit(Sprite, PIXI.Sprite, {
      */
     stop: function() {
         this.playing = false;
+        return this;
     },
     /**
      * Removes this sprite from the stage and the physics system
