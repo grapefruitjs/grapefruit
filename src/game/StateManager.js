@@ -57,7 +57,7 @@ inherit(StateManager, Object, {
         if(enable)
             this.enable(state);
 
-        return this;
+        return state;
     },
     remove: function(state) {
         if(typeof state === 'string')
@@ -67,6 +67,8 @@ inherit(StateManager, Object, {
             state.parent.removeChild(state);
 
         delete this.states[state.name];
+
+        return this;
     },
     enable: function(state) {
         if(typeof state !== 'string')

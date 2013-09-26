@@ -1,5 +1,6 @@
 var EventEmitter = require('../utils/EventEmitter'),
     Rectangle = require('../math/Rectangle'),
+    Body = require('../physics/Body'),
     inherit = require('../utils/inherit'),
     Texture = require('./Texture'),
     math = require('../math/math'),
@@ -59,18 +60,6 @@ var Sprite = module.exports = function(anims, speed, start) {
     this.name = '';
 
     /**
-     * The lifetime of the sprite. Once it reaches 0 (after being set)
-     * the sprite's visible property is set to false, so that it will
-     * no longer be rendered. NOT YET IMPLEMENTED
-     *
-     * @property lifetime
-     * @type Number
-     * @default Infinity
-     * @private
-     */
-    this.lifetime = Infinity;
-
-    /**
      * The animation speed for this sprite
      *
      * @property speed
@@ -126,6 +115,8 @@ var Sprite = module.exports = function(anims, speed, start) {
     this.playing = false;
 
     this.hitArea = this.hitArea || new Rectangle(0, 0, this.width, this.height);
+
+    THIS.body = new Body(this);
 
     //start playing
     this.gotoAndPlay(this.currentAnimation);
