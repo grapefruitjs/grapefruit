@@ -116,13 +116,31 @@ var Sprite = module.exports = function(anims, speed, start) {
 
     this.hitArea = this.hitArea || new Rectangle(0, 0, this.width, this.height);
 
-    THIS.body = new Body(this);
+    this.body = new Body(this);
 
     //start playing
-    this.gotoAndPlay(this.currentAnimation);
+    this.goto(this.currentAnimation);
 };
 
 inherit(Sprite, PIXI.Sprite, {
+    /**
+     * Creates a new Sprite instance with the same values as this one
+     *
+     * @method clone
+     */
+    clone: function() {
+        //make a copy of our animations object
+        var anims = utils.extend(true, {}, this.animations),
+            spr = new Sprite(anims, this.speed, this.currentAnimation);
+
+        spr.name = this.name;
+        spr.loop = this.loop;
+        spr.currentFrame = this.currentFrame;
+        spr.playing = this.playing;
+        spr.hitArea = this.hitArea.clone();
+
+        return spr;
+    },
     /**
      * Adds a new animation to this animated sprite
      *
