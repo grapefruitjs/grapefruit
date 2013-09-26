@@ -28,6 +28,14 @@ var World = module.exports = function(state) {
     this.state = state;
 
     /**
+     * The particle system for the world
+     *
+     * @property particles
+     * @type ParticleSystem
+     */
+    this.particles = this.addChild(new ParticleSystem());
+
+    /**
      * The bounds of the world
      *
      * @property bounds

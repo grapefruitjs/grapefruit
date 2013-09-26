@@ -62,7 +62,6 @@ module.exports = {
     },
 
     PARTICLES: {
-        MAX_PARTICLES: 1000,   //max number of particles that can exist in a single game
-        MAX_EMITTER_PARTICLES: 50
+        MAX_PARTICLES: 100      //max number of particles that can exist per emitter
     }
 };

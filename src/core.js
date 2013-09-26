@@ -93,6 +93,10 @@ module.exports = {
     Rectangle:  require('./math/Rectangle'),
     Vector:     require('./math/Vector'),
 
+    //particles
+    ParticleEmitter:    require('./particles/ParticleEmitter'),
+    ParticleSystem:     require('./particles/ParticleSystem'),
+
     //physics
     Physics:    require('./physics/Physics'),
     Body:       require('./physics/Body'),

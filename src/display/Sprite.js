@@ -60,6 +60,18 @@ var Sprite = module.exports = function(anims, speed, start) {
     this.name = '';
 
     /**
+     * The lifetime of the sprite. Once it reaches 0 (after being set)
+     * the sprite's visible property is set to false, so that it will
+     * no longer be rendered. NOT YET IMPLEMENTED
+     *
+     * @property lifetime
+     * @type Number
+     * @default Infinity
+     * @private
+     */
+    this.lifespan = Infinity;
+
+    /**
      * The animation speed for this sprite
      *
      * @property speed
@@ -138,6 +150,8 @@ inherit(Sprite, PIXI.Sprite, {
         spr.currentFrame = this.currentFrame;
         spr.playing = this.playing;
         spr.hitArea = this.hitArea.clone();
+
+        spr.body = this.body.clone();
 
         return spr;
     },
