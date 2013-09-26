@@ -53,6 +53,41 @@ var Body = module.exports = function(sprite) {
 };
 
 inherit(Body, Rectangle, {
+    clone: function() {
+        var body = new Body(this.sprite);
+
+        body.type = this.type;
+        body.solveType = this.solveType;
+
+        body.velocity.copy(this.velocity);
+        body.accel.copy(this.accel);
+        body.drag.copy(this.drag);
+        body.gravity.copy(this.gravity);
+        body.bounce.copy(this.bounce);
+        body.offset.copy(this.offset);
+        body.maxVelocity.copy(this.maxVelocity);
+
+        body.angularVelocity = this.angularVelocity;
+        body.angularAccel = this.angularAccel;
+        body.angularDrag = this.angularDrag;
+        body.maxAngular = this.maxAngular;
+
+        body.mass = this.mass;
+        body.rotation = this.rotation;
+        body.allowRotation = this.allowRotation;
+
+        body.embedded = this.embedded;
+        body.carry = this.carry;
+
+        body.allowCollide = this.allowCollide;
+        body.touching = this.touching;
+        body.wasTouching = this.wasTouching;
+
+        body.overlap.copy(this.overlap);
+        body.lastPos.copy(this.lastPos);
+
+        return body;
+    },
     computeVelocity: function(dt, vel, accel, drag, maxVel) {
         this._accel = accel * dt;
         this._drag = drag * dt;
