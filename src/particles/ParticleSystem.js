@@ -1,15 +1,11 @@
-var Emitter = requie('./Emitter'),
+var Emitter = requie('./ParticleEmitter'),
     Contianer = require('../display/Contianer'),
     Vector = require('../math/Vector'),
     inherit = require('../utils/inherit'),
     C = require('../constants');
 
-var ParticleSystem = module.exports = function(game) {
+var ParticleSystem = module.exports = function() {
     Contianer.call(this);
-
-    this.maxParticles = C.PARTICLES.MAX_PARTICLES;
-
-    this.game = game;
 
     this.emitters = {};
 
@@ -20,22 +16,21 @@ inherit(ParticleSystem, Contianer, {
     add: function(Name, enable) {
         var emitter;
 
-        if(!Name)
-            Name = 'emitter_' + (nextId++);
-
         //create an emitter if a string is passed
         if(typeof Name === 'string') {
-            emitter = new Emitter(this.game, Name);
+            emitter = new Emitter(Name);
         }
         //create an emitter of the instance passed
         else if(typeof Name === 'function') {
-            emitter = new Name(this.game);
+            emitter = new Name();
         }
         //a pre-created emitter, ensure game is set correctly
         else {
             emitter = Name;
-            emitter.game = this.game;
         }
+
+        if(!emitter.name)
+            emitter.name = 'emitter_' + (nextId++);
 
         this.emitters[emitter.name] = emitter;
         this.addChild(emitter);

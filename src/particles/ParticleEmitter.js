@@ -1,16 +1,14 @@
-var Particle = require('./Particle'),
+var Sprite = require('./Sprite'),
     ObjectPool = require('../utils/ObjectPool'),
     Container = require('../display/Container'),
     math = require('../math/math'),
     inherit = require('../inherit'),
     C = require('../constants');
 
-var ParticleEmitter = module.exports = function(game, name) {
+var ParticleEmitter = module.exports = function(name) {
     Container.call(this);
 
-    this.maxParticles = C.PARTICLES.MAX_EMITTER_PARTICLES;
-
-    this.game = game;
+    this.maxParticles = C.PARTICLES.MAX_PARTICLES;
 
     this.name = name;
 
@@ -41,7 +39,7 @@ var ParticleEmitter = module.exports = function(game, name) {
     this.active = false;
 
     //the pool to create particles from
-    this.particles = new ObjectPool(Particle, this);
+    this.particles = [];
 
     //some internal trackers
     this._rate = 0; //the number of particles to emit each emission cycle
@@ -51,9 +49,9 @@ var ParticleEmitter = module.exports = function(game, name) {
     this._timer = 0; //tracker for time to know when to emit particles
 
     //params for particle ctor
-    this._anims = null;
-    this._speed = null;
-    this._startAnim = null;
+    this._particle = null; //the Sprite object to use as the "template" particle
+    this._textures = null; //the textures to choose from when getting a particle
+    this._pool = []; //the pool to release particles into when they are done
 };
 
 inherit(ParticleEmitter, Container, {
@@ -77,6 +75,12 @@ inherit(ParticleEmitter, Container, {
 
         this._timer = 0;
     },
+    /**
+     * Deactivates the emitter. Particles that are already emitted will continue to
+     * decay and die, but no new particles will be emitted.
+     *
+     * @method stop
+     */
     stop: function() {
         this.active = false;
     },
@@ -90,24 +94,61 @@ inherit(ParticleEmitter, Container, {
      * @param [collide=gf.DIRECTION.ALL] {Number} The directions the particles are allowed to collide in, use gf.DIRECTION bit flags
      */
     setup: function(sprite, collide) {
-        if(typeof anims === 'string') {
-            anims = this.game.cache.getTexture(anims);
+        if(collide === undefined)
+            collide = C.DIRECTION.ALL;
+
+        //single texture
+        if(sprite instanceof Texture) {
+            this._particle = new Sprite(sprite);
+            this._textures = [sprite];
+        }
+        //array of textures
+        else if(Array.isArray(sprite)) {
+            this._particle = new Sprite(sprite[0]);
+            this._textures = sprite;
+        }
+        //an actual sprite
+        else {
+            this._particle = sprite;
+            this._textures = [sprite.texture];
         }
 
-        
+        this._particle.body.allowCollide = collide;
+    },
+    _get: function() {
+        if(this._emitted >= this._total || this._emitted > this.maxParticles)
+            return null;
+
+        var spr = this._pool.pop();
+
+        if(!spr) {
+            spr = this._particle.clone();
+        }
+
+        spr.setTexture(math.randomElement(this._textures));
+        spr.visible = true;
+
+        this.addChild(spr);
+        this._emitted++;
+
+        return spr;
+    },
+    _free: function(spr) {
+        spr.visible = false;
+        this._pool.push(spr);
+
+        this.removeChild(spr);
+        this._emitted--;
     },
     emitParticle: function() {
-        var part = this.particles.create(this._anims, this._speed, this._startAnim);
+        var part = this._get();
 
         if(!part)
             return;
 
-        //set visible true
-        part.visible = true;
-
         //set optionally random position
-        part.position.x = math.randomInt(this.position.x, this.position.x + this.width);
-        part.position.y = math.randomInt(this.position.y, this.position.y + this.height);
+        part.position.x = math.randomInt(0, this.width);
+        part.position.y = math.randomInt(0, this.height);
 
         //set lifespan
         part.lifespan = this.lifespan;
@@ -133,11 +174,23 @@ inherit(ParticleEmitter, Container, {
         part.body.angularDrag = this.angularDrag;
     },
     update: function(dt) {
+        var t = dt * 1000;
+
+        //update each of the particle lifetimes
+        for(var c = 0; c < this.children.length; ++c) {
+            var child = this.children[c];
+            child.lifespan -= t;
+
+            if(child.lifespan <= 0)
+                this._free(child);
+        }
+
+        //if no longer active, we are done here
         if(!this.active)
             return;
 
         //increment time we have waited
-        this._timer += dt * 1000;
+        this._timer += t;
 
         //if we waited more than delay, emit some particles
         if(this._timer >= this._delay) {
