@@ -7,27 +7,21 @@ from simple top-down space shooters to complex RPGs are possible with grapefruit
 
 Some features that GrapeFruit gives you:
 
- - Rendering Engine (WebGL, with Canvas fallback)
- - Full Physics System (collisions, gravity, bouancy, friction, etc)
- - GUI system (for HUDs and menus)
- - Texture Fonts
- - Input Manager (keyboard, mouse, touch, and gamepad)
  - Audio Manager (WebAudio API with HTML5 Audio fallback)
+ - Camera Effects (Shake, Fade, Flash, Scanlines, and more)
+ - Rendering Engine (WebGL, with Canvas fallback)
+ - Full Physics System (collisions, gravity, bounce, and more)
+ - GUI system (for HUDs and menus)
+ - Bitmap and System Text
+ - Input Manager (keyboard, mouse, touch, and gamepad)
  - Full featured [Tiled Map Editor](http://www.mapeditor.org/) support
  - Plugin system
+ - Asset Preloader
  - much more!
 
 ## Current State
 
-This project is under heavy development, and the API is subject to change at any time. Check the GitHub issue list to see how to help!
-
-The following classes need documentation:
-
- - gf.SpriteSheetLoader
- - gf.WorldLoader
- - gf.PhysicsSystem
-
-ugh...
+This project is under heavy development, and the API is subject to change but is becoming increasing more stable. Check the GitHub issue list to see how to help!
 
 ## Coming Features
 
@@ -35,27 +29,23 @@ Grapefruit is still a baby, and it is only me working on it in my spare time, so
 Below is a list of the features I want to add in. If there is something else I missed, please open an
 [Issue](https://github.com/englercj/grapefruit/issues) and we can talk about it.
 
-Soon to come:
+Extra Features:
 
 - Isometric maps
-- Generic Text (non-texture based font)
-- Sprite Sheet Animations (without forcing TexturePacker format)
-
-Coming in the future:
-
 - Multiple Cameras
 - Touch Gestures
+- Pathfinding
+- Bitmap Alpha Masks
+- Deterministic RNG
+- Particles
 
 ## Plugins
 
 Here is a list of some plugins for grapefruit that are planned, or in development:
 
 - UI Pack
-- Particles
-- Path Finding
 - Achievements
 - Saves and Storage
-- Typewriter (for dialog-like text printing)
 - Spines and spinal animation
 - [Debugger](https://github.com/grapefruitjs/gf-debug)
 
@@ -66,14 +56,13 @@ If you haven't heard of this library I suggest you check it out, it is a super p
 
 ## Physics Engine
 
-Grapefruit leverages [Chipmunk-js](https://github.com/josephg/Chipmunk-js) for 2D physics. Because of this powerful
-library grapefruit is able to support velocity, ellasticity, gravity, friction, collisions, and much more.
+Grapefruit uses a simple "Arcade" style physics engine. Basic velocity and acceleration is simulated along with gravity,
+bounce, and collisions. Later on more advanced physics via Box2D or Chipmunk may be integrated.
 
 ## Tile Engine
 
 The tile map engine is custom written in grapefruit to support all kinds of maps. The main focus however has been on
-supporting the [Tiled Map Editor](http://mapeditor.org), and its full feature set. In the near future, I will experiment
-with map prerendering for TiledLayers based on a property.
+supporting the [Tiled Map Editor](http://mapeditor.org), and its full feature set.
 
 ## License
 
