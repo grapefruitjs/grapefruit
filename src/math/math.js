@@ -205,12 +205,8 @@ var math = module.exports = {
         if(chance >= 100)
             return true;
 
-        //if roll is larger than chance, return false
-        if(Math.random() * 100 >= chance)
-            return false;
-
-        //roll passed, return true
-        return true;
+        //if roll is less than change, return true
+        return (Math.random() * 100 < chance);
     },
     /**
      * Returns a random int between min and max.
@@ -221,9 +217,15 @@ var math = module.exports = {
      * @return {Number}
      */
     randomInt: function(min, max) {
+        if(min === max)
+            return min;
+
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
     randomReal: function(min, max) {
+        if(min === max)
+            return min;
+
         return math.random() * (max - min + 1) + min;
     },
     /**
@@ -231,7 +233,7 @@ var math = module.exports = {
      * percentage chance of returning 1 (positive).
      *
      * @method randomSign
-     * @param chance {Number} The % chance of getting true (0 - 100), defaults to 50%
+     * @param chance {Number} The % chance of getting positive (0 - 100), defaults to 50%
      * @return {Number} either 1 or -1
      */
     randomSign: function(chance) {
@@ -253,22 +255,26 @@ var math = module.exports = {
      * @method randomElement
      * @param array {Array} The array to choose from
      * @param start {Number} The index of the first element to include, defaults to 0
-     * @param length {Number} The number of elements from the start to include, defaults to the length of the array (minus the start index)
+     * @param end {Number} The index of the last element to include, defaults to array.length - 1
      * @return {Number} either 1 or -1
      */
-    randomElement: function(array, start, len) {
+    randomElement: function(array, start, end) {
+        //ensure we have an array, and there are elements to check
+        if(!array || !array.length)
+            return null;
+
+        //special case for 1 element
+        if(array.length === 1)
+            return array[0];
+
         //default for start
         if(!start || start < 0)
             start = start || 0;
 
-        //default for len
-        if(!len || len < 1 || len > array.length - start)
-            len = array.length - start;
+        //default for end
+        if(!end || end < 0)
+            end = array.length - 1;
 
-        //ensure we have an array, and there are elements to check
-        if(!array || len < 1)
-            return null;
-
-        return array[start + Math.floor(Math.random() * len)];
+        return array[math.randomInt(start, end)];
     }
 };
