@@ -99,9 +99,6 @@ inherit(Physics, Object, {
      * @param sprite {Sprite} The sprite to add to the simulation
      */
     addSprite: function(sprite) {
-        if(!sprite.body)
-            sprite.body = new Body(sprite);
-
         this.bodies.push(sprite.body);
         sprite._physics = this;
     },

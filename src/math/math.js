@@ -223,6 +223,9 @@ var math = module.exports = {
     randomInt: function(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
+    randomReal: function(min, max) {
+        return math.random() * (max - min + 1) + min;
+    },
     /**
      * Returns a random sign based on the provided chance. The chance represents the
      * percentage chance of returning 1 (positive).
