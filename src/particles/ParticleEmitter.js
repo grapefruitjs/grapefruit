@@ -1,6 +1,7 @@
-var Sprite = require('./Sprite'),
-    ObjectPool = require('../utils/ObjectPool'),
+var Sprite = require('../display/Sprite'),
+    Texture = require('../display/Texture'),
     Container = require('../display/Container'),
+    Vector = require('../math/Vector'),
     math = require('../math/math'),
     inherit = require('../inherit'),
     C = require('../constants');

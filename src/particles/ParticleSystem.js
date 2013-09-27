@@ -1,8 +1,6 @@
-var Emitter = requie('./ParticleEmitter'),
+var Emitter = require('./ParticleEmitter'),
     Contianer = require('../display/Contianer'),
-    Vector = require('../math/Vector'),
-    inherit = require('../utils/inherit'),
-    C = require('../constants');
+    inherit = require('../utils/inherit');
 
 var ParticleSystem = module.exports = function() {
     Contianer.call(this);
@@ -13,7 +11,7 @@ var ParticleSystem = module.exports = function() {
 };
 
 inherit(ParticleSystem, Contianer, {
-    add: function(Name, enable) {
+    add: function(Name) {
         var emitter;
 
         //create an emitter if a string is passed
@@ -30,7 +28,7 @@ inherit(ParticleSystem, Contianer, {
         }
 
         if(!emitter.name)
-            emitter.name = 'emitter_' + (nextId++);
+            emitter.name = 'emitter_' + (this.nextId++);
 
         this.emitters[emitter.name] = emitter;
         this.addChild(emitter);

@@ -4,6 +4,7 @@ var EventEmitter = require('../utils/EventEmitter'),
     inherit = require('../utils/inherit'),
     Texture = require('./Texture'),
     math = require('../math/math'),
+    utils = require('../utils/utils'),
     PIXI = require('../vendor/pixi');
 
 /**

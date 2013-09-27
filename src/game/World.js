@@ -1,7 +1,8 @@
 var inherit = require('../utils/inherit'),
     Container = require('../display/Container'),
     Rectangle = require('../math/Rectangle'),
-    ObjectFactory = require('../utils/ObjectFactory');
+    ObjectFactory = require('../utils/ObjectFactory'),
+    ParticleSystem = require('../particles/ParticleSystem');
 
 /**
  * The world is the container for all game objects

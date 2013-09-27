@@ -212,7 +212,7 @@ var utils = module.exports = {
     },
     /**
      * From jQuery.extend, extends one object into another
-     * taken straight from jQuery
+     * taken straight from jQuery 2.0.3
      *
      * @method extend
      */
@@ -223,7 +223,7 @@ var utils = module.exports = {
             deep = false;
 
         // Handle a deep copy situation
-        if (typeof target === "boolean") {
+        if (typeof target === 'boolean') {
             deep = target;
             target = arguments[1] || {};
             // skip the boolean and the target
@@ -231,9 +231,15 @@ var utils = module.exports = {
         }
 
         // Handle case when target is a string or something (possible in deep copy)
-        if (typeof target !== "object" && typeof target !== 'function') {
+        if (typeof target !== 'object' && typeof target !== 'function') {
             target = {};
         }
+
+        // extend jQuery itself if only one argument is passed
+        //if (length === i) {
+        //    target = this;
+        //    --i;
+        //}
 
         for (; i < length; i++) {
             // Only deal with non-null/undefined values
@@ -249,7 +255,7 @@ var utils = module.exports = {
                     }
 
                     // Recurse if we're merging plain objects or arrays
-                    if (deep && copy && (utils.isPlainObject(copy) || copyIsArray = Array.isArray(copy))) {
+                    if (deep && copy && (utils.isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))) {
                         if (copyIsArray) {
                             copyIsArray = false;
                             clone = src && Array.isArray(src) ? src : [];
@@ -274,43 +280,34 @@ var utils = module.exports = {
     },
     /**
      * From jQuery.isPlainObject, checks if an object is a plain object
-     * taken straight from jQuery
+     * taken straight from jQuery 2.0.3
      *
      * @method isPlainObject
      */
     isPlainObject: function(obj) {
-        var key;
-
-        // Must be an Object.
-        // Because of IE, we also have to check the presence of the constructor property.
-        // Make sure that DOM nodes and window objects don't pass through, as well
-        if (!obj || typeof obj !== "object" || obj.nodeType || obj == obj.window) {
+        // Not plain objects:
+        // - Any object or value whose internal [[Class]] property is not "[object Object]"
+        // - DOM nodes
+        // - window
+        if (typeof obj !== 'object' || obj.nodeType || obj === obj.window) {
             return false;
         }
 
+        // Support: Firefox <20
+        // The try/catch suppresses exceptions thrown when attempting to access
+        // the "constructor" property of certain host objects, ie. |window.location|
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=814622
         try {
-            // Not own constructor property must be Object
-            if (obj.constructor && !Object.hasOwnProperty.call(obj, 'constructor') && !Object.hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf')) {
+            if (obj.constructor && !Object.hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf')) {
                 return false;
             }
         } catch(e) {
-            // IE8,9 Will throw exceptions on certain host objects #9897
             return false;
         }
 
-        // Support: IE<9
-        // Handle iteration over inherited properties before own properties.
-        if (support.ownLast) {
-            for (key in obj) {
-                return Object.hasOwnProperty.call(obj, key);
-            }
-        }
-
-        // Own properties are enumerated firstly, so to speed up,
-        // if last one is own, then all properties are own.
-        for (key in obj) {}
-
-        return key === undefined || hasOwn.call(obj, key);
+        // If the function hasn't returned already, we're confident that
+        // |obj| is a plain object, created by {} or constructed with new Object
+        return true;
     },
     parseHitArea: function(hv) {
         var ha;

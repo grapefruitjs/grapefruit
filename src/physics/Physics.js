@@ -5,7 +5,6 @@
 var QuadTree = require('../math/QuadTree'),
     Container = require('../display/Container'),
     Sprite = require('../display/Sprite'),
-    Body = require('./Body'),
     Vector = require('../math/Vector'),
     inherit = require('../utils/inherit'),
     math = require('../math/math'),

@@ -1,4 +1,5 @@
-var Container = require('../display/Container'),
+var AudioManager = require('../audio/AudioManager'),
+    Container = require('../display/Container'),
     World = require('./World'),
     Camera = require('../camera/Camera'),
     Physics = require('../physics/Physics'),
