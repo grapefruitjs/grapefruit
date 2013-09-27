@@ -1,7 +1,7 @@
-var Input = require('./Input'),
-    Vector = require('../math/Vector'),
-    Clock = require('../utils/Clock'),
-    inherit = require('../utils/inherit');
+var Input = require('../Input'),
+    Vector = require('../../math/Vector'),
+    Clock = require('../../utils/Clock'),
+    inherit = require('../../utils/inherit');
 
 /**
  * Represents a single pointer input method

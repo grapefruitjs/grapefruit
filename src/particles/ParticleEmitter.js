@@ -3,7 +3,7 @@ var Sprite = require('../display/Sprite'),
     Container = require('../display/Container'),
     Vector = require('../math/Vector'),
     math = require('../math/math'),
-    inherit = require('../inherit'),
+    inherit = require('../utils/inherit'),
     C = require('../constants');
 
 var ParticleEmitter = module.exports = function(name) {

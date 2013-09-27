@@ -42,7 +42,6 @@ module.exports = {
     Texture:        require('./display/Texture'),
     Container:      require('./display/Container'),
     Sprite:         require('./display/Sprite'),
-    AnimatedSprite: require('./display/AnimatedSprite'),
 
     //font
     BitmapText:     require('./text/BitmapText'),
@@ -72,8 +71,10 @@ module.exports = {
     InputManager:   require('./input/InputManager'),
     Keyboard:       require('./input/Keyboard'),
     Gamepad:        require('./input/Gamepad'),
-    GamepadButtons: require('./input/GamepadButtons'),
-    GamepadSticks:  require('./input/GamepadSticks'),
+    GamepadButtons: require('./input/gamepad/GamepadButtons'),
+    GamepadSticks:  require('./input/gamepad/GamepadSticks'),
+    Pointers:       require('./input/Pointers'),
+    Pointer:        require('./input/pointer/Pointer'),
 
     //loader
     Loader: require('./loader/Loader'),
