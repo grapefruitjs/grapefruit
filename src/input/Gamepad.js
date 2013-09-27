@@ -1,7 +1,7 @@
 var inherit = require('../utils/inherit'),
     Input = require('./Input'),
-    GamepadButtons = require('./GamepadButtons'),
-    GamepadSticks = require('./GamepadSticks');
+    GamepadButtons = require('./gamepad/GamepadButtons'),
+    GamepadSticks = require('./gamepad/GamepadSticks');
 
 /**
  * Controls input from gamepads
