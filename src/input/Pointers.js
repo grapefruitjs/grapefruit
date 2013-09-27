@@ -1,5 +1,6 @@
 var inherit = require('../utils/inherit'),
-    Input = require('./Input');
+    Input = require('./Input'),
+    Pointer = require('./pointer/Pointer');
 
 /**
  * Controls pointer input (mouse, touch, pen, etc) or all pointers tracked by the game
@@ -60,7 +61,7 @@ var Pointers = module.exports = function(game) {
     this.holdDelay = 2000;
 
     //create the mouse pointer object
-    this.mouse = pointers[1] = new Pointer(1, this);
+    this.mouse = this.pointers[1] = new Pointer(1, this);
 
     //number of pointers being tracked
     this.activePointers = 0;
@@ -79,14 +80,14 @@ var Pointers = module.exports = function(game) {
 inherit(Pointers, Input, {
     onPointer: function(name, evt) {
         var id = evt.pointerId,
-            pointer = pointers[id];
+            pointer = this.pointers[id];
 
         //create a new pointer object if we need it, and if there is room
         //if there isn't room for a new pointer object then we just return
         //without echoing the event or anything.
         if(!pointer) {
             if(this._numPointers < this.maxPointers) {
-                pointers[id] = new Pointer(id, this);
+                this.pointers[id] = new Pointer(id, this);
             } else {
                 return;
             }
