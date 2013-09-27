@@ -111,7 +111,7 @@ inherit(Keyboard, Input, {
             input: this,
             originalEvent: e,
             down: down
-        }
+        };
     },
     /**
      * Clears the current sequence so that a new one can start
