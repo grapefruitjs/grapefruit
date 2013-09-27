@@ -25,27 +25,27 @@ var Pointer = module.exports = function(view) {
 
 inherit(Pointer, Input, {
     onPointerDown: function(evt) {
-
+        window.console.log(evt);
     },
     onPointerUp: function(evt) {
-
+        window.console.log(evt);
     },
     onPointerMove: function(evt) {
-
+        window.console.log(evt);
     },
     onPointerOver: function(evt) {
-
+        window.console.log(evt);
     },
     onPointerOut: function(evt) {
-
+        window.console.log(evt);
     },
     onPointerCancel: function(evt) {
-
+        window.console.log(evt);
     },
     onPointerEnter: function(evt) {
-
+        window.console.log(evt);
     },
     onPointerLeave: function(evt) {
-
+        window.console.log(evt);
     }
 });
