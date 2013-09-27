@@ -197,6 +197,15 @@ var Game = module.exports = function(container, settings) {
      */
     this.state = new StateManager(this);
 
+    /**
+     * The offset for the viewport in the document
+     *
+     * @property offset
+     * @type Vector
+     * @readOnly
+     */
+    this.offset = new Vector();
+
     //TODO:
     //
     //add (obj factory?)
@@ -256,6 +265,8 @@ inherit(Game, Object, {
             this.container.appendChild(render.view);
             this.canvas = render.view;
         }
+
+        this.offset = utils.getOffset(this.canvas);
 
         return render;
     },
