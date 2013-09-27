@@ -7,10 +7,10 @@ var inherit = require('../utils/inherit'),
  * @class Keyboard
  * @extends Input
  * @constructor
- * @param view {DOMElement} The DOMElement to bind input events to
+ * @param game {Game} The game instance
  */
-var Keyboard = module.exports = function(view) {
-    Input.call(this, view);
+var Keyboard = module.exports = function(game) {
+    Input.call(this, game);
 
     /**
      * The current sequence of keys that have been pressed
@@ -39,8 +39,8 @@ var Keyboard = module.exports = function(view) {
      */
     this._clearSq = null;
 
-    view.addEventListener('keydown', this.onKeyDown.bind(this), false);
-    view.addEventListener('keyup', this.onKeyUp.bind(this), false);
+    game.canvas.addEventListener('keydown', this.onKeyDown.bind(this), false);
+    game.canvas.addEventListener('keyup', this.onKeyUp.bind(this), false);
 };
 
 inherit(Keyboard, Input, {
@@ -79,11 +79,7 @@ inherit(Keyboard, Input, {
      */
     modifyKey: function(e, key, down) {
         //emit single key event
-        this.emit(key, {
-            input: this,
-            originalEvent: e,
-            down: down
-        });
+        this.emit(key, this._getEventData(e, down));
 
         //when pressed is when we process a key for a sequence
         if(down) {
@@ -93,16 +89,28 @@ inherit(Keyboard, Input, {
             //process current sequence
             var s = this.sequence.toString();
             if(s !== key.toString()) {
-                this.emit(s, {
-                    input: this,
-                    originalEvent: e,
-                    down: down
-                });
+                this.emit(s, this._getEventData(e, down));
             }
 
             //set timeout to clear sequence
             clearTimeout(this._clearSq);
             this._clearSq = setTimeout(this._clearSequence.bind(this), this.sequenceTimeout);
+        }
+    },
+    /**
+     * Generates an event data object for a keyboard event
+     *
+     * @method _getEventData
+     * @param event {DOMEvent} The original DOMEvent that was passed into the raw event handler
+     * @param down {Boolean} Is this a keydown event
+     * @return {Object} The event object
+     * @private
+     */
+    _getEventData: function(e, down) {
+        return {
+            input: this,
+            originalEvent: e,
+            down: down
         }
     },
     /**
