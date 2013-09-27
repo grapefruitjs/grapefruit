@@ -8,49 +8,19 @@ var inherit = require('../utils/inherit'),
  * @extends Object
  * @uses EventEmitter
  * @constructor
- * @param view {DOMElement} The DOMElement to bind input events to
+ * @param game {Game} The game instance
  */
-var InputType = module.exports = function(view) {
+var InputType = module.exports = function(game) {
     EventEmitter.call(this);
 
     /**
-     * For backwards compatibility
+     * The game instance this input belongs to
      *
-     * @method bind
-     * @deprecated use on
-     */
-    this.bind = this.on;
-
-    /**
-     * The dom element to bind events to
-     *
-     * @property view
+     * @property game
      * @type Game
      */
-    this.view = view;
+    this.game = game;
 };
 
 inherit(InputType, Object, {
-    /**
-     * Prevents the default action of an event
-     *
-     * @method preventDefault
-     * @param event {DOMEvent} The event to prevent default actions for
-     */
-    preventDefault: function(e) {
-        if(e.preventDefault) e.preventDefault();
-        else e.returnValue = false;
-
-        return false;
-    },
-    /**
-     * Prevents an event from bubbling up the DOM.
-     *
-     * @method stopPropogation
-     * @param event {DOMEvent} The event to prevent bubbling for
-     */
-    stopPropogation: function(e) {
-        if(e.stopPropagation) e.stopPropagation();
-        else e.cancelBubble = true;
-    }
 });
