@@ -1,6 +1,7 @@
 var inherit = require('../utils/inherit'),
     Keyboard = require('./Keyboard'),
-    Gamepad = require('./Gamepad');
+    Gamepad = require('./Gamepad'),
+    Pointers = require('./Pointers');
 
 /**
  * Manages all input handlers in a unified way
@@ -35,7 +36,16 @@ var InputManager = module.exports = function(game) {
      * @type Keyboard
      * @readOnly
      */
-    this.keyboard = new Keyboard(this.canvas);
+    this.keyboard = new Keyboard(game);
+
+    /**
+     * Holds the pointer handler for pointer events
+     *
+     * @property pointer
+     * @type Pointer
+     * @readOnly
+     */
+    this.pointers = new Pointers(game);
 
     /**
      * Holds the gamepad handler for gamepad events
@@ -55,6 +65,7 @@ inherit(InputManager, Object, {
      * @private
      */
     update: function(dt) {
+        this.pointers.update(dt);
         this.gamepad.update(dt);
     }
 });
