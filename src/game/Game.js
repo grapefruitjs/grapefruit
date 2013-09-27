@@ -27,7 +27,6 @@ var StateManager = require('./StateManager'),
  * @param [settings.background='#FFF'] {Number} The background color of the stage
  * @param [settings.antialias=true] {Boolean} Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality)
  * @param [settings.canvas] {DOMElement} The canvas to render into, if not specified one is created
- * @param [settings.interactive] {Boolean} Whether the game will use mouse events or not
  */
 var Game = module.exports = function(container, settings) {
     EventEmitter.call(this);
@@ -132,7 +131,7 @@ var Game = module.exports = function(container, settings) {
      * @type PIXI.Stage
      * @readOnly
      */
-    this.stage = new PIXI.Stage(this.background, this.interactive);
+    this.stage = new PIXI.Stage(this.background);
 
     /**
      * Clock instance for internal timing
