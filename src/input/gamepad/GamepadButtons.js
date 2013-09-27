@@ -1,5 +1,5 @@
-var inherit = require('../utils/inherit'),
-    Input = require('./Input');
+var inherit = require('../../utils/inherit'),
+    Input = require('../Input');
 
 /**
  * Controls gamepad button input
