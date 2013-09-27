@@ -309,6 +309,25 @@ var utils = module.exports = {
         // |obj| is a plain object, created by {} or constructed with new Object
         return true;
     },
+    /**
+     * Get the DOM offset values of any given element
+     *
+     * @method getOffset
+     * @param element {HTMLElement} The targeted element that we want to retrieve the offset
+     * @return {Vector} The offset of the element
+     */
+    getOffset: function(element) {
+        var box = element.getBoundingClientRect(),
+            clientTop = element.clientTop || document.body.clientTop || 0,
+            clientLeft = element.clientLeft || document.body.clientLeft || 0,
+            scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop,
+            scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
+
+        return new Vector(
+            box.left + scrollLeft - clientLeft,
+            box.top + scrollTop - clientTop
+        );
+    },
     parseHitArea: function(hv) {
         var ha;
 
