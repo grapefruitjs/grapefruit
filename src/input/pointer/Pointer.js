@@ -40,8 +40,7 @@ var Pointer = module.exports = function(id, manager) {
     this._holdSent = false;
 
     this.position = new Vector();
-    this.downAt = new Vector();
-    this.worldAt = new Vector();
+    this.positionDown = new Vector();
 };
 
 inherit(Pointer, Input, {
@@ -55,7 +54,7 @@ inherit(Pointer, Input, {
 
         //update x/y position
         this.move(evt);
-        this.downAt.copy(this.position);
+        this.positionDown.copy(this.position);
 
         //copy some event vars
         this.button = evt.button;
@@ -110,11 +109,6 @@ inherit(Pointer, Input, {
             evt.pageX - this.game.offset.x,
             evt.pageY - this.game.offset.y
         );
-
-        this.worldAt.set(
-            this.position.x - this.game.world.position.x,
-            this.position.y - this.game.world.position.y
-        );
     },
     leave: function(evt) {
         this.move(evt);
@@ -128,6 +122,19 @@ inherit(Pointer, Input, {
             this._holdSent = true;
             this.manager.emit('hold', this);
         }
+    },
+    positionWorld: {}
+});
+
+Object.defineProperty(Pointer.prototype.positionWorld, 'x', {
+    get: function() {
+        return this.position.x - this.game.world.position.x;
+    }
+});
+
+Object.defineProperty(Pointer.prototype.positionWorld, 'y', {
+    get: function() {
+        return this.position.y - this.game.world.position.y;
     }
 });
 
