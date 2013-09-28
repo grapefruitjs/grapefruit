@@ -151,25 +151,24 @@ inherit(ParticleEmitter, Container, {
         part.position.x = math.randomInt(0, this.width);
         part.position.y = math.randomInt(0, this.height);
 
+        //set scale
+        part.scale.x = part.scale.y = math.randomReal(this.minScale, this.maxScale);
+
         //set lifespan
         part.lifespan = this.lifespan;
 
         //sync physics body
         part.body.x = part.position.x;
         part.body.y = part.position.y;
-        part.body.lastPos.copy(part.position);
 
+        part.body.velocity.x = math.randomInt(this.minSpeed.x, this.maxSpeed.x);
+        part.body.velocity.y = math.randomInt(this.minSpeed.y, this.maxSpeed.y);
+
+        part.body.lastPos.copy(part.position);
         part.body.bounce.copy(this.bounce);
         part.body.gravity.copy(this.gravity);
 
-        part.body.velocity.set(
-            math.randomInt(this.minSpeed.x, this.maxSpeed.x),
-            math.randomInt(this.minSpeed.y, this.maxSpeed.y)
-        );
         part.body.angularVelocity = math.randomInt(this.minRotation, this.maxRotation);
-
-        var scale = math.randomReal(this.minScale, this.maxScale);
-        part.body.scale.set(scale, scale);
 
         part.body.drag.copy(this.drag);
         part.body.angularDrag = this.angularDrag;
