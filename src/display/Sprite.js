@@ -154,6 +154,38 @@ inherit(Sprite, PIXI.Sprite, {
 
         spr.body = this.body.clone();
 
+        spr.blendMode = this.blendMode;
+
+        spr.anchor.x = this.anchor.x;
+        spr.anchor.y = this.anchor.y;
+
+        spr.position.x = this.position.x;
+        spr.position.y = this.position.y;
+
+        spr.scale.x = this.scale.x;
+        spr.scale.y = this.scale.y;
+
+        spr.pivot.x = this.pivot.x;
+        spr.pivot.y = this.pivot.y;
+
+        spr.rotation = this.rotation;
+        spr.alpha = this.alpha;
+        spr.visible = this.visible;
+        spr.buttonMode = this.buttonMode;
+        spr.renderable = this.renderable;
+
+        //Don't copy some pixi stuff
+
+        //spr.children = this.children;
+        //spr.parent = this.parent;
+        //spr.stage = this.stage;
+        //spr.worldAlpha = this.worldAlpha;
+        //spr._interactive = this._interactive;
+        //spr.worldTransform = this.worldTransform;
+        //spr.localTransform = this.localTransform;
+        //spr.color = this.color;
+        //spr.dynamic = this.dynamic;
+
         return spr;
     },
     /**
