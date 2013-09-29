@@ -1,9 +1,11 @@
 //var Rectangle = module.exports = require('../vendor/pixi').Rectangle;
 
-var inherit = require('../utils/inherit');
+var inherit = require('../utils/inherit'),
+    Polygon = require('./Polygon');
 
 /**
- * the Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its width and its height.
+ * The Rectangle object is an area defined by its position, as indicated by its
+ * top-left corner point (x, y) and by its width and its height.
  *
  * @class Rectangle
  * @constructor 
@@ -93,11 +95,33 @@ inherit(Rectangle, Object, {
         return false;
     },
 
+    /**
+     * Checks if this rectangle overlaps another
+     *
+     * @method contains
+     * @param rect {Rectangle} The rectangle to check if this overlaps
+     * @return {Boolean} if the rectangle overlaps
+     */
     overlaps: function(rect) {
         return this.right > rect.x &&
                 this.x < rect.right &&
                 this.bottom > rect.y &&
                 this.y < rect.bottom;
+    },
+
+    /**
+     * Returns a polygon from this rectangle's points
+     *
+     * @method toPolygon
+     * @return {Polygon}
+     */
+    toPolygon: function() {
+        return new Polygon(this.x, this.y, [
+            new Vector(), //top-left
+            new Vector(this.width, 0), //top-right
+            new Vector(this.width, this.height), //bottom-right
+            new Vector(0, this.height) //bottom-left
+        ]);
     }
 });
 
