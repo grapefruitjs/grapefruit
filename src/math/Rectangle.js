@@ -2,7 +2,8 @@
 
 var inherit = require('../utils/inherit'),
     Polygon = require('./Polygon'),
-    Vector = require('./Vector');
+    Vector = require('./Vector'),
+    C = require('../constants');
 
 /**
  * The Rectangle object is an area defined by its position, as indicated by its
@@ -56,6 +57,9 @@ var Rectangle = module.exports = function(x, y, width, height) {
      * @default 0
      */
     this.halfHeight = this._height / 2;
+
+    //internal shape type
+    this._shapetype = C.SHAPE.RECTANGLE;
 };
 
 inherit(Rectangle, Object, {

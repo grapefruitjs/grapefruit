@@ -1,4 +1,6 @@
-var inherit = require('../utils/inherit');
+var inherit = require('../utils/inherit'),
+    Vector = require('../math/Vector'),
+    C = require('../constants');
 
 /**
  * A *convex* clockwise Polygon.
@@ -78,6 +80,9 @@ var Polygon = module.exports = function(x, y, points) {
 
     //recalculate edges and normals
     this.recalc();
+
+    //internal shape type
+    this._shapetype = C.SHAPE.POLYGON;
 };
 
 inherit(Polygon, Object, {
@@ -94,7 +99,7 @@ inherit(Polygon, Object, {
         }
 
         return new Polygon(points);
-    }
+    },
 
     /**
      * Checks if the x, and y coords passed to this function are contained within this polygon
@@ -112,7 +117,7 @@ inherit(Polygon, Object, {
         for(var i = 0, j = this.points.length - 1; i < this.points.length; j = i++) {
             var xi = this.points[i].x, yi = this.points[i].y,
                 xj = this.points[j].x, yj = this.points[j].y,
-                intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+                intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
 
             if(intersect) inside = !inside;
         }
