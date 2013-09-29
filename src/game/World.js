@@ -12,6 +12,8 @@ var inherit = require('../utils/inherit'),
  * @constructor
  */
 var World = module.exports = function(state) {
+    Container.call(this);
+
     /**
      * The game instance this world belongs to
      *
@@ -51,8 +53,6 @@ var World = module.exports = function(state) {
      * @type ObjectFactory
      */
     this.add = new ObjectFactory(state, this);
-
-    Container.call(this);
 };
 
 inherit(World, Container, {
