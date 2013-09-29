@@ -132,7 +132,7 @@ var Sprite = module.exports = function(anims, speed, start) {
     this.body = new Body(this);
 
     //start playing
-    this.goto(this.currentAnimation);
+    this.goto(0, this.currentAnimation);
 };
 
 inherit(Sprite, PIXI.Sprite, {
@@ -283,7 +283,7 @@ inherit(Sprite, PIXI.Sprite, {
      * @private
      */
     updateTransform: function() {
-        Sprite.prototype.updateTransform.call(this);
+        PIXI.Sprite.prototype.updateTransform.call(this);
 
         if(!this.playing) return;
 
