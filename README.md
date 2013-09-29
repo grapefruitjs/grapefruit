@@ -7,14 +7,14 @@ from simple top-down space shooters to complex RPGs are possible with grapefruit
 
 Some features that GrapeFruit gives you:
 
- - Audio Manager (WebAudio API with HTML5 Audio fallback)
- - Camera Effects (Shake, Fade, Flash, Scanlines, and more)
  - Rendering Engine (WebGL, with Canvas fallback)
- - Full Physics System (collisions, gravity, bounce, and more)
+ - Full featured [Tiled Map Editor](http://www.mapeditor.org/) support
+ - Simple Physics System (collisions, gravity, bounce, and more)
+ - Audio Manager (WebAudio API with HTML5 Audio fallback)
+ - Input Manager (keyboard, mouse, touch, and gamepad)
+ - Camera Effects (Shake, Fade, Flash, Scanlines, and more)
  - GUI system (for HUDs and menus)
  - Bitmap and System Text
- - Input Manager (keyboard, mouse, touch, and gamepad)
- - Full featured [Tiled Map Editor](http://www.mapeditor.org/) support
  - Plugin system
  - Asset Preloader
  - much more!
