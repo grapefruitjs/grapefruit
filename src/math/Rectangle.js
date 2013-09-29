@@ -1,7 +1,8 @@
 //var Rectangle = module.exports = require('../vendor/pixi').Rectangle;
 
 var inherit = require('../utils/inherit'),
-    Polygon = require('./Polygon');
+    Polygon = require('./Polygon'),
+    Vector = require('./Vector');
 
 /**
  * The Rectangle object is an area defined by its position, as indicated by its
@@ -16,17 +17,14 @@ var inherit = require('../utils/inherit'),
  */
 var Rectangle = module.exports = function(x, y, width, height) {
     /**
-     * @property x
-     * @type Number
+     * @property position
+     * @type Vector
      * @default 0
      */
-    this.x = x || 0;
+    this.position = new Vector();
 
-    /**
-     * @property y
-     * @type Number
-     * @default 0
-     */
+    //set positon
+    this.x = x || 0;
     this.y = y || 0;
 
     /**
@@ -124,6 +122,39 @@ inherit(Rectangle, Object, {
         ]);
     }
 });
+
+/**
+ * The top-left X coord of the rectangle
+ *
+ * @property x
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Rectangle.prototype, 'x', {
+    get: function() {
+        return this.position.x;
+    },
+    set: function(v) {
+        this.position.x = v;
+    }
+});
+
+/**
+ * The top-left Y coord of the rectangle
+ *
+ * @property y
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Rectangle.prototype, 'y', {
+    get: function() {
+        return this.position.y;
+    },
+    set: function(v) {
+        this.position.y = v;
+    }
+});
+
 
 /**
  * The width of the object

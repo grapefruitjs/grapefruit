@@ -1,4 +1,5 @@
-var inherit = require('../utils/inherit');
+var inherit = require('../utils/inherit'),
+    Vector = require('./Vector');
 
 /**
  * The Circle object is an area defined by its position, as indicated by its
@@ -6,28 +7,17 @@ var inherit = require('../utils/inherit');
  *
  * @class Circle
  * @constructor
- * @param x {Number} The X coord of the center of the circle
- * @param y {Number} The Y coord of the center of the circle
+ * @param center {Vector} The point of the center of the circle
  * @param radius {Number} The radius of the circle
  */
 var Circle = module.exports = function(x, y, radius) {
     /**
-     * The center X coord of the circle
+     * The center of the circle
      *
-     * @property x
-     * @type Number
-     * @default 0
+     * @property position
+     * @type Vector
      */
-    this.x = x || 0;
-    
-    /**
-     * The center Y coord of the circle
-     *
-     * @property y
-     * @type Number
-     * @default 0
-     */
-    this.y = y || 0;
+    this.position = new Vector();
 
     /**
      * The radius of the circle
@@ -37,6 +27,10 @@ var Circle = module.exports = function(x, y, radius) {
      * @default 0
      */
     this.radius = radius || 0;
+
+    //set position
+    this.x = x || 0;
+    this.y = y || 0;
 };
 
 inherit(Circle, Object, {
@@ -71,5 +65,37 @@ inherit(Circle, Object, {
         dy *= dy;
 
         return (dx + dy <= r2);
+    }
+});
+
+/**
+ * The center X coord of the circle
+ *
+ * @property x
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Circle.prototype, 'x', {
+    get: function() {
+        return this.position.x;
+    },
+    set: function(v) {
+        this.position.x = v;
+    }
+});
+
+/**
+ * The center Y coord of the circle
+ *
+ * @property y
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Circle.prototype, 'y', {
+    get: function() {
+        return this.position.y;
+    },
+    set: function(v) {
+        this.position.y = v;
     }
 });

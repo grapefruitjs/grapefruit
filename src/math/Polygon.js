@@ -15,22 +15,12 @@ var inherit = require('../utils/inherit');
  */
 var Polygon = module.exports = function(x, y, points) {
     /**
-     * The origin X coord of the polygon
+     * The origin point of the polygon, all points are relative to this
      *
-     * @property x
-     * @type Number
-     * @default 0
+     * @property position
+     * @type Vector
      */
-    this.x = x || 0;
-
-    /**
-     * The origin Y coord of the polygon
-     *
-     * @property x
-     * @type Number
-     * @default 0
-     */
-    this.y = y || 0;
+    this.position = new Vector();
 
     /**
      * The points of the polygon, the X & Y values here should be
@@ -81,6 +71,10 @@ var Polygon = module.exports = function(x, y, points) {
     }
 
     this.points = points;
+
+    //set position
+    this.x = x || 0;
+    this.y = y || 0;
 
     //recalculate edges and normals
     this.recalc();
@@ -147,5 +141,37 @@ inherit(Polygon, Object, {
             this.edges.push(e);
             this.normals.push(n);
         }
+    }
+});
+
+/**
+ * The origin X coord of the polygon
+ *
+ * @property x
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Polygon.prototype, 'x', {
+    get: function() {
+        return this.position.x;
+    },
+    set: function(v) {
+        this.position.x = v;
+    }
+});
+
+/**
+ * The origin Y coord of the polygon
+ *
+ * @property x
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Polygon.prototype, 'y', {
+    get: function() {
+        return this.position.y;
+    },
+    set: function(v) {
+        this.position.y = v;
     }
 });
