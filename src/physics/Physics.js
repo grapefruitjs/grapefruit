@@ -1,14 +1,30 @@
-// Based heavily off of PhotonStorm's Phaser Arcade Physics, and ChipmunkJS (mostly the former)
-// Phaser: https://github.com/photonstorm/phaser 
-// ChipmunkJS: https://github.com/josephg/Chipmunk-js
+// Based heavily on SAT.js
+// https://github.com/jriecken/sat-js
 
 var QuadTree = require('../math/QuadTree'),
-    Container = require('../display/Container'),
-    Sprite = require('../display/Sprite'),
+    Collision = require('./Collision'),
     Vector = require('../math/Vector'),
     inherit = require('../utils/inherit'),
     math = require('../math/math'),
     C = require('../constants');
+
+/**
+ * Pool of Vectors used in calculations.
+ *
+ * @type {Array<Vector>}
+ */
+var T_VECTORS = [];
+for (var i = 0; i < 10; i++)
+    T_VECTORS.push(new Vector());
+
+/**
+ * Pool of Arrays used in calculations.
+ *
+ * @type {Array<Array<mixed>>}
+ */
+var T_ARRAYS = [];
+for (var i = 0; i < 5; i++)
+    T_ARRAYS.push([]);
 
 var Physics = module.exports = function(state) {
     this.state = state;
@@ -53,18 +69,7 @@ var Physics = module.exports = function(state) {
      */
     this.gravity = new Vector(0, 9.87);
 
-    //some temp vars to prevent have to declare a lot
-    this._total = 0;
-    this._overlap = 0;
-    this._maxOverlap = 0;
-
-    this._velocity1 = 0;
-    this._velocity2 = 0;
-    this._newVelocity1 = 0;
-    this._newVelocity2 = 0;
-
-    this._average = 0;
-    this._potentials = null;
+    this._collision = new Collision();
 };
 
 inherit(Physics, Object, {
@@ -78,18 +83,169 @@ inherit(Physics, Object, {
         //clear quad tree
         this.tree.clear();
 
-        //update bodies
-        var bods = this.bodies;
+        var bods = this.bodies,
+            body, i,
+            pots, p,
+            il = bods.length,
+            pl,
+            pot;
 
-        for(var i = 0, il = bods.length, body; i < il; ++i) {
+        //update bodies and build quadtree
+        for (; i < il; ++i) {
             body = bods[i];
 
             body.update(dt, this.gravity);
 
-            if(body.allowCollide && body.sprite.visible) {
+            if (body.allowCollide && body.sprite.visible) {
                 this.tree.insert(body);
             }
         }
+
+        //select likely collisions
+        for(i = 0; i < il; ++i) {
+            body = bods[i];
+
+            //get likely collisions
+            pots = this.tree.retrieve(body);
+
+            for(p = 0, pl = pots.length; p < pl; ++p) {
+                pot = pots[p];
+
+                if(this.checkShapeCollision(body, pot)) {
+                    if(body.sprite.onCollide(pot, this._collision.clone()) !== false) {
+                        this.solveCollision(body, pot);
+                    }
+                }
+            }
+        }
+    },
+    solveCollision: function(b1, b2) {
+        var col = this._collision,
+            ov = col.overlapV;
+
+        //separate bodies
+        this._separate(b1, b2, ov.x, 'x');
+        this._separate(b1, b2, ov.y, 'y');
+
+        //special case for things that carry stuff (like moving platforms)
+        if(b2.carry && (b1.touching & C.DIRECTION.BOTTOM)) {
+            b1.x += b2.deltaX();
+        } else if(b1.carry && (b2.touching & C.DIRECTION.BOTTOM)) {
+            b2.x += b1.deltaX();
+        }
+    },
+    _separate: function(b1, b2, over, ax) {
+        var v1 = b1.velocity[ax],
+            v2 = b2.velocity[ax];
+
+        //separate non-static bodies
+        if(b1.type !== C.PHYSICS_TYPE.STATIC && b2.type !== C.PHYSICS_TYPE.STATIC) {
+            over *= 0.5;
+
+            //perform the actual separation
+            b1[ax] -= over;
+            b2[ax] += over;
+
+            //update velocities
+            var nv1 = math.sqrt((v2 * v2 * b2.mass) / b1.mass) * ((v2 > 0) ? 1 : -1),
+                nv2 = math.sqrt((v1 * v1 * b1.mass) / b2.mass) * ((v1 > 0) ? 1 : -1),
+                avg = (v1 + v2) * 0.5;
+
+            nv1 -= avg;
+            nv2 -= avg;
+
+            b1.velocity[ax] = avg + (nv1 * b1.bounce[ax]);
+            b2.velocity[ax] = avg + (nv2 * b2.bounce[ax]);
+        }
+        //body1 isn't static
+        else if(b1.type !== C.PHYSICS_TYPE.STATIC) {
+            b1[ax] -= over;
+            b1.velocity[ax] = v2 - (v1 * b1.bounce[ax]);
+        }
+        //body2 isn't static
+        else if(b2. type !== C.PHYSICS_TYPE.STATIC) {
+            b2[ax] += over;
+            b2.velocity[ax] = v1 - (v2 * b2.bounce[ax]);
+        }
+    },
+    checkShapeCollision: function(b1, b2) {
+        var hit = false;
+
+        //if this is a circle
+        if(b1.shape._shapetype === C.SHAPE.CIRCLE) {
+            //circle-circle check
+            if(b2.shape._shapetype === C.SHAPE.CIRCLE) {
+                hit = this.testCircleCircle(b1, b2, this._collision);
+            }
+            //circle-polygon check
+            else {
+                hit = this.testCirclePolygon(b1, b2, this._collision);
+            }
+        }
+        //otherwise a polygon
+        else {
+            //polygon-circle check
+            if(b2.shape._shapetype === C.SHAPE.CIRCLE) {
+                hit = this.testPolygonCircle(b1, b2, this._collision);
+            }
+            //polygon-polygon check
+            else {
+                hit = this.testPolygonPolygon(b1, b2, this._collision);
+            }
+        }
+
+        //check allow collide flags
+        if(hit) {
+            var on = this._collision.overlapN,
+                ov = this._collision.overlapV;
+
+            //check x collision to the right
+            if(on.x > 0) {
+                if(!(b1.allowCollide & C.DIRECTION.RIGHT) || !(b2.allowCollide & C.DIRECTION.LEFT)) {
+                    on.x = 0;
+                    ov.x = 0;
+                } else {
+                    b1.touching |= C.DIRECTION.RIGHT;
+                    b2.touching |= C.DIRECTION.LEFT;
+                }
+            }
+            //check x collision to the left
+            else if(on.x < 0) {
+                if(!(b1.allowCollide & C.DIRECTION.LEFT) || !(b2.allowCollide & C.DIRECTION.RIGHT)) {
+                    on.x = 0;
+                    ov.x = 0;
+                } else {
+                    b1.touching |= C.DIRECTION.LEFT;
+                    b2.touching |= C.DIRECTION.RIGHT;
+                }
+            }
+
+            //check y collision down
+            if(on.y > 0) {
+                if(!(b1.allowCollide & C.DIRECTION.BOTTOM) || !(b2.allowCollide & C.DIRECTION.TOP)) {
+                    on.y = 0;
+                    ov.y = 0;
+                } else {
+                    b1.touching |= C.DIRECTION.BOTTOM;
+                    b2.touching |= C.DIRECTION.TOP;
+                }
+            }
+            //check y collision up
+            else if(on.y < 0) {
+                if(!(b1.allowCollide & C.DIRECTION.TOP) || !(b2.allowCollide & C.DIRECTION.BOTTOM)) {
+                    on.y = 0;
+                    ov.y = 0;
+                } else {
+                    b1.touching |= C.DIRECTION.TOP;
+                    b2.touching |= C.DIRECTION.BOTTOM;
+                }
+            }
+
+            if(!on.x && !on.y)
+                hit = false;
+        }
+
+        return hit;
     },
     /**
      * Adds a sprite to the physics simulation
@@ -98,7 +254,7 @@ inherit(Physics, Object, {
      * @param sprite {Sprite} The sprite to add to the simulation
      */
     addSprite: function(sprite) {
-        this.bodies.push(sprite.body);
+        this.addBody(sprite.body);
         sprite._physics = this;
     },
     /**
@@ -108,288 +264,445 @@ inherit(Physics, Object, {
      * @param sprite {Sprite} The sprite to remove from the simulation
      */
     removeSprite: function(sprite) {
-        var i = this.bodies.indexOf(sprite.body);
+        this.removeBody(sprite.body);
+        sprite._physics = null;
+    },
+    /**
+     * Adds a body to the physics simulation
+     *
+     * @method addBody
+     * @param body {Body} The body to add to the simulation
+     */
+    addBody: function(body) {
+        this.bodies.push(body);
+    },
+    /**
+     * Removes a body from the physics simulation
+     *
+     * @method removeSprite
+     * @param body {Body} The body to remove from the simulation
+     */
+    removeBody: function(body) {
+        var i = this.bodies.indexOf(body);
 
-        if(i !== -1)
+        if (i !== -1)
             this.bodies.splice(i, 1);
     },
+
+    /****************************************************
+     * Shape testing functions
+     ****************************************************/
     /**
-     * Checks for collisions between objects such as Sprites or Containers.
+     * Check if two circles intersect.
      *
-     * @method collide
-     * @param object1 {Sprite|Container} The first object to check
-     * @param object2 {Sprite|Container} The first object to check
-     * @param onCollision {Function} The callback to call whenever a collision occurs
+     * @param a {Circle} The first circle.
+     * @param b {Circle} The second circle.
+     * @param [response] {Collision} Collision object (optional) that will be populated if the circles intersect.
+     * @return {Boolean} true if the circles intersect, false if they don't.
      */
-    collide: function(obj1, obj2, onCollision) {
-        this._total = 0;
+    testCircleCircle: function(a, b, response) {
+        var differenceV = T_VECTORS.pop().copy(b.position).sub(a.position),
+            totalRadius = a.r + b.r,
+            totalRadiusSq = totalRadius * totalRadius,
+            distanceSq = differenceV.len2();
 
-        if(obj1 && obj2) {
-            //sprite collisions
-            if(obj1 instanceof Sprite) {
-                if(obj2 instanceof Sprite) {
-                    this._collideSpriteVsSprite(obj1, obj2, onCollision);
-                }
-                else if(obj2 instanceof Container) {
-                    this._collideSpriteVsContainer(obj1, obj2, onCollision);
-                }
-            }
-            //container collisions
-            else if(obj1 instanceof Container) {
-                if(obj2 instanceof Sprite) {
-                    this._collideSpriteVsContainer(obj2, obj1, onCollision);
-                }
-                else if(obj2 instanceof Container) {
-                    this._collideContainerVsContainer(obj1, obj2, onCollision);
-                }
-            }
+        // They do not intersect
+        if (distanceSq > totalRadiusSq) {
+            T_VECTORS.push(differenceV);
+            return false;
         }
 
-        return this._total;
+        // They intersect.  If we're calculating a response, calculate the overlap.
+        if (response) {
+            var dist = math.sqrt(distanceSq);
+            response.a = a;
+            response.b = b;
+            response.overlap = totalRadius - dist;
+            response.overlapN.copy(differenceV.normalize());
+            response.overlapV.copy(differenceV).scale(response.overlap);
+            response.aInB = a.r <= b.r && dist <= b.r - a.r;
+            response.bInA = b.r <= a.r && dist <= a.r - b.r;
+        }
+
+        T_VECTORS.push(differenceV);
+
+        return true;
     },
     /**
-     * The core separation function to separate two physics bodies.
+     * Check if a polygon and a circle intersect.
      *
-     * @method separate
-     * @param body1 {Body} The first Body to separate
-     * @param body2 {Body} The second Body to separate
-     * @returns {Boolean} Returns true if the bodies were separated, otherwise false.
+     * @param polygon {Polygon} The polygon.
+     * @param circle {Circle} The circle.
+     * @param [response] {Collision} Collision object (optional) that will be populated if they interset.
+     * @return {Boolean} true if they intersect, false if they don't.
      */
-    separate: function(b1, b2) {
-        //make sure the sprite is updated after the collision solve
-        if(this._separateX(b1, b2) || this._separateY(b1, b2)) {
-            b1.syncSprite();
-            b2.syncSprite();
+    testPolygonCircle: function(polygon, circle, response) {
+        var circlePos = T_VECTORS.pop().copy(circle.position).sub(polygon.position),
+            radius = circle.radius,
+            radius2 = radius * radius,
+            points = polygon.points,
+            len = points.length,
+            edge = T_VECTORS.pop(),
+            point = T_VECTORS.pop();
+
+        // For each edge in the polygon
+        for (var i = 0; i < len; i++) {
+            var next = i === len - 1 ? 0 : i + 1,
+                prev = i === 0 ? len - 1 : i - 1,
+                overlap = 0,
+                overlapN = null,
+                dist, distAbs;
+
+            // Get the edge
+            edge.copy(polygon.edges[i]);
+
+            // Calculate the center of the circle relative to the starting point of the edge
+            point.copy(circlePos).sub(points[i]);
+
+            // If the distance between the center of the circle and the point
+            // is bigger than the radius, the polygon is definitely not fully in
+            // the circle.
+            if (response && point.len2() > radius2) {
+                response.aInB = false;
+            }
+
+            // Calculate which Vornoi region the center of the circle is in.
+            var region = this.vornoiRegion(edge, point);
+            if (region === Physics.VORONOI_REGION.LEFT) {
+                // Need to make sure we're in the VORNOI_REGION.RIGHT of the previous edge.
+                edge.copy(polygon.edges[prev]);
+
+                // Calculate the center of the circle relative the starting point of the previous edge
+                var point2 = T_VECTORS.pop().copy(circlePos).sub(points[prev]);
+
+                region = this.vornoiRegion(edge, point2);
+                if (region === Physics.VORONOI_REGION.RIGHT) {
+                    // It's in the region we want.  Check if the circle intersects the point.
+                    dist = point.length();
+
+                    // No intersection
+                    if (dist > radius) {
+                        T_VECTORS.push(circlePos);
+                        T_VECTORS.push(edge);
+                        T_VECTORS.push(point);
+                        T_VECTORS.push(point2);
+                        return false;
+                    }
+                    // It intersects, calculate the overlap
+                    else if (response) {
+                        response.bInA = false;
+                        overlapN = point.normalize();
+                        overlap = radius - dist;
+                    }
+                }
+                T_VECTORS.push(point2);
+            } else if (region === Physics.VORONOI_REGION.RIGHT) {
+                // Need to make sure we're in the left region on the next edge
+                edge.copy(polygon.edges[next]);
+
+                // Calculate the center of the circle relative to the starting point of the next edge
+                point.copy(circlePos).sub(points[next]);
+
+                region = this.vornoiRegion(edge, point);
+                if (region === Physics.VORONOI_REGION.LEFT) {
+                    // It's in the region we want.  Check if the circle intersects the point.
+                    dist = point.length();
+
+                    // No intersection
+                    if (dist > radius) {
+                        T_VECTORS.push(circlePos);
+                        T_VECTORS.push(edge);
+                        T_VECTORS.push(point);
+                        return false;
+                    }
+                    // It intersects, calculate the overlap
+                    else if (response) {
+                        response.bInA = false;
+                        overlapN = point.normalize();
+                        overlap = radius - dist;
+                    }
+                }
+                // MIDDLE_VORNOI_REGION
+            } else {
+                // Need to check if the circle is intersecting the edge,
+                // Change the edge into its "edge normal".
+                var normal = edge.perp().normalize();
+
+                // Find the perpendicular distance between the center of the 
+                // circle and the edge.
+                dist = point.dot(normal);
+                distAbs = math.abs(dist);
+
+                // If the circle is on the outside of the edge, there is no intersection
+                if (dist > 0 && distAbs > radius) {
+                    T_VECTORS.push(circlePos);
+                    T_VECTORS.push(normal);
+                    T_VECTORS.push(point);
+                    return false;
+                }
+                // It intersects, calculate the overlap.
+                else if (response) {
+                    overlapN = normal;
+                    overlap = radius - dist;
+
+                    // If the center of the circle is on the outside of the edge, or part of the
+                    // circle is on the outside, the circle is not fully inside the polygon.
+                    if (dist >= 0 || overlap < 2 * radius) {
+                        response.bInA = false;
+                    }
+                }
+            }
+
+            // If this is the smallest overlap we've seen, keep it. 
+            // (overlapN may be null if the circle was in the wrong Vornoi region)
+            if (overlapN && response && math.abs(overlap) < math.abs(response.overlap)) {
+                response.overlap = overlap;
+                response.overlapN.copy(overlapN);
+            }
+        }
+
+        // Calculate the final overlap vector - based on the smallest overlap.
+        if (response) {
+            response.a = polygon;
+            response.b = circle;
+            response.overlapV.copy(response.overlapN).scale(response.overlap);
+        }
+
+        T_VECTORS.push(circlePos);
+        T_VECTORS.push(edge);
+        T_VECTORS.push(point);
+
+        return true;
+    },
+    /**
+     * Check if a circle and a polygon intersect.
+     *
+     * NOTE: This runs slightly slower than polygonCircle as it just
+     * runs polygonCircle and reverses everything at the end.
+     *
+     * @param circle {Circle} The circle.
+     * @param Polygon {Polygon} The polygon.
+     * @param [response] {Collision} Collision object (optional) that will be populated if they interset.
+     * @return {Boolean} true if they intersect, false if they don't.
+     */
+    testCirclePolygon: function(circle, polygon, response) {
+        var result = this.testPolygonCircle(polygon, circle, response);
+
+        if (result && response) {
+            // Swap A and B in the response.
+            var a = response.a,
+                aInB = response.aInB;
+
+            response.overlapN.reverse();
+            response.overlapV.reverse();
+            response.a = response.b;
+            response.b = a;
+            response.aInB = response.bInA;
+            response.bInA = aInB;
+        }
+
+        return result;
+    },
+    /**
+     * Checks whether two convex, clockwise polygons intersect.
+     *
+     * @param a {Polygon} The first polygon.
+     * @param b {Polygon} The second polygon.
+     * @param [response] {Collision} Collision object (optional) that will be populated if they interset.
+     * @return {Boolean} true if they intersect, false if they don't.
+     */
+    testPolygonPolygon: function(a, b, response) {
+        var aPoints = a.points,
+            aLen = aPoints.length,
+            bPoints = b.points,
+            bLen = bPoints.length,
+            i;
+
+        // If any of the edge normals of A is a separating axis, no intersection.
+        for (i = 0; i < aLen; i++) {
+            if (this.isSeparatingAxis(a.pos, b.pos, aPoints, bPoints, a.normals[i], response)) {
+                return false;
+            }
+        }
+
+        // If any of the edge normals of B is a separating axis, no intersection.
+        for (i = 0; i < bLen; i++) {
+            if (this.isSeparatingAxis(a.pos, b.pos, aPoints, bPoints, b.normals[i], response)) {
+                return false;
+            }
+        }
+        // Since none of the edge normals of A or B are a separating axis, there is an intersection
+        // and we've already calculated the smallest overlap (in isSeparatingAxis).  Calculate the
+        // final overlap vector.
+        if (response) {
+            response.a = a;
+            response.b = b;
+            response.overlapV.copy(response.overlapN).scale(response.overlap);
+        }
+
+        return true;
+    },
+
+    /****************************************************
+     * Utility functions
+     ****************************************************/
+    /**
+     * Flattens the specified array of points onto a unit vector axis,
+     * resulting in a one dimensional range of the minimum and
+     * maximum value on that axis.
+     *
+     * @param points {Array<Vector>} The points to flatten.
+     * @param normal {Vector} The unit vector axis to flatten on.
+     * @param [result] {Array<Number>} After calling this function,
+     *   result[0] will be the minimum value,
+     *   result[1] will be the maximum value.
+     *
+     * @return {Array} If you do not pass a `result` array, a new one is created for you
+     */
+    flattenPointsOn: function(points, normal, result) {
+        var min = Number.MAX_VALUE,
+            max = -Number.MAX_VALUE,
+            len = points.length;
+
+        for (var i = 0; i < len; ++i) {
+            //get the magnitude of the projection of the point onto the normal
+            var dot = points[i].dot(normal);
+            min = math.min(dot, min);
+            max = math.max(dot, max);
+        }
+
+        result = result || [];
+        result[0] = min;
+        result[1] = max;
+
+        return result;
+    },
+    /**
+     * Check whether two convex clockwise polygons are separated by the specified
+     * axis (must be a unit vector).
+     *
+     * @param aPos {Vector} The position of the first polygon.
+     * @param bPos {Vector} The position of the second polygon.
+     * @param aPoints {Array<Vector>} The points in the first polygon.
+     * @param bPoints {Array<Vector>} The points in the second polygon.
+     * @param axis {Vector} The axis (unit sized) to test against. The points of both polygons
+     *      will be projected onto this axis.
+     * @param [response] {Collision=} A Collision object (optional) which will be populated
+     *      if the axis is not a separating axis.
+     * @return {boolean} true if it is a separating axis, false otherwise. If false,
+     *      and a response is passed in, information about how much overlap and
+     *      the direction of the overlap will be populated.
+     */
+    isSeparatingAxis: function(aPos, bPos, aPoints, bPoints, axis, response) {
+        var rangeA = T_ARRAYS.pop(),
+            rangeB = T_ARRAYS.pop(),
+            // Get the magnitude of the offset between the two polygons
+            offsetV = T_VECTORS.pop().copy(bPos).sub(aPos),
+            projectedOffset = offsetV.dot(axis),
+            option1, option2;
+
+        // Project the polygons onto the axis.
+        this.flattenPointsOn(aPoints, axis, rangeA);
+        this.flattenPointsOn(bPoints, axis, rangeB);
+
+        // Move B's range to its position relative to A.
+        rangeB[0] += projectedOffset;
+        rangeB[1] += projectedOffset;
+
+        // Check if there is a gap. If there is, this is a separating axis and we can stop
+        if (rangeA[0] > rangeB[1] || rangeB[0] > rangeA[1]) {
+            T_VECTORS.push(offsetV);
+            T_ARRAYS.push(rangeA);
+            T_ARRAYS.push(rangeB);
 
             return true;
         }
 
-        return false;
-    },
-    _hit: function(obj1, obj2, cb) {
-        this._total++;
+        // If we're calculating a response, calculate the overlap.
+        if (response) {
+            var overlap = 0;
 
-        if(cb)
-            cb(obj1, obj2);
-    },
-    _separateX: function(b1, b2) {
-        //static bodies don't collide with eachother
-        if(b1.type === C.PHYSICS_TYPE.STATIC && b2.type === C.PHYSICS_TYPE.STATIC)
-            return false;
+            // A starts further left than B
+            if (rangeA[0] < rangeB[0]) {
+                response.aInB = false;
 
-        //delta of the two body locations
-        this._overlap = 0;
+                // A ends before B does. We have to pull A out of B
+                if (rangeA[1] < rangeB[1]) {
+                    overlap = rangeA[1] - rangeB[0];
+                    response.bInA = false;
+                }
+                // B is fully inside A.  Pick the shortest way out.
+                else {
+                    option1 = rangeA[1] - rangeB[0];
+                    option2 = rangeB[1] - rangeA[0];
 
-        var dx1 = b1.deltaX(),
-            dx2 = b2.deltaX();
-
-        //check for overlap (detect collisions)
-        if(b1.overlaps(b2)) {
-            this._maxOverlap = math.abs(dx1) + math.abs(dx2) + C.PHYSICS.OVERLAP_BIAS;
-
-            //the overlap but neither are moving
-            if(dx1 === 0 && dx2 === 0) {
-                b1.embedded = true;
-                b2.embedded = true;
-            }
-            //if they did overlap to the right
-            else if(dx1 > dx2) {
-                this._overlap = b1.right - b2.x;
-
-                //check collision flags, if touching set such
-                if((this._overlap > this._maxOverlap) || !(b1.allowCollide & C.DIRECTION.RIGHT) || !(b2.allowCollide & C.DIRECTION.LEFT)) {
-                    this._overlap = 0;
-                } else {
-                    b1.touching |= C.DIRECTION.RIGHT;
-                    b2.touching |= C.DIRECTION.LEFT;
+                    overlap = option1 < option2 ? option1 : -option2;
                 }
             }
-            //if they did overlap to the left
-            else if(dx1 < dx2) {
-                this._overlap = b1.x - b2.width - b2.x;
+            // B starts further left than A
+            else {
+                response.bInA = false;
 
-                if((-this._overlap > this._maxOverlap) || !(b1.allowCollide & C.DIRECTION.LEFT) || !(b2.allowCollide & C.DIRECTION.RIGHT)) {
-                    this._overlap = 0;
-                } else {
-                    b1.touching |= C.DIRECTION.LEFT;
-                    b2.touching |= C.DIRECTION.RIGHT;
+                // B ends before A ends. We have to push A out of B
+                if (rangeA[1] > rangeB[1]) {
+                    overlap = rangeA[0] - rangeB[1];
+                    response.aInB = false;
+                }
+                // A is fully inside B.  Pick the shortest way out.
+                else {
+                    option1 = rangeA[1] - rangeB[0];
+                    option2 = rangeB[1] - rangeA[0];
+
+                    overlap = option1 < option2 ? option1 : -option2;
+                }
+            }
+            // If this is the smallest amount of overlap we've seen so far, set it as the minimum overlap.
+            var absOverlap = math.abs(overlap);
+            if (absOverlap < response.overlap) {
+                response.overlap = absOverlap;
+                response.overlapN.copy(axis);
+
+                if (overlap < 0) {
+                    response.overlapN.reverse();
                 }
             }
         }
 
-        //adjust positions and velocity according to collisions (solve collisions)
-        if(this._overlap) {
-            b1.overlap.x = b2.overlap.x = this._overlap;
-
-            //set velocities
-            this._velocity1 = b1.velocity.x;
-            this._velocity2 = b2.velocity.x;
-
-            //static entities do not move
-            if(b1.type !== C.PHYSICS_TYPE.STATIC && b2.type !== C.PHYSICS_TYPE.STATIC) {
-                this._overlap *= 0.5;
-
-                b1.x = b1.x - this._overlap;
-                b2.x += this._overlap;
-
-                this._newVelocity1 = math.sqrt((this._velocity2 * this._velocity2 * b2.mass) / b1.mass) * ((this._velocity2 > 0) ? 1 : -1);
-                this._newVelocity2 = math.sqrt((this._velocity1 * this._velocity1 * b1.mass) / b2.mass) * ((this._velocity1 > 0) ? 1 : -1);
-                this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
-                this._newVelocity1 -= this._average;
-                this._newVelocity2 -= this._average;
-
-                b1.velocity.x = this._average + (this._newVelocity1 * b1.bounce.x);
-                b2.velocity.x = this._average + (this._newVelocity2 * b1.bounce.x);
-            }
-            //if body 1 isn't static
-            else if(b1.type !== C.PHYSICS_TYPE.STATIC) {
-                b1.x -= this._overlap;
-                b1.velocity.x = this._velocity2 - (this._velocity1 * b1.bounce.x);
-            }
-            //if body 2 isn't static
-            else if(b2.type !== C.PHYSICS_TYPE.STATIC) {
-                b2.x += this._overlap;
-                b2.velocity.x = this._velocity1 - (this._velocity2 * b2.bounce.x);
-            }
-
-            return true;
-        }
+        T_VECTORS.push(offsetV);
+        T_ARRAYS.push(rangeA);
+        T_ARRAYS.push(rangeB);
 
         return false;
     },
-    _separateY: function(b1, b2) {
-        //static bodies don't collide with eachother
-        if(b1.type === C.PHYSICS_TYPE.STATIC && b2.type === C.PHYSICS_TYPE.STATIC)
-            return false;
+    /**
+     * Calculates which Vornoi region a point is on a line segment.
+     * It is assumed that both the line and the point are relative to (0, 0)
+     *
+     *             |       (0)      |
+     *      (-1)  [0]--------------[1]  (1)
+     *             |       (0)      |
+     *
+     * @param line {Vector} The line segment.
+     * @param point {Vector} The point.
+     * @return {Number} LEFT_VORNOI_REGION (-1) if it is the left region,
+     *          MIDDLE_VORNOI_REGION (0) if it is the middle region,
+     *          RIGHT_VORNOI_REGION (1) if it is the right region.
+     */
+    vornoiRegion: function(line, point) {
+        var len2 = line.lengthSq(),
+            dp = point.dot(line);
 
-        //delta of the two body locations
-        this._overlap = 0;
-
-        var dy1 = b1.deltaY(),
-            dy2 = b2.deltaY();
-
-        //check for overlap (detect collisions)
-        if(b1.overlaps(b2)) {
-            this._maxOverlap = math.abs(dy1) + math.abs(dy2) + C.PHYSICS.OVERLAP_BIAS;
-
-            //they overlap but neither are moving
-            if(dy1 === 0 && dy2 === 0) {
-                b1.embedded = true;
-                b2.embedded = true;
-            }
-            //if they did overlap down
-            else if(dy1 > dy2) {
-                this._overlap = b1.bottom - b2.y;
-
-                //check collision flags, if touching set such
-                if((this._overlap > this._maxOverlap) || !(b1.allowCollide & C.DIRECTION.BOTTOM) || !(b2.allowCollide & C.DIRECTION.TOP)) {
-                    this._overlap = 0;
-                } else {
-                    b1.touching |= C.DIRECTION.BOTTOM;
-                    b2.touching |= C.DIRECTION.TOP;
-                }
-            }
-            //if they did overlap up
-            else if(dy1 < dy2) {
-                this._overlap = b1.y - b2.height - b2.y;
-
-                if((-this._overlap > this._maxOverlap) || !(b1.allowCollide & C.DIRECTION.TOP) || !(b2.allowCollide & C.DIRECTION.BOTTOM)) {
-                    this._overlap = 0;
-                } else {
-                    b1.touching |= C.DIRECTION.TOP;
-                    b2.touching |= C.DIRECTION.BOTTOM;
-                }
-            }
-        }
-
-        //adjust positions and velocity according to collisions (solve collisions)
-        if(this._overlap) {
-            b1.overlap.y = b2.overlap.y = this._overlap;
-
-            //set velocities
-            this._velocity1 = b1.velocity.y;
-            this._velocity2 = b2.velocity.y;
-
-            //static entities do not move
-            if(b1.type !== C.PHYSICS_TYPE.STATIC && b2.type !== C.PHYSICS_TYPE.STATIC) {
-                this._overlap *= 0.5;
-
-                b1.y = b1.y - this._overlap;
-                b2.y += this._overlap;
-
-                this._newVelocity1 = math.sqrt((this._velocity2 * this._velocity2 * b2.mass) / b1.mass) * ((this._velocity2 > 0) ? 1 : -1);
-                this._newVelocity2 = math.sqrt((this._velocity1 * this._velocity1 * b1.mass) / b2.mass) * ((this._velocity1 > 0) ? 1 : -1);
-                this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
-                this._newVelocity1 -= this._average;
-                this._newVelocity2 -= this._average;
-
-                b1.velocity.y = this._average + (this._newVelocity1 * b1.bounce.y);
-                b2.velocity.y = this._average + (this._newVelocity2 * b1.bounce.y);
-            }
-            //if body 1 isn't static
-            else if(b1.type !== C.PHYSICS_TYPE.STATIC) {
-                b1.y -= this._overlap;
-                b1.velocity.y = this._velocity2 - (this._velocity1 * b1.bounce.y);
-
-                //special case for things like being on a moving platform
-                if(b2.carry && dy1 > dy2) {
-                    b1.x += b2.deltaX();
-                }
-            }
-            //if body 2 isn't static
-            else if(b2.type !== C.PHYSICS_TYPE.STATIC) {
-                b2.y += this._overlap;
-                b2.velocity.y = this._velocity1 - (this._velocity2 * b2.bounce.y);
-
-                //special case for things like being on a moving platform
-                if(b1.carry && dy1 < dy2) {
-                    b2.x += b1.deltaX();
-                }
-            }
-
-            return true;
-        }
-
-        return false;
-    },
-    _collideSpriteVsSprite: function(sprite1, sprite2, onCollision) {
-        if(this.separate(sprite1.body, sprite2.body)) {
-            this._hit(sprite1, sprite2, onCollision);
-        }
-    },
-    _collideSpriteVsContainer: function(sprite, container, onCollision) {
-        this._potentials = this.tree.retrieve(sprite.body);
-
-        for(var i = 0, il = this._potentials.length; i < il; ++i) {
-            if(this._spriteInChain(this._potentials[i].sprite, container)) {
-                if(this.separate(sprite.body, this._potentials[i])) {
-                    this._hit(sprite, container, onCollision);
-                }
-            }
-        }
-    },
-    _collideContainerVsContainer: function(container1, container2, onCollision) {
-        if(container1.first._iNext) {
-            var node = container1.first._iNext;
-
-            do {
-                if(node instanceof Sprite)
-                    this.collideSpriteVsGroup(node, container2, onCollision);
-
-                node = node._iNext;
-            } while (node !== container1.last._iNext);
-        }
-    },
-    _spriteInChain: function(spr, container) {
-        var c = spr._container;
-
-        while(c) {
-            if(c === container)
-                return true;
-
-            c = c.parent;
-        }
-
-        return false;
+        if (dp < 0)
+            return Physics.VORONOI_REGION.LEFT;
+        else if (dp > len2)
+            return Physics.VORONOI_REGION.RIGHT;
+        else
+            return Physics.VORONOI_REGION.MIDDLE;
     }
 });
+
+Physics.VORONOI_REGION = {
+    LEFT: -1,
+    MIDDLE: 0,
+    RIGHT: 1
+};

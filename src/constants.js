@@ -44,6 +44,12 @@ module.exports = {
         ALL: 15         // 1111
     },
 
+    SHAPE: {
+        CIRCLE: 1,
+        POLYGON: 2,
+        RECTANGLE: 3
+    },
+
     PHYSICS_TYPE: {
         STATIC: 0,      //doesn't move
         KINEMATIC: 1,   //gravity doesn't effect it, and solver doesn't solve it

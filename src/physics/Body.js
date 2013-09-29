@@ -8,10 +8,17 @@ var Rectangle = require('../math/Rectangle'),
     inherit = require('../utils/inherit'),
     C = require('../constants');
 
-var Body = module.exports = function(sprite) {
+var Body = module.exports = function(sprite, shape) {
     Rectangle.call(this, sprite.position.x, sprite.position.y, sprite.width, sprite.height);
 
     this.sprite = sprite;
+    this.shape = shape || new Rectangle(0, 0, sprite.width, sprite.height);
+
+    //if it is a rectangle, just copy the values to the body which is the BB
+    //that way we don't have to do a shape check later
+    if(this.shape._shapetype === C.SHAPE.RECTANGLE) {
+        this.shape = this.shape.toPolygon();
+    }
 
     this.type = C.PHYSICS_TYPE.DYNAMIC;
     this.solveType = C.SOLVE_TYPE.DISPLACE;
@@ -24,13 +31,14 @@ var Body = module.exports = function(sprite) {
     this.offset = new Vector();
     this.maxVelocity = new Vector(10000, 10000);
 
+    /*
     this.angularVelocity = 0;
     this.angularAccel = 0;
     this.angularDrag = 0;
     this.maxAngular = 1000;
+    */
 
     this.mass = sprite.mass || 1;
-    this.rotation = 0;
     this.allowRotation = true;
 
     this.embedded = false;
@@ -41,7 +49,6 @@ var Body = module.exports = function(sprite) {
     this.touching = C.DIRECTION.NONE;
     this.wasTouching = C.DIRECTION.NONE;
 
-    this.overlap = new Vector();
     this.lastPos = new Vector();
 
     //some temp vars to prevent having to create a bunch each update
@@ -54,7 +61,7 @@ var Body = module.exports = function(sprite) {
 
 inherit(Body, Rectangle, {
     clone: function() {
-        var body = new Body(this.sprite);
+        var body = new Body(this.sprite, this.shape);
 
         body.type = this.type;
         body.solveType = this.solveType;
@@ -67,14 +74,14 @@ inherit(Body, Rectangle, {
         body.offset.copy(this.offset);
         body.maxVelocity.copy(this.maxVelocity);
 
+        /*
         body.angularVelocity = this.angularVelocity;
         body.angularAccel = this.angularAccel;
         body.angularDrag = this.angularDrag;
         body.maxAngular = this.maxAngular;
+        */
 
         body.mass = this.mass;
-        body.rotation = this.rotation;
-        body.allowRotation = this.allowRotation;
 
         body.embedded = this.embedded;
         body.carry = this.carry;
@@ -120,9 +127,11 @@ inherit(Body, Rectangle, {
         }
 
         // compute angular velocity
+        /*
         this._vDelta = (this.computeVelocity(dt, this.angularVelocity, this.angularAccel, this.angularDrag, this.maxAngular) - this.angularVelocity) / 2;
         this.angularVelocity += this._vDelta;
         this.rotation += this.angularVelocity * dt;
+        */
 
         // compute X velocity
         this._vDelta = (this.computeVelocity(dt, this.velocity.x, this.accel.x, this.drag.x, this.maxVelocity.x) - this.velocity.x) / 2;
@@ -144,21 +153,25 @@ inherit(Body, Rectangle, {
 
         this.lastPos.set(this.x, this.y);
 
-        this.rotation = this.sprite.rotation;
-
         if(this.type !== C.PHYSICS_TYPE.STATIC)
             this.updateMotion(dt, gravity);
 
-        //update sprite position/rotation
+        //update sprite/shape position
         this.syncSprite();
+        this.syncShape();
     },
     syncSprite: function() {
         this.sprite.position.x = this.x - this.offset.x + (this.sprite.anchor.x * this._width);
         this.sprite.position.y = this.y - this.offset.y + (this.sprite.anchor.y * this._height);
 
+        /*
         if(this.allowRotation) {
             this.sprite.rotation = this.rotation;
         }
+        */
+    },
+    syncShape: function() {
+        this.shape.position.copy(this.position);
     },
     deltaX: function() {
         return this.x - this.lastPos.x;

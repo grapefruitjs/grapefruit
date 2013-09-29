@@ -1,5 +1,6 @@
 var inherit = require('../utils/inherit'),
-    Vector = require('./Vector');
+    Vector = require('./Vector'),
+    C = require('../constants');
 
 /**
  * The Circle object is an area defined by its position, as indicated by its
@@ -31,6 +32,9 @@ var Circle = module.exports = function(x, y, radius) {
     //set position
     this.x = x || 0;
     this.y = y || 0;
+
+    //internal shape type
+    this._shapetype = C.SHAPE.CIRCLE;
 };
 
 inherit(Circle, Object, {
