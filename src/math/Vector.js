@@ -291,31 +291,6 @@ inherit(Vector, Object, {
         return this.multiplyScalar(-1);
     },
     /**
-     * Scale this vector.
-     * 
-     * @param x {Number} The scaling factor in the x direction.
-     * @param [y=x] {Number} The scaling factor in the y direction.  If this
-     *   is not specified, the x scaling factor will be used.
-     * @return {Vector} Returns itself
-     */
-    scale: function(x, y) {
-        this.x *= x;
-        this.y *= y || x;
-
-        return this;
-    },
-    /**
-     * Reverse this vector.
-     *
-     * @return {Vector} Returns itself
-     */
-    reverse: function() {
-        this.x = -this.x;
-        this.y = -this.y;
-
-        return this;
-    },
-    /**
      * Project this vector on to another vector.
      *
      * @param v {Vector} The vector to project onto.

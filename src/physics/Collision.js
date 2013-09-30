@@ -15,9 +15,13 @@ var Collision = module.exports = function() {
 
 inherit(Collision, Object, {
     clear: function() {
-        this.aInB = true;
-        this.bInA = true;
+        this.a = null;
+        this.b = null;
+        this.aInB = false;
+        this.bInA = false;
         this.overlap = Infinity;
+        this.overlapN.set(0, 0);
+        this.overlapV.set(0, 0);
     },
     clone: function() {
         var c = new Collision();

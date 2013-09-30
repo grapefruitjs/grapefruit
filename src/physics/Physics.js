@@ -91,10 +91,11 @@ inherit(Physics, Object, {
             pot;
 
         //update bodies and build quadtree
-        for (; i < il; ++i) {
+        for (i = 0; i < il; ++i) {
             body = bods[i];
 
             body.update(dt, this.gravity);
+            body._collided = false;
 
             if (body.allowCollide && body.sprite.visible) {
                 this.tree.insert(body);
@@ -111,9 +112,30 @@ inherit(Physics, Object, {
             for(p = 0, pl = pots.length; p < pl; ++p) {
                 pot = pots[p];
 
+                //filter yourself
+                if(pot === body)
+                    continue;
+
+                //ignore static/static collisions
+                if(body.type === C.PHYSICS_TYPE.STATIC && pot.type === C.PHYSICS_TYPE.STATIC)
+                    continue;
+
+                //ignore repeat collisions
+                if(body._collided && pot._collided)
+                    continue;
+
+                //clear previous collision value
+                this._collision.clear();
+
+                //check for a collision between the shapes using SAT
                 if(this.checkShapeCollision(body, pot)) {
-                    if(body.sprite.onCollide(pot, this._collision.clone()) !== false) {
+                    //if they do collide, run user callbacks so they can override if they want
+                    if(body.sprite.onCollide(pot.sprite, this._collision.clone()) !== false && pot.sprite.onCollide(body.sprite, this._collision.clone()) !== false) {
+                        //if neither override then mark both as collided and solve
+                        body._collided = true;
+                        pot._collided = true;
                         this.solveCollision(body, pot);
+                        break;
                     }
                 }
             }
@@ -124,8 +146,11 @@ inherit(Physics, Object, {
             ov = col.overlapV;
 
         //separate bodies
-        this._separate(b1, b2, ov.x, 'x');
-        this._separate(b1, b2, ov.y, 'y');
+        if(ov.x)
+            this._separate(b1, b2, ov.x, 'x');
+
+        if(ov.y)
+            this._separate(b1, b2, ov.y, 'y');
 
         //special case for things that carry stuff (like moving platforms)
         if(b2.carry && (b1.touching & C.DIRECTION.BOTTOM)) {
@@ -133,6 +158,13 @@ inherit(Physics, Object, {
         } else if(b1.carry && (b2.touching & C.DIRECTION.BOTTOM)) {
             b2.x += b1.deltaX();
         }
+
+        //sync sprites and shapes
+        b1.syncSprite();
+        b1.syncShape();
+
+        b2.syncSprite();
+        b2.syncShape();
     },
     _separate: function(b1, b2, over, ax) {
         var v1 = b1.velocity[ax],
@@ -175,22 +207,22 @@ inherit(Physics, Object, {
         if(b1.shape._shapetype === C.SHAPE.CIRCLE) {
             //circle-circle check
             if(b2.shape._shapetype === C.SHAPE.CIRCLE) {
-                hit = this.testCircleCircle(b1, b2, this._collision);
+                hit = this.testCircleCircle(b1.shape, b2.shape, this._collision);
             }
             //circle-polygon check
             else {
-                hit = this.testCirclePolygon(b1, b2, this._collision);
+                hit = this.testCirclePolygon(b1.shape, b2.shape, this._collision);
             }
         }
         //otherwise a polygon
         else {
             //polygon-circle check
             if(b2.shape._shapetype === C.SHAPE.CIRCLE) {
-                hit = this.testPolygonCircle(b1, b2, this._collision);
+                hit = this.testPolygonCircle(b1.shape, b2.shape, this._collision);
             }
             //polygon-polygon check
             else {
-                hit = this.testPolygonPolygon(b1, b2, this._collision);
+                hit = this.testPolygonPolygon(b1.shape, b2.shape, this._collision);
             }
         }
 
@@ -319,7 +351,7 @@ inherit(Physics, Object, {
             response.b = b;
             response.overlap = totalRadius - dist;
             response.overlapN.copy(differenceV.normalize());
-            response.overlapV.copy(differenceV).scale(response.overlap);
+            response.overlapV.copy(differenceV).multiplyScalar(response.overlap);
             response.aInB = a.r <= b.r && dist <= b.r - a.r;
             response.bInA = b.r <= a.r && dist <= a.r - b.r;
         }
@@ -465,7 +497,7 @@ inherit(Physics, Object, {
         if (response) {
             response.a = polygon;
             response.b = circle;
-            response.overlapV.copy(response.overlapN).scale(response.overlap);
+            response.overlapV.copy(response.overlapN).multiplyScalar(response.overlap);
         }
 
         T_VECTORS.push(circlePos);
@@ -493,8 +525,8 @@ inherit(Physics, Object, {
             var a = response.a,
                 aInB = response.aInB;
 
-            response.overlapN.reverse();
-            response.overlapV.reverse();
+            response.overlapN.negate();
+            response.overlapV.negate();
             response.a = response.b;
             response.b = a;
             response.aInB = response.bInA;
@@ -520,14 +552,14 @@ inherit(Physics, Object, {
 
         // If any of the edge normals of A is a separating axis, no intersection.
         for (i = 0; i < aLen; i++) {
-            if (this.isSeparatingAxis(a.pos, b.pos, aPoints, bPoints, a.normals[i], response)) {
+            if (this.isSeparatingAxis(a.position, b.position, aPoints, bPoints, a.normals[i], response)) {
                 return false;
             }
         }
 
         // If any of the edge normals of B is a separating axis, no intersection.
         for (i = 0; i < bLen; i++) {
-            if (this.isSeparatingAxis(a.pos, b.pos, aPoints, bPoints, b.normals[i], response)) {
+            if (this.isSeparatingAxis(a.position, b.position, aPoints, bPoints, b.normals[i], response)) {
                 return false;
             }
         }
@@ -537,7 +569,7 @@ inherit(Physics, Object, {
         if (response) {
             response.a = a;
             response.b = b;
-            response.overlapV.copy(response.overlapN).scale(response.overlap);
+            response.overlapV.copy(response.overlapN).multiplyScalar(response.overlap);
         }
 
         return true;
@@ -663,7 +695,7 @@ inherit(Physics, Object, {
                 response.overlapN.copy(axis);
 
                 if (overlap < 0) {
-                    response.overlapN.reverse();
+                    response.overlapN.negate();
                 }
             }
         }
