@@ -132,7 +132,7 @@ var Sprite = module.exports = function(anims, speed, start) {
     this.body = new Body(this);
 
     //start playing
-    this.goto(0, this.currentAnimation);
+    this.goto(0, this.currentAnimation).play();
 };
 
 inherit(Sprite, PIXI.Sprite, {
@@ -220,6 +220,11 @@ inherit(Sprite, PIXI.Sprite, {
      * @param [name] {String} The string name of the animation to go to
      */
     goto: function(frame, anim) {
+        if(typeof frame === 'string') {
+            anim = frame;
+            frame = 0;
+        }
+
         this.currentFrame = frame || 0;
         this.lastRound = math.round(frame || 0);
 
@@ -303,7 +308,7 @@ inherit(Sprite, PIXI.Sprite, {
         }
         else {
             if(loop) {
-                this.gotoAndPlay(0);
+                this.goto(0);
             } else {
                 this.stop();
                 this.emit('complete', this.currentAnimation);

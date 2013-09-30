@@ -208,8 +208,8 @@ inherit(ObjectGroup, Container, {
                 }
 
                 if(props.animation || props.tileprops.animation) {
-                    if(obj.gotoAndPlay) {
-                        obj.gotoAndPlay(props.animation || props.tileprops.animation);
+                    if(obj.goto) {
+                        obj.goto(0, props.animation || props.tileprops.animation).play();
                     }
                 }
 
