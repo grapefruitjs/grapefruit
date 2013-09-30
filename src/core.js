@@ -113,6 +113,9 @@ module.exports = {
     SpritePool:     require('./utils/SpritePool'),
     ObjectFactory:  require('./utils/ObjectFactory'),
 
+    //plugin
+    plugin: require('./plugin'),
+
     //vendor files
     PIXI:   require('./vendor/pixi')
 };
