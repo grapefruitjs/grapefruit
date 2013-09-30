@@ -303,7 +303,7 @@ inherit(Sprite, PIXI.Sprite, {
         }
         else {
             if(loop) {
-                this.gotoAndPlay(0);
+                this.goto(0).play();
             } else {
                 this.stop();
                 this.emit('complete', this.currentAnimation);
