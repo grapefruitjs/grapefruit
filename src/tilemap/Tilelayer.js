@@ -372,8 +372,8 @@ inherit(Tilelayer, Container, {
         tile.position.y = position[1];
 
         if(props.mass) {
-            this.state.physics.addSprite(tile);
             tile.body.type = C.PHYSICS_TYPE.STATIC;
+            this.state.physics.addSprite(tile);
         }
 
         //pass through all events
