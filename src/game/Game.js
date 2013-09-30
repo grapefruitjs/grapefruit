@@ -332,6 +332,8 @@ inherit(Game, Object, {
      * @private
      */
     _tick: function() {
+        this.timings.tickStart = this.clock.now();
+
         //start render loop
         window.requestAnimFrame(this._tick.bind(this));
 
@@ -362,6 +364,8 @@ inherit(Game, Object, {
         this.timings.renderStart = this.clock.now();
         this.renderer.render(this.stage);
         this.timings.renderEnd = this.clock.now();
+
+        this.timings.tickEnd = this.clock.now();
     }
 });
 
