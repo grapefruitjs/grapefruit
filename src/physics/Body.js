@@ -161,8 +161,8 @@ inherit(Body, Rectangle, {
         this.syncShape();
     },
     syncSprite: function() {
-        this.sprite.position.x = this.x - this.offset.x + (this.sprite.anchor.x * this._width);
-        this.sprite.position.y = this.y - this.offset.y + (this.sprite.anchor.y * this._height);
+        this.sprite.position.x = math.round(this.x - this.offset.x + (this.sprite.anchor.x * this._width));
+        this.sprite.position.y = math.round(this.y - this.offset.y + (this.sprite.anchor.y * this._height));
 
         /*
         if(this.allowRotation) {
