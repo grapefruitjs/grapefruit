@@ -1,9 +1,13 @@
 //var Rectangle = module.exports = require('../vendor/pixi').Rectangle;
 
-var inherit = require('../utils/inherit');
+var inherit = require('../utils/inherit'),
+    Polygon = require('./Polygon'),
+    Vector = require('./Vector'),
+    C = require('../constants');
 
 /**
- * the Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its width and its height.
+ * The Rectangle object is an area defined by its position, as indicated by its
+ * top-left corner point (x, y) and by its width and its height.
  *
  * @class Rectangle
  * @constructor 
@@ -14,17 +18,14 @@ var inherit = require('../utils/inherit');
  */
 var Rectangle = module.exports = function(x, y, width, height) {
     /**
-     * @property x
-     * @type Number
+     * @property position
+     * @type Vector
      * @default 0
      */
-    this.x = x || 0;
+    this.position = new Vector();
 
-    /**
-     * @property y
-     * @type Number
-     * @default 0
-     */
+    //set positon
+    this.x = x || 0;
     this.y = y || 0;
 
     /**
@@ -56,6 +57,9 @@ var Rectangle = module.exports = function(x, y, width, height) {
      * @default 0
      */
     this.halfHeight = this._height / 2;
+
+    //internal shape type
+    this._shapetype = C.SHAPE.RECTANGLE;
 };
 
 inherit(Rectangle, Object, {
@@ -93,13 +97,68 @@ inherit(Rectangle, Object, {
         return false;
     },
 
+    /**
+     * Checks if this rectangle overlaps another
+     *
+     * @method contains
+     * @param rect {Rectangle} The rectangle to check if this overlaps
+     * @return {Boolean} if the rectangle overlaps
+     */
     overlaps: function(rect) {
         return this.right > rect.x &&
                 this.x < rect.right &&
                 this.bottom > rect.y &&
                 this.y < rect.bottom;
+    },
+
+    /**
+     * Returns a polygon from this rectangle's points
+     *
+     * @method toPolygon
+     * @return {Polygon}
+     */
+    toPolygon: function() {
+        return new Polygon(this.x, this.y, [
+            new Vector(), //top-left
+            new Vector(this.width, 0), //top-right
+            new Vector(this.width, this.height), //bottom-right
+            new Vector(0, this.height) //bottom-left
+        ]);
     }
 });
+
+/**
+ * The top-left X coord of the rectangle
+ *
+ * @property x
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Rectangle.prototype, 'x', {
+    get: function() {
+        return this.position.x;
+    },
+    set: function(v) {
+        this.position.x = v;
+    }
+});
+
+/**
+ * The top-left Y coord of the rectangle
+ *
+ * @property y
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Rectangle.prototype, 'y', {
+    get: function() {
+        return this.position.y;
+    },
+    set: function(v) {
+        this.position.y = v;
+    }
+});
+
 
 /**
  * The width of the object

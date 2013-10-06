@@ -291,6 +291,62 @@ inherit(Vector, Object, {
         return this.multiplyScalar(-1);
     },
     /**
+     * Project this vector on to another vector.
+     *
+     * @param v {Vector} The vector to project onto.
+     * @return {Vector} Returns itself
+     */
+    project: function(v) {
+        var amt = this.dot(v) / v.len2();
+        this.x = amt * v.x;
+        this.y = amt * v.y;
+
+        return this;
+    },
+    /**
+     * Project this vector onto a vector of unit length.
+     *
+     * @param v {Vector} The unit vector to project onto.
+     * @return {Vector} Returns itself
+     */
+    projectN: function(v) {
+        var amt = this.dot(v);
+        this.x = amt * v.x;
+        this.y = amt * v.y;
+
+        return this;
+    },
+    /**
+     * Reflect this vector on an arbitrary axis.
+     *
+     * @param axis {Vector} The vector representing the axis.
+     * @return {Vector} Returns itself
+     */
+    reflect: function(axis) {
+        var x = this.x;
+        var y = this.y;
+        this.project(axis).scale(2);
+        this.x -= x;
+        this.y -= y;
+
+        return this;
+    },
+    /**
+     * Reflect this vector on an arbitrary axis (represented by a unit vector)
+     *
+     * @param axis {Vector} The unit vector representing the axis.
+     * @return {Vector} Returns itself
+     */
+    reflectN: function(axis) {
+        var x = this.x;
+        var y = this.y;
+        this.projectN(axis).scale(2);
+        this.x -= x;
+        this.y -= y;
+
+        return this;
+    },
+    /**
      * Performs the dot product between this vector and the passed one and returns the result
      *
      * @method dot
@@ -375,6 +431,18 @@ inherit(Vector, Object, {
     lerp: function(v, alpha) {
         this.x += (v.x - this.x) * alpha;
         this.y += (v.y - this.y) * alpha;
+
+        return this;
+    },
+    /**
+     * Rotates the vector by 90 degrees
+     *
+     * @return {Vector} Returns itself
+     */
+    perp: function() {
+        var x = this.x;
+        this.x = this.y;
+        this.y = -x;
 
         return this;
     },

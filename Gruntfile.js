@@ -1,20 +1,20 @@
 module.exports = function(grunt) {
     var glob = require('glob'),
-        source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; }),
-        banner = [
-            '/**',
-            ' * @license',
-            ' * <%= pkg.longName %> - v<%= pkg.version %>',
-            ' * Copyright (c) 2012, Chad Engler',
-            ' * <%= pkg.homepage %>',
-            ' *',
-            ' * Compiled: <%= grunt.template.today("yyyy-mm-dd") %>',
-            ' *',
-            ' * <%= pkg.longName %> is licensed under the <%= pkg.license %> License.',
-            ' * <%= pkg.licenseUrl %>',
-            ' */',
-            ''
-        ].join('\n');
+        source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; });
+        //banner = [
+        //    '/**',
+        //    ' * @license',
+        //    ' * <%= pkg.longName %> - v<%= pkg.version %>',
+        //    ' * Copyright (c) 2012, Chad Engler',
+        //    ' * <%= pkg.homepage %>',
+        //    ' *',
+        //    ' * Compiled: <%= grunt.template.today("yyyy-mm-dd") %>',
+        //    ' *',
+        //    ' * <%= pkg.longName %> is licensed under the <%= pkg.license %> License.',
+        //    ' * <%= pkg.licenseUrl %>',
+        //    ' */',
+        //    ''
+        //].join('\n');
 
     //Project Configuration
     grunt.initConfig({
