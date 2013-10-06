@@ -63,8 +63,7 @@ module.exports = {
 
     PHYSICS: {
         MAX_QUAD_OBJECTS: 10,   //max number of objects before a quadrant splits in the physics quad tree
-        MAX_QUAD_LEVELS: 4,     //max levels deep the physics quad tree can go
-        OVERLAP_BIAS: 4         //a bias to add to the maximum overlap value
+        MAX_QUAD_LEVELS: 5      //max levels deep the physics quad tree can go
     },
 
     PARTICLES: {
