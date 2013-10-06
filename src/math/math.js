@@ -60,6 +60,22 @@ var math = module.exports = {
      */
     sqrt: Math.sqrt,
     /**
+     * Returns the min of the values passed
+     *
+     * @method min
+     * @param num* {Number...}
+     * @return {Number} The min value
+     */
+    min: Math.min,
+    /**
+     * Returns the max of the values passed
+     *
+     * @method max
+     * @param num* {Number...}
+     * @return {Number} The max value
+     */
+    max: Math.max,
+    /**
      * Quickly rounds a number. This is about twice as fast as Math.round()
      *
      * @method round

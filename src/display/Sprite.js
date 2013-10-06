@@ -131,8 +131,8 @@ var Sprite = module.exports = function(anims, speed, start) {
 
     this.body = new Body(this);
 
-    //start playing
-    this.goto(0, this.currentAnimation).play();
+    //show first frame
+    this.goto(0, this.currentAnimation);
 };
 
 inherit(Sprite, PIXI.Sprite, {
@@ -314,6 +314,20 @@ inherit(Sprite, PIXI.Sprite, {
                 this.emit('complete', this.currentAnimation);
             }
         }
+    },
+    /**
+     * Called whenever a collision occurs
+     *
+     * @method onCollide
+     * @param sprite {Sprite} The sprite that you collide with
+     * @param collision {Collision} Collision data object that contains
+     *      information about the intersection
+     * @return {Boolean} If you return `false` explicitly the engine will *not*
+     *      solve the collision. In this way you can make thing "not collide" if
+     *      you don't want their types to collide.
+     */
+    onCollide: function() {
+        /* To be overriden */
     }
 });
 

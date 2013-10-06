@@ -44,6 +44,12 @@ module.exports = {
         ALL: 15         // 1111
     },
 
+    SHAPE: {
+        CIRCLE: 1,
+        POLYGON: 2,
+        RECTANGLE: 3
+    },
+
     PHYSICS_TYPE: {
         STATIC: 0,      //doesn't move
         KINEMATIC: 1,   //gravity doesn't effect it, and solver doesn't solve it
@@ -57,8 +63,7 @@ module.exports = {
 
     PHYSICS: {
         MAX_QUAD_OBJECTS: 10,   //max number of objects before a quadrant splits in the physics quad tree
-        MAX_QUAD_LEVELS: 4,     //max levels deep the physics quad tree can go
-        OVERLAP_BIAS: 4         //a bias to add to the maximum overlap value
+        MAX_QUAD_LEVELS: 5      //max levels deep the physics quad tree can go
     },
 
     PARTICLES: {
