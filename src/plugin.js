@@ -7,7 +7,7 @@
  * @extends Object
  * @namespace gf
  */
-var plugin = module.exports = {
+var plugin = {
     /**
      * Patches a core function with a new one. The function you override with has a special property
      * called `this._super` which is a reference to the function you are overriding.
@@ -64,11 +64,13 @@ var plugin = module.exports = {
      */
     register: function(plugin, name) {
         //ensure we don't overrite a name
-        if(gf[name]) {
+        if(window.gf[name]) {
             throw 'Grapefruit: Unable to register plugin: "' + name + '" already exists in the gf namespace, please choose something else!';
         }
 
         //store the plugin in the namespace
-        gf[name] = plugin;
+        window.gf[name] = plugin;
     }
 };
+
+module.exports = plugin;
