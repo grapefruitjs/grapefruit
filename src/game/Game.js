@@ -269,6 +269,7 @@ inherit(Game, Object, {
         }
 
         this.offset = utils.getOffset(this.canvas);
+        this.renderMethod = method;
 
         return render;
     },
