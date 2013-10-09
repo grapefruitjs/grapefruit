@@ -1,5 +1,5 @@
 var inherit = require('../utils/inherit'),
-    Vector = require('./Vector'),
+    Vector = require('../math/Vector'),
     C = require('../constants');
 
 /**

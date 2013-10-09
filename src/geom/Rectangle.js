@@ -2,7 +2,7 @@
 
 var inherit = require('../utils/inherit'),
     Polygon = require('./Polygon'),
-    Vector = require('./Vector'),
+    Vector = require('../math/Vector'),
     C = require('../constants');
 
 /**
