@@ -145,6 +145,10 @@ inherit(Physics, Object, {
         var col = this._collision,
             ov = col.overlapV;
 
+        //sensor bodies are only for detection, not to be solved
+        if(b1.sensor || b2.sensor)
+            return;
+
         //separate bodies
         if(ov.x)
             this._separate(b1, b2, ov.x, 'x');

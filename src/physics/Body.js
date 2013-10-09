@@ -39,10 +39,10 @@ var Body = module.exports = function(sprite, shape) {
     */
 
     this.mass = sprite.mass || 1;
-    this.allowRotation = true;
+    //this.allowRotation = true;
 
-    this.embedded = false;
     this.carry = false;
+    this.sensor = false;
 
     //touching/allowCollide directional flags
     this.allowCollide = C.DIRECTION.ALL;
