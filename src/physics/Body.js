@@ -2,7 +2,7 @@
 // Phaser: https://github.com/photonstorm/phaser 
 // ChipmunkJS: https://github.com/josephg/Chipmunk-js
 
-var Rectangle = require('../math/Rectangle'),
+var Rectangle = require('../geom/Rectangle'),
     Vector = require('../math/Vector'),
     math = require('../math/math'),
     inherit = require('../utils/inherit'),

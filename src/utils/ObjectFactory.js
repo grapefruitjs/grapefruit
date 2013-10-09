@@ -2,7 +2,7 @@ var inherit = require('./inherit'),
     GuiItem = require('../gui/GuiItem'),
     Sprite = require('../display/Sprite'),
     Tilemap = require('../tilemap/Tilemap'),
-    Rectangle = require('../math/Rectangle'),
+    Rectangle = require('../geom/Rectangle'),
     BitmapText = require('../text/BitmapText'),
     C = require('../constants');
 

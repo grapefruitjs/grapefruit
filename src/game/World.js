@@ -1,6 +1,6 @@
 var inherit = require('../utils/inherit'),
     Container = require('../display/Container'),
-    Rectangle = require('../math/Rectangle'),
+    Rectangle = require('../geom/Rectangle'),
     ObjectFactory = require('../utils/ObjectFactory'),
     ParticleSystem = require('../particles/ParticleSystem');
 
