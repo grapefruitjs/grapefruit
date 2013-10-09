@@ -26,6 +26,14 @@ var StateManager = module.exports = function(game) {
      */
     this.active = null;
 
+    /**
+     * The count of states in this manager
+     *
+     * @property count
+     * @type Number
+     */
+    this.count = 0;
+
     //create a default state
     this._createDefault();
 };
@@ -57,6 +65,8 @@ inherit(StateManager, Object, {
         if(enable)
             this.enable(state);
 
+        this.count++;
+
         return state;
     },
     remove: function(state) {
@@ -67,6 +77,8 @@ inherit(StateManager, Object, {
             state.parent.removeChild(state);
 
         delete this.states[state.name];
+
+        this.count--;
 
         return this;
     },
