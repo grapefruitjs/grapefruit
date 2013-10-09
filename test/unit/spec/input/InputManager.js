@@ -1,3 +1,2 @@
-define(function() {
-    Q.module('InputManager');
+describe('InputManager', function() {
 });

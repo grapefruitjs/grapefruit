@@ -1,3 +1,2 @@
-define(function() {
-    Q.module('Input');
+describe('Input', function() {
 });

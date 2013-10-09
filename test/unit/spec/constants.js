@@ -1,0 +1,58 @@
+describe('constants', function() {
+    it('should export correct constant values', function() {
+        //renderer types
+        gf.RENDERER.AUTO.should.equal('auto');
+        gf.RENDERER.CANVAS.should.equal('canvas');
+        gf.RENDERER.WEBGL.should.equal('webgl');
+
+        //file format types
+        gf.FILE_FORMAT.JSON.should.equal(0);
+        gf.FILE_FORMAT.XML.should.equal(1);
+        gf.FILE_FORMAT.CSV.should.equal(2);
+
+        //atlas format types
+        gf.ATLAS_FORMAT.JSON_ARRAY.should.equal(0);
+        gf.ATLAS_FORMAT.JSON_HASH.should.equal(1);
+        gf.ATLAS_FORMAT.STARLING_XML.should.equal(2);
+
+        //camera follow values
+        gf.CAMERA_FOLLOW.PLATFORMER.should.equal(0);
+        gf.CAMERA_FOLLOW.TOPDOWN.should.equal(1);
+        gf.CAMERA_FOLLOW.TOPDOWN_TIGHT.should.equal(2);
+        gf.CAMERA_FOLLOW.LOCKON.should.equal(3);
+
+        //axis flags
+        gf.AXIS.NONE.should.equal(0);
+        gf.AXIS.HORIZONTAL.should.equal(1);
+        gf.AXIS.VERTICAL.should.equal(2);
+        gf.AXIS.BOTH.should.equal(gf.AXIS.HORIZONTAL | gf.AXIS.VERTICAL);
+
+        //Directional Flags
+        gf.DIRECTION.NONE.should.equal(0);
+        gf.DIRECTION.LEFT.should.equal(1);
+        gf.DIRECTION.RIGHT.should.equal(2);
+        gf.DIRECTION.TOP.should.equal(4);
+        gf.DIRECTION.BOTTOM.should.equal(8);
+        gf.DIRECTION.ALL.should.equal(
+            gf.DIRECTION.LEFT | gf.DIRECTION.RIGHT |
+            gf.DIRECTION.TOP | gf.DIRECTION.BOTTOM
+        );
+
+        //types of shapes for quick shape test checking in physics
+        gf.SHAPE.CIRCLE.should.equal(1);
+        gf.SHAPE.POLYGON.should.equal(2);
+        gf.SHAPE.RECTANGLE.should.equal(3);
+
+        //types of physics bodies
+        gf.PHYSICS_TYPE.STATIC.should.equal(0);
+        gf.PHYSICS_TYPE.KINEMATIC.should.equal(1);
+        gf.PHYSICS_TYPE.DYNAMIC.should.equal(2);
+
+        //some constants that control how physics work
+        gf.PHYSICS.MAX_QUAD_OBJECTS.should.equal(10);
+        gf.PHYSICS.MAX_QUAD_LEVELS.should.equal(5);
+
+        //some constants that control how particles work
+        gf.PARTICLES.MAX_PARTICLES.should.equal(100);
+    });
+});

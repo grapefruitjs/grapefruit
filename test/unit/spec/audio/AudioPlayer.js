@@ -1,3 +1,2 @@
-define(function() {
-    Q.module('AudioPlayer');
+describe('AudioPlayer', function() {
 });

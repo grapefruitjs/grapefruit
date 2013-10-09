@@ -1,3 +1,2 @@
-define(function() {
-    Q.module('Loader');
+describe('Loader', function() {
 });

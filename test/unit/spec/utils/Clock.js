@@ -1,3 +1,2 @@
-define(function() {
-    Q.module('Clock');
+describe('Clock', function() {
 });

@@ -1,3 +1,2 @@
-define(function() {
-    Q.module('Keyboard');
+describe('Keyboard', function() {
 });
