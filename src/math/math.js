@@ -333,30 +333,22 @@ var math = module.exports = {
             return function(ary) {
                 ary = ary || new Uint8Array(16);
 
-                var len = ary.length || 16,
-                    check,
-                    mask;
+                //get a view into the buffer that we *know* is Uint8
+                var buf = ary.buffer,
+                    len = buf.byteLength,
+                    view = new Uint8Array(buf);
 
-                //get the correct size constraints for this array
-                if(!ary.BYTES_PER_ELEMENT || ary.BYTES_PER_ELEMENT === 1) {
-                    check = 0x03;
-                    mask = 0xff;
-                } else if(ary.BYTES_PER_ELEMENT === 2) {
-                    check = 0x01;
-                    mask = 0xffff;
-                } else if(ary.BYTES_PER_ELEMENT === 4) {
-                    check = 0x00;
-                    mask = 0xffffffff;
-                }
-
+                //fill the array one random byte at a time
                 for(var i = 0, r; i < len; ++i) {
-                    if((i & check) === 0) {
+                    //we only need a new random when we have pulled all the bytes out of it
+                    if((i & 0x03) === 0) {
                         r = Math.random() * 0x100000000;
                     }
 
-                    ary[i] = r >>> ((i & check) << check) & mask;
+                    view[i] = r >>> ((i & 0x03) << 3) & 0xff;
                 }
 
+                //return the original view which now has the data we put into the buffer
                 return ary;
             };
         }
