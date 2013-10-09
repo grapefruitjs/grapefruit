@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <title>tests</title>
+        <link href="/node_modules/mocha/mocha.css" media="screen" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <!-- Required for browser reporter -->
+        <div id="mocha"></div>
+
+        <!-- Include mocha scripts -->
+        <script src="/node_modules/mocha/mocha.js"></script>
+        <script src="js/should.js"></script>
+        <script>
+            mocha.setup('bdd');
+        </script>
+
+        <!-- Include tests -->
+        <script src="spec/core.js"></script>
+
+        <!-- Run tests -->
+        <script>
+            if (window.mochaPhantomJS) {
+                mochaPhantomJS.run();
+            }
+            else {
+                mocha.run();
+            }
+        </script>
+    </body>
+</html>

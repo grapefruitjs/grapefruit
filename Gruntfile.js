@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
     var glob = require('glob'),
-        source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; });
+        source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; }),
+        testPort = grunt.option('port-test') || 9002;
         //banner = [
         //    '/**',
         //    ' * @license',
@@ -60,7 +61,7 @@ module.exports = function(grunt) {
         connect: {
             test: {
                 options: {
-                    port: grunt.option('port-test') || 9002,
+                    port: testPort,
                     base: './',
                     keepalive: true
                 }
@@ -104,6 +105,25 @@ module.exports = function(grunt) {
                     noRootExports: false
                 }
             }
+        },
+        mocha_phantomjs: {
+            dist: {
+                options: {
+                    reporter: 'spec',
+                    urls: [
+                        'http://localhost:' + testPort + '/test/unit/index.html'
+                    ]
+                }
+            },
+            xunit: {
+                options: {
+                    reporter: 'xunit',
+                    output: 'test/result/unit.xml',
+                    urls: [
+                        'http://localhost:' + testPort + '/test/unit/index.html'
+                    ]
+                }
+            }
         }
     });
 
@@ -111,6 +131,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
+    grunt.loadNpmTasks('grunt-mocha-phantomjs');
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-urequire');
 
