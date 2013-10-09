@@ -3,28 +3,97 @@
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
         <title>tests</title>
-        <link href="/node_modules/mocha/mocha.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="../../node_modules/mocha/mocha.css" media="screen" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <!-- Required for browser reporter -->
         <div id="mocha"></div>
 
         <!-- Include mocha scripts -->
-        <script src="/node_modules/mocha/mocha.js"></script>
-        <script src="js/should.js"></script>
+        <script src="../../node_modules/mocha/mocha.js"></script>
         <script>
             mocha.setup('bdd');
         </script>
 
+        <!-- Include should.js -->
+        <script src="js/should.js"></script>
+
+        <!-- Include grapefruit build -->
+        <script src="../../build/gf.js"></script>
+
         <!-- Include tests -->
+        <script src="spec/constants.js"></script>
         <script src="spec/core.js"></script>
+        <script src="spec/plugin.js"></script>
+
+        <script src="spec/audio/AudioManager.js"></script>
+        <script src="spec/audio/AudioPlayer.js"></script>
+
+        <script src="spec/camera/Camera.js"></script>
+
+        <script src="spec/display/BaseTexture.js"></script>
+        <script src="spec/display/Container.js"></script>
+        <script src="spec/display/Graphics.js"></script>
+        <script src="spec/display/RenderTexture.js"></script>
+        <script src="spec/display/Sprite.js"></script>
+        <script src="spec/display/Texture.js"></script>
+        <script src="spec/display/TilingSprite.js"></script>
+
+        <script src="spec/game/Game.js"></script>
+        <script src="spec/game/State.js"></script>
+        <script src="spec/game/StateManager.js"></script>
+        <script src="spec/game/World.js"></script>
+
+        <script src="spec/geom/Circle.js"></script>
+        <script src="spec/geom/Ellipse.js"></script>
+        <script src="spec/geom/Polygon.js"></script>
+        <script src="spec/geom/Rectangle.js"></script>
+
+        <script src="spec/gui/GuiItem.js"></script>
+
+        <script src="spec/input/Gamepad.js"></script>
+        <script src="spec/input/Input.js"></script>
+        <script src="spec/input/InputManager.js"></script>
+        <script src="spec/input/Keyboard.js"></script>
+        <script src="spec/input/Pointers.js"></script>
+
+        <script src="spec/loader/Loader.js"></script>
+
+        <script src="spec/math/Matrix.js"></script>
+        <script src="spec/math/QuadTree.js"></script>
+        <script src="spec/math/Vector.js"></script>
+        <script src="spec/math/math.js"></script>
+
+        <script src="spec/particles/ParticleEmitter.js"></script>
+        <script src="spec/particles/ParticleSystem.js"></script>
+
+        <script src="spec/physics/Body.js"></script>
+        <script src="spec/physics/Collision.js"></script>
+        <script src="spec/physics/Physics.js"></script>
+
+        <script src="spec/text/BitmapText.js"></script>
+        <script src="spec/text/Text.js"></script>
+
+        <script src="spec/tilemap/ObjectGroup.js"></script>
+        <script src="spec/tilemap/Tile.js"></script>
+        <script src="spec/tilemap/Tilelayer.js"></script>
+        <script src="spec/tilemap/Tilemap.js"></script>
+        <script src="spec/tilemap/Tileset.js"></script>
+
+        <script src="spec/utils/Cache.js"></script>
+        <script src="spec/utils/Clock.js"></script>
+        <script src="spec/utils/EventEmitter.js"></script>
+        <script src="spec/utils/ObjectFactory.js"></script>
+        <script src="spec/utils/ObjectPool.js"></script>
+        <script src="spec/utils/SpritePool.js"></script>
+        <script src="spec/utils/inherit.js"></script>
+        <script src="spec/utils/support.js"></script>
+        <script src="spec/utils/utils.js"></script>
 
         <!-- Run tests -->
         <script>
-            if (window.mochaPhantomJS) {
-                mochaPhantomJS.run();
-            }
-            else {
+            // If tests run in a real browser
+            if (navigator.userAgent.indexOf('PhantomJS') === -1) {
                 mocha.run();
             }
         </script>

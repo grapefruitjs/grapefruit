@@ -62,8 +62,7 @@ module.exports = function(grunt) {
             test: {
                 options: {
                     port: testPort,
-                    base: './',
-                    keepalive: true
+                    base: './'
                 }
             }
         },
@@ -109,19 +108,29 @@ module.exports = function(grunt) {
         mocha_phantomjs: {
             dist: {
                 options: {
+                    mocha: {
+                        ignoreLeaks: false,
+                    },
+                    log: true,
                     reporter: 'spec',
                     urls: [
                         'http://localhost:' + testPort + '/test/unit/index.html'
-                    ]
+                    ],
+                    run: true
                 }
             },
             xunit: {
                 options: {
+                    mocha: {
+                        ignoreLeaks: false,
+                    },
+                    log: true,
                     reporter: 'xunit',
                     output: 'test/result/unit.xml',
                     urls: [
                         'http://localhost:' + testPort + '/test/unit/index.html'
-                    ]
+                    ],
+                    run: true
                 }
             }
         }
@@ -131,12 +140,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
-    grunt.loadNpmTasks('grunt-mocha-phantomjs');
+    grunt.loadNpmTasks('grunt-mocha');
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-urequire');
 
     //setup shortcut tasks
     grunt.registerTask('default', ['jshint', 'build']);
     grunt.registerTask('build', ['urequire:dev', 'urequire:dist', 'replace:dist']);
+    grunt.registerTask('test', ['connect:test', 'mocha_phantomjs:dist']);
+    grunt.registerTask('testci', ['connect:test', 'mocha_phantomjs:xunit'])
     grunt.registerTask('docs', ['yuidoc']);
 };

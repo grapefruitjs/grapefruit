@@ -1,0 +1,2 @@
+describe('Rectangle', function() {
+});

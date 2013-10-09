@@ -1,0 +1,2 @@
+describe('Flash', function() {
+});

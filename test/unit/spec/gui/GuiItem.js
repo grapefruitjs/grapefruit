@@ -1,3 +1,2 @@
-define(function() {
-    Q.module('GuiItem');
+describe('GuiItem', function() {
 });
