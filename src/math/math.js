@@ -342,9 +342,10 @@ var math = module.exports = {
                 for(var i = 0, r; i < len; ++i) {
                     //we only need a new random when we have pulled all the bytes out of it
                     if((i & 0x03) === 0) {
-                        r = Math.random() * 0x100000000;
+                        r = math.random() * 0x100000000;
                     }
 
+                    //pull the next byte out of the random number
                     view[i] = r >>> ((i & 0x03) << 3) & 0xff;
                 }
 
