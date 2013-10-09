@@ -31,25 +31,28 @@ var plugin = {
             obj = obj.prototype;
         }
 
-        if(typeof obj[name] === 'function' && typeof fn === 'function') {
-            var _super = obj[name];
-
-            obj[name] = (function(name, fn) {
-                return function() {
-                    var tmp = this._super;
-
-                    this._super = _super;
-
-                    var ret = fn.apply(this, arguments);
-                    this._super = tmp;
-
-                    return ret;
-                };
-            })(name, fn);
+        if(typeof obj[name] !== 'function') {
+            throw new Error(name + ' is not a function in the passed object.');
         }
-        else {
-            throw (name + ' is not a function in the passed object.');
+
+        if(typeof fn !== 'function') {
+            throw new Error('The passed patch function is not a function.');
         }
+
+        var _super = obj[name];
+
+        obj[name] = (function(name, fn) {
+            return function() {
+                var tmp = this._super;
+
+                this._super = _super;
+
+                var ret = fn.apply(this, arguments);
+                this._super = tmp;
+
+                return ret;
+            };
+        })(name, fn);
     },
     /**
      * Registers a plugin into the gf namespace.
@@ -65,7 +68,7 @@ var plugin = {
     register: function(plugin, name) {
         //ensure we don't overrite a name
         if(window.gf[name]) {
-            throw 'Grapefruit: Unable to register plugin: "' + name + '" already exists in the gf namespace, please choose something else!';
+            throw new Error('Unable to register plugin: "' + name + '" already exists in the gf namespace, please choose something else!');
         }
 
         //store the plugin in the namespace
