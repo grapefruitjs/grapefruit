@@ -238,6 +238,14 @@ var math = module.exports = {
 
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
+    /**
+     * Returns a random real number between min and max.
+     *
+     * @method randomReal
+     * @param min {Number} The minimun number that the result can be
+     * @param max {Number} The maximun number that the result can be
+     * @return {Number}
+     */
     randomReal: function(min, max) {
         if(min === max)
             return min;
@@ -265,6 +273,94 @@ var math = module.exports = {
     randomString: function() {
         return Math.floor(Date.now() * Math.random()).toString();
     },
+    /**
+     * Generates a random RFC4122 compliant (v4) UUID
+     *
+     * @method randomUuid
+     * @return {String} A random guid
+     */
+    randomUuid: function() {
+        //collect some random bytes
+        var buf = math.randomBytes(math.__uuidBytes);
+
+        // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+        buf[6] = (buf[6] & 0x0f) | 0x40;
+        buf[8] = (buf[8] & 0x3f) | 0x80;
+
+        var i = 0,
+            bth = math.__byteToHex;
+
+        //convert bytes to string
+        return bth[buf[i++]] + bth[buf[i++]] +
+                bth[buf[i++]] + bth[buf[i++]] + '-' +
+                bth[buf[i++]] + bth[buf[i++]] + '-' +
+                bth[buf[i++]] + bth[buf[i++]] + '-' +
+                bth[buf[i++]] + bth[buf[i++]] + '-' +
+                bth[buf[i++]] + bth[buf[i++]] +
+                bth[buf[i++]] + bth[buf[i++]] +
+                bth[buf[i++]] + bth[buf[i++]];
+    },
+    __uuidBytes: new Uint8Array(16),
+    __byteToHex: (function() {
+        var bth = [],
+            htb = {};
+        for (var i = 0; i < 256; i++) {
+            bth[i] = (i + 0x100).toString(16).substr(1);
+            htb[bth[i]] = i;
+        }
+
+        return bth;
+    })(),
+    /**
+     * Fills a Typed Array with random bytes. If you do not pass an output param, then a default
+     * Uint8Array(16) is created and returned for you.
+     *
+     * @method randomBytes
+     * @param [output] {TypedArray} The output array for the random data, if none specified a new Uint8Array(16) is created
+     */
+    randomBytes: (function() {
+        if(crypto && crypto.getRandomValues) {
+            // WHATWG crypto-based RNG - http://wiki.whatwg.org/wiki/Crypto
+            // Moderately fast, high quality.
+            return function(ary) {
+                ary = ary || new Uint8Array(16);
+                crypto.getRandomValues(ary);
+                return ary;
+            };
+        } else {
+            // Math.random()-based (RNG)
+            // It's fast, but is of unspecified quality.
+            return function(ary) {
+                ary = ary || new Uint8Array(16);
+
+                var len = ary.length || 16,
+                    check,
+                    mask;
+
+                //get the correct size constraints for this array
+                if(!ary.BYTES_PER_ELEMENT || ary.BYTES_PER_ELEMENT === 1) {
+                    check = 0x03;
+                    mask = 0xff;
+                } else if(ary.BYTES_PER_ELEMENT === 2) {
+                    check = 0x01;
+                    mask = 0xffff;
+                } else if(ary.BYTES_PER_ELEMENT === 4) {
+                    check = 0x00;
+                    mask = 0xffffffff;
+                }
+
+                for(var i = 0, r; i < len; ++i) {
+                    if((i & check) === 0) {
+                        r = Math.random() * 0x100000000;
+                    }
+
+                    ary[i] = r >>> ((i & check) << check) & mask;
+                }
+
+                return ary;
+            };
+        }
+    })(),
     /**
      * Returns a random element of an array.
      *
