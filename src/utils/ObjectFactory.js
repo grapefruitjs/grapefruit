@@ -102,6 +102,8 @@ inherit(ObjectFactory, Object, {
             this.game.height
         );
 
+        tilemap._cachekey = key;
+
         return this.parent.addChild(tilemap);
     },
     /**
