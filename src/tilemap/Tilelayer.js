@@ -1,5 +1,5 @@
 var Container = require('../display/Container'),
-    Rectangle = require('../math/Rectangle'),
+    Rectangle = require('../geom/Rectangle'),
     Vector = require('../math/Vector'),
     Texture = require('../display/Texture'),
     Tile = require('./Tile'),

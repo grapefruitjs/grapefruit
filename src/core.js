@@ -88,10 +88,10 @@ module.exports = {
 
     //math
     math:       require('./math/math'),
-    Circle:     require('./math/Circle'),
-    Ellipse:    require('./math/Ellipse'),
-    Polygon:    require('./math/Polygon'),
-    Rectangle:  require('./math/Rectangle'),
+    Circle:     require('./geom/Circle'),
+    Ellipse:    require('./geom/Ellipse'),
+    Polygon:    require('./geom/Polygon'),
+    Rectangle:  require('./geom/Rectangle'),
     Vector:     require('./math/Vector'),
 
     //particles

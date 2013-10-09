@@ -1,7 +1,7 @@
 var Vector = require('../math/Vector'),
-    Circle = require('../math/Circle'),
-    Rectangle = require('../math/Rectangle'),
-    Polygon = require('../math/Polygon');
+    Circle = require('../geom/Circle'),
+    Rectangle = require('../geom/Rectangle'),
+    Polygon = require('../geom/Polygon');
 
 /**
  * The grapefruit utility object, used for misc functions used throughout the code base
