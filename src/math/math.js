@@ -206,7 +206,7 @@ var math = module.exports = {
      * percentage chance of returning: true.
      *
      * @method randomBool
-     * @param chance {Number} The % chance of getting true (0 - 100), defaults to 50%
+     * @param [chance=50] {Number} The % chance of getting true (0 - 100), defaults to 50%
      * @return {Boolean}
      */
     randomBool: function(chance) {
@@ -228,13 +228,16 @@ var math = module.exports = {
      * Returns a random int between min and max.
      *
      * @method randomInt
-     * @param min {Number} The minimun number that the result can be
-     * @param max {Number} The maximun number that the result can be
+     * @param [min=0] {Number} The minimun number that the result can be
+     * @param [max=100] {Number} The maximun number that the result can be
      * @return {Number}
      */
     randomInt: function(min, max) {
         if(min === max)
             return min;
+
+        min = min || 0;
+        max = max || 100;
 
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
@@ -242,13 +245,16 @@ var math = module.exports = {
      * Returns a random real number between min and max.
      *
      * @method randomReal
-     * @param min {Number} The minimun number that the result can be
-     * @param max {Number} The maximun number that the result can be
+     * @param [min=0] {Number} The minimun number that the result can be
+     * @param [max=1] {Number} The maximun number that the result can be
      * @return {Number}
      */
     randomReal: function(min, max) {
         if(min === max)
             return min;
+
+        min = min || 0;
+        max = max || 1;
 
         return math.random() * (max - min + 1) + min;
     },
