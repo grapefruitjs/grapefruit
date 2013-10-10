@@ -1,3 +1,5 @@
+var support = require('../utils/support');
+
 /**
  * The grapefruit math library, used to abstract commonly used math operations
  *
@@ -324,42 +326,11 @@ var math = module.exports = {
      * @method randomBytes
      * @param [output] {TypedArray} The output array for the random data, if none specified a new Uint8Array(16) is created
      */
-    randomBytes: (function() {
-        if(crypto && crypto.getRandomValues) {
-            // WHATWG crypto-based RNG - http://wiki.whatwg.org/wiki/Crypto
-            // Moderately fast, high quality.
-            return function(ary) {
-                ary = ary || new Uint8Array(16);
-                crypto.getRandomValues(ary);
-                return ary;
-            };
-        } else {
-            // Math.random()-based (RNG)
-            // It's fast, but is of unspecified quality.
-            return function(ary) {
-                ary = ary || new Uint8Array(16);
-
-                //get a view into the buffer that we *know* is Uint8
-                var buf = ary.buffer,
-                    len = buf.byteLength,
-                    view = new Uint8Array(buf);
-
-                //fill the array one random byte at a time
-                for(var i = 0, r; i < len; ++i) {
-                    //we only need a new random when we have pulled all the bytes out of it
-                    if((i & 0x03) === 0) {
-                        r = math.random() * 0x100000000;
-                    }
-
-                    //pull the next byte out of the random number
-                    view[i] = r >>> ((i & 0x03) << 3) & 0xff;
-                }
-
-                //return the original view which now has the data we put into the buffer
-                return ary;
-            };
-        }
-    })(),
+    randomBytes: function(ary) {
+        ary = ary || new Uint8Array(16);
+        crypto.getRandomValues(ary);
+        return ary;
+    },
     /**
      * Returns a random element of an array.
      *
@@ -389,3 +360,52 @@ var math = module.exports = {
         return array[math.randomInt(start, end)];
     }
 };
+
+//these polyfills are separated and exposed so that they can get tested
+
+//if we support typed arrays we can do a good approximation of crypto.getRandomValues
+math._getRandomValuesTyped = function(ary) {
+    //get a Uint8 view into the buffer
+    var buf = ary.buffer,
+        len = buf.byteLength,
+        view = new Uint8Array(buf);
+
+    //fill the buffer one random byte at a time
+    for(var i = 0, r; i < len; ++i) {
+        //we only need a new random when we have pulled all the bytes out of the last one
+        //which means every fourth byte we get a new random 32-bit value
+        if((i & 0x03) === 0) {
+            r = math.random() * 0x100000000;
+        }
+
+        //pull the next byte out of the random number
+        view[i] = r >>> ((i & 0x03) << 3) & 0xff;
+    }
+
+    //return the original view which now has the data we put into the buffer
+    return ary;
+};
+
+//without typed array support we can do one that returns an array of values
+//but you would need to use new Array(num), so there is a length
+//or something like `var a = []; a[num - 1] = undefined;` so length is expanded
+math._getRandomValuesArray = function(ary) {
+    //fill the array with random values
+    for(var i = 0, r; i < ary.length; ++i) {
+        ary[i] = math.random() * 0x100000000;
+    }
+
+    return ary;
+};
+
+//polyfill crypto.getRandomValues if necessary
+//crypto spec: http://wiki.whatwg.org/wiki/Crypto
+if(!support.crypto) {
+    window.crypto = window.crypto || {};
+
+    if(support.typedArrays) {
+        window.crypto.getRandomValues = math._getRandomValuesTyped;
+    } else {
+        window.crypto.getRandomValues = math._getRandomValuesArray;
+    }
+}
