@@ -11,7 +11,6 @@ var support = module.exports = {
      * @property ua
      * @type String
      */
-    //window is set by urequire
     ua: window.navigator ? window.navigator.userAgent.toLowerCase() : 'nodejs',
 
     /**
@@ -29,6 +28,14 @@ var support = module.exports = {
      * @type Boolean
      */
     webgl: (function () { try { return !!window.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl'); } catch(e) { return false; } })(),
+
+    /**
+     * Whether or not the crypto API is supported
+     *
+     * @property crypto
+     * @type Boolean
+     */
+    crypto: !!window.crypto && !!window.crypto.getRandomValues,
 
     /**
      * Whether or not web workers are supported
