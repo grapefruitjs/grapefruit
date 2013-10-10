@@ -233,7 +233,7 @@ var math = module.exports = {
      * @return {Number}
      */
     randomInt: function(min, max) {
-        if(min === max)
+        if(min !== undefined && min === max)
             return min;
 
         min = min || 0;
@@ -250,13 +250,13 @@ var math = module.exports = {
      * @return {Number}
      */
     randomReal: function(min, max) {
-        if(min === max)
+        if(min !== undefined && min === max)
             return min;
 
         min = min || 0;
         max = max || 1;
 
-        return math.random() * (max - min + 1) + min;
+        return math.random() * (max - min) + min;
     },
     /**
      * Returns a random sign based on the provided chance. The chance represents the
