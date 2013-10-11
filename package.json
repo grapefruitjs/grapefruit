@@ -29,7 +29,6 @@
         "grunt-replace": "0.x",
         "grunt-urequire": "0.x",
         "glob": "*",
-        "should": "2.x",
         "mocha": "1.x"
     },
 
