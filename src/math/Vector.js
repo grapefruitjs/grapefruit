@@ -260,8 +260,8 @@ inherit(Vector, Object, {
      * Clamps the vectors components to be between min and max
      *
      * @method max
-     * @param min {Number} The minimum value a component can be
-     * @param max {Number} The maximum value a component can be
+     * @param min {Vector} The minimum value a component can be
+     * @param max {Vector} The maximum value a component can be
      * @return {Vector} Returns itself
      */
     clamp: function(min, max) {
@@ -297,7 +297,7 @@ inherit(Vector, Object, {
      * @return {Vector} Returns itself
      */
     project: function(v) {
-        var amt = this.dot(v) / v.len2();
+        var amt = this.dot(v) / v.lengthSq();
         this.x = amt * v.x;
         this.y = amt * v.y;
 
@@ -325,7 +325,7 @@ inherit(Vector, Object, {
     reflect: function(axis) {
         var x = this.x;
         var y = this.y;
-        this.project(axis).scale(2);
+        this.project(axis).multiplyScalar(2);
         this.x -= x;
         this.y -= y;
 
@@ -340,7 +340,7 @@ inherit(Vector, Object, {
     reflectN: function(axis) {
         var x = this.x;
         var y = this.y;
-        this.projectN(axis).scale(2);
+        this.projectN(axis).multiplyScalar(2);
         this.x -= x;
         this.y -= y;
 
@@ -363,7 +363,7 @@ inherit(Vector, Object, {
      * @return {Number} Returns the square length of the vector
      */
     lengthSq: function() {
-        return this.x * this.x + this.y * this.y;
+        return this.dot(this);
     },
     /**
      * Calculates the length of the vector
@@ -372,7 +372,7 @@ inherit(Vector, Object, {
      * @return {Number} Returns the length of the vector
      */
     length: function() {
-        return Math.sqrt(this.x * this.x + this.y * this.y);
+        return Math.sqrt(this.lengthSq());
     },
     /**
      * Normalizes this vector (divides by its length)
@@ -387,7 +387,7 @@ inherit(Vector, Object, {
      * Calculates the distance to the passed vector
      *
      * @method distanceTo
-     * @param vector {Vector}
+     * @param vector {Vector} The vector to check distance to
      * @return {Number} The distance
      */
     distanceTo: function(v) {
@@ -397,7 +397,7 @@ inherit(Vector, Object, {
      * Calculates the square distance to the passed vector
      *
      * @method distanceToSquared
-     * @param vector {Vector}
+     * @param vector {Vector} The vector to check distance to
      * @return {Number} The square distance
      */
     distanceToSquared: function(v) {
@@ -408,7 +408,7 @@ inherit(Vector, Object, {
      * Sets the length of the vector
      *
      * @method setLength
-     * @param length {Number}
+     * @param length {Number} The length to set this vector to
      * @return {Vector} Returns itself
      */
     setLength: function(l) {
@@ -424,8 +424,8 @@ inherit(Vector, Object, {
      * Performs a linear interpolation between this vector and the passed vector
      *
      * @method lerp
-     * @param vector {Vector}
-     * @param alpha {Number}
+     * @param vector {Vector} The vector to interpolate with
+     * @param alpha {Number} The amount to interpolate [0-1] or extrapolate (1-]
      * @return {Vector} Returns itself
      */
     lerp: function(v, alpha) {
