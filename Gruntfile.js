@@ -31,7 +31,6 @@ module.exports = function(grunt) {
             vendor: 'vendor'
         },
         files: {
-            testBlob: '<%= dirs.test %>/unit/**/*.js',
             dev: '<%= dirs.dist %>/<%= pkg.name %>.js',
             dist: '<%= dirs.dist %>/<%= pkg.name %>.min.js',
             main: 'core.js'
@@ -84,6 +83,7 @@ module.exports = function(grunt) {
                 logo: 'https://en.gravatar.com/userimage/49218683/8654d0c767f327312ebb1ace7f5a8d8d.png',
                 options: {
                     paths: '<%= dirs.src %>',
+                    exclude: 'vendor',
                     outdir: '<%= dirs.docs %>'
                 }
             }
