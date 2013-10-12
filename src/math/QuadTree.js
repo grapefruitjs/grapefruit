@@ -122,7 +122,7 @@ inherit(QuadTree, Object, {
                 }
             }
         }
-     },
+    },
 
     /**
      * Determine which node the object belongs to

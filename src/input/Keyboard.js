@@ -54,7 +54,7 @@ inherit(Keyboard, Input, {
      */
     onKeyDown: function(e, override) {
         //if(e.target === this.view.parentElement)
-            return this.modifyKey(e, override || e.keyCode || e.which, true);
+        return this.modifyKey(e, override || e.keyCode || e.which, true);
     },
     /**
      * Called when a key is released
@@ -66,7 +66,7 @@ inherit(Keyboard, Input, {
      */
     onKeyUp: function(e, override) {
         //if(e.target === this.view.parentElement)
-            return this.modifyKey(e, override || e.keyCode || e.which, false);
+        return this.modifyKey(e, override || e.keyCode || e.which, false);
     },
     /**
      * Called when a key state has changed, updates current sequence and emits events
