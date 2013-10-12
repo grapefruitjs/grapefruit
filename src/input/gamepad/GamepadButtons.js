@@ -8,7 +8,7 @@ var inherit = require('../../utils/inherit'),
  * @extends Input
  * @constructor
  */
- var GamepadButtons = module.exports = function() {
+var GamepadButtons = module.exports = function() {
     Input.call(this);
 
     /**

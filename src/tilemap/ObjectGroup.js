@@ -16,7 +16,7 @@ var Container = require('../display/Container'),
  * @constructor
  * @param group {Object} All the settings for the layer
  */
- var ObjectGroup = module.exports = function(map, group) {
+var ObjectGroup = module.exports = function(map, group) {
     Container.call(this, group);
 
     /**

@@ -26,12 +26,12 @@
     // useful when your codebase is shared with a big number of developers
     // with different skill levels.
  
-    "bitwise"       : false,    // Allow bitwise operators (&, |, ^, etc.).
+    "bitwise"       : false,    // Disallow bitwise operators (&, |, ^, etc.).
     "camelcase"     : true,     // Force all variable names to use either camelCase or UPPER_CASE.
-    "curly"         : true,     // Require {} for every new block or scope.
+    "curly"         : false,    // Require {} for every new block or scope.
     "eqeqeq"        : true,     // Require triple equals i.e. `===`.
-    "es3"           : false,    // Do not need to conform to ECMAScript 3.
-    "forin"         : false,    // Tolerate `for in` loops without `hasOwnPrototype`.
+    "es3"           : false,    // Enforce conforming to ECMAScript 3.
+    "forin"         : false,    // Disallow `for in` loops without `hasOwnPrototype`.
     "immed"         : true,     // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
     "indent"        : 4,        // Require that 4 spaces are used for indentation.
     "latedef"       : true,     // Prohibit variable use before definition.
@@ -39,17 +39,17 @@
     "noarg"         : true,     // Prohibit use of `arguments.caller` and `arguments.callee`.
     "noempty"       : true,     // Prohibit use of empty blocks.
     "nonew"         : true,     // Prohibit use of constructors for side-effects.
-    "plusplus"      : false,    // Allow use of `++` & `--`.
+    "plusplus"      : false,    // Disallow use of `++` & `--`.
     "quotmark"      : true,     // Force consistency when using quote marks.
     "undef"         : true,     // Require all non-global variables be declared before they are used.
     "unused"        : true,     // Warn when varaibles are created by not used.
-    "strict"        : true,     // Require `use strict` pragma in every file.
+    "strict"        : false,    // Require `use strict` pragma in every file.
     "trailing"      : true,     // Prohibit trailing whitespaces.
-    "maxparams"     : 5,        // Prohibit having more than X number of params in a function.
-    "maxdepth"      : 5,        // Prohibit nested blocks from going more than X levels deep.
-    "maxstatements" : false,    // Do not restrict the number of statements in a function.
-    "maxcomplexity" : false,    // Do note restrict the cyclomatic complexity of the code.
-    "maxlen"        : 100,      // Require that all lines are 100 characters or less.
+    "maxparams"     : 6,        // Prohibit having more than X number of params in a function.
+    "maxdepth"      : 6,        // Prohibit nested blocks from going more than X levels deep.
+    "maxstatements" : false,    // Restrict the number of statements in a function.
+    "maxcomplexity" : false,    // Restrict the cyclomatic complexity of the code.
+    "maxlen"        : 200,      // Require that all lines are 100 characters or less.
     "globals"       : {         // Register globals that are used in the code.
         "module": false,
         "require": false
@@ -62,7 +62,7 @@
     // doing.
     
     "asi"           : false,    // Tolerate Automatic Semicolon Insertion (no semicolons).
-    "boss"          : false,    // Tolerate assignments inside if, for & while. Usually conditions & loops are for comparison, not assignments.
+    "boss"          : true,     // Tolerate assignments inside if, for & while. Usually conditions & loops are for comparison, not assignments.
     "debug"         : false,    // Allow debugger statements e.g. browser breakpoints.
     "eqnull"        : false,    // Tolerate use of `== null`.
     "esnext"        : false,    // Allow ES.next specific features such as `const` and `let`.

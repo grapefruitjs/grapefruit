@@ -328,7 +328,7 @@ var math = module.exports = {
      */
     randomBytes: function(ary) {
         ary = ary || new Uint8Array(16);
-        crypto.getRandomValues(ary);
+        window.crypto.getRandomValues(ary);
         return ary;
     },
     /**
@@ -391,7 +391,7 @@ math._getRandomValuesTyped = function(ary) {
 //or something like `var a = []; a[num - 1] = undefined;` so length is expanded
 math._getRandomValuesArray = function(ary) {
     //fill the array with random values
-    for(var i = 0, r; i < ary.length; ++i) {
+    for(var i = 0; i < ary.length; ++i) {
         ary[i] = math.random() * 0x100000000;
     }
 

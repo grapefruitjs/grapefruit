@@ -415,9 +415,9 @@ if(typeof window.DOMParser !== 'undefined') {
             return (new DOMParser()).parseFromString(xmlStr, "text/xml");
         };
     } else {*/
-        utils.warn('XML parser not available, trying to parse any XML will result in an error.');
-        utils.parseXML = function() {
-            throw 'Trying to parse XML, but not XML parser is available in this environment';
-        };
+    utils.warn('XML parser not available, trying to parse any XML will result in an error.');
+    utils.parseXML = function() {
+        throw 'Trying to parse XML, but not XML parser is available in this environment';
+    };
     //}
 }

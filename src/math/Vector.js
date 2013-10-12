@@ -65,9 +65,14 @@ inherit(Vector, Object, {
      */
     setComponent: function(index, value) {
         switch(index) {
-            case 0: this.x = value; break;
-            case 1: this.y = value; break;
-            default: throw new Error('index is out of range: ' + index);
+            case 0:
+                this.x = value;
+                break;
+            case 1:
+                this.y = value;
+                break;
+            default:
+                throw new Error('index is out of range: ' + index);
         }
 
         return this;
@@ -81,9 +86,12 @@ inherit(Vector, Object, {
      */
     getComponent: function(index) {
         switch(index) {
-            case 0: return this.x;
-            case 1: return this.y;
-            default: throw new Error('index is out of range: ' + index);
+            case 0:
+                return this.x;
+            case 1:
+                return this.y;
+            default:
+                throw new Error('index is out of range: ' + index);
         }
     },
     /**

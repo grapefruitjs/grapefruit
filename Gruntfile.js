@@ -105,7 +105,7 @@ module.exports = function(grunt) {
                 }
             }
         },
-        mocha_phantomjs: {
+        'mocha_phantomjs': {
             dist: {
                 options: {
                     mocha: {
@@ -148,6 +148,6 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['jshint', 'build']);
     grunt.registerTask('build', ['urequire:dev', 'urequire:dist', 'replace:dist']);
     grunt.registerTask('test', ['connect:test', 'mocha_phantomjs:dist']);
-    grunt.registerTask('testci', ['connect:test', 'mocha_phantomjs:xunit'])
+    grunt.registerTask('testci', ['connect:test', 'mocha_phantomjs:xunit']);
     grunt.registerTask('docs', ['yuidoc']);
 };

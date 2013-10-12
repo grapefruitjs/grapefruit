@@ -135,17 +135,17 @@ var Tilemap = module.exports = function(state, map, tilesetTextures) {
         var lyr;
 
         switch(map.layers[i].type) {
-            case 'tilelayer':
-                lyr = new Tilelayer(this, map.layers[i]);
-                break;
+        case 'tilelayer':
+            lyr = new Tilelayer(this, map.layers[i]);
+            break;
 
-            case 'objectgroup':
-                lyr = new ObjectGroup(this, map.layers[i]);
-                break;
+        case 'objectgroup':
+            lyr = new ObjectGroup(this, map.layers[i]);
+            break;
 
-            case 'imagelayer':
-                lyr = new Sprite(map.layers[i]);
-                break;
+        case 'imagelayer':
+            lyr = new Sprite(map.layers[i]);
+            break;
         }
 
         this.addChild(lyr);
