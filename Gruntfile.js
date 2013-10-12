@@ -1,3 +1,5 @@
+//need to allow script urls so that mocha: works below
+/* jshint scripturl:true */
 module.exports = function(grunt) {
     var glob = require('glob'),
         source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; }),
@@ -109,33 +111,36 @@ module.exports = function(grunt) {
                     scanAllow: true,
                     allNodeRequires: true,
                     noRootExports: false
+                },
+                dependencies: {
+                    exports: {
+                        root: {
+                            'core': ['gf']
+                        }
+                    }
                 }
             }
         },
         mocha: {
             dist: {
+                src: ['test/unit/index.html'],
                 options: {
                     mocha: {
                         ignoreLeaks: false,
                     },
                     log: true,
                     reporter: 'Spec',
-                    urls: [
-                        'http://localhost:' + testPort + '/test/unit/index.html'
-                    ],
                     run: true
                 }
             },
             xunit: {
+                src: ['test/unit/index.html'],
                 options: {
                     mocha: {
                         ignoreLeaks: false,
                     },
                     log: true,
                     reporter: 'xunit-file',
-                    urls: [
-                        'http://localhost:' + testPort + '/test/unit/index.html'
-                    ],
                     run: true
                 }
             }
@@ -157,7 +162,7 @@ module.exports = function(grunt) {
     //setup shortcut tasks
     grunt.registerTask('default', ['jshint', 'build']);
     grunt.registerTask('build', ['urequire:dev', 'urequire:dist', 'replace:dist']);
-    grunt.registerTask('test', ['connect:test', 'mocha:dist']);
-    grunt.registerTask('testci', ['connect:test', 'mocha:xunit']);
+    grunt.registerTask('test', ['mocha:dist']);
+    grunt.registerTask('testci', ['mocha:xunit']);
     grunt.registerTask('docs', ['yuidoc']);
 };

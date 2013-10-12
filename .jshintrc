@@ -18,14 +18,14 @@
     //
     // @author http://michael.haschke.biz/
     // @license http://unlicense.org/
- 
+
     // == Enforcing Options ===============================================
     //
     // These options tell JSHint to be more strict towards your code. Use
     // them if you want to allow only a safe subset of JavaScript, very
     // useful when your codebase is shared with a big number of developers
     // with different skill levels.
- 
+
     "bitwise"       : false,    // Disallow bitwise operators (&, |, ^, etc.).
     "camelcase"     : true,     // Force all variable names to use either camelCase or UPPER_CASE.
     "curly"         : false,    // Require {} for every new block or scope.
@@ -54,13 +54,13 @@
         "module": false,
         "require": false
     },
-    
+
     // == Relaxing Options ================================================
     //
     // These options allow you to suppress certain types of warnings. Use
     // them only if you are absolutely positive that you know what you are
     // doing.
-    
+
     "asi"           : false,    // Tolerate Automatic Semicolon Insertion (no semicolons).
     "boss"          : true,     // Tolerate assignments inside if, for & while. Usually conditions & loops are for comparison, not assignments.
     "debug"         : false,    // Allow debugger statements e.g. browser breakpoints.
@@ -84,43 +84,43 @@
     "sub"           : false,    // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
     "supernew"      : false,    // Tolerate `new function () { ... };` and `new Object;`.
     "validthis"     : false,    // Tolerate strict violations when the code is running in strict mode and you use this in a non-constructor function.
-    
+
     // == Environments ====================================================
     //
     // These options pre-define global variables that are exposed by
     // popular JavaScript libraries and runtime environments—such as
     // browser or node.js.
-    
+
     "browser"       : true,     // Standard browser globals e.g. `window`, `document`.
     "couch"         : false,    // Enable globals exposed by CouchDB.
     "devel"         : false,    // Allow development statements e.g. `console.log();`.
     "dojo"          : false,    // Enable globals exposed by Dojo Toolkit.
     "jquery"        : false,    // Enable globals exposed by jQuery JavaScript library.
     "mootools"      : false,    // Enable globals exposed by MooTools JavaScript framework.
-    "node"          : false,    // Enable globals available when code is running inside of the NodeJS runtime environment.
+    "node"          : true,     // Enable globals available when code is running inside of the NodeJS runtime environment. (for Gruntfile)
     "nonstandard"   : false,    // Define non-standard but widely adopted globals such as escape and unescape.
     "prototypejs"   : false,    // Enable globals exposed by Prototype JavaScript framework.
     "rhino"         : false,    // Enable globals available when your code is running inside of the Rhino runtime environment.
     "worker"        : false,    // Enable globals available when your code is running as a WebWorker.
     "wsh"           : false,    // Enable globals available when your code is running as a script for the Windows Script Host.
     "yui"           : false,    // Enable globals exposed by YUI library.
-    
+
     // == JSLint Legacy ===================================================
     //
     // These options are legacy from JSLint. Aside from bug fixes they will
     // not be improved in any way and might be removed at any point.
-    
+
     "nomen"         : false,    // Prohibit use of initial or trailing underbars in names.
     "onevar"        : false,    // Allow only one `var` statement per function.
     "passfail"      : false,    // Stop on first error.
     "white"         : false,    // Check against strict whitespace and indentation rules.
-    
+
     // == Undocumented Options ============================================
     //
     // While I've found these options in [example1][2] and [example2][3]
     // they are not described in the [JSHint Options documentation][4].
     //
     // [4]: http://www.jshint.com/options/
- 
+
     "maxerr"        : 100       // Maximum errors before stopping.
 }

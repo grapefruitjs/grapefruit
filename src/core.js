@@ -1,4 +1,3 @@
-({urequire: { rootExports: 'gf' } });
 /**
 * @license GrapeFruit Game Engine
 * Copyright (c) 2012-2014, Chad Engler
