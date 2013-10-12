@@ -12,6 +12,7 @@ var AudioPlayer = require('./AudioPlayer'),
  * @class AudoPlayer
  * @extends Object
  * @uses EventEmitter
+ * @namespace gf
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
  * @param audio {ArrayBuffer|Audio} The preloaded audio file object

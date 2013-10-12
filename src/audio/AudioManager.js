@@ -13,6 +13,7 @@ var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozA
  *
  * @class AudioManager
  * @extends Object
+ * @namespace gf
  * @constructor
  */
 var AudioManager = module.exports = function(game, parent) {
