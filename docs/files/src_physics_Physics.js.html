@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\physics\Physics.js - GrapeFruit Game Engine</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="https://en.gravatar.com/userimage/49218683/8654d0c767f327312ebb1ace7f5a8d8d.png" title="GrapeFruit Game Engine"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: v0.1.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/gf.AssetLoader.html">gf.AssetLoader</a></li>
+            
+                <li><a href="../classes/gf.AudioManager.html">gf.AudioManager</a></li>
+            
+                <li><a href="../classes/gf.AudoPlayer.html">gf.AudoPlayer</a></li>
+            
+                <li><a href="../classes/gf.BitmapText.html">gf.BitmapText</a></li>
+            
+                <li><a href="../classes/gf.Camera.html">gf.Camera</a></li>
+            
+                <li><a href="../classes/gf.Circle.html">gf.Circle</a></li>
+            
+                <li><a href="../classes/gf.Clock.html">gf.Clock</a></li>
+            
+                <li><a href="../classes/gf.Container.html">gf.Container</a></li>
+            
+                <li><a href="../classes/gf.EventEmitter.html">gf.EventEmitter</a></li>
+            
+                <li><a href="../classes/gf.Game.html">gf.Game</a></li>
+            
+                <li><a href="../classes/gf.Gamepad.html">gf.Gamepad</a></li>
+            
+                <li><a href="../classes/gf.GamepadButtons.html">gf.GamepadButtons</a></li>
+            
+                <li><a href="../classes/gf.GamepadSticks.html">gf.GamepadSticks</a></li>
+            
+                <li><a href="../classes/gf.GameState.html">gf.GameState</a></li>
+            
+                <li><a href="../classes/gf.GuiItem.html">gf.GuiItem</a></li>
+            
+                <li><a href="../classes/gf.Input.html">gf.Input</a></li>
+            
+                <li><a href="../classes/gf.InputManager.html">gf.InputManager</a></li>
+            
+                <li><a href="../classes/gf.Keyboard.html">gf.Keyboard</a></li>
+            
+                <li><a href="../classes/gf.math.html">gf.math</a></li>
+            
+                <li><a href="../classes/gf.ObjectGroup.html">gf.ObjectGroup</a></li>
+            
+                <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
+            
+                <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
+            
+                <li><a href="../classes/gf.Pointer.html">gf.Pointer</a></li>
+            
+                <li><a href="../classes/gf.Pointers.html">gf.Pointers</a></li>
+            
+                <li><a href="../classes/gf.Polygon.html">gf.Polygon</a></li>
+            
+                <li><a href="../classes/gf.Rectangle.html">gf.Rectangle</a></li>
+            
+                <li><a href="../classes/gf.Sprite.html">gf.Sprite</a></li>
+            
+                <li><a href="../classes/gf.SpritePool.html">gf.SpritePool</a></li>
+            
+                <li><a href="../classes/gf.support.html">gf.support</a></li>
+            
+                <li><a href="../classes/gf.Tile.html">gf.Tile</a></li>
+            
+                <li><a href="../classes/gf.Tilelayer.html">gf.Tilelayer</a></li>
+            
+                <li><a href="../classes/gf.Tilemap.html">gf.Tilemap</a></li>
+            
+                <li><a href="../classes/gf.Tileset.html">gf.Tileset</a></li>
+            
+                <li><a href="../classes/gf.utils.html">gf.utils</a></li>
+            
+                <li><a href="../classes/gf.Vector.html">gf.Vector</a></li>
+            
+                <li><a href="../classes/gf.World.html">gf.World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src\physics\Physics.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+// Based heavily on SAT.js
+// https://github.com/jriecken/sat-js
+
+var QuadTree = require(&#x27;../math/QuadTree&#x27;),
+    Collision = require(&#x27;./Collision&#x27;),
+    Vector = require(&#x27;../math/Vector&#x27;),
+    inherit = require(&#x27;../utils/inherit&#x27;),
+    math = require(&#x27;../math/math&#x27;),
+    C = require(&#x27;../constants&#x27;);
+
+/**
+ * Pool of Vectors used in calculations.
+ *
+ * @type {Array&lt;Vector&gt;}
+ */
+var T_VECTORS = [];
+for (var i = 0; i &lt; 10; i++)
+    T_VECTORS.push(new Vector());
+
+/**
+ * Pool of Arrays used in calculations.
+ *
+ * @type {Array&lt;Array&lt;mixed&gt;&gt;}
+ */
+var T_ARRAYS = [];
+for (var i = 0; i &lt; 5; i++)
+    T_ARRAYS.push([]);
+
+var Physics = module.exports = function(state) {
+    this.state = state;
+
+    /**
+     * The maximum objects the quad tree will tolerate in a single quadrant
+     *
+     * @property maxObjects
+     * @type Number
+     */
+    this.maxObjects = C.PHYSICS.MAX_QUAD_OBJECTS;
+
+    /**
+     * The maximum levels deep the quad tree will go to
+     *
+     * @property maxLevels
+     * @type Number
+     */
+    this.maxLevels = C.PHYSICS.MAX_QUAD_LEVELS;
+
+    /**
+     * The QuadTree used to help detect likely collisions
+     *
+     * @property tree
+     * @type QuadTree
+     */
+    this.tree = new QuadTree(state.world.bounds.clone(), this.maxObjects, this.maxLevels);
+
+    /**
+     * The bodies that have been added to this physics system
+     *
+     * @property tree
+     * @type QuadTree
+     */
+    this.bodies = [];
+
+    /**
+     * The gravity that the system will simulate
+     *
+     * @property gravity
+     * @type Vector
+     */
+    this.gravity = new Vector(0, 9.87);
+
+    this._collision = new Collision();
+};
+
+inherit(Physics, Object, {
+    /**
+     * Called each frame by the engine to calculate the quadtree, and update physical bodies
+     *
+     * @method update
+     * @param deltaTime {Number} The delta in seconds since the last call
+     */
+    update: function(dt) {
+        //clear quad tree
+        this.tree.clear();
+
+        var bods = this.bodies,
+            body, i,
+            pots, p,
+            il = bods.length,
+            pl,
+            pot;
+
+        //update bodies and build quadtree
+        for (i = 0; i &lt; il; ++i) {
+            body = bods[i];
+
+            body.update(dt, this.gravity);
+            body._collided = false;
+
+            if (body.allowCollide &amp;&amp; body.sprite.visible) {
+                this.tree.insert(body);
+            }
+        }
+
+        //select likely collisions
+        for(i = 0; i &lt; il; ++i) {
+            body = bods[i];
+
+            //get likely collisions
+            pots = this.tree.retrieve(body);
+
+            for(p = 0, pl = pots.length; p &lt; pl; ++p) {
+                pot = pots[p];
+
+                //filter yourself
+                if(pot === body)
+                    continue;
+
+                //ignore static/static collisions
+                if(body.type === C.PHYSICS_TYPE.STATIC &amp;&amp; pot.type === C.PHYSICS_TYPE.STATIC)
+                    continue;
+
+                //ignore repeat collisions
+                if(body._collided &amp;&amp; pot._collided)
+                    continue;
+
+                //clear previous collision value
+                this._collision.clear();
+
+                //check for a collision between the shapes using SAT
+                if(this.checkShapeCollision(body, pot)) {
+                    //if they do collide, run user callbacks so they can override if they want
+                    if(body.sprite.onCollide(pot.sprite, this._collision.clone()) !== false &amp;&amp; pot.sprite.onCollide(body.sprite, this._collision.clone()) !== false) {
+                        //if neither override then mark both as collided and solve
+                        body._collided = true;
+                        pot._collided = true;
+                        this.solveCollision(body, pot);
+                        break;
+                    }
+                }
+            }
+        }
+    },
+    solveCollision: function(b1, b2) {
+        var col = this._collision,
+            ov = col.overlapV;
+
+        //sensor bodies are only for detection, not to be solved
+        if(b1.sensor || b2.sensor)
+            return;
+
+        //separate bodies
+        if(ov.x)
+            this._separate(b1, b2, ov.x, &#x27;x&#x27;);
+
+        if(ov.y)
+            this._separate(b1, b2, ov.y, &#x27;y&#x27;);
+
+        //special case for things that carry stuff (like moving platforms)
+        if(b2.carry &amp;&amp; (b1.touching &amp; C.DIRECTION.BOTTOM)) {
+            b1.x += b2.deltaX();
+        } else if(b1.carry &amp;&amp; (b2.touching &amp; C.DIRECTION.BOTTOM)) {
+            b2.x += b1.deltaX();
+        }
+
+        //sync sprites and shapes
+        b1.syncSprite();
+        b1.syncShape();
+
+        b2.syncSprite();
+        b2.syncShape();
+    },
+    _separate: function(b1, b2, over, ax) {
+        var v1 = b1.velocity[ax],
+            v2 = b2.velocity[ax];
+
+        //separate non-static bodies
+        if(b1.type !== C.PHYSICS_TYPE.STATIC &amp;&amp; b2.type !== C.PHYSICS_TYPE.STATIC) {
+            over *= 0.5;
+
+            //perform the actual separation
+            b1[ax] -= over;
+            b2[ax] += over;
+
+            //update velocities
+            var nv1 = math.sqrt((v2 * v2 * b2.mass) / b1.mass) * ((v2 &gt; 0) ? 1 : -1),
+                nv2 = math.sqrt((v1 * v1 * b1.mass) / b2.mass) * ((v1 &gt; 0) ? 1 : -1),
+                avg = (v1 + v2) * 0.5;
+
+            nv1 -= avg;
+            nv2 -= avg;
+
+            b1.velocity[ax] = avg + (nv1 * b1.bounce[ax]);
+            b2.velocity[ax] = avg + (nv2 * b2.bounce[ax]);
+        }
+        //body1 isn&#x27;t static
+        else if(b1.type !== C.PHYSICS_TYPE.STATIC) {
+            b1[ax] -= over;
+            b1.velocity[ax] = v2 - (v1 * b1.bounce[ax]);
+        }
+        //body2 isn&#x27;t static
+        else if(b2. type !== C.PHYSICS_TYPE.STATIC) {
+            b2[ax] += over;
+            b2.velocity[ax] = v1 - (v2 * b2.bounce[ax]);
+        }
+    },
+    checkShapeCollision: function(b1, b2) {
+        var hit = false;
+
+        //if this is a circle
+        if(b1.shape._shapetype === C.SHAPE.CIRCLE) {
+            //circle-circle check
+            if(b2.shape._shapetype === C.SHAPE.CIRCLE) {
+                hit = this.testCircleCircle(b1.shape, b2.shape, this._collision);
+            }
+            //circle-polygon check
+            else {
+                hit = this.testCirclePolygon(b1.shape, b2.shape, this._collision);
+            }
+        }
+        //otherwise a polygon
+        else {
+            //polygon-circle check
+            if(b2.shape._shapetype === C.SHAPE.CIRCLE) {
+                hit = this.testPolygonCircle(b1.shape, b2.shape, this._collision);
+            }
+            //polygon-polygon check
+            else {
+                hit = this.testPolygonPolygon(b1.shape, b2.shape, this._collision);
+            }
+        }
+
+        //check allow collide flags
+        if(hit) {
+            var on = this._collision.overlapN,
+                ov = this._collision.overlapV;
+
+            //check x collision to the right
+            if(on.x &gt; 0) {
+                if(!(b1.allowCollide &amp; C.DIRECTION.RIGHT) || !(b2.allowCollide &amp; C.DIRECTION.LEFT)) {
+                    on.x = 0;
+                    ov.x = 0;
+                } else {
+                    b1.touching |= C.DIRECTION.RIGHT;
+                    b2.touching |= C.DIRECTION.LEFT;
+                }
+            }
+            //check x collision to the left
+            else if(on.x &lt; 0) {
+                if(!(b1.allowCollide &amp; C.DIRECTION.LEFT) || !(b2.allowCollide &amp; C.DIRECTION.RIGHT)) {
+                    on.x = 0;
+                    ov.x = 0;
+                } else {
+                    b1.touching |= C.DIRECTION.LEFT;
+                    b2.touching |= C.DIRECTION.RIGHT;
+                }
+            }
+
+            //check y collision down
+            if(on.y &gt; 0) {
+                if(!(b1.allowCollide &amp; C.DIRECTION.BOTTOM) || !(b2.allowCollide &amp; C.DIRECTION.TOP)) {
+                    on.y = 0;
+                    ov.y = 0;
+                } else {
+                    b1.touching |= C.DIRECTION.BOTTOM;
+                    b2.touching |= C.DIRECTION.TOP;
+                }
+            }
+            //check y collision up
+            else if(on.y &lt; 0) {
+                if(!(b1.allowCollide &amp; C.DIRECTION.TOP) || !(b2.allowCollide &amp; C.DIRECTION.BOTTOM)) {
+                    on.y = 0;
+                    ov.y = 0;
+                } else {
+                    b1.touching |= C.DIRECTION.TOP;
+                    b2.touching |= C.DIRECTION.BOTTOM;
+                }
+            }
+
+            if(!on.x &amp;&amp; !on.y)
+                hit = false;
+        }
+
+        return hit;
+    },
+    /**
+     * Adds a sprite to the physics simulation
+     *
+     * @method addSprite
+     * @param sprite {Sprite} The sprite to add to the simulation
+     */
+    addSprite: function(sprite) {
+        this.addBody(sprite.body);
+        sprite._physics = this;
+    },
+    /**
+     * Removes a sprite from the physics simulation
+     *
+     * @method removeSprite
+     * @param sprite {Sprite} The sprite to remove from the simulation
+     */
+    removeSprite: function(sprite) {
+        this.removeBody(sprite.body);
+        sprite._physics = null;
+    },
+    /**
+     * Adds a body to the physics simulation
+     *
+     * @method addBody
+     * @param body {Body} The body to add to the simulation
+     */
+    addBody: function(body) {
+        this.bodies.push(body);
+    },
+    /**
+     * Removes a body from the physics simulation
+     *
+     * @method removeSprite
+     * @param body {Body} The body to remove from the simulation
+     */
+    removeBody: function(body) {
+        var i = this.bodies.indexOf(body);
+
+        if (i !== -1)
+            this.bodies.splice(i, 1);
+    },
+
+    /****************************************************
+     * Shape testing functions
+     ****************************************************/
+    /**
+     * Check if two circles intersect.
+     *
+     * @param a {Circle} The first circle.
+     * @param b {Circle} The second circle.
+     * @param [response] {Collision} Collision object (optional) that will be populated if the circles intersect.
+     * @return {Boolean} true if the circles intersect, false if they don&#x27;t.
+     */
+    testCircleCircle: function(a, b, response) {
+        var differenceV = T_VECTORS.pop().copy(b.position).sub(a.position),
+            totalRadius = a.r + b.r,
+            totalRadiusSq = totalRadius * totalRadius,
+            distanceSq = differenceV.len2();
+
+        // They do not intersect
+        if (distanceSq &gt; totalRadiusSq) {
+            T_VECTORS.push(differenceV);
+            return false;
+        }
+
+        // They intersect.  If we&#x27;re calculating a response, calculate the overlap.
+        if (response) {
+            var dist = math.sqrt(distanceSq);
+            response.a = a;
+            response.b = b;
+            response.overlap = totalRadius - dist;
+            response.overlapN.copy(differenceV.normalize());
+            response.overlapV.copy(differenceV).multiplyScalar(response.overlap);
+            response.aInB = a.r &lt;= b.r &amp;&amp; dist &lt;= b.r - a.r;
+            response.bInA = b.r &lt;= a.r &amp;&amp; dist &lt;= a.r - b.r;
+        }
+
+        T_VECTORS.push(differenceV);
+
+        return true;
+    },
+    /**
+     * Check if a polygon and a circle intersect.
+     *
+     * @param polygon {Polygon} The polygon.
+     * @param circle {Circle} The circle.
+     * @param [response] {Collision} Collision object (optional) that will be populated if they interset.
+     * @return {Boolean} true if they intersect, false if they don&#x27;t.
+     */
+    testPolygonCircle: function(polygon, circle, response) {
+        var circlePos = T_VECTORS.pop().copy(circle.position).sub(polygon.position),
+            radius = circle.radius,
+            radius2 = radius * radius,
+            points = polygon.points,
+            len = points.length,
+            edge = T_VECTORS.pop(),
+            point = T_VECTORS.pop();
+
+        // For each edge in the polygon
+        for (var i = 0; i &lt; len; i++) {
+            var next = i === len - 1 ? 0 : i + 1,
+                prev = i === 0 ? len - 1 : i - 1,
+                overlap = 0,
+                overlapN = null,
+                dist, distAbs;
+
+            // Get the edge
+            edge.copy(polygon.edges[i]);
+
+            // Calculate the center of the circle relative to the starting point of the edge
+            point.copy(circlePos).sub(points[i]);
+
+            // If the distance between the center of the circle and the point
+            // is bigger than the radius, the polygon is definitely not fully in
+            // the circle.
+            if (response &amp;&amp; point.len2() &gt; radius2) {
+                response.aInB = false;
+            }
+
+            // Calculate which Vornoi region the center of the circle is in.
+            var region = this.vornoiRegion(edge, point);
+            if (region === Physics.VORONOI_REGION.LEFT) {
+                // Need to make sure we&#x27;re in the VORNOI_REGION.RIGHT of the previous edge.
+                edge.copy(polygon.edges[prev]);
+
+                // Calculate the center of the circle relative the starting point of the previous edge
+                var point2 = T_VECTORS.pop().copy(circlePos).sub(points[prev]);
+
+                region = this.vornoiRegion(edge, point2);
+                if (region === Physics.VORONOI_REGION.RIGHT) {
+                    // It&#x27;s in the region we want.  Check if the circle intersects the point.
+                    dist = point.length();
+
+                    // No intersection
+                    if (dist &gt; radius) {
+                        T_VECTORS.push(circlePos);
+                        T_VECTORS.push(edge);
+                        T_VECTORS.push(point);
+                        T_VECTORS.push(point2);
+                        return false;
+                    }
+                    // It intersects, calculate the overlap
+                    else if (response) {
+                        response.bInA = false;
+                        overlapN = point.normalize();
+                        overlap = radius - dist;
+                    }
+                }
+                T_VECTORS.push(point2);
+            } else if (region === Physics.VORONOI_REGION.RIGHT) {
+                // Need to make sure we&#x27;re in the left region on the next edge
+                edge.copy(polygon.edges[next]);
+
+                // Calculate the center of the circle relative to the starting point of the next edge
+                point.copy(circlePos).sub(points[next]);
+
+                region = this.vornoiRegion(edge, point);
+                if (region === Physics.VORONOI_REGION.LEFT) {
+                    // It&#x27;s in the region we want.  Check if the circle intersects the point.
+                    dist = point.length();
+
+                    // No intersection
+                    if (dist &gt; radius) {
+                        T_VECTORS.push(circlePos);
+                        T_VECTORS.push(edge);
+                        T_VECTORS.push(point);
+                        return false;
+                    }
+                    // It intersects, calculate the overlap
+                    else if (response) {
+                        response.bInA = false;
+                        overlapN = point.normalize();
+                        overlap = radius - dist;
+                    }
+                }
+                // MIDDLE_VORNOI_REGION
+            } else {
+                // Need to check if the circle is intersecting the edge,
+                // Change the edge into its &quot;edge normal&quot;.
+                var normal = edge.perp().normalize();
+
+                // Find the perpendicular distance between the center of the 
+                // circle and the edge.
+                dist = point.dot(normal);
+                distAbs = math.abs(dist);
+
+                // If the circle is on the outside of the edge, there is no intersection
+                if (dist &gt; 0 &amp;&amp; distAbs &gt; radius) {
+                    T_VECTORS.push(circlePos);
+                    T_VECTORS.push(normal);
+                    T_VECTORS.push(point);
+                    return false;
+                }
+                // It intersects, calculate the overlap.
+                else if (response) {
+                    overlapN = normal;
+                    overlap = radius - dist;
+
+                    // If the center of the circle is on the outside of the edge, or part of the
+                    // circle is on the outside, the circle is not fully inside the polygon.
+                    if (dist &gt;= 0 || overlap &lt; 2 * radius) {
+                        response.bInA = false;
+                    }
+                }
+            }
+
+            // If this is the smallest overlap we&#x27;ve seen, keep it. 
+            // (overlapN may be null if the circle was in the wrong Vornoi region)
+            if (overlapN &amp;&amp; response &amp;&amp; math.abs(overlap) &lt; math.abs(response.overlap)) {
+                response.overlap = overlap;
+                response.overlapN.copy(overlapN);
+            }
+        }
+
+        // Calculate the final overlap vector - based on the smallest overlap.
+        if (response) {
+            response.a = polygon;
+            response.b = circle;
+            response.overlapV.copy(response.overlapN).multiplyScalar(response.overlap);
+        }
+
+        T_VECTORS.push(circlePos);
+        T_VECTORS.push(edge);
+        T_VECTORS.push(point);
+
+        return true;
+    },
+    /**
+     * Check if a circle and a polygon intersect.
+     *
+     * NOTE: This runs slightly slower than polygonCircle as it just
+     * runs polygonCircle and reverses everything at the end.
+     *
+     * @param circle {Circle} The circle.
+     * @param Polygon {Polygon} The polygon.
+     * @param [response] {Collision} Collision object (optional) that will be populated if they interset.
+     * @return {Boolean} true if they intersect, false if they don&#x27;t.
+     */
+    testCirclePolygon: function(circle, polygon, response) {
+        var result = this.testPolygonCircle(polygon, circle, response);
+
+        if (result &amp;&amp; response) {
+            // Swap A and B in the response.
+            var a = response.a,
+                aInB = response.aInB;
+
+            response.overlapN.negate();
+            response.overlapV.negate();
+            response.a = response.b;
+            response.b = a;
+            response.aInB = response.bInA;
+            response.bInA = aInB;
+        }
+
+        return result;
+    },
+    /**
+     * Checks whether two convex, clockwise polygons intersect.
+     *
+     * @param a {Polygon} The first polygon.
+     * @param b {Polygon} The second polygon.
+     * @param [response] {Collision} Collision object (optional) that will be populated if they interset.
+     * @return {Boolean} true if they intersect, false if they don&#x27;t.
+     */
+    testPolygonPolygon: function(a, b, response) {
+        var aPoints = a.points,
+            aLen = aPoints.length,
+            bPoints = b.points,
+            bLen = bPoints.length,
+            i;
+
+        // If any of the edge normals of A is a separating axis, no intersection.
+        for (i = 0; i &lt; aLen; i++) {
+            if (this.isSeparatingAxis(a.position, b.position, aPoints, bPoints, a.normals[i], response)) {
+                return false;
+            }
+        }
+
+        // If any of the edge normals of B is a separating axis, no intersection.
+        for (i = 0; i &lt; bLen; i++) {
+            if (this.isSeparatingAxis(a.position, b.position, aPoints, bPoints, b.normals[i], response)) {
+                return false;
+            }
+        }
+        // Since none of the edge normals of A or B are a separating axis, there is an intersection
+        // and we&#x27;ve already calculated the smallest overlap (in isSeparatingAxis).  Calculate the
+        // final overlap vector.
+        if (response) {
+            response.a = a;
+            response.b = b;
+            response.overlapV.copy(response.overlapN).multiplyScalar(response.overlap);
+        }
+
+        return true;
+    },
+
+    /****************************************************
+     * Utility functions
+     ****************************************************/
+    /**
+     * Flattens the specified array of points onto a unit vector axis,
+     * resulting in a one dimensional range of the minimum and
+     * maximum value on that axis.
+     *
+     * @param points {Array&lt;Vector&gt;} The points to flatten.
+     * @param normal {Vector} The unit vector axis to flatten on.
+     * @param [result] {Array&lt;Number&gt;} After calling this function,
+     *   result[0] will be the minimum value,
+     *   result[1] will be the maximum value.
+     *
+     * @return {Array} If you do not pass a &#x60;result&#x60; array, a new one is created for you
+     */
+    flattenPointsOn: function(points, normal, result) {
+        var min = Number.MAX_VALUE,
+            max = -Number.MAX_VALUE,
+            len = points.length;
+
+        for (var i = 0; i &lt; len; ++i) {
+            //get the magnitude of the projection of the point onto the normal
+            var dot = points[i].dot(normal);
+            min = math.min(dot, min);
+            max = math.max(dot, max);
+        }
+
+        result = result || [];
+        result[0] = min;
+        result[1] = max;
+
+        return result;
+    },
+    /**
+     * Check whether two convex clockwise polygons are separated by the specified
+     * axis (must be a unit vector).
+     *
+     * @param aPos {Vector} The position of the first polygon.
+     * @param bPos {Vector} The position of the second polygon.
+     * @param aPoints {Array&lt;Vector&gt;} The points in the first polygon.
+     * @param bPoints {Array&lt;Vector&gt;} The points in the second polygon.
+     * @param axis {Vector} The axis (unit sized) to test against. The points of both polygons
+     *      will be projected onto this axis.
+     * @param [response] {Collision=} A Collision object (optional) which will be populated
+     *      if the axis is not a separating axis.
+     * @return {boolean} true if it is a separating axis, false otherwise. If false,
+     *      and a response is passed in, information about how much overlap and
+     *      the direction of the overlap will be populated.
+     */
+    isSeparatingAxis: function(aPos, bPos, aPoints, bPoints, axis, response) {
+        var rangeA = T_ARRAYS.pop(),
+            rangeB = T_ARRAYS.pop(),
+            // Get the magnitude of the offset between the two polygons
+            offsetV = T_VECTORS.pop().copy(bPos).sub(aPos),
+            projectedOffset = offsetV.dot(axis),
+            option1, option2;
+
+        // Project the polygons onto the axis.
+        this.flattenPointsOn(aPoints, axis, rangeA);
+        this.flattenPointsOn(bPoints, axis, rangeB);
+
+        // Move B&#x27;s range to its position relative to A.
+        rangeB[0] += projectedOffset;
+        rangeB[1] += projectedOffset;
+
+        // Check if there is a gap. If there is, this is a separating axis and we can stop
+        if (rangeA[0] &gt; rangeB[1] || rangeB[0] &gt; rangeA[1]) {
+            T_VECTORS.push(offsetV);
+            T_ARRAYS.push(rangeA);
+            T_ARRAYS.push(rangeB);
+
+            return true;
+        }
+
+        // If we&#x27;re calculating a response, calculate the overlap.
+        if (response) {
+            var overlap = 0;
+
+            // A starts further left than B
+            if (rangeA[0] &lt; rangeB[0]) {
+                response.aInB = false;
+
+                // A ends before B does. We have to pull A out of B
+                if (rangeA[1] &lt; rangeB[1]) {
+                    overlap = rangeA[1] - rangeB[0];
+                    response.bInA = false;
+                }
+                // B is fully inside A.  Pick the shortest way out.
+                else {
+                    option1 = rangeA[1] - rangeB[0];
+                    option2 = rangeB[1] - rangeA[0];
+
+                    overlap = option1 &lt; option2 ? option1 : -option2;
+                }
+            }
+            // B starts further left than A
+            else {
+                response.bInA = false;
+
+                // B ends before A ends. We have to push A out of B
+                if (rangeA[1] &gt; rangeB[1]) {
+                    overlap = rangeA[0] - rangeB[1];
+                    response.aInB = false;
+                }
+                // A is fully inside B.  Pick the shortest way out.
+                else {
+                    option1 = rangeA[1] - rangeB[0];
+                    option2 = rangeB[1] - rangeA[0];
+
+                    overlap = option1 &lt; option2 ? option1 : -option2;
+                }
+            }
+            // If this is the smallest amount of overlap we&#x27;ve seen so far, set it as the minimum overlap.
+            var absOverlap = math.abs(overlap);
+            if (absOverlap &lt; response.overlap) {
+                response.overlap = absOverlap;
+                response.overlapN.copy(axis);
+
+                if (overlap &lt; 0) {
+                    response.overlapN.negate();
+                }
+            }
+        }
+
+        T_VECTORS.push(offsetV);
+        T_ARRAYS.push(rangeA);
+        T_ARRAYS.push(rangeB);
+
+        return false;
+    },
+    /**
+     * Calculates which Vornoi region a point is on a line segment.
+     * It is assumed that both the line and the point are relative to (0, 0)
+     *
+     *             |       (0)      |
+     *      (-1)  [0]--------------[1]  (1)
+     *             |       (0)      |
+     *
+     * @param line {Vector} The line segment.
+     * @param point {Vector} The point.
+     * @return {Number} LEFT_VORNOI_REGION (-1) if it is the left region,
+     *          MIDDLE_VORNOI_REGION (0) if it is the middle region,
+     *          RIGHT_VORNOI_REGION (1) if it is the right region.
+     */
+    vornoiRegion: function(line, point) {
+        var len2 = line.lengthSq(),
+            dp = point.dot(line);
+
+        if (dp &lt; 0)
+            return Physics.VORONOI_REGION.LEFT;
+        else if (dp &gt; len2)
+            return Physics.VORONOI_REGION.RIGHT;
+        else
+            return Physics.VORONOI_REGION.MIDDLE;
+    }
+});
+
+Physics.VORONOI_REGION = {
+    LEFT: -1,
+    MIDDLE: 0,
+    RIGHT: 1
+};
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

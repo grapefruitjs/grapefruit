@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\geom\Rectangle.js - GrapeFruit Game Engine</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="https://en.gravatar.com/userimage/49218683/8654d0c767f327312ebb1ace7f5a8d8d.png" title="GrapeFruit Game Engine"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: v0.1.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/gf.AssetLoader.html">gf.AssetLoader</a></li>
+            
+                <li><a href="../classes/gf.AudioManager.html">gf.AudioManager</a></li>
+            
+                <li><a href="../classes/gf.AudoPlayer.html">gf.AudoPlayer</a></li>
+            
+                <li><a href="../classes/gf.BitmapText.html">gf.BitmapText</a></li>
+            
+                <li><a href="../classes/gf.Camera.html">gf.Camera</a></li>
+            
+                <li><a href="../classes/gf.Circle.html">gf.Circle</a></li>
+            
+                <li><a href="../classes/gf.Clock.html">gf.Clock</a></li>
+            
+                <li><a href="../classes/gf.Container.html">gf.Container</a></li>
+            
+                <li><a href="../classes/gf.EventEmitter.html">gf.EventEmitter</a></li>
+            
+                <li><a href="../classes/gf.Game.html">gf.Game</a></li>
+            
+                <li><a href="../classes/gf.Gamepad.html">gf.Gamepad</a></li>
+            
+                <li><a href="../classes/gf.GamepadButtons.html">gf.GamepadButtons</a></li>
+            
+                <li><a href="../classes/gf.GamepadSticks.html">gf.GamepadSticks</a></li>
+            
+                <li><a href="../classes/gf.GameState.html">gf.GameState</a></li>
+            
+                <li><a href="../classes/gf.GuiItem.html">gf.GuiItem</a></li>
+            
+                <li><a href="../classes/gf.Input.html">gf.Input</a></li>
+            
+                <li><a href="../classes/gf.InputManager.html">gf.InputManager</a></li>
+            
+                <li><a href="../classes/gf.Keyboard.html">gf.Keyboard</a></li>
+            
+                <li><a href="../classes/gf.math.html">gf.math</a></li>
+            
+                <li><a href="../classes/gf.ObjectGroup.html">gf.ObjectGroup</a></li>
+            
+                <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
+            
+                <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
+            
+                <li><a href="../classes/gf.Pointer.html">gf.Pointer</a></li>
+            
+                <li><a href="../classes/gf.Pointers.html">gf.Pointers</a></li>
+            
+                <li><a href="../classes/gf.Polygon.html">gf.Polygon</a></li>
+            
+                <li><a href="../classes/gf.Rectangle.html">gf.Rectangle</a></li>
+            
+                <li><a href="../classes/gf.Sprite.html">gf.Sprite</a></li>
+            
+                <li><a href="../classes/gf.SpritePool.html">gf.SpritePool</a></li>
+            
+                <li><a href="../classes/gf.support.html">gf.support</a></li>
+            
+                <li><a href="../classes/gf.Tile.html">gf.Tile</a></li>
+            
+                <li><a href="../classes/gf.Tilelayer.html">gf.Tilelayer</a></li>
+            
+                <li><a href="../classes/gf.Tilemap.html">gf.Tilemap</a></li>
+            
+                <li><a href="../classes/gf.Tileset.html">gf.Tileset</a></li>
+            
+                <li><a href="../classes/gf.utils.html">gf.utils</a></li>
+            
+                <li><a href="../classes/gf.Vector.html">gf.Vector</a></li>
+            
+                <li><a href="../classes/gf.World.html">gf.World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src\geom\Rectangle.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+//var Rectangle = module.exports = require(&#x27;../vendor/pixi&#x27;).Rectangle;
+
+var inherit = require(&#x27;../utils/inherit&#x27;),
+    Polygon = require(&#x27;./Polygon&#x27;),
+    Vector = require(&#x27;../math/Vector&#x27;),
+    C = require(&#x27;../constants&#x27;);
+
+/**
+ * The Rectangle object is an area defined by its position, as indicated by its
+ * top-left corner point (x, y) and by its width and its height.
+ *
+ * @class Rectangle
+ * @constructor 
+ * @param x {Number} The X coord of the upper-left corner of the rectangle
+ * @param y {Number} The Y coord of the upper-left corner of the rectangle
+ * @param width {Number} The overall wisth of this rectangle
+ * @param height {Number} The overall height of this rectangle
+ */
+var Rectangle = module.exports = function(x, y, width, height) {
+    /**
+     * @property position
+     * @type Vector
+     * @default 0
+     */
+    this.position = new Vector();
+
+    //set positon
+    this.x = x || 0;
+    this.y = y || 0;
+
+    /**
+     * @property _width
+     * @type Number
+     * @default 0
+     * @private
+     */
+    this._width = width || 0;
+
+    /**
+     * @property _height
+     * @type Number
+     * @default 0
+     * @private
+     */
+    this._height = height || 0;
+
+    /**
+     * @property halfWidth
+     * @type Number
+     * @default 0
+     */
+    this.halfWidth = this._width / 2;
+
+    /**
+     * @property halfHeight
+     * @type Number
+     * @default 0
+     */
+    this.halfHeight = this._height / 2;
+
+    //internal shape type
+    this._shapetype = C.SHAPE.RECTANGLE;
+};
+
+inherit(Rectangle, Object, {
+    /**
+     * Creates a clone of this Rectangle
+     *
+     * @method clone
+     * @return {Rectangle} a copy of the rectangle
+     */
+    clone: function() {
+        return new Rectangle(this.x, this.y, this._width, this._height);
+    },
+
+    /**
+     * Checks if the x, and y coords passed to this function are contained within this Rectangle
+     *
+     * @method contains
+     * @param x {Number} The X coord of the point to test
+     * @param y {Number} The Y coord of the point to test
+     * @return {Boolean} if the x/y coords are within this Rectangle
+     */
+    contains: function(x, y) {
+        if(this._width &lt;= 0 || this._height &lt;= 0)
+            return false;
+
+        var x1 = this.x;
+        if(x &gt;= x1 &amp;&amp; x &lt;= x1 + this._width) {
+            var y1 = this.y;
+
+            if(y &gt;= y1 &amp;&amp; y &lt;= y1 + this._height) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    /**
+     * Checks if this rectangle overlaps another
+     *
+     * @method contains
+     * @param rect {Rectangle} The rectangle to check if this overlaps
+     * @return {Boolean} if the rectangle overlaps
+     */
+    overlaps: function(rect) {
+        return this.right &gt; rect.x &amp;&amp;
+                this.x &lt; rect.right &amp;&amp;
+                this.bottom &gt; rect.y &amp;&amp;
+                this.y &lt; rect.bottom;
+    },
+
+    /**
+     * Returns a polygon from this rectangle&#x27;s points
+     *
+     * @method toPolygon
+     * @return {Polygon}
+     */
+    toPolygon: function() {
+        return new Polygon(this.x, this.y, [
+            new Vector(), //top-left
+            new Vector(this.width, 0), //top-right
+            new Vector(this.width, this.height), //bottom-right
+            new Vector(0, this.height) //bottom-left
+        ]);
+    }
+});
+
+/**
+ * The top-left X coord of the rectangle
+ *
+ * @property x
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Rectangle.prototype, &#x27;x&#x27;, {
+    get: function() {
+        return this.position.x;
+    },
+    set: function(v) {
+        this.position.x = v;
+    }
+});
+
+/**
+ * The top-left Y coord of the rectangle
+ *
+ * @property y
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Rectangle.prototype, &#x27;y&#x27;, {
+    get: function() {
+        return this.position.y;
+    },
+    set: function(v) {
+        this.position.y = v;
+    }
+});
+
+
+/**
+ * The width of the object
+ *
+ * @property width
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Rectangle.prototype, &#x27;width&#x27;, {
+    get: function() {
+        return this._width;
+    },
+    set: function(w) {
+        this._width = w || 0;
+        this.halfWidth = this._width / 2;
+    }
+});
+
+/**
+ * The height of the object
+ *
+ * @property height
+ * @type Number
+ * @defualt 0
+ */
+Object.defineProperty(Rectangle.prototype, &#x27;height&#x27;, {
+    get: function() {
+        return this._height;
+    },
+    set: function(h) {
+        this._height = h || 0;
+        this.halfHeight = this._height / 2;
+    }
+});
+
+/**
+ * Returns the right most X coord
+ *
+ * @property right
+ * @type Number
+ * @readOnly
+ */
+Object.defineProperty(Rectangle.prototype, &#x27;right&#x27;, {
+    get: function() {
+        return this.x + this._width;
+    }
+});
+
+/**
+ * Returns the left most X coord
+ *
+ * @property left
+ * @type Number
+ * @readOnly
+ */
+Object.defineProperty(Rectangle.prototype, &#x27;left&#x27;, {
+    get: function() {
+        return this.x;
+    }
+});
+
+/**
+ * Returns the top most Y coord
+ *
+ * @property top
+ * @type Number
+ * @readOnly
+ */
+Object.defineProperty(Rectangle.prototype, &#x27;top&#x27;, {
+    get: function() {
+        return this.y;
+    }
+});
+
+/**
+ * Returns the bottom most Y coord
+ *
+ * @property bottom
+ * @type Number
+ * @readOnly
+ */
+Object.defineProperty(Rectangle.prototype, &#x27;bottom&#x27;, {
+    get: function() {
+        return this.y + this._height;
+    }
+});
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

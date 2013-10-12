@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\input\pointer\Pointer.js - GrapeFruit Game Engine</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="https://en.gravatar.com/userimage/49218683/8654d0c767f327312ebb1ace7f5a8d8d.png" title="GrapeFruit Game Engine"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: v0.1.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/gf.AssetLoader.html">gf.AssetLoader</a></li>
+            
+                <li><a href="../classes/gf.AudioManager.html">gf.AudioManager</a></li>
+            
+                <li><a href="../classes/gf.AudoPlayer.html">gf.AudoPlayer</a></li>
+            
+                <li><a href="../classes/gf.BitmapText.html">gf.BitmapText</a></li>
+            
+                <li><a href="../classes/gf.Camera.html">gf.Camera</a></li>
+            
+                <li><a href="../classes/gf.Circle.html">gf.Circle</a></li>
+            
+                <li><a href="../classes/gf.Clock.html">gf.Clock</a></li>
+            
+                <li><a href="../classes/gf.Container.html">gf.Container</a></li>
+            
+                <li><a href="../classes/gf.EventEmitter.html">gf.EventEmitter</a></li>
+            
+                <li><a href="../classes/gf.Game.html">gf.Game</a></li>
+            
+                <li><a href="../classes/gf.Gamepad.html">gf.Gamepad</a></li>
+            
+                <li><a href="../classes/gf.GamepadButtons.html">gf.GamepadButtons</a></li>
+            
+                <li><a href="../classes/gf.GamepadSticks.html">gf.GamepadSticks</a></li>
+            
+                <li><a href="../classes/gf.GameState.html">gf.GameState</a></li>
+            
+                <li><a href="../classes/gf.GuiItem.html">gf.GuiItem</a></li>
+            
+                <li><a href="../classes/gf.Input.html">gf.Input</a></li>
+            
+                <li><a href="../classes/gf.InputManager.html">gf.InputManager</a></li>
+            
+                <li><a href="../classes/gf.Keyboard.html">gf.Keyboard</a></li>
+            
+                <li><a href="../classes/gf.math.html">gf.math</a></li>
+            
+                <li><a href="../classes/gf.ObjectGroup.html">gf.ObjectGroup</a></li>
+            
+                <li><a href="../classes/gf.ObjectPool.html">gf.ObjectPool</a></li>
+            
+                <li><a href="../classes/gf.plugin.html">gf.plugin</a></li>
+            
+                <li><a href="../classes/gf.Pointer.html">gf.Pointer</a></li>
+            
+                <li><a href="../classes/gf.Pointers.html">gf.Pointers</a></li>
+            
+                <li><a href="../classes/gf.Polygon.html">gf.Polygon</a></li>
+            
+                <li><a href="../classes/gf.Rectangle.html">gf.Rectangle</a></li>
+            
+                <li><a href="../classes/gf.Sprite.html">gf.Sprite</a></li>
+            
+                <li><a href="../classes/gf.SpritePool.html">gf.SpritePool</a></li>
+            
+                <li><a href="../classes/gf.support.html">gf.support</a></li>
+            
+                <li><a href="../classes/gf.Tile.html">gf.Tile</a></li>
+            
+                <li><a href="../classes/gf.Tilelayer.html">gf.Tilelayer</a></li>
+            
+                <li><a href="../classes/gf.Tilemap.html">gf.Tilemap</a></li>
+            
+                <li><a href="../classes/gf.Tileset.html">gf.Tileset</a></li>
+            
+                <li><a href="../classes/gf.utils.html">gf.utils</a></li>
+            
+                <li><a href="../classes/gf.Vector.html">gf.Vector</a></li>
+            
+                <li><a href="../classes/gf.World.html">gf.World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src\input\pointer\Pointer.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+var Input = require(&#x27;../Input&#x27;),
+    Vector = require(&#x27;../../math/Vector&#x27;),
+    Clock = require(&#x27;../../utils/Clock&#x27;),
+    inherit = require(&#x27;../../utils/inherit&#x27;);
+
+/**
+ * Represents a single pointer input method
+ *
+ * @class Pointer
+ * @extends Input
+ * @constructor
+ * @param id {mixed} The identifier for this pointer
+ */
+var Pointer = module.exports = function(id, manager) {
+    Input.call(this);
+
+    //the id of this pointer
+    this.id = id;
+
+    //the pointers manager
+    this.manager = manager;
+
+    //the game instance of the pointer
+    this.game = manager.game;
+
+    //is this an active pointer (currently touching)?
+    this.active = false;
+
+    //is this the mouse pointer?
+    this.mouse = (id === 1);
+
+    //the clock for timing stuffz
+    this.clock = new Clock();
+
+    //to copy some event stuff
+    this.button = null;
+    this.type = null; //Pointer.TYPE
+
+    //have we emitted the hold event already?
+    this._holdSent = false;
+
+    this.position = new Vector();
+    this.positionDown = new Vector();
+};
+
+inherit(Pointer, Input, {
+    down: function(evt) {
+        this.originalEvent = evt;
+
+        //store down timing
+        this.timeDown = this.clock.now();
+        this.timeHold = 0;
+        this._holdSent = false;
+
+        //update x/y position
+        this.move(evt);
+        this.positionDown.copy(this.position);
+
+        //copy some event vars
+        this.button = evt.button;
+        this.type = evt.pointerType;
+
+        if(!this.active) {
+            this.active = true;
+            this.manager.activePointers++;
+        }
+    },
+    up: function(evt) {
+        var emit;
+
+        this.originalEvent = evt;
+
+        this.timeUp = this.clock.now();
+        this.timeHold = this.timeUp - this.timeDown;
+
+        //consider this a click?
+        if(this.timeHold &gt;= 0 &amp;&amp; this.timeHold &lt;= this.manager.clickDelay) {
+            //is this a double click?
+            if((this.timeUp - this.previousClickTime) &lt;= this.manager.doubleClickDelay) {
+                emit = &#x27;doubleclick&#x27;;
+            }
+            //only a single click
+            else {
+                emit = &#x27;click&#x27;;
+            }
+
+            this.previousClickTime = this.timeUp;
+        }
+
+        //mouse is always active
+        if(!this.mouse) {
+            this.active = false;
+            this.manager.activePointers--;
+        }
+
+        //emit click/doubleclick if needed
+        if(emit) {
+            this.manager.emit(emit, this);
+        }
+    },
+    move: function(evt) {
+        this.originalEvent = evt;
+
+        //copy some event vars
+        this.button = evt.button;
+        this.type = evt.pointerType;
+
+        this.position.set(
+            evt.pageX - this.game.offset.x,
+            evt.pageY - this.game.offset.y
+        );
+    },
+    leave: function(evt) {
+        this.move(evt);
+    },
+    update: function() {
+        if(!this.active || this._holdSent)
+            return;
+
+        this.timeHold += this.clock.now() - this.timeDown;
+        if(this.timeHold &gt;= this.manager.holdDelay) {
+            this._holdSent = true;
+            this.manager.emit(&#x27;hold&#x27;, this);
+        }
+    },
+    positionWorld: {}
+});
+
+Object.defineProperty(Pointer.prototype.positionWorld, &#x27;x&#x27;, {
+    get: function() {
+        return this.position.x - this.game.world.position.x;
+    }
+});
+
+Object.defineProperty(Pointer.prototype.positionWorld, &#x27;y&#x27;, {
+    get: function() {
+        return this.position.y - this.game.world.position.y;
+    }
+});
+
+Pointer.TYPE = {
+    TOUCH: &#x27;touch&#x27;,
+    PEN: &#x27;pen&#x27;,
+    MOUSE: &#x27;mouse&#x27;
+};
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
