@@ -1,0 +1,2 @@
+describe('ObjectGroup', function() {
+});

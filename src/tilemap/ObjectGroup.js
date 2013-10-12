@@ -1,8 +1,8 @@
 var Container = require('../display/Container'),
     Vector = require('../math/Vector'),
-    Polygon = require('../math/Polygon'),
-    Ellipse = require('../math/Ellipse'),
-    Rectangle = require('../math/Rectangle'),
+    Polygon = require('../geom/Polygon'),
+    Ellipse = require('../geom/Ellipse'),
+    Rectangle = require('../geom/Rectangle'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
     math = require('../math/math');
@@ -16,7 +16,7 @@ var Container = require('../display/Container'),
  * @constructor
  * @param group {Object} All the settings for the layer
  */
- var ObjectGroup = module.exports = function(map, group) {
+var ObjectGroup = module.exports = function(map, group) {
     Container.call(this, group);
 
     /**

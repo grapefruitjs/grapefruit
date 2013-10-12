@@ -1,0 +1,2 @@
+describe('ParticleEmitter', function() {
+});

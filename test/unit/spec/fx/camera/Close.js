@@ -1,0 +1,2 @@
+describe('Close', function() {
+});

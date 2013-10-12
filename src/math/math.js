@@ -1,3 +1,5 @@
+var support = require('../utils/support');
+
 /**
  * The grapefruit math library, used to abstract commonly used math operations
  *
@@ -206,7 +208,7 @@ var math = module.exports = {
      * percentage chance of returning: true.
      *
      * @method randomBool
-     * @param chance {Number} The % chance of getting true (0 - 100), defaults to 50%
+     * @param [chance=50] {Number} The % chance of getting true (0 - 100), defaults to 50%
      * @return {Boolean}
      */
     randomBool: function(chance) {
@@ -228,21 +230,35 @@ var math = module.exports = {
      * Returns a random int between min and max.
      *
      * @method randomInt
-     * @param min {Number} The minimun number that the result can be
-     * @param max {Number} The maximun number that the result can be
+     * @param [min=0] {Number} The minimun number that the result can be
+     * @param [max=100] {Number} The maximun number that the result can be
      * @return {Number}
      */
     randomInt: function(min, max) {
-        if(min === max)
+        if(min !== undefined && min === max)
             return min;
+
+        min = min || 0;
+        max = max || 100;
 
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
+    /**
+     * Returns a random real number between min and max.
+     *
+     * @method randomReal
+     * @param [min=0] {Number} The minimun number that the result can be
+     * @param [max=1] {Number} The maximun number that the result can be
+     * @return {Number}
+     */
     randomReal: function(min, max) {
-        if(min === max)
+        if(min !== undefined && min === max)
             return min;
 
-        return math.random() * (max - min + 1) + min;
+        min = min || 0;
+        max = max || 1;
+
+        return math.random() * (max - min) + min;
     },
     /**
      * Returns a random sign based on the provided chance. The chance represents the
@@ -264,6 +280,56 @@ var math = module.exports = {
      */
     randomString: function() {
         return Math.floor(Date.now() * Math.random()).toString();
+    },
+    /**
+     * Generates a random RFC4122 compliant (v4) UUID
+     *
+     * @method randomUuid
+     * @return {String} A random guid
+     */
+    randomUuid: function() {
+        //collect some random bytes
+        var buf = math.randomBytes(math.__uuidBytes);
+
+        // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+        buf[6] = (buf[6] & 0x0f) | 0x40;
+        buf[8] = (buf[8] & 0x3f) | 0x80;
+
+        var i = 0,
+            bth = math.__byteToHex;
+
+        //convert bytes to string
+        return bth[buf[i++]] + bth[buf[i++]] +
+                bth[buf[i++]] + bth[buf[i++]] + '-' +
+                bth[buf[i++]] + bth[buf[i++]] + '-' +
+                bth[buf[i++]] + bth[buf[i++]] + '-' +
+                bth[buf[i++]] + bth[buf[i++]] + '-' +
+                bth[buf[i++]] + bth[buf[i++]] +
+                bth[buf[i++]] + bth[buf[i++]] +
+                bth[buf[i++]] + bth[buf[i++]];
+    },
+    __uuidBytes: new Uint8Array(16),
+    __byteToHex: (function() {
+        var bth = [],
+            htb = {};
+        for (var i = 0; i < 256; i++) {
+            bth[i] = (i + 0x100).toString(16).substr(1);
+            htb[bth[i]] = i;
+        }
+
+        return bth;
+    })(),
+    /**
+     * Fills a Typed Array with random bytes. If you do not pass an output param, then a default
+     * Uint8Array(16) is created and returned for you.
+     *
+     * @method randomBytes
+     * @param [output] {TypedArray} The output array for the random data, if none specified a new Uint8Array(16) is created
+     */
+    randomBytes: function(ary) {
+        ary = ary || new Uint8Array(16);
+        window.crypto.getRandomValues(ary);
+        return ary;
     },
     /**
      * Returns a random element of an array.
@@ -294,3 +360,52 @@ var math = module.exports = {
         return array[math.randomInt(start, end)];
     }
 };
+
+//these polyfills are separated and exposed so that they can get tested
+
+//if we support typed arrays we can do a good approximation of crypto.getRandomValues
+math._getRandomValuesTyped = function(ary) {
+    //get a Uint8 view into the buffer
+    var buf = ary.buffer,
+        len = buf.byteLength,
+        view = new Uint8Array(buf);
+
+    //fill the buffer one random byte at a time
+    for(var i = 0, r; i < len; ++i) {
+        //we only need a new random when we have pulled all the bytes out of the last one
+        //which means every fourth byte we get a new random 32-bit value
+        if((i & 0x03) === 0) {
+            r = math.random() * 0x100000000;
+        }
+
+        //pull the next byte out of the random number
+        view[i] = r >>> ((i & 0x03) << 3) & 0xff;
+    }
+
+    //return the original view which now has the data we put into the buffer
+    return ary;
+};
+
+//without typed array support we can do one that returns an array of values
+//but you would need to use new Array(num), so there is a length
+//or something like `var a = []; a[num - 1] = undefined;` so length is expanded
+math._getRandomValuesArray = function(ary) {
+    //fill the array with random values
+    for(var i = 0; i < ary.length; ++i) {
+        ary[i] = math.random() * 0x100000000;
+    }
+
+    return ary;
+};
+
+//polyfill crypto.getRandomValues if necessary
+//crypto spec: http://wiki.whatwg.org/wiki/Crypto
+if(!support.crypto) {
+    window.crypto = window.crypto || {};
+
+    if(support.typedArrays) {
+        window.crypto.getRandomValues = math._getRandomValuesTyped;
+    } else {
+        window.crypto.getRandomValues = math._getRandomValuesArray;
+    }
+}

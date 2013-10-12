@@ -1,6 +1,6 @@
 var Container = require('../display/Container'),
     Sprite = require('../display/Sprite'),
-    Rectangle = require('../math/Rectangle'),
+    Rectangle = require('../geom/Rectangle'),
     Vector = require('../math/Vector'),
     ObjectFactory = require('../utils/ObjectFactory'),
     inherit = require('../utils/inherit'),

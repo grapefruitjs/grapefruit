@@ -1,0 +1,2 @@
+describe('Gamepad', function() {
+});

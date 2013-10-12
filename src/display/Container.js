@@ -193,7 +193,7 @@ inherit(Container, PIXI.DisplayObjectContainer, {
         if(this.parent)
             this.parent.removeChild(this);
     }
- });
+});
 
 //Add event echos
 /*

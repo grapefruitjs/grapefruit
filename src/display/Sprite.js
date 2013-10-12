@@ -1,5 +1,5 @@
 var EventEmitter = require('../utils/EventEmitter'),
-    Rectangle = require('../math/Rectangle'),
+    Rectangle = require('../geom/Rectangle'),
     Body = require('../physics/Body'),
     inherit = require('../utils/inherit'),
     Texture = require('./Texture'),

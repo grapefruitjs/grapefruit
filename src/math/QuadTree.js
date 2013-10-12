@@ -33,7 +33,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var Rectangle = require('../math/Rectangle'),
+var Rectangle = require('../geom/Rectangle'),
     math = require('./math'),
     inherit = require('../utils/inherit');
 
@@ -122,7 +122,7 @@ inherit(QuadTree, Object, {
                 }
             }
         }
-     },
+    },
 
     /**
      * Determine which node the object belongs to

@@ -1,0 +1,2 @@
+describe('Camera', function() {
+});

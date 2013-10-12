@@ -1,0 +1,2 @@
+describe('Clock', function() {
+});

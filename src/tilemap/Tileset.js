@@ -196,13 +196,13 @@ inherit(Tileset, Texture, {
         if(tileId < 0) return null;
 
         var props = this.tileproperties[tileId] ?
-                //get this value
-                this.tileproperties[tileId] :
-                //set this id to default values and cache
-                this.tileproperties[tileId] = {
-                    collidable: false,
-                    breakable: false
-                };
+        //get this value
+        this.tileproperties[tileId] :
+        //set this id to default values and cache
+        this.tileproperties[tileId] = {
+            collidable: false,
+            breakable: false
+        };
 
         props.flippedX = flippedX;
         props.flippedY = flippedY;
