@@ -64,6 +64,13 @@ module.exports = function(grunt) {
                     port: testPort,
                     base: './'
                 }
+            },
+            dev: {
+                options: {
+                    port: testPort,
+                    base: './',
+                    keepalive: true
+                }
             }
         },
         yuidoc: {
@@ -105,14 +112,14 @@ module.exports = function(grunt) {
                 }
             }
         },
-        'mocha_phantomjs': {
+        mocha: {
             dist: {
                 options: {
                     mocha: {
                         ignoreLeaks: false,
                     },
                     log: true,
-                    reporter: 'spec',
+                    reporter: 'Spec',
                     urls: [
                         'http://localhost:' + testPort + '/test/unit/index.html'
                     ],
@@ -125,8 +132,7 @@ module.exports = function(grunt) {
                         ignoreLeaks: false,
                     },
                     log: true,
-                    reporter: 'xunit',
-                    output: 'test/result/unit.xml',
+                    reporter: 'xunit-file',
                     urls: [
                         'http://localhost:' + testPort + '/test/unit/index.html'
                     ],
@@ -135,6 +141,10 @@ module.exports = function(grunt) {
             }
         }
     });
+
+    //xunit file directory, if none is passed
+    if(!process.env.XUNIT_FILE)
+        process.env.XUNIT_FILE = './test/result/unit.xml';
 
     //load npm tasks
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -147,7 +157,7 @@ module.exports = function(grunt) {
     //setup shortcut tasks
     grunt.registerTask('default', ['jshint', 'build']);
     grunt.registerTask('build', ['urequire:dev', 'urequire:dist', 'replace:dist']);
-    grunt.registerTask('test', ['connect:test', 'mocha_phantomjs:dist']);
-    grunt.registerTask('testci', ['connect:test', 'mocha_phantomjs:xunit']);
+    grunt.registerTask('test', ['connect:test', 'mocha:dist']);
+    grunt.registerTask('testci', ['connect:test', 'mocha:xunit']);
     grunt.registerTask('docs', ['yuidoc']);
 };
