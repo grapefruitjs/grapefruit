@@ -305,11 +305,11 @@ inherit(Game, Object, {
         var elem = this.renderer.view;
 
         if(elem.requestFullscreen) {
-          elem.requestFullscreen();
+            elem.requestFullscreen();
         } else if(elem.mozRequestFullScreen) {
-          elem.mozRequestFullScreen();
+            elem.mozRequestFullScreen();
         } else if(elem.webkitRequestFullscreen) {
-          elem.webkitRequestFullscreen();
+            elem.webkitRequestFullscreen();
         }
 
         return this;

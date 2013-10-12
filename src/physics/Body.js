@@ -2,7 +2,7 @@
 // Phaser: https://github.com/photonstorm/phaser 
 // ChipmunkJS: https://github.com/josephg/Chipmunk-js
 
-var Rectangle = require('../math/Rectangle'),
+var Rectangle = require('../geom/Rectangle'),
     Vector = require('../math/Vector'),
     math = require('../math/math'),
     inherit = require('../utils/inherit'),
@@ -21,7 +21,6 @@ var Body = module.exports = function(sprite, shape) {
     }
 
     this.type = C.PHYSICS_TYPE.DYNAMIC;
-    this.solveType = C.SOLVE_TYPE.DISPLACE;
 
     this.velocity = new Vector();
     this.accel = new Vector();
@@ -64,7 +63,6 @@ inherit(Body, Rectangle, {
         var body = new Body(this.sprite, this.shape);
 
         body.type = this.type;
-        body.solveType = this.solveType;
 
         body.velocity.copy(this.velocity);
         body.accel.copy(this.accel);

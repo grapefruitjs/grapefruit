@@ -1,0 +1,2 @@
+describe('ObjectFactory', function() {
+});

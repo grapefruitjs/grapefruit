@@ -1,0 +1,2 @@
+describe('StateManager', function() {
+});

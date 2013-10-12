@@ -1,7 +1,7 @@
 var Vector = require('../math/Vector'),
-    Circle = require('../math/Circle'),
-    Rectangle = require('../math/Rectangle'),
-    Polygon = require('../math/Polygon');
+    Circle = require('../geom/Circle'),
+    Rectangle = require('../geom/Rectangle'),
+    Polygon = require('../geom/Polygon');
 
 /**
  * The grapefruit utility object, used for misc functions used throughout the code base
@@ -415,9 +415,9 @@ if(typeof window.DOMParser !== 'undefined') {
             return (new DOMParser()).parseFromString(xmlStr, "text/xml");
         };
     } else {*/
-        utils.warn('XML parser not available, trying to parse any XML will result in an error.');
-        utils.parseXML = function() {
-            throw 'Trying to parse XML, but not XML parser is available in this environment';
-        };
+    utils.warn('XML parser not available, trying to parse any XML will result in an error.');
+    utils.parseXML = function() {
+        throw 'Trying to parse XML, but not XML parser is available in this environment';
+    };
     //}
 }

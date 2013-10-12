@@ -1,6 +1,9 @@
+//need to allow script urls so that mocha: works below
+/* jshint scripturl:true */
 module.exports = function(grunt) {
     var glob = require('glob'),
-        source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; });
+        source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; }),
+        testPort = grunt.option('port-test') || 9002;
         //banner = [
         //    '/**',
         //    ' * @license',
@@ -60,7 +63,13 @@ module.exports = function(grunt) {
         connect: {
             test: {
                 options: {
-                    port: grunt.option('port-test') || 9002,
+                    port: testPort,
+                    base: './'
+                }
+            },
+            dev: {
+                options: {
+                    port: testPort,
                     base: './',
                     keepalive: true
                 }
@@ -102,20 +111,58 @@ module.exports = function(grunt) {
                     scanAllow: true,
                     allNodeRequires: true,
                     noRootExports: false
+                },
+                dependencies: {
+                    exports: {
+                        root: {
+                            'core': ['gf']
+                        }
+                    }
+                }
+            }
+        },
+        mocha: {
+            dist: {
+                src: ['test/unit/index.html'],
+                options: {
+                    mocha: {
+                        ignoreLeaks: false,
+                    },
+                    log: true,
+                    reporter: 'Spec',
+                    run: true
+                }
+            },
+            xunit: {
+                src: ['test/unit/index.html'],
+                options: {
+                    mocha: {
+                        ignoreLeaks: false,
+                    },
+                    log: true,
+                    reporter: 'xunit-file',
+                    run: true
                 }
             }
         }
     });
 
+    //xunit file directory, if none is passed
+    if(!process.env.XUNIT_FILE)
+        process.env.XUNIT_FILE = './test/result/unit.xml';
+
     //load npm tasks
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
+    grunt.loadNpmTasks('grunt-mocha');
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-urequire');
 
     //setup shortcut tasks
     grunt.registerTask('default', ['jshint', 'build']);
     grunt.registerTask('build', ['urequire:dev', 'urequire:dist', 'replace:dist']);
+    grunt.registerTask('test', ['mocha:dist']);
+    grunt.registerTask('testci', ['mocha:xunit']);
     grunt.registerTask('docs', ['yuidoc']);
 };
