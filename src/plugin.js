@@ -5,7 +5,6 @@
  *
  * @class plugin
  * @extends Object
- * @namespace gf
  */
 var plugin = {
     /**

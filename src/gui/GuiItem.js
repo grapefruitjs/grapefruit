@@ -10,7 +10,7 @@ var inherit = require('../utils/inherit'),
  * @param texture {Texture} The texture to set the sprite to
  * @param interactive {Boolean} Whether this item should repsond to mouse events
  */
-var GuiItem = module.exports = function(texture, interactive) {
+var GuiItem = function(texture, interactive) {
     /**
      * Sets whether or not you can drag the GuiItem around
      *
@@ -66,3 +66,5 @@ inherit(GuiItem, Sprite, {
         this.dragging = pos;
     }
 });
+
+module.exports = GuiItem;

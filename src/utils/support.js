@@ -2,9 +2,8 @@
  * Feature detection so we cans witch between renderers, play audio correctly, and other things.
  *
  * @class support
- * @namespace gf
  */
-var support = module.exports = {
+var support = {
     /**
      * The current user agent string
      *
@@ -120,3 +119,5 @@ support.codec = {
     m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),
     webm: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')
 };
+
+module.exports = support;

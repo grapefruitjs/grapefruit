@@ -8,11 +8,10 @@ var inherit = require('../utils/inherit'),
  *
  * @class InputManager
  * @extends Object
- * @namespace gf
  * @constructor
  * @param view {DOMElement} The DOMElement to bind input events to
  */
-var InputManager = module.exports = function(game) {
+var InputManager = function(game) {
     /**
      * The game instance this manager belongs to
      *
@@ -69,3 +68,5 @@ inherit(InputManager, Object, {
         this.gamepad.update(dt);
     }
 });
+
+module.exports = InputManager;

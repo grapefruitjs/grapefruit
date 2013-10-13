@@ -22,7 +22,7 @@ var AudioManager = require('../audio/AudioManager'),
  *
  *      game.enableState(state); //or you can use the name from the ctor 'battle'
  */
-var State = module.exports = function(game, name) {
+var State = function(game, name) {
     if(!name)
         name = math.randomString();
 
@@ -139,3 +139,5 @@ inherit(State, Container, {
         return this;
     }
 });
+
+module.exports = State;

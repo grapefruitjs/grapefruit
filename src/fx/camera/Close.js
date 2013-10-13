@@ -1,7 +1,7 @@
 var Effect = require('./Effect'),
     inherit = require('../../utils/inherit');
 
-var Close = module.exports = function() {
+var Close = function() {
     Effect.call(this);
 };
 
@@ -100,3 +100,5 @@ inherit(Close, Effect, {
         return this;
     }
 });
+
+module.exports = Close;

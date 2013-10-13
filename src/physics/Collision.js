@@ -1,7 +1,7 @@
 var inherit = require('../utils/inherit'),
     Vector = require('../math/Vector');
 
-var Collision = module.exports = function() {
+var Collision = function() {
     this.a = null;
     this.b = null;
 
@@ -37,3 +37,5 @@ inherit(Collision, Object, {
         return c;
     }
 });
+
+module.exports = Collision;

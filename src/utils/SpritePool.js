@@ -7,10 +7,9 @@ var inherit = require('./inherit'),
  *
  * @class SpritePool
  * @extends Object
- * @namespace gf
  * @constructor
  */
-var SpritePool = module.exports = function(game) {
+var SpritePool = function(game) {
     this.types = {};
 
     /**
@@ -66,3 +65,5 @@ inherit(SpritePool, Object, {
         return;
     }
 });
+
+module.exports = SpritePool;

@@ -1,7 +1,14 @@
 var inherit = require('../utils/inherit'),
     State = require('./State');
 
-var StateManager = module.exports = function(game) {
+/**
+ * A state manager is a container for all the states in a game.
+ *
+ * @class Statemanager
+ * @extends Object
+ * @constructor
+ */
+var StateManager = function(game) {
     /**
      * The game instance that this manager belongs to.
      *
@@ -100,3 +107,5 @@ inherit(StateManager, Object, {
         this.states = {};
     }
 });
+
+module.exports = StateManager;

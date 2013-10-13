@@ -2,7 +2,7 @@ var Effect = require('./Effect'),
     inherit = require('../../utils/inherit'),
     C = require('../../constants');
 
-var Scanlines = module.exports = function() {
+var Scanlines = function() {
     Effect.call(this);
 };
 
@@ -47,3 +47,5 @@ inherit(Scanlines, Effect, {
         return this;
     }
 });
+
+module.exports = Scanlines;

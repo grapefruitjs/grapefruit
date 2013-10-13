@@ -6,7 +6,7 @@
  * @param parent {Function} The Parent to inherit from
  * @param proto {Object} The prototype to apply to the child
  */
-module.exports = function(child, parent, proto) {
+var inherit = function(child, parent, proto) {
     proto = proto || {};
 
     //get the property descriptors from the child proto and the passed proto
@@ -28,3 +28,5 @@ module.exports = function(child, parent, proto) {
     //create the prototype
     child.prototype = Object.create(parent.prototype, desc);
 };
+
+module.exports = inherit;

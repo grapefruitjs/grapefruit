@@ -15,7 +15,7 @@ var inherit = require('../utils/inherit'),
  *      arguments passed can be flat x,y values e.g. `new Polygon(X, Y, x,y, x,y, x,y, ...)` where `x` and `y` are
  *      Numbers.
  */
-var Polygon = module.exports = function(x, y, points) {
+var Polygon = function(x, y, points) {
     /**
      * The origin point of the polygon, all points are relative to this
      *
@@ -180,3 +180,5 @@ Object.defineProperty(Polygon.prototype, 'y', {
         this.position.y = v;
     }
 });
+
+module.exports = Polygon;

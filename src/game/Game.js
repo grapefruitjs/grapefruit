@@ -30,7 +30,7 @@ var StateManager = require('./StateManager'),
  * @param [settings.antialias=true] {Boolean} Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality)
  * @param [settings.canvas] {DOMElement} The canvas to render into, if not specified one is created
  */
-var Game = module.exports = function(container, settings) {
+var Game = function(container, settings) {
     EventEmitter.call(this);
 
     //setup settings defaults
@@ -411,3 +411,5 @@ Object.defineProperty(Game.prototype, 'world', {
         return this.state.active.world;
     }
 });
+
+module.exports = Game;

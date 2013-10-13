@@ -8,7 +8,7 @@ var inherit = require('../../utils/inherit'),
  * @extends Input
  * @constructor
  */
-var GamepadButtons = module.exports = function() {
+var GamepadButtons = function() {
     Input.call(this);
 
     /**
@@ -100,3 +100,5 @@ GamepadButtons.getGpButtonName = function(i) {
 
     return '';
 };
+
+module.exports = GamepadButtons;

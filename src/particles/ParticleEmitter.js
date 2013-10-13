@@ -6,7 +6,7 @@ var Sprite = require('../display/Sprite'),
     inherit = require('../utils/inherit'),
     C = require('../constants');
 
-var ParticleEmitter = module.exports = function(name) {
+var ParticleEmitter = function(name) {
     Container.call(this);
 
     this.maxParticles = C.PARTICLES.MAX_PARTICLES;
@@ -202,3 +202,5 @@ inherit(ParticleEmitter, Container, {
         }
     }
 });
+
+module.exports = ParticleEmitter;

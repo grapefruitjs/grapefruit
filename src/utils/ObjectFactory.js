@@ -6,7 +6,7 @@ var inherit = require('./inherit'),
     BitmapText = require('../text/BitmapText'),
     C = require('../constants');
 
-var ObjectFactory = module.exports = function(state, parent) {
+var ObjectFactory = function(state, parent) {
     this.state = state;
     this.game = state.game;
     this.parent = parent;
@@ -134,3 +134,5 @@ inherit(ObjectFactory, Object, {
         return this.parent.addChild(new BitmapText(text, font, style));
     }
 });
+
+module.exports = ObjectFactory;

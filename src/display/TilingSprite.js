@@ -1,1 +1,3 @@
-module.exports = require('../vendor/pixi').TilingSprite;
+var TilingSprite = require('../vendor/pixi').TilingSprite;
+
+module.exports = TilingSprite;

@@ -8,9 +8,8 @@ var Vector = require('../math/Vector'),
  *
  * @class utils
  * @extends Object
- * @namespace gf
  */
-var utils = module.exports = {
+var utils = {
     _arrayDelim: /[|,]/,
     /**
      * An empty function that performs no action
@@ -421,3 +420,5 @@ if(typeof window.DOMParser !== 'undefined') {
     };
     //}
 }
+
+module.exports = utils;

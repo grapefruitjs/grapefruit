@@ -1,4 +1,4 @@
-module.exports = {
+var constants = {
     version: '@@VERSION',
 
     RENDERER: {
@@ -65,3 +65,5 @@ module.exports = {
         MAX_PARTICLES: 100      //max number of particles that can exist per emitter
     }
 };
+
+module.exports = constants;

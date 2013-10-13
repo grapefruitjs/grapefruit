@@ -11,7 +11,7 @@ var inherit = require('../utils/inherit'),
  * @extends Container
  * @constructor
  */
-var World = module.exports = function(state) {
+var World = function(state) {
     Container.call(this);
 
     /**
@@ -99,3 +99,5 @@ inherit(World, Container, {
         return this;
     }
 });
+
+module.exports = World;

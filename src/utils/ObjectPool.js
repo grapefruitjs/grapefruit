@@ -6,7 +6,6 @@ var inherit = require('./inherit');
  *
  * @class ObjectPool
  * @extends Object
- * @namespace gf
  * @constructor
  * @param type {mixed} The object type that this pool will hold (like Sprite, or Tile)
  * @param parent {mixed} The parent that the objects will be added to. Passing this in will
@@ -60,3 +59,5 @@ inherit(ObjectPool, Object, {
         return new F();
     }
 });
+
+module.exports = ObjectPool;
