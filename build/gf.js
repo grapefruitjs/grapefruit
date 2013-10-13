@@ -1298,9 +1298,15 @@ define(
         obj.__tiledparsed = true;
         return obj;
       },
-      log: window.console && window.console.log,
-      warn: window.console && window.console.warn,
-      error: window.console && window.console.error
+      log: function () {
+        window.console && window.console.log.apply(window.console, arguments);
+      },
+      warn: function () {
+        window.console && window.console.warn.apply(window.console, arguments);
+      },
+      error: function () {
+        window.console && window.console.error.apply(window.console, arguments);
+      }
     };
   if (typeof window.DOMParser !== "undefined") {
     utils.parseXML = function (xmlStr) {
@@ -10803,11 +10809,11 @@ define(
         });
         break;
       case "audio":
-        file.url = this.getAudioURL(file.url);
+        file.url = this.getAudioUrl(file.url);
         if (file.url) {
           if (support.webAudio) {
             utils.ajax({
-              url: this.baseURL + file.url,
+              url: this.baseUrl + file.url,
               dataType: "arraybuffer",
               load: function (data) {
                 file.data = data;
@@ -10832,7 +10838,7 @@ define(
         break;
       case "text":
         utils.ajax({
-          url: this.baseURL + file.url,
+          url: this.baseUrl + file.url,
           dataType: "text",
           load: function (data) {
             file.data = data;
