@@ -163,6 +163,6 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['jshint', 'build']);
     grunt.registerTask('build', ['urequire:dev', 'urequire:dist', 'replace:dist']);
     grunt.registerTask('test', ['mocha:dist']);
-    grunt.registerTask('testci', ['mocha:xunit']);
+    grunt.registerTask('testci', ['jshint', 'mocha:xunit']);
     grunt.registerTask('docs', ['yuidoc']);
 };
