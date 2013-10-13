@@ -6,7 +6,7 @@
  * for more information.
  *
  * @class Graphics
- * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a>
+ * @extends [PIXI.DisplayObjectContainer](http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html)
  * @constructor
  */
 var Graphics = require('../vendor/pixi').Graphics;

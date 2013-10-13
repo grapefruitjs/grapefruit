@@ -1,6 +1,6 @@
 /**
  * A texture stores the information that represents an image. All textures have a base texture
- * see <a href="http://www.goodboydigital.com/pixijs/docs/classes/BaseTexture.html">PIXI.BaseTexture</a>
+ * see [PIXI.BaseTexture](http://www.goodboydigital.com/pixijs/docs/classes/BaseTexture.html)
  * for more information.
  *
  * @class BaseTexture

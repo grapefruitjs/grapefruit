@@ -1,6 +1,6 @@
 /**
  * The Ellipse object can be used to specify a hit area for displayobjects
- * see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html">PIXI.Ellipse</a>
+ * see [PIXI.Ellipse](http://www.goodboydigital.com/pixijs/docs/classes/Ellipse.html)
  * for more information.
  *
  * @class Ellipse

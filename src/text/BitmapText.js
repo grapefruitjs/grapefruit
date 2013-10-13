@@ -10,9 +10,8 @@ var Container = require('../display/Container'),
 
 /**
  * A Text Object will create (a) line(s) of text using bitmap font. To split a line you can use "\n", "\r" or "\r\n"
- * You can generate the fnt files using
- * [http://www.angelcode.com/products/bmfont/] for windows or
- * [http://www.bmglyph.com/] for mac.
+ * You can generate the fnt files using [bmfont](http://www.angelcode.com/products/bmfont/) for windows or
+ * [bmglyph](http://www.bmglyph.com/) for mac.
  *
  * @class BitmapText
  * @extends Container

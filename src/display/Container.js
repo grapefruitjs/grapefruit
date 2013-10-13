@@ -7,7 +7,7 @@ var EventEmitter = require('../utils/EventEmitter'),
  * The base display object, that anything being put on the screen inherits from
  *
  * @class Container
- * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a>
+ * @extends [PIXI.DisplayObjectContainer](http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html)
  * @uses EventEmitter
  * @uses PhysicsTarget
  * @constructor

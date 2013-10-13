@@ -2,7 +2,7 @@ var inherit = require('../utils/inherit');
 
 /**
  * A 2d Vector implementation stolen directly from mrdoob's THREE.js
- * thanks mrdoob: https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js
+ * [Vector2d](https://github.com/mrdoob/three.js/blob/master/src/math/Vector2.js)
  *
  * @class Vector
  * @extends Object

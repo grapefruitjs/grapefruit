@@ -9,8 +9,8 @@ var utils = require('../utils/utils'),
 
 /**
  * The Loader loads and parses different game assets, such as sounds, textures,
- * TMX World files (exported from the <a target="_blank" href="http://mapeditor.org">Tiled Editor</a>),
- * and Spritesheet files (published from <a target="_blank" href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
+ * TMX World files (exported from the [Tiled Editor](http://mapeditor.org)),
+ * and Spritesheet files (published from [Texture Packer](http://www.codeandweb.com/texturepacker)).
  *
  * @class Loader
  * @extends Object
