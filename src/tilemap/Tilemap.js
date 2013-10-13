@@ -15,7 +15,11 @@ var Container = require('../display/Container'),
  * @class Tilemap
  * @extends Container
  * @constructor
+ * @param state {State} The game state the map belongs to
  * @param map {Object} All the settings for the map
+ * @param tilesetTextures {Object} An object whose keys are the tileset name,
+ *      and whose values are the textures for the tileset. For example:
+ *      `{ tileset1: new Texture(), ... }`
  */
 var Tilemap = function(state, map, tilesetTextures) {
     //call base ctor

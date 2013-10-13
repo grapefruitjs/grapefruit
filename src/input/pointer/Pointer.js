@@ -9,7 +9,8 @@ var Input = require('../Input'),
  * @class Pointer
  * @extends Input
  * @constructor
- * @param id {mixed} The identifier for this pointer
+ * @param id {String|Number} The identifier for this pointer
+ * @param manager {Pointers} The pointer manager for this pointer instance
  */
 var Pointer = function(id, manager) {
     Input.call(this);

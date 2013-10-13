@@ -8,7 +8,7 @@ var inherit = require('../utils/inherit'),
  * @extends Object
  * @uses EventEmitter
  * @constructor
- * @param game {Game} The game instance
+ * @param game {Game} The game instance this input belongs to
  */
 var Input = function(game) {
     EventEmitter.call(this);

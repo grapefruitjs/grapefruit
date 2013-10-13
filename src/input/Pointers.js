@@ -8,7 +8,7 @@ var inherit = require('../utils/inherit'),
  * @class Pointers
  * @extends Input
  * @constructor
- * @param game {Game} The game instance
+ * @param game {Game} The game instance this input belongs to
  */
 //TODO: Sprite interactivity and Interaction History
 var Pointers = function(game) {

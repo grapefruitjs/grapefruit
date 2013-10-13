@@ -18,6 +18,7 @@ var Container = require('../display/Container'),
  * @class Tilelayer
  * @extends Container
  * @constructor
+ * @param map {Tilemap} The tilemap instance that this belongs to
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48

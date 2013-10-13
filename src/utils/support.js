@@ -2,6 +2,7 @@
  * Feature detection so we cans witch between renderers, play audio correctly, and other things.
  *
  * @class support
+ * @extends Object
  */
 var support = {
     /**
