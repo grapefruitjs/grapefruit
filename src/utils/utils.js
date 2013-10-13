@@ -389,9 +389,15 @@ var utils = {
 
         return obj;
     },
-    log: window.console && window.console.log,
-    warn: window.console && window.console.warn,
-    error: window.console && window.console.error
+    log: function() {
+        window.console && window.console.log.apply(window.console, arguments);
+    },
+    warn: function() {
+        window.console && window.console.warn.apply(window.console, arguments);
+    },
+    error: function() {
+        window.console && window.console.error.apply(window.console, arguments);
+    }
 };
 
 //XML Parser

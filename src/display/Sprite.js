@@ -24,6 +24,10 @@ var EventEmitter = require('../utils/EventEmitter'),
 var Sprite = function(anims, speed, start) {
     EventEmitter.call(this);
 
+    if(!anims) {
+        anims = game.cache.getTexture('__default');
+    }
+
     //parse tx into correct format
     if(anims instanceof Texture) {
         anims = { _default: { frames: [anims] } };

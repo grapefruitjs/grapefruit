@@ -425,12 +425,12 @@ inherit(Loader, Object, {
 
             //load audio
             case 'audio':
-                file.url = this.getAudioURL(file.url);
+                file.url = this.getAudioUrl(file.url);
 
                 if(file.url) {
                     if(support.webAudio) {
                         utils.ajax({
-                            url: this.baseURL + file.url,
+                            url: this.baseUrl + file.url,
                             dataType: 'arraybuffer',
                             load: function(data) {
                                 file.data = data;
@@ -457,7 +457,7 @@ inherit(Loader, Object, {
 
             case 'text':
                 utils.ajax({
-                    url: this.baseURL + file.url,
+                    url: this.baseUrl + file.url,
                     dataType: 'text',
                     load: function(data) {
                         file.data = data;
