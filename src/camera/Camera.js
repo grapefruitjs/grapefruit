@@ -13,10 +13,9 @@ var Container = require('../display/Container'),
  *
  * @class Camera
  * @extends Container
- * @namespace gf
  * @constructor
  */
-var Camera = module.exports = function(state) {
+var Camera = function(state) {
     /**
      * The world instance this camera is tied to
      *
@@ -364,3 +363,5 @@ inherit(Camera, Container, {
         return this;
     }
 });
+
+module.exports = Camera;

@@ -30,7 +30,7 @@ var utils = require('../utils/utils'),
  */
 //TODO: Support external tilesets (TSX files) via the "source" attribute
 //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
-var Tileset = module.exports = function(texture, settings) {
+var Tileset = function(texture, settings) {
     //initialize the base Texture class
     Texture.call(this, texture.baseTexture || texture);
 
@@ -250,3 +250,5 @@ for(var f in Tileset.FLAGS) {
 }
 
 Tileset.FLAGS.ALL = mask;
+
+module.exports = Tileset;

@@ -1,16 +1,19 @@
-var support = require('../utils/support');
+var support = require('../utils/support'),
+    PIXI = require('../vendor/pixi');
 
 /**
  * The grapefruit math library, used to abstract commonly used math operations
  *
  * @class math
  * @extends Object
- * @namespace gf
  */
-var math = module.exports = {
+var math = {
     DEG_TO_RAD: Math.PI / 180,
     RAD_TO_DEG: 180 / Math.PI,
     SEED: Math.random(),
+    Matrix: PIXI.Matrix,
+    mat3: PIXI.mat3,
+    mat4: PIXI.mat4,
     /**
      * Alias some native functions for great justice (or incase we want to override)
      *
@@ -409,3 +412,5 @@ if(!support.crypto) {
         window.crypto.getRandomValues = math._getRandomValuesArray;
     }
 }
+
+module.exports = math;

@@ -8,7 +8,7 @@ var Rectangle = require('../geom/Rectangle'),
     inherit = require('../utils/inherit'),
     C = require('../constants');
 
-var Body = module.exports = function(sprite, shape) {
+var Body = function(sprite, shape) {
     Rectangle.call(this, sprite.position.x, sprite.position.y, sprite.width, sprite.height);
 
     this.sprite = sprite;
@@ -178,3 +178,5 @@ inherit(Body, Rectangle, {
         return this.y - this.lastPos.y;
     }
 });
+
+module.exports = Body;

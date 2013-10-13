@@ -8,7 +8,7 @@ var inherit = require('../../utils/inherit'),
  * @extends Input
  * @constructor
  */
-var GamepadSticks = module.exports = function() {
+var GamepadSticks = function() {
     Input.call(this);
 
     /**
@@ -88,3 +88,5 @@ GamepadSticks.getGpAxisName = function(i) {
 
     return '';
 };
+
+module.exports = GamepadSticks;

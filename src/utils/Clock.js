@@ -8,7 +8,7 @@ var inherit = require('./inherit');
  * @extends Object
  * @constructor
  */
-var Clock = module.exports = function() {
+var Clock = function() {
     this.startTime = 0;
     this.oldTime = 0;
     this.elapsedTime = 0;
@@ -98,3 +98,5 @@ inherit(Clock, Object, {
         return diff;
     }
 });
+
+module.exports = Clock;

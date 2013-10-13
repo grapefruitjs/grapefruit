@@ -6,12 +6,11 @@ var inherit = require('../utils/inherit');
  *
  * @class Vector
  * @extends Object
- * @namespace gf
  * @constructor
  * @param x {Number} The x component of the vector
  * @param y {Number} The y component of the vector
  */
-var Vector = module.exports = function(x, y) {
+var Vector = function(x, y) {
     this.x = x || 0;
     this.y = y || 0;
 };
@@ -483,3 +482,5 @@ inherit(Vector, Object, {
         return new Vector(this.x, this.y);
     }
 });
+
+module.exports = Vector;

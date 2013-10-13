@@ -17,7 +17,7 @@ var Container = require('../display/Container'),
  * @constructor
  * @param map {Object} All the settings for the map
  */
-var Tilemap = module.exports = function(state, map, tilesetTextures) {
+var Tilemap = function(state, map, tilesetTextures) {
     //call base ctor
     Container.call(this, map);
 
@@ -320,3 +320,5 @@ Tilemap.fromCSV = function(state, data) {
 
 };
 */
+
+module.exports = Tilemap;

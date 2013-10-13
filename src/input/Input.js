@@ -10,7 +10,7 @@ var inherit = require('../utils/inherit'),
  * @constructor
  * @param game {Game} The game instance
  */
-var InputType = module.exports = function(game) {
+var Input = function(game) {
     EventEmitter.call(this);
 
     /**
@@ -22,5 +22,7 @@ var InputType = module.exports = function(game) {
     this.game = game;
 };
 
-inherit(InputType, Object, {
+inherit(Input, Object, {
 });
+
+module.exports = Input;

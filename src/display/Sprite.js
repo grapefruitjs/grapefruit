@@ -21,7 +21,7 @@ var EventEmitter = require('../utils/EventEmitter'),
  * @example
  *      var spr = new gf.Sprite(texture);
  */
-var Sprite = module.exports = function(anims, speed, start) {
+var Sprite = function(anims, speed, start) {
     EventEmitter.call(this);
 
     //parse tx into correct format
@@ -330,6 +330,8 @@ inherit(Sprite, PIXI.Sprite, {
         /* To be overriden */
     }
 });
+
+module.exports = Sprite;
 
 //Add event echos
 /*

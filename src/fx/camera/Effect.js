@@ -2,7 +2,7 @@ var Container = require('../../display/Container'),
     inherit = require('../../utils/inherit'),
     PIXI = require('../../vendor/pixi');
 
-var Effect = module.exports = function() {
+var Effect = function() {
     Container.call(this);
 
     this.addChild(this.gfx = new PIXI.Graphics());
@@ -36,3 +36,5 @@ inherit(Effect, Container, {
         }
     }
 });
+
+module.exports = Effect;

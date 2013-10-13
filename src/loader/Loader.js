@@ -8,17 +8,17 @@ var utils = require('../utils/utils'),
     C = require('../constants');
 
 /**
- * The AssetLoader loads and parses different game assets, such as sounds, textures,
+ * The Loader loads and parses different game assets, such as sounds, textures,
  * TMX World files (exported from the <a target="_blank" href="http://mapeditor.org">Tiled Editor</a>),
  * and Spritesheet files (published from <a target="_blank" href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).
  *
- * @class AssetLoader
+ * @class Loader
  * @extends Object
  * @uses EventEmitter
  * @constructor
  * @param game {Game} Game instance this belongs to
  */
-var AssetLoader = module.exports = function(game) {
+var Loader = function(game) {
     EventEmitter.call(this);
 
     /**
@@ -127,7 +127,7 @@ var AssetLoader = module.exports = function(game) {
      */
 };
 
-inherit(AssetLoader, Object, {
+inherit(Loader, Object, {
     /**
      * Check whether asset exists with a specific key.
      *
@@ -706,3 +706,5 @@ inherit(AssetLoader, Object, {
         }
     }
 });
+
+module.exports = Loader;

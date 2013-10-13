@@ -1,1 +1,3 @@
-module.exports = require('../vendor/pixi').Text;
+var Text = require('../vendor/pixi').Text;
+
+module.exports = Text;

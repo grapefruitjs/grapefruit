@@ -4,7 +4,7 @@ var Effect = require('./Effect'),
     math = require('../../math/math'),
     C = require('../../constants');
 
-var Shake = module.exports = function() {
+var Shake = function() {
     Effect.call(this);
     this.offset = new Vector();
 };
@@ -73,3 +73,5 @@ inherit(Shake, Effect, {
         }
     }
 });
+
+module.exports = Shake;

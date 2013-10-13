@@ -2,7 +2,7 @@ var Emitter = require('./ParticleEmitter'),
     Contianer = require('../display/Container'),
     inherit = require('../utils/inherit');
 
-var ParticleSystem = module.exports = function() {
+var ParticleSystem = function() {
     Contianer.call(this);
 
     this.emitters = {};
@@ -55,3 +55,5 @@ inherit(ParticleSystem, Contianer, {
         }
     }
 });
+
+module.exports = ParticleSystem;

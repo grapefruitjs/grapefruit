@@ -1,1 +1,3 @@
-module.exports = require('../vendor/pixi').BaseTexture;
+var BaseTexture = require('../vendor/pixi').BaseTexture;
+
+module.exports = BaseTexture;

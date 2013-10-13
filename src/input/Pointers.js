@@ -11,7 +11,7 @@ var inherit = require('../utils/inherit'),
  * @param game {Game} The game instance
  */
 //TODO: Sprite interactivity and Interaction History
-var Pointers = module.exports = function(game) {
+var Pointers = function(game) {
     Input.call(this, game);
 
     /**
@@ -107,3 +107,5 @@ inherit(Pointers, Input, {
         }
     }
 });
+
+module.exports = Pointers;

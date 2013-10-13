@@ -9,7 +9,7 @@ var inherit = require('../utils/inherit'),
  * @constructor
  * @param game {Game} The game instance
  */
-var Keyboard = module.exports = function(game) {
+var Keyboard = function(game) {
     Input.call(this, game);
 
     /**
@@ -210,3 +210,5 @@ Keyboard.KEY = {
     MINUS: 173,
     TILDE: 192
 };
+
+module.exports = Keyboard;

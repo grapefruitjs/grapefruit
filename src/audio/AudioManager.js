@@ -13,10 +13,9 @@ var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozA
  *
  * @class AudioManager
  * @extends Object
- * @namespace gf
  * @constructor
  */
-var AudioManager = module.exports = function(game, parent) {
+var AudioManager = function(game, parent) {
     /**
      * The game instance this manager belongs to
      *
@@ -251,3 +250,5 @@ inherit(AudioManager, Object, {
         delete this.sounds[key];
     }
 });
+
+module.exports = AudioManager;

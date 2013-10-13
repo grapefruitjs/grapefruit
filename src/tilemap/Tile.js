@@ -9,10 +9,12 @@ var Sprite = require('../display/Sprite'),
  * @constructor
  * @param texture {Texture} The texture of the tile
  */
-var Tile = module.exports = function(texture) {
+var Tile = function(texture) {
     //call base ctor
     Sprite.call(this, texture);
 };
 
 inherit(Tile, Sprite, {
 });
+
+module.exports = Tile;

@@ -12,7 +12,6 @@ var AudioPlayer = require('./AudioPlayer'),
  * @class AudoPlayer
  * @extends Object
  * @uses EventEmitter
- * @namespace gf
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
  * @param audio {ArrayBuffer|Audio} The preloaded audio file object
@@ -21,7 +20,7 @@ var AudioPlayer = require('./AudioPlayer'),
  * @param audio.decoded {Boolean} Whether the data has been decoded yet or not
  * @param settings {Object} All the settings for this player instance
  */
-var AudioPlayer = module.exports = function(manager, audio, settings) {
+var AudioPlayer = function(manager, audio, settings) {
     EventEmitter.call(this);
 
     /**
@@ -896,3 +895,5 @@ inherit(AudioPlayer, Object, {
         }
     }
 });
+
+module.exports = AudioPlayer;

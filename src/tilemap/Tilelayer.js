@@ -21,7 +21,7 @@ var Container = require('../display/Container'),
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
-var Tilelayer = module.exports = function(map, layer) {
+var Tilelayer = function(map, layer) {
     Container.call(this, layer);
 
     /**
@@ -555,3 +555,5 @@ inherit(Tilelayer, Container, {
         this._rendered = null;
     }
 });
+
+module.exports = Tilelayer;

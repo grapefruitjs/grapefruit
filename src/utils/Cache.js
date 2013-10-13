@@ -19,7 +19,7 @@ var inherit = require('./inherit'),
  * @copyright  2013 Photon Storm Ltd.
  * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
  */
-var Cache = module.exports = function(game) {
+var Cache = function(game) {
     /**
      * Local reference to Game.
      *
@@ -442,3 +442,5 @@ inherit(Cache, Object, {
         this._tilemaps = {};
     }
 });
+
+module.exports = Cache;

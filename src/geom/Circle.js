@@ -11,7 +11,7 @@ var inherit = require('../utils/inherit'),
  * @param center {Vector} The point of the center of the circle
  * @param radius {Number} The radius of the circle
  */
-var Circle = module.exports = function(x, y, radius) {
+var Circle = function(x, y, radius) {
     /**
      * The center of the circle
      *
@@ -103,3 +103,5 @@ Object.defineProperty(Circle.prototype, 'y', {
         this.position.y = v;
     }
 });
+
+module.exports = Circle;

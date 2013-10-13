@@ -10,7 +10,7 @@ var inherit = require('../utils/inherit'),
  * @extends Input
  * @constructor
  */
-var Gamepad = module.exports = function() {
+var Gamepad = function() {
     Input.call(this);
 
     /**
@@ -180,3 +180,5 @@ inherit(Gamepad, Input, {
         this.pollStatus();
     }
 });
+
+module.exports = Gamepad;

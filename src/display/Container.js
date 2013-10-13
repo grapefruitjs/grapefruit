@@ -10,10 +10,9 @@ var EventEmitter = require('../utils/EventEmitter'),
  * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html">PIXI.DisplayObjectContainer</a>
  * @uses EventEmitter
  * @uses PhysicsTarget
- * @namespace gf
  * @constructor
  */
-var Container = module.exports = function(settings) {
+var Container = function(settings) {
     PIXI.DisplayObjectContainer.call(this);
     EventEmitter.call(this);
 
@@ -194,6 +193,8 @@ inherit(Container, PIXI.DisplayObjectContainer, {
             this.parent.removeChild(this);
     }
 });
+
+module.exports = Container;
 
 //Add event echos
 /*

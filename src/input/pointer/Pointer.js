@@ -11,7 +11,7 @@ var Input = require('../Input'),
  * @constructor
  * @param id {mixed} The identifier for this pointer
  */
-var Pointer = module.exports = function(id, manager) {
+var Pointer = function(id, manager) {
     Input.call(this);
 
     //the id of this pointer
@@ -143,3 +143,5 @@ Pointer.TYPE = {
     PEN: 'pen',
     MOUSE: 'mouse'
 };
+
+module.exports = Pointer;

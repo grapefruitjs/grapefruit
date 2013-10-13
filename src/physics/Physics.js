@@ -26,7 +26,7 @@ var T_ARRAYS = [];
 for (var i = 0; i < 5; i++)
     T_ARRAYS.push([]);
 
-var Physics = module.exports = function(state) {
+var Physics = function(state) {
     this.state = state;
 
     /**
@@ -742,3 +742,5 @@ Physics.VORONOI_REGION = {
     MIDDLE: 0,
     RIGHT: 1
 };
+
+module.exports = Physics;

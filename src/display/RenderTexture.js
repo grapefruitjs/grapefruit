@@ -1,1 +1,3 @@
-module.exports = require('../vendor/pixi').RenderTexture;
+var RenderTexture = require('../vendor/pixi').RenderTexture;
+
+module.exports = RenderTexture;

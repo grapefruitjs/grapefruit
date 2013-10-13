@@ -1,4 +1,4 @@
-var Texture = module.exports = require('../vendor/pixi').Texture,
+var Texture = require('../vendor/pixi').Texture,
     utils = require('../utils/utils'),
     PIXI = require('../vendor/pixi');
 
@@ -115,3 +115,5 @@ Texture.fromXML = function(key, xml, baseTexture) {
 Texture.fromSpritesheet = function(obj) {
     return obj;
 };
+
+module.exports = Texture;

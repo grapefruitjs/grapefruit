@@ -47,7 +47,7 @@ var Rectangle = require('../geom/Rectangle'),
 * @param [maxLevels=4] {Number} Total max levels inside root QuadTree
 * @param [level] {Number} Deepth level, required for subnodes  
 */
-var QuadTree = module.exports = function(bounds, maxObjects, maxLevels, level) {
+var QuadTree = function(bounds, maxObjects, maxLevels, level) {
     this.maxObjects = maxObjects || 10;
     this.maxLevels = maxLevels || 4;
     this.level = level || 0;
@@ -228,3 +228,5 @@ inherit(QuadTree, Object, {
         bounds.midY = bounds.y + bounds.subHeight;
     }
 });
+
+module.exports = QuadTree;

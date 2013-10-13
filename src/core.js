@@ -28,7 +28,7 @@
 *       - Opera 12+
 */
 
-module.exports = {
+var gf = {
     //audio
     AudioManager:       require('./audio/AudioManager'),
     AudioPlayer:        require('./audio/AudioPlayer'),
@@ -123,5 +123,7 @@ module.exports = {
 var C = require('./constants');
 
 for(var k in C) {
-    module.exports[k] = C[k];
+    gf[k] = C[k];
 }
+
+module.exports = gf;

@@ -16,7 +16,7 @@ var inherit = require('../utils/inherit'),
  * @param width {Number} The overall wisth of this rectangle
  * @param height {Number} The overall height of this rectangle
  */
-var Rectangle = module.exports = function(x, y, width, height) {
+var Rectangle = function(x, y, width, height) {
     /**
      * @property position
      * @type Vector
@@ -245,3 +245,5 @@ Object.defineProperty(Rectangle.prototype, 'bottom', {
         return this.y + this._height;
     }
 });
+
+module.exports = Rectangle;
