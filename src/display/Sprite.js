@@ -25,7 +25,7 @@ var Sprite = function(anims, speed, start) {
     EventEmitter.call(this);
 
     if(!anims) {
-        anims = game.cache.getTexture('__default');
+        anims = Texture.__default;
     }
 
     //parse tx into correct format
