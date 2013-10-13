@@ -194,7 +194,7 @@ var Game = function(container, settings) {
      * The state manager, to switch between game states
      *
      * @property state
-     * @type Array
+     * @type StateManager
      * @readOnly
      */
     this.state = new StateManager(this);
