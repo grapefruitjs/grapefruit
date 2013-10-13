@@ -14,10 +14,10 @@ var inherit = require('./inherit'),
  * A game only has one instance of a Cache and it is used to store all externally loaded assets such
  * as images, sounds and data files as a result of Loader calls. Cache items use string based keys for look-up.
  *
- * @package    Phaser.Cache
- * @author     Richard Davey <rich@photonstorm.com>, Chad Engler <chad@pantherdev.com>
- * @copyright  2013 Photon Storm Ltd.
- * @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+ * @class Cache
+ * @extends Object
+ * @constructor
+ * @param game {Game} The game instance this cache belongs to
  */
 var Cache = function(game) {
     /**

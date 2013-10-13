@@ -1,3 +1,15 @@
+/**
+ * A texture stores the information that represents an image or part of an image. It cannot be added
+ * to the display list directly. To do this use PIXI.Sprite. If no frame is provided then the whole image is used
+ * see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
+ * for more information.
+ *
+ * @class Texture
+ * @uses EventEmitter
+ * @constructor
+ * @param baseTexture {BaseTexture} The base texture source to create the texture from
+ * @param frame {Rectangle} The rectangle frame of the texture to show
+ */
 var Texture = require('../vendor/pixi').Texture,
     utils = require('../utils/utils'),
     PIXI = require('../vendor/pixi');

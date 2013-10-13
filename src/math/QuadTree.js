@@ -38,15 +38,17 @@ var Rectangle = require('../geom/Rectangle'),
     inherit = require('../utils/inherit');
 
 /*
-* QuadTree
-*
-* @class QuadTree
-* @constructor
-* @param bounds {Rectangle} The bounds of the quad tree
-* @param [maxObjects=10] {Number} Max objects a node can hold before splitting into 4 subnodes
-* @param [maxLevels=4] {Number} Total max levels inside root QuadTree
-* @param [level] {Number} Deepth level, required for subnodes  
-*/
+ * A QuadTree data structure organizes objects in a space by grouping them
+ * by position. This makes it much easier to detect likely collisions based
+ * on the objects that are in the same quadrants.
+ *
+ * @class QuadTree
+ * @constructor
+ * @param bounds {Rectangle} The bounds of the quad tree
+ * @param [maxObjects=10] {Number} Max objects a node can hold before splitting into 4 subnodes
+ * @param [maxLevels=4] {Number} Total max levels inside root QuadTree
+ * @param [level] {Number} Deepth level, required for subnodes
+ */
 var QuadTree = function(bounds, maxObjects, maxLevels, level) {
     this.maxObjects = maxObjects || 10;
     this.maxLevels = maxLevels || 4;

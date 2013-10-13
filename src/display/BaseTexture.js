@@ -1,3 +1,13 @@
+/**
+ * A texture stores the information that represents an image. All textures have a base texture
+ * see <a href="http://www.goodboydigital.com/pixijs/docs/classes/BaseTexture.html">PIXI.BaseTexture</a>
+ * for more information.
+ *
+ * @class BaseTexture
+ * @uses EventEmitter
+ * @constructor
+ * @param source {Image|Canvas} the source object (image or canvas)
+ */
 var BaseTexture = require('../vendor/pixi').BaseTexture;
 
 module.exports = BaseTexture;

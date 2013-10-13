@@ -7,7 +7,7 @@ var inherit = require('../utils/inherit'),
  * @class Keyboard
  * @extends Input
  * @constructor
- * @param game {Game} The game instance
+ * @param game {Game} The game instance this input belongs to
  */
 var Keyboard = function(game) {
     Input.call(this, game);

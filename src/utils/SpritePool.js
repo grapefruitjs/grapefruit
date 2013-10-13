@@ -8,6 +8,7 @@ var inherit = require('./inherit'),
  * @class SpritePool
  * @extends Object
  * @constructor
+ * @param game {Game} The game instance this sprite pool belongs to
  */
 var SpritePool = function(game) {
     this.types = {};

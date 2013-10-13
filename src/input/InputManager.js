@@ -9,7 +9,7 @@ var inherit = require('../utils/inherit'),
  * @class InputManager
  * @extends Object
  * @constructor
- * @param view {DOMElement} The DOMElement to bind input events to
+ * @param game {Game} The game instance this input belongs to
  */
 var InputManager = function(game) {
     /**

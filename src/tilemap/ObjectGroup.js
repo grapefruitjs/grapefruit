@@ -14,6 +14,7 @@ var Container = require('../display/Container'),
  * @class ObjectGroup
  * @extends Container
  * @constructor
+ * @param map {Tilemap} The tilemap instance that this belongs to
  * @param group {Object} All the settings for the layer
  */
 var ObjectGroup = function(map, group) {
