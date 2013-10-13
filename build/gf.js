@@ -428,59 +428,60 @@ define(
   'constants',['require','exports','module'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
-  module.exports = {
-    version: "@@VERSION",
-    RENDERER: {
-      AUTO: "auto",
-      CANVAS: "canvas",
-      WEBGL: "webgl"
-    },
-    FILE_FORMAT: {
-      JSON: 0,
-      XML: 1,
-      CSV: 2
-    },
-    ATLAS_FORMAT: {
-      JSON_ARRAY: 0,
-      JSON_HASH: 1,
-      STARLING_XML: 2
-    },
-    CAMERA_FOLLOW: {
-      PLATFORMER: 0,
-      TOPDOWN: 1,
-      TOPDOWN_TIGHT: 2,
-      LOCKON: 3
-    },
-    AXIS: {
-      NONE: 0,
-      HORIZONTAL: 1,
-      VERTICAL: 2,
-      BOTH: 3
-    },
-    DIRECTION: {
-      NONE: 0,
-      LEFT: 1,
-      RIGHT: 2,
-      TOP: 4,
-      BOTTOM: 8,
-      ALL: 15
-    },
-    SHAPE: {
-      CIRCLE: 1,
-      POLYGON: 2,
-      RECTANGLE: 3
-    },
-    PHYSICS_TYPE: {
-      STATIC: 0,
-      KINEMATIC: 1,
-      DYNAMIC: 2
-    },
-    PHYSICS: {
-      MAX_QUAD_OBJECTS: 10,
-      MAX_QUAD_LEVELS: 5
-    },
-    PARTICLES: { MAX_PARTICLES: 100 }
-  };
+  var constants = {
+      version: "0.1.0",
+      RENDERER: {
+        AUTO: "auto",
+        CANVAS: "canvas",
+        WEBGL: "webgl"
+      },
+      FILE_FORMAT: {
+        JSON: 0,
+        XML: 1,
+        CSV: 2
+      },
+      ATLAS_FORMAT: {
+        JSON_ARRAY: 0,
+        JSON_HASH: 1,
+        STARLING_XML: 2
+      },
+      CAMERA_FOLLOW: {
+        PLATFORMER: 0,
+        TOPDOWN: 1,
+        TOPDOWN_TIGHT: 2,
+        LOCKON: 3
+      },
+      AXIS: {
+        NONE: 0,
+        HORIZONTAL: 1,
+        VERTICAL: 2,
+        BOTH: 3
+      },
+      DIRECTION: {
+        NONE: 0,
+        LEFT: 1,
+        RIGHT: 2,
+        TOP: 4,
+        BOTTOM: 8,
+        ALL: 15
+      },
+      SHAPE: {
+        CIRCLE: 1,
+        POLYGON: 2,
+        RECTANGLE: 3
+      },
+      PHYSICS_TYPE: {
+        STATIC: 0,
+        KINEMATIC: 1,
+        DYNAMIC: 2
+      },
+      PHYSICS: {
+        MAX_QUAD_OBJECTS: 10,
+        MAX_QUAD_LEVELS: 5
+      },
+      PARTICLES: { MAX_PARTICLES: 100 }
+    };
+  module.exports = constants;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -491,7 +492,7 @@ define(
   'utils/EventEmitter',['require','exports','module'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
-  module.exports = function () {
+  var EventEmitter = function () {
     this._events = this._events || {};
     this.addEventListener = this.on = function (type, listener) {
       if (typeof listener !== "function")
@@ -533,6 +534,7 @@ define(
           for (i = 1; i < len; i++)
             args[i - 1] = arguments[i];
           handler.apply(this, args);
+          break;
         }
       } else if (typeof handler === "object") {
         len = arguments.length;
@@ -586,6 +588,7 @@ define(
       return this;
     };
   };
+  module.exports = EventEmitter;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -596,7 +599,7 @@ define(
   'utils/inherit',['require','exports','module'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
-  module.exports = function (child, parent, proto) {
+  var inherit = function (child, parent, proto) {
     proto = proto || {};
     var desc = {};
     [
@@ -615,6 +618,7 @@ define(
     };
     child.prototype = Object.create(parent.prototype, desc);
   };
+  module.exports = inherit;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -626,10 +630,10 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit");
-  var Vector = module.exports = function (x, y) {
-      this.x = x || 0;
-      this.y = y || 0;
-    };
+  var Vector = function (x, y) {
+    this.x = x || 0;
+    this.y = y || 0;
+  };
   inherit(Vector, Object, {
     set: function (x, y) {
       this.x = x;
@@ -756,7 +760,7 @@ define(
       return this.multiplyScalar(-1);
     },
     project: function (v) {
-      var amt = this.dot(v) / v.len2();
+      var amt = this.dot(v) / v.lengthSq();
       this.x = amt * v.x;
       this.y = amt * v.y;
       return this;
@@ -770,7 +774,7 @@ define(
     reflect: function (axis) {
       var x = this.x;
       var y = this.y;
-      this.project(axis).scale(2);
+      this.project(axis).multiplyScalar(2);
       this.x -= x;
       this.y -= y;
       return this;
@@ -778,7 +782,7 @@ define(
     reflectN: function (axis) {
       var x = this.x;
       var y = this.y;
-      this.projectN(axis).scale(2);
+      this.projectN(axis).multiplyScalar(2);
       this.x -= x;
       this.y -= y;
       return this;
@@ -787,10 +791,10 @@ define(
       return this.x * v.x + this.y * v.y;
     },
     lengthSq: function () {
-      return this.x * this.x + this.y * this.y;
+      return this.dot(this);
     },
     length: function () {
-      return Math.sqrt(this.x * this.x + this.y * this.y);
+      return Math.sqrt(this.lengthSq());
     },
     normalize: function () {
       return this.divideScalar(this.length());
@@ -833,6 +837,7 @@ define(
       return new Vector(this.x, this.y);
     }
   });
+  module.exports = Vector;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -844,13 +849,13 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Vector = require("../math/Vector"), C = require("../constants");
-  var Circle = module.exports = function (x, y, radius) {
-      this.position = new Vector();
-      this.radius = radius || 0;
-      this.x = x || 0;
-      this.y = y || 0;
-      this._shapetype = C.SHAPE.CIRCLE;
-    };
+  var Circle = function (x, y, radius) {
+    this.position = new Vector();
+    this.radius = radius || 0;
+    this.x = x || 0;
+    this.y = y || 0;
+    this._shapetype = C.SHAPE.CIRCLE;
+  };
   inherit(Circle, Object, {
     clone: function () {
       return new Circle(this.x, this.y, this.radius);
@@ -880,6 +885,7 @@ define(
       this.position.y = v;
     }
   });
+  module.exports = Circle;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -891,26 +897,26 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Vector = require("../math/Vector"), C = require("../constants");
-  var Polygon = module.exports = function (x, y, points) {
-      this.position = new Vector();
-      this.points = null;
-      this.edges = [];
-      this.normals = [];
-      if (!(points instanceof Array))
-        points = Array.prototype.slice.call(arguments, 2);
-      if (typeof points[0] === "number") {
-        var p = [];
-        for (var i = 0, il = points.length; i < il; i += 2) {
-          p.push(new Vector(points[i], points[i + 1]));
-        }
-        points = p;
+  var Polygon = function (x, y, points) {
+    this.position = new Vector();
+    this.points = null;
+    this.edges = [];
+    this.normals = [];
+    if (!(points instanceof Array))
+      points = Array.prototype.slice.call(arguments, 2);
+    if (typeof points[0] === "number") {
+      var p = [];
+      for (var i = 0, il = points.length; i < il; i += 2) {
+        p.push(new Vector(points[i], points[i + 1]));
       }
-      this.points = points;
-      this.x = x || 0;
-      this.y = y || 0;
-      this.recalc();
-      this._shapetype = C.SHAPE.POLYGON;
-    };
+      points = p;
+    }
+    this.points = points;
+    this.x = x || 0;
+    this.y = y || 0;
+    this.recalc();
+    this._shapetype = C.SHAPE.POLYGON;
+  };
   inherit(Polygon, Object, {
     clone: function () {
       var points = [];
@@ -957,6 +963,7 @@ define(
       this.position.y = v;
     }
   });
+  module.exports = Polygon;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -968,16 +975,16 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Polygon = require("./Polygon"), Vector = require("../math/Vector"), C = require("../constants");
-  var Rectangle = module.exports = function (x, y, width, height) {
-      this.position = new Vector();
-      this.x = x || 0;
-      this.y = y || 0;
-      this._width = width || 0;
-      this._height = height || 0;
-      this.halfWidth = this._width / 2;
-      this.halfHeight = this._height / 2;
-      this._shapetype = C.SHAPE.RECTANGLE;
-    };
+  var Rectangle = function (x, y, width, height) {
+    this.position = new Vector();
+    this.x = x || 0;
+    this.y = y || 0;
+    this._width = width || 0;
+    this._height = height || 0;
+    this.halfWidth = this._width / 2;
+    this.halfHeight = this._height / 2;
+    this._shapetype = C.SHAPE.RECTANGLE;
+  };
   inherit(Rectangle, Object, {
     clone: function () {
       return new Rectangle(this.x, this.y, this._width, this._height);
@@ -1060,6 +1067,7 @@ define(
       return this.y + this._height;
     }
   });
+  module.exports = Rectangle;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -1071,7 +1079,7 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Vector = require("../math/Vector"), Circle = require("../geom/Circle"), Rectangle = require("../geom/Rectangle"), Polygon = require("../geom/Polygon");
-  var utils = module.exports = {
+  var utils = {
       _arrayDelim: /[|,]/,
       noop: function () {
       },
@@ -1311,6 +1319,7 @@ define(
       throw "Trying to parse XML, but not XML parser is available in this environment";
     };
   }
+  module.exports = utils;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -1321,7 +1330,7 @@ define(
   'utils/support',['require','exports','module'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
-  var support = module.exports = {
+  var support = {
       ua: window.navigator ? window.navigator.userAgent.toLowerCase() : "nodejs",
       canvas: function () {
         try {
@@ -1337,6 +1346,7 @@ define(
           return false;
         }
       }(),
+      crypto: !!window.crypto && !!window.crypto.getRandomValues,
       workers: !!window.Worker,
       blobUrls: !!window.Blob && !!window.URL && !!window.URL.createObjectURL,
       typedArrays: !!window.ArrayBuffer,
@@ -1356,6 +1366,7 @@ define(
     m4a: !!(audioTest.canPlayType("audio/x-m4a;") || audioTest.canPlayType("audio/aac;")).replace(/^no$/, ""),
     webm: !!audioTest.canPlayType("audio/webm; codecs=\"vorbis\"").replace(/^no$/, "")
   };
+  module.exports = support;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -1367,38 +1378,38 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var AudioPlayer = require("./AudioPlayer"), EventEmitter = require("../utils/EventEmitter"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), support = require("../utils/support");
-  var AudioPlayer = module.exports = function (manager, audio, settings) {
-      EventEmitter.call(this);
-      this.src = "";
-      this.game = manager.game;
-      this.key = audio.key;
-      this.autoplay = false;
-      this.format = null;
-      this.loop = false;
-      this.pos3d = [
-        0,
-        0,
-        -0.5
-      ];
-      this.sprite = {};
-      Object.defineProperty(this, "volume", {
-        get: this.getVolume.bind(this),
-        set: this.setVolume.bind(this)
-      });
-      this._file = audio;
-      this._volume = 1;
-      this._duration = 0;
-      this._loaded = false;
-      this._manager = manager;
-      this._webAudio = support.webAudio;
-      this._nodes = [];
-      this._onendTimer = [];
-      utils.setValues(this, settings);
-      if (this._webAudio) {
-        this._setupAudioNode();
-      }
-      this.load();
-    };
+  var AudioPlayer = function (manager, audio, settings) {
+    EventEmitter.call(this);
+    this.src = "";
+    this.game = manager.game;
+    this.key = audio.key;
+    this.autoplay = false;
+    this.format = null;
+    this.loop = false;
+    this.pos3d = [
+      0,
+      0,
+      -0.5
+    ];
+    this.sprite = {};
+    Object.defineProperty(this, "volume", {
+      get: this.getVolume.bind(this),
+      set: this.setVolume.bind(this)
+    });
+    this._file = audio;
+    this._volume = 1;
+    this._duration = 0;
+    this._loaded = false;
+    this._manager = manager;
+    this._webAudio = support.webAudio;
+    this._nodes = [];
+    this._onendTimer = [];
+    utils.setValues(this, settings);
+    if (this._webAudio) {
+      this._setupAudioNode();
+    }
+    this.load();
+  };
   inherit(AudioPlayer, Object, {
     load: function () {
       var self = this, audio = this._file;
@@ -1834,6 +1845,7 @@ define(
       }
     }
   });
+  module.exports = AudioPlayer;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -1846,24 +1858,24 @@ define(
 // uRequire v0.6.2-01: START body of original nodejs module
   var AudioPlayer = require("./AudioPlayer"), inherit = require("../utils/inherit"), support = require("../utils/support");
   var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext, __audioctx = support.webAudio ? new __AudioCtx() : null;
-  var AudioManager = module.exports = function (game, parent) {
-      this.game = game;
-      this.parent = parent;
-      this._muted = false;
-      this._volume = 1;
-      Object.defineProperty(this, "volume", {
-        get: this.getVolume.bind(this),
-        set: this.setVolume.bind(this)
-      });
-      this.ctx = __audioctx;
-      this.canPlay = support.webAudio || support.htmlAudio;
-      if (support.webAudio) {
-        this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
-        this.masterGain.gain.value = 1;
-        this.setParent(parent);
-      }
-      this.sounds = {};
-    };
+  var AudioManager = function (game, parent) {
+    this.game = game;
+    this.parent = parent;
+    this._muted = false;
+    this._volume = 1;
+    Object.defineProperty(this, "volume", {
+      get: this.getVolume.bind(this),
+      set: this.setVolume.bind(this)
+    });
+    this.ctx = __audioctx;
+    this.canPlay = support.webAudio || support.htmlAudio;
+    if (support.webAudio) {
+      this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
+      this.masterGain.gain.value = 1;
+      this.setParent(parent);
+    }
+    this.sounds = {};
+  };
   inherit(AudioManager, Object, {
     getVolume: function () {
       return this._volume;
@@ -1941,6 +1953,7 @@ define(
       delete this.sounds[key];
     }
   });
+  module.exports = AudioManager;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -7459,11 +7472,11 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var EventEmitter = require("../utils/EventEmitter"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), PIXI = require("../vendor/pixi");
-  var Container = module.exports = function (settings) {
-      PIXI.DisplayObjectContainer.call(this);
-      EventEmitter.call(this);
-      utils.setValues(this, settings);
-    };
+  var Container = function (settings) {
+    PIXI.DisplayObjectContainer.call(this);
+    EventEmitter.call(this);
+    utils.setValues(this, settings);
+  };
   inherit(Container, PIXI.DisplayObjectContainer, {
     addChild: function (child) {
       if (child._container !== this) {
@@ -7507,6 +7520,7 @@ define(
         this.parent.removeChild(this);
     }
   });
+  module.exports = Container;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -7514,13 +7528,17 @@ return module.exports;
 }
 );
 define(
-  'math/math',['require','exports','module'],function (require, exports, module) {
+  'math/math',['require','exports','module','../utils/support','../vendor/pixi'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
-  var math = module.exports = {
+  var support = require("../utils/support"), PIXI = require("../vendor/pixi");
+  var math = {
       DEG_TO_RAD: Math.PI / 180,
       RAD_TO_DEG: 180 / Math.PI,
       SEED: Math.random(),
+      Matrix: PIXI.Matrix,
+      mat3: PIXI.mat3,
+      mat4: PIXI.mat4,
       floor: Math.floor,
       ceil: Math.ceil,
       random: Math.random,
@@ -7580,14 +7598,18 @@ define(
         return Math.random() * 100 < chance;
       },
       randomInt: function (min, max) {
-        if (min === max)
+        if (min !== undefined && min === max)
           return min;
+        min = min || 0;
+        max = max || 100;
         return Math.floor(Math.random() * (max - min + 1) + min);
       },
       randomReal: function (min, max) {
-        if (min === max)
+        if (min !== undefined && min === max)
           return min;
-        return math.random() * (max - min + 1) + min;
+        min = min || 0;
+        max = max || 1;
+        return math.random() * (max - min) + min;
       },
       randomSign: function (chance) {
         return math.randomBool(chance) ? 1 : -1;
@@ -7611,29 +7633,11 @@ define(
         }
         return bth;
       }(),
-      randomBytes: function () {
-        return function (ary) {
-          ary = ary || new Uint8Array(16);
-          var len = ary.length || 16, check, mask;
-          if (ary.BYTES_PER_ELEMENT === 1) {
-            check = 3;
-            mask = 255;
-          } else if (ary.BYTES_PER_ELEMENT === 2) {
-            check = 1;
-            mask = 65535;
-          } else if (ary.BYTES_PER_ELEMENT === 4) {
-            check = 0;
-            mask = 4294967295;
-          }
-          for (var i = 0, r; i < len; ++i) {
-            if ((i & check) === 0) {
-              r = Math.random() * 4294967296;
-            }
-            ary[i] = r >>> ((i & check) << check) & mask;
-          }
-          return ary;
-        };
-      }(),
+      randomBytes: function (ary) {
+        ary = ary || new Uint8Array(16);
+        window.crypto.getRandomValues(ary);
+        return ary;
+      },
       randomElement: function (array, start, end) {
         if (!array || !array.length)
           return null;
@@ -7646,6 +7650,31 @@ define(
         return array[math.randomInt(start, end)];
       }
     };
+  math._getRandomValuesTyped = function (ary) {
+    var buf = ary.buffer, len = buf.byteLength, view = new Uint8Array(buf);
+    for (var i = 0, r; i < len; ++i) {
+      if ((i & 3) === 0) {
+        r = math.random() * 4294967296;
+      }
+      view[i] = r >>> ((i & 3) << 3) & 255;
+    }
+    return ary;
+  };
+  math._getRandomValuesArray = function (ary) {
+    for (var i = 0; i < ary.length; ++i) {
+      ary[i] = math.random() * 4294967296;
+    }
+    return ary;
+  };
+  if (!support.crypto) {
+    window.crypto = window.crypto || {};
+    if (support.typedArrays) {
+      window.crypto.getRandomValues = math._getRandomValuesTyped;
+    } else {
+      window.crypto.getRandomValues = math._getRandomValuesArray;
+    }
+  }
+  module.exports = math;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -7657,34 +7686,34 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Rectangle = require("../geom/Rectangle"), Vector = require("../math/Vector"), math = require("../math/math"), inherit = require("../utils/inherit"), C = require("../constants");
-  var Body = module.exports = function (sprite, shape) {
-      Rectangle.call(this, sprite.position.x, sprite.position.y, sprite.width, sprite.height);
-      this.sprite = sprite;
-      this.shape = shape || new Rectangle(0, 0, sprite.width, sprite.height);
-      if (this.shape._shapetype === C.SHAPE.RECTANGLE) {
-        this.shape = this.shape.toPolygon();
-      }
-      this.type = C.PHYSICS_TYPE.DYNAMIC;
-      this.velocity = new Vector();
-      this.accel = new Vector();
-      this.drag = new Vector();
-      this.gravity = new Vector();
-      this.bounce = new Vector();
-      this.offset = new Vector();
-      this.maxVelocity = new Vector(10000, 10000);
-      this.mass = sprite.mass || 1;
-      this.carry = false;
-      this.sensor = false;
-      this.allowCollide = C.DIRECTION.ALL;
-      this.touching = C.DIRECTION.NONE;
-      this.wasTouching = C.DIRECTION.NONE;
-      this.lastPos = new Vector();
-      this._accel = 0;
-      this._drag = 0;
-      this._vDelta = 0;
-      this._accel = 0;
-      this._accel = 0;
-    };
+  var Body = function (sprite, shape) {
+    Rectangle.call(this, sprite.position.x, sprite.position.y, sprite.width, sprite.height);
+    this.sprite = sprite;
+    this.shape = shape || new Rectangle(0, 0, sprite.width, sprite.height);
+    if (this.shape._shapetype === C.SHAPE.RECTANGLE) {
+      this.shape = this.shape.toPolygon();
+    }
+    this.type = C.PHYSICS_TYPE.DYNAMIC;
+    this.velocity = new Vector();
+    this.accel = new Vector();
+    this.drag = new Vector();
+    this.gravity = new Vector();
+    this.bounce = new Vector();
+    this.offset = new Vector();
+    this.maxVelocity = new Vector(10000, 10000);
+    this.mass = sprite.mass || 1;
+    this.carry = false;
+    this.sensor = false;
+    this.allowCollide = C.DIRECTION.ALL;
+    this.touching = C.DIRECTION.NONE;
+    this.wasTouching = C.DIRECTION.NONE;
+    this.lastPos = new Vector();
+    this._accel = 0;
+    this._drag = 0;
+    this._vDelta = 0;
+    this._accel = 0;
+    this._accel = 0;
+  };
   inherit(Body, Rectangle, {
     clone: function () {
       var body = new Body(this.sprite, this.shape);
@@ -7761,6 +7790,7 @@ define(
       return this.y - this.lastPos.y;
     }
   });
+  module.exports = Body;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -7771,7 +7801,7 @@ define(
   'display/Texture',['require','exports','module','../vendor/pixi','../utils/utils','../vendor/pixi'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
-  var Texture = module.exports = require("../vendor/pixi").Texture, utils = require("../utils/utils"), PIXI = require("../vendor/pixi");
+  var Texture = require("../vendor/pixi").Texture, utils = require("../utils/utils"), PIXI = require("../vendor/pixi");
   Texture.fromJSON = function (key, json, baseTexture) {
     if (!json.frames) {
       utils.warn("Invalid Texture Atlas JSON for fromJSON, missing \"frames\" array, full json:", json);
@@ -7841,6 +7871,7 @@ define(
   Texture.fromSpritesheet = function (obj) {
     return obj;
   };
+  module.exports = Texture;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -7852,40 +7883,40 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var EventEmitter = require("../utils/EventEmitter"), Rectangle = require("../geom/Rectangle"), Body = require("../physics/Body"), inherit = require("../utils/inherit"), Texture = require("./Texture"), math = require("../math/math"), utils = require("../utils/utils"), PIXI = require("../vendor/pixi");
-  var Sprite = module.exports = function (anims, speed, start) {
-      EventEmitter.call(this);
-      if (anims instanceof Texture) {
-        anims = { _default: { frames: [anims] } };
-        speed = 1;
-        start = "_default";
-      } else if (anims instanceof Array) {
-        anims = { _default: { frames: anims } };
-        speed = 1;
-        start = "_default";
-      } else {
-        for (var a in anims) {
-          if (start === undefined)
-            start = a;
-          var anim = anims[a];
-          if (anim instanceof Array)
-            anims[a] = { frames: anim };
-          else if (anim instanceof Texture)
-            anims[a] = { frames: [anim] };
-        }
+  var Sprite = function (anims, speed, start) {
+    EventEmitter.call(this);
+    if (anims instanceof Texture) {
+      anims = { _default: { frames: [anims] } };
+      speed = 1;
+      start = "_default";
+    } else if (anims instanceof Array) {
+      anims = { _default: { frames: anims } };
+      speed = 1;
+      start = "_default";
+    } else {
+      for (var a in anims) {
+        if (start === undefined)
+          start = a;
+        var anim = anims[a];
+        if (anim instanceof Array)
+          anims[a] = { frames: anim };
+        else if (anim instanceof Texture)
+          anims[a] = { frames: [anim] };
       }
-      PIXI.Sprite.call(this, anims[start].frames[0]);
-      this.name = "";
-      this.lifespan = Infinity;
-      this.speed = speed || 1;
-      this.loop = false;
-      this.animations = anims;
-      this.currentAnimation = start;
-      this.currentFrame = 0;
-      this.playing = false;
-      this.hitArea = this.hitArea || new Rectangle(0, 0, this.width, this.height);
-      this.body = new Body(this);
-      this.goto(0, this.currentAnimation);
-    };
+    }
+    PIXI.Sprite.call(this, anims[start].frames[0]);
+    this.name = "";
+    this.lifespan = Infinity;
+    this.speed = speed || 1;
+    this.loop = false;
+    this.animations = anims;
+    this.currentAnimation = start;
+    this.currentFrame = 0;
+    this.playing = false;
+    this.hitArea = this.hitArea || new Rectangle(0, 0, this.width, this.height);
+    this.body = new Body(this);
+    this.goto(0, this.currentAnimation);
+  };
   inherit(Sprite, PIXI.Sprite, {
     clone: function () {
       var anims = utils.extend(true, {}, this.animations), spr = new Sprite(anims, this.speed, this.currentAnimation);
@@ -7989,6 +8020,7 @@ define(
     onCollide: function () {
     }
   });
+  module.exports = Sprite;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8000,12 +8032,12 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Sprite = require("../display/Sprite");
-  var GuiItem = module.exports = function (texture, interactive) {
-      this.draggable = false;
-      this.dragging = false;
-      Sprite.call(this, texture);
-      this.interactive = interactive;
-    };
+  var GuiItem = function (texture, interactive) {
+    this.draggable = false;
+    this.dragging = false;
+    Sprite.call(this, texture);
+    this.interactive = interactive;
+  };
   inherit(GuiItem, Sprite, {
     mousedown: function (e) {
       Sprite.prototype.mousedown.call(this, e);
@@ -8026,6 +8058,7 @@ define(
       this.dragging = pos;
     }
   });
+  module.exports = GuiItem;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8036,7 +8069,8 @@ define(
   'geom/Ellipse',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
-  module.exports = require("../vendor/pixi").Ellipse;
+  var Ellipse = require("../vendor/pixi").Ellipse;
+  module.exports = Ellipse;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8048,19 +8082,19 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Container = require("../display/Container"), Vector = require("../math/Vector"), Polygon = require("../geom/Polygon"), Ellipse = require("../geom/Ellipse"), Rectangle = require("../geom/Rectangle"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), math = require("../math/math");
-  var ObjectGroup = module.exports = function (map, group) {
-      Container.call(this, group);
-      this.map = map;
-      this.game = map.game;
-      this.state = map.state;
-      this.name = group.name || "";
-      this.color = group.color;
-      this.properties = group.properties || {};
-      this.objects = group.objects;
-      this.type = group.type;
-      this.alpha = group.opacity;
-      this.visible = group.visible;
-    };
+  var ObjectGroup = function (map, group) {
+    Container.call(this, group);
+    this.map = map;
+    this.game = map.game;
+    this.state = map.state;
+    this.name = group.name || "";
+    this.color = group.color;
+    this.properties = group.properties || {};
+    this.objects = group.objects;
+    this.type = group.type;
+    this.alpha = group.opacity;
+    this.visible = group.visible;
+  };
   inherit(ObjectGroup, Container, {
     spawn: function () {
       var game = this.game;
@@ -8218,6 +8252,7 @@ define(
       Container.prototype.destroy.call(this);
     }
   });
+  module.exports = ObjectGroup;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8229,10 +8264,11 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Sprite = require("../display/Sprite"), inherit = require("../utils/inherit");
-  var Tile = module.exports = function (texture) {
-      Sprite.call(this, texture);
-    };
+  var Tile = function (texture) {
+    Sprite.call(this, texture);
+  };
   inherit(Tile, Sprite, {});
+  module.exports = Tile;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8244,34 +8280,34 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Container = require("../display/Container"), Rectangle = require("../geom/Rectangle"), Vector = require("../math/Vector"), Texture = require("../display/Texture"), Tile = require("./Tile"), math = require("../math/math"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), support = require("../utils/support"), C = require("../constants");
-  var Tilelayer = module.exports = function (map, layer) {
-      Container.call(this, layer);
-      this.map = map;
-      this.game = map.game;
-      this.state = map.state;
-      this.tiles = [];
-      this.name = layer.name || "";
-      this.size = new Vector(layer.width || 0, layer.height || 0);
-      this.tileIds = support.typedArrays ? new Uint32Array(layer.data) : layer.data;
-      this.properties = utils.parseTiledProperties(layer.properties) || {};
-      this.type = layer.type;
-      this.position.x = layer.x;
-      this.position.y = layer.y;
-      this.alpha = layer.opacity;
-      this.visible = layer.visible;
-      this.preRender = this.properties.preRender;
-      this.chunkSize = new Vector(this.properties.chunkSizeX || this.properties.chunkSize || 512, this.properties.chunkSizeY || this.properties.chunkSize || 512);
-      this._preRendered = false;
-      this._tilePool = [];
-      this._buffered = {
-        left: false,
-        right: false,
-        top: false,
-        bottom: false
-      };
-      this._panDelta = new Vector();
-      this._rendered = new Rectangle();
+  var Tilelayer = function (map, layer) {
+    Container.call(this, layer);
+    this.map = map;
+    this.game = map.game;
+    this.state = map.state;
+    this.tiles = [];
+    this.name = layer.name || "";
+    this.size = new Vector(layer.width || 0, layer.height || 0);
+    this.tileIds = support.typedArrays ? new Uint32Array(layer.data) : layer.data;
+    this.properties = utils.parseTiledProperties(layer.properties) || {};
+    this.type = layer.type;
+    this.position.x = layer.x;
+    this.position.y = layer.y;
+    this.alpha = layer.opacity;
+    this.visible = layer.visible;
+    this.preRender = this.properties.preRender;
+    this.chunkSize = new Vector(this.properties.chunkSizeX || this.properties.chunkSize || 512, this.properties.chunkSizeY || this.properties.chunkSize || 512);
+    this._preRendered = false;
+    this._tilePool = [];
+    this._buffered = {
+      left: false,
+      right: false,
+      top: false,
+      bottom: false
     };
+    this._panDelta = new Vector();
+    this._rendered = new Rectangle();
+  };
   inherit(Tilelayer, Container, {
     render: function (x, y, width, height) {
       if (this.preRender) {
@@ -8516,6 +8552,7 @@ define(
       this._rendered = null;
     }
   });
+  module.exports = Tilelayer;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8527,31 +8564,31 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var utils = require("../utils/utils"), inherit = require("../utils/inherit"), math = require("../math/math"), Texture = require("../display/Texture"), Vector = require("../math/Vector"), PIXI = require("../vendor/pixi");
-  var Tileset = module.exports = function (texture, settings) {
-      Texture.call(this, texture.baseTexture || texture);
-      this.firstgid = settings.firstgid || 1;
-      this.name = settings.name;
-      this.tileSize = new Vector(settings.tilewidth, settings.tileheight);
-      this.spacing = settings.spacing || 0;
-      this.margin = settings.margin || 0;
-      this.tileoffset = new Vector(settings.tileoffset ? settings.tileoffset.x : 0, settings.tileoffset ? settings.tileoffset.y : 0);
-      this.numTiles = new Vector(math.floor((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), math.floor((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing)));
-      this.lastgid = this.firstgid + (this.numTiles.x * this.numTiles.y - 1 || 0);
-      this.properties = settings.properties || {};
-      this.tileproperties = settings.tileproperties || {};
-      this.size = new Vector(settings.imagewidth || this.baseTexture.source.width, settings.imageheight || this.baseTexture.source.height);
-      this.textures = [];
-      this.properties = utils.parseTiledProperties(this.properties);
-      for (var k in this.tileproperties) {
-        this.tileproperties[k] = utils.parseTiledProperties(this.tileproperties[k]);
-      }
-      for (var t = 0, tl = this.lastgid - this.firstgid + 1; t < tl; ++t) {
-        var y = math.floor(t / this.numTiles.x), x = t - y * this.numTiles.x;
-        x = x * this.tileSize.x + x * this.spacing + this.margin;
-        y = y * this.tileSize.y + y * this.spacing + this.margin;
-        this.textures.push(new Texture(this.baseTexture, new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)));
-      }
-    };
+  var Tileset = function (texture, settings) {
+    Texture.call(this, texture.baseTexture || texture);
+    this.firstgid = settings.firstgid || 1;
+    this.name = settings.name;
+    this.tileSize = new Vector(settings.tilewidth, settings.tileheight);
+    this.spacing = settings.spacing || 0;
+    this.margin = settings.margin || 0;
+    this.tileoffset = new Vector(settings.tileoffset ? settings.tileoffset.x : 0, settings.tileoffset ? settings.tileoffset.y : 0);
+    this.numTiles = new Vector(math.floor((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), math.floor((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing)));
+    this.lastgid = this.firstgid + (this.numTiles.x * this.numTiles.y - 1 || 0);
+    this.properties = settings.properties || {};
+    this.tileproperties = settings.tileproperties || {};
+    this.size = new Vector(settings.imagewidth || this.baseTexture.source.width, settings.imageheight || this.baseTexture.source.height);
+    this.textures = [];
+    this.properties = utils.parseTiledProperties(this.properties);
+    for (var k in this.tileproperties) {
+      this.tileproperties[k] = utils.parseTiledProperties(this.tileproperties[k]);
+    }
+    for (var t = 0, tl = this.lastgid - this.firstgid + 1; t < tl; ++t) {
+      var y = math.floor(t / this.numTiles.x), x = t - y * this.numTiles.x;
+      x = x * this.tileSize.x + x * this.spacing + this.margin;
+      y = y * this.tileSize.y + y * this.spacing + this.margin;
+      this.textures.push(new Texture(this.baseTexture, new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)));
+    }
+  };
   inherit(Tileset, Texture, {
     getTileProperties: function (tileId) {
       if (!tileId)
@@ -8594,6 +8631,7 @@ define(
     mask |= Tileset.FLAGS[f];
   }
   Tileset.FLAGS.ALL = mask;
+  module.exports = Tileset;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8605,45 +8643,45 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Container = require("../display/Container"), ObjectGroup = require("./ObjectGroup"), Sprite = require("../display/Sprite"), Vector = require("../math/Vector"), Tilelayer = require("./Tilelayer"), Tileset = require("./Tileset"), utils = require("../utils/utils"), inherit = require("../utils/inherit");
-  var Tilemap = module.exports = function (state, map, tilesetTextures) {
-      Container.call(this, map);
-      this.state = state;
-      this.game = state.game;
-      this.properties = utils.parseTiledProperties(map.properties) || {};
-      this.scale.x = this.properties.scale || 1;
-      this.scale.y = this.properties.scale || 1;
-      this.tileSize = new Vector(map.tilewidth, map.tileheight);
-      this.size = new Vector(map.width, map.height);
-      this.orientation = map.orientation;
-      this.version = map.version;
-      this.backgroundColor = map.backgroundColor;
-      this.tilesets = [];
-      this.scaledTileSize = new Vector(map.tilewidth * this.scale.x, map.tileheight * this.scale.y);
-      this.realSize = new Vector(this.size.x * this.scaledTileSize.x, this.size.y * this.scaledTileSize.y);
-      for (var t = 0, tl = map.tilesets.length; t < tl; ++t) {
-        var ts = map.tilesets[t];
-        this.tilesets.push(new Tileset(tilesetTextures[ts.name], ts));
+  var Tilemap = function (state, map, tilesetTextures) {
+    Container.call(this, map);
+    this.state = state;
+    this.game = state.game;
+    this.properties = utils.parseTiledProperties(map.properties) || {};
+    this.scale.x = this.properties.scale || 1;
+    this.scale.y = this.properties.scale || 1;
+    this.tileSize = new Vector(map.tilewidth, map.tileheight);
+    this.size = new Vector(map.width, map.height);
+    this.orientation = map.orientation;
+    this.version = map.version;
+    this.backgroundColor = map.backgroundColor;
+    this.tilesets = [];
+    this.scaledTileSize = new Vector(map.tilewidth * this.scale.x, map.tileheight * this.scale.y);
+    this.realSize = new Vector(this.size.x * this.scaledTileSize.x, this.size.y * this.scaledTileSize.y);
+    for (var t = 0, tl = map.tilesets.length; t < tl; ++t) {
+      var ts = map.tilesets[t];
+      this.tilesets.push(new Tileset(tilesetTextures[ts.name], ts));
+    }
+    for (var i = 0, il = map.layers.length; i < il; ++i) {
+      var lyr;
+      switch (map.layers[i].type) {
+      case "tilelayer":
+        lyr = new Tilelayer(this, map.layers[i]);
+        break;
+      case "objectgroup":
+        lyr = new ObjectGroup(this, map.layers[i]);
+        break;
+      case "imagelayer":
+        lyr = new Sprite(map.layers[i]);
+        break;
       }
-      for (var i = 0, il = map.layers.length; i < il; ++i) {
-        var lyr;
-        switch (map.layers[i].type) {
-        case "tilelayer":
-          lyr = new Tilelayer(this, map.layers[i]);
-          break;
-        case "objectgroup":
-          lyr = new ObjectGroup(this, map.layers[i]);
-          break;
-        case "imagelayer":
-          lyr = new Sprite(map.layers[i]);
-          break;
-        }
-        this.addChild(lyr);
-      }
-      var w = this.game.state.active.world;
-      w.bounds.width = Math.max(w.bounds.width, this.realSize.x);
-      w.bounds.height = Math.max(w.bounds.height, this.realSize.y);
-      this.state.physics.tree.setBounds(w.bounds.clone());
-    };
+      this.addChild(lyr);
+    }
+    var w = this.game.state.active.world;
+    w.bounds.width = Math.max(w.bounds.width, this.realSize.x);
+    w.bounds.height = Math.max(w.bounds.height, this.realSize.y);
+    this.state.physics.tree.setBounds(w.bounds.clone());
+  };
   inherit(Tilemap, Container, {
     getTileset: function (tileId) {
       for (var i = 0, il = this.tilesets.length; i < il; ++i)
@@ -8717,6 +8755,7 @@ define(
       return this;
     }
   });
+  module.exports = Tilemap;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8758,6 +8797,7 @@ define(
       return new F();
     }
   });
+  module.exports = ObjectPool;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8769,15 +8809,15 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Container = require("../display/Container"), ObjectPool = require("../utils/ObjectPool"), Texture = require("../display/Texture"), Sprite = require("../display/Sprite"), Vector = require("../math/Vector"), Rectangle = require("../geom/Rectangle"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), PIXI = require("../vendor/pixi");
-  var BitmapText = module.exports = function (text, font, style) {
-      Container.call(this);
-      this.dirty = true;
-      this.font = font;
-      this._text = text;
-      this.sprites = new ObjectPool(Sprite, this);
-      this.setText(text);
-      this.setStyle(style);
-    };
+  var BitmapText = function (text, font, style) {
+    Container.call(this);
+    this.dirty = true;
+    this.font = font;
+    this._text = text;
+    this.sprites = new ObjectPool(Sprite, this);
+    this.setText(text);
+    this.setStyle(style);
+  };
   inherit(BitmapText, Container, {
     setStyle: function (style) {
       style = style || {};
@@ -8894,6 +8934,7 @@ define(
     PIXI.BitmapText.fonts[data.name] = data;
     return data;
   };
+  module.exports = BitmapText;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8905,11 +8946,11 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("./inherit"), GuiItem = require("../gui/GuiItem"), Sprite = require("../display/Sprite"), Tilemap = require("../tilemap/Tilemap"), Rectangle = require("../geom/Rectangle"), BitmapText = require("../text/BitmapText"), C = require("../constants");
-  var ObjectFactory = module.exports = function (state, parent) {
-      this.state = state;
-      this.game = state.game;
-      this.parent = parent;
-    };
+  var ObjectFactory = function (state, parent) {
+    this.state = state;
+    this.game = state.game;
+    this.parent = parent;
+  };
   inherit(ObjectFactory, Object, {
     obj: function (obj) {
       return this.parent.addChild(obj);
@@ -8947,6 +8988,7 @@ define(
         this.state.camera.constrain(new Rectangle(0, 0, tilemap.realSize.x, tilemap.realSize.y));
       }
       tilemap.render(-this.state.world.position.x, -this.state.world.position.x, this.game.width, this.game.height);
+      tilemap._cachekey = key;
       return this.parent.addChild(tilemap);
     },
     gui: function (tx, interact) {
@@ -8960,6 +9002,7 @@ define(
       return this.parent.addChild(new BitmapText(text, font, style));
     }
   });
+  module.exports = ObjectFactory;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -8971,20 +9014,20 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Container = require("../display/Container"), Sprite = require("../display/Sprite"), Rectangle = require("../geom/Rectangle"), Vector = require("../math/Vector"), ObjectFactory = require("../utils/ObjectFactory"), inherit = require("../utils/inherit"), math = require("../math/math"), C = require("../constants");
-  var Camera = module.exports = function (state) {
-      this.world = state.world;
-      this.game = state.game;
-      this.state = state;
-      this.bounds = state.world.bounds.clone();
-      this._deadzone = null;
-      this._target = null;
-      this.size = new Vector(0, 0);
-      this.hSize = new Vector(0, 0);
-      this.gui = new Container();
-      this.add = new ObjectFactory(state, this.gui);
-      Container.call(this);
-      this.addChild(this.gui);
-    };
+  var Camera = function (state) {
+    this.world = state.world;
+    this.game = state.game;
+    this.state = state;
+    this.bounds = state.world.bounds.clone();
+    this._deadzone = null;
+    this._target = null;
+    this.size = new Vector(0, 0);
+    this.hSize = new Vector(0, 0);
+    this.gui = new Container();
+    this.add = new ObjectFactory(state, this.gui);
+    Container.call(this);
+    this.addChild(this.gui);
+  };
   inherit(Camera, Container, {
     follow: function (spr, style) {
       if (!(spr instanceof Sprite))
@@ -9092,6 +9135,7 @@ define(
       return this;
     }
   });
+  module.exports = Camera;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9102,7 +9146,8 @@ define(
   'display/BaseTexture',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
-  module.exports = require("../vendor/pixi").BaseTexture;
+  var BaseTexture = require("../vendor/pixi").BaseTexture;
+  module.exports = BaseTexture;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9114,12 +9159,12 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Container = require("../../display/Container"), inherit = require("../../utils/inherit"), PIXI = require("../../vendor/pixi");
-  var Effect = module.exports = function () {
-      Container.call(this);
-      this.addChild(this.gfx = new PIXI.Graphics());
-      this.gfx.visible = false;
-      this.done = true;
-    };
+  var Effect = function () {
+    Container.call(this);
+    this.addChild(this.gfx = new PIXI.Graphics());
+    this.gfx.visible = false;
+    this.done = true;
+  };
   inherit(Effect, Container, {
     start: function () {
       this.done = false;
@@ -9143,6 +9188,7 @@ define(
       }
     }
   });
+  module.exports = Effect;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9154,9 +9200,9 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Effect = require("./Effect"), inherit = require("../../utils/inherit");
-  var Close = module.exports = function () {
-      Effect.call(this);
-    };
+  var Close = function () {
+    Effect.call(this);
+  };
   inherit(Close, Effect, {
     start: function (shape, duration, pos, cb) {
       Effect.prototype.start.call(this);
@@ -9233,6 +9279,7 @@ define(
       return this;
     }
   });
+  module.exports = Close;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9244,9 +9291,9 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Effect = require("./Effect"), inherit = require("../../utils/inherit");
-  var Fade = module.exports = function () {
-      Effect.call(this);
-    };
+  var Fade = function () {
+    Effect.call(this);
+  };
   inherit(Fade, Effect, {
     start: function (color, duration, alpha, cb) {
       Effect.prototype.start.call(this);
@@ -9294,6 +9341,7 @@ define(
       return this;
     }
   });
+  module.exports = Fade;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9305,9 +9353,9 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Effect = require("./Effect"), inherit = require("../../utils/inherit");
-  var Flash = module.exports = function () {
-      Effect.call(this);
-    };
+  var Flash = function () {
+    Effect.call(this);
+  };
   inherit(Flash, Effect, {
     start: function (color, duration, alpha, cb) {
       Effect.prototype.start.call(this);
@@ -9355,6 +9403,7 @@ define(
       return this;
     }
   });
+  module.exports = Flash;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9366,9 +9415,9 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Effect = require("./Effect"), inherit = require("../../utils/inherit"), C = require("../../constants");
-  var Scanlines = module.exports = function () {
-      Effect.call(this);
-    };
+  var Scanlines = function () {
+    Effect.call(this);
+  };
   inherit(Scanlines, Effect, {
     start: function (color, direction, spacing, thickness, alpha) {
       Effect.prototype.start.call(this);
@@ -9400,6 +9449,7 @@ define(
       return this;
     }
   });
+  module.exports = Scanlines;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9411,10 +9461,10 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Effect = require("./Effect"), Vector = require("../../math/Vector"), inherit = require("../../utils/inherit"), math = require("../../math/math"), C = require("../../constants");
-  var Shake = module.exports = function () {
-      Effect.call(this);
-      this.offset = new Vector();
-    };
+  var Shake = function () {
+    Effect.call(this);
+    this.offset = new Vector();
+  };
   inherit(Shake, Effect, {
     start: function (intensity, duration, direction, cb) {
       Effect.prototype.start.call(this);
@@ -9463,6 +9513,7 @@ define(
       }
     }
   });
+  module.exports = Shake;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9474,35 +9525,35 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Sprite = require("../display/Sprite"), Texture = require("../display/Texture"), Container = require("../display/Container"), Vector = require("../math/Vector"), math = require("../math/math"), inherit = require("../utils/inherit"), C = require("../constants");
-  var ParticleEmitter = module.exports = function (name) {
-      Container.call(this);
-      this.maxParticles = C.PARTICLES.MAX_PARTICLES;
-      this.name = name;
-      this.width = 0;
-      this.height = 0;
-      this.lifespan = Infinity;
-      this.minSpeed = new Vector(-100, -100);
-      this.maxSpeed = new Vector(100, 100);
-      this.minScale = 1;
-      this.maxScale = 1;
-      this.minRotation = -2 * Math.PI;
-      this.maxRotation = 2 * Math.PI;
-      this.gravity = new Vector(0, 5);
-      this.drag = new Vector();
-      this.angularDrag = 0;
-      this.bounce = new Vector();
-      this.spread = Math.PI / 32;
-      this.delay = 100;
-      this.active = false;
-      this.particles = [];
-      this._rate = 0;
-      this._total = 0;
-      this._emitted = 0;
-      this._timer = 0;
-      this._particle = null;
-      this._textures = null;
-      this._pool = [];
-    };
+  var ParticleEmitter = function (name) {
+    Container.call(this);
+    this.maxParticles = C.PARTICLES.MAX_PARTICLES;
+    this.name = name;
+    this.width = 0;
+    this.height = 0;
+    this.lifespan = Infinity;
+    this.minSpeed = new Vector(-100, -100);
+    this.maxSpeed = new Vector(100, 100);
+    this.minScale = 1;
+    this.maxScale = 1;
+    this.minRotation = -2 * Math.PI;
+    this.maxRotation = 2 * Math.PI;
+    this.gravity = new Vector(0, 5);
+    this.drag = new Vector();
+    this.angularDrag = 0;
+    this.bounce = new Vector();
+    this.spread = Math.PI / 32;
+    this.delay = 100;
+    this.active = false;
+    this.particles = [];
+    this._rate = 0;
+    this._total = 0;
+    this._emitted = 0;
+    this._timer = 0;
+    this._particle = null;
+    this._textures = null;
+    this._pool = [];
+  };
   inherit(ParticleEmitter, Container, {
     start: function (lifespan, delay, rate, total) {
       this.active = true;
@@ -9587,6 +9638,7 @@ define(
       }
     }
   });
+  module.exports = ParticleEmitter;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9598,11 +9650,11 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Emitter = require("./ParticleEmitter"), Contianer = require("../display/Container"), inherit = require("../utils/inherit");
-  var ParticleSystem = module.exports = function () {
-      Contianer.call(this);
-      this.emitters = {};
-      this.nextId = 0;
-    };
+  var ParticleSystem = function () {
+    Contianer.call(this);
+    this.emitters = {};
+    this.nextId = 0;
+  };
   inherit(ParticleSystem, Contianer, {
     add: function (Name) {
       var emitter;
@@ -9635,6 +9687,7 @@ define(
       }
     }
   });
+  module.exports = ParticleSystem;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9646,14 +9699,14 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Container = require("../display/Container"), Rectangle = require("../geom/Rectangle"), ObjectFactory = require("../utils/ObjectFactory"), ParticleSystem = require("../particles/ParticleSystem");
-  var World = module.exports = function (state) {
-      Container.call(this);
-      this.game = state.game;
-      this.state = state;
-      this.particles = this.addChild(new ParticleSystem());
-      this.bounds = new Rectangle(0, 0, state.game.width, state.game.height);
-      this.add = new ObjectFactory(state, this);
-    };
+  var World = function (state) {
+    Container.call(this);
+    this.game = state.game;
+    this.state = state;
+    this.particles = this.addChild(new ParticleSystem());
+    this.bounds = new Rectangle(0, 0, state.game.width, state.game.height);
+    this.add = new ObjectFactory(state, this);
+  };
   inherit(World, Container, {
     pan: function (x, y) {
       y = x.y !== undefined ? x.y : y || 0;
@@ -9676,6 +9729,7 @@ define(
       return this;
     }
   });
+  module.exports = World;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9687,14 +9741,14 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Rectangle = require("../geom/Rectangle"), math = require("./math"), inherit = require("../utils/inherit");
-  var QuadTree = module.exports = function (bounds, maxObjects, maxLevels, level) {
-      this.maxObjects = maxObjects || 10;
-      this.maxLevels = maxLevels || 4;
-      this.level = level || 0;
-      this.setBounds(bounds);
-      this.objects = [];
-      this.nodes = [];
-    };
+  var QuadTree = function (bounds, maxObjects, maxLevels, level) {
+    this.maxObjects = maxObjects || 10;
+    this.maxLevels = maxLevels || 4;
+    this.level = level || 0;
+    this.setBounds(bounds);
+    this.objects = [];
+    this.nodes = [];
+  };
   inherit(QuadTree, Object, {
     split: function () {
       var b = this.bounds, next = this.level + 1;
@@ -9780,6 +9834,7 @@ define(
       bounds.midY = bounds.y + bounds.subHeight;
     }
   });
+  module.exports = QuadTree;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9791,15 +9846,15 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Vector = require("../math/Vector");
-  var Collision = module.exports = function () {
-      this.a = null;
-      this.b = null;
-      this.aInB = false;
-      this.bInA = false;
-      this.overlap = Infinity;
-      this.overlapN = new Vector();
-      this.overlapV = new Vector();
-    };
+  var Collision = function () {
+    this.a = null;
+    this.b = null;
+    this.aInB = false;
+    this.bInA = false;
+    this.overlap = Infinity;
+    this.overlapN = new Vector();
+    this.overlapV = new Vector();
+  };
   inherit(Collision, Object, {
     clear: function () {
       this.a = null;
@@ -9822,6 +9877,7 @@ define(
       return c;
     }
   });
+  module.exports = Collision;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9839,15 +9895,15 @@ define(
   var T_ARRAYS = [];
   for (var i = 0; i < 5; i++)
     T_ARRAYS.push([]);
-  var Physics = module.exports = function (state) {
-      this.state = state;
-      this.maxObjects = C.PHYSICS.MAX_QUAD_OBJECTS;
-      this.maxLevels = C.PHYSICS.MAX_QUAD_LEVELS;
-      this.tree = new QuadTree(state.world.bounds.clone(), this.maxObjects, this.maxLevels);
-      this.bodies = [];
-      this.gravity = new Vector(0, 9.87);
-      this._collision = new Collision();
-    };
+  var Physics = function (state) {
+    this.state = state;
+    this.maxObjects = C.PHYSICS.MAX_QUAD_OBJECTS;
+    this.maxLevels = C.PHYSICS.MAX_QUAD_LEVELS;
+    this.tree = new QuadTree(state.world.bounds.clone(), this.maxObjects, this.maxLevels);
+    this.bodies = [];
+    this.gravity = new Vector(0, 9.87);
+    this._collision = new Collision();
+  };
   inherit(Physics, Object, {
     update: function (dt) {
       this.tree.clear();
@@ -10197,6 +10253,7 @@ define(
     MIDDLE: 0,
     RIGHT: 1
   };
+  module.exports = Physics;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -10208,21 +10265,21 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var AudioManager = require("../audio/AudioManager"), Container = require("../display/Container"), World = require("./World"), Camera = require("../camera/Camera"), Physics = require("../physics/Physics"), math = require("../math/math"), inherit = require("../utils/inherit");
-  var State = module.exports = function (game, name) {
-      if (!name)
-        name = math.randomString();
-      this.name = name;
-      this.game = game;
-      this.audio = new AudioManager(game, game.audio);
-      this.world = new World(this);
-      this.physics = new Physics(this);
-      this.camera = new Camera(this);
-      Container.call(this);
-      this.disable();
-      this.addChild(this.camera);
-      this.addChild(this.world);
-      this.camera.resize(game.width, game.height);
-    };
+  var State = function (game, name) {
+    if (!name)
+      name = math.randomString();
+    this.name = name;
+    this.game = game;
+    this.audio = new AudioManager(game, game.audio);
+    this.world = new World(this);
+    this.physics = new Physics(this);
+    this.camera = new Camera(this);
+    Container.call(this);
+    this.disable();
+    this.addChild(this.camera);
+    this.addChild(this.world);
+    this.camera.resize(game.width, game.height);
+  };
   inherit(State, Container, {
     enable: function () {
       this.visible = true;
@@ -10246,6 +10303,7 @@ define(
       return this;
     }
   });
+  module.exports = State;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -10257,12 +10315,13 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), State = require("./State");
-  var StateManager = module.exports = function (game) {
-      this.game = game;
-      this.states = {};
-      this.active = null;
-      this._createDefault();
-    };
+  var StateManager = function (game) {
+    this.game = game;
+    this.states = {};
+    this.active = null;
+    this.count = 0;
+    this._createDefault();
+  };
   inherit(StateManager, Object, {
     _createDefault: function () {
       return this.add("__default", true);
@@ -10281,6 +10340,7 @@ define(
       this.game.stage.addChild(state);
       if (enable)
         this.enable(state);
+      this.count++;
       return state;
     },
     remove: function (state) {
@@ -10289,6 +10349,7 @@ define(
       if (state.parent)
         state.parent.removeChild(state);
       delete this.states[state.name];
+      this.count--;
       return this;
     },
     enable: function (state) {
@@ -10306,6 +10367,7 @@ define(
       this.states = {};
     }
   });
+  module.exports = StateManager;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -10317,15 +10379,15 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("./inherit"), C = require("../constants"), Texture = require("../display/Texture"), BaseTexture = require("../display/BaseTexture"), BitmapText = require("../text/BitmapText"), PIXI = require("../vendor/pixi");
-  var Cache = module.exports = function (game) {
-      this.game = game;
-      this._canvases = {};
-      this._images = {};
-      this._sounds = {};
-      this._text = {};
-      this._tilemaps = {};
-      this.addDefaultImage();
-    };
+  var Cache = function (game) {
+    this.game = game;
+    this._canvases = {};
+    this._images = {};
+    this._sounds = {};
+    this._text = {};
+    this._tilemaps = {};
+    this.addDefaultImage();
+  };
   inherit(Cache, Object, {
     addCanvas: function (obj) {
       this._canvases[obj.key] = obj;
@@ -10463,6 +10525,7 @@ define(
       this._tilemaps = {};
     }
   });
+  module.exports = Cache;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -10474,13 +10537,13 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("./inherit");
-  var Clock = module.exports = function () {
-      this.startTime = 0;
-      this.oldTime = 0;
-      this.elapsedTime = 0;
-      this.running = false;
-      this.timer = window.performance && window.performance.now ? window.performance : Date;
-    };
+  var Clock = function () {
+    this.startTime = 0;
+    this.oldTime = 0;
+    this.elapsedTime = 0;
+    this.running = false;
+    this.timer = window.performance && window.performance.now ? window.performance : Date;
+  };
   inherit(Clock, Object, {
     now: function () {
       return this.timer.now();
@@ -10512,6 +10575,7 @@ define(
       return diff;
     }
   });
+  module.exports = Clock;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -10523,11 +10587,11 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("./inherit"), Sprite = require("../display/Sprite");
-  var SpritePool = module.exports = function (game) {
-      this.types = {};
-      this.game = game;
-      this.add("_default", Sprite);
-    };
+  var SpritePool = function (game) {
+    this.types = {};
+    this.game = game;
+    this.add("_default", Sprite);
+  };
   inherit(SpritePool, Object, {
     add: function (name, obj) {
       return this.types[name] = obj;
@@ -10544,6 +10608,7 @@ define(
       return;
     }
   });
+  module.exports = SpritePool;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -10555,20 +10620,20 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var utils = require("../utils/utils"), inherit = require("../utils/inherit"), support = require("../utils/support"), EventEmitter = require("../utils/EventEmitter"), C = require("../constants");
-  var AssetLoader = module.exports = function (game) {
-      EventEmitter.call(this);
-      this.game = game;
-      this.keys = [];
-      this.assets = {};
-      this.total = 0;
-      this.done = 0;
-      this.isLoading = false;
-      this.hasLoaded = false;
-      this.progress = 0;
-      this.crossOrigin = "";
-      this.baseUrl = "";
-    };
-  inherit(AssetLoader, Object, {
+  var Loader = function (game) {
+    EventEmitter.call(this);
+    this.game = game;
+    this.keys = [];
+    this.assets = {};
+    this.total = 0;
+    this.done = 0;
+    this.isLoading = false;
+    this.hasLoaded = false;
+    this.progress = 0;
+    this.crossOrigin = "";
+    this.baseUrl = "";
+  };
+  inherit(Loader, Object, {
     hasKey: function (key) {
       return !!this.assets[key];
     },
@@ -10941,6 +11006,7 @@ define(
       }
     }
   });
+  module.exports = Loader;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -10952,11 +11018,12 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), EventEmitter = require("../utils/EventEmitter");
-  var InputType = module.exports = function (game) {
-      EventEmitter.call(this);
-      this.game = game;
-    };
-  inherit(InputType, Object, {});
+  var Input = function (game) {
+    EventEmitter.call(this);
+    this.game = game;
+  };
+  inherit(Input, Object, {});
+  module.exports = Input;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -10968,14 +11035,14 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Input = require("./Input");
-  var Keyboard = module.exports = function (game) {
-      Input.call(this, game);
-      this.sequence = [];
-      this.sequenceTimeout = 500;
-      this._clearSq = null;
-      game.canvas.addEventListener("keydown", this.onKeyDown.bind(this), false);
-      game.canvas.addEventListener("keyup", this.onKeyUp.bind(this), false);
-    };
+  var Keyboard = function (game) {
+    Input.call(this, game);
+    this.sequence = [];
+    this.sequenceTimeout = 500;
+    this._clearSq = null;
+    game.canvas.addEventListener("keydown", this.onKeyDown.bind(this), false);
+    game.canvas.addEventListener("keyup", this.onKeyUp.bind(this), false);
+  };
   inherit(Keyboard, Input, {
     onKeyDown: function (e, override) {
       return this.modifyKey(e, override || e.keyCode || e.which, true);
@@ -11085,6 +11152,7 @@ define(
     MINUS: 173,
     TILDE: 192
   };
+  module.exports = Keyboard;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -11096,19 +11164,19 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../../utils/inherit"), Input = require("../Input");
-  var GamepadButtons = module.exports = function () {
-      Input.call(this);
-      this.threshold = 0.4;
-      this.buttons = {};
-      for (var bt in GamepadButtons.BUTTON) {
-        this.buttons[GamepadButtons.BUTTON[bt]] = {
-          code: GamepadButtons.BUTTON[bt],
-          name: bt,
-          down: false,
-          value: 0
-        };
-      }
-    };
+  var GamepadButtons = function () {
+    Input.call(this);
+    this.threshold = 0.4;
+    this.buttons = {};
+    for (var bt in GamepadButtons.BUTTON) {
+      this.buttons[GamepadButtons.BUTTON[bt]] = {
+        code: GamepadButtons.BUTTON[bt],
+        name: bt,
+        down: false,
+        value: 0
+      };
+    }
+  };
   inherit(GamepadButtons, Input, {
     pollStatus: function (pad) {
       for (var b = 0, bl = pad.buttons.length; b < bl; ++b) {
@@ -11148,6 +11216,7 @@ define(
     }
     return "";
   };
+  module.exports = GamepadButtons;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -11159,18 +11228,18 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../../utils/inherit"), Input = require("../Input");
-  var GamepadSticks = module.exports = function () {
-      Input.call(this);
-      this.threshold = 0.5;
-      this.axes = {};
-      for (var ax in GamepadSticks.AXIS) {
-        this.axes[GamepadSticks.AXIS[ax]] = {
-          code: GamepadSticks.AXIS[ax],
-          name: ax,
-          value: 0
-        };
-      }
-    };
+  var GamepadSticks = function () {
+    Input.call(this);
+    this.threshold = 0.5;
+    this.axes = {};
+    for (var ax in GamepadSticks.AXIS) {
+      this.axes[GamepadSticks.AXIS[ax]] = {
+        code: GamepadSticks.AXIS[ax],
+        name: ax,
+        value: 0
+      };
+    }
+  };
   inherit(GamepadSticks, Input, {
     pollStatus: function (pad) {
       for (var a = 0, al = pad.axes.length; a < al; ++a) {
@@ -11198,6 +11267,7 @@ define(
     }
     return "";
   };
+  module.exports = GamepadSticks;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -11209,19 +11279,19 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Input = require("./Input"), GamepadButtons = require("./gamepad/GamepadButtons"), GamepadSticks = require("./gamepad/GamepadSticks");
-  var Gamepad = module.exports = function () {
-      Input.call(this);
-      this.ticking = false;
-      this.pads = [];
-      this.prevTimestamps = [];
-      this.buttons = new GamepadButtons();
-      this.sticks = new GamepadSticks();
-      window.addEventListener("MozGamepadConnected", this.onGamepadConnect.bind(this), false);
-      window.addEventListener("MozGamepadDisconnected", this.onGamepadDisconnect.bind(this), false);
-      if (!!navigator.webkitGamepads || !!navigator.webkitGetGamepads) {
-        this.startPolling();
-      }
-    };
+  var Gamepad = function () {
+    Input.call(this);
+    this.ticking = false;
+    this.pads = [];
+    this.prevTimestamps = [];
+    this.buttons = new GamepadButtons();
+    this.sticks = new GamepadSticks();
+    window.addEventListener("MozGamepadConnected", this.onGamepadConnect.bind(this), false);
+    window.addEventListener("MozGamepadDisconnected", this.onGamepadDisconnect.bind(this), false);
+    if (!!navigator.webkitGamepads || !!navigator.webkitGetGamepads) {
+      this.startPolling();
+    }
+  };
   inherit(Gamepad, Input, {
     onGamepadConnect: function (event) {
       this.pads.push(event.gamepad);
@@ -11274,6 +11344,7 @@ define(
       this.pollStatus();
     }
   });
+  module.exports = Gamepad;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -11285,20 +11356,20 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Input = require("../Input"), Vector = require("../../math/Vector"), Clock = require("../../utils/Clock"), inherit = require("../../utils/inherit");
-  var Pointer = module.exports = function (id, manager) {
-      Input.call(this);
-      this.id = id;
-      this.manager = manager;
-      this.game = manager.game;
-      this.active = false;
-      this.mouse = id === 1;
-      this.clock = new Clock();
-      this.button = null;
-      this.type = null;
-      this._holdSent = false;
-      this.position = new Vector();
-      this.positionDown = new Vector();
-    };
+  var Pointer = function (id, manager) {
+    Input.call(this);
+    this.id = id;
+    this.manager = manager;
+    this.game = manager.game;
+    this.active = false;
+    this.mouse = id === 1;
+    this.clock = new Clock();
+    this.button = null;
+    this.type = null;
+    this._holdSent = false;
+    this.position = new Vector();
+    this.positionDown = new Vector();
+  };
   inherit(Pointer, Input, {
     down: function (evt) {
       this.originalEvent = evt;
@@ -11370,6 +11441,7 @@ define(
     PEN: "pen",
     MOUSE: "mouse"
   };
+  module.exports = Pointer;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -11381,24 +11453,24 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Input = require("./Input"), Pointer = require("./pointer/Pointer");
-  var Pointers = module.exports = function (game) {
-      Input.call(this, game);
-      this.pointers = {};
-      this.maxPointers = 10;
-      this.clickDelay = 200;
-      this.doubleClickDelay = 300;
-      this.holdDelay = 2000;
-      this.mouse = this.pointers[1] = new Pointer(1, this);
-      this.activePointers = 0;
-      game.canvas.addEventListener("pointerdown", this.onPointer.bind(this, "down"), false);
-      game.canvas.addEventListener("pointerup", this.onPointer.bind(this, "up"), false);
-      game.canvas.addEventListener("pointermove", this.onPointer.bind(this, "move"), false);
-      game.canvas.addEventListener("pointerover", this.onPointer.bind(this, "over"), false);
-      game.canvas.addEventListener("pointerout", this.onPointer.bind(this, "out"), false);
-      game.canvas.addEventListener("pointercancel", this.onPointer.bind(this, "cancel"), false);
-      game.canvas.addEventListener("pointerenter", this.onPointer.bind(this, "enter"), false);
-      game.canvas.addEventListener("pointerleave", this.onPointer.bind(this, "leave"), false);
-    };
+  var Pointers = function (game) {
+    Input.call(this, game);
+    this.pointers = {};
+    this.maxPointers = 10;
+    this.clickDelay = 200;
+    this.doubleClickDelay = 300;
+    this.holdDelay = 2000;
+    this.mouse = this.pointers[1] = new Pointer(1, this);
+    this.activePointers = 0;
+    game.canvas.addEventListener("pointerdown", this.onPointer.bind(this, "down"), false);
+    game.canvas.addEventListener("pointerup", this.onPointer.bind(this, "up"), false);
+    game.canvas.addEventListener("pointermove", this.onPointer.bind(this, "move"), false);
+    game.canvas.addEventListener("pointerover", this.onPointer.bind(this, "over"), false);
+    game.canvas.addEventListener("pointerout", this.onPointer.bind(this, "out"), false);
+    game.canvas.addEventListener("pointercancel", this.onPointer.bind(this, "cancel"), false);
+    game.canvas.addEventListener("pointerenter", this.onPointer.bind(this, "enter"), false);
+    game.canvas.addEventListener("pointerleave", this.onPointer.bind(this, "leave"), false);
+  };
   inherit(Pointers, Input, {
     onPointer: function (name, evt) {
       var id = evt.pointerId, pointer = this.pointers[id];
@@ -11422,6 +11494,7 @@ define(
       }
     }
   });
+  module.exports = Pointers;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -11433,19 +11506,20 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Keyboard = require("./Keyboard"), Gamepad = require("./Gamepad"), Pointers = require("./Pointers");
-  var InputManager = module.exports = function (game) {
-      this.game = game;
-      this.canvas = game.canvas;
-      this.keyboard = new Keyboard(game);
-      this.pointers = new Pointers(game);
-      this.gamepad = new Gamepad();
-    };
+  var InputManager = function (game) {
+    this.game = game;
+    this.canvas = game.canvas;
+    this.keyboard = new Keyboard(game);
+    this.pointers = new Pointers(game);
+    this.gamepad = new Gamepad();
+  };
   inherit(InputManager, Object, {
     update: function (dt) {
       this.pointers.update(dt);
       this.gamepad.update(dt);
     }
   });
+  module.exports = InputManager;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -11457,45 +11531,45 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var StateManager = require("./StateManager"), EventEmitter = require("../utils/EventEmitter"), Cache = require("../utils/Cache"), Clock = require("../utils/Clock"), SpritePool = require("../utils/SpritePool"), Loader = require("../loader/Loader"), InputManager = require("../input/InputManager"), AudioManager = require("../audio/AudioManager"), Vector = require("../math/Vector"), utils = require("../utils/utils"), support = require("../utils/support"), inherit = require("../utils/inherit"), PIXI = require("../vendor/pixi"), C = require("../constants");
-  var Game = module.exports = function (container, settings) {
-      EventEmitter.call(this);
-      settings = settings || {};
-      settings.width = settings.width || 800;
-      settings.height = settings.height || 600;
-      settings.renderer = settings.renderer || C.RENDERER.AUTO;
-      settings.transparent = settings.transparent || false;
-      settings.background = settings.background || "#FFF";
-      settings.antialias = settings.antialias !== undefined ? settings.antialias : true;
-      settings.canvas = settings.canvas || null;
-      this.container = typeof container === "string" ? document.getElementById(container) : container;
-      if (!this.container)
-        this.container = document.body;
-      this.width = settings.width;
-      this.height = settings.height;
-      this.renderMethod = settings.renderer;
-      this.transparent = settings.transparent;
-      this.background = settings.background;
-      this.antialias = settings.antialias;
-      this.canvas = settings.canvas;
-      this.renderer = this._createRenderer();
-      this.stage = new PIXI.Stage(this.background);
-      this.clock = new Clock();
-      this.audio = new AudioManager(this);
-      this.load = new Loader(this);
-      this.cache = new Cache(this);
-      this.input = new InputManager(this);
-      this.spritepool = new SpritePool(this);
-      this.state = new StateManager(this);
-      this.offset = new Vector();
-      this.timings = {};
-      var view = this.canvas;
-      if (!view.getAttribute("tabindex"))
-        view.setAttribute("tabindex", "1");
+  var Game = function (container, settings) {
+    EventEmitter.call(this);
+    settings = settings || {};
+    settings.width = settings.width || 800;
+    settings.height = settings.height || 600;
+    settings.renderer = settings.renderer || C.RENDERER.AUTO;
+    settings.transparent = settings.transparent || false;
+    settings.background = settings.background || "#FFF";
+    settings.antialias = settings.antialias !== undefined ? settings.antialias : true;
+    settings.canvas = settings.canvas || null;
+    this.container = typeof container === "string" ? document.getElementById(container) : container;
+    if (!this.container)
+      this.container = document.body;
+    this.width = settings.width;
+    this.height = settings.height;
+    this.renderMethod = settings.renderer;
+    this.transparent = settings.transparent;
+    this.background = settings.background;
+    this.antialias = settings.antialias;
+    this.canvas = settings.canvas;
+    this.renderer = this._createRenderer();
+    this.stage = new PIXI.Stage(this.background);
+    this.clock = new Clock();
+    this.audio = new AudioManager(this);
+    this.load = new Loader(this);
+    this.cache = new Cache(this);
+    this.input = new InputManager(this);
+    this.spritepool = new SpritePool(this);
+    this.state = new StateManager(this);
+    this.offset = new Vector();
+    this.timings = {};
+    var view = this.canvas;
+    if (!view.getAttribute("tabindex"))
+      view.setAttribute("tabindex", "1");
+    view.focus();
+    view.addEventListener("click", function () {
       view.focus();
-      view.addEventListener("click", function () {
-        view.focus();
-      }, false);
-    };
+    }, false);
+  };
   inherit(Game, Object, {
     _createRenderer: function () {
       var method = this.renderMethod, render = null;
@@ -11580,6 +11654,7 @@ define(
       return this.state.active.world;
     }
   });
+  module.exports = Game;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -11631,79 +11706,82 @@ define('core.js',['require', 'exports', 'module', './constants', './audio/AudioM
   var __umodule = (function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
-  ({ urequire: { rootExports: "gf" } });
-  module.exports = {
-    AudioManager: require("./audio/AudioManager"),
-    AudioPlayer: require("./audio/AudioPlayer"),
-    Camera: require("./camera/Camera"),
-    BaseTexture: require("./display/BaseTexture"),
-    Texture: require("./display/Texture"),
-    Container: require("./display/Container"),
-    Sprite: require("./display/Sprite"),
-    BitmapText: require("./text/BitmapText"),
-    fx: {
-      camera: {
-        Effect: require("./fx/camera/Effect"),
-        Close: require("./fx/camera/Close"),
-        Fade: require("./fx/camera/Fade"),
-        Flash: require("./fx/camera/Flash"),
-        Scanlines: require("./fx/camera/Scanlines"),
-        Shake: require("./fx/camera/Shake")
-      }
-    },
-    Game: require("./game/Game"),
-    State: require("./game/State"),
-    StateManager: require("./game/StateManager"),
-    GuiItem: require("./gui/GuiItem"),
-    Input: require("./input/Input"),
-    InputManager: require("./input/InputManager"),
-    Keyboard: require("./input/Keyboard"),
-    Gamepad: require("./input/Gamepad"),
-    GamepadButtons: require("./input/gamepad/GamepadButtons"),
-    GamepadSticks: require("./input/gamepad/GamepadSticks"),
-    Pointers: require("./input/Pointers"),
-    Pointer: require("./input/pointer/Pointer"),
-    Loader: require("./loader/Loader"),
-    Tile: require("./tilemap/Tile"),
-    Tilelayer: require("./tilemap/Tilelayer"),
-    Tilemap: require("./tilemap/Tilemap"),
-    Tileset: require("./tilemap/Tileset"),
-    ObjectGroup: require("./tilemap/ObjectGroup"),
-    math: require("./math/math"),
-    Circle: require("./geom/Circle"),
-    Ellipse: require("./geom/Ellipse"),
-    Polygon: require("./geom/Polygon"),
-    Rectangle: require("./geom/Rectangle"),
-    Vector: require("./math/Vector"),
-    ParticleEmitter: require("./particles/ParticleEmitter"),
-    ParticleSystem: require("./particles/ParticleSystem"),
-    Physics: require("./physics/Physics"),
-    Body: require("./physics/Body"),
-    utils: require("./utils/utils"),
-    support: require("./utils/support"),
-    inherit: require("./utils/inherit"),
-    Cache: require("./utils/Cache"),
-    Clock: require("./utils/Clock"),
-    EventEmitter: require("./utils/EventEmitter"),
-    ObjectPool: require("./utils/ObjectPool"),
-    SpritePool: require("./utils/SpritePool"),
-    ObjectFactory: require("./utils/ObjectFactory"),
-    plugin: require("./plugin"),
-    PIXI: require("./vendor/pixi")
-  };
+  var gf = {
+      AudioManager: require("./audio/AudioManager"),
+      AudioPlayer: require("./audio/AudioPlayer"),
+      Camera: require("./camera/Camera"),
+      BaseTexture: require("./display/BaseTexture"),
+      Texture: require("./display/Texture"),
+      Container: require("./display/Container"),
+      Sprite: require("./display/Sprite"),
+      BitmapText: require("./text/BitmapText"),
+      fx: {
+        camera: {
+          Effect: require("./fx/camera/Effect"),
+          Close: require("./fx/camera/Close"),
+          Fade: require("./fx/camera/Fade"),
+          Flash: require("./fx/camera/Flash"),
+          Scanlines: require("./fx/camera/Scanlines"),
+          Shake: require("./fx/camera/Shake")
+        }
+      },
+      Game: require("./game/Game"),
+      State: require("./game/State"),
+      StateManager: require("./game/StateManager"),
+      GuiItem: require("./gui/GuiItem"),
+      Input: require("./input/Input"),
+      InputManager: require("./input/InputManager"),
+      Keyboard: require("./input/Keyboard"),
+      Gamepad: require("./input/Gamepad"),
+      GamepadButtons: require("./input/gamepad/GamepadButtons"),
+      GamepadSticks: require("./input/gamepad/GamepadSticks"),
+      Pointers: require("./input/Pointers"),
+      Pointer: require("./input/pointer/Pointer"),
+      Loader: require("./loader/Loader"),
+      Tile: require("./tilemap/Tile"),
+      Tilelayer: require("./tilemap/Tilelayer"),
+      Tilemap: require("./tilemap/Tilemap"),
+      Tileset: require("./tilemap/Tileset"),
+      ObjectGroup: require("./tilemap/ObjectGroup"),
+      math: require("./math/math"),
+      Circle: require("./geom/Circle"),
+      Ellipse: require("./geom/Ellipse"),
+      Polygon: require("./geom/Polygon"),
+      Rectangle: require("./geom/Rectangle"),
+      Vector: require("./math/Vector"),
+      ParticleEmitter: require("./particles/ParticleEmitter"),
+      ParticleSystem: require("./particles/ParticleSystem"),
+      Physics: require("./physics/Physics"),
+      Body: require("./physics/Body"),
+      utils: require("./utils/utils"),
+      support: require("./utils/support"),
+      inherit: require("./utils/inherit"),
+      Cache: require("./utils/Cache"),
+      Clock: require("./utils/Clock"),
+      EventEmitter: require("./utils/EventEmitter"),
+      ObjectPool: require("./utils/ObjectPool"),
+      SpritePool: require("./utils/SpritePool"),
+      ObjectFactory: require("./utils/ObjectFactory"),
+      plugin: require("./plugin"),
+      PIXI: require("./vendor/pixi")
+    };
   var C = require("./constants");
   for (var k in C) {
-    module.exports[k] = C[k];
+    gf[k] = C[k];
   }
+  module.exports = gf;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
 return module.exports;
 }).call(this, require, exports, module);
-
+var old_gf = window.gf;
 
 window.gf = __umodule;
-
+__umodule.noConflict = function () {
+    window.gf = old_gf;
+return __umodule;
+}
 return __umodule;
 }
 );
