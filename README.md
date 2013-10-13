@@ -24,6 +24,7 @@ Some features that GrapeFruit gives you:
 This project is under heavy development, and the API is subject to change but is becoming increasing more stable. Check the GitHub issue list to see how to help!
 
 [![Dependency Status](https://gemnasium.com/grapefruitjs/grapefruit.png)](https://gemnasium.com/grapefruitjs/grapefruit)
+<br/>
 [![browser support](https://ci.testling.com/grapefruitjs/grapefruit.png)](https://ci.testling.com/grapefruitjs/grapefruit)
 
 ## Coming Features
