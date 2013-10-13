@@ -5,7 +5,7 @@ var inherit = require('../utils/inherit'),
     ParticleSystem = require('../particles/ParticleSystem');
 
 /**
- * The world is the container for all game objects
+ * The world is the container for all game objects in a game state.
  *
  * @class World
  * @extends Container

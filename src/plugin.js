@@ -1,7 +1,6 @@
 //Great ideas taken from: https://github.com/obiot/melonJS/blob/master/src/plugin/plugin.js
 /**
- * Namespace for all plugins, it also provides methods for patching
- * core functions, and registering plugins.
+ * Provides methods for patching core functions, and registering plugins.
  *
  * @class plugin
  * @extends Object

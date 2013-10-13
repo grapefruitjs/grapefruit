@@ -1,5 +1,6 @@
 /**
- * Feature detection so we cans witch between renderers, play audio correctly, and other things.
+ * Holds the results of the feature detection run on the browser, to make it simple to
+ * see which features the library can use.
  *
  * @class support
  * @extends Object
