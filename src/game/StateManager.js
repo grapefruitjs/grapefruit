@@ -4,7 +4,7 @@ var inherit = require('../utils/inherit'),
 /**
  * A state manager is a container for all the states in a game.
  *
- * @class Statemanager
+ * @class StateManager
  * @extends Object
  * @constructor
  */

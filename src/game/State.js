@@ -7,9 +7,9 @@ var AudioManager = require('../audio/AudioManager'),
     inherit = require('../utils/inherit');
 
 /**
- * GameStates are containers that represent different states of a game
+ * States are containers that represent different states of a game
  *
- * @class GameState
+ * @class State
  * @extends Container
  * @constructor
  * @param [name] {String} The name of this state

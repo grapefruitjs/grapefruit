@@ -8,9 +8,9 @@ var Container = require('../display/Container'),
     inherit = require('../utils/inherit');
 
 /**
- * Tiled map, expects a Tiled TMX file loaded by the loader as the argument.
- * The loader knows to load all textures and other resources when loading a world TMX
- * file, and this expets that to already be done.
+ * Tiled map that represents an entire tile map with multiple layers or object groups.
+ * Often it is easier to create a tilemap using the object factor on a world, rather
+ * than doing it manually yourself.
  *
  * @class Tilemap
  * @extends Container
