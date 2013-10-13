@@ -390,13 +390,16 @@ var utils = {
         return obj;
     },
     log: function() {
-        window.console && window.console.log.apply(window.console, arguments);
+        if(window.console)
+            window.console.log.apply(window.console, arguments);
     },
     warn: function() {
-        window.console && window.console.warn.apply(window.console, arguments);
+        if(window.console)
+            window.console.warn.apply(window.console, arguments);
     },
     error: function() {
-        window.console && window.console.error.apply(window.console, arguments);
+        if(window.console)
+            window.console.error.apply(window.console, arguments);
     }
 };
 

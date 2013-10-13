@@ -277,6 +277,8 @@ inherit(Cache, Object, {
         PIXI.BaseTextureCache[key] = base;
         PIXI.TextureCache[key] = new Texture(base);
 
+        Texture.__default = PIXI.TextureCache[key];
+
         this._images[key] = {
             texture: PIXI.TextureCache[key]
         };
