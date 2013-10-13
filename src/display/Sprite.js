@@ -11,7 +11,7 @@ var EventEmitter = require('../utils/EventEmitter'),
  * The base Sprite class. This class is the base for all images on the screen
  *
  * @class Sprite
- * @extends <a target="_blank" href="http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html">PIXI.Sprite</a>
+ * @extends [PIXI.Sprite](http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html)
  * @uses EventEmitter
  * @constructor
  * @param textures {Texture|Array<Texture>|Object} The texture for the sprite to display, an array of texture to animation through, or an animation object.

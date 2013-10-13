@@ -1,8 +1,9 @@
 var inherit = require('./inherit');
 
 /**
- * High performance clock, based on mrdoob's Three.js clock, but with tweaks:
- * <a target="_blank" href="https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js">/src/core/Clock.js</a>
+ * High performance clock, based on mrdoob's
+ * [Three.js clock](https://github.com/mrdoob/three.js/blob/master/src/core/Clock.js),
+ * but with tweaks.
  *
  * @class Clock
  * @extends Object

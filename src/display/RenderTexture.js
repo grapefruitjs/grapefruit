@@ -6,17 +6,23 @@
  *
  * RenderTexture takes snapshot of DisplayObject passed to render method. If DisplayObject is passed to render method, position and rotation of it will be ignored. For example:
  *
- *    var renderTexture = new gf.RenderTexture(800, 600);
- *    var sprite = gf.Sprite(texture);
- *    sprite.position.x = 800/2;
- *    sprite.position.y = 600/2;
- *    renderTexture.render(sprite);
+ * ```
+ * var renderTexture = new gf.RenderTexture(800, 600);
+ * var sprite = gf.Sprite(texture);
+ * sprite.position.x = 800/2;
+ * sprite.position.y = 600/2;
+ * sprite.anchor.x = 0.5;
+ * sprite.anchor.y = 0.5;
+ * renderTexture.render(sprite);
+ * ```
  *
  * Sprite in this case will be rendered to 0,0 position. To render this sprite at center Container should be used:
  *
- *    var doc = new gf.Container();
- *    doc.addChild(sprite);
- *    renderTexture.render(doc);  // Renders to center of renderTexture
+ * ```
+ * var doc = new gf.Container();
+ * doc.addChild(sprite);
+ * renderTexture.render(doc);  // Renders to center of renderTexture
+ * ```
  *
  * @class RenderTexture
  * @extends Texture

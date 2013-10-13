@@ -1,7 +1,7 @@
 /**
  * A texture stores the information that represents an image or part of an image. It cannot be added
  * to the display list directly. To do this use PIXI.Sprite. If no frame is provided then the whole image is used
- * see <a href="http://www.goodboydigital.com/pixijs/docs/classes/Texture.html">PIXI.Texture</a>
+ * see [PIXI.Texture](http://www.goodboydigital.com/pixijs/docs/classes/Texture.html)
  * for more information.
  *
  * @class Texture

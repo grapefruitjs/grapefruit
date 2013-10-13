@@ -1,7 +1,7 @@
 /**
  * Event emitter mixin. This will add emitter properties to an object so that
  * it can emit events, and have others listen for them. Based on
- * <a target="_blank" href="https://github.com/joyent/node/blob/master/lib/events.js">node.js event emitter</a>
+ * [node.js event emitter](https://github.com/joyent/node/blob/master/lib/events.js)
  *
  * @class EventEmitter
  * @constructor
