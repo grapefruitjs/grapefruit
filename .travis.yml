@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "0.10"
+
+branches:
+  only:
+    - master
+    - /^release-.*$/
+
+install:
+  - npm install -g grunt-cli
+  - npm install
+
+script:
+  - grunt testci
+
+env:
+  - XUNIT_FILE=./test/result/unit.xml
