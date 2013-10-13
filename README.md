@@ -1,4 +1,4 @@
-# GrapeFruit Game Engine
+# GrapeFruit Game Engine [![Build Status](https://travis-ci.org/grapefruitjs/grapefruit.png?branch=master)](https://travis-ci.org/grapefruitjs/grapefruit)
 
 The game engine that powers my remake of [lttp](https://github.com/englercj/lttp) and my original game [shiv](https://github.com/englercj/shiv).
 
