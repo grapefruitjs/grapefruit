@@ -63,14 +63,14 @@ var plugin = {
      *      gf.plugin.register(MyPluginObject, 'MyPluginName');
      *      var plg = new gf.MyPluginName();
      */
-    register: function(plugin, name) {
+    register: function(obj, name) {
         //ensure we don't overrite a name
         if(window.gf[name]) {
             throw new Error('Unable to register plugin: "' + name + '" already exists in the gf namespace, please choose something else!');
         }
 
         //store the plugin in the namespace
-        window.gf[name] = plugin;
+        window.gf[name] = obj;
     }
 };
 

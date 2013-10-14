@@ -6,14 +6,14 @@ describe('constants', function() {
         gf.RENDERER.WEBGL.should.equal('webgl');
 
         //file format types
-        gf.FILE_FORMAT.JSON.should.equal(0);
-        gf.FILE_FORMAT.XML.should.equal(1);
-        gf.FILE_FORMAT.CSV.should.equal(2);
+        gf.FILE_FORMAT.JSON.should.equal('json');
+        gf.FILE_FORMAT.XML.should.equal('xml');
+        gf.FILE_FORMAT.CSV.should.equal('csv');
 
         //atlas format types
-        gf.ATLAS_FORMAT.JSON_ARRAY.should.equal(0);
-        gf.ATLAS_FORMAT.JSON_HASH.should.equal(1);
-        gf.ATLAS_FORMAT.STARLING_XML.should.equal(2);
+        gf.ATLAS_FORMAT.JSON_ARRAY.should.equal('json_array');
+        gf.ATLAS_FORMAT.JSON_HASH.should.equal('json_hash');
+        gf.ATLAS_FORMAT.XML_STARLING.should.equal('xml_starling');
 
         //camera follow values
         gf.CAMERA_FOLLOW.PLATFORMER.should.equal(0);

@@ -324,7 +324,7 @@ inherit(Loader, Object, {
         this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.JSON_HASH);
     },
     atlasXML: function(key, textureURL, atlasURL, atlasData) {
-        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.STARLING_XML);
+        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.XML_STARLING);
     },
 
     /**
@@ -342,7 +342,7 @@ inherit(Loader, Object, {
 
             if(typeof data === 'string') {
                 switch(format) {
-                    case C.ATLAS_FORMAT.STARLING_XML:
+                    case C.ATLAS_FORMAT.XML_STARLING:
                         data = utils.parseXML(data);
                         break;
 
@@ -611,7 +611,7 @@ inherit(Loader, Object, {
             case C.FILE_FORMAT.JSON:
                 return 'json';
 
-            case C.ATLAS_FORMAT.STARLING_XML:
+            case C.ATLAS_FORMAT.XML_STARLING:
             case C.FILE_FORMAT.XML:
                 return 'xml';
 

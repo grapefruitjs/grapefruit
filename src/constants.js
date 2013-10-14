@@ -8,15 +8,15 @@ var constants = {
     },
 
     FILE_FORMAT: {
-        JSON: 0,
-        XML: 1,
-        CSV: 2
+        JSON: 'json',
+        XML: 'xml',
+        CSV: 'csv'
     },
 
     ATLAS_FORMAT: {
-        JSON_ARRAY: 0,
-        JSON_HASH: 1,
-        STARLING_XML: 2
+        JSON_ARRAY: 'json_array',
+        JSON_HASH: 'json_hash',
+        XML_STARLING: 'xml_starling'
     },
 
     CAMERA_FOLLOW: {

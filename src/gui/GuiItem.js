@@ -58,10 +58,8 @@ inherit(GuiItem, Sprite, {
         var pos = e.data.getLocalPosition(this.parent);
 
         //current position + (new mouse position - old mouse position) == current position + mousemove delta
-        this.setPosition(
-            this.position.x + (pos.x - this.dragging.x),
-            this.position.y + (pos.y - this.dragging.y)
-        );
+        this.position.x += (pos.x - this.dragging.x);
+        this.position.y += (pos.y - this.dragging.y);
 
         this.dragging = pos;
     }

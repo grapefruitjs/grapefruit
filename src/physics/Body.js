@@ -146,8 +146,12 @@ inherit(Body, Rectangle, {
         this.touching = C.DIRECTION.NONE;
         this.embedded = false;
 
-        this.x = (this.sprite.position.x - (this.sprite.anchor.x * this._width)) + this.offset.x;
-        this.y = (this.sprite.position.y - (this.sprite.anchor.y * this._height)) + this.offset.y;
+        var a = this.sprite.anchor,
+            ax = a !== undefined ? a.x : 0,
+            ay = a !== undefined ? a.y : 0;
+
+        this.x = (this.sprite.position.x - (ax * this._width)) + this.offset.x;
+        this.y = (this.sprite.position.y - (ay * this._height)) + this.offset.y;
 
         this.lastPos.set(this.x, this.y);
 
@@ -159,8 +163,12 @@ inherit(Body, Rectangle, {
         this.syncShape();
     },
     syncSprite: function() {
-        this.sprite.position.x = math.round(this.x - this.offset.x + (this.sprite.anchor.x * this._width));
-        this.sprite.position.y = math.round(this.y - this.offset.y + (this.sprite.anchor.y * this._height));
+        var a = this.sprite.anchor,
+            ax = a !== undefined ? a.x : 0,
+            ay = a !== undefined ? a.y : 0;
+
+        this.sprite.position.x = math.round(this.x - this.offset.x + (ax * this._width));
+        this.sprite.position.y = math.round(this.y - this.offset.y + (ay * this._height));
 
         /*
         if(this.allowRotation) {

@@ -2,6 +2,7 @@ var Container = require('../display/Container'),
     Sprite = require('../display/Sprite'),
     Rectangle = require('../geom/Rectangle'),
     Vector = require('../math/Vector'),
+    ObjectPool = require('../utils/ObjectPool'),
     ObjectFactory = require('../utils/ObjectFactory'),
     inherit = require('../utils/inherit'),
     math = require('../math/math'),
@@ -106,6 +107,39 @@ var Camera = function(state) {
      */
     this.add = new ObjectFactory(state, this.gui);
 
+    /**
+     * The fxpools for doing camera effects
+     *
+     * @property fxpools
+     * @type Object
+     * @private
+     * @readOnly
+     */
+    this.fxpools = {
+        flash: new ObjectPool(gf.fx.camera.Flash, this),
+        fade: new ObjectPool(gf.fx.camera.Fade, this),
+        shake: new ObjectPool(gf.fx.camera.Shake, this),
+        scanlines: new ObjectPool(gf.fx.camera.Scanlines, this),
+        close: new ObjectPool(gf.fx.camera.Close, this)
+    };
+
+    //Dynamic addition of fx shortcuts
+    var self = this;
+    Object.keys(this.fxpools).forEach(function(key) {
+        self[key] = function() {
+            var e = self.fxpools[key].create(),
+                args = Array.prototype.slice.call(arguments),
+                cb = args.pop();
+
+            if(typeof cb !== 'function')
+                args.push(cb);
+
+            args.push(this._fxCallback.bind(this, e, key, cb));
+
+            return e.start.apply(e, args);
+        };
+    });
+
     Container.call(this);
 
     //add the gui child
@@ -113,6 +147,16 @@ var Camera = function(state) {
 };
 
 inherit(Camera, Container, {
+    _fxCallback: function(fx, type, cb) {
+        var ret;
+
+        if(typeof cb === 'function')
+            ret = cb();
+
+        this.fxpools[type].free(fx);
+
+        return ret;
+    },
     /**
      * Follows an sprite with the camera, ensuring they are always center view. You can
      * pass a follow style to change the area an sprite can move around in before we start

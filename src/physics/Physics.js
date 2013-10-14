@@ -340,7 +340,7 @@ inherit(Physics, Object, {
         var differenceV = T_VECTORS.pop().copy(b.position).sub(a.position),
             totalRadius = a.r + b.r,
             totalRadiusSq = totalRadius * totalRadius,
-            distanceSq = differenceV.len2();
+            distanceSq = differenceV.lengthSq();
 
         // They do not intersect
         if (distanceSq > totalRadiusSq) {
@@ -398,7 +398,7 @@ inherit(Physics, Object, {
             // If the distance between the center of the circle and the point
             // is bigger than the radius, the polygon is definitely not fully in
             // the circle.
-            if (response && point.len2() > radius2) {
+            if (response && point.lengthSq() > radius2) {
                 response.aInB = false;
             }
 

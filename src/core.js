@@ -38,12 +38,12 @@ var gf = {
 
     //display
     BaseTexture:        require('./display/BaseTexture'),
-    Texture:            require('./display/Texture'),
     Container:          require('./display/Container'),
+    Graphics:           require('./display/Graphics'),
+    RenderTexture:      require('./display/RenderTexture'),
     Sprite:             require('./display/Sprite'),
-
-    //font
-    BitmapText:         require('./text/BitmapText'),
+    Texture:            require('./display/Texture'),
+    TilingSprite:       require('./display/TilingSprite'),
 
     //fx
     fx: {
@@ -61,6 +61,13 @@ var gf = {
     Game:               require('./game/Game'),
     State:              require('./game/State'),
     StateManager:       require('./game/StateManager'),
+    World:              require('./game/World'),
+
+    //geometry
+    Circle:             require('./geom/Circle'),
+    Ellipse:            require('./geom/Ellipse'),
+    Polygon:            require('./geom/Polygon'),
+    Rectangle:          require('./geom/Rectangle'),
 
     //gui
     GuiItem:            require('./gui/GuiItem'),
@@ -78,19 +85,9 @@ var gf = {
     //loader
     Loader:             require('./loader/Loader'),
 
-    //map
-    Tile:               require('./tilemap/Tile'),
-    Tilelayer:          require('./tilemap/Tilelayer'),
-    Tilemap:            require('./tilemap/Tilemap'),
-    Tileset:            require('./tilemap/Tileset'),
-    ObjectGroup:        require('./tilemap/ObjectGroup'),
-
     //math
     math:               require('./math/math'),
-    Circle:             require('./geom/Circle'),
-    Ellipse:            require('./geom/Ellipse'),
-    Polygon:            require('./geom/Polygon'),
-    Rectangle:          require('./geom/Rectangle'),
+    QuadTree:           require('./math/QuadTree'),
     Vector:             require('./math/Vector'),
 
     //particles
@@ -98,8 +95,20 @@ var gf = {
     ParticleSystem:     require('./particles/ParticleSystem'),
 
     //physics
-    Physics:            require('./physics/Physics'),
     Body:               require('./physics/Body'),
+    Physics:            require('./physics/Physics'),
+    Collision:          require('./physics/Collision'),
+
+    //text
+    BitmapText:         require('./text/BitmapText'),
+    Text:               require('./text/Text'),
+
+    //tilemap
+    Tile:               require('./tilemap/Tile'),
+    Tilelayer:          require('./tilemap/Tilelayer'),
+    Tilemap:            require('./tilemap/Tilemap'),
+    Tileset:            require('./tilemap/Tileset'),
+    ObjectGroup:        require('./tilemap/ObjectGroup'),
 
     //utils
     utils:              require('./utils/utils'),
@@ -118,6 +127,9 @@ var gf = {
     //vendor files
     PIXI:               require('./vendor/pixi')
 };
+
+//replace the pixi point with a powerful vector class
+gf.PIXI.Point = gf.Vector;
 
 //copy over constants
 var C = require('./constants');
