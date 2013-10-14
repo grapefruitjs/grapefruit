@@ -4,6 +4,13 @@ var Container = require('../display/Container'),
     Vector = require('../math/Vector'),
     ObjectPool = require('../utils/ObjectPool'),
     ObjectFactory = require('../utils/ObjectFactory'),
+    //camera fx
+    Close = require('../fx/camera/Close'),
+    Fade = require('../fx/camera/Fade'),
+    Flash = require('../fx/camera/Flash'),
+    Scanlines = require('../fx/camera/Scanlines'),
+    Shake = require('../fx/camera/Shake'),
+
     inherit = require('../utils/inherit'),
     math = require('../math/math'),
     C = require('../constants');
@@ -116,11 +123,11 @@ var Camera = function(state) {
      * @readOnly
      */
     this.fxpools = {
-        flash: new ObjectPool(gf.fx.camera.Flash, this),
-        fade: new ObjectPool(gf.fx.camera.Fade, this),
-        shake: new ObjectPool(gf.fx.camera.Shake, this),
-        scanlines: new ObjectPool(gf.fx.camera.Scanlines, this),
-        close: new ObjectPool(gf.fx.camera.Close, this)
+        flash: new ObjectPool(Flash, this),
+        fade: new ObjectPool(Fade, this),
+        shake: new ObjectPool(Shake, this),
+        scanlines: new ObjectPool(Scanlines, this),
+        close: new ObjectPool(Close, this)
     };
 
     //Dynamic addition of fx shortcuts
