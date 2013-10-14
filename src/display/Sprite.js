@@ -323,7 +323,7 @@ inherit(Sprite, PIXI.Sprite, {
      * Called whenever a collision occurs
      *
      * @method onCollide
-     * @param sprite {Sprite} The sprite that you collide with
+     * @param obj {Sprite|Container} The sprite or container that you collide with
      * @param collision {Collision} Collision data object that contains
      *      information about the intersection
      * @return {Boolean} If you return `false` explicitly the engine will *not*

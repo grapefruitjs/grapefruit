@@ -3,6 +3,7 @@ var Container = require('../display/Container'),
     Polygon = require('../geom/Polygon'),
     Ellipse = require('../geom/Ellipse'),
     Rectangle = require('../geom/Rectangle'),
+    Body = require('../physics/Body'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
     math = require('../math/math');
@@ -157,8 +158,12 @@ inherit(ObjectGroup, Container, {
                 obj.sensor = true;
 
                 //these are treated as sensor bodies, so always enable physics
-                obj.setPosition(o.x, o.y);
-                obj.enablePhysics(game.physics);
+                obj.position.x = o.x;
+                obj.position.y = o.y;
+                obj.body = new Body(obj);
+                obj.body.sensor = true;
+                game.physics.addSprite(obj);
+
                 if(this.parent._showPhysics)
                     obj.showPhysics();
             } else {
@@ -178,7 +183,8 @@ inherit(ObjectGroup, Container, {
                 obj.inertia = props.inertia || props.tileprops.inertia;
                 obj.friction = props.friction || props.tileprops.friction;
                 obj.sensor = props.sensor || props.tileprops.sensor;
-                obj.setPosition(o.x, o.y);
+                obj.position.x = o.x;
+                obj.position.y = o.y;
 
                 var a = props.anchor || props.tileprops.anchor;
                 obj.anchor.y = a ? a[1] : 1;

@@ -75,20 +75,20 @@ Texture.fromXML = function(key, xml, baseTexture) {
 
     for(var i = 0; i < frames.length; i++) {
         var frame = frames[i],
-            attrs = frame.attributes.getNamedItem,
-            name = attrs('name') || attrs('n'),
+            attrs = frame.attributes,
+            name = attrs.getNamedItem('name') || attrs.getNamedItem('n'),
             //sprite
-            x = attrs('x'),
-            y = attrs('y'),
-            width = attrs('width') || attrs('w'),
-            height = attrs('height') || attrs('h'),
+            x = attrs.getNamedItem('x'),
+            y = attrs.getNamedItem('y'),
+            width = attrs.getNamedItem('width') || attrs.getNamedItem('w'),
+            height = attrs.getNamedItem('height') || attrs.getNamedItem('h'),
             //trim
-            ox = attrs('frameX') || attrs('oX'),
-            oy = attrs('frameY') || attrs('oY'),
-            owidth = attrs('frameWidth') || attrs('oW'),
-            oheight = attrs('frameHeight') || attrs('oH'),
+            ox = attrs.getNamedItem('frameX') || attrs.getNamedItem('oX'),
+            oy = attrs.getNamedItem('frameY') || attrs.getNamedItem('oY'),
+            owidth = attrs.getNamedItem('frameWidth') || attrs.getNamedItem('oW'),
+            oheight = attrs.getNamedItem('frameHeight') || attrs.getNamedItem('oH'),
             //rotated (generic xml export)
-            rotated = !!attrs('r');
+            rotated = !!attrs.getNamedItem('r');
 
         var tx = textures[name] = PIXI.TextureCache[key + '_' + name] = new Texture(baseTexture, {
             x: parseInt(x.nodeValue, 10),

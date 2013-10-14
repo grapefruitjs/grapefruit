@@ -270,8 +270,8 @@ inherit(Cache, Object, {
         var key = '__default';
 
         var base = new BaseTexture();
-        base.width = 32;
-        base.height = 32;
+        base.width = 0;
+        base.height = 0;
         base.hasLoaded = true; // avoids a hanging event listener
 
         PIXI.BaseTextureCache[key] = base;

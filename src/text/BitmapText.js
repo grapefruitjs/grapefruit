@@ -29,9 +29,10 @@ var Container = require('../display/Container'),
 var BitmapText = function(text, font, style) {
     Container.call(this);
 
-    this.dirty = true;
+    this.dirty = false;
     this.font = font;
     this._text = text;
+    this.monospace = 0;
 
     /**
      * The sprite pool to grab character sprites from
@@ -43,7 +44,7 @@ var BitmapText = function(text, font, style) {
      */
     this.sprites = new ObjectPool(Sprite, this);
 
-    this.setText(text);
+    this.text = text;
     this.setStyle(style);
 };
 
@@ -108,7 +109,7 @@ inherit(BitmapText, Container, {
             });
 
             //advance the position
-            pos.x += data.xAdvance;
+            pos.x += (this.monospace || data.xAdvance);
 
             //remember this code for kernings next char
             prevCode = code;
@@ -218,20 +219,20 @@ BitmapText.parseXML = function(key, xml, texture) {
 
     for(var i = 0, il = chars.length; i < il; ++i) {
         var letter = chars[i],
-            attrs = letter.attributes.getNamedItem,
-            code = parseInt(attrs('id').nodeValue, 10),
+            attrs = letter.attributes,
+            code = parseInt(attrs.getNamedItem('id').nodeValue, 10),
             rect = new Rectangle(
-                parseInt(attrs('x').nodeValue, 10),
-                parseInt(attrs('y').nodeValue, 10),
-                parseInt(attrs('width').nodeValue, 10),
-                parseInt(attrs('height').nodeValue, 10)
+                parseInt(attrs.getNamedItem('x').nodeValue, 10),
+                parseInt(attrs.getNamedItem('y').nodeValue, 10),
+                parseInt(attrs.getNamedItem('width').nodeValue, 10),
+                parseInt(attrs.getNamedItem('height').nodeValue, 10)
             ),
             tx = PIXI.TextureCache[key + '_' + code] = new Texture(btx, rect);
 
         data.chars[code] = {
-            xOffset: parseInt(attrs('xoffset').nodeValue, 10),
-            yOffset: parseInt(attrs('yoffset').nodeValue, 10),
-            xAdvance: parseInt(attrs('xadvance').nodeValue, 10),
+            xOffset: parseInt(attrs.getNamedItem('xoffset').nodeValue, 10),
+            yOffset: parseInt(attrs.getNamedItem('yoffset').nodeValue, 10),
+            xAdvance: parseInt(attrs.getNamedItem('xadvance').nodeValue, 10),
             kerning: {},
             texture: tx
         };
@@ -242,10 +243,10 @@ BitmapText.parseXML = function(key, xml, texture) {
 
     for(i = 0, il = kernings.length; i < il; ++i) {
         var kern = kernings[i],
-            attrs2 = kern.attributes.getNamedItem,
-            first = parseInt(attrs2('first').nodeValue, 10),
-            second = parseInt(attrs2('second').nodeValue, 10),
-            amount = parseInt(attrs2('amount').nodeValue, 10);
+            attrs2 = kern.attributes,
+            first = parseInt(attrs2.getNamedItem('first').nodeValue, 10),
+            second = parseInt(attrs2.getNamedItem('second').nodeValue, 10),
+            amount = parseInt(attrs2.getNamedItem('amount').nodeValue, 10);
 
         data.chars[second].kerning[first] = amount;
     }

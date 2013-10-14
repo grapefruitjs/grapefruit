@@ -147,7 +147,7 @@ inherit(AudioPlayer, Object, {
         //if using web audio, load up the buffer
         if(audio.webAudio) {
             if(!audio.decoded) {
-                this.ctx.decodeAudioData(audio.data, function(buffer) {
+                this._manager.ctx.decodeAudioData(audio.data, function(buffer) {
                     if(buffer) {
                         audio.data = buffer;
                         audio.decoded = true;
