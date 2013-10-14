@@ -91,13 +91,16 @@ inherit(Physics, Object, {
             pot;
 
         //update bodies and build quadtree
-        for (i = 0; i < il; ++i) {
+        for(i = 0; i < il; ++i) {
             body = bods[i];
 
             body.update(dt, this.gravity);
             body._collided = false;
 
-            if (body.allowCollide && body.sprite.visible) {
+            //TODO: Check worldVisible so that children that are ".visible === true"
+            // but are invisible due to parent are filtered out. However in that case
+            // invisible collision layers will also not be put in; how to handle?!
+            if(body.allowCollide && body.sprite.visible) {
                 this.tree.insert(body);
             }
         }
