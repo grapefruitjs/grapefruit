@@ -436,14 +436,14 @@ define(
         WEBGL: "webgl"
       },
       FILE_FORMAT: {
-        JSON: 0,
-        XML: 1,
-        CSV: 2
+        JSON: "json",
+        XML: "xml",
+        CSV: "csv"
       },
       ATLAS_FORMAT: {
-        JSON_ARRAY: 0,
-        JSON_HASH: 1,
-        STARLING_XML: 2
+        JSON_ARRAY: "json_array",
+        JSON_HASH: "json_hash",
+        XML_STARLING: "xml_starling"
       },
       CAMERA_FOLLOW: {
         PLATFORMER: 0,
@@ -1299,13 +1299,16 @@ define(
         return obj;
       },
       log: function () {
-        window.console && window.console.log.apply(window.console, arguments);
+        if (window.console)
+          window.console.log.apply(window.console, arguments);
       },
       warn: function () {
-        window.console && window.console.warn.apply(window.console, arguments);
+        if (window.console)
+          window.console.warn.apply(window.console, arguments);
       },
       error: function () {
-        window.console && window.console.error.apply(window.console, arguments);
+        if (window.console)
+          window.console.error.apply(window.console, arguments);
       }
     };
   if (typeof window.DOMParser !== "undefined") {
@@ -1421,7 +1424,7 @@ define(
       var self = this, audio = this._file;
       if (audio.webAudio) {
         if (!audio.decoded) {
-          this.ctx.decodeAudioData(audio.data, function (buffer) {
+          this._manager.ctx.decodeAudioData(audio.data, function (buffer) {
             if (buffer) {
               audio.data = buffer;
               audio.decoded = true;
@@ -7524,6 +7527,8 @@ define(
       this.removeAllChildren();
       if (this.parent)
         this.parent.removeChild(this);
+    },
+    onCollide: function () {
     }
   });
   module.exports = Container;
@@ -7774,8 +7779,9 @@ define(
       this.wasTouching = this.touching;
       this.touching = C.DIRECTION.NONE;
       this.embedded = false;
-      this.x = this.sprite.position.x - this.sprite.anchor.x * this._width + this.offset.x;
-      this.y = this.sprite.position.y - this.sprite.anchor.y * this._height + this.offset.y;
+      var a = this.sprite.anchor, ax = a !== undefined ? a.x : 0, ay = a !== undefined ? a.y : 0;
+      this.x = this.sprite.position.x - ax * this._width + this.offset.x;
+      this.y = this.sprite.position.y - ay * this._height + this.offset.y;
       this.lastPos.set(this.x, this.y);
       if (this.type !== C.PHYSICS_TYPE.STATIC)
         this.updateMotion(dt, gravity);
@@ -7783,8 +7789,9 @@ define(
       this.syncShape();
     },
     syncSprite: function () {
-      this.sprite.position.x = math.round(this.x - this.offset.x + this.sprite.anchor.x * this._width);
-      this.sprite.position.y = math.round(this.y - this.offset.y + this.sprite.anchor.y * this._height);
+      var a = this.sprite.anchor, ax = a !== undefined ? a.x : 0, ay = a !== undefined ? a.y : 0;
+      this.sprite.position.x = math.round(this.x - this.offset.x + ax * this._width);
+      this.sprite.position.y = math.round(this.y - this.offset.y + ay * this._height);
     },
     syncShape: function () {
       this.shape.position.copy(this.position);
@@ -7850,7 +7857,7 @@ define(
     }
     var frames = xml.getElementsByTagName("SubTexture") || xml.getElementsByTagName("sprite"), textures = {};
     for (var i = 0; i < frames.length; i++) {
-      var frame = frames[i], attrs = frame.attributes.getNamedItem, name = attrs("name") || attrs("n"), x = attrs("x"), y = attrs("y"), width = attrs("width") || attrs("w"), height = attrs("height") || attrs("h"), ox = attrs("frameX") || attrs("oX"), oy = attrs("frameY") || attrs("oY"), owidth = attrs("frameWidth") || attrs("oW"), oheight = attrs("frameHeight") || attrs("oH"), rotated = !!attrs("r");
+      var frame = frames[i], attrs = frame.attributes, name = attrs.getNamedItem("name") || attrs.getNamedItem("n"), x = attrs.getNamedItem("x"), y = attrs.getNamedItem("y"), width = attrs.getNamedItem("width") || attrs.getNamedItem("w"), height = attrs.getNamedItem("height") || attrs.getNamedItem("h"), ox = attrs.getNamedItem("frameX") || attrs.getNamedItem("oX"), oy = attrs.getNamedItem("frameY") || attrs.getNamedItem("oY"), owidth = attrs.getNamedItem("frameWidth") || attrs.getNamedItem("oW"), oheight = attrs.getNamedItem("frameHeight") || attrs.getNamedItem("oH"), rotated = !!attrs.getNamedItem("r");
       var tx = textures[name] = PIXI.TextureCache[key + "_" + name] = new Texture(baseTexture, {
           x: parseInt(x.nodeValue, 10),
           y: parseInt(y.nodeValue, 10),
@@ -7891,6 +7898,9 @@ define(
   var EventEmitter = require("../utils/EventEmitter"), Rectangle = require("../geom/Rectangle"), Body = require("../physics/Body"), inherit = require("../utils/inherit"), Texture = require("./Texture"), math = require("../math/math"), utils = require("../utils/utils"), PIXI = require("../vendor/pixi");
   var Sprite = function (anims, speed, start) {
     EventEmitter.call(this);
+    if (!anims) {
+      anims = Texture.__default;
+    }
     if (anims instanceof Texture) {
       anims = { _default: { frames: [anims] } };
       speed = 1;
@@ -8034,6 +8044,48 @@ return module.exports;
 }
 );
 define(
+  'utils/ObjectPool',['require','exports','module','./inherit'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var inherit = require("./inherit");
+  var ObjectPool = function (type, parent) {
+    this.type = type;
+    this.pool = [];
+    this.parent = parent;
+  };
+  inherit(ObjectPool, Object, {
+    create: function () {
+      var o = this.pool.pop();
+      if (!o) {
+        o = this._construct(this.type, arguments);
+        if (this.parent)
+          this.parent.addChild(o);
+      }
+      o.__allocated = true;
+      return o;
+    },
+    free: function (o) {
+      if (o.__allocated) {
+        o.__allocated = false;
+        this.pool.push(o);
+      }
+    },
+    _construct: function (ctor, args) {
+      function F() {
+        return ctor.apply(this, args);
+      }
+      F.prototype = ctor.prototype;
+      return new F();
+    }
+  });
+  module.exports = ObjectPool;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
   'gui/GuiItem',['require','exports','module','../utils/inherit','../display/Sprite'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
@@ -8060,7 +8112,8 @@ define(
       if (!this.draggable || !this.dragging)
         return;
       var pos = e.data.getLocalPosition(this.parent);
-      this.setPosition(this.position.x + (pos.x - this.dragging.x), this.position.y + (pos.y - this.dragging.y));
+      this.position.x += pos.x - this.dragging.x;
+      this.position.y += pos.y - this.dragging.y;
       this.dragging = pos;
     }
   });
@@ -8084,10 +8137,10 @@ return module.exports;
 }
 );
 define(
-  'tilemap/ObjectGroup',['require','exports','module','../display/Container','../math/Vector','../geom/Polygon','../geom/Ellipse','../geom/Rectangle','../utils/utils','../utils/inherit','../math/math'],function (require, exports, module) {
+  'tilemap/ObjectGroup',['require','exports','module','../display/Container','../math/Vector','../geom/Polygon','../geom/Ellipse','../geom/Rectangle','../physics/Body','../utils/utils','../utils/inherit','../math/math'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
-  var Container = require("../display/Container"), Vector = require("../math/Vector"), Polygon = require("../geom/Polygon"), Ellipse = require("../geom/Ellipse"), Rectangle = require("../geom/Rectangle"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), math = require("../math/math");
+  var Container = require("../display/Container"), Vector = require("../math/Vector"), Polygon = require("../geom/Polygon"), Ellipse = require("../geom/Ellipse"), Rectangle = require("../geom/Rectangle"), Body = require("../physics/Body"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), math = require("../math/math");
   var ObjectGroup = function (map, group) {
     Container.call(this, group);
     this.map = map;
@@ -8145,8 +8198,11 @@ define(
           obj.hitArea = props.hitArea;
           obj.rotation = o.rotation;
           obj.sensor = true;
-          obj.setPosition(o.x, o.y);
-          obj.enablePhysics(game.physics);
+          obj.position.x = o.x;
+          obj.position.y = o.y;
+          obj.body = new Body(obj);
+          obj.body.sensor = true;
+          game.physics.addSprite(obj);
           if (this.parent._showPhysics)
             obj.showPhysics();
         } else {
@@ -8161,7 +8217,8 @@ define(
           obj.inertia = props.inertia || props.tileprops.inertia;
           obj.friction = props.friction || props.tileprops.friction;
           obj.sensor = props.sensor || props.tileprops.sensor;
-          obj.setPosition(o.x, o.y);
+          obj.position.x = o.x;
+          obj.position.y = o.y;
           var a = props.anchor || props.tileprops.anchor;
           obj.anchor.y = a ? a[1] : 1;
           obj.anchor.x = a ? a[0] : this.parent.orientation === "isometric" ? 0.5 : 0;
@@ -8769,59 +8826,18 @@ return module.exports;
 }
 );
 define(
-  'utils/ObjectPool',['require','exports','module','./inherit'],function (require, exports, module) {
-  
-// uRequire v0.6.2-01: START body of original nodejs module
-  var inherit = require("./inherit");
-  var ObjectPool = function (type, parent) {
-    this.type = type;
-    this.pool = [];
-    this.parent = parent;
-  };
-  inherit(ObjectPool, Object, {
-    create: function () {
-      var o = this.pool.pop();
-      if (!o) {
-        o = this._construct(this.type, arguments);
-        if (this.parent)
-          this.parent.addChild(o);
-      }
-      o.__allocated = true;
-      return o;
-    },
-    free: function (o) {
-      if (o.__allocated) {
-        o.__allocated = false;
-        this.pool.push(o);
-      }
-    },
-    _construct: function (ctor, args) {
-      function F() {
-        return ctor.apply(this, args);
-      }
-      F.prototype = ctor.prototype;
-      return new F();
-    }
-  });
-  module.exports = ObjectPool;
-// uRequire v0.6.2-01: END body of original nodejs module
-
-
-return module.exports;
-}
-);
-define(
   'text/BitmapText',['require','exports','module','../display/Container','../utils/ObjectPool','../display/Texture','../display/Sprite','../math/Vector','../geom/Rectangle','../utils/utils','../utils/inherit','../vendor/pixi'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var Container = require("../display/Container"), ObjectPool = require("../utils/ObjectPool"), Texture = require("../display/Texture"), Sprite = require("../display/Sprite"), Vector = require("../math/Vector"), Rectangle = require("../geom/Rectangle"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), PIXI = require("../vendor/pixi");
   var BitmapText = function (text, font, style) {
     Container.call(this);
-    this.dirty = true;
+    this.dirty = false;
     this.font = font;
     this._text = text;
+    this.monospace = 0;
     this.sprites = new ObjectPool(Sprite, this);
-    this.setText(text);
+    this.text = text;
     this.setStyle(style);
   };
   inherit(BitmapText, Container, {
@@ -8857,7 +8873,7 @@ define(
           x: pos.x + data.xOffset,
           y: pos.y + data.yOffset
         });
-        pos.x += data.xAdvance;
+        pos.x += this.monospace || data.xAdvance;
         prevCode = code;
       }
       lineWidths.push(pos.x);
@@ -8923,18 +8939,18 @@ define(
     data.chars = {};
     var chars = xml.getElementsByTagName("char");
     for (var i = 0, il = chars.length; i < il; ++i) {
-      var letter = chars[i], attrs = letter.attributes.getNamedItem, code = parseInt(attrs("id").nodeValue, 10), rect = new Rectangle(parseInt(attrs("x").nodeValue, 10), parseInt(attrs("y").nodeValue, 10), parseInt(attrs("width").nodeValue, 10), parseInt(attrs("height").nodeValue, 10)), tx = PIXI.TextureCache[key + "_" + code] = new Texture(btx, rect);
+      var letter = chars[i], attrs = letter.attributes, code = parseInt(attrs.getNamedItem("id").nodeValue, 10), rect = new Rectangle(parseInt(attrs.getNamedItem("x").nodeValue, 10), parseInt(attrs.getNamedItem("y").nodeValue, 10), parseInt(attrs.getNamedItem("width").nodeValue, 10), parseInt(attrs.getNamedItem("height").nodeValue, 10)), tx = PIXI.TextureCache[key + "_" + code] = new Texture(btx, rect);
       data.chars[code] = {
-        xOffset: parseInt(attrs("xoffset").nodeValue, 10),
-        yOffset: parseInt(attrs("yoffset").nodeValue, 10),
-        xAdvance: parseInt(attrs("xadvance").nodeValue, 10),
+        xOffset: parseInt(attrs.getNamedItem("xoffset").nodeValue, 10),
+        yOffset: parseInt(attrs.getNamedItem("yoffset").nodeValue, 10),
+        xAdvance: parseInt(attrs.getNamedItem("xadvance").nodeValue, 10),
         kerning: {},
         texture: tx
       };
     }
     var kernings = xml.getElementsByTagName("kerning");
     for (i = 0, il = kernings.length; i < il; ++i) {
-      var kern = kernings[i], attrs2 = kern.attributes.getNamedItem, first = parseInt(attrs2("first").nodeValue, 10), second = parseInt(attrs2("second").nodeValue, 10), amount = parseInt(attrs2("amount").nodeValue, 10);
+      var kern = kernings[i], attrs2 = kern.attributes, first = parseInt(attrs2.getNamedItem("first").nodeValue, 10), second = parseInt(attrs2.getNamedItem("second").nodeValue, 10), amount = parseInt(attrs2.getNamedItem("amount").nodeValue, 10);
       data.chars[second].kerning[first] = amount;
     }
     PIXI.BitmapText.fonts[data.name] = data;
@@ -9009,151 +9025,6 @@ define(
     }
   });
   module.exports = ObjectFactory;
-// uRequire v0.6.2-01: END body of original nodejs module
-
-
-return module.exports;
-}
-);
-define(
-  'camera/Camera',['require','exports','module','../display/Container','../display/Sprite','../geom/Rectangle','../math/Vector','../utils/ObjectFactory','../utils/inherit','../math/math','../constants'],function (require, exports, module) {
-  
-// uRequire v0.6.2-01: START body of original nodejs module
-  var Container = require("../display/Container"), Sprite = require("../display/Sprite"), Rectangle = require("../geom/Rectangle"), Vector = require("../math/Vector"), ObjectFactory = require("../utils/ObjectFactory"), inherit = require("../utils/inherit"), math = require("../math/math"), C = require("../constants");
-  var Camera = function (state) {
-    this.world = state.world;
-    this.game = state.game;
-    this.state = state;
-    this.bounds = state.world.bounds.clone();
-    this._deadzone = null;
-    this._target = null;
-    this.size = new Vector(0, 0);
-    this.hSize = new Vector(0, 0);
-    this.gui = new Container();
-    this.add = new ObjectFactory(state, this.gui);
-    Container.call(this);
-    this.addChild(this.gui);
-  };
-  inherit(Camera, Container, {
-    follow: function (spr, style) {
-      if (!(spr instanceof Sprite))
-        return this;
-      this._target = spr;
-      switch (style) {
-      case C.CAMERA_FOLLOW.PLATFORMER:
-        var w = this.size.x / 8;
-        var h = this.size.y / 3;
-        this._deadzone = new Rectangle((this.size.x - w) / 2, (this.size.y - h) / 2 - h / 4, w, h);
-        break;
-      case C.CAMERA_FOLLOW.TOPDOWN:
-        var sq4 = Math.max(this.size.x, this.size.y) / 4;
-        this._deadzone = new Rectangle((this.size.x - sq4) / 2, (this.size.y - sq4) / 2, sq4, sq4);
-        break;
-      case C.CAMERA_FOLLOW.TOPDOWN_TIGHT:
-        var sq8 = Math.max(this.size.x, this.size.y) / 8;
-        this._deadzone = new Rectangle((this.size.x - sq8) / 2, (this.size.y - sq8) / 2, sq8, sq8);
-        break;
-      case C.CAMERA_FOLLOW.LOCKON:
-      default:
-        this._deadzone = null;
-        break;
-      }
-      this.focusSprite(this._target);
-      return this;
-    },
-    unfollow: function () {
-      this._target = null;
-      return this;
-    },
-    focusSprite: function (spr) {
-      return this.focus(math.round(spr.position.x), math.round(spr.position.y));
-    },
-    focus: function (x, y) {
-      y = x.y !== undefined ? x.y : y || 0;
-      x = x.x !== undefined ? x.x : x || 0;
-      var goToX = x - this.hSize.x, goToY = y - this.hSize.y, dx = goToX + this.world.position.x, dy = goToY + this.world.position.y;
-      return this.pan(dx, dy);
-    },
-    pan: function (dx, dy) {
-      dy = dx.y !== undefined ? dx.y : dy || 0;
-      dx = dx.x !== undefined ? dx.x : dx || 0;
-      if (!dx && !dy)
-        return;
-      var pos = this.world.position, newX = pos.x - dx, newY = pos.y - dy, b = this.bounds;
-      if (b) {
-        if (this._outsideBounds(-newX, -pos.y)) {
-          dx = (dx < 0 ? b.x : b.right - this.size.x) + pos.x;
-        }
-        if (this._outsideBounds(-pos.x, -newY)) {
-          dy = (dy < 0 ? b.y : b.bottom - this.size.y) + pos.y;
-        }
-      }
-      if (!dx)
-        dx = 0;
-      if (!dy)
-        dy = 0;
-      this.world.pan(-dx, -dy);
-      return this;
-    },
-    _outsideBounds: function (x, y) {
-      return !this.bounds.contains(x, y) || !this.bounds.contains(x, y + this.size.y) || !this.bounds.contains(x + this.size.x, y) || !this.bounds.contains(x + this.size.x, y + this.size.y);
-    },
-    resize: function (w, h) {
-      this.size.set(w, h);
-      this.hSize.set(math.round(this.size.x / 2), math.round(this.size.y / 2));
-      return this;
-    },
-    constrain: function (shape) {
-      this.bounds = shape;
-      return this;
-    },
-    unconstrain: function () {
-      this.bounds = null;
-      return this;
-    },
-    update: function (dt) {
-      if (this._target) {
-        if (!this._deadzone) {
-          this.focusSprite(this._target);
-        } else {
-          var moveX, moveY, dx, dy, camX = this._target.position.x + this.world.position.x, camY = this._target.position.y + this.world.position.y;
-          moveX = moveY = dx = dy = 0;
-          dx = camX - this._deadzone.x;
-          dy = camY - this._deadzone.y;
-          if (dx < 0)
-            moveX = dx;
-          if (dy < 0)
-            moveY = dy;
-          dx = camX - (this._deadzone.x + this._deadzone.width);
-          dy = camY - (this._deadzone.y + this._deadzone.height);
-          if (dx > 0)
-            moveX = dx;
-          if (dy > 0)
-            moveY = dy;
-          this.pan(math.round(moveX), math.round(moveY));
-        }
-      }
-      for (var i = 0, il = this.children.length; i < il; ++i) {
-        var c = this.children[i];
-        if (c.update)
-          c.update(dt);
-      }
-      return this;
-    }
-  });
-  module.exports = Camera;
-// uRequire v0.6.2-01: END body of original nodejs module
-
-
-return module.exports;
-}
-);
-define(
-  'display/BaseTexture',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
-  
-// uRequire v0.6.2-01: START body of original nodejs module
-  var BaseTexture = require("../vendor/pixi").BaseTexture;
-  module.exports = BaseTexture;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -9520,6 +9391,211 @@ define(
     }
   });
   module.exports = Shake;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
+  'camera/Camera',['require','exports','module','../display/Container','../display/Sprite','../geom/Rectangle','../math/Vector','../utils/ObjectPool','../utils/ObjectFactory','../fx/camera/Close','../fx/camera/Fade','../fx/camera/Flash','../fx/camera/Scanlines','../fx/camera/Shake','../utils/inherit','../math/math','../constants'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var Container = require("../display/Container"), Sprite = require("../display/Sprite"), Rectangle = require("../geom/Rectangle"), Vector = require("../math/Vector"), ObjectPool = require("../utils/ObjectPool"), ObjectFactory = require("../utils/ObjectFactory"), Close = require("../fx/camera/Close"), Fade = require("../fx/camera/Fade"), Flash = require("../fx/camera/Flash"), Scanlines = require("../fx/camera/Scanlines"), Shake = require("../fx/camera/Shake"), inherit = require("../utils/inherit"), math = require("../math/math"), C = require("../constants");
+  var Camera = function (state) {
+    this.world = state.world;
+    this.game = state.game;
+    this.state = state;
+    this.bounds = state.world.bounds.clone();
+    this._deadzone = null;
+    this._target = null;
+    this.size = new Vector(0, 0);
+    this.hSize = new Vector(0, 0);
+    this.gui = new Container();
+    this.add = new ObjectFactory(state, this.gui);
+    this.fxpools = {
+      flash: new ObjectPool(Flash, this),
+      fade: new ObjectPool(Fade, this),
+      shake: new ObjectPool(Shake, this),
+      scanlines: new ObjectPool(Scanlines, this),
+      close: new ObjectPool(Close, this)
+    };
+    var self = this;
+    Object.keys(this.fxpools).forEach(function (key) {
+      self[key] = function () {
+        var e = self.fxpools[key].create(), args = Array.prototype.slice.call(arguments), cb = args.pop();
+        if (typeof cb !== "function")
+          args.push(cb);
+        args.push(this._fxCallback.bind(this, e, key, cb));
+        return e.start.apply(e, args);
+      };
+    });
+    Container.call(this);
+    this.addChild(this.gui);
+  };
+  inherit(Camera, Container, {
+    _fxCallback: function (fx, type, cb) {
+      var ret;
+      if (typeof cb === "function")
+        ret = cb();
+      this.fxpools[type].free(fx);
+      return ret;
+    },
+    follow: function (spr, style) {
+      if (!(spr instanceof Sprite))
+        return this;
+      this._target = spr;
+      switch (style) {
+      case C.CAMERA_FOLLOW.PLATFORMER:
+        var w = this.size.x / 8;
+        var h = this.size.y / 3;
+        this._deadzone = new Rectangle((this.size.x - w) / 2, (this.size.y - h) / 2 - h / 4, w, h);
+        break;
+      case C.CAMERA_FOLLOW.TOPDOWN:
+        var sq4 = Math.max(this.size.x, this.size.y) / 4;
+        this._deadzone = new Rectangle((this.size.x - sq4) / 2, (this.size.y - sq4) / 2, sq4, sq4);
+        break;
+      case C.CAMERA_FOLLOW.TOPDOWN_TIGHT:
+        var sq8 = Math.max(this.size.x, this.size.y) / 8;
+        this._deadzone = new Rectangle((this.size.x - sq8) / 2, (this.size.y - sq8) / 2, sq8, sq8);
+        break;
+      case C.CAMERA_FOLLOW.LOCKON:
+      default:
+        this._deadzone = null;
+        break;
+      }
+      this.focusSprite(this._target);
+      return this;
+    },
+    unfollow: function () {
+      this._target = null;
+      return this;
+    },
+    focusSprite: function (spr) {
+      return this.focus(math.round(spr.position.x), math.round(spr.position.y));
+    },
+    focus: function (x, y) {
+      y = x.y !== undefined ? x.y : y || 0;
+      x = x.x !== undefined ? x.x : x || 0;
+      var goToX = x - this.hSize.x, goToY = y - this.hSize.y, dx = goToX + this.world.position.x, dy = goToY + this.world.position.y;
+      return this.pan(dx, dy);
+    },
+    pan: function (dx, dy) {
+      dy = dx.y !== undefined ? dx.y : dy || 0;
+      dx = dx.x !== undefined ? dx.x : dx || 0;
+      if (!dx && !dy)
+        return;
+      var pos = this.world.position, newX = pos.x - dx, newY = pos.y - dy, b = this.bounds;
+      if (b) {
+        if (this._outsideBounds(-newX, -pos.y)) {
+          dx = (dx < 0 ? b.x : b.right - this.size.x) + pos.x;
+        }
+        if (this._outsideBounds(-pos.x, -newY)) {
+          dy = (dy < 0 ? b.y : b.bottom - this.size.y) + pos.y;
+        }
+      }
+      if (!dx)
+        dx = 0;
+      if (!dy)
+        dy = 0;
+      this.world.pan(-dx, -dy);
+      return this;
+    },
+    _outsideBounds: function (x, y) {
+      return !this.bounds.contains(x, y) || !this.bounds.contains(x, y + this.size.y) || !this.bounds.contains(x + this.size.x, y) || !this.bounds.contains(x + this.size.x, y + this.size.y);
+    },
+    resize: function (w, h) {
+      this.size.set(w, h);
+      this.hSize.set(math.round(this.size.x / 2), math.round(this.size.y / 2));
+      return this;
+    },
+    constrain: function (shape) {
+      this.bounds = shape;
+      return this;
+    },
+    unconstrain: function () {
+      this.bounds = null;
+      return this;
+    },
+    update: function (dt) {
+      if (this._target) {
+        if (!this._deadzone) {
+          this.focusSprite(this._target);
+        } else {
+          var moveX, moveY, dx, dy, camX = this._target.position.x + this.world.position.x, camY = this._target.position.y + this.world.position.y;
+          moveX = moveY = dx = dy = 0;
+          dx = camX - this._deadzone.x;
+          dy = camY - this._deadzone.y;
+          if (dx < 0)
+            moveX = dx;
+          if (dy < 0)
+            moveY = dy;
+          dx = camX - (this._deadzone.x + this._deadzone.width);
+          dy = camY - (this._deadzone.y + this._deadzone.height);
+          if (dx > 0)
+            moveX = dx;
+          if (dy > 0)
+            moveY = dy;
+          this.pan(math.round(moveX), math.round(moveY));
+        }
+      }
+      for (var i = 0, il = this.children.length; i < il; ++i) {
+        var c = this.children[i];
+        if (c.update)
+          c.update(dt);
+      }
+      return this;
+    }
+  });
+  module.exports = Camera;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
+  'display/BaseTexture',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var BaseTexture = require("../vendor/pixi").BaseTexture;
+  module.exports = BaseTexture;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
+  'display/Graphics',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var Graphics = require("../vendor/pixi").Graphics;
+  module.exports = Graphics;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
+  'display/RenderTexture',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var RenderTexture = require("../vendor/pixi").RenderTexture;
+  module.exports = RenderTexture;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
+  'display/TilingSprite',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var TilingSprite = require("../vendor/pixi").TilingSprite;
+  module.exports = TilingSprite;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -10055,7 +10131,7 @@ define(
         this.bodies.splice(i, 1);
     },
     testCircleCircle: function (a, b, response) {
-      var differenceV = T_VECTORS.pop().copy(b.position).sub(a.position), totalRadius = a.r + b.r, totalRadiusSq = totalRadius * totalRadius, distanceSq = differenceV.len2();
+      var differenceV = T_VECTORS.pop().copy(b.position).sub(a.position), totalRadius = a.r + b.r, totalRadiusSq = totalRadius * totalRadius, distanceSq = differenceV.lengthSq();
       if (distanceSq > totalRadiusSq) {
         T_VECTORS.push(differenceV);
         return false;
@@ -10079,7 +10155,7 @@ define(
         var next = i === len - 1 ? 0 : i + 1, prev = i === 0 ? len - 1 : i - 1, overlap = 0, overlapN = null, dist, distAbs;
         edge.copy(polygon.edges[i]);
         point.copy(circlePos).sub(points[i]);
-        if (response && point.len2() > radius2) {
+        if (response && point.lengthSq() > radius2) {
           response.aInB = false;
         }
         var region = this.vornoiRegion(edge, point);
@@ -10470,11 +10546,12 @@ define(
     addDefaultImage: function () {
       var key = "__default";
       var base = new BaseTexture();
-      base.width = 32;
-      base.height = 32;
+      base.width = 0;
+      base.height = 0;
       base.hasLoaded = true;
       PIXI.BaseTextureCache[key] = base;
       PIXI.TextureCache[key] = new Texture(base);
+      Texture.__default = PIXI.TextureCache[key];
       this._images[key] = { texture: PIXI.TextureCache[key] };
     },
     getCanvas: function (key) {
@@ -10741,7 +10818,7 @@ define(
       this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.JSON_HASH);
     },
     atlasXML: function (key, textureURL, atlasURL, atlasData) {
-      this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.STARLING_XML);
+      this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.XML_STARLING);
     },
     atlas: function (key, textureUrl, dataUrl, data, format, overwrite) {
       if (overwrite || !this.hasKey(key)) {
@@ -10749,7 +10826,7 @@ define(
           format = C.ATLAS_FORMAT.JSON_ARRAY;
         if (typeof data === "string") {
           switch (format) {
-          case C.ATLAS_FORMAT.STARLING_XML:
+          case C.ATLAS_FORMAT.XML_STARLING:
             data = utils.parseXML(data);
             break;
           case C.ATLAS_FORMAT.JSON_ARRAY:
@@ -10940,7 +11017,7 @@ define(
       case C.ATLAS_FORMAT.JSON_HASH:
       case C.FILE_FORMAT.JSON:
         return "json";
-      case C.ATLAS_FORMAT.STARLING_XML:
+      case C.ATLAS_FORMAT.XML_STARLING:
       case C.FILE_FORMAT.XML:
         return "xml";
       case C.FILE_FORMAT.CSV:
@@ -11668,6 +11745,18 @@ return module.exports;
 }
 );
 define(
+  'text/Text',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var Text = require("../vendor/pixi").Text;
+  module.exports = Text;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
   'plugin',['require','exports','module'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
@@ -11693,11 +11782,11 @@ define(
           };
         }(name, fn);
       },
-      register: function (plugin, name) {
+      register: function (obj, name) {
         if (window.gf[name]) {
           throw new Error("Unable to register plugin: \"" + name + "\" already exists in the gf namespace, please choose something else!");
         }
-        window.gf[name] = plugin;
+        window.gf[name] = obj;
       }
     };
   module.exports = plugin;
@@ -11707,7 +11796,7 @@ define(
 return module.exports;
 }
 );
-define('core.js',['require', 'exports', 'module', './constants', './audio/AudioManager', './audio/AudioPlayer', './camera/Camera', './display/BaseTexture', './display/Texture', './display/Container', './display/Sprite', './text/BitmapText', './fx/camera/Effect', './fx/camera/Close', './fx/camera/Fade', './fx/camera/Flash', './fx/camera/Scanlines', './fx/camera/Shake', './game/Game', './game/State', './game/StateManager', './gui/GuiItem', './input/Input', './input/InputManager', './input/Keyboard', './input/Gamepad', './input/gamepad/GamepadButtons', './input/gamepad/GamepadSticks', './input/Pointers', './input/pointer/Pointer', './loader/Loader', './tilemap/Tile', './tilemap/Tilelayer', './tilemap/Tilemap', './tilemap/Tileset', './tilemap/ObjectGroup', './math/math', './geom/Circle', './geom/Ellipse', './geom/Polygon', './geom/Rectangle', './math/Vector', './particles/ParticleEmitter', './particles/ParticleSystem', './physics/Physics', './physics/Body', './utils/utils', './utils/support', './utils/inherit', './utils/Cache', './utils/Clock', './utils/EventEmitter', './utils/ObjectPool', './utils/SpritePool', './utils/ObjectFactory', './plugin', './vendor/pixi'], 
+define('core.js',['require', 'exports', 'module', './constants', './audio/AudioManager', './audio/AudioPlayer', './camera/Camera', './display/BaseTexture', './display/Container', './display/Graphics', './display/RenderTexture', './display/Sprite', './display/Texture', './display/TilingSprite', './fx/camera/Effect', './fx/camera/Close', './fx/camera/Fade', './fx/camera/Flash', './fx/camera/Scanlines', './fx/camera/Shake', './game/Game', './game/State', './game/StateManager', './game/World', './geom/Circle', './geom/Ellipse', './geom/Polygon', './geom/Rectangle', './gui/GuiItem', './input/Input', './input/InputManager', './input/Keyboard', './input/Gamepad', './input/gamepad/GamepadButtons', './input/gamepad/GamepadSticks', './input/Pointers', './input/pointer/Pointer', './loader/Loader', './math/math', './math/QuadTree', './math/Vector', './particles/ParticleEmitter', './particles/ParticleSystem', './physics/Body', './physics/Physics', './physics/Collision', './text/BitmapText', './text/Text', './tilemap/Tile', './tilemap/Tilelayer', './tilemap/Tilemap', './tilemap/Tileset', './tilemap/ObjectGroup', './utils/utils', './utils/support', './utils/inherit', './utils/Cache', './utils/Clock', './utils/EventEmitter', './utils/ObjectPool', './utils/SpritePool', './utils/ObjectFactory', './plugin', './vendor/pixi'], 
   function (require, exports, module) {
   var __umodule = (function (require, exports, module) {
   
@@ -11717,10 +11806,12 @@ define('core.js',['require', 'exports', 'module', './constants', './audio/AudioM
       AudioPlayer: require("./audio/AudioPlayer"),
       Camera: require("./camera/Camera"),
       BaseTexture: require("./display/BaseTexture"),
-      Texture: require("./display/Texture"),
       Container: require("./display/Container"),
+      Graphics: require("./display/Graphics"),
+      RenderTexture: require("./display/RenderTexture"),
       Sprite: require("./display/Sprite"),
-      BitmapText: require("./text/BitmapText"),
+      Texture: require("./display/Texture"),
+      TilingSprite: require("./display/TilingSprite"),
       fx: {
         camera: {
           Effect: require("./fx/camera/Effect"),
@@ -11734,6 +11825,11 @@ define('core.js',['require', 'exports', 'module', './constants', './audio/AudioM
       Game: require("./game/Game"),
       State: require("./game/State"),
       StateManager: require("./game/StateManager"),
+      World: require("./game/World"),
+      Circle: require("./geom/Circle"),
+      Ellipse: require("./geom/Ellipse"),
+      Polygon: require("./geom/Polygon"),
+      Rectangle: require("./geom/Rectangle"),
       GuiItem: require("./gui/GuiItem"),
       Input: require("./input/Input"),
       InputManager: require("./input/InputManager"),
@@ -11744,21 +11840,21 @@ define('core.js',['require', 'exports', 'module', './constants', './audio/AudioM
       Pointers: require("./input/Pointers"),
       Pointer: require("./input/pointer/Pointer"),
       Loader: require("./loader/Loader"),
+      math: require("./math/math"),
+      QuadTree: require("./math/QuadTree"),
+      Vector: require("./math/Vector"),
+      ParticleEmitter: require("./particles/ParticleEmitter"),
+      ParticleSystem: require("./particles/ParticleSystem"),
+      Body: require("./physics/Body"),
+      Physics: require("./physics/Physics"),
+      Collision: require("./physics/Collision"),
+      BitmapText: require("./text/BitmapText"),
+      Text: require("./text/Text"),
       Tile: require("./tilemap/Tile"),
       Tilelayer: require("./tilemap/Tilelayer"),
       Tilemap: require("./tilemap/Tilemap"),
       Tileset: require("./tilemap/Tileset"),
       ObjectGroup: require("./tilemap/ObjectGroup"),
-      math: require("./math/math"),
-      Circle: require("./geom/Circle"),
-      Ellipse: require("./geom/Ellipse"),
-      Polygon: require("./geom/Polygon"),
-      Rectangle: require("./geom/Rectangle"),
-      Vector: require("./math/Vector"),
-      ParticleEmitter: require("./particles/ParticleEmitter"),
-      ParticleSystem: require("./particles/ParticleSystem"),
-      Physics: require("./physics/Physics"),
-      Body: require("./physics/Body"),
       utils: require("./utils/utils"),
       support: require("./utils/support"),
       inherit: require("./utils/inherit"),
@@ -11771,6 +11867,7 @@ define('core.js',['require', 'exports', 'module', './constants', './audio/AudioM
       plugin: require("./plugin"),
       PIXI: require("./vendor/pixi")
     };
+  gf.PIXI.Point = gf.Vector;
   var C = require("./constants");
   for (var k in C) {
     gf[k] = C[k];
