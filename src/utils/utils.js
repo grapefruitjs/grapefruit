@@ -389,17 +389,18 @@ var utils = {
 
         return obj;
     },
+    _logger: window.console || {},
     log: function() {
-        if(window.console)
-            window.console.log.apply(window.console, arguments);
+        if(utils._logger.log)
+            utils._logger.log.apply(utils._logger, arguments);
     },
     warn: function() {
-        if(window.console)
-            window.console.warn.apply(window.console, arguments);
+        if(utils._logger.warn)
+            utils._logger.warn.apply(utils._logger, arguments);
     },
     error: function() {
-        if(window.console)
-            window.console.error.apply(window.console, arguments);
+        if(utils._logger.error)
+            utils._logger.error.apply(utils._logger, arguments);
     }
 };
 
