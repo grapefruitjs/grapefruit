@@ -12,13 +12,16 @@ var Body = function(sprite, shape) {
     Rectangle.call(this, sprite.position.x, sprite.position.y, sprite.width, sprite.height);
 
     this.sprite = sprite;
-    this.shape = shape || new Rectangle(0, 0, sprite.width, sprite.height);
+    this._shape = shape || new Rectangle(0, 0, sprite.width, sprite.height);
 
     //if it is a rectangle, just copy the values to the body which is the BB
     //that way we don't have to do a shape check later
-    if(this.shape._shapetype === C.SHAPE.RECTANGLE) {
-        this.shape = this.shape.toPolygon();
+    if(this._shape._shapetype === C.SHAPE.RECTANGLE) {
+        this._shape = this.shape.toPolygon();
     }
+
+    //make our shape have the same position object
+    this._shape.position = this.position;
 
     this.type = C.PHYSICS_TYPE.DYNAMIC;
 
@@ -42,6 +45,7 @@ var Body = function(sprite, shape) {
 
     this.carry = false;
     this.sensor = false;
+    this.worldBound = true;
 
     //touching/allowCollide directional flags
     this.allowCollide = C.DIRECTION.ALL;
@@ -150,25 +154,29 @@ inherit(Body, Rectangle, {
             ax = a !== undefined ? a.x : 0,
             ay = a !== undefined ? a.y : 0;
 
-        this.x = (this.sprite.position.x - (ax * this._width)) + this.offset.x;
-        this.y = (this.sprite.position.y - (ay * this._height)) + this.offset.y;
+        this.position.x = (this.sprite.worldTransform[2] - (ax * this._width)) + this.offset.x;
+        this.position.y = (this.sprite.worldTransform[5] - (ay * this._height)) + this.offset.y;
 
-        this.lastPos.set(this.x, this.y);
+        this.lastPos.copy(this.position);
 
         if(this.type !== C.PHYSICS_TYPE.STATIC)
             this.updateMotion(dt, gravity);
 
-        //update sprite/shape position
+        //update sprite position
         this.syncSprite();
-        this.syncShape();
     },
     syncSprite: function() {
         var a = this.sprite.anchor,
             ax = a !== undefined ? a.x : 0,
             ay = a !== undefined ? a.y : 0;
 
+        this.sprite.position.x += this.deltaX();
+        this.sprite.position.y += this.deltaY();
+
+        /*
         this.sprite.position.x = math.round(this.x - this.offset.x + (ax * this._width));
         this.sprite.position.y = math.round(this.y - this.offset.y + (ay * this._height));
+        */
 
         /*
         if(this.allowRotation) {
@@ -176,15 +184,22 @@ inherit(Body, Rectangle, {
         }
         */
     },
-    syncShape: function() {
-        this.shape.position.copy(this.position);
-    },
     deltaX: function() {
-        return this.x - this.lastPos.x;
+        return this.position.x - this.lastPos.x;
     },
     deltaY: function() {
-        return this.y - this.lastPos.y;
+        return this.position.y - this.lastPos.y;
     }
 });
 
 module.exports = Body;
+
+Object.defineProperty('shape', {
+    get: function() {
+        return this._shape;
+    },
+    set: function(s) {
+        s.position = this.position;
+        this._shape = s;
+    }
+});
