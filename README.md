@@ -1,4 +1,6 @@
-# GrapeFruit Game Engine [![Build Status](https://travis-ci.org/grapefruitjs/grapefruit.png?branch=master)](https://travis-ci.org/grapefruitjs/grapefruit)
+# GrapeFruit Game Engine
+[![Build Status](https://travis-ci.org/grapefruitjs/grapefruit.png?branch=master)](https://travis-ci.org/grapefruitjs/grapefruit)
+[![Dependency Status](https://gemnasium.com/grapefruitjs/grapefruit.png)](https://gemnasium.com/grapefruitjs/grapefruit)
 
 The game engine that powers my remake of [lttp](https://github.com/englercj/lttp) and my original game [shiv](https://github.com/englercj/shiv).
 
@@ -22,8 +24,6 @@ Some features that GrapeFruit gives you:
 ## Current State
 
 This project is under heavy development, and the API is subject to change but is becoming increasing more stable. Check the GitHub issue list to see how to help!
-
-[![Dependency Status](https://gemnasium.com/grapefruitjs/grapefruit.png)](https://gemnasium.com/grapefruitjs/grapefruit)
 
 ## Coming Features
 
