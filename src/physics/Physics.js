@@ -94,8 +94,12 @@ inherit(Physics, Object, {
         for(i = 0; i < il; ++i) {
             body = bods[i];
 
+            // update position and movement
             body.update(dt, this.gravity);
             body._collided = false;
+
+            //check tree bounds collisions
+            this.checkBoundsCollision(body);
 
             //TODO: Check worldVisible so that children that are ".visible === true"
             // but are invisible due to parent are filtered out. However in that case
@@ -105,7 +109,7 @@ inherit(Physics, Object, {
             }
         }
 
-        //select likely collisions
+        //select likely collisions and sync sprites
         for(i = 0; i < il; ++i) {
             body = bods[i];
 
@@ -142,6 +146,32 @@ inherit(Physics, Object, {
                     }
                 }
             }
+
+            body.syncSprite();
+        }
+    },
+    checkBoundsCollision: function(body) {
+        if(!body.worldBound)
+            return;
+
+        // x collision solves
+        if(body.x < this.tree.bounds.x) {
+            body.x = this.tree.bounds.x;
+            body.velocity.x *= -this.bounce.x;
+        }
+        else if(body.right > this.tree.bounds.right) {
+            body.x = this.tree.bounds.right - body.width;
+            body.velocity.x *= -this.bounce.x;
+        }
+
+        // y collision solves
+        if(body.y < this.tree.bounds.y) {
+            body.y = this.tree.bouonds.y;
+            body.velocity.y *= -this.bounce.y;
+        }
+        else if(body.bottom > this.tree.bounds.bottom) {
+            body.y = this.tree.bounds.bottom - body.height;
+            body.velocity.y *= -this.bounce.y;
         }
     },
     solveCollision: function(b1, b2) {
@@ -165,13 +195,6 @@ inherit(Physics, Object, {
         } else if(b1.carry && (b2.touching & C.DIRECTION.BOTTOM)) {
             b2.x += b1.deltaX();
         }
-
-        //sync sprites and shapes
-        b1.syncSprite();
-        b1.syncShape();
-
-        b2.syncSprite();
-        b2.syncShape();
     },
     _separate: function(b1, b2, over, ax) {
         var v1 = b1.velocity[ax],
