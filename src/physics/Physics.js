@@ -364,7 +364,7 @@ inherit(Physics, Object, {
      */
     testCircleCircle: function(a, b, response) {
         var differenceV = T_VECTORS.pop().copy(b.position).sub(a.position),
-            totalRadius = a.r + b.r,
+            totalRadius = a.radius + b.radius,
             totalRadiusSq = totalRadius * totalRadius,
             distanceSq = differenceV.lengthSq();
 
@@ -382,8 +382,8 @@ inherit(Physics, Object, {
             response.overlap = totalRadius - dist;
             response.overlapN.copy(differenceV.normalize());
             response.overlapV.copy(differenceV).multiplyScalar(response.overlap);
-            response.aInB = a.r <= b.r && dist <= b.r - a.r;
-            response.bInA = b.r <= a.r && dist <= a.r - b.r;
+            response.aInB = a.radius <= b.radius && dist <= b.radius - a.radius;
+            response.bInA = b.radius <= a.radius && dist <= a.radius - b.radius;
         }
 
         T_VECTORS.push(differenceV);
