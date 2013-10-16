@@ -102,6 +102,29 @@ inherit(Polygon, Object, {
     },
 
     /**
+     * Copies the values from another polygon to this one
+     *
+     * @method copy
+     * @param polygon {Polygon} The polygon to copy vlaues from
+     * @return {Polygon} Returns itself
+     */
+    copy: function(poly) {
+        //copy the position
+        this.position.copy(poly.position);
+
+        //clone the points to this polygon
+        this.points.length = 0;
+        for(var i = 0; i < poly.points.length; ++i) {
+            this.points.push(poly.points[i].clone());
+        }
+
+        //update our edges and normals
+        this.recalc();
+
+        return this;
+    },
+
+    /**
      * Checks if the x, and y coords passed to this function are contained within this polygon
      *
      * @method contains
@@ -123,6 +146,29 @@ inherit(Polygon, Object, {
         }
 
         return inside;
+    },
+
+    /**
+     * Checks if this polygon's values are equal to anothers
+     *
+     * @method equals
+     * @param polygon {Polygon} The polygon to check against
+     * @return {Boolean} True if they are equal
+     */
+    equals: function(poly) {
+        //check position and points array length
+        if(!this.position.equals(poly.position) || this.points.length !== poly.points.length) {
+            return false;
+        }
+
+        //check each point
+        for(var i = 0; i < poly.points.length; ++i) {
+            if(!this.points[i].equals(poly.points[i])) {
+                return false;
+            }
+        }
+
+        return true;
     },
 
     /**

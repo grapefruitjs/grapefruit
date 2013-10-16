@@ -3,6 +3,7 @@
 var inherit = require('../utils/inherit'),
     Polygon = require('./Polygon'),
     Vector = require('../math/Vector'),
+    math = require('../math/math'),
     C = require('../constants');
 
 /**
@@ -74,6 +75,22 @@ inherit(Rectangle, Object, {
     },
 
     /**
+     * Copies the values from another rectangle to this one
+     *
+     * @method copy
+     * @param rectangle {Rectangle} The rectangle to copy vlaues from
+     * @return {Rectangle} Returns itself
+     */
+    copy: function(rect) {
+        this.x = rect.x;
+        this.y = rect.y;
+        this.width = rect.width;
+        this.height = rect.height;
+
+        return this;
+    },
+
+    /**
      * Checks if the x, and y coords passed to this function are contained within this Rectangle
      *
      * @method contains
@@ -100,7 +117,7 @@ inherit(Rectangle, Object, {
     /**
      * Checks if this rectangle overlaps another
      *
-     * @method contains
+     * @method overlaps
      * @param rect {Rectangle} The rectangle to check if this overlaps
      * @return {Boolean} if the rectangle overlaps
      */
@@ -124,6 +141,38 @@ inherit(Rectangle, Object, {
             new Vector(this.width, this.height), //bottom-right
             new Vector(0, this.height) //bottom-left
         ]);
+    },
+
+    /**
+     * Checks if this rectangle's values are equal to anothers
+     *
+     * @method equals
+     * @param rectangle {Rectangle} The rectangle to check against
+     * @return {Boolean} True if they are equal
+     */
+    equals: function(rect) {
+        return this.position.equals(rect.position) &&
+                this._width === rect._width &&
+                this._height === rect._height;
+    },
+
+    /**
+     * Combines two rectangles together to create a new rectangle
+     *
+     * @method union
+     * @param rectangle {Rectangle} The rectangle to union with
+     * @param [output] {Rectangle} The rectangle object to output to, a new one is created by default
+     * @return {Rectangle} a new rectangle object that is the combonation of both
+     */
+    union: function(rect, out) {
+        out = out || new Rectangle();
+
+        out.x = math.min(this.x, rect.x);
+        out.y = math.min(this.y, rect.y);
+        out.width = math.max(this.right, rect.right);
+        out.height = math.max(this.bottom, rect.bottom);
+
+        return out;
     }
 });
 
@@ -243,6 +292,32 @@ Object.defineProperty(Rectangle.prototype, 'top', {
 Object.defineProperty(Rectangle.prototype, 'bottom', {
     get: function() {
         return this.y + this._height;
+    }
+});
+
+/**
+ * The perimeter of the rectangle
+ *
+ * @property perimeter
+ * @type Number
+ * @readOnly
+ */
+Object.defineProperty(Rectangle.prototype, 'perimeter', {
+    get: function() {
+        return 2 * (this._width + this._height);
+    }
+});
+
+/**
+ * The area of the rectangle
+ *
+ * @property area
+ * @type Number
+ * @readOnly
+ */
+Object.defineProperty(Rectangle.prototype, 'area', {
+    get: function() {
+        return this._width * this._height;
     }
 });
 
