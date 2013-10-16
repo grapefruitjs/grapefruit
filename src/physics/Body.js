@@ -12,16 +12,15 @@ var Body = function(sprite, shape) {
     Rectangle.call(this, sprite.position.x, sprite.position.y, sprite.width, sprite.height);
 
     this.sprite = sprite;
-    this._shape = shape || new Rectangle(0, 0, sprite.width, sprite.height);
+    shape = shape || new Rectangle(0, 0, sprite.width, sprite.height);
 
     //if it is a rectangle, just copy the values to the body which is the BB
     //that way we don't have to do a shape check later
-    if(this._shape._shapetype === C.SHAPE.RECTANGLE) {
-        this._shape = this.shape.toPolygon();
+    if(shape._shapetype === C.SHAPE.RECTANGLE) {
+        shape = shape.toPolygon();
     }
 
-    //make our shape have the same position object
-    this._shape.position = this.position;
+    this.shape = shape;
 
     this.type = C.PHYSICS_TYPE.DYNAMIC;
 
@@ -185,7 +184,7 @@ inherit(Body, Rectangle, {
 
 module.exports = Body;
 
-Object.defineProperty('shape', {
+Object.defineProperty(Body.prototype, 'shape', {
     get: function() {
         return this._shape;
     },
