@@ -28,7 +28,7 @@ var support = {
      * @property webgl
      * @type Boolean
      */
-    webgl: (function () { try { return !!window.WebGLRenderingContext && !!document.createElement('canvas').getContext('experimental-webgl'); } catch(e) { return false; } })(),
+    webgl: (function () { try { var c = document.createElement('canvas'); return !!window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')); } catch(e) { return false; } })(),
 
     /**
      * Whether or not the crypto API is supported
