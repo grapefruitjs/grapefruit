@@ -247,7 +247,7 @@ inherit(Game, Object, {
 
         //no support
         if(!support.webgl && !support.canvas) {
-            throw 'Neither WebGL nor Canvas is supported by this browser!';
+            throw new Error('Neither WebGL nor Canvas is supported by this browser!');
         }
         else if((method === C.RENDERER.WEBGL || method === C.RENDERER.AUTO) && support.webgl) {
             method = C.RENDERER.WEBGL;
@@ -259,7 +259,7 @@ inherit(Game, Object, {
             //TODO: setSmoothingEnabled based on this.antialias
         }
         else {
-            throw 'Your render method ("' + method + '") is not supported by this browser!';
+            throw new Error('Your render method ("' + method + '") is not supported by this browser!');
         }
 
         //append the renderer view only if the user didn't pass their own
