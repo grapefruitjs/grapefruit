@@ -429,7 +429,7 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var constants = {
-      version: "0.1.0",
+      version: "@@VERSION",
       RENDERER: {
         AUTO: "auto",
         CANVAS: "canvas",
@@ -657,7 +657,7 @@ define(
         this.y = value;
         break;
       default:
-        throw new Error("index is out of range: " + index);
+        throw new RangeError("index is out of range: " + index);
       }
       return this;
     },
@@ -668,7 +668,7 @@ define(
       case 1:
         return this.y;
       default:
-        throw new Error("index is out of range: " + index);
+        throw new RangeError("index is out of range: " + index);
       }
     },
     copy: function (v) {
@@ -1093,7 +1093,7 @@ define(
         sets.method = sets.method || "GET";
         sets.dataType = sets.dataType || "text";
         if (!sets.url)
-          throw "No URL passed to ajax";
+          throw new TypeError("Undefined URL passed to ajax");
         sets.progress = sets.progress || utils.noop;
         sets.load = sets.load || utils.noop;
         sets.error = sets.error || utils.noop;
@@ -1259,7 +1259,7 @@ define(
       parseHitArea: function (hv) {
         var ha;
         if (hv.length % 2 !== 0 && hv.length !== 3) {
-          throw "Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.";
+          throw new RangeError("Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.");
         }
         if (hv.length === 3) {
           ha = new Circle(hv[0], hv[1], hv[2]);
@@ -1298,17 +1298,18 @@ define(
         obj.__tiledparsed = true;
         return obj;
       },
+      _logger: window.console || {},
       log: function () {
-        if (window.console)
-          window.console.log.apply(window.console, arguments);
+        if (utils._logger.log)
+          utils._logger.log.apply(utils._logger, arguments);
       },
       warn: function () {
-        if (window.console)
-          window.console.warn.apply(window.console, arguments);
+        if (utils._logger.warn)
+          utils._logger.warn.apply(utils._logger, arguments);
       },
       error: function () {
-        if (window.console)
-          window.console.error.apply(window.console, arguments);
+        if (utils._logger.error)
+          utils._logger.error.apply(utils._logger, arguments);
       }
     };
   if (typeof window.DOMParser !== "undefined") {
@@ -1325,7 +1326,7 @@ define(
   } else {
     utils.warn("XML parser not available, trying to parse any XML will result in an error.");
     utils.parseXML = function () {
-      throw "Trying to parse XML, but not XML parser is available in this environment";
+      throw new Error("Trying to parse XML, but not XML parser is available in this environment");
     };
   }
   module.exports = utils;
@@ -1350,7 +1351,8 @@ define(
       }(),
       webgl: function () {
         try {
-          return !!window.WebGLRenderingContext && !!document.createElement("canvas").getContext("experimental-webgl");
+          var c = document.createElement("canvas");
+          return !!window.WebGLRenderingContext && (c.getContext("webgl") || c.getContext("experimental-webgl"));
         } catch (e) {
           return false;
         }
@@ -11657,7 +11659,7 @@ define(
     _createRenderer: function () {
       var method = this.renderMethod, render = null;
       if (!support.webgl && !support.canvas) {
-        throw "Neither WebGL nor Canvas is supported by this browser!";
+        throw new Error("Neither WebGL nor Canvas is supported by this browser!");
       } else if ((method === C.RENDERER.WEBGL || method === C.RENDERER.AUTO) && support.webgl) {
         method = C.RENDERER.WEBGL;
         render = new PIXI.WebGLRenderer(this.width, this.height, this.canvas, this.transparent, this.antialias);
@@ -11665,7 +11667,7 @@ define(
         method = C.RENDERER.CANVAS;
         render = new PIXI.CanvasRenderer(this.width, this.height, this.canvas, this.transparent);
       } else {
-        throw "Your render method (\"" + method + "\") is not supported by this browser!";
+        throw new Error("Your render method (\"" + method + "\") is not supported by this browser!");
       }
       if (!this.canvas) {
         this.container.appendChild(render.view);
@@ -11766,10 +11768,10 @@ define(
           obj = obj.prototype;
         }
         if (typeof obj[name] !== "function") {
-          throw new Error(name + " is not a function in the passed object.");
+          throw new TypeError(name + " is not a function in the passed object.");
         }
         if (typeof fn !== "function") {
-          throw new Error("The passed patch function is not a function.");
+          throw new TypeError("The passed patch function is not a function.");
         }
         var _super = obj[name];
         obj[name] = function (name, fn) {
@@ -11784,7 +11786,7 @@ define(
       },
       register: function (obj, name) {
         if (window.gf[name]) {
-          throw new Error("Unable to register plugin: \"" + name + "\" already exists in the gf namespace, please choose something else!");
+          throw new RangeError("Unable to register plugin: \"" + name + "\" already exists in the gf namespace, please choose something else!");
         }
         window.gf[name] = obj;
       }
