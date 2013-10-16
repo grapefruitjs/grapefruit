@@ -454,6 +454,22 @@ inherit(Vector, Object, {
         return this;
     },
     /**
+     * Rotates the vector by an arbitrary angle around an arbitrary point in space
+     *
+     * @method rotate
+     * @param angle {Number} The angle in radians to rotate by
+     * @param anchor {Vector} The anchor point to rotate around
+     * @return {Vector} Returns itself
+     */
+    rotate: function(angle, anchor) {
+        var dist = anchor.distanceTo(this);
+
+        return this.set(
+            anchor.x + (dist * Math.cos(angle)),
+            anchor.y + (dist * Math.sin(angle))
+        );
+    },
+    /**
      * Checks if this vector is equal to another
      *
      * @method equals

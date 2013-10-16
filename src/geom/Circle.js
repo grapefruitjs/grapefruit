@@ -42,10 +42,25 @@ inherit(Circle, Object, {
      * Creates a clone of this Circle instance
      *
      * @method clone
-     * @return {Circle} a copy of the polygon
+     * @return {Circle} a copy of the circle
      */
     clone: function() {
         return new Circle(this.x, this.y, this.radius);
+    },
+
+    /**
+     * Copies the values from another circle to this one
+     *
+     * @method copy
+     * @param circle {Circle} The circle to copy vlaues from
+     * @return {Circle} Returns itself
+     */
+    copy: function(circle) {
+        this.x = circle.x;
+        this.y = circle.y;
+        this.radius = circle.radius;
+
+        return this;
     },
 
     /**
@@ -69,6 +84,37 @@ inherit(Circle, Object, {
         dy *= dy;
 
         return (dx + dy <= r2);
+    },
+
+    /**
+     * Checks if this circle overlaps another
+     *
+     * @method overlaps
+     * @param circle {Circle} The circle to check if this overlaps
+     * @return {Boolean} if the circle overlaps
+     */
+    overlaps: function(circle) {
+        var differenceV = this.position.clone().sub(circle.position),
+            totalRadius = this.radius + circle.radius,
+            totalRadiusSq = totalRadius * totalRadius,
+            distanceSq = differenceV.lengthSq();
+
+        //if distanceSq is greater than totalRadiusSq then they do not intersect,
+        //so we return the inverse of that value.
+        /*jshint -W018*/
+        return !(distanceSq > totalRadiusSq);
+    },
+
+    /**
+     * Checks if this circle's values are equal to anothers
+     *
+     * @method equals
+     * @param circle {Circle} The circle to check against
+     * @return {Boolean} True if they are equal
+     */
+    equals: function(circle) {
+        return this.position.equals(circle.position) &&
+                this.radius === circle.radius;
     }
 });
 
@@ -101,6 +147,32 @@ Object.defineProperty(Circle.prototype, 'y', {
     },
     set: function(v) {
         this.position.y = v;
+    }
+});
+
+/**
+ * The circumference of the circle
+ *
+ * @property circumference
+ * @type Number
+ * @readOnly
+ */
+Object.defineProperty(Circle.prototype, 'circumference', {
+    get: function() {
+        return 2 * (Math.PI * this.radius);
+    }
+});
+
+/**
+ * The area of the circle
+ *
+ * @property area
+ * @type Number
+ * @readOnly
+ */
+Object.defineProperty(Circle.prototype, 'area', {
+    get: function() {
+        return Math.PI * this.radius * this.radius;
     }
 });
 
