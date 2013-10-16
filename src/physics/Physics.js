@@ -99,7 +99,8 @@ inherit(Physics, Object, {
             body._collided = false;
 
             //check tree bounds collisions
-            this.checkBoundsCollision(body);
+            //TODO: This is *crazy* expensive!
+            //this.checkBoundsCollision(body);
 
             //TODO: Check worldVisible so that children that are ".visible === true"
             // but are invisible due to parent are filtered out. However in that case
@@ -120,7 +121,7 @@ inherit(Physics, Object, {
                 pot = pots[p];
 
                 //filter yourself
-                if(pot === body)
+                if(pot.sprite === body.sprite)
                     continue;
 
                 //ignore static/static collisions
@@ -157,21 +158,21 @@ inherit(Physics, Object, {
         // x collision solves
         if(body.x < this.tree.bounds.x) {
             body.x = this.tree.bounds.x;
-            body.velocity.x *= -this.bounce.x;
+            body.velocity.x *= -body.bounce.x;
         }
         else if(body.right > this.tree.bounds.right) {
             body.x = this.tree.bounds.right - body.width;
-            body.velocity.x *= -this.bounce.x;
+            body.velocity.x *= -body.bounce.x;
         }
 
         // y collision solves
         if(body.y < this.tree.bounds.y) {
-            body.y = this.tree.bouonds.y;
-            body.velocity.y *= -this.bounce.y;
+            body.y = this.tree.bounds.y;
+            body.velocity.y *= -body.bounce.y;
         }
         else if(body.bottom > this.tree.bounds.bottom) {
             body.y = this.tree.bounds.bottom - body.height;
-            body.velocity.y *= -this.bounce.y;
+            body.velocity.y *= -body.bounce.y;
         }
     },
     solveCollision: function(b1, b2) {
