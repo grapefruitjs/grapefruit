@@ -43,7 +43,7 @@ var utils = {
         sets.dataType = sets.dataType || 'text';
 
         if(!sets.url)
-            throw 'No URL passed to ajax';
+            throw new TypeError('Undefined URL passed to ajax');
 
         //callbacks
         sets.progress = sets.progress || utils.noop;
@@ -333,7 +333,7 @@ var utils = {
 
         //odd number of values
         if(hv.length % 2 !== 0 && hv.length !== 3) {
-            throw 'Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.';
+            throw new RangeError('Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.');
         }
 
         //a circle x,y,r
@@ -426,7 +426,7 @@ if(typeof window.DOMParser !== 'undefined') {
     } else {*/
     utils.warn('XML parser not available, trying to parse any XML will result in an error.');
     utils.parseXML = function() {
-        throw 'Trying to parse XML, but not XML parser is available in this environment';
+        throw new Error('Trying to parse XML, but not XML parser is available in this environment');
     };
     //}
 }

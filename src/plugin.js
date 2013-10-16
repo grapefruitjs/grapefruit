@@ -30,11 +30,11 @@ var plugin = {
         }
 
         if(typeof obj[name] !== 'function') {
-            throw new Error(name + ' is not a function in the passed object.');
+            throw new TypeError(name + ' is not a function in the passed object.');
         }
 
         if(typeof fn !== 'function') {
-            throw new Error('The passed patch function is not a function.');
+            throw new TypeError('The passed patch function is not a function.');
         }
 
         var _super = obj[name];
@@ -66,7 +66,7 @@ var plugin = {
     register: function(obj, name) {
         //ensure we don't overrite a name
         if(window.gf[name]) {
-            throw new Error('Unable to register plugin: "' + name + '" already exists in the gf namespace, please choose something else!');
+            throw new RangeError('Unable to register plugin: "' + name + '" already exists in the gf namespace, please choose something else!');
         }
 
         //store the plugin in the namespace

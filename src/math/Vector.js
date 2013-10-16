@@ -71,7 +71,7 @@ inherit(Vector, Object, {
                 this.y = value;
                 break;
             default:
-                throw new Error('index is out of range: ' + index);
+                throw new RangeError('index is out of range: ' + index);
         }
 
         return this;
@@ -90,7 +90,7 @@ inherit(Vector, Object, {
             case 1:
                 return this.y;
             default:
-                throw new Error('index is out of range: ' + index);
+                throw new RangeError('index is out of range: ' + index);
         }
     },
     /**
