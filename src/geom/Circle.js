@@ -11,7 +11,7 @@ var inherit = require('../utils/inherit'),
  * @param center {Vector} The point of the center of the circle
  * @param radius {Number} The radius of the circle
  */
-var Circle = function(x, y, radius) {
+var Circle = function(x, y, radius, scale) {
     /**
      * The center of the circle
      *
@@ -19,6 +19,16 @@ var Circle = function(x, y, radius) {
      * @type Vector
      */
     this.position = new Vector();
+
+    /**
+     * The unscaled radius of the circle
+     *
+     * @property _radius
+     * @type Number
+     * @default 0
+     * @private
+     */
+    this._radius = radius || 0;
 
     /**
      * The radius of the circle
@@ -29,12 +39,23 @@ var Circle = function(x, y, radius) {
      */
     this.radius = radius || 0;
 
+    /**
+     * The scale of the circle
+     *
+     * @property scale
+     * @type Vector
+     * @default new Vector(1, 1)
+     */
+    this.scale = scale || new Vector(1, 1);
+
     //set position
     this.x = x || 0;
     this.y = y || 0;
 
     //internal shape type
     this._shapetype = C.SHAPE.CIRCLE;
+
+    this.recalc();
 };
 
 inherit(Circle, Object, {
@@ -115,6 +136,15 @@ inherit(Circle, Object, {
     equals: function(circle) {
         return this.position.equals(circle.position) &&
                 this.radius === circle.radius;
+    },
+
+    /**
+     * Recalculates the scaled radius
+     *
+     * @method recalc
+     */
+    recalc: function() {
+        this.radius = this._radius * this.scale.x;
     }
 });
 
@@ -147,6 +177,22 @@ Object.defineProperty(Circle.prototype, 'y', {
     },
     set: function(v) {
         this.position.y = v;
+    }
+});
+
+/**
+ * The radius circle
+ *
+ * @property radius
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Circle.prototype, 'radius', {
+    get: function() {
+        return this._radius * this.scale.x;
+    },
+    set: function(v) {
+        this._radius = v;
     }
 });
 

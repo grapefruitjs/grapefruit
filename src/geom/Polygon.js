@@ -15,7 +15,7 @@ var inherit = require('../utils/inherit'),
  *      arguments passed can be flat x,y values e.g. `new Polygon(X, Y, x,y, x,y, x,y, ...)` where `x` and `y` are
  *      Numbers.
  */
-var Polygon = function(x, y, points) {
+var Polygon = function(x, y, points, scale) {
     /**
      * The origin point of the polygon, all points are relative to this
      *
@@ -25,6 +25,26 @@ var Polygon = function(x, y, points) {
     this.position = new Vector();
 
     /**
+     * The unscaled points of the polygon, the X & Y values here should be
+     * relative to the origin X & Y.
+     *
+     * @property _points
+     * @type Array<Vector>
+     * @default []
+     * @private
+     */
+    this._points = null;
+
+    /**
+     * The scale of the polygon
+     *
+     * @property scale
+     * @type Vector
+     * @default new Vector(1, 1)
+     */
+    this.scale = scale || new Vector(1, 1);
+
+    /**
      * The points of the polygon, the X & Y values here should be
      * relative to the origin X & Y values.
      *
@@ -32,7 +52,7 @@ var Polygon = function(x, y, points) {
      * @type Array<Vector>
      * @default []
      */
-    this.points = null;
+    this.points = [];
 
     /**
      * These vectors are calculated by `this.recalc()` and represent the edges
@@ -72,13 +92,14 @@ var Polygon = function(x, y, points) {
         points = p;
     }
 
-    this.points = points;
+    //assign the points
+    this._points = points;
 
     //set position
     this.x = x || 0;
     this.y = y || 0;
 
-    //recalculate edges and normals
+    //recalculate scaled points, edges, and normals
     this.recalc();
 
     //internal shape type
@@ -94,11 +115,11 @@ inherit(Polygon, Object, {
      */
     clone: function() {
         var points = [];
-        for (var i=0; i<this.points.length; i++) {
-            points.push(this.points[i].clone());
+        for (var i=0; i<this._points.length; i++) {
+            points.push(this._points[i].clone());
         }
 
-        return new Polygon(points);
+        return new Polygon(points, this.scale);
     },
 
     /**
@@ -113,10 +134,12 @@ inherit(Polygon, Object, {
         this.position.copy(poly.position);
 
         //clone the points to this polygon
-        this.points.length = 0;
-        for(var i = 0; i < poly.points.length; ++i) {
-            this.points.push(poly.points[i].clone());
+        this._points.length = this.points.length = 0;
+        for(var i = 0; i < poly._points.length; ++i) {
+            this._points.push(poly._points[i].clone());
         }
+
+        this.scale.copy(poly.scale);
 
         //update our edges and normals
         this.recalc();
@@ -172,17 +195,31 @@ inherit(Polygon, Object, {
     },
 
     /**
-     * Recalculates the edges and normals of this polygon based on the points
+     * Recalculates the scaled points, edges, and normals of this polygon
+     * based on the relative points
      *
      * @method recalc
      */
     recalc: function() {
-        var points = this.points,
+        var points = this._points,
             len = points.length,
             p1, p2, e, n;
 
+        //scale our points
+        for(var i = 0; i < len; i++) {
+            if(!this.points[i])
+                this.points[i] = new Vector();
+
+            this.points[i].set(
+                this._points[i].x * this.scale.x,
+                this._points[i].y * this.scale.y
+            );
+        }
+
+        // reset edges and normals
         this.edges.length = this.normals.length = 0;
 
+        //calculate edges and normals
         for(var i = 0; i < len; ++i) {
             p1 = points[i];
             p2 = i < len - 1 ? points[i + 1] : points[0];

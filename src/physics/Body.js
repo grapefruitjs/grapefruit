@@ -20,6 +20,10 @@ var Body = function(sprite, shape) {
         shape = shape.toPolygon();
     }
 
+    shape.scale.x = sprite.worldTransform[0];
+    shape.scale.y = sprite.worldTransform[4];
+    shape.recalc();
+
     this.shape = shape;
 
     this.type = C.PHYSICS_TYPE.DYNAMIC;
@@ -149,15 +153,28 @@ inherit(Body, Rectangle, {
         this.touching = C.DIRECTION.NONE;
         this.embedded = false;
 
+        //get a default anchor if there isn't one
         var a = this.sprite.anchor,
-            ax = a !== undefined ? a.x : 0,
-            ay = a !== undefined ? a.y : 0;
+            trans = this.sprite.worldTransform,
+            ax = (a !== undefined ? a.x : 0) * trans[0],
+            ay = (a !== undefined ? a.y : 0) * trans[4];
 
-        this.position.x = (this.sprite.worldTransform[2] - (ax * this._width)) + this.offset.x;
-        this.position.y = (this.sprite.worldTransform[5] - (ay * this._height)) + this.offset.y;
 
+        //if world scale changes update
+        if(this.shape.scale.x !== trans[0] || this.shape.scale.y !== trans[4]) {
+            this.shape.scale.x = trans[0];
+            this.shape.scale.y = trans[4];
+            this.shape.recalc();
+        }
+
+        //set our position
+        this.position.x = (trans[2] - (ax * this._width)) + this.offset.x;
+        this.position.y = (trans[5] - (ay * this._height)) + this.offset.y;
+
+        //copy to last position
         this.lastPos.copy(this.position);
 
+        //update motion if we aren't static
         if(this.type !== C.PHYSICS_TYPE.STATIC)
             this.updateMotion(dt, gravity);
 
@@ -165,8 +182,8 @@ inherit(Body, Rectangle, {
         this.syncSprite();
     },
     syncSprite: function() {
-        this.sprite.position.x += this.deltaX();
-        this.sprite.position.y += this.deltaY();
+        this.sprite.position.x += math.truncate(this.deltaX());
+        this.sprite.position.y += math.truncate(this.deltaY());
 
         /*
         if(this.allowRotation) {
