@@ -175,9 +175,10 @@ inherit(Physics, Object, {
             body.velocity.y *= -body.bounce.y;
         }
     },
-    solveCollision: function(b1, b2) {
-        var col = this._collision,
-            ov = col.overlapV;
+    solveCollision: function(b1, b2, col) {
+        col = col || this._collision;
+
+        var ov = col.overlapV;
 
         //sensor bodies are only for detection, not to be solved
         if(b1.sensor || b2.sensor)
