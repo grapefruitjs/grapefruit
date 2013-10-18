@@ -429,7 +429,7 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var constants = {
-      version: "@@VERSION",
+      version: "0.1.0",
       RENDERER: {
         AUTO: "auto",
         CANVAS: "canvas",
@@ -824,6 +824,10 @@ define(
       this.y = -x;
       return this;
     },
+    rotate: function (angle, anchor) {
+      var dist = anchor.distanceTo(this);
+      return this.set(anchor.x + dist * Math.cos(angle), anchor.y + dist * Math.sin(angle));
+    },
     equals: function (v) {
       return v.x === this.x && v.y === this.y;
     },
@@ -849,16 +853,25 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Vector = require("../math/Vector"), C = require("../constants");
-  var Circle = function (x, y, radius) {
+  var Circle = function (x, y, radius, scale) {
     this.position = new Vector();
+    this._radius = radius || 0;
     this.radius = radius || 0;
+    this.scale = scale || new Vector(1, 1);
     this.x = x || 0;
     this.y = y || 0;
     this._shapetype = C.SHAPE.CIRCLE;
+    this.recalc();
   };
   inherit(Circle, Object, {
     clone: function () {
       return new Circle(this.x, this.y, this.radius);
+    },
+    copy: function (circle) {
+      this.x = circle.x;
+      this.y = circle.y;
+      this.radius = circle.radius;
+      return this;
     },
     contains: function (x, y) {
       if (this.radius <= 0)
@@ -867,6 +880,16 @@ define(
       dx *= dx;
       dy *= dy;
       return dx + dy <= r2;
+    },
+    overlaps: function (circle) {
+      var differenceV = this.position.clone().sub(circle.position), totalRadius = this.radius + circle.radius, totalRadiusSq = totalRadius * totalRadius, distanceSq = differenceV.lengthSq();
+      return !(distanceSq > totalRadiusSq);
+    },
+    equals: function (circle) {
+      return this.position.equals(circle.position) && this.radius === circle.radius;
+    },
+    recalc: function () {
+      this.radius = this._radius * this.scale.x;
     }
   });
   Object.defineProperty(Circle.prototype, "x", {
@@ -885,6 +908,24 @@ define(
       this.position.y = v;
     }
   });
+  Object.defineProperty(Circle.prototype, "radius", {
+    get: function () {
+      return this._radius * this.scale.x;
+    },
+    set: function (v) {
+      this._radius = v;
+    }
+  });
+  Object.defineProperty(Circle.prototype, "circumference", {
+    get: function () {
+      return 2 * (Math.PI * this.radius);
+    }
+  });
+  Object.defineProperty(Circle.prototype, "area", {
+    get: function () {
+      return Math.PI * this.radius * this.radius;
+    }
+  });
   module.exports = Circle;
 // uRequire v0.6.2-01: END body of original nodejs module
 
@@ -897,9 +938,11 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var inherit = require("../utils/inherit"), Vector = require("../math/Vector"), C = require("../constants");
-  var Polygon = function (x, y, points) {
+  var Polygon = function (x, y, points, scale) {
     this.position = new Vector();
-    this.points = null;
+    this._points = null;
+    this.scale = scale || new Vector(1, 1);
+    this.points = [];
     this.edges = [];
     this.normals = [];
     if (!(points instanceof Array))
@@ -911,7 +954,7 @@ define(
       }
       points = p;
     }
-    this.points = points;
+    this._points = points;
     this.x = x || 0;
     this.y = y || 0;
     this.recalc();
@@ -920,10 +963,20 @@ define(
   inherit(Polygon, Object, {
     clone: function () {
       var points = [];
-      for (var i = 0; i < this.points.length; i++) {
-        points.push(this.points[i].clone());
+      for (var i = 0; i < this._points.length; i++) {
+        points.push(this._points[i].clone());
       }
-      return new Polygon(points);
+      return new Polygon(points, this.scale);
+    },
+    copy: function (poly) {
+      this.position.copy(poly.position);
+      this._points.length = this.points.length = 0;
+      for (var i = 0; i < poly._points.length; ++i) {
+        this._points.push(poly._points[i].clone());
+      }
+      this.scale.copy(poly.scale);
+      this.recalc();
+      return this;
     },
     contains: function (x, y) {
       var inside = false;
@@ -934,10 +987,26 @@ define(
       }
       return inside;
     },
+    equals: function (poly) {
+      if (!this.position.equals(poly.position) || this.points.length !== poly.points.length) {
+        return false;
+      }
+      for (var i = 0; i < poly.points.length; ++i) {
+        if (!this.points[i].equals(poly.points[i])) {
+          return false;
+        }
+      }
+      return true;
+    },
     recalc: function () {
-      var points = this.points, len = points.length, p1, p2, e, n;
+      var points = this._points, len = points.length, p1, p2, e, n, i = 0;
+      for (i = 0; i < len; i++) {
+        if (!this.points[i])
+          this.points[i] = new Vector();
+        this.points[i].set(this._points[i].x * this.scale.x, this._points[i].y * this.scale.y);
+      }
       this.edges.length = this.normals.length = 0;
-      for (var i = 0; i < len; ++i) {
+      for (i = 0; i < len; ++i) {
         p1 = points[i];
         p2 = i < len - 1 ? points[i + 1] : points[0];
         e = p2.clone().sub(p1);
@@ -971,372 +1040,6 @@ return module.exports;
 }
 );
 define(
-  'geom/Rectangle',['require','exports','module','../utils/inherit','./Polygon','../math/Vector','../constants'],function (require, exports, module) {
-  
-// uRequire v0.6.2-01: START body of original nodejs module
-  var inherit = require("../utils/inherit"), Polygon = require("./Polygon"), Vector = require("../math/Vector"), C = require("../constants");
-  var Rectangle = function (x, y, width, height) {
-    this.position = new Vector();
-    this.x = x || 0;
-    this.y = y || 0;
-    this._width = width || 0;
-    this._height = height || 0;
-    this.halfWidth = this._width / 2;
-    this.halfHeight = this._height / 2;
-    this._shapetype = C.SHAPE.RECTANGLE;
-  };
-  inherit(Rectangle, Object, {
-    clone: function () {
-      return new Rectangle(this.x, this.y, this._width, this._height);
-    },
-    contains: function (x, y) {
-      if (this._width <= 0 || this._height <= 0)
-        return false;
-      var x1 = this.x;
-      if (x >= x1 && x <= x1 + this._width) {
-        var y1 = this.y;
-        if (y >= y1 && y <= y1 + this._height) {
-          return true;
-        }
-      }
-      return false;
-    },
-    overlaps: function (rect) {
-      return this.right > rect.x && this.x < rect.right && this.bottom > rect.y && this.y < rect.bottom;
-    },
-    toPolygon: function () {
-      return new Polygon(this.x, this.y, [
-        new Vector(),
-        new Vector(this.width, 0),
-        new Vector(this.width, this.height),
-        new Vector(0, this.height)
-      ]);
-    }
-  });
-  Object.defineProperty(Rectangle.prototype, "x", {
-    get: function () {
-      return this.position.x;
-    },
-    set: function (v) {
-      this.position.x = v;
-    }
-  });
-  Object.defineProperty(Rectangle.prototype, "y", {
-    get: function () {
-      return this.position.y;
-    },
-    set: function (v) {
-      this.position.y = v;
-    }
-  });
-  Object.defineProperty(Rectangle.prototype, "width", {
-    get: function () {
-      return this._width;
-    },
-    set: function (w) {
-      this._width = w || 0;
-      this.halfWidth = this._width / 2;
-    }
-  });
-  Object.defineProperty(Rectangle.prototype, "height", {
-    get: function () {
-      return this._height;
-    },
-    set: function (h) {
-      this._height = h || 0;
-      this.halfHeight = this._height / 2;
-    }
-  });
-  Object.defineProperty(Rectangle.prototype, "right", {
-    get: function () {
-      return this.x + this._width;
-    }
-  });
-  Object.defineProperty(Rectangle.prototype, "left", {
-    get: function () {
-      return this.x;
-    }
-  });
-  Object.defineProperty(Rectangle.prototype, "top", {
-    get: function () {
-      return this.y;
-    }
-  });
-  Object.defineProperty(Rectangle.prototype, "bottom", {
-    get: function () {
-      return this.y + this._height;
-    }
-  });
-  module.exports = Rectangle;
-// uRequire v0.6.2-01: END body of original nodejs module
-
-
-return module.exports;
-}
-);
-define(
-  'utils/utils',['require','exports','module','../math/Vector','../geom/Circle','../geom/Rectangle','../geom/Polygon'],function (require, exports, module) {
-  
-// uRequire v0.6.2-01: START body of original nodejs module
-  var Vector = require("../math/Vector"), Circle = require("../geom/Circle"), Rectangle = require("../geom/Rectangle"), Polygon = require("../geom/Polygon");
-  var utils = {
-      _arrayDelim: /[|,]/,
-      noop: function () {
-      },
-      getAbsoluteUrl: function (url) {
-        var a = document.createElement("a");
-        a.href = url;
-        return a.href;
-      },
-      ajax: function (sets) {
-        sets = sets || {};
-        sets.method = sets.method || "GET";
-        sets.dataType = sets.dataType || "text";
-        if (!sets.url)
-          throw new TypeError("Undefined URL passed to ajax");
-        sets.progress = sets.progress || utils.noop;
-        sets.load = sets.load || utils.noop;
-        sets.error = sets.error || utils.noop;
-        sets.abort = sets.abort || utils.noop;
-        sets.complete = sets.complete || utils.noop;
-        var xhr = utils.createAjaxRequest(), protocol = utils.getAbsoluteUrl(sets.url).split("/")[0];
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-            var res = xhr.response || xhr.responseText, err = null;
-            if (protocol !== "file:" && xhr.status !== 200)
-              err = "Non-200 status code returned: " + xhr.status;
-            if (!err && typeof res === "string") {
-              if (sets.dataType === "json") {
-                try {
-                  res = JSON.parse(res);
-                } catch (e) {
-                  err = e;
-                }
-              } else if (sets.dataType === "xml") {
-                try {
-                  res = utils.parseXML(res);
-                } catch (e) {
-                  err = e;
-                }
-              }
-            }
-            if (err) {
-              if (sets.error)
-                sets.error.call(xhr, err);
-            } else {
-              if (sets.load)
-                sets.load.call(xhr, res);
-            }
-          }
-        };
-        if (sets.dataType !== "json" && sets.dataType !== "xml")
-          xhr.responseType = sets.dataType;
-        else
-          xhr.responseType = "text";
-        xhr.open(sets.method, sets.url, true);
-        xhr.send();
-        return xhr;
-      },
-      createAjaxRequest: function () {
-        var activexmodes = [
-            "Msxml2.XMLHTTP",
-            "Microsoft.XMLHTTP"
-          ];
-        if (window.ActiveXObject) {
-          for (var i = 0; i < activexmodes.length; i++) {
-            try {
-              return new window.ActiveXObject(activexmodes[i]);
-            } catch (e) {
-            }
-          }
-        } else if (window.XMLHttpRequest) {
-          return new XMLHttpRequest();
-        } else {
-          return false;
-        }
-      },
-      setValues: function (obj, values) {
-        if (!values)
-          return;
-        for (var key in values) {
-          var newVal = values[key];
-          if (newVal === undefined) {
-            continue;
-          }
-          if (key in obj) {
-            var curVal = obj[key];
-            if (typeof curVal === "number" && typeof newVal === "string") {
-              var n;
-              if (newVal.indexOf("0x") === 0)
-                n = parseInt(newVal, 16);
-              else
-                n = parseInt(newVal, 10);
-              if (!isNaN(n))
-                obj[key] = n;
-            } else if (curVal instanceof Vector && newVal instanceof Array) {
-              curVal.set(parseFloat(newVal[0], 10) || 0, parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0);
-            } else if (curVal instanceof Vector && typeof newVal === "string") {
-              var a = newVal.split(utils._arrayDelim, 2);
-              curVal.set(parseFloat(a[0], 10) || 0, parseFloat(a[1], 10) || parseFloat(a[0], 10) || 0);
-            } else if (curVal instanceof Vector && typeof newVal === "number") {
-              curVal.set(newVal, newVal);
-            } else if (curVal.x !== undefined && newVal instanceof Array) {
-              curVal.x = parseFloat(newVal[0], 10) || 0;
-              curVal.y = parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0;
-            } else if (curVal.x !== undefined && typeof newVal === "string") {
-              var a2 = newVal.split(utils._arrayDelim, 2);
-              curVal.x = parseFloat(a2[0], 10) || 0;
-              curVal.y = parseFloat(a2[1], 10) || parseFloat(a2[0], 10) || 0;
-            } else if (curVal.x !== undefined && typeof newVal === "number") {
-              curVal.x = newVal;
-              curVal.y = newVal;
-            } else if (curVal instanceof Array && typeof newVal === "string") {
-              obj[key] = newVal.split(utils._arrayDelim);
-              for (var i = 0, il = obj[key].length; i < il; ++i) {
-                var val = obj[key][i];
-                if (!isNaN(val))
-                  obj[key][i] = parseFloat(val, 10);
-              }
-            } else {
-              obj[key] = newVal;
-            }
-          }
-        }
-        return obj;
-      },
-      extend: function () {
-        var src, copyIsArray, copy, name, options, clone, target = arguments[0] || {}, i = 1, length = arguments.length, deep = false;
-        if (typeof target === "boolean") {
-          deep = target;
-          target = arguments[1] || {};
-          i = 2;
-        }
-        if (typeof target !== "object" && typeof target !== "function") {
-          target = {};
-        }
-        for (; i < length; i++) {
-          options = arguments[i];
-          if (options !== null && options !== undefined) {
-            for (name in options) {
-              src = target[name];
-              copy = options[name];
-              if (target === copy) {
-                continue;
-              }
-              if (deep && copy && (utils.isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))) {
-                if (copyIsArray) {
-                  copyIsArray = false;
-                  clone = src && Array.isArray(src) ? src : [];
-                } else {
-                  clone = src && utils.isPlainObject(src) ? src : {};
-                }
-                target[name] = utils.extend(deep, clone, copy);
-              } else if (copy !== undefined) {
-                target[name] = copy;
-              }
-            }
-          }
-        }
-        return target;
-      },
-      isPlainObject: function (obj) {
-        if (typeof obj !== "object" || obj.nodeType || obj === obj.window) {
-          return false;
-        }
-        try {
-          if (obj.constructor && !Object.hasOwnProperty.call(obj.constructor.prototype, "isPrototypeOf")) {
-            return false;
-          }
-        } catch (e) {
-          return false;
-        }
-        return true;
-      },
-      getOffset: function (element) {
-        var box = element.getBoundingClientRect(), clientTop = element.clientTop || document.body.clientTop || 0, clientLeft = element.clientLeft || document.body.clientLeft || 0, scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop, scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
-        return new Vector(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
-      },
-      parseHitArea: function (hv) {
-        var ha;
-        if (hv.length % 2 !== 0 && hv.length !== 3) {
-          throw new RangeError("Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.");
-        }
-        if (hv.length === 3) {
-          ha = new Circle(hv[0], hv[1], hv[2]);
-        } else if (hv.length === 4) {
-          ha = new Rectangle(hv[0], hv[1], hv[2], hv[3]);
-        } else {
-          ha = new Polygon(hv);
-        }
-        return ha;
-      },
-      parseTiledProperties: function (obj) {
-        if (!obj || obj.__tiledparsed)
-          return obj;
-        for (var k in obj) {
-          var v = obj[k];
-          if (!isNaN(v))
-            obj[k] = parseFloat(v, 10);
-          else if (v === "true")
-            obj[k] = true;
-          else if (v === "false")
-            obj[k] = false;
-          else {
-            try {
-              v = JSON.parse(v);
-              obj[k] = v;
-            } catch (e) {
-            }
-          }
-        }
-        if (obj.hitArea)
-          obj.hitArea = utils.parseHitArea(obj.hitArea);
-        if (obj.static || obj.sensor) {
-          obj.mass = Infinity;
-          obj.inertia = Infinity;
-        }
-        obj.__tiledparsed = true;
-        return obj;
-      },
-      _logger: window.console || {},
-      log: function () {
-        if (utils._logger.log)
-          utils._logger.log.apply(utils._logger, arguments);
-      },
-      warn: function () {
-        if (utils._logger.warn)
-          utils._logger.warn.apply(utils._logger, arguments);
-      },
-      error: function () {
-        if (utils._logger.error)
-          utils._logger.error.apply(utils._logger, arguments);
-      }
-    };
-  if (typeof window.DOMParser !== "undefined") {
-    utils.parseXML = function (xmlStr) {
-      return new window.DOMParser().parseFromString(xmlStr, "text/xml");
-    };
-  } else if (typeof window.ActiveXObject !== "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
-    utils.parseXML = function (xmlStr) {
-      var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
-      xmlDoc.async = "false";
-      xmlDoc.loadXML(xmlStr);
-      return xmlDoc;
-    };
-  } else {
-    utils.warn("XML parser not available, trying to parse any XML will result in an error.");
-    utils.parseXML = function () {
-      throw new Error("Trying to parse XML, but not XML parser is available in this environment");
-    };
-  }
-  module.exports = utils;
-// uRequire v0.6.2-01: END body of original nodejs module
-
-
-return module.exports;
-}
-);
-define(
   'utils/support',['require','exports','module'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
@@ -1363,608 +1066,23 @@ define(
       typedArrays: !!window.ArrayBuffer,
       fileapi: !!window.File && !!window.FileReader && !!window.FileList && !!window.Blob,
       webAudio: !!window.AudioContext || !!window.webkitAudioContext || !!window.mozAudioContext,
-      htmlAudio: !!document.createElement("audio").canPlayType,
+      htmlAudio: !!document.createElement("audio").canPlayType && !!window.Audio,
       localStorage: !!window.localStorage,
       touch: "createTouch" in document || "ontouchstart" in window || navigator.isCocoonJS,
       gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || navigator.userAgent.indexOf("Firefox/") !== -1
     };
-  var audioTest = new Audio();
-  support.codec = {
-    mp3: !!audioTest.canPlayType("audio/mpeg;").replace(/^no$/, ""),
-    opus: !!audioTest.canPlayType("audio/ogg; codecs=\"opus\"").replace(/^no$/, ""),
-    ogg: !!audioTest.canPlayType("audio/ogg; codecs=\"vorbis\"").replace(/^no$/, ""),
-    wav: !!audioTest.canPlayType("audio/wav; codecs=\"1\"").replace(/^no$/, ""),
-    m4a: !!(audioTest.canPlayType("audio/x-m4a;") || audioTest.canPlayType("audio/aac;")).replace(/^no$/, ""),
-    webm: !!audioTest.canPlayType("audio/webm; codecs=\"vorbis\"").replace(/^no$/, "")
-  };
+  if (support.htmlAudio) {
+    var audioTest = new Audio();
+    support.codec = {
+      mp3: !!audioTest.canPlayType("audio/mpeg;").replace(/^no$/, ""),
+      opus: !!audioTest.canPlayType("audio/ogg; codecs=\"opus\"").replace(/^no$/, ""),
+      ogg: !!audioTest.canPlayType("audio/ogg; codecs=\"vorbis\"").replace(/^no$/, ""),
+      wav: !!audioTest.canPlayType("audio/wav; codecs=\"1\"").replace(/^no$/, ""),
+      m4a: !!(audioTest.canPlayType("audio/x-m4a;") || audioTest.canPlayType("audio/aac;")).replace(/^no$/, ""),
+      webm: !!audioTest.canPlayType("audio/webm; codecs=\"vorbis\"").replace(/^no$/, "")
+    };
+  }
   module.exports = support;
-// uRequire v0.6.2-01: END body of original nodejs module
-
-
-return module.exports;
-}
-);
-define(
-  'audio/AudioPlayer',['require','exports','module','./AudioPlayer','../utils/EventEmitter','../utils/utils','../utils/inherit','../utils/support'],function (require, exports, module) {
-  
-// uRequire v0.6.2-01: START body of original nodejs module
-  var AudioPlayer = require("./AudioPlayer"), EventEmitter = require("../utils/EventEmitter"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), support = require("../utils/support");
-  var AudioPlayer = function (manager, audio, settings) {
-    EventEmitter.call(this);
-    this.src = "";
-    this.game = manager.game;
-    this.key = audio.key;
-    this.autoplay = false;
-    this.format = null;
-    this.loop = false;
-    this.pos3d = [
-      0,
-      0,
-      -0.5
-    ];
-    this.sprite = {};
-    Object.defineProperty(this, "volume", {
-      get: this.getVolume.bind(this),
-      set: this.setVolume.bind(this)
-    });
-    this._file = audio;
-    this._volume = 1;
-    this._duration = 0;
-    this._loaded = false;
-    this._manager = manager;
-    this._webAudio = support.webAudio;
-    this._nodes = [];
-    this._onendTimer = [];
-    utils.setValues(this, settings);
-    if (this._webAudio) {
-      this._setupAudioNode();
-    }
-    this.load();
-  };
-  inherit(AudioPlayer, Object, {
-    load: function () {
-      var self = this, audio = this._file;
-      if (audio.webAudio) {
-        if (!audio.decoded) {
-          this._manager.ctx.decodeAudioData(audio.data, function (buffer) {
-            if (buffer) {
-              audio.data = buffer;
-              audio.decoded = true;
-              self.loadSoundBuffer(buffer);
-            }
-          });
-        } else {
-          this.loadSoundBuffer(audio.data);
-        }
-      } else {
-        var node = audio.data.cloneNode();
-        this._nodes.push(node);
-        node._pos = 0;
-        node.volume = this._manager.muted ? 0 : this._volume * this._manager.volume;
-        this._duration = node.duration;
-        this.sprite._default = [
-          0,
-          node.duration * 1000
-        ];
-        if (!this._loaded) {
-          this._loaded = true;
-          this.emit("load", {
-            message: "Audio file loaded.",
-            data: this.src
-          });
-        }
-        if (this.autoplay) {
-          this.play();
-        }
-      }
-      return this;
-    },
-    play: function (sprite, cb) {
-      var self = this;
-      if (typeof sprite === "function") {
-        cb = sprite;
-        sprite = null;
-      }
-      if (!sprite) {
-        sprite = "_default";
-      }
-      if (!this._loaded) {
-        this.on("load", function () {
-          self.play(sprite, cb);
-        });
-        return this;
-      }
-      if (!this.sprite[sprite]) {
-        if (typeof cb === "function")
-          cb();
-        return this;
-      }
-      this._inactiveNode(function (node) {
-        var pos = node._pos > 0 ? node._pos : self.sprite[sprite][0] / 1000, duration = self.sprite[sprite][1] / 1000 - node._pos, loop = self.loop || self.sprite[sprite][2], soundId = typeof cb === "string" ? cb : Math.round(Date.now() * Math.random()) + "", timerId;
-        node._sprite = sprite;
-        (function (o) {
-          timerId = setTimeout(function () {
-            if (!self._webAudio && o.loop) {
-              self.stop(o.id, o.timer).play(o.sprite, o.id);
-            }
-            if (self._webAudio && !o.loop) {
-              self._nodeById(o.id).paused = true;
-            }
-            if (!self._webAudio && !o.loop) {
-              self.stop(o.id, o.timer);
-            }
-            self.emit("end", {
-              message: "Audio has finished playing",
-              data: o.id
-            });
-          }, duration * 1000);
-          self._onendTimer.push(timerId);
-          o.timer = timerId;
-        }({
-          id: soundId,
-          sprite: sprite,
-          loop: loop
-        }));
-        if (self._webAudio) {
-          node.id = soundId;
-          node.paused = false;
-          self.refreshBuffer([
-            loop,
-            pos,
-            duration
-          ], soundId);
-          self._playStart = self._manager.ctx.currentTime;
-          node.gain.value = self._volume;
-          if (typeof node.bufferSource.start === "undefined") {
-            node.bufferSource.noteGrainOn(0, pos, duration);
-          } else {
-            node.bufferSource.start(0, pos, duration);
-          }
-        } else {
-          if (node.readyState === 4) {
-            node.id = soundId;
-            node.currentTime = pos;
-            node.muted = self._manager.muted;
-            node.volume = self._volume * self._manager.volume;
-            node.play();
-          } else {
-            self._clearEndTimer(timerId);
-            (function () {
-              var sound = self, playSpr = sprite, fn = cb, newNode = node;
-              var evt = function () {
-                sound.play(playSpr, fn);
-                newNode.removeEventListener("canplaythrough", evt, false);
-              };
-              newNode.addEventListener("canplaythrough", evt, false);
-            }());
-            return self;
-          }
-        }
-        self.emit("play", {
-          message: "Playing audio file",
-          data: soundId
-        });
-        if (typeof cb === "function")
-          cb(soundId);
-      });
-      return this;
-    },
-    pause: function (id, timerId) {
-      var self = this;
-      if (!this._loaded) {
-        this.on("play", function () {
-          self.play(id);
-        });
-        return this;
-      }
-      this._clearEndTimer(timerId || 0);
-      var activeNode = id ? this._nodeById(id) : this._activeNode();
-      if (activeNode) {
-        if (this._webAudio) {
-          if (!activeNode.bufferSource)
-            return this;
-          activeNode.paused = true;
-          activeNode._pos += this._manager.ctx.currentTime - this._playStart;
-          if (typeof activeNode.bufferSource.stop === "undefined") {
-            activeNode.bufferSource.noteOff(0);
-          } else {
-            activeNode.bufferSource.stop(0);
-          }
-        } else {
-          activeNode._pos = activeNode.currentTime;
-          activeNode.pause();
-        }
-      }
-      this.emit("pause", {
-        message: "Audio file paused",
-        data: id
-      });
-      return this;
-    },
-    stop: function (id, timerId) {
-      var self = this;
-      if (!this._loaded) {
-        this.on("play", function () {
-          self.stop(id);
-        });
-        return this;
-      }
-      this._clearEndTimer(timerId || 0);
-      var activeNode = id ? this._nodeById(id) : this._activeNode();
-      if (activeNode) {
-        activeNode._pos = 0;
-        if (this._webAudio) {
-          if (!activeNode.bufferSource)
-            return this;
-          activeNode.paused = true;
-          if (typeof activeNode.bufferSource.stop === "undefined") {
-            activeNode.bufferSource.noteOff(0);
-          } else {
-            activeNode.bufferSource.stop(0);
-          }
-        } else {
-          activeNode.pause();
-          activeNode.currentTime = 0;
-        }
-      }
-      return this;
-    },
-    mute: function (id) {
-      return this.setMuted(true, id);
-    },
-    unmute: function (id) {
-      return this.setMuted(false, id);
-    },
-    setMuted: function (muted, id) {
-      var self = this;
-      if (!this._loaded) {
-        this.on("play", function () {
-          self.setMuted(muted, id);
-        });
-        return this;
-      }
-      var activeNode = id ? this._nodeById(id) : this._activeNode();
-      if (activeNode) {
-        if (this._webAudio) {
-          activeNode.gain.value = muted ? 0 : this._volume;
-        } else {
-          activeNode.volume = muted ? 0 : this._volume;
-        }
-      }
-      return this;
-    },
-    seek: function (pos, id) {
-      var self = this;
-      if (!this._loaded) {
-        this.on("load", function () {
-          self.seek(pos);
-        });
-        return this;
-      }
-      if (!pos || pos < 0)
-        pos = 0;
-      var activeNode = id ? this._nodeById(id) : this._activeNode();
-      if (activeNode) {
-        if (this._webAudio) {
-          activeNode._pos = pos;
-          this.pause(activeNode.id).play(activeNode._sprite, id);
-        } else {
-          activeNode.currentTime = pos;
-        }
-      }
-      return this;
-    },
-    getPosition: function (id) {
-      var self = this;
-      if (!this._loaded) {
-        this.on("load", function () {
-          self.getPosition(id);
-        });
-        return this;
-      }
-      var activeNode = id ? this._nodeById(id) : this._activeNode();
-      if (activeNode) {
-        if (this._webAudio) {
-          return activeNode._pos + (this._manager.ctx.currentTime - this._playStart);
-        } else {
-          return activeNode.currentTime;
-        }
-      }
-      return 0;
-    },
-    fade: function (from, to, len, id, cb) {
-      var self = this, diff = Math.abs(from - to), dir = from > to ? "dowm" : "up", steps = diff / 0.01, stepTime = len / steps;
-      if (typeof id === "function") {
-        cb = id;
-        id = null;
-      }
-      if (!this._loaded) {
-        this.on("load", function () {
-          self.fade(from, to, len, id, cb);
-        });
-        return this;
-      }
-      this.setVolume(from, id);
-      for (var i = 1; i <= steps; ++i) {
-        var change = this._volume + (dir === "up" ? 0.01 : -0.01) * i, vol = Math.round(1000 * change) / 1000, wait = stepTime * i;
-        this._doFadeStep(vol, wait, to, id, cb);
-      }
-    },
-    getVolume: function () {
-      return this._volume;
-    },
-    setVolume: function (vol, id) {
-      var self = this;
-      vol = parseFloat(vol);
-      if (!this._loaded) {
-        this.on("play", function () {
-          self.setVolume(vol, id);
-        });
-        return this;
-      }
-      if (vol >= 0 && vol <= 1) {
-        this._volume = vol;
-        var activeNode = id ? this._nodeById(id) : this._activeNode();
-        if (activeNode) {
-          if (this._webAudio) {
-            activeNode.gain.volume = vol;
-          } else {
-            activeNode.volume = vol * this._manager.volume;
-          }
-        }
-      }
-      return this;
-    },
-    setPosition: function (x, y, z, id) {
-      var self = this;
-      x = !x ? 0 : x;
-      y = !y ? 0 : y;
-      z = !z && z !== 0 ? -0.5 : z;
-      if (!this._loaded) {
-        this.on("play", function () {
-          self.setPosition(x, y, z, id);
-        });
-        return this;
-      }
-      if (this._webAudio) {
-        var activeNode = id ? this._nodeById(id) : this._activeNode();
-        if (activeNode) {
-          this.pos3d[0] = x;
-          this.pos3d[1] = y;
-          this.pos3d[2] = z;
-          activeNode.panner.setPosition(x, y, z);
-        }
-      }
-      return this;
-    },
-    _doFadeStep: function (vol, wait, end, id, cb) {
-      var self = this;
-      setTimeout(function () {
-        self.setVolume(vol, id);
-        if (vol === end) {
-          if (typeof cb === "function")
-            cb();
-        }
-      }, wait);
-    },
-    _nodeById: function (id) {
-      var node = this._nodes[0];
-      for (var i = 0, il = this._nodes.length; i < il; ++i) {
-        if (this._nodes[i].id === id) {
-          node = this._nodes[i];
-          break;
-        }
-      }
-      return node;
-    },
-    _activeNode: function () {
-      var node;
-      for (var i = 0, il = this._nodes.length; i < il; ++i) {
-        if (!this._nodes[i].paused) {
-          node = this._nodes[i];
-          break;
-        }
-      }
-      this._drainPool();
-      return node;
-    },
-    _inactiveNode: function (cb) {
-      var node;
-      for (var i = 0, il = this._nodes.length; i < il; ++i) {
-        if (this._nodes[i].paused && this._nodes[i].readyState === 4) {
-          cb(node = this._nodes[i]);
-          break;
-        }
-      }
-      this._drainPool();
-      if (node)
-        return;
-      if (this._webAudio) {
-        node = this._setupAudioNode();
-        cb(node);
-      } else {
-        this.load();
-        node = this._nodes[this.nodes.length - 1];
-        node.addEventListener("loadedmetadata", function () {
-          cb(node);
-        });
-      }
-    },
-    _drainPool: function () {
-      var inactive = 0, i = 0, il = 0;
-      for (i = 0, il = this._nodes.length; i < il; ++i) {
-        if (this._nodes[i].paused) {
-          inactive++;
-        }
-      }
-      for (i = this._nodes.length; i >= 0; --i) {
-        if (inactive <= 5)
-          break;
-        if (this._nodes[i].paused) {
-          inactive--;
-          this._nodes.splice(i, 1);
-        }
-      }
-    },
-    _clearEndTimer: function (timerId) {
-      var timer = this._onendTimer.indexOf(timerId);
-      timer = timer >= 0 ? timer : 0;
-      if (this._onendTimer[timer]) {
-        clearTimeout(this._onendTimer[timer]);
-        this._onendTimer.splice(timer, 1);
-      }
-    },
-    _setupAudioNode: function () {
-      var node = this._nodes, i = this._nodes.length;
-      node.push(typeof this._manager.ctx.createGain === "undefined" ? this._manager.ctx.createGainNode : this._manager.ctx.createGain());
-      node[i].gain.value = this._volume;
-      node[i].paused = true;
-      node[i]._pos = 0;
-      node[i].readyState = 4;
-      node[i].connect(this._manager.masterGain);
-      node[i].panner = this._manager.ctx.createPanner();
-      node[i].panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
-      node[i].panner.connect(node[i]);
-      return node[i];
-    },
-    loadSoundBuffer: function (buffer) {
-      this._duration = buffer ? buffer.duration : this._duration;
-      this.sprite._default = [
-        0,
-        this._duration * 1000
-      ];
-      if (!this._loaded) {
-        this._loaded = true;
-        this.emit("load", {
-          message: "Audio file loaded.",
-          data: this.src
-        });
-      }
-      if (this.autoplay) {
-        this.play();
-      }
-    },
-    refreshBuffer: function (loop, id) {
-      var node = this._nodeById(id);
-      node.bufferSource = this._manager.ctx.createBufferSource();
-      node.bufferSource.buffer = this._file.data;
-      node.bufferSource.connect(node.panner);
-      node.bufferSource.loop = loop[0];
-      if (loop[0]) {
-        node.bufferSource.loopStart = loop[1];
-        node.bufferSource.loopEnd = loop[1] + loop[2];
-      }
-    }
-  });
-  module.exports = AudioPlayer;
-// uRequire v0.6.2-01: END body of original nodejs module
-
-
-return module.exports;
-}
-);
-define(
-  'audio/AudioManager',['require','exports','module','./AudioPlayer','../utils/inherit','../utils/support'],function (require, exports, module) {
-  
-// uRequire v0.6.2-01: START body of original nodejs module
-  var AudioPlayer = require("./AudioPlayer"), inherit = require("../utils/inherit"), support = require("../utils/support");
-  var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext, __audioctx = support.webAudio ? new __AudioCtx() : null;
-  var AudioManager = function (game, parent) {
-    this.game = game;
-    this.parent = parent;
-    this._muted = false;
-    this._volume = 1;
-    Object.defineProperty(this, "volume", {
-      get: this.getVolume.bind(this),
-      set: this.setVolume.bind(this)
-    });
-    this.ctx = __audioctx;
-    this.canPlay = support.webAudio || support.htmlAudio;
-    if (support.webAudio) {
-      this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
-      this.masterGain.gain.value = 1;
-      this.setParent(parent);
-    }
-    this.sounds = {};
-  };
-  inherit(AudioManager, Object, {
-    getVolume: function () {
-      return this._volume;
-    },
-    setVolume: function (v) {
-      v = parseFloat(v, 10);
-      if (!isNaN(v) && v >= 0 && v <= 1) {
-        this._volume = v;
-        if (support.webAudio)
-          this.masterGain.gain.value = v;
-        for (var key in this.sounds) {
-          if (this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
-            var player = this.sounds[key];
-            for (var i = 0, il = player._nodes.length; i < il; ++i) {
-              player._nodes[i].volume = player._volume * this._volume;
-            }
-          }
-        }
-      }
-    },
-    mute: function () {
-      return this.setMuted(true);
-    },
-    unmute: function () {
-      return this.setMuted(false);
-    },
-    setMuted: function (m) {
-      this._muted = m = !!m;
-      if (support.webAudio)
-        this.masterGain.gain.value = m ? 0 : this._volume;
-      for (var key in this.sounds) {
-        if (this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
-          var player = this.sounds[key];
-          for (var i = 0, il = player._nodes.length; i < il; ++i) {
-            player._nodes[i].mute();
-          }
-        }
-      }
-      return this;
-    },
-    setParent: function (parent) {
-      this.parent = parent;
-      if (support.webAudio) {
-        if (parent && parent.masterGain) {
-          this.masterGain.connect(parent.masterGain);
-        } else {
-          this.masterGain.connect(this.ctx.destination);
-        }
-      }
-    },
-    attach: function (sound) {
-      this.sounds[sound.key] = sound;
-      sound._manager = this;
-      if (support.webAudio) {
-        for (var i = 0; i < sound._nodes.length; ++i) {
-          sound._nodes[i].disconnect();
-          sound._nodes[i].connect(this.masterGain);
-        }
-      }
-    },
-    add: function (key, settings) {
-      if (!this.canPlay) {
-        return false;
-      }
-      var audio = this.game.cache.getAudio(key);
-      if (!audio.player)
-        audio.player = new AudioPlayer(this, audio, settings);
-      return this.sounds[key] = audio.player;
-    },
-    remove: function (key) {
-      var audio = this.sounds[key];
-      if (audio) {
-        audio.stop();
-      }
-      delete this.sounds[key];
-    }
-  });
-  module.exports = AudioManager;
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -7479,68 +6597,6 @@ return module.exports;
 }
 );
 define(
-  'display/Container',['require','exports','module','../utils/EventEmitter','../utils/utils','../utils/inherit','../vendor/pixi'],function (require, exports, module) {
-  
-// uRequire v0.6.2-01: START body of original nodejs module
-  var EventEmitter = require("../utils/EventEmitter"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), PIXI = require("../vendor/pixi");
-  var Container = function (settings) {
-    PIXI.DisplayObjectContainer.call(this);
-    EventEmitter.call(this);
-    utils.setValues(this, settings);
-  };
-  inherit(Container, PIXI.DisplayObjectContainer, {
-    addChild: function (child) {
-      if (child._container !== this) {
-        child._container = this;
-        PIXI.DisplayObjectContainer.prototype.addChild.apply(this, arguments);
-      }
-      return child;
-    },
-    addChildAt: function (child) {
-      if (child._container !== this) {
-        child._container = this;
-        PIXI.DisplayObjectContainer.prototype.addChildAt.apply(this, arguments);
-      }
-      return child;
-    },
-    removeChild: function (child) {
-      if (child._container === this) {
-        child._container = null;
-        PIXI.DisplayObjectContainer.prototype.removeChild.apply(this, arguments);
-      }
-      return child;
-    },
-    removeAllChildren: function () {
-      while (this.children.length) {
-        if (this.children[0].destroy)
-          this.children[0].destroy();
-        this.removeChild(this.children[0]);
-      }
-      return this;
-    },
-    bringChildToTop: function (child) {
-      if (child._container === this) {
-        this.removeChild(child);
-        this.addChild(child);
-      }
-      return child;
-    },
-    destroy: function () {
-      this.removeAllChildren();
-      if (this.parent)
-        this.parent.removeChild(this);
-    },
-    onCollide: function () {
-    }
-  });
-  module.exports = Container;
-// uRequire v0.6.2-01: END body of original nodejs module
-
-
-return module.exports;
-}
-);
-define(
   'math/math',['require','exports','module','../utils/support','../vendor/pixi'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
@@ -7695,6 +6751,1049 @@ return module.exports;
 }
 );
 define(
+  'geom/Rectangle',['require','exports','module','../utils/inherit','./Polygon','../math/Vector','../math/math','../constants'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var inherit = require("../utils/inherit"), Polygon = require("./Polygon"), Vector = require("../math/Vector"), math = require("../math/math"), C = require("../constants");
+  var Rectangle = function (x, y, width, height) {
+    this.position = new Vector();
+    this.x = x || 0;
+    this.y = y || 0;
+    this._width = width || 0;
+    this._height = height || 0;
+    this.halfWidth = this._width / 2;
+    this.halfHeight = this._height / 2;
+    this._shapetype = C.SHAPE.RECTANGLE;
+  };
+  inherit(Rectangle, Object, {
+    clone: function () {
+      return new Rectangle(this.x, this.y, this._width, this._height);
+    },
+    copy: function (rect) {
+      this.x = rect.x;
+      this.y = rect.y;
+      this.width = rect.width;
+      this.height = rect.height;
+      return this;
+    },
+    contains: function (x, y) {
+      if (this._width <= 0 || this._height <= 0)
+        return false;
+      var x1 = this.x;
+      if (x >= x1 && x <= x1 + this._width) {
+        var y1 = this.y;
+        if (y >= y1 && y <= y1 + this._height) {
+          return true;
+        }
+      }
+      return false;
+    },
+    overlaps: function (rect) {
+      return this.right > rect.x && this.x < rect.right && this.bottom > rect.y && this.y < rect.bottom;
+    },
+    toPolygon: function () {
+      return new Polygon(this.x, this.y, [
+        new Vector(),
+        new Vector(this.width, 0),
+        new Vector(this.width, this.height),
+        new Vector(0, this.height)
+      ]);
+    },
+    equals: function (rect) {
+      return this.position.equals(rect.position) && this._width === rect._width && this._height === rect._height;
+    },
+    union: function (rect, out) {
+      out = out || new Rectangle();
+      out.x = math.min(this.x, rect.x);
+      out.y = math.min(this.y, rect.y);
+      out.width = math.max(this.right, rect.right);
+      out.height = math.max(this.bottom, rect.bottom);
+      return out;
+    }
+  });
+  Object.defineProperty(Rectangle.prototype, "x", {
+    get: function () {
+      return this.position.x;
+    },
+    set: function (v) {
+      this.position.x = v;
+    }
+  });
+  Object.defineProperty(Rectangle.prototype, "y", {
+    get: function () {
+      return this.position.y;
+    },
+    set: function (v) {
+      this.position.y = v;
+    }
+  });
+  Object.defineProperty(Rectangle.prototype, "width", {
+    get: function () {
+      return this._width;
+    },
+    set: function (w) {
+      this._width = w || 0;
+      this.halfWidth = this._width / 2;
+    }
+  });
+  Object.defineProperty(Rectangle.prototype, "height", {
+    get: function () {
+      return this._height;
+    },
+    set: function (h) {
+      this._height = h || 0;
+      this.halfHeight = this._height / 2;
+    }
+  });
+  Object.defineProperty(Rectangle.prototype, "right", {
+    get: function () {
+      return this.x + this._width;
+    }
+  });
+  Object.defineProperty(Rectangle.prototype, "left", {
+    get: function () {
+      return this.x;
+    }
+  });
+  Object.defineProperty(Rectangle.prototype, "top", {
+    get: function () {
+      return this.y;
+    }
+  });
+  Object.defineProperty(Rectangle.prototype, "bottom", {
+    get: function () {
+      return this.y + this._height;
+    }
+  });
+  Object.defineProperty(Rectangle.prototype, "perimeter", {
+    get: function () {
+      return 2 * (this._width + this._height);
+    }
+  });
+  Object.defineProperty(Rectangle.prototype, "area", {
+    get: function () {
+      return this._width * this._height;
+    }
+  });
+  module.exports = Rectangle;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
+  'utils/utils',['require','exports','module','../math/Vector','../geom/Circle','../geom/Rectangle','../geom/Polygon'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var Vector = require("../math/Vector"), Circle = require("../geom/Circle"), Rectangle = require("../geom/Rectangle"), Polygon = require("../geom/Polygon");
+  var utils = {
+      _arrayDelim: /[|,]/,
+      noop: function () {
+      },
+      getAbsoluteUrl: function (url) {
+        var a = document.createElement("a");
+        a.href = url;
+        return a.href;
+      },
+      ajax: function (sets) {
+        sets = sets || {};
+        sets.method = sets.method || "GET";
+        sets.dataType = sets.dataType || "text";
+        if (!sets.url)
+          throw new TypeError("Undefined URL passed to ajax");
+        sets.progress = sets.progress || utils.noop;
+        sets.load = sets.load || utils.noop;
+        sets.error = sets.error || utils.noop;
+        sets.abort = sets.abort || utils.noop;
+        sets.complete = sets.complete || utils.noop;
+        var xhr = utils.createAjaxRequest(), protocol = utils.getAbsoluteUrl(sets.url).split("/")[0];
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            var res = xhr.response || xhr.responseText, err = null;
+            if (protocol !== "file:" && xhr.status !== 200)
+              err = "Non-200 status code returned: " + xhr.status;
+            if (!err && typeof res === "string") {
+              if (sets.dataType === "json") {
+                try {
+                  res = JSON.parse(res);
+                } catch (e) {
+                  err = e;
+                }
+              } else if (sets.dataType === "xml") {
+                try {
+                  res = utils.parseXML(res);
+                } catch (e) {
+                  err = e;
+                }
+              }
+            }
+            if (err) {
+              if (sets.error)
+                sets.error.call(xhr, err);
+            } else {
+              if (sets.load)
+                sets.load.call(xhr, res);
+            }
+          }
+        };
+        if (sets.dataType !== "json" && sets.dataType !== "xml")
+          xhr.responseType = sets.dataType;
+        else
+          xhr.responseType = "text";
+        xhr.open(sets.method, sets.url, true);
+        xhr.send();
+        return xhr;
+      },
+      createAjaxRequest: function () {
+        var activexmodes = [
+            "Msxml2.XMLHTTP",
+            "Microsoft.XMLHTTP"
+          ];
+        if (window.ActiveXObject) {
+          for (var i = 0; i < activexmodes.length; i++) {
+            try {
+              return new window.ActiveXObject(activexmodes[i]);
+            } catch (e) {
+            }
+          }
+        } else if (window.XMLHttpRequest) {
+          return new XMLHttpRequest();
+        } else {
+          return false;
+        }
+      },
+      setValues: function (obj, values) {
+        if (!values)
+          return;
+        for (var key in values) {
+          var newVal = values[key];
+          if (newVal === undefined) {
+            continue;
+          }
+          if (key in obj) {
+            var curVal = obj[key];
+            if (typeof curVal === "number" && typeof newVal === "string") {
+              var n;
+              if (newVal.indexOf("0x") === 0)
+                n = parseInt(newVal, 16);
+              else
+                n = parseInt(newVal, 10);
+              if (!isNaN(n))
+                obj[key] = n;
+            } else if (curVal instanceof Vector && newVal instanceof Array) {
+              curVal.set(parseFloat(newVal[0], 10) || 0, parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0);
+            } else if (curVal instanceof Vector && typeof newVal === "string") {
+              var a = newVal.split(utils._arrayDelim, 2);
+              curVal.set(parseFloat(a[0], 10) || 0, parseFloat(a[1], 10) || parseFloat(a[0], 10) || 0);
+            } else if (curVal instanceof Vector && typeof newVal === "number") {
+              curVal.set(newVal, newVal);
+            } else if (curVal.x !== undefined && newVal instanceof Array) {
+              curVal.x = parseFloat(newVal[0], 10) || 0;
+              curVal.y = parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0;
+            } else if (curVal.x !== undefined && typeof newVal === "string") {
+              var a2 = newVal.split(utils._arrayDelim, 2);
+              curVal.x = parseFloat(a2[0], 10) || 0;
+              curVal.y = parseFloat(a2[1], 10) || parseFloat(a2[0], 10) || 0;
+            } else if (curVal.x !== undefined && typeof newVal === "number") {
+              curVal.x = newVal;
+              curVal.y = newVal;
+            } else if (curVal instanceof Array && typeof newVal === "string") {
+              obj[key] = newVal.split(utils._arrayDelim);
+              for (var i = 0, il = obj[key].length; i < il; ++i) {
+                var val = obj[key][i];
+                if (!isNaN(val))
+                  obj[key][i] = parseFloat(val, 10);
+              }
+            } else {
+              obj[key] = newVal;
+            }
+          }
+        }
+        return obj;
+      },
+      extend: function () {
+        var src, copyIsArray, copy, name, options, clone, target = arguments[0] || {}, i = 1, length = arguments.length, deep = false;
+        if (typeof target === "boolean") {
+          deep = target;
+          target = arguments[1] || {};
+          i = 2;
+        }
+        if (typeof target !== "object" && typeof target !== "function") {
+          target = {};
+        }
+        for (; i < length; i++) {
+          options = arguments[i];
+          if (options !== null && options !== undefined) {
+            for (name in options) {
+              src = target[name];
+              copy = options[name];
+              if (target === copy) {
+                continue;
+              }
+              if (deep && copy && (utils.isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))) {
+                if (copyIsArray) {
+                  copyIsArray = false;
+                  clone = src && Array.isArray(src) ? src : [];
+                } else {
+                  clone = src && utils.isPlainObject(src) ? src : {};
+                }
+                target[name] = utils.extend(deep, clone, copy);
+              } else if (copy !== undefined) {
+                target[name] = copy;
+              }
+            }
+          }
+        }
+        return target;
+      },
+      isPlainObject: function (obj) {
+        if (typeof obj !== "object" || obj.nodeType || obj === obj.window) {
+          return false;
+        }
+        try {
+          if (obj.constructor && !Object.hasOwnProperty.call(obj.constructor.prototype, "isPrototypeOf")) {
+            return false;
+          }
+        } catch (e) {
+          return false;
+        }
+        return true;
+      },
+      getOffset: function (element) {
+        var box = element.getBoundingClientRect(), clientTop = element.clientTop || document.body.clientTop || 0, clientLeft = element.clientLeft || document.body.clientLeft || 0, scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop, scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
+        return new Vector(box.left + scrollLeft - clientLeft, box.top + scrollTop - clientTop);
+      },
+      parseHitArea: function (hv) {
+        var ha;
+        if (hv.length % 2 !== 0 && hv.length !== 3) {
+          throw new RangeError("Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.");
+        }
+        if (hv.length === 3) {
+          ha = new Circle(hv[0], hv[1], hv[2]);
+        } else if (hv.length === 4) {
+          ha = new Rectangle(hv[0], hv[1], hv[2], hv[3]);
+        } else {
+          ha = new Polygon(hv);
+        }
+        return ha;
+      },
+      parseTiledProperties: function (obj) {
+        if (!obj || obj.__tiledparsed)
+          return obj;
+        for (var k in obj) {
+          var v = obj[k];
+          if (!isNaN(v))
+            obj[k] = parseFloat(v, 10);
+          else if (v === "true")
+            obj[k] = true;
+          else if (v === "false")
+            obj[k] = false;
+          else {
+            try {
+              v = JSON.parse(v);
+              obj[k] = v;
+            } catch (e) {
+            }
+          }
+        }
+        if (obj.hitArea)
+          obj.hitArea = utils.parseHitArea(obj.hitArea);
+        if (obj.static || obj.sensor) {
+          obj.mass = Infinity;
+          obj.inertia = Infinity;
+        }
+        obj.__tiledparsed = true;
+        return obj;
+      },
+      _logger: window.console || {},
+      log: function () {
+        if (utils._logger.log)
+          utils._logger.log.apply(utils._logger, arguments);
+      },
+      warn: function () {
+        if (utils._logger.warn)
+          utils._logger.warn.apply(utils._logger, arguments);
+      },
+      error: function () {
+        if (utils._logger.error)
+          utils._logger.error.apply(utils._logger, arguments);
+      }
+    };
+  if (typeof window.DOMParser !== "undefined") {
+    utils.parseXML = function (xmlStr) {
+      return new window.DOMParser().parseFromString(xmlStr, "text/xml");
+    };
+  } else if (typeof window.ActiveXObject !== "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
+    utils.parseXML = function (xmlStr) {
+      var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+      xmlDoc.async = "false";
+      xmlDoc.loadXML(xmlStr);
+      return xmlDoc;
+    };
+  } else {
+    utils.warn("XML parser not available, trying to parse any XML will result in an error.");
+    utils.parseXML = function () {
+      throw new Error("Trying to parse XML, but not XML parser is available in this environment");
+    };
+  }
+  module.exports = utils;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
+  'audio/AudioPlayer',['require','exports','module','./AudioPlayer','../utils/EventEmitter','../utils/utils','../utils/inherit','../utils/support'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var AudioPlayer = require("./AudioPlayer"), EventEmitter = require("../utils/EventEmitter"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), support = require("../utils/support");
+  var AudioPlayer = function (manager, audio, settings) {
+    EventEmitter.call(this);
+    this.src = "";
+    this.game = manager.game;
+    this.key = audio.key;
+    this.autoplay = false;
+    this.format = null;
+    this.loop = false;
+    this.pos3d = [
+      0,
+      0,
+      -0.5
+    ];
+    this.sprite = {};
+    Object.defineProperty(this, "volume", {
+      get: this.getVolume.bind(this),
+      set: this.setVolume.bind(this)
+    });
+    this._file = audio;
+    this._volume = 1;
+    this._duration = 0;
+    this._loaded = false;
+    this._manager = manager;
+    this._webAudio = support.webAudio;
+    this._nodes = [];
+    this._onendTimer = [];
+    utils.setValues(this, settings);
+    if (this._webAudio) {
+      this._setupAudioNode();
+    }
+    this.load();
+  };
+  inherit(AudioPlayer, Object, {
+    load: function () {
+      var self = this, audio = this._file;
+      if (audio.webAudio) {
+        if (!audio.decoded) {
+          this._manager.ctx.decodeAudioData(audio.data, function (buffer) {
+            if (buffer) {
+              audio.data = buffer;
+              audio.decoded = true;
+              self.loadSoundBuffer(buffer);
+            }
+          });
+        } else {
+          this.loadSoundBuffer(audio.data);
+        }
+      } else {
+        var node = audio.data.cloneNode();
+        this._nodes.push(node);
+        node._pos = 0;
+        node.volume = this._manager.muted ? 0 : this._volume * this._manager.volume;
+        this._duration = node.duration;
+        this.sprite._default = [
+          0,
+          node.duration * 1000
+        ];
+        if (!this._loaded) {
+          this._loaded = true;
+          this.emit("load", {
+            message: "Audio file loaded.",
+            data: this.src
+          });
+        }
+        if (this.autoplay) {
+          this.play();
+        }
+      }
+      return this;
+    },
+    play: function (sprite, cb) {
+      var self = this;
+      if (typeof sprite === "function") {
+        cb = sprite;
+        sprite = null;
+      }
+      if (!sprite) {
+        sprite = "_default";
+      }
+      if (!this._loaded) {
+        this.on("load", function () {
+          self.play(sprite, cb);
+        });
+        return this;
+      }
+      if (!this.sprite[sprite]) {
+        if (typeof cb === "function")
+          cb();
+        return this;
+      }
+      this._inactiveNode(function (node) {
+        var pos = node._pos > 0 ? node._pos : self.sprite[sprite][0] / 1000, duration = self.sprite[sprite][1] / 1000 - node._pos, loop = self.loop || self.sprite[sprite][2], soundId = typeof cb === "string" ? cb : Math.round(Date.now() * Math.random()) + "", timerId;
+        node._sprite = sprite;
+        (function (o) {
+          timerId = setTimeout(function () {
+            if (!self._webAudio && o.loop) {
+              self.stop(o.id, o.timer).play(o.sprite, o.id);
+            }
+            if (self._webAudio && !o.loop) {
+              self._nodeById(o.id).paused = true;
+            }
+            if (!self._webAudio && !o.loop) {
+              self.stop(o.id, o.timer);
+            }
+            self.emit("end", {
+              message: "Audio has finished playing",
+              data: o.id
+            });
+          }, duration * 1000);
+          self._onendTimer.push(timerId);
+          o.timer = timerId;
+        }({
+          id: soundId,
+          sprite: sprite,
+          loop: loop
+        }));
+        if (self._webAudio) {
+          node.id = soundId;
+          node.paused = false;
+          self.refreshBuffer([
+            loop,
+            pos,
+            duration
+          ], soundId);
+          self._playStart = self._manager.ctx.currentTime;
+          node.gain.value = self._volume;
+          if (typeof node.bufferSource.start === "undefined") {
+            node.bufferSource.noteGrainOn(0, pos, duration);
+          } else {
+            node.bufferSource.start(0, pos, duration);
+          }
+        } else {
+          if (node.readyState === 4) {
+            node.id = soundId;
+            node.currentTime = pos;
+            node.muted = self._manager.muted;
+            node.volume = self._volume * self._manager.volume;
+            node.play();
+          } else {
+            self._clearEndTimer(timerId);
+            (function () {
+              var sound = self, playSpr = sprite, fn = cb, newNode = node;
+              var evt = function () {
+                sound.play(playSpr, fn);
+                newNode.removeEventListener("canplaythrough", evt, false);
+              };
+              newNode.addEventListener("canplaythrough", evt, false);
+            }());
+            return self;
+          }
+        }
+        self.emit("play", {
+          message: "Playing audio file",
+          data: soundId
+        });
+        if (typeof cb === "function")
+          cb(soundId);
+      });
+      return this;
+    },
+    pause: function (id, timerId) {
+      var self = this;
+      if (!this._loaded) {
+        this.on("play", function () {
+          self.play(id);
+        });
+        return this;
+      }
+      this._clearEndTimer(timerId || 0);
+      var activeNode = id ? this._nodeById(id) : this._activeNode();
+      if (activeNode) {
+        if (this._webAudio) {
+          if (!activeNode.bufferSource)
+            return this;
+          activeNode.paused = true;
+          activeNode._pos += this._manager.ctx.currentTime - this._playStart;
+          if (typeof activeNode.bufferSource.stop === "undefined") {
+            activeNode.bufferSource.noteOff(0);
+          } else {
+            activeNode.bufferSource.stop(0);
+          }
+        } else {
+          activeNode._pos = activeNode.currentTime;
+          activeNode.pause();
+        }
+      }
+      this.emit("pause", {
+        message: "Audio file paused",
+        data: id
+      });
+      return this;
+    },
+    stop: function (id, timerId) {
+      var self = this;
+      if (!this._loaded) {
+        this.on("play", function () {
+          self.stop(id);
+        });
+        return this;
+      }
+      this._clearEndTimer(timerId || 0);
+      var activeNode = id ? this._nodeById(id) : this._activeNode();
+      if (activeNode) {
+        activeNode._pos = 0;
+        if (this._webAudio) {
+          if (!activeNode.bufferSource)
+            return this;
+          activeNode.paused = true;
+          if (typeof activeNode.bufferSource.stop === "undefined") {
+            activeNode.bufferSource.noteOff(0);
+          } else {
+            activeNode.bufferSource.stop(0);
+          }
+        } else {
+          activeNode.pause();
+          activeNode.currentTime = 0;
+        }
+      }
+      return this;
+    },
+    mute: function (id) {
+      return this.setMuted(true, id);
+    },
+    unmute: function (id) {
+      return this.setMuted(false, id);
+    },
+    setMuted: function (muted, id) {
+      var self = this;
+      if (!this._loaded) {
+        this.on("play", function () {
+          self.setMuted(muted, id);
+        });
+        return this;
+      }
+      var activeNode = id ? this._nodeById(id) : this._activeNode();
+      if (activeNode) {
+        if (this._webAudio) {
+          activeNode.gain.value = muted ? 0 : this._volume;
+        } else {
+          activeNode.volume = muted ? 0 : this._volume;
+        }
+      }
+      return this;
+    },
+    seek: function (pos, id) {
+      var self = this;
+      if (!this._loaded) {
+        this.on("load", function () {
+          self.seek(pos);
+        });
+        return this;
+      }
+      if (!pos || pos < 0)
+        pos = 0;
+      var activeNode = id ? this._nodeById(id) : this._activeNode();
+      if (activeNode) {
+        if (this._webAudio) {
+          activeNode._pos = pos;
+          this.pause(activeNode.id).play(activeNode._sprite, id);
+        } else {
+          activeNode.currentTime = pos;
+        }
+      }
+      return this;
+    },
+    getPosition: function (id) {
+      var self = this;
+      if (!this._loaded) {
+        this.on("load", function () {
+          self.getPosition(id);
+        });
+        return this;
+      }
+      var activeNode = id ? this._nodeById(id) : this._activeNode();
+      if (activeNode) {
+        if (this._webAudio) {
+          return activeNode._pos + (this._manager.ctx.currentTime - this._playStart);
+        } else {
+          return activeNode.currentTime;
+        }
+      }
+      return 0;
+    },
+    fade: function (from, to, len, id, cb) {
+      var self = this, diff = Math.abs(from - to), dir = from > to ? "dowm" : "up", steps = diff / 0.01, stepTime = len / steps;
+      if (typeof id === "function") {
+        cb = id;
+        id = null;
+      }
+      if (!this._loaded) {
+        this.on("load", function () {
+          self.fade(from, to, len, id, cb);
+        });
+        return this;
+      }
+      this.setVolume(from, id);
+      for (var i = 1; i <= steps; ++i) {
+        var change = this._volume + (dir === "up" ? 0.01 : -0.01) * i, vol = Math.round(1000 * change) / 1000, wait = stepTime * i;
+        this._doFadeStep(vol, wait, to, id, cb);
+      }
+    },
+    getVolume: function () {
+      return this._volume;
+    },
+    setVolume: function (vol, id) {
+      var self = this;
+      vol = parseFloat(vol);
+      if (!this._loaded) {
+        this.on("play", function () {
+          self.setVolume(vol, id);
+        });
+        return this;
+      }
+      if (vol >= 0 && vol <= 1) {
+        this._volume = vol;
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if (activeNode) {
+          if (this._webAudio) {
+            activeNode.gain.volume = vol;
+          } else {
+            activeNode.volume = vol * this._manager.volume;
+          }
+        }
+      }
+      return this;
+    },
+    setPosition: function (x, y, z, id) {
+      var self = this;
+      x = !x ? 0 : x;
+      y = !y ? 0 : y;
+      z = !z && z !== 0 ? -0.5 : z;
+      if (!this._loaded) {
+        this.on("play", function () {
+          self.setPosition(x, y, z, id);
+        });
+        return this;
+      }
+      if (this._webAudio) {
+        var activeNode = id ? this._nodeById(id) : this._activeNode();
+        if (activeNode) {
+          this.pos3d[0] = x;
+          this.pos3d[1] = y;
+          this.pos3d[2] = z;
+          activeNode.panner.setPosition(x, y, z);
+        }
+      }
+      return this;
+    },
+    _doFadeStep: function (vol, wait, end, id, cb) {
+      var self = this;
+      setTimeout(function () {
+        self.setVolume(vol, id);
+        if (vol === end) {
+          if (typeof cb === "function")
+            cb();
+        }
+      }, wait);
+    },
+    _nodeById: function (id) {
+      var node = this._nodes[0];
+      for (var i = 0, il = this._nodes.length; i < il; ++i) {
+        if (this._nodes[i].id === id) {
+          node = this._nodes[i];
+          break;
+        }
+      }
+      return node;
+    },
+    _activeNode: function () {
+      var node;
+      for (var i = 0, il = this._nodes.length; i < il; ++i) {
+        if (!this._nodes[i].paused) {
+          node = this._nodes[i];
+          break;
+        }
+      }
+      this._drainPool();
+      return node;
+    },
+    _inactiveNode: function (cb) {
+      var node;
+      for (var i = 0, il = this._nodes.length; i < il; ++i) {
+        if (this._nodes[i].paused && this._nodes[i].readyState === 4) {
+          cb(node = this._nodes[i]);
+          break;
+        }
+      }
+      this._drainPool();
+      if (node)
+        return;
+      if (this._webAudio) {
+        node = this._setupAudioNode();
+        cb(node);
+      } else {
+        this.load();
+        node = this._nodes[this.nodes.length - 1];
+        node.addEventListener("loadedmetadata", function () {
+          cb(node);
+        });
+      }
+    },
+    _drainPool: function () {
+      var inactive = 0, i = 0, il = 0;
+      for (i = 0, il = this._nodes.length; i < il; ++i) {
+        if (this._nodes[i].paused) {
+          inactive++;
+        }
+      }
+      for (i = this._nodes.length; i >= 0; --i) {
+        if (inactive <= 5)
+          break;
+        if (this._nodes[i].paused) {
+          inactive--;
+          this._nodes.splice(i, 1);
+        }
+      }
+    },
+    _clearEndTimer: function (timerId) {
+      var timer = this._onendTimer.indexOf(timerId);
+      timer = timer >= 0 ? timer : 0;
+      if (this._onendTimer[timer]) {
+        clearTimeout(this._onendTimer[timer]);
+        this._onendTimer.splice(timer, 1);
+      }
+    },
+    _setupAudioNode: function () {
+      var node = this._nodes, i = this._nodes.length;
+      node.push(typeof this._manager.ctx.createGain === "undefined" ? this._manager.ctx.createGainNode : this._manager.ctx.createGain());
+      node[i].gain.value = this._volume;
+      node[i].paused = true;
+      node[i]._pos = 0;
+      node[i].readyState = 4;
+      node[i].connect(this._manager.masterGain);
+      node[i].panner = this._manager.ctx.createPanner();
+      node[i].panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
+      node[i].panner.connect(node[i]);
+      return node[i];
+    },
+    loadSoundBuffer: function (buffer) {
+      this._duration = buffer ? buffer.duration : this._duration;
+      this.sprite._default = [
+        0,
+        this._duration * 1000
+      ];
+      if (!this._loaded) {
+        this._loaded = true;
+        this.emit("load", {
+          message: "Audio file loaded.",
+          data: this.src
+        });
+      }
+      if (this.autoplay) {
+        this.play();
+      }
+    },
+    refreshBuffer: function (loop, id) {
+      var node = this._nodeById(id);
+      node.bufferSource = this._manager.ctx.createBufferSource();
+      node.bufferSource.buffer = this._file.data;
+      node.bufferSource.connect(node.panner);
+      node.bufferSource.loop = loop[0];
+      if (loop[0]) {
+        node.bufferSource.loopStart = loop[1];
+        node.bufferSource.loopEnd = loop[1] + loop[2];
+      }
+    }
+  });
+  module.exports = AudioPlayer;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
+  'audio/AudioManager',['require','exports','module','./AudioPlayer','../utils/inherit','../utils/support'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var AudioPlayer = require("./AudioPlayer"), inherit = require("../utils/inherit"), support = require("../utils/support");
+  var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozAudioContext, __audioctx = support.webAudio ? new __AudioCtx() : null;
+  var AudioManager = function (game, parent) {
+    this.game = game;
+    this.parent = parent;
+    this._muted = false;
+    this._volume = 1;
+    Object.defineProperty(this, "volume", {
+      get: this.getVolume.bind(this),
+      set: this.setVolume.bind(this)
+    });
+    this.ctx = __audioctx;
+    this.canPlay = support.webAudio || support.htmlAudio;
+    if (support.webAudio) {
+      this.masterGain = this.ctx.createGain ? this.ctx.createGain() : this.ctx.createGainNode();
+      this.masterGain.gain.value = 1;
+      this.setParent(parent);
+    }
+    this.sounds = {};
+  };
+  inherit(AudioManager, Object, {
+    getVolume: function () {
+      return this._volume;
+    },
+    setVolume: function (v) {
+      v = parseFloat(v, 10);
+      if (!isNaN(v) && v >= 0 && v <= 1) {
+        this._volume = v;
+        if (support.webAudio)
+          this.masterGain.gain.value = v;
+        for (var key in this.sounds) {
+          if (this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
+            var player = this.sounds[key];
+            for (var i = 0, il = player._nodes.length; i < il; ++i) {
+              player._nodes[i].volume = player._volume * this._volume;
+            }
+          }
+        }
+      }
+    },
+    mute: function () {
+      return this.setMuted(true);
+    },
+    unmute: function () {
+      return this.setMuted(false);
+    },
+    setMuted: function (m) {
+      this._muted = m = !!m;
+      if (support.webAudio)
+        this.masterGain.gain.value = m ? 0 : this._volume;
+      for (var key in this.sounds) {
+        if (this.sounds.hasOwnProperty(key) && this.sounds[key]._webAudio === false) {
+          var player = this.sounds[key];
+          for (var i = 0, il = player._nodes.length; i < il; ++i) {
+            player._nodes[i].mute();
+          }
+        }
+      }
+      return this;
+    },
+    setParent: function (parent) {
+      this.parent = parent;
+      if (support.webAudio) {
+        if (parent && parent.masterGain) {
+          this.masterGain.connect(parent.masterGain);
+        } else {
+          this.masterGain.connect(this.ctx.destination);
+        }
+      }
+    },
+    attach: function (sound) {
+      this.sounds[sound.key] = sound;
+      sound._manager = this;
+      if (support.webAudio) {
+        for (var i = 0; i < sound._nodes.length; ++i) {
+          sound._nodes[i].disconnect();
+          sound._nodes[i].connect(this.masterGain);
+        }
+      }
+    },
+    add: function (key, settings) {
+      if (!this.canPlay) {
+        return false;
+      }
+      var audio = this.game.cache.getAudio(key);
+      if (!audio.player)
+        audio.player = new AudioPlayer(this, audio, settings);
+      return this.sounds[key] = audio.player;
+    },
+    remove: function (key) {
+      var audio = this.sounds[key];
+      if (audio) {
+        audio.stop();
+      }
+      delete this.sounds[key];
+    }
+  });
+  module.exports = AudioManager;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
+  'display/Container',['require','exports','module','../utils/EventEmitter','../utils/utils','../utils/inherit','../vendor/pixi'],function (require, exports, module) {
+  
+// uRequire v0.6.2-01: START body of original nodejs module
+  var EventEmitter = require("../utils/EventEmitter"), utils = require("../utils/utils"), inherit = require("../utils/inherit"), PIXI = require("../vendor/pixi");
+  var Container = function (settings) {
+    PIXI.DisplayObjectContainer.call(this);
+    EventEmitter.call(this);
+    utils.setValues(this, settings);
+  };
+  inherit(Container, PIXI.DisplayObjectContainer, {
+    addChild: function (child) {
+      if (child._container !== this) {
+        child._container = this;
+        PIXI.DisplayObjectContainer.prototype.addChild.apply(this, arguments);
+      }
+      return child;
+    },
+    addChildAt: function (child) {
+      if (child._container !== this) {
+        child._container = this;
+        PIXI.DisplayObjectContainer.prototype.addChildAt.apply(this, arguments);
+      }
+      return child;
+    },
+    removeChild: function (child) {
+      if (child._container === this) {
+        child._container = null;
+        PIXI.DisplayObjectContainer.prototype.removeChild.apply(this, arguments);
+      }
+      return child;
+    },
+    removeAllChildren: function () {
+      while (this.children.length) {
+        if (this.children[0].destroy)
+          this.children[0].destroy();
+        this.removeChild(this.children[0]);
+      }
+      return this;
+    },
+    bringChildToTop: function (child) {
+      if (child._container === this) {
+        this.removeChild(child);
+        this.addChild(child);
+      }
+      return child;
+    },
+    destroy: function () {
+      this.removeAllChildren();
+      if (this.parent)
+        this.parent.removeChild(this);
+    },
+    onCollide: function () {
+    }
+  });
+  module.exports = Container;
+// uRequire v0.6.2-01: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
   'physics/Body',['require','exports','module','../geom/Rectangle','../math/Vector','../math/math','../utils/inherit','../constants'],function (require, exports, module) {
   
 // uRequire v0.6.2-01: START body of original nodejs module
@@ -7702,10 +7801,14 @@ define(
   var Body = function (sprite, shape) {
     Rectangle.call(this, sprite.position.x, sprite.position.y, sprite.width, sprite.height);
     this.sprite = sprite;
-    this.shape = shape || new Rectangle(0, 0, sprite.width, sprite.height);
-    if (this.shape._shapetype === C.SHAPE.RECTANGLE) {
-      this.shape = this.shape.toPolygon();
+    shape = shape || new Rectangle(0, 0, sprite.width, sprite.height);
+    if (shape._shapetype === C.SHAPE.RECTANGLE) {
+      shape = shape.toPolygon();
     }
+    shape.scale.x = sprite.worldTransform[0];
+    shape.scale.y = sprite.worldTransform[4];
+    shape.recalc();
+    this.shape = shape;
     this.type = C.PHYSICS_TYPE.DYNAMIC;
     this.velocity = new Vector();
     this.accel = new Vector();
@@ -7717,6 +7820,7 @@ define(
     this.mass = sprite.mass || 1;
     this.carry = false;
     this.sensor = false;
+    this.worldBound = true;
     this.allowCollide = C.DIRECTION.ALL;
     this.touching = C.DIRECTION.NONE;
     this.wasTouching = C.DIRECTION.NONE;
@@ -7781,31 +7885,40 @@ define(
       this.wasTouching = this.touching;
       this.touching = C.DIRECTION.NONE;
       this.embedded = false;
-      var a = this.sprite.anchor, ax = a !== undefined ? a.x : 0, ay = a !== undefined ? a.y : 0;
-      this.x = this.sprite.position.x - ax * this._width + this.offset.x;
-      this.y = this.sprite.position.y - ay * this._height + this.offset.y;
-      this.lastPos.set(this.x, this.y);
+      var a = this.sprite.anchor, trans = this.sprite.worldTransform, ax = (a !== undefined ? a.x : 0) * trans[0], ay = (a !== undefined ? a.y : 0) * trans[4];
+      if (this.shape.scale.x !== trans[0] || this.shape.scale.y !== trans[4]) {
+        this.shape.scale.x = trans[0];
+        this.shape.scale.y = trans[4];
+        this.shape.recalc();
+      }
+      this.position.x = trans[2] - ax * this._width + this.offset.x;
+      this.position.y = trans[5] - ay * this._height + this.offset.y;
+      this.lastPos.copy(this.position);
       if (this.type !== C.PHYSICS_TYPE.STATIC)
         this.updateMotion(dt, gravity);
       this.syncSprite();
-      this.syncShape();
     },
     syncSprite: function () {
-      var a = this.sprite.anchor, ax = a !== undefined ? a.x : 0, ay = a !== undefined ? a.y : 0;
-      this.sprite.position.x = math.round(this.x - this.offset.x + ax * this._width);
-      this.sprite.position.y = math.round(this.y - this.offset.y + ay * this._height);
-    },
-    syncShape: function () {
-      this.shape.position.copy(this.position);
+      this.sprite.position.x += math.truncate(this.deltaX());
+      this.sprite.position.y += math.truncate(this.deltaY());
     },
     deltaX: function () {
-      return this.x - this.lastPos.x;
+      return this.position.x - this.lastPos.x;
     },
     deltaY: function () {
-      return this.y - this.lastPos.y;
+      return this.position.y - this.lastPos.y;
     }
   });
   module.exports = Body;
+  Object.defineProperty(Body.prototype, "shape", {
+    get: function () {
+      return this._shape;
+    },
+    set: function (s) {
+      s.position = this.position;
+      this._shape = s;
+    }
+  });
 // uRequire v0.6.2-01: END body of original nodejs module
 
 
@@ -10005,7 +10118,7 @@ define(
         pots = this.tree.retrieve(body);
         for (p = 0, pl = pots.length; p < pl; ++p) {
           pot = pots[p];
-          if (pot === body)
+          if (pot.sprite === body.sprite)
             continue;
           if (body.type === C.PHYSICS_TYPE.STATIC && pot.type === C.PHYSICS_TYPE.STATIC)
             continue;
@@ -10021,10 +10134,30 @@ define(
             }
           }
         }
+        body.syncSprite();
       }
     },
-    solveCollision: function (b1, b2) {
-      var col = this._collision, ov = col.overlapV;
+    checkBoundsCollision: function (body) {
+      if (!body.worldBound)
+        return;
+      if (body.x < this.tree.bounds.x) {
+        body.x = this.tree.bounds.x;
+        body.velocity.x *= -body.bounce.x;
+      } else if (body.right > this.tree.bounds.right) {
+        body.x = this.tree.bounds.right - body.width;
+        body.velocity.x *= -body.bounce.x;
+      }
+      if (body.y < this.tree.bounds.y) {
+        body.y = this.tree.bounds.y;
+        body.velocity.y *= -body.bounce.y;
+      } else if (body.bottom > this.tree.bounds.bottom) {
+        body.y = this.tree.bounds.bottom - body.height;
+        body.velocity.y *= -body.bounce.y;
+      }
+    },
+    solveCollision: function (b1, b2, col) {
+      col = col || this._collision;
+      var ov = col.overlapV;
       if (b1.sensor || b2.sensor)
         return;
       if (ov.x)
@@ -10036,10 +10169,6 @@ define(
       } else if (b1.carry && b2.touching & C.DIRECTION.BOTTOM) {
         b2.x += b1.deltaX();
       }
-      b1.syncSprite();
-      b1.syncShape();
-      b2.syncSprite();
-      b2.syncShape();
     },
     _separate: function (b1, b2, over, ax) {
       var v1 = b1.velocity[ax], v2 = b2.velocity[ax];
@@ -10133,7 +10262,7 @@ define(
         this.bodies.splice(i, 1);
     },
     testCircleCircle: function (a, b, response) {
-      var differenceV = T_VECTORS.pop().copy(b.position).sub(a.position), totalRadius = a.r + b.r, totalRadiusSq = totalRadius * totalRadius, distanceSq = differenceV.lengthSq();
+      var differenceV = T_VECTORS.pop().copy(b.position).sub(a.position), totalRadius = a.radius + b.radius, totalRadiusSq = totalRadius * totalRadius, distanceSq = differenceV.lengthSq();
       if (distanceSq > totalRadiusSq) {
         T_VECTORS.push(differenceV);
         return false;
@@ -10145,8 +10274,8 @@ define(
         response.overlap = totalRadius - dist;
         response.overlapN.copy(differenceV.normalize());
         response.overlapV.copy(differenceV).multiplyScalar(response.overlap);
-        response.aInB = a.r <= b.r && dist <= b.r - a.r;
-        response.bInA = b.r <= a.r && dist <= a.r - b.r;
+        response.aInB = a.radius <= b.radius && dist <= b.radius - a.radius;
+        response.bInA = b.radius <= a.radius && dist <= a.radius - b.radius;
       }
       T_VECTORS.push(differenceV);
       return true;
