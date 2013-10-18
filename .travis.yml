@@ -15,6 +15,3 @@ script:
     - grunt urequire:dev
     - grunt replace:dist
     - grunt testci
-
-env:
-    - XUNIT_FILE=./test/result/unit.xml
