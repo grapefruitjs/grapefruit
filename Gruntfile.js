@@ -130,7 +130,9 @@ module.exports = function(grunt) {
                     },
                     log: true,
                     reporter: 'Spec',
-                    run: true
+                    run: true/*,
+                    '--remote-debugger-port': 9000,
+                    '--proxy-type=none': 'none'*/
                 }
             }
         }
