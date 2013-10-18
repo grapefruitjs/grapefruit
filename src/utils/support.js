@@ -84,7 +84,7 @@ var support = {
      * @property htmlAudio
      * @type Boolean
      */
-    htmlAudio: !!document.createElement('audio').canPlayType,
+    htmlAudio: !!document.createElement('audio').canPlayType && !!window.Audio,
 
     /**
      * Whether or not local storage is supported
@@ -111,15 +111,17 @@ var support = {
     gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') !== -1)
 };
 
-var audioTest = new Audio();
+if(support.htmlAudio) {
+    var audioTest = new Audio();
 
-support.codec = {
-    mp3: !!audioTest.canPlayType('audio/mpeg;').replace(/^no$/,''),
-    opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/,''),
-    ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,''),
-    wav: !!audioTest.canPlayType('audio/wav; codecs="1"').replace(/^no$/,''),
-    m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),
-    webm: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')
-};
+    support.codec = {
+        mp3: !!audioTest.canPlayType('audio/mpeg;').replace(/^no$/,''),
+        opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/,''),
+        ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,''),
+        wav: !!audioTest.canPlayType('audio/wav; codecs="1"').replace(/^no$/,''),
+        m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/,''),
+        webm: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/,'')
+    };
+}
 
 module.exports = support;
