@@ -203,10 +203,10 @@ inherit(Polygon, Object, {
     recalc: function() {
         var points = this._points,
             len = points.length,
-            p1, p2, e, n;
+            p1, p2, e, n, i = 0;
 
         //scale our points
-        for(var i = 0; i < len; i++) {
+        for(i = 0; i < len; i++) {
             if(!this.points[i])
                 this.points[i] = new Vector();
 
@@ -220,7 +220,7 @@ inherit(Polygon, Object, {
         this.edges.length = this.normals.length = 0;
 
         //calculate edges and normals
-        for(var i = 0; i < len; ++i) {
+        for(i = 0; i < len; ++i) {
             p1 = points[i];
             p2 = i < len - 1 ? points[i + 1] : points[0];
             e = p2.clone().sub(p1);
