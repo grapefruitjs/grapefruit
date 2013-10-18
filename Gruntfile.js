@@ -132,17 +132,6 @@ module.exports = function(grunt) {
                     reporter: 'Spec',
                     run: true
                 }
-            },
-            xunit: {
-                src: ['test/unit/index.html'],
-                options: {
-                    mocha: {
-                        ignoreLeaks: false,
-                    },
-                    log: true,
-                    reporter: 'xunit-file',
-                    run: true
-                }
             }
         }
     });
@@ -163,6 +152,6 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['jshint', 'build']);
     grunt.registerTask('build', ['urequire:dev', 'urequire:dist', 'replace:dist']);
     grunt.registerTask('test', ['mocha:dist']);
-    grunt.registerTask('testci', ['jshint']);
+    grunt.registerTask('testci', ['jshint', 'mocha:dist']);
     grunt.registerTask('docs', ['yuidoc']);
 };
