@@ -30,7 +30,7 @@
         "grunt-urequire": "~0.6.0",
         "glob": "~3.2.6",
         "mocha": "~1.13.0",
-        "xunit-file": "~0.0.4"
+        "should": "~2.0.2"
     },
 
     "scripts": {
