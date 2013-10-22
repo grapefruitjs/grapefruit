@@ -429,7 +429,7 @@ define(
   
 // uRequire v0.6.2-01: START body of original nodejs module
   var constants = {
-      version: "0.1.0",
+      version: "@@VERSION",
       RENDERER: {
         AUTO: "auto",
         CANVAS: "canvas",
@@ -841,6 +841,7 @@ define(
       return new Vector(this.x, this.y);
     }
   });
+  Vector.ZERO = new Vector();
   module.exports = Vector;
 // uRequire v0.6.2-01: END body of original nodejs module
 
@@ -6791,12 +6792,13 @@ define(
     overlaps: function (rect) {
       return this.right > rect.x && this.x < rect.right && this.bottom > rect.y && this.y < rect.bottom;
     },
-    toPolygon: function () {
-      return new Polygon(this.x, this.y, [
-        new Vector(),
-        new Vector(this.width, 0),
+    toPolygon: function (pos) {
+      pos = pos || this.position;
+      return new Polygon(this.x - pos.x, this.y - pos.y, [
+        new Vector(pos.x, pos.y),
+        new Vector(this.width, pos.y),
         new Vector(this.width, this.height),
-        new Vector(0, this.height)
+        new Vector(pos.x, this.height)
       ]);
     },
     equals: function (rect) {
@@ -7074,7 +7076,7 @@ define(
         } else if (hv.length === 4) {
           ha = new Rectangle(hv[0], hv[1], hv[2], hv[3]);
         } else {
-          ha = new Polygon(hv);
+          ha = new Polygon(0, 0, hv);
         }
         return ha;
       },
@@ -7915,8 +7917,12 @@ define(
       return this._shape;
     },
     set: function (s) {
-      s.position = this.position;
-      this._shape = s;
+      if (s.toPolygon)
+        this._shape = s.toPolygon();
+      else
+        this._shape = s;
+      this._shape.position = this.position;
+      this._shape.recalc();
     }
   });
 // uRequire v0.6.2-01: END body of original nodejs module
@@ -8310,13 +8316,12 @@ define(
           obj.height = o.height;
           obj.name = o.name;
           obj.type = o.type;
-          obj.hitArea = props.hitArea;
           obj.rotation = o.rotation;
-          obj.sensor = true;
           obj.position.x = o.x;
           obj.position.y = o.y;
           obj.body = new Body(obj);
           obj.body.sensor = true;
+          obj.body.shape = props.hitArea;
           game.physics.addSprite(obj);
           if (this.parent._showPhysics)
             obj.showPhysics();
@@ -8327,13 +8332,13 @@ define(
           obj = game.spritepool.create(o.name, props.texture, props);
           obj.name = o.name;
           obj.type = o.type;
-          obj.hitArea = props.hitArea;
-          obj.mass = props.mass || props.tileprops.mass;
-          obj.inertia = props.inertia || props.tileprops.inertia;
-          obj.friction = props.friction || props.tileprops.friction;
-          obj.sensor = props.sensor || props.tileprops.sensor;
           obj.position.x = o.x;
           obj.position.y = o.y;
+          obj.body.mass = props.mass || props.tileprops.mass;
+          obj.body.inertia = props.inertia || props.tileprops.inertia;
+          obj.body.friction = props.friction || props.tileprops.friction;
+          obj.body.sensor = props.sensor || props.tileprops.sensor;
+          obj.body.shape = props.hitArea;
           var a = props.anchor || props.tileprops.anchor;
           obj.anchor.y = a ? a[1] : 1;
           obj.anchor.x = a ? a[0] : this.parent.orientation === "isometric" ? 0.5 : 0;
@@ -8605,19 +8610,31 @@ define(
       }
       if (!tile) {
         tile = new Tile(texture);
-        tile.mass = props.mass;
         tile.anchor.y = 1;
         this.addChild(tile);
       }
       tile.collisionType = props.type;
       tile.visible = true;
-      tile.hitArea = hitArea;
       tile.interactive = interactive;
       tile.setTexture(texture);
       tile.position.x = position[0];
       tile.position.y = position[1];
-      if (props.mass) {
+      switch (props.body) {
+      case "static":
         tile.body.type = C.PHYSICS_TYPE.STATIC;
+        break;
+      case "kinematic":
+        tile.body.type = C.PHYSICS_TYPE.KINEMATIC;
+        break;
+      default:
+        tile.body.type = C.PHYSICS_TYPE.DYNAMIC;
+        break;
+      }
+      if (hitArea) {
+        tile.body.shape = hitArea;
+      }
+      tile.body.mass = props.mass || 1;
+      if (props.body) {
         this.state.physics.addSprite(tile);
       }
       if (interactive) {

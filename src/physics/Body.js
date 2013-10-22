@@ -206,7 +206,12 @@ Object.defineProperty(Body.prototype, 'shape', {
         return this._shape;
     },
     set: function(s) {
-        s.position = this.position;
-        this._shape = s;
+        if(s.toPolygon)
+            this._shape = s.toPolygon();
+        else
+            this._shape = s;
+
+        this._shape.position = this.position;
+        this._shape.recalc();
     }
 });

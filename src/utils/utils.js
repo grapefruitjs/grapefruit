@@ -346,7 +346,7 @@ var utils = {
         }
         //generic polygon
         else {
-            ha = new Polygon(hv);
+            ha = new Polygon(0, 0, hv);
         }
 
         return ha;
