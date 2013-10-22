@@ -153,15 +153,16 @@ inherit(ObjectGroup, Container, {
                 obj.height = o.height;
                 obj.name = o.name;
                 obj.type = o.type;
-                obj.hitArea = props.hitArea;
                 obj.rotation = o.rotation;
-                obj.sensor = true;
 
                 //these are treated as sensor bodies, so always enable physics
                 obj.position.x = o.x;
                 obj.position.y = o.y;
+
                 obj.body = new Body(obj);
                 obj.body.sensor = true;
+                obj.body.shape = props.hitArea;
+
                 game.physics.addSprite(obj);
 
                 if(this.parent._showPhysics)
@@ -178,13 +179,14 @@ inherit(ObjectGroup, Container, {
                 //assign some values
                 obj.name = o.name;
                 obj.type = o.type;
-                obj.hitArea = props.hitArea;
-                obj.mass = props.mass || props.tileprops.mass;
-                obj.inertia = props.inertia || props.tileprops.inertia;
-                obj.friction = props.friction || props.tileprops.friction;
-                obj.sensor = props.sensor || props.tileprops.sensor;
                 obj.position.x = o.x;
                 obj.position.y = o.y;
+
+                obj.body.mass = props.mass || props.tileprops.mass;
+                obj.body.inertia = props.inertia || props.tileprops.inertia;
+                obj.body.friction = props.friction || props.tileprops.friction;
+                obj.body.sensor = props.sensor || props.tileprops.sensor;
+                obj.body.shape = props.hitArea;
 
                 var a = props.anchor || props.tileprops.anchor;
                 obj.anchor.y = a ? a[1] : 1;

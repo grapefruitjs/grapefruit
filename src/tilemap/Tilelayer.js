@@ -358,22 +358,37 @@ inherit(Tilelayer, Container, {
         //then create a new tile
         if(!tile) {
             tile = new Tile(texture);
-            tile.mass = props.mass;
             tile.anchor.y = 1;
             this.addChild(tile);
         }
 
         tile.collisionType = props.type;
         tile.visible = true;
-        tile.hitArea = hitArea;
         tile.interactive = interactive;
 
         tile.setTexture(texture);
         tile.position.x = position[0];
         tile.position.y = position[1];
 
-        if(props.mass) {
-            tile.body.type = C.PHYSICS_TYPE.STATIC;
+        switch(props.body) {
+            case 'static':
+                tile.body.type = C.PHYSICS_TYPE.STATIC;
+                break;
+            case 'kinematic':
+                tile.body.type = C.PHYSICS_TYPE.KINEMATIC;
+                break;
+            default:
+                tile.body.type = C.PHYSICS_TYPE.DYNAMIC;
+                break;
+        }
+
+        if(hitArea) {
+            tile.body.shape = hitArea;
+        }
+
+        tile.body.mass = props.mass || 1;
+
+        if(props.body) {
             this.state.physics.addSprite(tile);
         }
 

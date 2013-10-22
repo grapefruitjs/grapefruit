@@ -134,12 +134,14 @@ inherit(Rectangle, Object, {
      * @method toPolygon
      * @return {Polygon}
      */
-    toPolygon: function() {
-        return new Polygon(this.x, this.y, [
-            new Vector(), //top-left
-            new Vector(this.width, 0), //top-right
+    toPolygon: function(pos) {
+        pos = pos || this.position;
+
+        return new Polygon(this.x - pos.x, this.y - pos.y, [
+            new Vector(pos.x, pos.y), //top-left
+            new Vector(this.width, pos.y), //top-right
             new Vector(this.width, this.height), //bottom-right
-            new Vector(0, this.height) //bottom-left
+            new Vector(pos.x, this.height) //bottom-left
         ]);
     },
 
