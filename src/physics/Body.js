@@ -58,7 +58,6 @@ var Body = function(sprite, shape) {
     this.lastPos = new Vector();
 
     //some temp vars to prevent having to create a bunch each update
-    this._accel = 0;
     this._drag = 0;
     this._vDelta = 0;
     this._accel = 0;
@@ -101,15 +100,14 @@ inherit(Body, Rectangle, {
         return body;
     },
     computeVelocity: function(dt, vel, accel, drag, maxVel) {
-        this._accel = accel * dt;
-        this._drag = drag * dt;
-
         //apply acceleration if there is any
-        if(this._accel) {
-            vel += this._accel;
+        if(accel !== 0) {
+            vel += accel * dt;
         }
         //if no acceleration, then apply drag
-        else if(this._drag) {
+        else if(drag !== 0) {
+            this._drag = drag * dt;
+
             if(vel - this._drag > 0)
                 vel -= this._drag;
             else if(vel + this._drag < 0)
