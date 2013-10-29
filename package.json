@@ -30,7 +30,8 @@
         "grunt-urequire": "~0.6.0",
         "glob": "~3.2.6",
         "mocha": "~1.13.0",
-        "should": "~2.0.2"
+        "should": "~2.0.2",
+        "physicsjs": "git+https://github.com/wellcaffeinated/PhysicsJS.git"
     },
 
     "scripts": {
