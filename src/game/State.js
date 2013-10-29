@@ -2,7 +2,7 @@ var AudioManager = require('../audio/AudioManager'),
     Container = require('../display/Container'),
     World = require('./World'),
     Camera = require('../camera/Camera'),
-    Physics = require('../physics/Physics'),
+    PhysicsSystem = require('../physics/PhysicsSystem'),
     math = require('../math/math'),
     inherit = require('../utils/inherit');
 
@@ -22,7 +22,7 @@ var AudioManager = require('../audio/AudioManager'),
  *
  *      game.enableState(state); //or you can use the name from the ctor 'battle'
  */
-var State = function(game, name) {
+var State = function(game, name, physOptions) {
     if(!name)
         name = math.randomString();
 
@@ -68,7 +68,7 @@ var State = function(game, name) {
      * @type Physics
      * @readOnly
      */
-    this.physics = new Physics(this);
+    this.physics = new PhysicsSystem(this, physOptions);
 
     /**
      * The camera you view the scene through, will be set

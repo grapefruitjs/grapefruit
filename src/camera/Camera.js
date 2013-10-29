@@ -238,9 +238,22 @@ inherit(Camera, Container, {
      * @return {Camera} Returns iteself for chainability
      */
     focusSprite: function(spr) {
+        var x = spr.localTransform[2],
+            y = spr.localTransform[5],
+            p = spr.parent;
+
+        //need the transform of the sprite that doesn't take into account
+        //the world object. So add up the local transforms to that point.
+        while(p && p !== this.world) {
+            x += p.localTransform[2];
+            y += p.localTransform[5];
+            p = p.parent;
+        }
+
         return this.focus(
-            math.round(spr.position.x),
-            math.round(spr.position.y)
+            //multiple the calculated point by the world scale for this sprite
+            math.floor(x * spr.worldTransform[0]),
+            math.floor(y * spr.worldTransform[4])
         );
     },
     /**

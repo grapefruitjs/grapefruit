@@ -159,8 +159,6 @@ var Tilemap = function(state, map, tilesetTextures) {
     var w = this.game.state.active.world;
     w.bounds.width = Math.max(w.bounds.width, this.realSize.x);
     w.bounds.height = Math.max(w.bounds.height, this.realSize.y);
-
-    this.state.physics.tree.setBounds(w.bounds.clone());
 };
 
 inherit(Tilemap, Container, {

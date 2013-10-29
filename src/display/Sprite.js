@@ -1,6 +1,6 @@
 var EventEmitter = require('../utils/EventEmitter'),
     Rectangle = require('../geom/Rectangle'),
-    Body = require('../physics/Body'),
+    PhysicsTarget = require('../physics/PhysicsTarget'),
     inherit = require('../utils/inherit'),
     Texture = require('./Texture'),
     math = require('../math/math'),
@@ -23,6 +23,7 @@ var EventEmitter = require('../utils/EventEmitter'),
  */
 var Sprite = function(anims, speed, start) {
     EventEmitter.call(this);
+    PhysicsTarget.call(this);
 
     if(!anims) {
         anims = Texture.__default;
@@ -132,8 +133,6 @@ var Sprite = function(anims, speed, start) {
     this.playing = false;
 
     this.hitArea = this.hitArea || new Rectangle(0, 0, this.width, this.height);
-
-    this.body = new Body(this);
 
     //show first frame
     this.goto(0, this.currentAnimation);
@@ -267,10 +266,7 @@ inherit(Sprite, PIXI.Sprite, {
     destroy: function() {
         this.stop();
 
-        if(this._physics) {
-            this._physics.removeSprite(this);
-            this._physics = null;
-        }
+        this.disablePhysics();
 
         if(this.parent)
             this.parent.removeChild(this);
