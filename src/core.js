@@ -95,9 +95,7 @@ var gf = {
     ParticleSystem:     require('./particles/ParticleSystem'),
 
     //physics
-    Body:               require('./physics/Body'),
-    Physics:            require('./physics/Physics'),
-    Collision:          require('./physics/Collision'),
+    PhysicsSystem:      require('./physics/PhysicsSystem'),
 
     //text
     BitmapText:         require('./text/BitmapText'),

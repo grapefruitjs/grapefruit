@@ -211,8 +211,10 @@ inherit(Tilelayer, Container, {
 
         //use the canvas as a texture for a tile to display
         var tile = new Tile(Texture.fromCanvas(canvas));
-        tile.position.x = cx * this.chunkSize.x;
-        tile.position.y = cy * this.chunkSize.y;
+        tile.setPosition(
+            cx * this.chunkSize.x,
+            cy * this.chunkSize.y
+        );
 
         if(!this.tiles[cx])
             this.tiles[cx] = {};
@@ -288,7 +290,8 @@ inherit(Tilelayer, Container, {
      */
     clearTile: function(tile, remove) {
         tile.visible = false;
-        this.state.physics.removeSprite(tile);
+        tile.disablePhysics();
+        //this.state.physics.removeSprite(tile);
 
         if(remove)
             this.removeChild(tile);
@@ -347,7 +350,8 @@ inherit(Tilelayer, Container, {
         if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
             tile = this.tiles[fromTileX][fromTileY];
             this.tiles[fromTileX][fromTileY] = null;
-            this.state.physics.removeSprite(tile);
+            tile.disablePhysics();
+            //this.state.physics.removeSprite(tile);
         }
         //otherwise grab a new tile from the pool
         else {
@@ -358,23 +362,30 @@ inherit(Tilelayer, Container, {
         //then create a new tile
         if(!tile) {
             tile = new Tile(texture);
-            tile.mass = props.mass;
             tile.anchor.y = 1;
             this.addChild(tile);
         }
 
         tile.collisionType = props.type;
         tile.visible = true;
-        tile.hitArea = hitArea;
         tile.interactive = interactive;
 
         tile.setTexture(texture);
-        tile.position.x = position[0];
-        tile.position.y = position[1];
+        tile.setPosition(position[0], position[1]);
 
-        if(props.mass) {
-            tile.body.type = C.PHYSICS_TYPE.STATIC;
-            this.state.physics.addSprite(tile);
+        if(hitArea) {
+            tile.hitArea = hitArea;
+        }
+
+        if(props.body === 'static') {
+            tile.mass = Infinity;
+        } else {
+            tile.mass = props.mass || 0;
+        }
+
+        if(tile.mass) {
+            tile.enablePhysics(this.state.physics);
+            //this.state.physics.addSprite(tile);
         }
 
         //pass through all events

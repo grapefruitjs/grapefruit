@@ -9,11 +9,9 @@ var inherit = require('../utils/inherit'),
  * @constructor
  * @param x {Number} The X origin of the polygon, all X coords for all points are relative to this
  * @param y {Number} The Y origin of the polygon, all Y coords for all points are relative to this
- * @param points* {Array<Vector>|Array<Number>|Point...|Number...} This can be an array of Vectors that form the polygon,
- *      a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arugments passed can be
- *      all the points of the polygon e.g. `new Polygon(X, Y, new Vector(), new Vector(), ...)`, or the
- *      arguments passed can be flat x,y values e.g. `new Polygon(X, Y, x,y, x,y, x,y, ...)` where `x` and `y` are
- *      Numbers.
+ * @param points {Array<Vector>|Array<Number>} This can be an array of Vectors that form the polygon,
+ *      a flat array of numbers that will be interpreted as [x,y, x,y, ...]
+ * @param scale {Number} The scale of the polygon
  */
 var Polygon = function(x, y, points, scale) {
     /**
@@ -75,10 +73,6 @@ var Polygon = function(x, y, points, scale) {
      * @readOnly
      */
     this.normals = [];
-
-    //if points isn't an array, use arguments as the array
-    if(!(points instanceof Array))
-        points = Array.prototype.slice.call(arguments, 2);
 
     //if this is a flat array of numbers, convert it to points
     if(typeof points[0] === 'number') {
