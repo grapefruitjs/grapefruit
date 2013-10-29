@@ -96,6 +96,7 @@ var gf = {
 
     //physics
     PhysicsSystem:      require('./physics/PhysicsSystem'),
+    PhysicsTarget:      require('./physics/PhysicsTarget'),
 
     //text
     BitmapText:         require('./text/BitmapText'),
