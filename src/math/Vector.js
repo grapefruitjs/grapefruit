@@ -499,4 +499,6 @@ inherit(Vector, Object, {
     }
 });
 
+Vector.ZERO = new Vector();
+
 module.exports = Vector;

@@ -3,7 +3,6 @@ var Container = require('../display/Container'),
     Polygon = require('../geom/Polygon'),
     Ellipse = require('../geom/Ellipse'),
     Rectangle = require('../geom/Rectangle'),
-    Body = require('../physics/Body'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
     math = require('../math/math');
@@ -153,19 +152,16 @@ inherit(ObjectGroup, Container, {
                 obj.height = o.height;
                 obj.name = o.name;
                 obj.type = o.type;
-                obj.hitArea = props.hitArea;
                 obj.rotation = o.rotation;
-                obj.sensor = true;
 
                 //these are treated as sensor bodies, so always enable physics
                 obj.position.x = o.x;
                 obj.position.y = o.y;
-                obj.body = new Body(obj);
-                obj.body.sensor = true;
-                game.physics.addSprite(obj);
 
-                if(this.parent._showPhysics)
-                    obj.showPhysics();
+                obj.sensor = true;
+                obj.hitArea = props.hitArea;
+
+                obj.enablePhysics(game.physics);
             } else {
                 //some variable for the user if they want them
                 //these will be passed through to a custom sprite if wanted
@@ -178,23 +174,21 @@ inherit(ObjectGroup, Container, {
                 //assign some values
                 obj.name = o.name;
                 obj.type = o.type;
-                obj.hitArea = props.hitArea;
+                obj.position.x = o.x;
+                obj.position.y = o.y;
+
                 obj.mass = props.mass || props.tileprops.mass;
                 obj.inertia = props.inertia || props.tileprops.inertia;
                 obj.friction = props.friction || props.tileprops.friction;
                 obj.sensor = props.sensor || props.tileprops.sensor;
-                obj.position.x = o.x;
-                obj.position.y = o.y;
+                obj.hitArea = props.hitArea;
 
                 var a = props.anchor || props.tileprops.anchor;
                 obj.anchor.y = a ? a[1] : 1;
                 obj.anchor.x = a ? a[0] : (this.parent.orientation === 'isometric' ? 0.5 : 0);
 
-                if(props.mass || props.tileprops.mass) {
+                if(obj.mass) {
                     obj.enablePhysics(game.physics);
-
-                    if(this.parent._showPhysics)
-                        obj.showPhysics();
                 }
 
                 if(props.tileprops) {
@@ -208,7 +202,7 @@ inherit(ObjectGroup, Container, {
                         obj.anchor.y = a ? a[1] : 0;
                     }
 
-                    //IDK if this is right
+                    //TODO: IDK if this is the correct angle, there are no docs for `rotatedCW`
                     if(props.tileprops.rotatedCW) {
                         obj.rotation = math.degreesToRadians(45);
                     }

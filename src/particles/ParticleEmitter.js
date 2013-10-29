@@ -26,9 +26,6 @@ var ParticleEmitter = function(name) {
     this.minRotation = -2 * Math.PI;
     this.maxRotation = 2 * Math.PI;
     this.gravity = new Vector(0, 5);
-    this.drag = new Vector();
-    this.angularDrag = 0;
-    this.bounce = new Vector();
 
     //the spread of the emitted particles
     this.spread = Math.PI / 32;
@@ -113,8 +110,6 @@ inherit(ParticleEmitter, Container, {
             this._particle = sprite;
             this._textures = [sprite.texture];
         }
-
-        this._particle.body.allowCollide = collide;
     },
     _get: function() {
         if(this._emitted >= this._total || this._emitted > this.maxParticles)
@@ -148,8 +143,10 @@ inherit(ParticleEmitter, Container, {
             return;
 
         //set optionally random position
-        part.position.x = math.randomInt(0, this.width);
-        part.position.y = math.randomInt(0, this.height);
+        part.setPosition(
+            math.randomInt(0, this.width),
+            math.randomInt(0, this.height)
+        );
 
         //set scale
         part.scale.x = part.scale.y = math.randomReal(this.minScale, this.maxScale);
@@ -157,21 +154,13 @@ inherit(ParticleEmitter, Container, {
         //set lifespan
         part.lifespan = this.lifespan;
 
-        //sync physics body
-        part.body.x = part.position.x;
-        part.body.y = part.position.y;
+        //set velocity
+        part.setVelocity(
+            math.randomInt(this.minSpeed.x, this.maxSpeed.x),
+            math.randomInt(this.minSpeed.y, this.maxSpeed.y)
+        );
 
-        part.body.velocity.x = math.randomInt(this.minSpeed.x, this.maxSpeed.x);
-        part.body.velocity.y = math.randomInt(this.minSpeed.y, this.maxSpeed.y);
-
-        part.body.lastPos.copy(part.position);
-        part.body.bounce.copy(this.bounce);
-        part.body.gravity.copy(this.gravity);
-
-        part.body.angularVelocity = math.randomInt(this.minRotation, this.maxRotation);
-
-        part.body.drag.copy(this.drag);
-        part.body.angularDrag = this.angularDrag;
+        //part.body.angularVelocity = math.randomInt(this.minRotation, this.maxRotation);
     },
     update: function(dt) {
         var t = dt * 1000;
