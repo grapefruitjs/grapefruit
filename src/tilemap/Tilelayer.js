@@ -6,8 +6,7 @@ var Container = require('../display/Container'),
     math = require('../math/math'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
-    support = require('../utils/support'),
-    C = require('../constants');
+    support = require('../utils/support');
 
 /**
  * The Tilelayer is the visual tiled layer that actually displays on the screen
