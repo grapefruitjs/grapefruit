@@ -64,8 +64,8 @@ describe('core', function() {
             'ParticleSystem',
 
             //physics
-            'Physics',
-            'Body',
+            'PhysicsSystem',
+            'PhysicsTarget',
 
             //utils
             'utils',
