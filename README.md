@@ -11,11 +11,11 @@ Some features that GrapeFruit gives you:
 
  - Rendering Engine (WebGL, with Canvas fallback)
  - Full featured [Tiled Map Editor](http://www.mapeditor.org/) support
- - Simple Physics System (collisions, gravity, bounce, and more)
+ - Physics System via [Chipmunk-js](https://github.com/josephg/Chipmunk-js)
  - Audio Manager (WebAudio API with HTML5 Audio fallback)
  - Input Manager (keyboard, mouse, touch, and gamepad)
  - Camera Effects (Shake, Fade, Flash, Scanlines, and more)
- - GUI system (for HUDs and menus)
+ - GUI support (for HUDs and menus)
  - Bitmap and System Text
  - Plugin system
  - Asset Preloader
@@ -31,25 +31,24 @@ Grapefruit is still a baby, and it is only me working on it in my spare time, so
 Below is a list of the features I want to add in. If there is something else I missed, please open an
 [Issue](https://github.com/englercj/grapefruit/issues) and we can talk about it.
 
-Extra Features:
+Prioritized list of coming features:
 
-- Isometric maps
-- Multiple Cameras
-- Touch Gestures
+- Deterministic RNG
 - Pathfinding
 - Bitmap Alpha Masks
-- Deterministic RNG
-- Particles
+- Isometric maps
+- Touch Gestures
+- Multiple Cameras
 
 ## Plugins
 
-Here is a list of some plugins for grapefruit that are planned, or in development:
+Here is a list of some plugins for grapefruit that are planned, or in development. The list is prioritized.
 
+- [Debugger](https://github.com/grapefruitjs/gf-debug)
+- Saves and Storage
 - UI Pack
 - Achievements
-- Saves and Storage
 - Spines and spinal animation
-- [Debugger](https://github.com/grapefruitjs/gf-debug)
 
 ## Rendering Engine
 
@@ -58,8 +57,8 @@ If you haven't heard of this library I suggest you check it out, it is a super p
 
 ## Physics Engine
 
-Grapefruit uses a simple "Arcade" style physics engine. Basic velocity and acceleration is simulated along with gravity,
-bounce, and collisions. Later on more advanced physics via Box2D or Chipmunk may be integrated.
+Grapefruit leverages [Chipmunk-js](https://github.com/josephg/Chipmunk-js) for 2D physics. Because of this powerful
+library grapefruit is able to support velocity, ellasticity, gravity, friction, collisions, and much more.
 
 ## Tile Engine
 
