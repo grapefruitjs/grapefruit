@@ -109,10 +109,7 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     addChild: function(child) {
-        if(child._container !== this) {
-            child._container = this;
-            PIXI.DisplayObjectContainer.prototype.addChild.apply(this, arguments);
-        }
+        PIXI.DisplayObjectContainer.prototype.addChild.apply(this, arguments);
 
         return child;
     },
@@ -126,10 +123,7 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     addChildAt: function(child) {
-        if(child._container !== this) {
-            child._container = this;
-            PIXI.DisplayObjectContainer.prototype.addChildAt.apply(this, arguments);
-        }
+        PIXI.DisplayObjectContainer.prototype.addChildAt.apply(this, arguments);
 
         return child;
     },
@@ -142,10 +136,7 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     removeChild: function(child) {
-        if(child._container === this) {
-            child._container = null;
-            PIXI.DisplayObjectContainer.prototype.removeChild.apply(this, arguments);
-        }
+        PIXI.DisplayObjectContainer.prototype.removeChild.apply(this, arguments);
 
         return child;
     },
@@ -158,10 +149,11 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      */
     removeAllChildren: function() {
         while(this.children.length) {
-            if(this.children[0].destroy)
+            if(this.children[0].destroy) {
                 this.children[0].destroy();
-
-            this.removeChild(this.children[0]);
+            } else {
+                this.removeChild(this.children[0]);
+            }
         }
 
         return this;
@@ -175,9 +167,8 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     bringChildToTop: function(child) {
-        if(child._container === this) {
-            this.removeChild(child);
-            this.addChild(child);
+        if(child.parent === this) {
+            this.addChild(this.removeChild(child));
         }
 
         return child;
