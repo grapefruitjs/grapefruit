@@ -265,7 +265,6 @@ inherit(Sprite, PIXI.Sprite, {
      */
     destroy: function() {
         this.stop();
-
         this.disablePhysics();
 
         if(this.parent)

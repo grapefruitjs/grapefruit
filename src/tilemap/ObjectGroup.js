@@ -286,6 +286,7 @@ inherit(ObjectGroup, Container, {
         return new Rectangle(0, 0, o.width, o.height);
     },
     _getInteractive: function(set, props) {
+        //TODO: This is wrong, if 'false' is set on a lower level a higher level will override
         //first check the lowest level value (on the tile iteself)
         return props.interactive || //obj interactive
                 props.tileprops.interactive || //tile object interactive
@@ -300,19 +301,11 @@ inherit(ObjectGroup, Container, {
      * @return {ObjectGroup} Returns itself for chainability
      */
     despawn: function() {
-        //remove each sprite from the game
-        for(var i = this.children.length - 1; i > -1; --i) {
-            var c = this.children[i];
-
-            if(c.destroy)
-                c.destroy();
-        }
-
-        return this;
+        return Container.prototype.removeAllChildren.call(this);
     },
     destroy: function() {
         this.despawn();
-        Container.prototype.destroy.call(this);
+        return Container.prototype.destroy.call(this);
     }
 });
 
