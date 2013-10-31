@@ -143,10 +143,6 @@ inherit(PhysicsSystem, Object, {
     nextTick: function(fn) {
         this.tickCallbacks.push(fn);
     },
-    reindexStatic: function() {
-        this.actionQueue.push(['reindexStatic']);
-        this.act();
-    },
     getCollisionType: function(spr) {
         if(spr instanceof Tile) {
             return PhysicsSystem.COLLISION_TYPE.TILE;
@@ -154,9 +150,9 @@ inherit(PhysicsSystem, Object, {
             return PhysicsSystem.COLLISION_TYPE.SPRITE;
         }
     },
-    add: function(spr) {
-        //already in system
-        if(spr._phys && spr._phys.body)
+    add: function(spr, cb) {
+        //already in space with body(s)
+        if(spr._phys.active)
             return;
 
         var body = this._createBody(spr),
@@ -182,77 +178,100 @@ inherit(PhysicsSystem, Object, {
             control.gear = cgear;
         }
 
+        spr._phys.active = true;
         this.actionQueue.push(['add', {
             spr: spr,
             body: body,
             shape: shape,
             control: control
-        }]);
+        }, cb]);
         this.act();
     },
-    remove: function(spr) {
-        if(!spr || !spr._phys || !spr._phys.body || !spr._phys.shape)
+    remove: function(spr, cb) {
+        if(!spr || !spr._phys.active)
             return;
 
-        this.actionQueue.push(['remove', spr._phys]);
+        spr._phys.active = false;
+        this.actionQueue.push(['remove', spr._phys, cb]);
         this.act();
     },
-    reindex: function(spr) {
-        if(!spr || !spr._phys || !spr._phys.shape)
+    reindex: function(spr, cb) {
+        if(!spr || !spr._phys.active)
             return;
 
-        this.actionQueue.push(['reindex', spr._phys.shape]);
+        spr._phys._cb = cb;
+        this.actionQueue.push(['reindex', spr._phys.shape, cb]);
         this.act();
     },
-    addCustomShape: function(spr, poly, sensor) {
-        if(spr && spr._phys && spr._phys.body) {
-            var s = this._createShape(spr, spr._phys.body, poly);
+    reindexStatic: function(cb) {
+        this.actionQueue.push(['reindexStatic', null, cb]);
+        this.act();
+    },
+    addCustomShape: function(spr, poly, sensor, cb) {
+        if(!spr || !spr._phys.body)
+            return;
 
-            s.setSensor(sensor);
-            s.width = spr.width;
-            s.height = spr.height;
-            s.sprite = spr;
-            s.setElasticity(0);
-            s.setSensor(sensor !== undefined ? sensor : spr.sensor);
-            s.setCollisionType(this.getCollisionType(spr));
-            s.setFriction(spr.friction || 0);
+        var s = this._createShape(spr, spr._phys.body, poly);
 
-            this.actionQueue.push(['addCustomShape', { spr: spr, shape: s }]);
-            this.act();
+        s.setSensor(sensor);
+        s.width = spr.width;
+        s.height = spr.height;
+        s.sprite = spr;
+        s.setElasticity(0);
+        s.setSensor(sensor !== undefined ? sensor : spr.sensor);
+        s.setCollisionType(this.getCollisionType(spr));
+        s.setFriction(spr.friction || 0);
 
-            return s;
-        }
+        this.actionQueue.push(['addCustomShape', { spr: spr, shape: s }, cb]);
+        this.act();
+
+        return s;
     },
     setMass: function(spr, mass) {
-        if(spr && spr._phys && spr._phys.body)
-            spr._phys.body.setMass(mass);
+        if(!spr || !spr._phys.body)
+            return;
+
+        spr._phys.body.setMass(mass);
     },
     setVelocity: function(spr, vel) {
-        //update control body velocity (and pivot contraint makes regular follow)
-        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
-            spr._phys.control.body.setVel(vel);
+        if(!spr)
+            return;
 
+        //update control body velocity (and pivot contraint makes regular follow)
+        if(spr._phys.control) {
+            spr._phys.control.body.setVel(vel);
+        }
         //if no control body then update real body
-        else if(spr && spr._phys && spr._phys.body)
+        else {
             spr._phys.body.setVel(vel);
+        }
     },
     setPosition: function(spr, pos) {
+        if(!spr)
+            return;
+
         //update body position
-        if(spr && spr._phys && spr._phys.body)
+        if(spr._phys.body) {
             spr._phys.body.setPos(pos);
+        }
 
         //update control body position
-        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
+        if(spr._phys.control) {
             spr._phys.control.body.setPos(pos);
+        }
     },
     setRotation: function(spr, rads) {
-        //update control body rotation (and gear contraint makes regular follow)
-        if(spr && spr._phys && spr._phys.control && spr._phys.control.body)
-            spr._phys.control.body.setAngle(rads);
+        if(!spr)
+            return;
 
+        //update control body rotation (and gear contraint makes regular follow)
+        if(spr._phys.control) {
+            spr._phys.control.body.setAngle(rads);
+        }
         //if no control body then update real body
-        else if(spr && spr._phys && spr._phys.body)
+        else if(spr._phys.body) {
             spr._phys.body.setAngle(rads);
+        }
 
     },
     update: function(dt) {
@@ -277,6 +296,7 @@ inherit(PhysicsSystem, Object, {
             spr.position.y = shape.body.p.y;// + ((spr.anchor.y * shape.height) - (shape.height / 2));
             spr.rotation = shape.body.a;
 
+            //the sprite has changed due to a physics update, emit that event
             spr.emit('physUpdate');
         });
     },
@@ -322,7 +342,11 @@ inherit(PhysicsSystem, Object, {
         if(this.space.locked) {
             this.space.addPostStepCallback(this.onPostStep.bind(this));
         } else {
-            this.onPostStep();
+            //for async behavior
+            var self = this;
+            setTimeout(function() {
+                self.onPostStep();
+            }, 1);
         }
     },
     pause: function() {
@@ -332,7 +356,7 @@ inherit(PhysicsSystem, Object, {
         this._paused = false;
     },
     skip: function(num) {
-        this._skip = num;
+        this._skip += num;
     },
     skipNext: function() {
         this.skip(1);
@@ -342,7 +366,8 @@ inherit(PhysicsSystem, Object, {
         while(this.actionQueue.length) {
             var a = this.actionQueue.shift(),
                 act = a[0],
-                data = a[1];
+                data = a[1],
+                cb = a[2];
 
             switch(act) {
                 case 'add':
@@ -359,7 +384,9 @@ inherit(PhysicsSystem, Object, {
                         this.space.addConstraint(data.control.gear);
                     }
 
-                    data.spr._phys = data;
+                    data.spr._phys.body = data.body;
+                    data.spr._phys.shape = data.shape;
+                    data.spr._phys.control = data.control;
                     break;
 
                 case 'remove':
@@ -399,6 +426,9 @@ inherit(PhysicsSystem, Object, {
                     break;
 
             }
+
+            if(cb)
+                cb.call(this);
         }
     }
 });

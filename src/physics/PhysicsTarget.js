@@ -6,17 +6,17 @@
  */
 module.exports = function() {
     /**
-     * The physics system that this object is a part of. This is advisory only
-     * please use enablePhysics() or disablePhysics() and do not set this value
-     * directly.
+     * The physics namespace that all physics properties go into. Those properties are:
+     *  - system {PhysicsSystem} PhysicsSystem that this object is a part of.
+     *  - active {Boolean} Whether or not this target is actively having physics simulated.
      *
-     * @property _psystem
-     * @type PhysicsSystem
-     * @default null
+     * @property _phys
+     * @type Object
+     * @default {}
      * @private
      * @readOnly
      */
-    this._psystem = null;
+    this._phys = {};
 
     /**
      * The mass of this object, please use setMass to set this value
@@ -43,15 +43,36 @@ module.exports = function() {
      * @method enablePhysics
      * @param system {PhysicsSystem} The system for the sprite to be in
      */
-    this.enablePhysics = function(sys) {
-        if(sys && this._psystem !== sys) {
-            if(this._psystem)
-                this._psystem.remove(this);
+    this.enablePhysics = function(sys, cb) {
+        var self = this;
 
-            this._psystem = sys;
+        if(typeof sys === 'function') {
+            cb = sys;
+            sys = null;
         }
 
-        this._psystem.add(this);
+        //is a system is passed use it
+        if(sys) {
+            //if active, remove from current system
+            if(this._phys.active) {
+                //remove from old system
+                this._phys.system.remove(this, function() {
+                    //add to new system when completed
+                    sys.add(self);
+                });
+            }
+            //if inactive add to new system immediately
+            else {
+                sys.add(this);
+            }
+
+            //reassign new system
+            this._phys.system = sys;
+        }
+        //if no system passed (or same one passed) just add to current stored system
+        else {
+            this._phys.system.add(this);
+        }
 
         return this;
     };
@@ -61,9 +82,10 @@ module.exports = function() {
      *
      * @method disablePhysics
      */
-    this.disablePhysics = function() {
-        if(this._psystem) {
-            this._psystem.remove(this);
+    this.disablePhysics = function(cb) {
+        //if we have a cached system, remove from it
+        if(this._phys.system) {
+            this._phys.system.remove(this, cb);
         }
 
         return this;
@@ -75,9 +97,10 @@ module.exports = function() {
      *
      * @method disablePhysics
      */
-    this.reindex = function() {
-        if(this._psystem) {
-            this._psystem.reindex(this);
+    this.reindex = function(cb) {
+        //if we have a cached system, reindex
+        if(this._phys.system) {
+            this._phys.system.reindex(this, cb);
         }
 
         return this;
@@ -90,8 +113,8 @@ module.exports = function() {
      * @param mass {Number} The new mass of the object
      */
     this.setMass = function(mass) {
-        if(this._psystem) {
-            this._psystem.setMass(this, mass);
+        if(this._phys.system) {
+            this._phys.system.setMass(this, mass);
         }
 
         return this;
@@ -104,8 +127,8 @@ module.exports = function() {
      * @param velocity {Vector} The new velocity of the object
      */
     this.setVelocity = function(vel) {
-        if(this._psystem) {
-            this._psystem.setVelocity(this, vel);
+        if(this._phys.system) {
+            this._phys.system.setVelocity(this, vel);
         }
 
         return this;
@@ -120,8 +143,8 @@ module.exports = function() {
     this.setRotation = function(rads) {
         this.rotation = rads;
 
-        if(this._psystem) {
-            this._psystem.setRotation(this, rads);
+        if(this._phys.system) {
+            this._phys.system.setRotation(this, rads);
         }
 
         return this;
@@ -138,8 +161,8 @@ module.exports = function() {
         this.position.x = x;
         this.position.y = y;
 
-        if(this._psystem) {
-            this._psystem.setPosition(this, this.position);
+        if(this._phys.system) {
+            this._phys.system.setPosition(this, this.position);
         }
 
         return this;
