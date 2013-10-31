@@ -225,6 +225,17 @@ inherit(Tilemap, Container, {
 
         return this;
     },
+    clearTiles: function() {
+        for(var i = 0, il = this.children.length; i < il; ++i) {
+            var o = this.children[i];
+
+            if(o.type === 'tilelayer') {
+                o.clearTiles();
+            }
+        }
+
+        return this;
+    },
     /**
      * Called by a Tilelayer when a tile event occurs. This is so you can listen for
      * the emitted events on the world instead of the tile itself.
@@ -301,6 +312,12 @@ inherit(Tilemap, Container, {
      * @return {Tilemap}
      */
     render: function(x, y, width, height) {
+        //defaults
+        x = x || -this.state.world.position.x;
+        y = y || -this.state.world.position.y;
+        width = width || this.game.width;
+        height = height || this.game.height;
+
         //render the layers
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];

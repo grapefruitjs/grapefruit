@@ -290,7 +290,6 @@ inherit(Tilelayer, Container, {
     clearTile: function(tile, remove) {
         tile.visible = false;
         tile.disablePhysics();
-        //this.state.physics.removeSprite(tile);
 
         if(remove)
             this.removeChild(tile);
@@ -311,6 +310,10 @@ inherit(Tilelayer, Container, {
     moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
         //if off the map, just ignore it
         if(toTileX < 0 || toTileY < 0 || toTileX >= this.parent.size.x || toTileY >= this.parent.size.y) {
+            //remove the from tile's physics
+            if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
+                this.tiles[fromTileX][fromTileY].disablePhysics();
+            }
             return;
         }
 
@@ -350,7 +353,6 @@ inherit(Tilelayer, Container, {
             tile = this.tiles[fromTileX][fromTileY];
             this.tiles[fromTileX][fromTileY] = null;
             tile.disablePhysics();
-            //this.state.physics.removeSprite(tile);
         }
         //otherwise grab a new tile from the pool
         else {
@@ -384,7 +386,6 @@ inherit(Tilelayer, Container, {
 
         if(tile.mass) {
             tile.enablePhysics(this.state.physics);
-            //this.state.physics.addSprite(tile);
         }
 
         //pass through all events
