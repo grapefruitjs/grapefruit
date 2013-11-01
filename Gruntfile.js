@@ -135,6 +135,16 @@ module.exports = function(grunt) {
                     '--proxy-type=none': 'none'*/
                 }
             }
+        },
+        watch: {
+            options: {
+                interrupt: true,
+                spawn: false
+            },
+            src: {
+                files: ['<%= dirs.src %>/**/*.js'],
+                tasks: ['build']
+            }
         }
     });
 
@@ -146,6 +156,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-mocha');
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-urequire');
@@ -156,4 +167,6 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['mocha:dist']);
     grunt.registerTask('testci', ['jshint', 'mocha:dist']);
     grunt.registerTask('docs', ['yuidoc']);
+
+    grunt.registerTask('dev', ['watch:src']);
 };
