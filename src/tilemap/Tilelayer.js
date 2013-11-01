@@ -33,12 +33,12 @@ var Tilelayer = function(map, layer) {
     this.map = map;
 
     /**
-     * The game instance this tilelayer belongs to
+     * The state instance this tilelayer belongs to
      *
-     * @property game
+     * @property state
      * @type Game
      */
-    this.game = map.game;
+    this.state = map.state;
 
     /**
      * The state instance this tilelayer belongs to
@@ -136,6 +136,9 @@ inherit(Tilelayer, Container, {
 
         //render the tiles on the screen
         this._renderTiles(x, y, width, height);
+
+        //reindex the physics for our tiles
+        this.state.physics.reindexStatic();
     },
     //render the map onto a canvas once to use as a preRendered texture
     _preRender: function() {
@@ -489,6 +492,9 @@ inherit(Tilelayer, Container, {
         if(this.hasPhysics) {
             this.parent.parent.physics.reindexStatic();
         }
+
+        //reindex the physics for our tiles
+        this.state.physics.reindexStatic();
     },
     _renderLeft: function(forceNew) {
         //move all the far right tiles to the left side
@@ -547,7 +553,7 @@ inherit(Tilelayer, Container, {
 
         this.clearTiles(true);
 
-        this.game = null;
+        this.state = null;
         this.name = null;
         this.size = null;
         this.tileIds = null;

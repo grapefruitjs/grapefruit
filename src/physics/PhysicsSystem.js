@@ -390,11 +390,13 @@ inherit(PhysicsSystem, Object, {
                     break;
 
                 case 'remove':
-                    if(data.body.space)
+                    if(data.body.space) {
                         this.space.removeBody(data.body);
+                    }
 
-                    if(data.shape.space)
+                    if(data.shape.space) {
                         this.space.removeShape(data.shape);
+                    }
 
                     if(data.customShapes) {
                         for(var i = data.customShapes.length - 1; i > -1; --i) {
@@ -418,8 +420,9 @@ inherit(PhysicsSystem, Object, {
                     break;
 
                 case 'addCustomShape':
-                    if(!data.spr._phys.customShapes)
+                    if(!data.spr._phys.customShapes) {
                         data.spr._phys.customShapes = [];
+                    }
 
                     data.spr._phys.customShapes.push(data.shape);
                     this.space.addShape(data.shape);
