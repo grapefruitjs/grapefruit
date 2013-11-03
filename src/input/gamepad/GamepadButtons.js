@@ -67,7 +67,7 @@ inherit(GamepadButtons, Input, {
 /**
  * Bindable Gamepad Buttons
  *
- * @property GP_BUTTON
+ * @property BUTTON
  * @type Object
  * @static
  */

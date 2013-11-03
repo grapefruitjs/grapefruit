@@ -68,7 +68,7 @@ inherit(GamepadSticks, Input, {
 /**
  * Bindable Gamepad Axes
  *
- * @property GP_AXIS
+ * @property AXIS
  * @type Object
  * @static
  */
