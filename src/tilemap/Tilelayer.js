@@ -136,9 +136,6 @@ inherit(Tilelayer, Container, {
 
         //render the tiles on the screen
         this._renderTiles(x, y, width, height);
-
-        //reindex the physics for our tiles
-        this.state.physics.reindexStatic();
     },
     //render the map onto a canvas once to use as a preRendered texture
     _preRender: function() {
@@ -376,10 +373,7 @@ inherit(Tilelayer, Container, {
 
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);
-
-        if(hitArea) {
-            tile.hitArea = hitArea;
-        }
+        tile.hitArea = hitArea;
 
         if(props.body === 'static') {
             tile.mass = Infinity;
@@ -488,13 +482,6 @@ inherit(Tilelayer, Container, {
             this._renderDown();
             this._panDelta.y += tszY;
         }
-
-        if(this.hasPhysics) {
-            this.parent.parent.physics.reindexStatic();
-        }
-
-        //reindex the physics for our tiles
-        this.state.physics.reindexStatic();
     },
     _renderLeft: function(forceNew) {
         //move all the far right tiles to the left side
