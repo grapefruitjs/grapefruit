@@ -22,17 +22,15 @@
     "dependencies": {},
     "devDependencies": {
         "grunt": "~0.4.1",
-        "grunt-contrib-jshint": "git+https://github.com/englercj/grunt-contrib-jshint.git",
-        "grunt-contrib-connect": "~0.5.0",
-        "grunt-contrib-yuidoc": "~0.5.0",
-        "grunt-contrib-watch": "~0.5.0",
+        "grunt-contrib-jshint": "git+https://github.com/englercj/grunt-contrib-jshint",
+        "grunt-contrib-connect": "~0.5",
+        "grunt-contrib-yuidoc": "~0.5",
+        "grunt-contrib-watch": "~0.5",
         "grunt-mocha": "git+https://github.com/englercj/grunt-mocha.git",
-        "grunt-replace": "~0.5.1",
-        "grunt-urequire": "~0.6.0",
-        "glob": "~3.2.6",
-        "mocha": "~1.13.0",
-        "should": "~2.0.2",
-        "physicsjs": "git+https://github.com/wellcaffeinated/PhysicsJS.git"
+        "grunt-replace": "~0.5",
+        "grunt-urequire": "~0.6",
+        "glob": "~3.2",
+        "should": "~2.0"
     },
 
     "scripts": {
