@@ -485,7 +485,7 @@ inherit(Tilelayer, Container, {
     },
     _renderLeft: function(forceNew) {
         //move all the far right tiles to the left side
-        for(var i = 0; i < this._rendered.height; ++i) {
+        for(var i = 0; i < this._rendered.height + 1; ++i) {
             this.moveTileSprite(
                 forceNew ? -1 : this._rendered.right,
                 forceNew ? -1 : this._rendered.top + i,
@@ -498,7 +498,7 @@ inherit(Tilelayer, Container, {
     },
     _renderRight: function(forceNew) {
         //move all the far left tiles to the right side
-        for(var i = 0; i < this._rendered.height; ++i) {
+        for(var i = 0; i < this._rendered.height + 1; ++i) {
             this.moveTileSprite(
                 forceNew ? -1 : this._rendered.left,
                 forceNew ? -1 : this._rendered.top + i,
@@ -511,7 +511,7 @@ inherit(Tilelayer, Container, {
     },
     _renderUp: function(forceNew) {
         //move all the far bottom tiles to the top side
-        for(var i = 0; i < this._rendered.width; ++i) {
+        for(var i = 0; i < this._rendered.width + 1; ++i) {
             this.moveTileSprite(
                 forceNew ? -1 : this._rendered.left + i,
                 forceNew ? -1 : this._rendered.bottom,
@@ -524,7 +524,7 @@ inherit(Tilelayer, Container, {
     },
     _renderDown: function(forceNew) {
         //move all the far top tiles to the bottom side
-        for(var i = 0; i < this._rendered.width; ++i) {
+        for(var i = 0; i < this._rendered.width + 1; ++i) {
             this.moveTileSprite(
                 forceNew ? -1 : this._rendered.left + i,
                 forceNew ? -1 : this._rendered.top,
