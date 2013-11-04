@@ -285,11 +285,12 @@ describe('math', function() {
         it('should return a random string value', function() {
             gf.math.randomString().should.be.String;
 
-            var i = 0,
+            //This check doesn't make sense since length is not guaranteed
+            /*var i = 0,
                 count = 50;
 
             for(i = 0; i < count; ++i)
-                gf.math.randomString().length.should.be.within(10, 15);
+                gf.math.randomString().length.should.be.within(10, 15);*/
         });
     });
 
