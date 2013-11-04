@@ -238,15 +238,15 @@ inherit(Camera, Container, {
      * @return {Camera} Returns iteself for chainability
      */
     focusSprite: function(spr) {
-        var x = spr.localTransform[2],
-            y = spr.localTransform[5],
+        var x = spr.position.x,
+            y = spr.position.y,
             p = spr.parent;
 
         //need the transform of the sprite that doesn't take into account
-        //the world object. So add up the local transforms to that point.
+        //the world object. So add up the positions not including the world position.
         while(p && p !== this.world) {
-            x += p.localTransform[2];
-            y += p.localTransform[5];
+            x += p.position.x;
+            y += p.position.y;
             p = p.parent;
         }
 
