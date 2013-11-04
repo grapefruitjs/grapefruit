@@ -790,7 +790,7 @@ inherit(AudioPlayer, Object, {
         }
 
         //remove excess inactive nodes
-        for(i = this._nodes.length; i >= 0; --i) {
+        for(i = this._nodes.length - 1; i >= 0; --i) {
             if(inactive <= 5)
                 break;
 
@@ -826,21 +826,21 @@ inherit(AudioPlayer, Object, {
      * @private
      */
     _setupAudioNode: function() {
-        var node = this._nodes,
-            i = this._nodes.length;
+        var nodes = this._nodes,
+            i = nodes.length;
 
         //create gain node
-        node.push((typeof this._manager.ctx.createGain === 'undefined') ? this._manager.ctx.createGainNode : this._manager.ctx.createGain());
-        node[i].gain.value = this._volume;
-        node[i].paused = true;
-        node[i]._pos = 0;
-        node[i].readyState = 4;
-        node[i].connect(this._manager.masterGain);
+        nodes.push(this._manager.ctx.createGain ? this._manager.ctx.createGain() : this._manager.ctx.createGainNode());
+        nodes[i].gain.value = this._volume;
+        nodes[i].paused = true;
+        nodes[i]._pos = 0;
+        nodes[i].readyState = 4;
+        nodes[i].connect(this._manager.masterGain);
 
         //create the panner
-        node[i].panner = this._manager.ctx.createPanner();
-        node[i].panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
-        node[i].panner.connect(node[i]);
+        nodes[i].panner = this._manager.ctx.createPanner();
+        nodes[i].panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
+        nodes[i].panner.connect(node[i]);
 
         return node[i];
     },
