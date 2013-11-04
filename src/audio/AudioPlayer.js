@@ -826,11 +826,9 @@ inherit(AudioPlayer, Object, {
      * @private
      */
     _setupAudioNode: function() {
-        var nodes = this._nodes,
-            i = nodes.length,
-            node = this._manager.ctx.createGain ? this._manager.ctx.createGain() : this._manager.ctx.createGainNode();
+        var node = this._manager.ctx.createGain ? this._manager.ctx.createGain() : this._manager.ctx.createGainNode();
 
-        nodes.push(node);
+        this._nodes.push(node);
 
         //create gain node
         node.gain.value = this._volume;
@@ -842,7 +840,7 @@ inherit(AudioPlayer, Object, {
         //create the panner
         node.panner = this._manager.ctx.createPanner();
         node.panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
-        node.panner.connect(node[i]);
+        node.panner.connect(node);
 
         return node;
     },
