@@ -121,8 +121,13 @@ inherit(Tilelayer, Container, {
      */
     render: function(x, y, width, height) {
         if(this.preRender) {
-            if(!this._preRendered)
+            if(!this._preRendered) {
                 this._preRender();
+            } else {
+                for(var c = this.children.length - 1; c > -1; --c) {
+                    this.children[c].visible = true;
+                }
+            }
 
             return;
         }
@@ -274,7 +279,20 @@ inherit(Tilelayer, Container, {
      * @param remove {Boolean} Should this tile be completely removed (never to bee seen again)
      */
     clearTiles: function(remove) {
-        for(var c = this.children.length - 1; c > -1; --c) {
+        var c;
+
+        if(this.preRender && !remove) {
+            for(c = this.children.length - 1; c > -1; --c) {
+                this.children[c].visible = false;
+            }
+
+            return;
+        }
+
+        //force rerender later
+        this._preRendered = false;
+
+        for(c = this.children.length - 1; c > -1; --c) {
             this.clearTile(this.children[c], remove);
         }
 
