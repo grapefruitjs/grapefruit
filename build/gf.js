@@ -7390,9 +7390,9 @@ define(
         if (!obj || obj.__tiledparsed)
           return obj;
         for (var k in obj) {
-          var v = obj[k];
-          if (!isNaN(v))
-            obj[k] = parseFloat(v, 10);
+          var v = obj[k], n = parseFloat(v, 10);
+          if (n === 0 || n)
+            obj[k] = n;
           else if (v === "true")
             obj[k] = true;
           else if (v === "false")
@@ -8725,8 +8725,13 @@ define(
   inherit(Tilelayer, Container, {
     render: function (x, y, width, height) {
       if (this.preRender) {
-        if (!this._preRendered)
+        if (!this._preRendered) {
           this._preRender();
+        } else {
+          for (var c = this.children.length - 1; c > -1; --c) {
+            this.children[c].visible = true;
+          }
+        }
         return;
       }
       if (!this.tileSize)
@@ -8800,7 +8805,15 @@ define(
       }
     },
     clearTiles: function (remove) {
-      for (var c = this.children.length - 1; c > -1; --c) {
+      var c;
+      if (this.preRender && !remove) {
+        for (c = this.children.length - 1; c > -1; --c) {
+          this.children[c].visible = false;
+        }
+        return;
+      }
+      this._preRendered = false;
+      for (c = this.children.length - 1; c > -1; --c) {
         this.clearTile(this.children[c], remove);
       }
       this.tiles.length = 0;
@@ -9867,10 +9880,10 @@ define(
       return this;
     },
     focusSprite: function (spr) {
-      var x = spr.localTransform[2], y = spr.localTransform[5], p = spr.parent;
+      var x = spr.position.x, y = spr.position.y, p = spr.parent;
       while (p && p !== this.world) {
-        x += p.localTransform[2];
-        y += p.localTransform[5];
+        x += p.position.x;
+        y += p.position.y;
         p = p.parent;
       }
       return this.focus(math.floor(x * spr.worldTransform[0]), math.floor(y * spr.worldTransform[4]));
