@@ -827,22 +827,24 @@ inherit(AudioPlayer, Object, {
      */
     _setupAudioNode: function() {
         var nodes = this._nodes,
-            i = nodes.length;
+            i = nodes.length,
+            node = this._manager.ctx.createGain ? this._manager.ctx.createGain() : this._manager.ctx.createGainNode();
+
+        nodes.push(node);
 
         //create gain node
-        nodes.push(this._manager.ctx.createGain ? this._manager.ctx.createGain() : this._manager.ctx.createGainNode());
-        nodes[i].gain.value = this._volume;
-        nodes[i].paused = true;
-        nodes[i]._pos = 0;
-        nodes[i].readyState = 4;
-        nodes[i].connect(this._manager.masterGain);
+        node.gain.value = this._volume;
+        node.paused = true;
+        node._pos = 0;
+        node.readyState = 4;
+        node.connect(this._manager.masterGain);
 
         //create the panner
-        nodes[i].panner = this._manager.ctx.createPanner();
-        nodes[i].panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
-        nodes[i].panner.connect(node[i]);
+        node.panner = this._manager.ctx.createPanner();
+        node.panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
+        node.panner.connect(node[i]);
 
-        return node[i];
+        return node;
     },
     /**
      * Finishes loading the Web Audio API sound and fires the loaded event
