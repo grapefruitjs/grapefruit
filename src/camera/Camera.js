@@ -138,7 +138,7 @@ var Camera = function(state) {
                 args = Array.prototype.slice.call(arguments),
                 cb = args.pop();
 
-            if(typeof cb !== 'function')
+            if(cb !== undefined && typeof cb !== 'function')
                 args.push(cb);
 
             args.push(this._fxCallback.bind(this, e, key, cb));

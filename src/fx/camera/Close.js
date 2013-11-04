@@ -41,7 +41,7 @@ inherit(Close, Effect, {
         this.gfx.position.x = this.cx;
         this.gfx.position.y = this.cy;
 
-        this.parent.game.activeState.mask = this.gfx;
+        this.parent.state.mask = this.gfx;
 
         if(shape === 'ellipse') {
             this.gfx.scale.y = 0.5;
@@ -58,8 +58,8 @@ inherit(Close, Effect, {
         this.radius = this.sx = this.sy = 0;
         this.gfx.visible = false;
 
-        if(this.parent.game.activeState.mask === this.gfx)
-            this.parent.game.activeState.mask = null;
+        if(this.parent.state.mask === this.gfx)
+            this.parent.state.mask = null;
 
         return this;
     },

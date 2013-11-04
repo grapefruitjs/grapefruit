@@ -87,8 +87,8 @@ var State = function(game, name, physOptions) {
     this.disable();
 
     //add world/camera
-    this.addChild(this.camera);
     this.addChild(this.world);
+    this.addChild(this.camera);
 
     //ensure the camera is the right size
     this.camera.resize(game.width, game.height);
