@@ -356,11 +356,12 @@ var utils = {
             return obj;
 
         for(var k in obj) {
-            var v = obj[k];
+            var v = obj[k],
+                n = parseFloat(v, 10);
 
             //try to massage numbers
-            if(!isNaN(v))
-                obj[k] = parseFloat(v, 10);
+            if(n === 0 || n)
+                obj[k] = n;
             //true values
             else if(v === 'true')
                 obj[k] = true;
