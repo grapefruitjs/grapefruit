@@ -7865,7 +7865,7 @@ define(
           inactive++;
         }
       }
-      for (i = this._nodes.length; i >= 0; --i) {
+      for (i = this._nodes.length - 1; i >= 0; --i) {
         if (inactive <= 5)
           break;
         if (this._nodes[i].paused) {
@@ -7883,17 +7883,17 @@ define(
       }
     },
     _setupAudioNode: function () {
-      var node = this._nodes, i = this._nodes.length;
-      node.push(typeof this._manager.ctx.createGain === "undefined" ? this._manager.ctx.createGainNode : this._manager.ctx.createGain());
-      node[i].gain.value = this._volume;
-      node[i].paused = true;
-      node[i]._pos = 0;
-      node[i].readyState = 4;
-      node[i].connect(this._manager.masterGain);
-      node[i].panner = this._manager.ctx.createPanner();
-      node[i].panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
-      node[i].panner.connect(node[i]);
-      return node[i];
+      var node = this._manager.ctx.createGain ? this._manager.ctx.createGain() : this._manager.ctx.createGainNode();
+      this._nodes.push(node);
+      node.gain.value = this._volume;
+      node.paused = true;
+      node._pos = 0;
+      node.readyState = 4;
+      node.connect(this._manager.masterGain);
+      node.panner = this._manager.ctx.createPanner();
+      node.panner.setPosition(this.pos3d[0], this.pos3d[1], this.pos3d[2]);
+      node.panner.connect(node);
+      return node;
     },
     loadSoundBuffer: function (buffer) {
       this._duration = buffer ? buffer.duration : this._duration;
@@ -9473,7 +9473,7 @@ define(
       this.gfx.visible = true;
       this.gfx.position.x = this.cx;
       this.gfx.position.y = this.cy;
-      this.parent.game.activeState.mask = this.gfx;
+      this.parent.state.mask = this.gfx;
       if (shape === "ellipse") {
         this.gfx.scale.y = 0.5;
       } else {
@@ -9485,8 +9485,8 @@ define(
       Effect.prototype.stop.call(this);
       this.radius = this.sx = this.sy = 0;
       this.gfx.visible = false;
-      if (this.parent.game.activeState.mask === this.gfx)
-        this.parent.game.activeState.mask = null;
+      if (this.parent.state.mask === this.gfx)
+        this.parent.state.mask = null;
       return this;
     },
     update: function (dt) {
@@ -9660,23 +9660,54 @@ define(
     Effect.call(this);
   };
   inherit(Scanlines, Effect, {
-    start: function (color, direction, spacing, thickness, alpha) {
+    start: function (color, axis, spacing, thickness, alpha, cb) {
       Effect.prototype.start.call(this);
+      if (typeof alpha === "function") {
+        cb = alpha;
+        alpha = null;
+      }
+      if (typeof thickness === "function") {
+        cb = thickness;
+        alpha = null;
+        thickness = null;
+      }
+      if (typeof spacing === "function") {
+        cb = spacing;
+        alpha = null;
+        thickness = null;
+        spacing = null;
+      }
+      if (typeof axis === "function") {
+        cb = spacing;
+        alpha = null;
+        thickness = null;
+        spacing = null;
+        axis = null;
+      }
+      if (typeof color === "function") {
+        cb = spacing;
+        alpha = null;
+        thickness = null;
+        spacing = null;
+        axis = null;
+        color = null;
+      }
       color = color || 0;
-      direction = direction || C.AXIS.HORIZONTAL;
+      axis = axis || C.AXIS.HORIZONTAL;
       spacing = spacing || 4;
       thickness = thickness || 1;
       alpha = alpha || 0.3;
+      this.cb = cb;
       var sx = this.parent.size.x, sy = this.parent.size.y;
       this.gfx.clear();
       this.gfx.visible = true;
       this.gfx.beginFill(color, alpha);
-      if (direction & C.AXIS.VERTICAL) {
+      if (axis & C.AXIS.VERTICAL) {
         for (var x = 0; x < sx; x += spacing) {
           this.gfx.drawRect(x, 0, thickness, sy);
         }
       }
-      if (direction & C.AXIS.HORIZONTAL) {
+      if (axis & C.AXIS.HORIZONTAL) {
         for (var y = 0; y < sy; y += spacing) {
           this.gfx.drawRect(0, y, sx, thickness);
         }
@@ -9788,7 +9819,7 @@ define(
     Object.keys(this.fxpools).forEach(function (key) {
       self[key] = function () {
         var e = self.fxpools[key].create(), args = Array.prototype.slice.call(arguments), cb = args.pop();
-        if (typeof cb !== "function")
+        if (cb !== undefined && typeof cb !== "function")
           args.push(cb);
         args.push(this._fxCallback.bind(this, e, key, cb));
         return e.start.apply(e, args);
@@ -13942,8 +13973,8 @@ define(
     this.camera = new Camera(this);
     Container.call(this);
     this.disable();
-    this.addChild(this.camera);
     this.addChild(this.world);
+    this.addChild(this.camera);
     this.camera.resize(game.width, game.height);
   };
   inherit(State, Container, {
