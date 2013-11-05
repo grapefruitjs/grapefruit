@@ -6,7 +6,7 @@ var Rectangle = require('../geom/Rectangle'),
     inherit = require('../utils/inherit'),
     cp = require('../vendor/cp');
 
-var PhysicsSystem = module.exports = function(game, gravity) {
+var PhysicsSystem = function(game, gravity) {
     /**
      * The game instance this system belongs to
      *
@@ -440,3 +440,5 @@ PhysicsSystem.COLLISION_TYPE = {
     SPRITE: 0,
     TILE: 1
 };
+
+module.exports = PhysicsSystem;
