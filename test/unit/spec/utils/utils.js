@@ -2,25 +2,25 @@ describe('utils', function() {
     describe('#_arrayDelim', function() {
         it('should be /[|,]/', function() {
             gf.utils._arrayDelim.should.be.RegExp;
-            gf.utils._arrayDelim.toString().should.equal('[|,]');
+            gf.utils._arrayDelim.toString().should.equal('/[|,]/');
         });
     });
 
     describe('#noop', function() {
         it('should be an empty function', function() {
-            gf.utils.noop.toString().should.equal((function() {}).toString());
+            gf.utils.noop.toString().should.match(/^function\s\(\)\s{\s+}$/);
         });
     });
 
     describe('#getAbsoluteUrl', function() {
         it('should return the absolute version of a url', function() {
-            gf.utils.getAbsoluteUrl('/file/here').should.equal('http://localhost/file/here');
-            gf.utils.getAbsoluteUrl('file/here').should.equal('http://localhost/file/here');
-            gf.utils.getAbsoluteUrl('/here.html').should.equal('http://localhost/here.html');
-            gf.utils.getAbsoluteUrl('here.png').should.equal('http://localhost/here.png');
+            gf.utils.getAbsoluteUrl('/file/here').should.equal('file:///file/here');
+            gf.utils.getAbsoluteUrl('file/here').should.match(/^file:\/\/\/.+\/test\/unit\/file\/here$/);
+            gf.utils.getAbsoluteUrl('/here.html').should.equal('file:///here.html');
+            gf.utils.getAbsoluteUrl('here.png').should.match(/^file:\/\/\/.+\/test\/unit\/here\.png$/);
 
             gf.utils.getAbsoluteUrl('some/big/long/path/that/is/stupid/because/it/is/so/long.jpg')
-                        .should.equal('http://localhost/some/big/long/path/that/is/stupid/because/it/is/so/long.jpg');
+                        .should.match(/^file:\/\/\/.+\/test\/unit\/some\/big\/long\/path\/that\/is\/stupid\/because\/it\/is\/so\/long\.jpg$/);
         });
     });
 
