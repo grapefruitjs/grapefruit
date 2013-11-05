@@ -140,9 +140,30 @@ var Sprite = function(anims, speed, start) {
 
 inherit(Sprite, PIXI.Sprite, {
     /**
+     * Sets the sprite to visible = true
+     *
+     * @method show
+     * @return {Sprite} Returns itself
+     */
+    show: function() {
+        this.visible = true;
+        return this;
+    },
+    /**
+     * Sets the sprite to visible = false
+     *
+     * @method hide
+     * @return {Sprite} Returns itself
+     */
+    hide: function() {
+        this.visible = false;
+        return this;
+    },
+    /**
      * Creates a new Sprite instance with the same values as this one
      *
      * @method clone
+     * @return {Sprite} Returns the new sprite
      */
     clone: function() {
         //make a copy of our animations object
@@ -199,6 +220,7 @@ inherit(Sprite, PIXI.Sprite, {
      * @param frames {Array<Texture>} The array of texture frames
      * @param [speed] {Number} The animation speed
      * @param [loop] {Boolean} Loop the animation or not
+     * @return {Sprite} Returns itself
      */
     addAnimation: function(name, frames, speed, loop) {
         if(typeof name === 'object') {
@@ -221,6 +243,7 @@ inherit(Sprite, PIXI.Sprite, {
      * @method goto
      * @param frame {Number} The index of the frame to start on
      * @param [name] {String} The string name of the animation to go to
+     * @return {Sprite} Returns itself
      */
     goto: function(frame, anim) {
         if(typeof frame === 'string') {
@@ -244,6 +267,7 @@ inherit(Sprite, PIXI.Sprite, {
      * Starts playing the currently active animation
      *
      * @method play
+     * @return {Sprite} Returns itself
      */
     play: function() {
         this.playing = true;
@@ -253,6 +277,7 @@ inherit(Sprite, PIXI.Sprite, {
      * Stops playing the currently active animation
      *
      * @method stop
+     * @return {Sprite} Returns itself
      */
     stop: function() {
         this.playing = false;
@@ -313,20 +338,6 @@ inherit(Sprite, PIXI.Sprite, {
                 this.emit('complete', this.currentAnimation);
             }
         }
-    },
-    /**
-     * Called whenever a collision occurs
-     *
-     * @method onCollide
-     * @param obj {Sprite|Container} The sprite or container that you collide with
-     * @param collision {Collision} Collision data object that contains
-     *      information about the intersection
-     * @return {Boolean} If you return `false` explicitly the engine will *not*
-     *      solve the collision. In this way you can make thing "not collide" if
-     *      you don't want their types to collide.
-     */
-    onCollide: function() {
-        /* To be overriden */
     }
 });
 

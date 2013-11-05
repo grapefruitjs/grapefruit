@@ -102,6 +102,26 @@ var Container = function(settings) {
 
 inherit(Container, PIXI.DisplayObjectContainer, {
     /**
+     * Sets the container to visible = true
+     *
+     * @method show
+     * @return {Container} Returns itself
+     */
+    show: function() {
+        this.visible = true;
+        return this;
+    },
+    /**
+     * Sets the container to visible = false
+     *
+     * @method hide
+     * @return {Container} Returns itself
+     */
+    hide: function() {
+        this.visible = false;
+        return this;
+    },
+    /**
      * Adds a child to the container and returns the child
      *
      * @method addChild
