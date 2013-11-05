@@ -8056,14 +8056,14 @@ define(
       if (sys) {
         if (this._phys.active) {
           this._phys.system.remove(this, function () {
-            sys.add(self);
+            sys.add(self, cb);
           });
         } else {
-          sys.add(this);
+          sys.add(this, cb);
         }
         this._phys.system = sys;
       } else {
-        this._phys.system.add(this);
+        this._phys.system.add(this, cb);
       }
       return this;
     };
@@ -13665,18 +13665,18 @@ define(
   
 // uRequire v0.6.5: START body of original nodejs module
   var Rectangle = require("../geom/Rectangle"), Circle = require("../geom/Circle"), Polygon = require("../geom/Polygon"), Vector = require("../math/Vector"), Tile = require("../tilemap/Tile"), inherit = require("../utils/inherit"), cp = require("../vendor/cp");
-  var PhysicsSystem = module.exports = function (game, gravity) {
-      this.game = game;
-      this.space = new cp.Space();
-      this.gravity = this.space.gravity = gravity !== undefined ? gravity : new Vector(0, 9.87);
-      this.space.sleepTimeThreshold = 0.2;
-      this.space.collisionSlop = 0.1;
-      this.space.addCollisionHandler(PhysicsSystem.COLLISION_TYPE.SPRITE, PhysicsSystem.COLLISION_TYPE.SPRITE, this.onCollisionBegin.bind(this), null, this.onCollisionPostSolve.bind(this), this.onCollisionEnd.bind(this));
-      this.space.addCollisionHandler(PhysicsSystem.COLLISION_TYPE.SPRITE, PhysicsSystem.COLLISION_TYPE.TILE, this.onCollisionBegin.bind(this), null, this.onCollisionPostSolve.bind(this), this.onCollisionEnd.bind(this));
-      this.actionQueue = [];
-      this.tickCallbacks = [];
-      this._skip = 0;
-    };
+  var PhysicsSystem = function (game, gravity) {
+    this.game = game;
+    this.space = new cp.Space();
+    this.gravity = this.space.gravity = gravity !== undefined ? gravity : new Vector(0, 9.87);
+    this.space.sleepTimeThreshold = 0.2;
+    this.space.collisionSlop = 0.1;
+    this.space.addCollisionHandler(PhysicsSystem.COLLISION_TYPE.SPRITE, PhysicsSystem.COLLISION_TYPE.SPRITE, this.onCollisionBegin.bind(this), null, this.onCollisionPostSolve.bind(this), this.onCollisionEnd.bind(this));
+    this.space.addCollisionHandler(PhysicsSystem.COLLISION_TYPE.SPRITE, PhysicsSystem.COLLISION_TYPE.TILE, this.onCollisionBegin.bind(this), null, this.onCollisionPostSolve.bind(this), this.onCollisionEnd.bind(this));
+    this.actionQueue = [];
+    this.tickCallbacks = [];
+    this._skip = 0;
+  };
   inherit(PhysicsSystem, Object, {
     _createBody: function (spr) {
       var body = new cp.Body(spr.mass || 1, spr.inertia || cp.momentForBox(spr.mass || 1, spr.width, spr.height) || Infinity);
@@ -13964,6 +13964,7 @@ define(
     SPRITE: 0,
     TILE: 1
   };
+  module.exports = PhysicsSystem;
 // uRequire v0.6.5: END body of original nodejs module
 
 
