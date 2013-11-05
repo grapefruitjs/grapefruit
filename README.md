@@ -49,6 +49,7 @@ Here is a list of some plugins for grapefruit that are planned, or in developmen
 - UI Pack
 - Achievements
 - Spines and spinal animation
+- Tilemap Generator & Exporter
 
 ## Rendering Engine
 
