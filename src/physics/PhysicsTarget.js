@@ -58,12 +58,12 @@ module.exports = function() {
                 //remove from old system
                 this._phys.system.remove(this, function() {
                     //add to new system when completed
-                    sys.add(self);
+                    sys.add(self, cb);
                 });
             }
             //if inactive add to new system immediately
             else {
-                sys.add(this);
+                sys.add(this, cb);
             }
 
             //reassign new system
@@ -71,7 +71,7 @@ module.exports = function() {
         }
         //if no system passed (or same one passed) just add to current stored system
         else {
-            this._phys.system.add(this);
+            this._phys.system.add(this, cb);
         }
 
         return this;
