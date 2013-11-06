@@ -99,7 +99,7 @@ var Tileset = function(texture, settings) {
      * @type Vector
      */
     this.numTiles = new Vector(
-        math.floor((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), //75 / 
+        math.floor((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)),
         math.floor((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing))
     );
 
