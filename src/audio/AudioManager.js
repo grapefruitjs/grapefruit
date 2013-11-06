@@ -201,19 +201,48 @@ inherit(AudioManager, Object, {
      *
      * @method attach
      * @param sound {AudioPlayer} The player to attach to this manager
+     * @return {AudioPlayer} The newly attached audio player
      */
     attach: function(sound) {
-        //TODO: check name collision
-        this.sounds[sound.key] = sound;
+        if(sound._manager !== this) {
+            //remove from other manager
+            if(sound._manager)
+                sound._manager.detach(sound);
 
-        sound._manager = this;
+            this.sounds[sound.key] = sound;
+            sound._manager = this;
 
-        if(support.webAudio) {
-            for(var i = 0; i < sound._nodes.length; ++i) {
-                sound._nodes[i].disconnect();
-                sound._nodes[i].connect(this.masterGain);
+            if(support.webAudio) {
+                for(var i = 0; i < sound._nodes.length; ++i) {
+                    sound._nodes[i].connect(this.masterGain);
+                }
             }
         }
+
+        return sound;
+    },
+    /**
+     * Detaches an AudioPlayer from this manager, if using webAudio this means
+     * that the sound will disconnect from this masterGain node and stop inheriting
+     * anything that happens to it (such as muting).
+     *
+     * @method detach
+     * @param sound {AudioPlayer} The player to detach from this manager
+     * @return {AudioPlayer} The detached audio player
+     */
+    detach: function(sound) {
+        if(sound._manager !== this) {
+            delete this.sounds[sound.key];
+            sound._manager = null;
+
+            if(support.webAudio) {
+                for(var i = 0; i < sound._nodes.length; ++i) {
+                    sound._nodes[i].disconnect();
+                }
+            }
+        }
+
+        return sound;
     },
     /**
      * Creates a new audio player for a peice of audio
