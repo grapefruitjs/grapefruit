@@ -24,6 +24,8 @@
  * renderTexture.render(doc);  // Renders to center of renderTexture
  * ```
  *
+ * *This is directly exposing [PIXI.RenderTexture](http://www.goodboydigital.com/pixijs/docs/classes/RenderTexture.html)*
+ *
  * @class RenderTexture
  * @extends Texture
  * @constructor

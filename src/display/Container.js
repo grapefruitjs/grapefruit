@@ -6,6 +6,7 @@ var EventEmitter = require('../utils/EventEmitter'),
 
 /**
  * The base display object, that anything being put on the screen inherits from
+ * Container or Sprite at some point. This class extends PIXI's DisplayObjectContainer.
  *
  * @class Container
  * @extends [PIXI.DisplayObjectContainer](http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html)

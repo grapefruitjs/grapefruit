@@ -12,15 +12,16 @@ var AudioManager = require('../audio/AudioManager'),
  * @class State
  * @extends Container
  * @constructor
+ * @param game {Game} The game instance this state belongs to
  * @param [name] {String} The name of this state
- * @param [settings] {Object} All the settings for this game state
- * @param [settings.gravity] {Number} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
+ * @param [physicsOptions] {Object} All the settings for the physics environment
+ * @param [physicsOptions.gravity] {Vectore} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
  * @example
- *      var state = new GameState(game, 'battle');
+ *      var state = game.state.add('battle');
  *      state.addChild(battlePlayer);
  *      state.addChild(enemy);
  *
- *      game.enableState(state); //or you can use the name from the ctor 'battle'
+ *      state.enable();
  */
 var State = function(game, name, physOptions) {
     if(!name)
@@ -99,30 +100,34 @@ inherit(State, Container, {
      * Enables (shows) the game state
      *
      * @method enable
+     * @return {State} Returns itself.
      */
     enable: function() {
-        this.visible = true;
+        this.game.state.enable(this);
 
         return this;
     },
     /**
-     * Disables (hides) the game state
+     * Called internally by `game.resize`. This ensures that the camera
+     * is the correct size, and renders the world with the new viewport size.
      *
-     * @method disable
+     * @method resize
+     * @param width {Number} The width of the new viewport
+     * @param height {Number} The height of the new viewport
+     * @return {State} Returns itself.
+     * @private
      */
-    disable: function() {
-        this.visible = false;
-
-        return this;
-    },
     resize: function(w, h) {
         this.camera.resize(w, h);
         this.world.resize(w, h);
+
+        return this;
     },
     /**
-     * Called by the game each frame to update the camera object
+     * Called by the game each frame to update the state objects.
      *
      * @method update
+     * @param dt {Number} The number of seconds passed since the last update call.
      * @private
      */
     update: function(dt) {

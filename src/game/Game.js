@@ -20,7 +20,7 @@ var StateManager = require('./StateManager'),
  * @extends Object
  * @uses EventEmitter
  * @constructor
- * @param contId {String} The container for the new canvas we will create for the game
+ * @param container {DOMElement|String} The container for the new canvas we will create for the game, or the ID of one
  * @param settings {Object} All the settings for the game instance
  * @param settings.width {Number} The width of the viewport
  * @param settings.height {Number} The height of the viewport
@@ -208,17 +208,6 @@ var Game = function(container, settings) {
      */
     this.offset = new Vector();
 
-    //TODO:
-    //
-    //add (obj factory?)
-    //world (doc for objs?)
-    //camera (should a world own this?)
-    //debug (moved in from gf-debug)
-    //particles (TODO)
-    //
-    //implement state manager, remove state code from here
-    //
-
     /**
      * Holds timing data for the previous loop
      *
@@ -241,6 +230,14 @@ var Game = function(container, settings) {
 };
 
 inherit(Game, Object, {
+    /**
+     * Creates the underlying renderer based on browser support. It will also set's `game.renderMethod` for a user
+     * to be able to check.
+     *
+     * @method _createRenderer
+     * @return {PIXI.WebGLRenderer|PIXI.CanvasRenderer} The renderer to use
+     * @private
+     */
     _createRenderer: function() {
         var method = this.renderMethod,
             render = null;
@@ -274,7 +271,7 @@ inherit(Game, Object, {
         return render;
     },
     /**
-     * Allows you to resize the game area
+     * Allows you to resize the game area.
      *
      * @method resize
      * @param width {Number} Width to resize to
@@ -296,7 +293,7 @@ inherit(Game, Object, {
         return this;
     },
     /**
-     * Requests that the browser go into fullscreen mode
+     * Requests that the browser go into fullscreen mode.
      *
      * @method requestFullscreen
      * @return {Game} Returns itself for chainability
@@ -315,7 +312,7 @@ inherit(Game, Object, {
         return this;
     },
     /**
-     * Begins the render loop
+     * Begins the render loop.
      *
      * @method render
      * @return {Game} Returns itself for chainability
@@ -327,7 +324,7 @@ inherit(Game, Object, {
         return this;
     },
     /**
-     * The looping render tick
+     * The looping render tick.
      *
      * @method _tick
      * @private

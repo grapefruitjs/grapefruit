@@ -3,8 +3,7 @@
  * It is important to know that with the webGL renderer only simple polys can be filled at this stage
  * Complex polys will not be filled. Heres an example of a
  * [complex polygon](http://www.goodboydigital.com/wp-content/uploads/2013/06/complexPolygon.png).
- * see [PIXI.Graphics](http://www.goodboydigital.com/pixijs/docs/classes/Graphics.html)
- * for more information.
+ * *This is directly exposing [PIXI.Graphics](http://www.goodboydigital.com/pixijs/docs/classes/Graphics.html)*
  *
  * @class Graphics
  * @extends [PIXI.DisplayObjectContainer](http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html)

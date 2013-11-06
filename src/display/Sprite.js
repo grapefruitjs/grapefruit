@@ -8,7 +8,7 @@ var EventEmitter = require('../utils/EventEmitter'),
     PIXI = require('../vendor/pixi');
 
 /**
- * The base Sprite class. This class is the base for all images on the screen
+ * The base Sprite class. This class is the base for all images on the screen. This class extends PIXI's Sprite.
  *
  * @class Sprite
  * @extends [PIXI.Sprite](http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html)

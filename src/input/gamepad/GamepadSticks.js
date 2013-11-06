@@ -21,11 +21,10 @@ var GamepadSticks = function() {
     this.threshold = 0.5;
 
     /**
-     * Track the status of each of the axes
+     * Track the status of each of the axes on the gamepad
      *
      * @property axes
      * @type Object
-     * @private
      */
     this.axes = {};
 

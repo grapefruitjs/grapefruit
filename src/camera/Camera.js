@@ -16,12 +16,13 @@ var Container = require('../display/Container'),
     C = require('../constants');
 
 /**
- * A basic Camera object that provides some effects. It also will contain the HUD and GUI
+ * A basic Camera object that provides some effects. It also will contain the GUI
  * to ensure they are using "screen-coords".
  *
  * @class Camera
  * @extends Container
  * @constructor
+ * @param state {State} The game state this camera belongs to
  */
 var Camera = function(state) {
     /**
@@ -130,6 +131,62 @@ var Camera = function(state) {
         close: new ObjectPool(Close, this)
     };
 
+    /**
+     * Flash the screen with a color. This will cover the screen in a
+     * color then fade it out.
+     *
+     * @method flash
+     * @param [color=0xFFFFFF] {Number} The color to flash the screen with
+     * @param [duration=1000] {Number} The time it should take (in milliseconds) to fade out
+     * @param [alpha=1] {Number} The opacity of the initial flash of color (start opacity)
+     * @param [callback] {Function} A callback to call once the animation completes.
+     */
+
+    /**
+     * Fade the screen into a color. This will fade into a color that will
+     * eventually cover the screen.
+     *
+     * @method fade
+     * @param [color=0xFFFFFF] {Number} The color to fade into
+     * @param [duration=1000] {Number} The time it should take (in milliseconds) to fade in
+     * @param [alpha=1] {Number} The opacity to fade into (final opacity)
+     * @param [callback] {Function} A callback to call once the animation completes.
+     */
+
+    /**
+     * Shakes the camera around a bit.
+     *
+     * @method shake
+     * @param [intensity=0.01] {Number} The intensity of the shaking
+     * @param [duration=1000] {Number} The amount of time the screen shakes for (in milliseconds)
+     * @param [direction=gf.AXIS.BOTH] {gf.AXIS} The axis to shake on
+     * @param [callback] {Function} A callback to call once the animation completes.
+     */
+
+    /**
+     * Adds arcade-style scanlines to the camera viewport.
+     *
+     * @method scanlines - color, axis, spacing, thickness, alpha, cb
+     * @param [color=0x000000] {Number} The color for the scanlines to be
+     * @param [axis=gf.AXIS.HORIZONTAL] {gf.AXIS} The axis to draw the lines on
+     * @param [spacing=4] {Number} Number of pixels between each line
+     * @param [thickness=1] {Number} Number of pixels thick each line is
+     * @param [alpha=0.3] {Number} The opacity of the lines
+     * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {Close} The close effect that was created.
+     */
+
+    /**
+     * Performs a "close" animation that will cover the screen with a color.
+     *
+     * @method close
+     * @param [shape='circle'] {String} The shape to close with, can be either 'ellipse', 'circle', or 'rectangle'
+     * @param [duration=1000] {Number} Number of milliseconds for the animation to complete
+     * @param [position] {Vector} The position for the animation to close in on, defaults to camera center
+     * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {Close} The close effect that was created.
+     */
+
     //Dynamic addition of fx shortcuts
     var self = this;
     Object.keys(this.fxpools).forEach(function(key) {
@@ -154,6 +211,16 @@ var Camera = function(state) {
 };
 
 inherit(Camera, Container, {
+    /**
+     * The base callback for camera FX. This is called at the end of each aniamtion to
+     * free the FX class back into the pool.
+     *
+     * @method _fxCallback
+     * @param fx {mixed} The FX instance to free
+     * @param type {String} The name of the instance type
+     * @param [callback] {Function} The user callback to call.
+     * @private
+     */
     _fxCallback: function(fx, type, cb) {
         var ret;
 
@@ -318,6 +385,15 @@ inherit(Camera, Container, {
 
         return this;
     },
+    /**
+     * Checks if a point is outside the bounds of the camera constraints.
+     *
+     * @method _outsideBounds
+     * @param x {Number} The new X position to test
+     * @param y {Number} The new Y position to test
+     * @return {Boolean} true if the camera will move outside bounds to go to this point
+     * @private
+     */
     _outsideBounds: function(x, y) {
         //check if each corner of the camera is within the bounds
         return (

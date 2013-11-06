@@ -21,11 +21,10 @@ var GamepadButtons = function() {
     this.threshold = 0.4;
 
     /**
-     * Track the status of each button
+     * Track the status of each button on the gamepad
      *
      * @property buttons
      * @type Object
-     * @private
      */
     this.buttons = {};
 
