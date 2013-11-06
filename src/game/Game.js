@@ -253,7 +253,6 @@ inherit(Game, Object, {
         else if((method === C.RENDERER.CANVAS || method === C.RENDERER.AUTO) && support.canvas) {
             method = C.RENDERER.CANVAS;
             render = new PIXI.CanvasRenderer(this.width, this.height, this.canvas, this.transparent);
-            //TODO: setSmoothingEnabled based on this.antialias
         }
         else {
             throw new Error('Your render method ("' + method + '") is not supported by this browser!');
