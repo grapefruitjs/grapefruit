@@ -29,6 +29,7 @@ inherit(ObjectFactory, Object, {
      *
      * @method obj
      * @param object {mixed} Any game object you want to add to the parent
+     * @return {mixed} Returns the added object
      */
     obj: function(obj) {
         return this.parent.addChild(obj);
@@ -41,6 +42,7 @@ inherit(ObjectFactory, Object, {
      * @param [frame=null] {String|Number} A specific frame of a sprite sheet to use, either the index or string key
      *      depending on the type of the sheet when loaded.
      * @param [physics=true] {Boolean} Should this sprite be added to the physics simulation?
+     * @return {Sprite} The sprite added
      */
     sprite: function(tx, frame, physics) {
         var spr,
@@ -73,10 +75,10 @@ inherit(ObjectFactory, Object, {
      * @method audio
      * @param key {String} The unique cache key for the preloaded audio
      * @param [settings] {Object} All the settings for the audio player (see AudioManager.add for all settings)
+     * @return {AudioPlayer} The player added
      */
     audio: function(key, settings) {
-        //TODO: Change to use state audio when issue #66 is done!
-        return this.game.audio.addChild(key, settings);
+        return this.state.audio.add(key, settings);
     },
     /**
      * Creates a new tilemap to add to the world
@@ -84,6 +86,7 @@ inherit(ObjectFactory, Object, {
      * @method tilemap
      * @param key {String} The unique cache key for the preloaded tilemap data
      * @param [constrain=true] {Boolean} Should the camera be constrained to this tilemap's size?
+     * @return {Tilemap} The tilemap added
      */
     tilemap: function(key, constrain) {
         var obj = this.game.cache.getTilemap(key) || {},
@@ -124,6 +127,7 @@ inherit(ObjectFactory, Object, {
      * @method gui
      * @param texture {String|Texture} The texture for the item, or the key for one in the cache
      * @param interactive {Boolean} Can the item be interacted with by mouse (clicked, dragged, etc)
+     * @return {GuiItem} The new gui item added
      */
     gui: function(tx, interact) {
         if(typeof tx === 'string')
@@ -138,6 +142,7 @@ inherit(ObjectFactory, Object, {
      * @param text {String} The text for the BitmapText to display
      * @param font {String} The key for the bitmap font loaded into the cache
      * @param interactive {Boolean} Can the item be interacted with by mouse (clicked, dragged, etc)
+     * @return {BitmapText} The bitmap text object added
      */
     bitmaptext: function(text, font, style) {
         if(typeof font === 'string')
