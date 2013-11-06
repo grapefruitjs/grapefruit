@@ -1,7 +1,6 @@
 /**
  * A texture stores the information that represents an image. All textures have a base texture
- * see [PIXI.BaseTexture](http://www.goodboydigital.com/pixijs/docs/classes/BaseTexture.html)
- * for more information.
+ * *This is directly exposing [PIXI.BaseTexture](http://www.goodboydigital.com/pixijs/docs/classes/BaseTexture.html)*
  *
  * @class BaseTexture
  * @uses EventEmitter

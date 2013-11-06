@@ -2,8 +2,8 @@
  * A texture stores the information that represents an image or part of an image. It cannot be added
  * to the display list directly. It is used to desribe how a Sprite looks. If no frame is provided
  * then the whole image is used.
- * See [PIXI.Texture](http://www.goodboydigital.com/pixijs/docs/classes/Texture.html)
- * for more information.
+ * *This is directly exposing [PIXI.Texture](http://www.goodboydigital.com/pixijs/docs/classes/Texture.html)*
+ * though it does add some extra methods.
  *
  * @class Texture
  * @uses EventEmitter

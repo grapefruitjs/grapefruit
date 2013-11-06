@@ -7,12 +7,16 @@ var __AudioCtx = window.AudioContext || window.webkitAudioContext || window.mozA
     __audioctx = support.webAudio ? new __AudioCtx() : null;
 
 /**
- * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
- * The GF Audio API was based on [Howler.js](https://github.com/goldfire/howler.js)
+ * Grapefruit Audio API, provides an easy interface to use WebAudoiAPI with a fallback to HTML5 Audio
+ * The GF Audio API was originally based on [Howler.js](https://github.com/goldfire/howler.js)
+ * Generally you will use this via the `game.audio` or `state.audio` properties.
  *
  * @class AudioManager
  * @extends Object
  * @constructor
+ * @param game {Game} The game instance this manager belongs to
+ * @param parent {AudioManager} The parent audio manager this manager belongs to.
+ *      This is used to create a web audio API node heirarchy.
  */
 var AudioManager = function(game, parent) {
     /**
@@ -214,7 +218,7 @@ inherit(AudioManager, Object, {
     /**
      * Creates a new audio player for a peice of audio
      *
-     * @method create
+     * @method add
      * @param key {String} The unique cache key for the preloaded audio
      * @param [settings] {Object} All the settings for the audio player
      * @param [settings.volume] {Number} The volume of this audio clip
@@ -239,6 +243,13 @@ inherit(AudioManager, Object, {
 
         return this.sounds[key] = audio.player;
     },
+    /**
+     * Removes an audio player from the manager
+     *
+     * @method remove
+     * @param key {String} The unique cache key for the preloaded audio
+     * @return {AudioPlayer} Will return the audio player removed, or false if none was removed
+     */
     remove: function(key) {
         var audio = this.sounds[key];
 
@@ -247,6 +258,8 @@ inherit(AudioManager, Object, {
         }
 
         delete this.sounds[key];
+
+        return audio ? audio : false;
     }
 });
 

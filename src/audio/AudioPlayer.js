@@ -13,11 +13,16 @@ var AudioPlayer = require('./AudioPlayer'),
  * @uses EventEmitter
  * @constructor
  * @param manager {AudioManager} AudioManager instance for this audio player
- * @param audio {ArrayBuffer|Audio} The preloaded audio file object
+ * @param audio {Object} The preloaded audio file object
  * @param audio.data {ArrayBuffer|Audio} The actual audio data
  * @param audio.webAudio {Boolean} Whether the file is using webAudio or not
  * @param audio.decoded {Boolean} Whether the data has been decoded yet or not
- * @param settings {Object} All the settings for this player instance
+ * @param [settings] {Object} All the settings for this player instance
+ * @param [settings.autoplay=false] {Boolean} Whether to automatically start playing the audio file
+ * @param [settings.loop=false] {Boolean} Whether the audio should loop or not
+ * @param [settings.pos3d] {Array<Number>} The 3d position of the audio to play in the form [x, y, z]
+ * @param [settings.sprite] {Object} The audio sprite, if this audio clip has multiple sounds in it.
+ *      This object is in the form `{ 'sound': [start, duration] }`, and you can use them with `.play('sound')`.
  */
 var AudioPlayer = function(manager, audio, settings) {
     EventEmitter.call(this);
@@ -113,12 +118,68 @@ var AudioPlayer = function(manager, audio, settings) {
      */
     this._file = audio;
 
+    /**
+     * The current volume of the player
+     *
+     * @property _volume
+     * @type Number
+     * @private
+     */
     this._volume = 1;
+
+    /**
+     * The full duration of the file to play
+     *
+     * @property _duration
+     * @type Number
+     * @private
+     */
     this._duration = 0;
+
+    /**
+     * Has this player data been loaded?
+     *
+     * @property _loaded
+     * @type Boolean
+     * @private
+     */
     this._loaded = false;
+
+    /**
+     * The manager of the player
+     *
+     * @property _volum_manager
+     * @type AudioManager
+     * @private
+     */
     this._manager = manager;
+
+    /**
+     * Does the browser support WebAudio API
+     *
+     * @property _webAudio
+     * @type Boolean
+     * @private
+     */
     this._webAudio = support.webAudio;
+
+    /**
+     * The actual player nodes, these are either WebAudio Nodes
+     * or HTML5 Audio elements.
+     *
+     * @property _nodes
+     * @type Array
+     * @private
+     */
     this._nodes = [];
+
+    /**
+     * Array of timeouts to track end events
+     *
+     * @property _onendTimer
+     * @type Array
+     * @private
+     */
     this._onendTimer = [];
 
     //mixin user's settings
@@ -128,7 +189,7 @@ var AudioPlayer = function(manager, audio, settings) {
         this._setupAudioNode();
     }
 
-    this.load();
+    this._load();
 };
 
 inherit(AudioPlayer, Object, {
@@ -136,26 +197,27 @@ inherit(AudioPlayer, Object, {
      * Load the audio file for this player, this is called from the ctor
      * there is no reason to call it manually.
      *
-     * @method load
+     * @method _load
      * @return {AudioPlayer}
      * @private
      */
-    load: function() {
+    _load: function() {
         var self = this,
             audio = this._file;
 
         //if using web audio, load up the buffer
         if(audio.webAudio) {
+            //if not yet decoded, decode before loading the buffer
             if(!audio.decoded) {
                 this._manager.ctx.decodeAudioData(audio.data, function(buffer) {
                     if(buffer) {
                         audio.data = buffer;
                         audio.decoded = true;
-                        self.loadSoundBuffer(buffer);
+                        self._loadSoundBuffer(buffer);
                     }
                 });
             } else {
-                this.loadSoundBuffer(audio.data);
+                this._loadSoundBuffer(audio.data);
             }
         }
         //otherwise create some Audio nodes
@@ -278,7 +340,7 @@ inherit(AudioPlayer, Object, {
                 //set the play id to this node and load into context
                 node.id = soundId;
                 node.paused = false;
-                self.refreshBuffer([loop, pos, duration], soundId);
+                self._refreshBuffer([loop, pos, duration], soundId);
                 self._playStart = self._manager.ctx.currentTime;
                 node.gain.value = self._volume;
 
@@ -341,7 +403,7 @@ inherit(AudioPlayer, Object, {
         //if we haven't loaded this sound yet, wait until we play it to pause it
         if(!this._loaded) {
             this.on('play', function() {
-                self.play(id);
+                self.play(id, timerId);
             });
 
             return this;
@@ -392,7 +454,7 @@ inherit(AudioPlayer, Object, {
         //if we haven't loaded this sound yet, wait until we play it to stop it
         if(!this._loaded) {
             this.on('play', function() {
-                self.stop(id);
+                self.stop(id, timerId);
             });
 
             return this;
@@ -489,7 +551,7 @@ inherit(AudioPlayer, Object, {
         //if we haven't loaded this sound yet, wait until it is to seek it
         if(!this._loaded) {
             this.on('load', function() {
-                self.seek(pos);
+                self.seek(pos, id);
             });
 
             return this;
@@ -765,7 +827,7 @@ inherit(AudioPlayer, Object, {
             node = this._setupAudioNode();
             cb(node);
         } else {
-            this.load();
+            this._load();
             node = this._nodes[this.nodes.length - 1];
             node.addEventListener('loadedmetadata', function() {
                 cb(node);
@@ -851,7 +913,7 @@ inherit(AudioPlayer, Object, {
      * @param buffer {Object} The decoded buffer sound source.
      * @private
      */
-    loadSoundBuffer: function(buffer) {
+    _loadSoundBuffer: function(buffer) {
         this._duration = buffer ? buffer.duration : this._duration;
 
         //setup a default sprite
@@ -879,7 +941,7 @@ inherit(AudioPlayer, Object, {
      * @param [id] {String} The play instance ID.
      * @private
      */
-    refreshBuffer: function(loop, id) {
+    _refreshBuffer: function(loop, id) {
         var node = this._nodeById(id);
 
         //setup the buffer source for playback

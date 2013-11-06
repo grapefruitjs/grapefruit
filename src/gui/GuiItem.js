@@ -36,6 +36,14 @@ var GuiItem = function(texture, interactive) {
 };
 
 inherit(GuiItem, Sprite, {
+    /**
+     * Function that is called whenever a mousedown event occurs. This is
+     * used to handle dragging for GUI items.
+     *
+     * @method mousedown
+     * @param evt {InteractionEvent} The interaction event
+     * @private
+     */
     mousedown: function(e) {
         Sprite.prototype.mousedown.call(this, e);
 
@@ -44,11 +52,27 @@ inherit(GuiItem, Sprite, {
 
         this.dragging = e.data.getLocalPosition(e.object.parent);
     },
+    /**
+     * Function that is called whenever a mouseup event occurs. This is
+     * used to handle dragging for GUI items.
+     *
+     * @method mouseup
+     * @param evt {InteractionEvent} The interaction event
+     * @private
+     */
     mouseup: function(e) {
         Sprite.prototype.mouseup.call(this, e);
 
         this.dragging = false;
     },
+    /**
+     * Function that is called whenever a mousemove event occurs. This is
+     * used to handle dragging for GUI items.
+     *
+     * @method mousemove
+     * @param evt {InteractionEvent} The interaction event
+     * @private
+     */
     mousemove: function(e) {
         Sprite.prototype.mousemove.call(this, e);
 

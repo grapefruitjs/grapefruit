@@ -58,9 +58,10 @@ var InputManager = function(game) {
 
 inherit(InputManager, Object, {
     /**
-     * Called each frame to update state info for some input methods
+     * Called internally every frame. Updates all the pointers and gamepad
      *
      * @method update
+     * @param dt {Number} The delta time (in seconds) since the last update
      * @private
      */
     update: function(dt) {

@@ -15,10 +15,10 @@ var Pointers = function(game) {
     Input.call(this, game);
 
     /**
-     * The pointer instances currently being used
+     * The pointer instances currently being used, keyed by an ID
      *
      * @property pointers
-     * @type Array<Pointer>
+     * @type Object<Pointer>
      */
     this.pointers = {};
 
@@ -78,6 +78,14 @@ var Pointers = function(game) {
 };
 
 inherit(Pointers, Input, {
+    /**
+     * Callback that is called when a pointer event occurs.
+     *
+     * @method onPointer
+     * @param name {String} The name of the pointer event with out the 'pointer' prefix
+     * @param evt {DOMEvent} The DOM Event
+     * @private
+     */
     onPointer: function(name, evt) {
         var id = evt.pointerId,
             pointer = this.pointers[id];
@@ -98,6 +106,14 @@ inherit(Pointers, Input, {
 
         this.emit(name, pointer);
     },
+    /**
+     * Called internally every frame. Updates all the pointers
+     *
+     * @method update
+     * @param dt {Number} The delta time (in seconds) since the last update
+     * @return {Pointers} Returns iteself for chainability
+     * @private
+     */
     update: function(dt) {
         var p = this.pointers;
         for(var i = 0; i < p.length; ++i) {
@@ -105,6 +121,8 @@ inherit(Pointers, Input, {
                 p[i].update(dt);
             }
         }
+
+        return this;
     }
 });
 
