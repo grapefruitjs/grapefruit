@@ -23,8 +23,8 @@ var utils = require('../utils/utils'),
  * @param [settings.tileoffset.x=0] {Number} The X offset to apply to the tile
  * @param [settings.tileoffset.y=0] {Number} The Y offset to apply to the tile
  * @param [settings.properties] {Object} User-defined, custom properties that apply to the tileset
- * @param [settings.tileproperties] {Object} User-defined, custom properties that apply to tiles in the tileset
- *  The keys of this object should the tile id to apply to
+ * @param [settings.tileproperties] {Object} User-defined, custom properties that apply to tiles in the tileset.
+ *          The keys of this object should the tile id of the properties
  * @param [settings.imagewidth] {Number} An override for the image width
  * @param [settings.imageheight] {Number} An override for the image height
  */
@@ -87,7 +87,7 @@ var Tileset = function(texture, settings) {
         settings.tileoffset ? settings.tileoffset.y : 0
     );
 
-    //TODO: Support for "tileoffset," "terraintypes," "image"
+    //TODO: Support for terraintypes," "image"
     //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
 
     //Custom/Optional properties
