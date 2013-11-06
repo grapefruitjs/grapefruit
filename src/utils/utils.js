@@ -182,18 +182,6 @@ var utils = {
                 } else if(curVal instanceof Vector && typeof newVal === 'number') {
                     curVal.set(newVal, newVal);
                 }
-                //massage points
-                else if(curVal.x !== undefined && newVal instanceof Array) {
-                    curVal.x = parseFloat(newVal[0], 10) || 0;
-                    curVal.y = parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0;
-                } else if(curVal.x !== undefined && typeof newVal === 'string') {
-                    var a2 = newVal.split(utils._arrayDelim, 2);
-                    curVal.x = parseFloat(a2[0], 10) || 0;
-                    curVal.y = parseFloat(a2[1], 10) || parseFloat(a2[0], 10) || 0;
-                } else if(curVal.x !== undefined && typeof newVal === 'number') {
-                    curVal.x = newVal;
-                    curVal.y = newVal;
-                }
                 //massage arrays
                 else if(curVal instanceof Array && typeof newVal === 'string') {
                     obj[key] = newVal.split(utils._arrayDelim);
