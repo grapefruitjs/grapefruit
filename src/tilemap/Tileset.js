@@ -87,7 +87,7 @@ var Tileset = function(texture, settings) {
         settings.tileoffset ? settings.tileoffset.y : 0
     );
 
-    //TODO: Support for terraintypes," "image"
+    //TODO: Support for "terraintypes," "image"
     //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
 
     //Custom/Optional properties
