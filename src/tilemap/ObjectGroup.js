@@ -202,7 +202,7 @@ inherit(ObjectGroup, Container, {
                         obj.anchor.y = a ? a[1] : 0;
                     }
 
-                    //TODO: IDK if this is the correct angle, there are no docs for `rotatedCW`
+                    //IDK if this is the correct angle, there are no docs for `rotatedCW`
                     if(props.tileprops.rotatedCW) {
                         obj.rotation = math.degreesToRadians(45);
                     }
