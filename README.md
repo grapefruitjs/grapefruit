@@ -34,6 +34,7 @@ Below is a list of the features I want to add in. If there is something else I m
 Prioritized list of coming features:
 
 - Deterministic RNG
+- Parallax Tilemap Layers
 - Pathfinding
 - Bitmap Alpha Masks
 - Isometric maps
