@@ -377,11 +377,13 @@ inherit(Camera, Container, {
             }
         }
 
-        //prevent NaN
-        if(!dx) dx = 0;
-        if(!dy) dy = 0;
+        if(dx || dy) {
+            //prevent NaN
+            if(!dx) dx = 0;
+            if(!dy) dy = 0;
 
-        this.world.pan(-dx, -dy);
+            this.world.pan(-dx, -dy);
+        }
 
         return this;
     },
