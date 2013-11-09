@@ -85,7 +85,7 @@ var State = function(game, name, physOptions) {
     Container.call(this);
 
     //start disabled
-    this.disable();
+    this.visible = false;
 
     //add world/camera
     this.addChild(this.world);
