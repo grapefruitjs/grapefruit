@@ -15,7 +15,7 @@ var EventEmitter = require('../utils/EventEmitter'),
  * @uses EventEmitter
  * @constructor
  * @param textures {Texture|Array<Texture>|Object} The texture for the sprite to display, an array of texture to animation through, or an animation object.
- *      The later looks like: `{ animationName: { frames: [frame1, frame2], rate: 2 } }` where each frame is a Texture object
+ *      The later looks like: `{ animationName: { frames: [frame1, frame2], speed: 0.5, loop: false } }` where each frame is a Texture object
  * @param [speed] {Number} The speed of the animations (can be overriden on a specific animations)
  * @param [start] {String} The animation to start with, defaults to the first found key otherwise
  * @example
@@ -46,9 +46,11 @@ var Sprite = function(anims, speed, start) {
             var anim = anims[a];
 
             if(anim instanceof Array)
-                anims[a] = { frames: anim };
+                anims[a] = { name: a, frames: anim };
             else if(anim instanceof Texture)
-                anims[a] = { frames: [anim] };
+                anims[a] = { name: a, frames: [anim] };
+            else
+                anims[a].name = a;
         }
     }
 

@@ -386,11 +386,7 @@ inherit(Tilelayer, Container, {
         }
 
         tile.collisionType = props.type;
-        tile.visible = true;
         tile.interactive = interactive;
-
-        tile.setTexture(texture);
-        tile.setPosition(position[0], position[1]);
         tile.hitArea = hitArea;
 
         if(props.body === 'static') {
@@ -398,6 +394,10 @@ inherit(Tilelayer, Container, {
         } else {
             tile.mass = props.mass || 0;
         }
+
+        tile.setTexture(texture);
+        tile.setPosition(position[0], position[1]);
+        tile.show();
 
         if(tile.mass) {
             tile.enablePhysics(this.state.physics);
@@ -464,6 +464,7 @@ inherit(Tilelayer, Container, {
         //moving world left, so right will be exposed
         else if(dx < 0 && !this._buffered.right)
             this._renderRight(this._buffered.right = true);
+
         //moving world down, so top will be exposed
         if(dy > 0 && !this._buffered.top)
             this._renderUp(this._buffered.top = true);
