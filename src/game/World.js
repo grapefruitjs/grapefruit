@@ -2,7 +2,8 @@ var inherit = require('../utils/inherit'),
     Container = require('../display/Container'),
     Rectangle = require('../geom/Rectangle'),
     ObjectFactory = require('../utils/ObjectFactory'),
-    ParticleSystem = require('../particles/ParticleSystem');
+    ParticleSystem = require('../particles/ParticleSystem'),
+    math = require('../math/math');
 
 /**
  * The world is the container for all game objects in a game state.
@@ -65,8 +66,8 @@ inherit(World, Container, {
      * @return {World} Returns itself for chainability
      */
     pan: function(x, y) {
-        y = x.y !== undefined ? x.y : (y || 0);
-        x = x.x !== undefined ? x.x : (x || 0);
+        y = math.floor(x.y !== undefined ? x.y : (y || 0));
+        x = math.floor(x.x !== undefined ? x.x : (x || 0));
 
         this.position.x += x * this.scale.x;
         this.position.y += y * this.scale.y;

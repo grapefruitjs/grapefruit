@@ -134,7 +134,7 @@ inherit(Tilelayer, Container, {
 
         //copy down our tilesize
         if(!this.tileSize)
-            this.tileSize = this.parent.tileSize;
+            this.tileSize = this.map.tileSize;
 
         //clear all the visual tiles
         this.clearTiles();
@@ -150,7 +150,7 @@ inherit(Tilelayer, Container, {
         this._preRendered = true;
         this.tileSize = this.chunkSize.clone();
 
-        var world = this.parent,
+        var world = this.map,
             width = world.size.x * world.tileSize.x,
             height = world.size.y * world.tileSize.y,
             xChunks = math.ceil(width / this.chunkSize.x),
@@ -167,7 +167,7 @@ inherit(Tilelayer, Container, {
         }
     },
     _preRenderChunk: function(cx, cy, w, h) {
-        var world = this.parent,
+        var world = this.map,
             tsx = world.tileSize.x,
             tsy = world.tileSize.y,
             xTiles = w / tsx,
@@ -228,20 +228,20 @@ inherit(Tilelayer, Container, {
     },
     _renderTiles: function(sx, sy, sw, sh) {
         //convert to tile coords
-        sx = math.floor(sx / this.parent.scaledTileSize.x);
-        sy = math.floor(sy / this.parent.scaledTileSize.y);
+        sx = math.floor(sx / this.map.scaledTileSize.x);
+        sy = math.floor(sy / this.map.scaledTileSize.y);
 
         //ensure we don't go below 0
         sx = sx < 0 ? 0 : sx;
         sy = sy < 0 ? 0 : sy;
 
         //convert to tile sizes
-        sw = math.ceil(sw / this.parent.scaledTileSize.x) + 1;
-        sh = math.ceil(sh / this.parent.scaledTileSize.y) + 1;
+        sw = math.ceil(sw / this.map.scaledTileSize.x) + 1;
+        sh = math.ceil(sh / this.map.scaledTileSize.y) + 1;
 
         //ensure we don't go outside the map size
-        sw = (sx + sw > this.parent.size.x) ? (this.parent.size.x - sx) : sw;
-        sh = (sy + sh > this.parent.size.y) ? (this.parent.size.y - sy) : sh;
+        sw = (sx + sw > this.map.size.x) ? (this.map.size.x - sx) : sw;
+        sh = (sy + sh > this.map.size.y) ? (this.map.size.y - sy) : sh;
 
         //render new sprites
         var endX = sx + sw,
@@ -263,8 +263,8 @@ inherit(Tilelayer, Container, {
         this._buffered.left = this._buffered.right = this._buffered.top = this._buffered.bottom = false;
 
         //reset panDelta
-        this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
-        this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
+        this._panDelta.x = this.state.world.position.x % this.map.scaledTileSize.x;
+        this._panDelta.y = this.state.world.position.y % this.map.scaledTileSize.y;
     },
     _freeTile: function(tx, ty) {
         if(this.tiles[tx] && this.tiles[tx][ty]) {
@@ -327,7 +327,7 @@ inherit(Tilelayer, Container, {
      */
     moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
         //if off the map, just ignore it
-        if(toTileX < 0 || toTileY < 0 || toTileX >= this.parent.size.x || toTileY >= this.parent.size.y) {
+        if(toTileX < 0 || toTileY < 0 || toTileX >= this.map.size.x || toTileY >= this.map.size.y) {
             //remove the from tile's physics
             if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
                 this.tiles[fromTileX][fromTileY].disablePhysics();
@@ -338,7 +338,7 @@ inherit(Tilelayer, Container, {
         var tile,
             id = (toTileX + (toTileY * this.size.x)),
             tileId = this.tileIds[id],
-            set = this.parent.getTileset(tileId),
+            set = this.map.getTileset(tileId),
             texture,
             props,
             position,
@@ -357,14 +357,14 @@ inherit(Tilelayer, Container, {
         hitArea = props.hitArea || set.properties.hitArea;
         interactive = this._getInteractive(set, props);
         position = [
-            (toTileX * this.parent.tileSize.x) + set.tileoffset.x,
-            (toTileY * this.parent.tileSize.y) + set.tileoffset.y
+            (toTileX * this.map.tileSize.x) + set.tileoffset.x,
+            (toTileY * this.map.tileSize.y) + set.tileoffset.y
         ];
 
         //due to the fact that we use top-left anchors for everything, but tiled uses bottom-left
         //we need to move the position of each tile down by a single map-tile height. That is why
-        //there is an addition of "this.parent.tileSize.y" to the coords
-        position[1] +=  this.parent.tileSize.y;
+        //there is an addition of "this.map.tileSize.y" to the coords
+        position[1] +=  this.map.tileSize.y;
 
         //if there is one to move in the map, lets just move it
         if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
@@ -423,14 +423,14 @@ inherit(Tilelayer, Container, {
         return tile;
     },
     onTileEvent: function(eventName, tile, data) {
-        this.parent.onTileEvent(eventName, tile, data);
+        this.map.onTileEvent(eventName, tile, data);
     },
     _getInteractive: function(set, props) {
         //first check the lowest level value (on the tile iteself)
         return props.interactive || //obj interactive
                 (set && set.properties.interactive) || //tileset interactive
                 this.properties.interactive || //layer interactive
-                this.parent.properties.interactive; //map interactive
+                this.map.properties.interactive; //map interactive
     },
     /**
      * Pans the layer around, rendering stuff if necessary
@@ -448,12 +448,12 @@ inherit(Tilelayer, Container, {
         this._panDelta.x += dx;
         this._panDelta.y += dy;
 
-        var tszX = this.parent.scaledTileSize.x,
-            tszY = this.parent.scaledTileSize.y;
+        var tszX = this.map.scaledTileSize.x,
+            tszY = this.map.scaledTileSize.y;
 
         //check if we need to build a buffer around the viewport
         //usually this happens on the first pan after a full render
-        //caused by a viewport resize. WE do this buffering here instead
+        //caused by a viewport resize. We do this buffering here instead
         //of in the initial render because in the initial render, the buffer
         //may try to go negative which has no tiles. Plus doing it here
         //reduces the number of tiles that need to be created initially.
@@ -465,7 +465,7 @@ inherit(Tilelayer, Container, {
         else if(dx < 0 && !this._buffered.right)
             this._renderRight(this._buffered.right = true);
         //moving world down, so top will be exposed
-        else if(dy > 0 && !this._buffered.top)
+        if(dy > 0 && !this._buffered.top)
             this._renderUp(this._buffered.top = true);
         //moving world up, so bottom will be exposed
         else if(dy < 0 && !this._buffered.bottom)
