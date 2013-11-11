@@ -81,13 +81,23 @@ var Camera = function(state) {
     this._target = null;
 
     /**
+     * The target's last position, to cache if we should try to move the camera or not
+     *
+     * @property _targetPos
+     * @type Vector
+     * @readOnly
+     * @private
+     */
+    this._targetPos = new Vector();
+
+    /**
      * The size of the camera
      *
      * @property size
      * @type Vector
      * @readOnly
      */
-    this.size = new Vector(0, 0);
+    this.size = new Vector();
 
     /**
      * Half of the size of the camera
@@ -96,7 +106,7 @@ var Camera = function(state) {
      * @type Vector
      * @readOnly
      */
-    this.hSize = new Vector(0, 0);
+    this.hSize = new Vector();
 
     /**
      * The container that holds all the GUI items, direct children of Camera are effects
@@ -246,6 +256,7 @@ inherit(Camera, Container, {
             return this;
 
         this._target = spr;
+        this._targetPos.set(null, null);
 
         switch(style) {
             case C.CAMERA_FOLLOW.PLATFORMER:
@@ -295,6 +306,7 @@ inherit(Camera, Container, {
      */
     unfollow: function() {
         this._target = null;
+        this._targetPos.set(null, null);
         return this;
     },
     /**
@@ -458,7 +470,9 @@ inherit(Camera, Container, {
      */
     update: function(dt) {
         //follow sprite
-        if(this._target) {
+        if(this._target && !this._target.position.equals(this._targetPos)) {
+            this._targetPos.copy(this._target.position);
+
             if(!this._deadzone) {
                 this.focusSprite(this._target);
             } else {

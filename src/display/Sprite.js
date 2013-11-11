@@ -32,12 +32,10 @@ var Sprite = function(anims, speed, start) {
     //parse tx into correct format
     if(anims instanceof Texture) {
         anims = { _default: { frames: [anims] } };
-        speed = 1;
         start = '_default';
     }
     else if(anims instanceof Array) {
         anims = { _default: { frames: anims } };
-        speed = 1;
         start = '_default';
     } else {
         //massage animations into full format
