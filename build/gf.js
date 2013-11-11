@@ -7296,16 +7296,6 @@ define(
               curVal.set(parseFloat(a[0], 10) || 0, parseFloat(a[1], 10) || parseFloat(a[0], 10) || 0);
             } else if (curVal instanceof Vector && typeof newVal === "number") {
               curVal.set(newVal, newVal);
-            } else if (curVal.x !== undefined && newVal instanceof Array) {
-              curVal.x = parseFloat(newVal[0], 10) || 0;
-              curVal.y = parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0;
-            } else if (curVal.x !== undefined && typeof newVal === "string") {
-              var a2 = newVal.split(utils._arrayDelim, 2);
-              curVal.x = parseFloat(a2[0], 10) || 0;
-              curVal.y = parseFloat(a2[1], 10) || parseFloat(a2[0], 10) || 0;
-            } else if (curVal.x !== undefined && typeof newVal === "number") {
-              curVal.x = newVal;
-              curVal.y = newVal;
             } else if (curVal instanceof Array && typeof newVal === "string") {
               obj[key] = newVal.split(utils._arrayDelim);
               for (var i = 0, il = obj[key].length; i < il; ++i) {
@@ -7487,10 +7477,10 @@ define(
     if (this._webAudio) {
       this._setupAudioNode();
     }
-    this.load();
+    this._load();
   };
   inherit(AudioPlayer, Object, {
-    load: function () {
+    _load: function () {
       var self = this, audio = this._file;
       if (audio.webAudio) {
         if (!audio.decoded) {
@@ -7498,11 +7488,11 @@ define(
             if (buffer) {
               audio.data = buffer;
               audio.decoded = true;
-              self.loadSoundBuffer(buffer);
+              self._loadSoundBuffer(buffer);
             }
           });
         } else {
-          this.loadSoundBuffer(audio.data);
+          this._loadSoundBuffer(audio.data);
         }
       } else {
         var node = audio.data.cloneNode();
@@ -7576,7 +7566,7 @@ define(
         if (self._webAudio) {
           node.id = soundId;
           node.paused = false;
-          self.refreshBuffer([
+          self._refreshBuffer([
             loop,
             pos,
             duration
@@ -7621,7 +7611,7 @@ define(
       var self = this;
       if (!this._loaded) {
         this.on("play", function () {
-          self.play(id);
+          self.play(id, timerId);
         });
         return this;
       }
@@ -7653,7 +7643,7 @@ define(
       var self = this;
       if (!this._loaded) {
         this.on("play", function () {
-          self.stop(id);
+          self.stop(id, timerId);
         });
         return this;
       }
@@ -7705,7 +7695,7 @@ define(
       var self = this;
       if (!this._loaded) {
         this.on("load", function () {
-          self.seek(pos);
+          self.seek(pos, id);
         });
         return this;
       }
@@ -7851,7 +7841,7 @@ define(
         node = this._setupAudioNode();
         cb(node);
       } else {
-        this.load();
+        this._load();
         node = this._nodes[this.nodes.length - 1];
         node.addEventListener("loadedmetadata", function () {
           cb(node);
@@ -7895,7 +7885,7 @@ define(
       node.panner.connect(node);
       return node;
     },
-    loadSoundBuffer: function (buffer) {
+    _loadSoundBuffer: function (buffer) {
       this._duration = buffer ? buffer.duration : this._duration;
       this.sprite._default = [
         0,
@@ -7912,7 +7902,7 @@ define(
         this.play();
       }
     },
-    refreshBuffer: function (loop, id) {
+    _refreshBuffer: function (loop, id) {
       var node = this._nodeById(id);
       node.bufferSource = this._manager.ctx.createBufferSource();
       node.bufferSource.buffer = this._file.data;
@@ -8006,14 +7996,30 @@ define(
       }
     },
     attach: function (sound) {
-      this.sounds[sound.key] = sound;
-      sound._manager = this;
-      if (support.webAudio) {
-        for (var i = 0; i < sound._nodes.length; ++i) {
-          sound._nodes[i].disconnect();
-          sound._nodes[i].connect(this.masterGain);
+      if (sound._manager !== this) {
+        if (sound._manager)
+          sound._manager.detach(sound);
+        this.sounds[sound.key] = sound;
+        sound._manager = this;
+        if (support.webAudio) {
+          for (var i = 0; i < sound._nodes.length; ++i) {
+            sound._nodes[i].connect(this.masterGain);
+          }
         }
       }
+      return sound;
+    },
+    detach: function (sound) {
+      if (sound._manager !== this) {
+        delete this.sounds[sound.key];
+        sound._manager = null;
+        if (support.webAudio) {
+          for (var i = 0; i < sound._nodes.length; ++i) {
+            sound._nodes[i].disconnect();
+          }
+        }
+      }
+      return sound;
     },
     add: function (key, settings) {
       if (!this.canPlay) {
@@ -8030,6 +8036,7 @@ define(
         audio.stop();
       }
       delete this.sounds[key];
+      return audio ? audio : false;
     }
   });
   module.exports = AudioManager;
@@ -8277,11 +8284,9 @@ define(
     }
     if (anims instanceof Texture) {
       anims = { _default: { frames: [anims] } };
-      speed = 1;
       start = "_default";
     } else if (anims instanceof Array) {
       anims = { _default: { frames: anims } };
-      speed = 1;
       start = "_default";
     } else {
       for (var a in anims) {
@@ -8749,7 +8754,7 @@ define(
         return;
       }
       if (!this.tileSize)
-        this.tileSize = this.parent.tileSize;
+        this.tileSize = this.map.tileSize;
       this.clearTiles();
       this._renderTiles(x, y, width, height);
     },
@@ -8758,7 +8763,7 @@ define(
         return;
       this._preRendered = true;
       this.tileSize = this.chunkSize.clone();
-      var world = this.parent, width = world.size.x * world.tileSize.x, height = world.size.y * world.tileSize.y, xChunks = math.ceil(width / this.chunkSize.x), yChunks = math.ceil(height / this.chunkSize.y);
+      var world = this.map, width = world.size.x * world.tileSize.x, height = world.size.y * world.tileSize.y, xChunks = math.ceil(width / this.chunkSize.x), yChunks = math.ceil(height / this.chunkSize.y);
       for (var x = 0; x < xChunks; ++x) {
         for (var y = 0; y < yChunks; ++y) {
           var cw = x === xChunks - 1 ? width - x * this.chunkSize.x : this.chunkSize.x, ch = y === yChunks - 1 ? height - y * this.chunkSize.y : this.chunkSize.y;
@@ -8767,7 +8772,7 @@ define(
       }
     },
     _preRenderChunk: function (cx, cy, w, h) {
-      var world = this.parent, tsx = world.tileSize.x, tsy = world.tileSize.y, xTiles = w / tsx, yTiles = h / tsy, nx = cx * this.chunkSize.x % tsx, ny = cy * this.chunkSize.y % tsy, tx = math.floor(cx * this.chunkSize.x / tsx), ty = math.floor(cy * this.chunkSize.y / tsy), sx = world.size.x, sy = world.size.y, canvas = document.createElement("canvas"), ctx = canvas.getContext("2d");
+      var world = this.map, tsx = world.tileSize.x, tsy = world.tileSize.y, xTiles = w / tsx, yTiles = h / tsy, nx = cx * this.chunkSize.x % tsx, ny = cy * this.chunkSize.y % tsy, tx = math.floor(cx * this.chunkSize.x / tsx), ty = math.floor(cy * this.chunkSize.y / tsy), sx = world.size.x, sy = world.size.y, canvas = document.createElement("canvas"), ctx = canvas.getContext("2d");
       canvas.width = w;
       canvas.height = h;
       for (var x = 0; x < xTiles; ++x) {
@@ -8790,14 +8795,14 @@ define(
       this.tiles[cx][cy] = tile;
     },
     _renderTiles: function (sx, sy, sw, sh) {
-      sx = math.floor(sx / this.parent.scaledTileSize.x);
-      sy = math.floor(sy / this.parent.scaledTileSize.y);
+      sx = math.floor(sx / this.map.scaledTileSize.x);
+      sy = math.floor(sy / this.map.scaledTileSize.y);
       sx = sx < 0 ? 0 : sx;
       sy = sy < 0 ? 0 : sy;
-      sw = math.ceil(sw / this.parent.scaledTileSize.x) + 1;
-      sh = math.ceil(sh / this.parent.scaledTileSize.y) + 1;
-      sw = sx + sw > this.parent.size.x ? this.parent.size.x - sx : sw;
-      sh = sy + sh > this.parent.size.y ? this.parent.size.y - sy : sh;
+      sw = math.ceil(sw / this.map.scaledTileSize.x) + 1;
+      sh = math.ceil(sh / this.map.scaledTileSize.y) + 1;
+      sw = sx + sw > this.map.size.x ? this.map.size.x - sx : sw;
+      sh = sy + sh > this.map.size.y ? this.map.size.y - sy : sh;
       var endX = sx + sw, endY = sy + sh;
       for (var x = sx; x < endX; ++x) {
         for (var y = sy; y < endY; ++y) {
@@ -8809,8 +8814,8 @@ define(
       this._rendered.width = sw;
       this._rendered.height = sh;
       this._buffered.left = this._buffered.right = this._buffered.top = this._buffered.bottom = false;
-      this._panDelta.x = this.parent.position.x % this.parent.scaledTileSize.x;
-      this._panDelta.y = this.parent.position.y % this.parent.scaledTileSize.y;
+      this._panDelta.x = this.state.world.position.x % this.map.scaledTileSize.x;
+      this._panDelta.y = this.state.world.position.y % this.map.scaledTileSize.y;
     },
     _freeTile: function (tx, ty) {
       if (this.tiles[tx] && this.tiles[tx][ty]) {
@@ -8841,13 +8846,13 @@ define(
         this._tilePool.push(tile);
     },
     moveTileSprite: function (fromTileX, fromTileY, toTileX, toTileY) {
-      if (toTileX < 0 || toTileY < 0 || toTileX >= this.parent.size.x || toTileY >= this.parent.size.y) {
+      if (toTileX < 0 || toTileY < 0 || toTileX >= this.map.size.x || toTileY >= this.map.size.y) {
         if (this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
           this.tiles[fromTileX][fromTileY].disablePhysics();
         }
         return;
       }
-      var tile, id = toTileX + toTileY * this.size.x, tileId = this.tileIds[id], set = this.parent.getTileset(tileId), texture, props, position, hitArea, interactive;
+      var tile, id = toTileX + toTileY * this.size.x, tileId = this.tileIds[id], set = this.map.getTileset(tileId), texture, props, position, hitArea, interactive;
       if (!set) {
         this._freeTile(fromTileX, fromTileY);
         return;
@@ -8857,10 +8862,10 @@ define(
       hitArea = props.hitArea || set.properties.hitArea;
       interactive = this._getInteractive(set, props);
       position = [
-        toTileX * this.parent.tileSize.x + set.tileoffset.x,
-        toTileY * this.parent.tileSize.y + set.tileoffset.y
+        toTileX * this.map.tileSize.x + set.tileoffset.x,
+        toTileY * this.map.tileSize.y + set.tileoffset.y
       ];
-      position[1] += this.parent.tileSize.y;
+      position[1] += this.map.tileSize.y;
       if (this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
         tile = this.tiles[fromTileX][fromTileY];
         this.tiles[fromTileX][fromTileY] = null;
@@ -8902,22 +8907,22 @@ define(
       return tile;
     },
     onTileEvent: function (eventName, tile, data) {
-      this.parent.onTileEvent(eventName, tile, data);
+      this.map.onTileEvent(eventName, tile, data);
     },
     _getInteractive: function (set, props) {
-      return props.interactive || set && set.properties.interactive || this.properties.interactive || this.parent.properties.interactive;
+      return props.interactive || set && set.properties.interactive || this.properties.interactive || this.map.properties.interactive;
     },
     pan: function (dx, dy) {
       if (this.preRender)
         return;
       this._panDelta.x += dx;
       this._panDelta.y += dy;
-      var tszX = this.parent.scaledTileSize.x, tszY = this.parent.scaledTileSize.y;
+      var tszX = this.map.scaledTileSize.x, tszY = this.map.scaledTileSize.y;
       if (dx > 0 && !this._buffered.left)
         this._renderLeft(this._buffered.left = true);
       else if (dx < 0 && !this._buffered.right)
         this._renderRight(this._buffered.right = true);
-      else if (dy > 0 && !this._buffered.top)
+      if (dy > 0 && !this._buffered.top)
         this._renderUp(this._buffered.top = true);
       else if (dy < 0 && !this._buffered.bottom)
         this._renderDown(this._buffered.bottom = true);
@@ -9386,7 +9391,7 @@ define(
       return this.parent.addChild(spr);
     },
     audio: function (key, settings) {
-      return this.game.audio.addChild(key, settings);
+      return this.state.audio.add(key, settings);
     },
     tilemap: function (key, constrain) {
       var obj = this.game.cache.getTilemap(key) || {}, fmt = obj.format, data = obj.data, txs = obj.textures, tilemap;
@@ -9831,8 +9836,9 @@ define(
     this.bounds = state.world.bounds.clone();
     this._deadzone = null;
     this._target = null;
-    this.size = new Vector(0, 0);
-    this.hSize = new Vector(0, 0);
+    this._targetPos = new Vector();
+    this.size = new Vector();
+    this.hSize = new Vector();
     this.gui = new Container();
     this.add = new ObjectFactory(state, this.gui);
     this.fxpools = {
@@ -9867,6 +9873,7 @@ define(
       if (!(spr instanceof Sprite))
         return this;
       this._target = spr;
+      this._targetPos.set(null, null);
       switch (style) {
       case C.CAMERA_FOLLOW.PLATFORMER:
         var w = this.size.x / 8;
@@ -9891,6 +9898,7 @@ define(
     },
     unfollow: function () {
       this._target = null;
+      this._targetPos.set(null, null);
       return this;
     },
     focusSprite: function (spr) {
@@ -9922,11 +9930,13 @@ define(
           dy = (dy < 0 ? b.y : b.bottom - this.size.y) + pos.y;
         }
       }
-      if (!dx)
-        dx = 0;
-      if (!dy)
-        dy = 0;
-      this.world.pan(-dx, -dy);
+      if (dx || dy) {
+        if (!dx)
+          dx = 0;
+        if (!dy)
+          dy = 0;
+        this.world.pan(-dx, -dy);
+      }
       return this;
     },
     _outsideBounds: function (x, y) {
@@ -9946,7 +9956,8 @@ define(
       return this;
     },
     update: function (dt) {
-      if (this._target) {
+      if (this._target && !this._target.position.equals(this._targetPos)) {
+        this._targetPos.copy(this._target.position);
         if (!this._deadzone) {
           this.focusSprite(this._target);
         } else {
@@ -10191,10 +10202,10 @@ return module.exports;
 }
 );
 define(
-  'game/World',['require','exports','module','../utils/inherit','../display/Container','../geom/Rectangle','../utils/ObjectFactory','../particles/ParticleSystem'],function (require, exports, module) {
+  'game/World',['require','exports','module','../utils/inherit','../display/Container','../geom/Rectangle','../utils/ObjectFactory','../particles/ParticleSystem','../math/math'],function (require, exports, module) {
   
 // uRequire v0.6.5: START body of original nodejs module
-  var inherit = require("../utils/inherit"), Container = require("../display/Container"), Rectangle = require("../geom/Rectangle"), ObjectFactory = require("../utils/ObjectFactory"), ParticleSystem = require("../particles/ParticleSystem");
+  var inherit = require("../utils/inherit"), Container = require("../display/Container"), Rectangle = require("../geom/Rectangle"), ObjectFactory = require("../utils/ObjectFactory"), ParticleSystem = require("../particles/ParticleSystem"), math = require("../math/math");
   var World = function (state) {
     Container.call(this);
     this.game = state.game;
@@ -10205,8 +10216,8 @@ define(
   };
   inherit(World, Container, {
     pan: function (x, y) {
-      y = x.y !== undefined ? x.y : y || 0;
-      x = x.x !== undefined ? x.x : x || 0;
+      y = math.floor(x.y !== undefined ? x.y : y || 0);
+      x = math.floor(x.x !== undefined ? x.x : x || 0);
       this.position.x += x * this.scale.x;
       this.position.y += y * this.scale.y;
       for (var i = 0, il = this.children.length; i < il; ++i) {
@@ -14000,23 +14011,20 @@ define(
     this.physics = new PhysicsSystem(this, physOptions);
     this.camera = new Camera(this);
     Container.call(this);
-    this.disable();
+    this.visible = false;
     this.addChild(this.world);
     this.addChild(this.camera);
     this.camera.resize(game.width, game.height);
   };
   inherit(State, Container, {
     enable: function () {
-      this.visible = true;
-      return this;
-    },
-    disable: function () {
-      this.visible = false;
+      this.game.state.enable(this);
       return this;
     },
     resize: function (w, h) {
       this.camera.resize(w, h);
       this.world.resize(w, h);
+      return this;
     },
     update: function (dt) {
       this.game.timings.cameraStart = this.game.clock.now();
@@ -14081,15 +14089,17 @@ define(
       if (typeof state !== "string")
         state = state.name;
       if (this.states[state]) {
-        if (this.active)
-          this.active.disable();
-        this.active = this.states[state].enable();
+        if (this.active) {
+          this.active.visible = false;
+        }
+        this.active = this.states[state];
+        this.active.visible = true;
       }
       return this;
     },
     destroy: function () {
       this.game = null;
-      this.states = {};
+      this.states = null;
     }
   });
   module.exports = StateManager;
@@ -15219,6 +15229,7 @@ define(
           p[i].update(dt);
         }
       }
+      return this;
     }
   });
   module.exports = Pointers;
