@@ -90,21 +90,44 @@ var Tilelayer = function(map, layer) {
      */
     this.properties = utils.parseTiledProperties(layer.properties) || {};
 
-    //translate some tiled properties to our inherited properties
-    this.type = layer.type;
-    this.position.x = layer.x;
-    this.position.y = layer.y;
-    this.alpha = layer.opacity;
-    this.visible = layer.visible;
+    /**
+     * The Tiled type of tile layer, should always be 'tilelayer'
+     *
+     * @property type
+     * @type String
+     * @default 'tilelayer'
+     */
+    this.type = layer.type || 'tilelayer';
 
-    //prerender settings
-    this.preRender = this.properties.preRender;
+    /**
+     * Is this layer supposed to be preRendered?
+     *
+     * @property preRender
+     * @type Boolean
+     * @default false
+     */
+    this.preRender = layer.preRender || this.properties.preRender || false;
+
+    /**
+     * The size of a chunk when pre rendering
+     *
+     * @property chunkSize
+     * @type Vector
+     * @default new Vector(512, 512)
+     */
     this.chunkSize = new Vector(
-        this.properties.chunkSizeX || this.properties.chunkSize || 512,
-        this.properties.chunkSizeY || this.properties.chunkSize || 512
+        layer.chunkSizeX || layer.chunkSize || this.properties.chunkSizeX || this.properties.chunkSize || 512,
+        layer.chunkSizeY || layer.chunkSize || this.properties.chunkSizeY || this.properties.chunkSize || 512
     );
-    this._preRendered = false;
 
+    //translate some tiled properties to our inherited properties
+    this.position.x = layer.x || 0;
+    this.position.y = layer.y || 0;
+    this.alpha = layer.opacity !== undefined ? layer.opacity : 1;
+    this.visible = layer.visible !== undefined ? layer.visible : true;
+
+    //some private trackers
+    this._preRendered = false;
     this._tilePool = [];
     this._buffered = { left: false, right: false, top: false, bottom: false };
     this._panDelta = new Vector();
@@ -142,7 +165,13 @@ inherit(Tilelayer, Container, {
         //render the tiles on the screen
         this._renderTiles(x, y, width, height);
     },
-    //render the map onto a canvas once to use as a preRendered texture
+    /**
+     * Renders the map onto different canvases, one per chunk. This only runs once
+     * then the canvases are used as a textures for tiles the size of chunks.
+     *
+     * @method _preRender
+     * @private
+     */
     _preRender: function() {
         if(!this.visible)
             return;
@@ -166,6 +195,16 @@ inherit(Tilelayer, Container, {
             }
         }
     },
+    /**
+     * Renders a single chunk to a single canvas and creates/places the tile instance for it.
+     *
+     * @method _preRenderChunk
+     * @param cx {Number} The x-coord of this chunk's top left
+     * @param cy {Number} The y-coord of this chunk's top left
+     * @param w {Number} The width of this chunk
+     * @param h {Number} The height of this chunk
+     * @private
+     */
     _preRenderChunk: function(cx, cy, w, h) {
         var world = this.map,
             tsx = world.tileSize.x,
@@ -226,6 +265,16 @@ inherit(Tilelayer, Container, {
         this.addChild(tile);
         this.tiles[cx][cy] = tile;
     },
+    /**
+     * Renders the tiles for the viewport
+     *
+     * @method _renderTiles
+     * @param sx {Number} The x-coord in the map to start rendering
+     * @param sy {Number} The y-coord in the map to start rendering
+     * @param sw {Number} The width of the viewport
+     * @param sh {Number} The height of the viewport
+     * @private
+     */
     _renderTiles: function(sx, sy, sw, sh) {
         //convert to tile coords
         sx = math.floor(sx / this.map.scaledTileSize.x);
@@ -266,6 +315,14 @@ inherit(Tilelayer, Container, {
         this._panDelta.x = this.state.world.position.x % this.map.scaledTileSize.x;
         this._panDelta.y = this.state.world.position.y % this.map.scaledTileSize.y;
     },
+    /**
+     * Frees a tile in the list back into the pool
+     *
+     * @method _freeTile
+     * @param tx {Number} The x-coord of the tile in tile coords (not world coords)
+     * @param ty {Number} The y-coord of the tile in tile coords (not world coords)
+     * @private
+     */
     _freeTile: function(tx, ty) {
         if(this.tiles[tx] && this.tiles[tx][ty]) {
             this.clearTile(this.tiles[tx][ty]);
@@ -417,9 +474,27 @@ inherit(Tilelayer, Container, {
 
         return tile;
     },
+    /**
+     * Called whenever a tile event occurs, this is used to echo to the parent.
+     *
+     * @method onTileEvent
+     * @param eventName {String} The name of the event
+     * @param tile {Tile} The tile the event happened to
+     * @param data {mixed} The event data that was passed along
+     * @private
+     */
     onTileEvent: function(eventName, tile, data) {
         this.map.onTileEvent(eventName, tile, data);
     },
+    /**
+     * Checks if an object should be marked as interactive
+     *
+     * @method _getInteractive
+     * @param set {Tileset} The tileset for the object
+     * @param props {Object} The Tiled properties object
+     * @return {Boolean} Whether or not the item is interactive
+     * @private
+     */
     _getInteractive: function(set, props) {
         //first check the lowest level value (on the tile iteself)
         return props.interactive || //obj interactive
@@ -497,6 +572,13 @@ inherit(Tilelayer, Container, {
             this._panDelta.y += tszY;
         }
     },
+    /**
+     * Renders tiles to the left, pulling from the far right
+     *
+     * @method _renderLeft
+     * @param [forceNew=false] {Boolean} If set to true, new tiles are created instead of trying to recycle
+     * @private
+     */
     _renderLeft: function(forceNew) {
         //move all the far right tiles to the left side
         for(var i = 0; i < this._rendered.height + 1; ++i) {
@@ -510,6 +592,13 @@ inherit(Tilelayer, Container, {
         this._rendered.x--;
         if(forceNew) this._rendered.width++;
     },
+    /**
+     * Renders tiles to the right, pulling from the far left
+     *
+     * @method _renderRight
+     * @param [forceNew=false] {Boolean} If set to true, new tiles are created instead of trying to recycle
+     * @private
+     */
     _renderRight: function(forceNew) {
         //move all the far left tiles to the right side
         for(var i = 0; i < this._rendered.height + 1; ++i) {
@@ -523,6 +612,13 @@ inherit(Tilelayer, Container, {
         if(!forceNew) this._rendered.x++;
         if(forceNew) this._rendered.width++;
     },
+    /**
+     * Renders tiles to the top, pulling from the far bottom
+     *
+     * @method _renderUp
+     * @param [forceNew=false] {Boolean} If set to true, new tiles are created instead of trying to recycle
+     * @private
+     */
     _renderUp: function(forceNew) {
         //move all the far bottom tiles to the top side
         for(var i = 0; i < this._rendered.width + 1; ++i) {
@@ -536,6 +632,13 @@ inherit(Tilelayer, Container, {
         this._rendered.y--;
         if(forceNew) this._rendered.height++;
     },
+    /**
+     * Renders tiles to the bottom, pulling from the far top
+     *
+     * @method _renderDown
+     * @param [forceNew=false] {Boolean} If set to true, new tiles are created instead of trying to recycle
+     * @private
+     */
     _renderDown: function(forceNew) {
         //move all the far top tiles to the bottom side
         for(var i = 0; i < this._rendered.width + 1; ++i) {
@@ -549,6 +652,11 @@ inherit(Tilelayer, Container, {
         if(!forceNew) this._rendered.y++;
         if(forceNew) this._rendered.height++;
     },
+    /**
+     * Destroys the tile layer completely
+     *
+     * @method destroy
+     */
     destroy: function() {
         Container.prototype.destroy.call(this);
 

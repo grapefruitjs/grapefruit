@@ -1,5 +1,5 @@
 var constants = {
-    version: '@@VERSION',
+    version: '@@VERSION', //this is replaced by the grunt replace task with the version in package.json
 
     RENDERER: {
         AUTO: 'auto',
