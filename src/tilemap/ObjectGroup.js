@@ -371,7 +371,7 @@ inherit(ObjectGroup, Container, {
      */
     destroy: function() {
         this.despawn();
-        return Container.prototype.destroy.call(this);all(this, group);
+        Container.prototype.destroy.call(this);
 
         this.map = null;
         this.game = null;
