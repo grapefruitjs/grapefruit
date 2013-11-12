@@ -101,6 +101,7 @@ inherit(State, Container, {
      *
      * @method enable
      * @return {State} Returns itself.
+     * @chainable
      */
     enable: function() {
         this.game.state.enable(this);
@@ -115,6 +116,7 @@ inherit(State, Container, {
      * @param width {Number} The width of the new viewport
      * @param height {Number} The height of the new viewport
      * @return {State} Returns itself.
+     * @chainable
      * @private
      */
     resize: function(w, h) {

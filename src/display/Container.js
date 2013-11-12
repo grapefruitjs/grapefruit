@@ -106,7 +106,8 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * Sets the container to visible = true
      *
      * @method show
-     * @return {Container} Returns itself
+     * @return {Container} Returns itself.
+     * @chainable
      */
     show: function() {
         this.visible = true;
@@ -116,7 +117,8 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * Sets the container to visible = false
      *
      * @method hide
-     * @return {Container} Returns itself
+     * @return {Container} Returns itself.
+     * @chainable
      */
     hide: function() {
         this.visible = false;
@@ -166,7 +168,8 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * Removes all children from the object.
      *
      * @method removeAllChildren
-     * @return {Container} Returns iteself
+     * @return {Container} Returns itself.
+     * @chainable
      */
     removeAllChildren: function() {
         while(this.children.length) {
@@ -208,6 +211,8 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * Destroys all the children of the object.
      *
      * @method destroyAllChildren
+     * @return {Container} Returns itself.
+     * @chainable
      */
     destroyAllChildren: function() {
         while(this.children.length) {

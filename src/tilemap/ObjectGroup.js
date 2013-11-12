@@ -99,7 +99,8 @@ inherit(ObjectGroup, Container, {
      * Spawns all the entities associated with this layer, and properly sets their attributes
      *
      * @method spawn
-     * @return {ObjectGroup} Returns itself for chainability
+     * @return {ObjectGroup} Returns itself.
+     * @chainable
      */
     spawn: function() {
         var game = this.game; //this.Tilemap.GameState.Game
@@ -359,7 +360,8 @@ inherit(ObjectGroup, Container, {
      * Despawns all the sprites associated with this layer
      *
      * @method despawn
-     * @return {ObjectGroup} Returns itself for chainability
+     * @return {ObjectGroup} Returns itself.
+     * @chainable
      */
     despawn: function() {
         return Container.prototype.removeAllChildren.call(this);

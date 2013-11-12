@@ -115,6 +115,7 @@ inherit(StateManager, Object, {
      * @method remove
      * @param state {String|State} The name of the state to remove, or the state instance itself.
      * @return {StateManager} Returns itself.
+     * @chainable
      */
     remove: function(state) {
         if(typeof state === 'string')
@@ -135,6 +136,7 @@ inherit(StateManager, Object, {
      * @method enable
      * @param state {String|State} The name of the state to enable, or the state instance itself.
      * @return {StateManager} Returns itself.
+     * @chainable
      */
     enable: function(state) {
         if(typeof state !== 'string')

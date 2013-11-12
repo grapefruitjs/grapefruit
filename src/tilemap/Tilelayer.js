@@ -141,6 +141,8 @@ inherit(Tilelayer, Container, {
      * @method resize
      * @param width {Number} The number of tiles in the X direction to render
      * @param height {Number} The number of tiles in the Y direction to render
+     * @return {Tilelayer} Returns itself.
+     * @chainable
      */
     render: function(x, y, width, height) {
         if(this.preRender) {
@@ -164,6 +166,8 @@ inherit(Tilelayer, Container, {
 
         //render the tiles on the screen
         this._renderTiles(x, y, width, height);
+
+        return this;
     },
     /**
      * Renders the map onto different canvases, one per chunk. This only runs once
@@ -334,6 +338,8 @@ inherit(Tilelayer, Container, {
      *
      * @method clearTiles
      * @param remove {Boolean} Should this tile be completely removed (never to bee seen again)
+     * @return {Tilelayer} Returns itself.
+     * @chainable
      */
     clearTiles: function(remove) {
         var c;
@@ -354,6 +360,8 @@ inherit(Tilelayer, Container, {
         }
 
         this.tiles.length = 0;
+
+        return this;
     },
     /**
      * Clears a tile currently used to render the layer
@@ -361,6 +369,8 @@ inherit(Tilelayer, Container, {
      * @method clearTile
      * @param tile {Tile} The tile object to clear
      * @param remove {Boolean} Should this tile be completely removed (never to bee seen again)
+     * @return {Tilelayer} Returns itself.
+     * @chainable
      */
     clearTile: function(tile, remove) {
         tile.visible = false;
@@ -370,6 +380,8 @@ inherit(Tilelayer, Container, {
             this.removeChild(tile);
         else
             this._tilePool.push(tile);
+
+        return this;
     },
     /**
      * Moves a tile sprite from one position to another, and creates a new tile
@@ -508,7 +520,8 @@ inherit(Tilelayer, Container, {
      * @method pan
      * @param dx {Number|Point} The x amount to pan, if a Point is passed the dy param is ignored
      * @param dy {Number} The y ammount to pan
-     * @return {Tilelayer} Returns itself for chainability
+     * @return {Tilelayer} Returns itself.
+     * @chainable
      */
     pan: function(dx, dy) {
         if(this.preRender)

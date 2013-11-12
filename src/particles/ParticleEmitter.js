@@ -178,6 +178,8 @@ inherit(ParticleEmitter, Container, {
      * @param [delay=250] {Number} The time between each particle emission in ms
      * @param [rate=1] {Number} The number of particles to emit each emission
      * @param [total=gf.PARTICLES.MAX_EMITTER_PARTICLES] {Number} The total number of particles to emit
+     * @return {ParticleEmitter} Returns itself.
+     * @chainable
      */
     start: function(lifespan, delay, rate, total) {
         this.active = true;
@@ -188,15 +190,21 @@ inherit(ParticleEmitter, Container, {
         this._total = total || C.PARTICLES.MAX_EMITTER_PARTICLES;
 
         this._timer = 0;
+
+        return this;
     },
     /**
      * Deactivates the emitter. Particles that are already emitted will continue to
      * decay and die, but no new particles will be emitted.
      *
      * @method stop
+     * @return {ParticleEmitter} Returns itself.
+     * @chainable
      */
     stop: function() {
         this.active = false;
+
+        return this;
     },
     /**
      * Sets up the particles to be emitted
@@ -206,6 +214,8 @@ inherit(ParticleEmitter, Container, {
      *      or an array of textures to be randomly chosen from for different particles,
      *      or a single texture to use for each particle.
      * @param [collide=gf.DIRECTION.ALL] {Number} The directions the particles are allowed to collide in, use gf.DIRECTION bit flags
+     * @return {ParticleEmitter} Returns itself.
+     * @chainable
      */
     setup: function(sprite, collide) {
         if(collide === undefined)
@@ -226,6 +236,8 @@ inherit(ParticleEmitter, Container, {
             this._particle = sprite;
             this._textures = [sprite.texture];
         }
+
+        return this;
     },
     /**
      * Gets a particle from the pool and sets it up.
@@ -270,6 +282,8 @@ inherit(ParticleEmitter, Container, {
      * Emits a single particle and sets the position, scale, lifespan, and velocity
      *
      * @method emitParticle
+     * @return {ParticleEmitter} Returns itself.
+     * @chainable
      */
     emitParticle: function() {
         var part = this._get();
@@ -296,6 +310,8 @@ inherit(ParticleEmitter, Container, {
         );
 
         //part.body.angularVelocity = math.randomInt(this.minRotation, this.maxRotation);
+
+        return this;
     },
     /**
      * Called internally by the ParticleSystem each frame to update each particle's lifespan.

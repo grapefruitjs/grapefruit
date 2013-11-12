@@ -136,6 +136,8 @@ inherit(AudioManager, Object, {
      * Mutes all playing audio
      *
      * @method mute
+     * @return {AudioManager} Returns itself.
+     * @chainable
      */
     mute: function() {
         return this.setMuted(true);
@@ -144,6 +146,8 @@ inherit(AudioManager, Object, {
      * Unmutes all playing audio
      *
      * @method unmute
+     * @return {AudioManager} Returns itself.
+     * @chainable
      */
     unmute: function() {
         return this.setMuted(false);
@@ -152,6 +156,8 @@ inherit(AudioManager, Object, {
      * Sets whether or not this manager is muted
      *
      * @method setMuted
+     * @return {AudioManager} Returns itself.
+     * @chainable
      */
     setMuted: function(m) {
         this._muted = m = !!m;
@@ -179,6 +185,8 @@ inherit(AudioManager, Object, {
      *
      * @method setParent
      * @param parent {AudioManager} The parent to connect to, or `null` to connect to the global context
+     * @return {AudioManager} Returns itself.
+     * @chainable
      */
     setParent: function(parent) {
         this.parent = parent;
@@ -193,6 +201,8 @@ inherit(AudioManager, Object, {
                 this.masterGain.connect(this.ctx.destination);
             }
         }
+
+        return this;
     },
     /**
      * Attaches an AudioPlayer to this manager, if using webAudio this means

@@ -89,6 +89,7 @@ inherit(ParticleSystem, Contianer, {
      * @method remove
      * @param emitter {String|ParticleEmitter} The name of the emitter to remove, or the emitter instance itself.
      * @return {ParticleSystem} Returns itself.
+     * @chainable
      */
     remove: function(emitter) {
         if(typeof emitter === 'string')

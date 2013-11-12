@@ -79,7 +79,8 @@ inherit(Rectangle, Object, {
      *
      * @method copy
      * @param rectangle {Rectangle} The rectangle to copy vlaues from
-     * @return {Rectangle} Returns itself
+     * @return {Rectangle} Returns itself.
+     * @chainable
      */
     copy: function(rect) {
         this.x = rect.x;
@@ -132,7 +133,7 @@ inherit(Rectangle, Object, {
      * Returns a polygon from this rectangle's points
      *
      * @method toPolygon
-     * @return {Polygon}
+     * @return {Polygon} The new polygon
      */
     toPolygon: function(pos) {
         pos = pos || this.position;

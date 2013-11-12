@@ -42,6 +42,8 @@ module.exports = function() {
      *
      * @method enablePhysics
      * @param system {PhysicsSystem} The system for the sprite to be in
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.enablePhysics = function(sys, cb) {
         var self = this;
@@ -81,6 +83,8 @@ module.exports = function() {
      * Disbales physics for this sprite
      *
      * @method disablePhysics
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.disablePhysics = function(cb) {
         //if we have a cached system, remove from it
@@ -96,6 +100,8 @@ module.exports = function() {
      * (like to a new world)
      *
      * @method disablePhysics
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.reindex = function(cb) {
         //if we have a cached system, reindex
@@ -111,6 +117,8 @@ module.exports = function() {
      *
      * @method setMass
      * @param mass {Number} The new mass of the object
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.setMass = function(mass) {
         if(this._phys.system) {
@@ -125,6 +133,8 @@ module.exports = function() {
      *
      * @method setVelocity
      * @param velocity {Vector} The new velocity of the object
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.setVelocity = function(vel) {
         if(this._phys.system) {
@@ -139,6 +149,8 @@ module.exports = function() {
      *
      * @method setRotation
      * @param rotation {Number} The new rotation of the object in radians
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.setRotation = function(rads) {
         this.rotation = rads;
@@ -156,6 +168,8 @@ module.exports = function() {
      * @method setPosition
      * @param x {Number}
      * @param y {Number}
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.setPosition = function(x, y) {
         this.position.x = x;
@@ -175,11 +189,11 @@ module.exports = function() {
      *      and if we collide with a solid tile we kill our velocity. This method will emit a
      *      'collision' event that you can listen for
      *
-     * @method onCollision
+     * @event collision
      * @param obj {Sprite} Colliding sprite
      * @param vec {Vector} Collision vector (for sensors this is normalized)
      * @param colShape {cp.Shape} The colliding physics shape
-     * @param myShape {Sprite} Your physics shape that caused the collision
+     * @param myShape {cp.Shape} Your physics shape that caused the collision
      */
     this.onCollision = function(obj, vec, colShape, myShape) {
         this.emit('collision', obj, vec, colShape, myShape);
@@ -192,10 +206,10 @@ module.exports = function() {
      *      and if we collide with a solid tile we kill our velocity. This method will emit a
      *      'collision' event that you can listen for
      *
-     * @method onCollision
+     * @event separate
      * @param obj {Sprite} Colliding sprite
      * @param colShape {cp.Shape} The colliding physics shape
-     * @param myShape {Sprite} Your physics shape that caused the collision
+     * @param myShape {cp.Shape} Your physics shape that caused the collision
      */
     this.onSeparate = function(obj, colShape, myShape) {
         this.emit('separate', obj, colShape, myShape);

@@ -149,7 +149,6 @@ inherit(Gamepad, Input, {
      * Polls the gamepad object for status updates and emits events when they occur
      *
      * @method pollStatus
-     * @param pad {Gamepad} The gamepad object to check
      */
     pollStatus: function() {
         for(var i = 0, il = this.pads.length; i < il; ++i) {

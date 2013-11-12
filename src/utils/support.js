@@ -4,6 +4,7 @@
  *
  * @class support
  * @extends Object
+ * @static
  */
 var support = {
     /**

@@ -8,6 +8,7 @@ var Vector = require('../math/Vector'),
  *
  * @class utils
  * @extends Object
+ * @static
  */
 var utils = {
     _arrayDelim: /[|,]/,
