@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -180,18 +188,27 @@ var Container = require(&#x27;../display/Container&#x27;),
     Sprite = require(&#x27;../display/Sprite&#x27;),
     Rectangle = require(&#x27;../geom/Rectangle&#x27;),
     Vector = require(&#x27;../math/Vector&#x27;),
+    ObjectPool = require(&#x27;../utils/ObjectPool&#x27;),
     ObjectFactory = require(&#x27;../utils/ObjectFactory&#x27;),
+    //camera fx
+    Close = require(&#x27;../fx/camera/Close&#x27;),
+    Fade = require(&#x27;../fx/camera/Fade&#x27;),
+    Flash = require(&#x27;../fx/camera/Flash&#x27;),
+    Scanlines = require(&#x27;../fx/camera/Scanlines&#x27;),
+    Shake = require(&#x27;../fx/camera/Shake&#x27;),
+
     inherit = require(&#x27;../utils/inherit&#x27;),
     math = require(&#x27;../math/math&#x27;),
     C = require(&#x27;../constants&#x27;);
 
 /**
- * A basic Camera object that provides some effects. It also will contain the HUD and GUI
+ * A basic Camera object that provides some effects. It also will contain the GUI
  * to ensure they are using &quot;screen-coords&quot;.
  *
  * @class Camera
  * @extends Container
  * @constructor
+ * @param state {State} The game state this camera belongs to
  */
 var Camera = function(state) {
     /**
@@ -250,13 +267,23 @@ var Camera = function(state) {
     this._target = null;
 
     /**
+     * The target&#x27;s last position, to cache if we should try to move the camera or not
+     *
+     * @property _targetPos
+     * @type Vector
+     * @readOnly
+     * @private
+     */
+    this._targetPos = new Vector();
+
+    /**
      * The size of the camera
      *
      * @property size
      * @type Vector
      * @readOnly
      */
-    this.size = new Vector(0, 0);
+    this.size = new Vector();
 
     /**
      * Half of the size of the camera
@@ -265,7 +292,7 @@ var Camera = function(state) {
      * @type Vector
      * @readOnly
      */
-    this.hSize = new Vector(0, 0);
+    this.hSize = new Vector();
 
     /**
      * The container that holds all the GUI items, direct children of Camera are effects
@@ -284,6 +311,95 @@ var Camera = function(state) {
      */
     this.add = new ObjectFactory(state, this.gui);
 
+    /**
+     * The fxpools for doing camera effects
+     *
+     * @property fxpools
+     * @type Object
+     * @private
+     * @readOnly
+     */
+    this.fxpools = {
+        flash: new ObjectPool(Flash, this),
+        fade: new ObjectPool(Fade, this),
+        shake: new ObjectPool(Shake, this),
+        scanlines: new ObjectPool(Scanlines, this),
+        close: new ObjectPool(Close, this)
+    };
+
+    /**
+     * Flash the screen with a color. This will cover the screen in a
+     * color then fade it out.
+     *
+     * @method flash
+     * @param [color=0xFFFFFF] {Number} The color to flash the screen with
+     * @param [duration=1000] {Number} The time it should take (in milliseconds) to fade out
+     * @param [alpha=1] {Number} The opacity of the initial flash of color (start opacity)
+     * @param [callback] {Function} A callback to call once the animation completes.
+     */
+
+    /**
+     * Fade the screen into a color. This will fade into a color that will
+     * eventually cover the screen.
+     *
+     * @method fade
+     * @param [color=0xFFFFFF] {Number} The color to fade into
+     * @param [duration=1000] {Number} The time it should take (in milliseconds) to fade in
+     * @param [alpha=1] {Number} The opacity to fade into (final opacity)
+     * @param [callback] {Function} A callback to call once the animation completes.
+     */
+
+    /**
+     * Shakes the camera around a bit.
+     *
+     * @method shake
+     * @param [intensity=0.01] {Number} The intensity of the shaking
+     * @param [duration=1000] {Number} The amount of time the screen shakes for (in milliseconds)
+     * @param [direction=gf.AXIS.BOTH] {gf.AXIS} The axis to shake on
+     * @param [callback] {Function} A callback to call once the animation completes.
+     */
+
+    /**
+     * Adds arcade-style scanlines to the camera viewport.
+     *
+     * @method scanlines - color, axis, spacing, thickness, alpha, cb
+     * @param [color=0x000000] {Number} The color for the scanlines to be
+     * @param [axis=gf.AXIS.HORIZONTAL] {gf.AXIS} The axis to draw the lines on
+     * @param [spacing=4] {Number} Number of pixels between each line
+     * @param [thickness=1] {Number} Number of pixels thick each line is
+     * @param [alpha=0.3] {Number} The opacity of the lines
+     * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {Close} The close effect that was created.
+     */
+
+    /**
+     * Performs a &quot;close&quot; animation that will cover the screen with a color.
+     *
+     * @method close
+     * @param [shape=&#x27;circle&#x27;] {String} The shape to close with, can be either &#x27;ellipse&#x27;, &#x27;circle&#x27;, or &#x27;rectangle&#x27;
+     * @param [duration=1000] {Number} Number of milliseconds for the animation to complete
+     * @param [position] {Vector} The position for the animation to close in on, defaults to camera center
+     * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {Close} The close effect that was created.
+     */
+
+    //Dynamic addition of fx shortcuts
+    var self = this;
+    Object.keys(this.fxpools).forEach(function(key) {
+        self[key] = function() {
+            var e = self.fxpools[key].create(),
+                args = Array.prototype.slice.call(arguments),
+                cb = args.pop();
+
+            if(cb !== undefined &amp;&amp; typeof cb !== &#x27;function&#x27;)
+                args.push(cb);
+
+            args.push(this._fxCallback.bind(this, e, key, cb));
+
+            return e.start.apply(e, args);
+        };
+    });
+
     Container.call(this);
 
     //add the gui child
@@ -291,6 +407,26 @@ var Camera = function(state) {
 };
 
 inherit(Camera, Container, {
+    /**
+     * The base callback for camera FX. This is called at the end of each aniamtion to
+     * free the FX class back into the pool.
+     *
+     * @method _fxCallback
+     * @param fx {mixed} The FX instance to free
+     * @param type {String} The name of the instance type
+     * @param [callback] {Function} The user callback to call.
+     * @private
+     */
+    _fxCallback: function(fx, type, cb) {
+        var ret;
+
+        if(typeof cb === &#x27;function&#x27;)
+            ret = cb();
+
+        this.fxpools[type].free(fx);
+
+        return ret;
+    },
     /**
      * Follows an sprite with the camera, ensuring they are always center view. You can
      * pass a follow style to change the area an sprite can move around in before we start
@@ -306,6 +442,7 @@ inherit(Camera, Container, {
             return this;
 
         this._target = spr;
+        this._targetPos.set(null, null);
 
         switch(style) {
             case C.CAMERA_FOLLOW.PLATFORMER:
@@ -355,6 +492,7 @@ inherit(Camera, Container, {
      */
     unfollow: function() {
         this._target = null;
+        this._targetPos.set(null, null);
         return this;
     },
     /**
@@ -365,9 +503,22 @@ inherit(Camera, Container, {
      * @return {Camera} Returns iteself for chainability
      */
     focusSprite: function(spr) {
+        var x = spr.position.x,
+            y = spr.position.y,
+            p = spr.parent;
+
+        //need the transform of the sprite that doesn&#x27;t take into account
+        //the world object. So add up the positions not including the world position.
+        while(p &amp;&amp; p !== this.world) {
+            x += p.position.x;
+            y += p.position.y;
+            p = p.parent;
+        }
+
         return this.focus(
-            math.round(spr.position.x),
-            math.round(spr.position.y)
+            //multiple the calculated point by the world scale for this sprite
+            math.floor(x * spr.worldTransform[0]),
+            math.floor(y * spr.worldTransform[4])
         );
     },
     /**
@@ -424,14 +575,25 @@ inherit(Camera, Container, {
             }
         }
 
-        //prevent NaN
-        if(!dx) dx = 0;
-        if(!dy) dy = 0;
+        if(dx || dy) {
+            //prevent NaN
+            if(!dx) dx = 0;
+            if(!dy) dy = 0;
 
-        this.world.pan(-dx, -dy);
+            this.world.pan(-dx, -dy);
+        }
 
         return this;
     },
+    /**
+     * Checks if a point is outside the bounds of the camera constraints.
+     *
+     * @method _outsideBounds
+     * @param x {Number} The new X position to test
+     * @param y {Number} The new Y position to test
+     * @return {Boolean} true if the camera will move outside bounds to go to this point
+     * @private
+     */
     _outsideBounds: function(x, y) {
         //check if each corner of the camera is within the bounds
         return (
@@ -494,7 +656,9 @@ inherit(Camera, Container, {
      */
     update: function(dt) {
         //follow sprite
-        if(this._target) {
+        if(this._target &amp;&amp; !this._target.position.equals(this._targetPos)) {
+            this._targetPos.copy(this._target.position);
+
             if(!this._deadzone) {
                 this.focusSprite(this._target);
             } else {

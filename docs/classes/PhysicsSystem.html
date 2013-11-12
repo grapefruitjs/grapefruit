@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>math - GrapeFruit Game Engine</title>
+    <title>PhysicsSystem - GrapeFruit Game Engine</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -180,7 +180,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>math Class</h1>
+                        <h1>PhysicsSystem Class</h1>
 <div class="box meta">
     
 
@@ -192,7 +192,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/src_math_math.js.html#l4"><code>src\math\math.js:4</code></a>
+            Defined in: <a href="../files/src_physics_PhysicsSystem.js.html#l9"><code>src\physics\PhysicsSystem.js:9</code></a>
         </div>
     
 
@@ -204,10 +204,149 @@
 
 
 <div class="box intro">
-    <p>The grapefruit math library, used to abstract commonly used math operations</p>
+    <p>The PhysicsSystem is the wrapper around the chipmunk-js physics library that integrates
+grapefruit objects into the physics world. It is in charge of managing objects in the physics
+space. Generally you would not create this yourself and instead would use the <code>.physics</code> property
+of a State.</p>
 
 </div>
 
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_PhysicsSystem" class="method item">
+    <h3 class="name"><code>PhysicsSystem</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>state</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[options]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>[options.gravity=new</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l9"><code>src\physics\PhysicsSystem.js:9</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">state</code>
+                        <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The state instance this system belongs to.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[options]</code>
+                        <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The options for the physics system.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">[options.gravity=new</code>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Vector(0, 9.87)]  The gravity of the space</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -234,169 +373,162 @@
 
                     <ul class="index-list methods extends">
                         
-                            <li class="index-item method">
-                                <a href="#method_abs">abs</a>
+                            <li class="index-item method private">
+                                <a href="#method__createBody">_createBody</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__createShape">_createShape</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_angleBetween">angleBetween</a>
+                                <a href="#method_add">add</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_ceil">ceil</a>
+                                <a href="#method_addCustomShape">addCustomShape</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_clamp">clamp</a>
+                                <a href="#method_getCollisionType">getCollisionType</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_degreesToRadians">degreesToRadians</a>
+                                <a href="#method_nextTick">nextTick</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_onCollisionBegin">onCollisionBegin</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_onCollisionEnd">onCollisionEnd</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_onCollisionEnd">onCollisionEnd</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_onCollisionPostSolve">onCollisionPostSolve</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_onPostStep">onPostStep</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_floor">floor</a>
+                                <a href="#method_pause">pause</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_max">max</a>
+                                <a href="#method_reindex">reindex</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_min">min</a>
+                                <a href="#method_reindexStatic">reindexStatic</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_radiansToDegrees">radiansToDegrees</a>
+                                <a href="#method_remove">remove</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_random">random</a>
+                                <a href="#method_resume">resume</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_randomBool">randomBool</a>
+                                <a href="#method_setMass">setMass</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_randomBytes">randomBytes</a>
+                                <a href="#method_setPosition">setPosition</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_randomElement">randomElement</a>
+                                <a href="#method_setRotation">setRotation</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_randomInt">randomInt</a>
+                                <a href="#method_setVelocity">setVelocity</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_randomReal">randomReal</a>
+                                <a href="#method_skip">skip</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_randomSign">randomSign</a>
+                                <a href="#method_skipNext">skipNext</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
-                                <a href="#method_randomString">randomString</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_randomUuid">randomUuid</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_round">round</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_snap">snap</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_snapCeil">snapCeil</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_snapFloor">snapFloor</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_sqrt">sqrt</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_truncate">truncate</a>
+                            <li class="index-item method private">
+                                <a href="#method_update">update</a>
 
                                 
                                 
@@ -412,43 +544,43 @@
 
                     <ul class="index-list properties extends">
                         
-                            <li class="index-item property">
-                                <a href="#property_DEG_TO_RAD">DEG_TO_RAD</a>
+                            <li class="index-item property private">
+                                <a href="#property__skip">_skip</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_actonQueue">actonQueue</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_mat3">mat3</a>
+                                <a href="#property_gravity">gravity</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_mat3">mat3</a>
+                                <a href="#property_space">space</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_Matrix">Matrix</a>
+                                <a href="#property_state">state</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_RAD_TO_DEG">RAD_TO_DEG</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_SEED">SEED</a>
+                            <li class="index-item property private">
+                                <a href="#property_tickCallbacks">tickCallbacks</a>
 
                                 
                                 
@@ -468,8 +600,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_abs" class="method item">
-    <h3 class="name"><code>abs</code></h3>
+                    <div id="method__createBody" class="method item private">
+    <h3 class="name"><code>_createBody</code></h3>
 
     
         <div class="args">
@@ -477,7 +609,539 @@
             
                 <li class="arg">
                     
-                        <code>num</code>
+                        <code>spr</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">cp.Body</span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l554"><code>src\physics\PhysicsSystem.js:554</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Creates a physics body for a sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite to create a body for</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">cp.Body</span>:
+                    
+                    <p>The chipmunk-js physics body</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method__createShape" class="method item private">
+    <h3 class="name"><code>_createShape</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>spr</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>body</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[poly]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">cp.Shape</span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l578"><code>src\physics\PhysicsSystem.js:578</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Creates a collision shape for a sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite to create a shape for</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">body</code>
+                        <span class="type">cp.Body</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The body to attach the shape to</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[poly]</code>
+                        <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a> | <a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a> | <a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The shape to create, defaults to <code>spr.hitArea</code></p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">cp.Shape</span>:
+                    
+                    <p>The chipmunk-js collision shape</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_add" class="method item">
+    <h3 class="name"><code>add</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>spr</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[callback]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l172"><code>src\physics\PhysicsSystem.js:172</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a sprite to the physics simulation</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite to add</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The callback to call once the sprite has been added</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_addCustomShape" class="method item">
+    <h3 class="name"><code>addCustomShape</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>spr</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>poly</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>sensor</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[callback]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l257"><code>src\physics\PhysicsSystem.js:257</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a custom shape to a sprite, useful for a single sprite to have multiple
+different collision shapes (including sensors).</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite to add the shape to</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">poly</code>
+                        <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a> | <a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a> | <a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The shape to create</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">sensor</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Is this a sensor shape, if so you will get a collision callback, but no solve</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The callback to call once the shape has been added</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_getCollisionType" class="method item">
+    <h3 class="name"><code>getCollisionType</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>spr</code>
                     
                 </li>
             
@@ -514,7 +1178,7 @@
             
         
         
-        <a href="../files/src_math_math.js.html#l90"><code>src\math\math.js:90</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l158"><code>src\physics\PhysicsSystem.js:158</code></a>
         
         </p>
 
@@ -525,12 +1189,7 @@
     </div>
 
     <div class="description">
-        <p>Returns the absolute value of a number, currently uses native Math.abs
-since it is more performant than tricks you can use.
-see:
-     <a href="http://jsperf.com/math-abs-vs-bitwise/7">http://jsperf.com/math-abs-vs-bitwise/7</a>
-     <a href="http://jsperf.com/abs-value">http://jsperf.com/abs-value</a>
-     <a href="http://jsperf.com/math-abs-vs-bitwise/3">http://jsperf.com/math-abs-vs-bitwise/3</a></p>
+        <p>Returns the collision type of a sprite</p>
 
     </div>
 
@@ -542,14 +1201,14 @@ see:
             
                 <li class="param">
                     
-                        <code class="param-name">num</code>
-                        <span class="type">Number</span>
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The number to get the absolute value for</p>
+                        <p>The sprite to check</p>
 
                     </div>
 
@@ -569,7 +1228,7 @@ see:
                     
                         <span class="type">Number</span>:
                     
-                    <p>The absolute value</p>
+                    <p>The collision type</p>
 
                 
             </div>
@@ -580,8 +1239,8 @@ see:
 </div>
 
                 
-                    <div id="method_angleBetween" class="method item">
-    <h3 class="name"><code>angleBetween</code></h3>
+                    <div id="method_nextTick" class="method item">
+    <h3 class="name"><code>nextTick</code></h3>
 
     
         <div class="args">
@@ -589,13 +1248,7 @@ see:
             
                 <li class="arg">
                     
-                        <code>pos1</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>pos2</code>
+                        <code>fn</code>
                     
                 </li>
             
@@ -603,10 +1256,6 @@ see:
         </div>
     
 
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
     
 
     
@@ -632,7 +1281,7 @@ see:
             
         
         
-        <a href="../files/src_math_math.js.html#l242"><code>src\math\math.js:242</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l149"><code>src\physics\PhysicsSystem.js:149</code></a>
         
         </p>
 
@@ -643,7 +1292,7 @@ see:
     </div>
 
     <div class="description">
-        <p>Calculates the angle between two points</p>
+        <p>Registers a callback to be executed on the next frame step</p>
 
     </div>
 
@@ -655,30 +1304,14 @@ see:
             
                 <li class="param">
                     
-                        <code class="param-name">pos1</code>
-                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a> | Point</span>
+                        <code class="param-name">fn</code>
+                        <span class="type">Function</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The first position</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">pos2</code>
-                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a> | Point</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The second position</p>
+                        <p>The callback to register</p>
 
                     </div>
 
@@ -690,27 +1323,13 @@ see:
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The angle in radians</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_ceil" class="method item">
-    <h3 class="name"><code>ceil</code></h3>
+                    <div id="method_onCollisionBegin" class="method item private">
+    <h3 class="name"><code>onCollisionBegin</code></h3>
 
     
         <div class="args">
@@ -718,7 +1337,13 @@ see:
             
                 <li class="arg">
                     
-                        <code>num</code>
+                        <code>arbiter</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>space</code>
                     
                 </li>
             
@@ -727,13 +1352,11 @@ see:
     
 
     
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -755,7 +1378,7 @@ see:
             
         
         
-        <a href="../files/src_math_math.js.html#l74"><code>src\math\math.js:74</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l395"><code>src\physics\PhysicsSystem.js:395</code></a>
         
         </p>
 
@@ -766,8 +1389,7 @@ see:
     </div>
 
     <div class="description">
-        <p>Applys a Ceiling operation to a value, currently uses native Math.ceil
-since it deals with all edge cases</p>
+        <p>Called when a collision begins in the system</p>
 
     </div>
 
@@ -779,14 +1401,30 @@ since it deals with all edge cases</p>
             
                 <li class="param">
                     
-                        <code class="param-name">num</code>
-                        <span class="type">Number</span>
+                        <code class="param-name">arbiter</code>
+                        <span class="type">cp.Arbiter</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The number to ceil</p>
+                        <p>The arbiter of the collision</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">space</code>
+                        <span class="type">cp.Space</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The space the collision occurred in</p>
 
                     </div>
 
@@ -798,730 +1436,24 @@ since it deals with all edge cases</p>
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The ceiling value</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_clamp" class="method item">
-    <h3 class="name"><code>clamp</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>num</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>min</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>max</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l137"><code>src\math\math.js:137</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Clamps a number between two values.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">num</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The number to clamp</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">min</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The minimum value the number is allowed to be</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">max</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The maximum value the number is allowed to be</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The clamped value</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_degreesToRadians" class="method item">
-    <h3 class="name"><code>degreesToRadians</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>angle</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l232"><code>src\math\math.js:232</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Convert radians to degrees</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">angle</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The angle in degrees to convert</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The angle in radians</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_floor" class="method item">
-    <h3 class="name"><code>floor</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>num</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l64"><code>src\math\math.js:64</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Applys a Floor operation to a value, currently uses native Math.floor
-since it deals with all edge cases that quicker solutions like <code>~~value</code>
-or <code>value | 0</code> do not.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">num</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The number to floor</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The floored value</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_max" class="method item">
-    <h3 class="name"><code>max</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>num</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l119"><code>src\math\math.js:119</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Returns the max of the values passed</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">num</code>
-                        <span class="type">Number...</span>
-                    
-
-                    
-                        <span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The max value</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_min" class="method item">
-    <h3 class="name"><code>min</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>num</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l111"><code>src\math\math.js:111</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Returns the min of the values passed</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">num</code>
-                        <span class="type">Number...</span>
-                    
-
-                    
-                        <span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The min value</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_radiansToDegrees" class="method item">
-    <h3 class="name"><code>radiansToDegrees</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>angle</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l222"><code>src\math\math.js:222</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Convert radians to degrees</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">angle</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The angle in radians to convert</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The angle in degrees</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_random" class="method item">
-    <h3 class="name"><code>random</code></h3>
+                    <div id="method_onCollisionEnd" class="method item private">
+    <h3 class="name"><code>onCollisionEnd</code></h3>
 
     
         <span class="paren">()</span>
     
 
     
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1543,7 +1475,7 @@ or <code>value | 0</code> do not.</p>
             
         
         
-        <a href="../files/src_math_math.js.html#l83"><code>src\math\math.js:83</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l457"><code>src\physics\PhysicsSystem.js:457</code></a>
         
         </p>
 
@@ -1554,34 +1486,21 @@ or <code>value | 0</code> do not.</p>
     </div>
 
     <div class="description">
-        <p>Generates a random number between 0 and 1, NON DETERMINISTIC</p>
+        <p>Attempts to perform the postStep actions that have been queued. If the space
+is currently locked, then it waits until after the step to run the actions.</p>
 
     </div>
 
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The random value</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_randomBool" class="method item">
-    <h3 class="name"><code>randomBool</code></h3>
+                    <div id="method_onCollisionEnd" class="method item private">
+    <h3 class="name"><code>onCollisionEnd</code></h3>
 
     
         <div class="args">
@@ -1589,7 +1508,13 @@ or <code>value | 0</code> do not.</p>
             
                 <li class="arg">
                     
-                        <code class="optional">[chance=50]</code>
+                        <code>arbiter</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>space</code>
                     
                 </li>
             
@@ -1598,13 +1523,11 @@ or <code>value | 0</code> do not.</p>
     
 
     
-        <span class="returns-inline">
-            <span class="type">Boolean</span>
-        </span>
-    
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1626,7 +1549,7 @@ or <code>value | 0</code> do not.</p>
             
         
         
-        <a href="../files/src_math_math.js.html#l253"><code>src\math\math.js:253</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l438"><code>src\physics\PhysicsSystem.js:438</code></a>
         
         </p>
 
@@ -1637,8 +1560,7 @@ or <code>value | 0</code> do not.</p>
     </div>
 
     <div class="description">
-        <p>Returns a random boolean based on the provided chance. The chance represents the
-percentage chance of returning: true.</p>
+        <p>Called after a collision ends in the system (separation)</p>
 
     </div>
 
@@ -1650,118 +1572,30 @@ percentage chance of returning: true.</p>
             
                 <li class="param">
                     
-                        <code class="param-name optional">[chance=50]</code>
-                        <span class="type">Number</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                        <code class="param-name">arbiter</code>
+                        <span class="type">cp.Arbiter</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The % chance of getting true (0 - 100), defaults to 50%</p>
+                        <p>The arbiter of the collision</p>
 
                     </div>
 
                     
                 </li>
             
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Boolean</span>:
-                    
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_randomBytes" class="method item">
-    <h3 class="name"><code>randomBytes</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[output]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l369"><code>src\math\math.js:369</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Fills a Typed Array with random bytes. If you do not pass an output param, then a default
-Uint8Array(16) is created and returned for you.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
                 <li class="param">
                     
-                        <code class="param-name optional">[output]</code>
-                        <span class="type">TypedArray</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                        <code class="param-name">space</code>
+                        <span class="type">cp.Space</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The output array for the random data, if none specified a new Uint8Array(16) is created</p>
+                        <p>The space the collision occurred in</p>
 
                     </div>
 
@@ -1778,8 +1612,8 @@ Uint8Array(16) is created and returned for you.</p>
 </div>
 
                 
-                    <div id="method_randomElement" class="method item">
-    <h3 class="name"><code>randomElement</code></h3>
+                    <div id="method_onCollisionPostSolve" class="method item private">
+    <h3 class="name"><code>onCollisionPostSolve</code></h3>
 
     
         <div class="args">
@@ -1787,19 +1621,13 @@ Uint8Array(16) is created and returned for you.</p>
             
                 <li class="arg">
                     
-                        <code>array</code>
+                        <code>arbiter</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>start</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>end</code>
+                        <code>space</code>
                     
                 </li>
             
@@ -1808,13 +1636,11 @@ Uint8Array(16) is created and returned for you.</p>
     
 
     
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1836,7 +1662,7 @@ Uint8Array(16) is created and returned for you.</p>
             
         
         
-        <a href="../files/src_math_math.js.html#l381"><code>src\math\math.js:381</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l417"><code>src\physics\PhysicsSystem.js:417</code></a>
         
         </p>
 
@@ -1847,7 +1673,7 @@ Uint8Array(16) is created and returned for you.</p>
     </div>
 
     <div class="description">
-        <p>Returns a random element of an array.</p>
+        <p>Called after a collision is solved in the system</p>
 
     </div>
 
@@ -1859,14 +1685,14 @@ Uint8Array(16) is created and returned for you.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">array</code>
-                        <span class="type">Array</span>
+                        <code class="param-name">arbiter</code>
+                        <span class="type">cp.Arbiter</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The array to choose from</p>
+                        <p>The arbiter of the collision</p>
 
                     </div>
 
@@ -1875,30 +1701,14 @@ Uint8Array(16) is created and returned for you.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">start</code>
-                        <span class="type">Number</span>
+                        <code class="param-name">space</code>
+                        <span class="type">cp.Space</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The index of the first element to include, defaults to 0</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">end</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The index of the last element to include, defaults to array.length - 1</p>
+                        <p>The space the collision occurred in</p>
 
                     </div>
 
@@ -1910,406 +1720,24 @@ Uint8Array(16) is created and returned for you.</p>
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>either 1 or -1</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_randomInt" class="method item">
-    <h3 class="name"><code>randomInt</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[min=0]</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[max=100]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l276"><code>src\math\math.js:276</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Returns a random int between min and max.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[min=0]</code>
-                        <span class="type">Number</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The minimun number that the result can be</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[max=100]</code>
-                        <span class="type">Number</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The maximun number that the result can be</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_randomReal" class="method item">
-    <h3 class="name"><code>randomReal</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[min=0]</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[max=1]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l293"><code>src\math\math.js:293</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Returns a random real number between min and max.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[min=0]</code>
-                        <span class="type">Number</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The minimun number that the result can be</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[max=1]</code>
-                        <span class="type">Number</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The maximun number that the result can be</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_randomSign" class="method item">
-    <h3 class="name"><code>randomSign</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>chance</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l310"><code>src\math\math.js:310</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Returns a random sign based on the provided chance. The chance represents the
-percentage chance of returning 1 (positive).</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">chance</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The % chance of getting positive (0 - 100), defaults to 50%</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>either 1 or -1</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_randomString" class="method item">
-    <h3 class="name"><code>randomString</code></h3>
+                    <div id="method_onPostStep" class="method item private">
+    <h3 class="name"><code>onPostStep</code></h3>
 
     
         <span class="paren">()</span>
     
 
     
-        <span class="returns-inline">
-            <span class="type">String</span>
-        </span>
-    
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -2331,7 +1759,7 @@ percentage chance of returning 1 (positive).</p>
             
         
         
-        <a href="../files/src_math_math.js.html#l321"><code>src\math\math.js:321</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l475"><code>src\physics\PhysicsSystem.js:475</code></a>
         
         </p>
 
@@ -2342,45 +1770,26 @@ percentage chance of returning 1 (positive).</p>
     </div>
 
     <div class="description">
-        <p>Returns a random string based on a random value between 0 and 1, multiplied
-by the current date. Ex: &quot;1158014093337&quot;, &quot;86371874178&quot;, etc</p>
+        <p>Processes the action queue after a step is unlocked.</p>
 
     </div>
 
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">String</span>:
-                    
-                    <p>A random string</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_randomUuid" class="method item">
-    <h3 class="name"><code>randomUuid</code></h3>
+                    <div id="method_pause" class="method item">
+    <h3 class="name"><code>pause</code></h3>
 
     
         <span class="paren">()</span>
     
 
     
-        <span class="returns-inline">
-            <span class="type">String</span>
-        </span>
-    
 
     
 
@@ -2405,7 +1814,7 @@ by the current date. Ex: &quot;1158014093337&quot;, &quot;86371874178&quot;, etc
             
         
         
-        <a href="../files/src_math_math.js.html#l331"><code>src\math\math.js:331</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l116"><code>src\physics\PhysicsSystem.js:116</code></a>
         
         </p>
 
@@ -2416,34 +1825,20 @@ by the current date. Ex: &quot;1158014093337&quot;, &quot;86371874178&quot;, etc
     </div>
 
     <div class="description">
-        <p>Generates a random RFC4122 compliant (v4) UUID</p>
+        <p>Pauses physics simulation</p>
 
     </div>
 
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">String</span>:
-                    
-                    <p>A random guid</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_round" class="method item">
-    <h3 class="name"><code>round</code></h3>
+                    <div id="method_reindex" class="method item">
+    <h3 class="name"><code>reindex</code></h3>
 
     
         <div class="args">
@@ -2451,7 +1846,13 @@ by the current date. Ex: &quot;1158014093337&quot;, &quot;86371874178&quot;, etc
             
                 <li class="arg">
                     
-                        <code>num</code>
+                        <code>spr</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[callback]</code>
                     
                 </li>
             
@@ -2460,10 +1861,6 @@ by the current date. Ex: &quot;1158014093337&quot;, &quot;86371874178&quot;, etc
     
 
     
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
 
     
 
@@ -2488,7 +1885,7 @@ by the current date. Ex: &quot;1158014093337&quot;, &quot;86371874178&quot;, etc
             
         
         
-        <a href="../files/src_math_math.js.html#l127"><code>src\math\math.js:127</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l231"><code>src\physics\PhysicsSystem.js:231</code></a>
         
         </p>
 
@@ -2499,7 +1896,8 @@ by the current date. Ex: &quot;1158014093337&quot;, &quot;86371874178&quot;, etc
     </div>
 
     <div class="description">
-        <p>Quickly rounds a number. This is about twice as fast as Math.round()</p>
+        <p>Reindexes a sprite&#39;s shape in the simulation, useful if it looks
+like changes are being cached.</p>
 
     </div>
 
@@ -2511,135 +1909,14 @@ by the current date. Ex: &quot;1158014093337&quot;, &quot;86371874178&quot;, etc
             
                 <li class="param">
                     
-                        <code class="param-name">num</code>
-                        <span class="type">Number</span>
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The number to round</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The rounded value</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_snap" class="method item">
-    <h3 class="name"><code>snap</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>num</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>gap</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[offset=0]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_math.js.html#l159"><code>src\math\math.js:159</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Snaps a number to a grid value.
-For example, if you have a grid with gaps the size of 10 horizontally, and
-a position of 11, it would snap to 10; a position of 18 would snap to 20</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">num</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The number to snap</p>
+                        <p>The sprite to reindex</p>
 
                     </div>
 
@@ -2648,31 +1925,15 @@ a position of 11, it would snap to 10; a position of 18 would snap to 20</p>
             
                 <li class="param">
                     
-                        <code class="param-name">gap</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The gap size of the grid (the tile size)</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[offset=0]</code>
-                        <span class="type">Number</span>
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The starting offset of a grid slice (aka tile)</p>
+                        <p>The callback to call once the sprite has been reindexed</p>
 
                     </div>
 
@@ -2684,27 +1945,13 @@ a position of 11, it would snap to 10; a position of 18 would snap to 20</p>
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The snapped value</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_snapCeil" class="method item">
-    <h3 class="name"><code>snapCeil</code></h3>
+                    <div id="method_reindexStatic" class="method item">
+    <h3 class="name"><code>reindexStatic</code></h3>
 
     
         <div class="args">
@@ -2712,19 +1959,7 @@ a position of 11, it would snap to 10; a position of 18 would snap to 20</p>
             
                 <li class="arg">
                     
-                        <code>num</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>gap</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[offset=0]</code>
+                        <code class="optional">[callback]</code>
                     
                 </li>
             
@@ -2732,10 +1967,6 @@ a position of 11, it would snap to 10; a position of 18 would snap to 20</p>
         </div>
     
 
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
     
 
     
@@ -2761,7 +1992,7 @@ a position of 11, it would snap to 10; a position of 18 would snap to 20</p>
             
         
         
-        <a href="../files/src_math_math.js.html#l201"><code>src\math\math.js:201</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l247"><code>src\physics\PhysicsSystem.js:247</code></a>
         
         </p>
 
@@ -2772,9 +2003,7 @@ a position of 11, it would snap to 10; a position of 18 would snap to 20</p>
     </div>
 
     <div class="description">
-        <p>Snaps a number to a grid value, using ceiling.
-For example, if you have a grid with gaps the size of 10 horizontally, and
-a position of 11, it would snap to 20; a position of 18 would also snap to 20</p>
+        <p>Reindexes all static bodies in the simulation.</p>
 
     </div>
 
@@ -2786,47 +2015,15 @@ a position of 11, it would snap to 20; a position of 18 would also snap to 20</p
             
                 <li class="param">
                     
-                        <code class="param-name">num</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The number to snap</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">gap</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The gap size of the grid (the tile size)</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[offset=0]</code>
-                        <span class="type">Number</span>
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The starting offset of a grid slice (aka tile)</p>
+                        <p>The callback to call once reindexing completes</p>
 
                     </div>
 
@@ -2838,27 +2035,13 @@ a position of 11, it would snap to 20; a position of 18 would also snap to 20</p
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The snapped value</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_snapFloor" class="method item">
-    <h3 class="name"><code>snapFloor</code></h3>
+                    <div id="method_remove" class="method item">
+    <h3 class="name"><code>remove</code></h3>
 
     
         <div class="args">
@@ -2866,19 +2049,13 @@ a position of 11, it would snap to 20; a position of 18 would also snap to 20</p
             
                 <li class="arg">
                     
-                        <code>num</code>
+                        <code>spr</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>gap</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[offset=0]</code>
+                        <code class="optional">[callback]</code>
                     
                 </li>
             
@@ -2886,10 +2063,6 @@ a position of 11, it would snap to 20; a position of 18 would also snap to 20</p
         </div>
     
 
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
     
 
     
@@ -2915,7 +2088,7 @@ a position of 11, it would snap to 20; a position of 18 would also snap to 20</p
             
         
         
-        <a href="../files/src_math_math.js.html#l180"><code>src\math\math.js:180</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l216"><code>src\physics\PhysicsSystem.js:216</code></a>
         
         </p>
 
@@ -2926,9 +2099,7 @@ a position of 11, it would snap to 20; a position of 18 would also snap to 20</p
     </div>
 
     <div class="description">
-        <p>Snaps a number to a grid value, using floor.
-For example, if you have a grid with gaps the size of 10 horizontally, and
-a position of 11, it would snap to 10; a position of 18 would also snap to 10</p>
+        <p>Removes a sprite from the physics simulation</p>
 
     </div>
 
@@ -2940,14 +2111,14 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
                 <li class="param">
                     
-                        <code class="param-name">num</code>
-                        <span class="type">Number</span>
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The number to snap</p>
+                        <p>The sprite to remove</p>
 
                     </div>
 
@@ -2956,31 +2127,15 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
                 <li class="param">
                     
-                        <code class="param-name">gap</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The gap size of the grid (the tile size)</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[offset=0]</code>
-                        <span class="type">Number</span>
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
                         <span class="flag optional" title="This parameter is optional.">optional</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The starting offset of a grid slice (aka tile)</p>
+                        <p>The callback to call once the sprite has been removed</p>
 
                     </div>
 
@@ -2992,46 +2147,18 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The snapped value</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_sqrt" class="method item">
-    <h3 class="name"><code>sqrt</code></h3>
+                    <div id="method_resume" class="method item">
+    <h3 class="name"><code>resume</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>num</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
     
 
     
@@ -3057,7 +2184,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
         
         
-        <a href="../files/src_math_math.js.html#l103"><code>src\math\math.js:103</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l124"><code>src\physics\PhysicsSystem.js:124</code></a>
         
         </p>
 
@@ -3068,58 +2195,20 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
     </div>
 
     <div class="description">
-        <p>Returns the square root of a number, currently uses native Math.sqrt</p>
+        <p>Resumes physics simulation</p>
 
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
 
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">num</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The number to get the sqrt of</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The sqrt value</p>
-
-                
-            </div>
-        </div>
     
 
     
 </div>
 
                 
-                    <div id="method_truncate" class="method item">
-    <h3 class="name"><code>truncate</code></h3>
+                    <div id="method_setMass" class="method item">
+    <h3 class="name"><code>setMass</code></h3>
 
     
         <div class="args">
@@ -3127,7 +2216,13 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
                 <li class="arg">
                     
-                        <code>num</code>
+                        <code>spr</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>mass</code>
                     
                 </li>
             
@@ -3135,10 +2230,6 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
         </div>
     
 
-    
-        <span class="returns-inline">
-            <span class="type">Number</span>
-        </span>
     
 
     
@@ -3164,7 +2255,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
         
         
-        <a href="../files/src_math_math.js.html#l149"><code>src\math\math.js:149</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l287"><code>src\physics\PhysicsSystem.js:287</code></a>
         
         </p>
 
@@ -3175,7 +2266,445 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
     </div>
 
     <div class="description">
-        <p>Truncates the decimal from a number</p>
+        <p>Sets the mass of a sprite&#39;s physics body.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite to set the mass for</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">mass</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The mass to set</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setPosition" class="method item">
+    <h3 class="name"><code>setPosition</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>spr</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>position</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l320"><code>src\physics\PhysicsSystem.js:320</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the position of a sprite&#39;s physics body.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite to set the position for</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">position</code>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The position to set to</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setRotation" class="method item">
+    <h3 class="name"><code>setRotation</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>spr</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>rotation</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l341"><code>src\physics\PhysicsSystem.js:341</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the rotation of a sprite&#39;s physics body.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite to set the rotation for</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">rotation</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The rotation to set to in radians</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setVelocity" class="method item">
+    <h3 class="name"><code>setVelocity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>spr</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>velocity</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l300"><code>src\physics\PhysicsSystem.js:300</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the velocity of a sprite&#39;s physics body.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">spr</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite to set the velocity for</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">velocity</code>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The velocity to set to</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_skip" class="method item">
+    <h3 class="name"><code>skip</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>num</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l132"><code>src\physics\PhysicsSystem.js:132</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Skips the specified number of frame steps</p>
 
     </div>
 
@@ -3194,7 +2723,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
                     
 
                     <div class="param-description">
-                        <p>The number to truncate</p>
+                        <p>Number of steps to skip</p>
 
                     </div>
 
@@ -3206,19 +2735,151 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
 
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Number</span>:
-                    
-                    <p>The truncated value</p>
+    
+</div>
 
                 
-            </div>
+                    <div id="method_skipNext" class="method item">
+    <h3 class="name"><code>skipNext</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l141"><code>src\physics\PhysicsSystem.js:141</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Skips the next frame step</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_update" class="method item private">
+    <h3 class="name"><code>update</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>dt</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
         </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsSystem.js.html#l362"><code>src\physics\PhysicsSystem.js:362</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Called each frame by the game state to update the physics simulations</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">dt</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The number of seconds passed since the last call</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
     
 
     
@@ -3233,13 +2894,15 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_DEG_TO_RAD" class="property item">
-    <h3 class="name"><code>DEG_TO_RAD</code></h3>
+                    <div id="property__skip" class="property item private">
+    <h3 class="name"><code>_skip</code></h3>
     <span class="type">Number</span>
 
     
 
     
+        <span class="flag private">private</span>
+    
 
     
 
@@ -3256,7 +2919,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
         
         
-        <a href="../files/src_math_math.js.html#l11"><code>src\math\math.js:11</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l105"><code>src\physics\PhysicsSystem.js:105</code></a>
         
         </p>
 
@@ -3266,7 +2929,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
     </div>
 
     <div class="description">
-        <p>The factor to multiply by to convert Degrees into Radians. The value is π/180</p>
+        <p>The number of steps to skip, tracks <code>this.skip(num)</code></p>
 
     </div>
 
@@ -3278,12 +2941,14 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
 </div>
 
                 
-                    <div id="property_mat3" class="property item">
-    <h3 class="name"><code>mat3</code></h3>
-    <span class="type">Object</span>
+                    <div id="property_actonQueue" class="property item private">
+    <h3 class="name"><code>actonQueue</code></h3>
+    <span class="type">Array<Object></span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -3301,7 +2966,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
         
         
-        <a href="../files/src_math_math.js.html#l46"><code>src\math\math.js:46</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l85"><code>src\physics\PhysicsSystem.js:85</code></a>
         
         </p>
 
@@ -3311,7 +2976,9 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
     </div>
 
     <div class="description">
-        <p>A 3x3 Matrix namespace, directory exposes PIXI.mat3. You can use this to create 3x3 Matrix classes.</p>
+        <p>The actions to perform at the next post-step callback. These are
+for actions (like add, remove) that cannot be performed during a
+simulation step.</p>
 
     </div>
 
@@ -3323,9 +2990,9 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
 </div>
 
                 
-                    <div id="property_mat3" class="property item">
-    <h3 class="name"><code>mat3</code></h3>
-    <span class="type">Object</span>
+                    <div id="property_gravity" class="property item">
+    <h3 class="name"><code>gravity</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
 
     
 
@@ -3346,7 +3013,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
         
         
-        <a href="../files/src_math_math.js.html#l53"><code>src\math\math.js:53</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l46"><code>src\physics\PhysicsSystem.js:46</code></a>
         
         </p>
 
@@ -3356,7 +3023,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
     </div>
 
     <div class="description">
-        <p>A 4x4 Matrix namespace, directory exposes PIXI.mat4. You can use this to create 4x4 Matrix classes.</p>
+        <p>The gravity of the physics space</p>
 
     </div>
 
@@ -3368,9 +3035,9 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
 </div>
 
                 
-                    <div id="property_Matrix" class="property item">
-    <h3 class="name"><code>Matrix</code></h3>
-    <span class="type">Matrix</span>
+                    <div id="property_space" class="property item">
+    <h3 class="name"><code>space</code></h3>
+    <span class="type">cp.Space</span>
 
     
 
@@ -3391,7 +3058,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
         
         
-        <a href="../files/src_math_math.js.html#l39"><code>src\math\math.js:39</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l37"><code>src\physics\PhysicsSystem.js:37</code></a>
         
         </p>
 
@@ -3401,7 +3068,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
     </div>
 
     <div class="description">
-        <p>A Matrix class, directory exposes PIXI.Matrix.</p>
+        <p>The chipmunk space instance that will run all the physics simulations</p>
 
     </div>
 
@@ -3413,9 +3080,9 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
 </div>
 
                 
-                    <div id="property_RAD_TO_DEG" class="property item">
-    <h3 class="name"><code>RAD_TO_DEG</code></h3>
-    <span class="type">Number</span>
+                    <div id="property_state" class="property item">
+    <h3 class="name"><code>state</code></h3>
+    <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>
 
     
 
@@ -3436,7 +3103,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
         
         
-        <a href="../files/src_math_math.js.html#l19"><code>src\math\math.js:19</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l29"><code>src\physics\PhysicsSystem.js:29</code></a>
         
         </p>
 
@@ -3446,7 +3113,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
     </div>
 
     <div class="description">
-        <p>The factor to multiply by to convert Radians into Degrees. The value is 180/π</p>
+        <p>The state instance this system belongs to</p>
 
     </div>
 
@@ -3458,12 +3125,14 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
 </div>
 
                 
-                    <div id="property_SEED" class="property item">
-    <h3 class="name"><code>SEED</code></h3>
-    <span class="type">Number</span>
+                    <div id="property_tickCallbacks" class="property item private">
+    <h3 class="name"><code>tickCallbacks</code></h3>
+    <span class="type">Array<Function></span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -3481,7 +3150,7 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
             
         
         
-        <a href="../files/src_math_math.js.html#l27"><code>src\math\math.js:27</code></a>
+        <a href="../files/src_physics_PhysicsSystem.js.html#l96"><code>src\physics\PhysicsSystem.js:96</code></a>
         
         </p>
 
@@ -3491,15 +3160,10 @@ a position of 11, it would snap to 10; a position of 18 would also snap to 10</p
     </div>
 
     <div class="description">
-        <p>The RNG seed that allows for deterministic random numbers. Change this to a certain value
-to ensure you will have the same sequence of &quot;random&quot; numbers. Useful for playbacks, save files,
-procedural generation, etc.</p>
-<p>Note: Deterministic randomness is not yet implemented. Scheduled for v0.2.0</p>
+        <p>The callback functions to call on the next frame</p>
 
     </div>
 
-    
-        <p><strong>Default:</strong> Math.random()</p>
     
 
     

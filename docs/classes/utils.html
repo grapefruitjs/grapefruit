@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -239,6 +247,13 @@
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_error">error</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_extend">extend</a>
 
                                 
@@ -267,6 +282,13 @@
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_log">log</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_noop">noop</a>
 
                                 
@@ -274,7 +296,35 @@
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_parseHitArea">parseHitArea</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_parseTiledProperties">parseTiledProperties</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_parseXML">parseXML</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_setValues">setValues</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_warn">warn</a>
 
                                 
                                 
@@ -474,6 +524,61 @@
 </div>
 
                 
+                    <div id="method_error" class="method item">
+    <h3 class="name"><code>error</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_utils_utils.js.html#l421"><code>src\utils\utils.js:421</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Safe way to error to console, if console.error doesn&#39;t exist nothing happens.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_extend" class="method item">
     <h3 class="name"><code>extend</code></h3>
 
@@ -506,7 +611,7 @@
             
         
         
-        <a href="../files/src_utils_utils.js.html#l212"><code>src\utils\utils.js:212</code></a>
+        <a href="../files/src_utils_utils.js.html#l200"><code>src\utils\utils.js:200</code></a>
         
         </p>
 
@@ -683,7 +788,7 @@ taken straight from jQuery 2.0.3</p>
             
         
         
-        <a href="../files/src_utils_utils.js.html#l312"><code>src\utils\utils.js:312</code></a>
+        <a href="../files/src_utils_utils.js.html#l302"><code>src\utils\utils.js:302</code></a>
         
         </p>
 
@@ -748,6 +853,112 @@ taken straight from jQuery 2.0.3</p>
     <h3 class="name"><code>isPlainObject</code></h3>
 
     
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>obj</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_utils_utils.js.html#l269"><code>src\utils\utils.js:269</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>From jQuery.isPlainObject, checks if an object is a plain object
+taken straight from jQuery 2.0.3</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">obj</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The object to test</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_log" class="method item">
+    <h3 class="name"><code>log</code></h3>
+
+    
         <span class="paren">()</span>
     
 
@@ -776,7 +987,7 @@ taken straight from jQuery 2.0.3</p>
             
         
         
-        <a href="../files/src_utils_utils.js.html#l281"><code>src\utils\utils.js:281</code></a>
+        <a href="../files/src_utils_utils.js.html#l403"><code>src\utils\utils.js:403</code></a>
         
         </p>
 
@@ -787,8 +998,7 @@ taken straight from jQuery 2.0.3</p>
     </div>
 
     <div class="description">
-        <p>From jQuery.isPlainObject, checks if an object is a plain object
-taken straight from jQuery 2.0.3</p>
+        <p>Safe way to log to console, if console.log doesn&#39;t exist nothing happens.</p>
 
     </div>
 
@@ -849,6 +1059,334 @@ taken straight from jQuery 2.0.3</p>
 
     
 
+    
+
+    
+</div>
+
+                
+                    <div id="method_parseHitArea" class="method item">
+    <h3 class="name"><code>parseHitArea</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>value</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a> | <a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a> | <a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_utils_utils.js.html#l321"><code>src\utils\utils.js:321</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Parses an array of numbers that represent a hitArea into the actual shape.</p>
+<p>For example: <code>[1, 1, 15]</code> is a Circle (<code>[x, y, radius]</code>); <code>[1, 1, 15, 15]</code> is a Rectangle
+(<code>[x, y, width, height]</code>); and any length &gt;= 5 is a polygon in the form <code>[x1, y1, x2, y2, ..., xN, yN]</code>.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">value</code>
+                        <span class="type">Array<Number></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The array to parse</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a> | <a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a> | <a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>:
+                    
+                    <p>The parsed out shape</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_parseTiledProperties" class="method item">
+    <h3 class="name"><code>parseTiledProperties</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>value</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a> | <a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a> | <a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_utils_utils.js.html#l354"><code>src\utils\utils.js:354</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Parses an object of string properties into potential javascript types. First it attempts to
+convert to a number, if that fails it checks for the string &#39;true&#39; or &#39;false&#39; and changes it
+to the actual Boolean value, then it attempts to parse a string as JSON.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">value</code>
+                        <span class="type">Array<Number></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The array to parse</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a> | <a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a> | <a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>:
+                    
+                    <p>The parsed out shape</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_parseXML" class="method item">
+    <h3 class="name"><code>parseXML</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>xmlStr</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Document</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_utils_utils.js.html#l432"><code>src\utils\utils.js:432</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Parses an XML string into a Document object. Will use window.DOMParser
+if available, falling back to Microsoft.XMLDOM ActiveXObject in IE.</p>
+<p>Eventually, it would be nice to include a node.js alternative as well
+for running in that environment.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">xmlStr</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The xml string to parse</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Document</span>:
+                    
+                    <p>An XML Document</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -996,6 +1534,61 @@ in the original object, it is not copied.</p>
 
             </div>
         </div>
+    
+</div>
+
+                
+                    <div id="method_warn" class="method item">
+    <h3 class="name"><code>warn</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_utils_utils.js.html#l412"><code>src\utils\utils.js:412</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Safe way to warn to console, if console.warn doesn&#39;t exist nothing happens.</p>
+
+    </div>
+
+    
+
+    
+
     
 </div>
 

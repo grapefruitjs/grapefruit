@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -305,6 +313,8 @@
         
         
         
+            <li class="api-class-tab events"><a href="#events">Events</a></li>
+        
     </ul>
 
     <div>
@@ -340,6 +350,20 @@
                         
                             <li class="index-item method inherited">
                                 <a href="#method_once">once</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_onPointer">onPointer</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_update">update</a>
 
                                 
                                 
@@ -403,6 +427,70 @@
 
             
 
+            
+                <div class="index-section events">
+                    <h3>Events</h3>
+
+                    <ul class="index-list events extends">
+                        
+                            <li class="index-item event">
+                                <a href="#event_cancel">cancel</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_down">down</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_enter">enter</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_leave">leave</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_move">move</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_out">out</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_over">over</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_up">up</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
             
         </div>
 
@@ -843,6 +931,228 @@
 </div>
 
                 
+                    <div id="method_onPointer" class="method item private">
+    <h3 class="name"><code>onPointer</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>name</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>evt</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_input_Pointers.js.html#l137"><code>src\input\Pointers.js:137</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Callback that is called when a pointer event occurs.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">name</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the pointer event with out the &#39;pointer&#39; prefix</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">evt</code>
+                        <span class="type">DOMEvent</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The DOM Event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_update" class="method item private">
+    <h3 class="name"><code>update</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>dt</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Pointers.html" class="crosslink">Pointers</a></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_input_Pointers.js.html#l165"><code>src\input\Pointers.js:165</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Called internally every frame. Updates all the pointers</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">dt</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The delta time (in seconds) since the last update</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Pointers.html" class="crosslink">Pointers</a></span>:
+                    
+                    <p>Returns iteself for chainability</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
             </div>
         
 
@@ -1085,7 +1395,7 @@ event for it to be considered a &quot;click&quot; event, in milliseconds</p>
                 
                     <div id="property_pointers" class="property item">
     <h3 class="name"><code>pointers</code></h3>
-    <span class="type">Array<Pointer></span>
+    <span class="type">Object<Pointer></span>
 
     
 
@@ -1116,7 +1426,7 @@ event for it to be considered a &quot;click&quot; event, in milliseconds</p>
     </div>
 
     <div class="description">
-        <p>The pointer instances currently being used</p>
+        <p>The pointer instances currently being used, keyed by an ID</p>
 
     </div>
 
@@ -1133,6 +1443,556 @@ event for it to be considered a &quot;click&quot; event, in milliseconds</p>
 
         
 
+        
+            <div id="events" class="api-class-tabpanel">
+                <h2 class="off-left">Events</h2>
+
+                
+                    <div id="event_cancel" class="events item">
+    <h3 class="name"><code>cancel</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_input_Pointers.js.html#l114"><code>src\input\Pointers.js:114</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when a pointer event is canceled</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pointer</code>
+                        <span class="type"><a href="..\classes\Pointer.html" class="crosslink">Pointer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The pointer instance that had a &#39;pointercancel&#39; event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_down" class="events item">
+    <h3 class="name"><code>down</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_input_Pointers.js.html#l79"><code>src\input\Pointers.js:79</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when a pointer is pressed on the canvas</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pointer</code>
+                        <span class="type"><a href="..\classes\Pointer.html" class="crosslink">Pointer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The pointer instance that had a &#39;pointerdown&#39; event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_enter" class="events item">
+    <h3 class="name"><code>enter</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_input_Pointers.js.html#l121"><code>src\input\Pointers.js:121</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when a pointer enters the canvas</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pointer</code>
+                        <span class="type"><a href="..\classes\Pointer.html" class="crosslink">Pointer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The pointer instance that had a &#39;pointerenter&#39; event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_leave" class="events item">
+    <h3 class="name"><code>leave</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_input_Pointers.js.html#l128"><code>src\input\Pointers.js:128</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when a pointer leaves the canvas</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pointer</code>
+                        <span class="type"><a href="..\classes\Pointer.html" class="crosslink">Pointer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The pointer instance that had a &#39;pointerleave&#39; event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_move" class="events item">
+    <h3 class="name"><code>move</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_input_Pointers.js.html#l93"><code>src\input\Pointers.js:93</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when a pointer is moved while on the canvas</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pointer</code>
+                        <span class="type"><a href="..\classes\Pointer.html" class="crosslink">Pointer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The pointer instance that had a &#39;pointermove&#39; event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_out" class="events item">
+    <h3 class="name"><code>out</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_input_Pointers.js.html#l107"><code>src\input\Pointers.js:107</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when a pointer moves out of the canvas</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pointer</code>
+                        <span class="type"><a href="..\classes\Pointer.html" class="crosslink">Pointer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The pointer instance that had a &#39;pointerout&#39; event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_over" class="events item">
+    <h3 class="name"><code>over</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_input_Pointers.js.html#l100"><code>src\input\Pointers.js:100</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when a pointer moves over the canvas</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pointer</code>
+                        <span class="type"><a href="..\classes\Pointer.html" class="crosslink">Pointer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The pointer instance that had a &#39;pointerover&#39; event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_up" class="events item">
+    <h3 class="name"><code>up</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_input_Pointers.js.html#l86"><code>src\input\Pointers.js:86</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when a pointer is released off the canvas</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">pointer</code>
+                        <span class="type"><a href="..\classes\Pointer.html" class="crosslink">Pointer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The pointer instance that had a &#39;pointerup&#39; event</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+            </div>
         
     </div>
 </div>

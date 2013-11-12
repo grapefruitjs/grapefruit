@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -207,7 +215,7 @@
 <div class="box intro">
     <p>The Loader loads and parses different game assets, such as sounds, textures,
 TMX World files (exported from the <a href="http://mapeditor.org">Tiled Editor</a>),
-and Spritesheet files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).</p>
+and Sprite Atlas files (published from <a href="http://www.codeandweb.com/texturepacker">Texture Packer</a>).</p>
 
 </div>
 
@@ -330,6 +338,48 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
 
                     <ul class="index-list methods extends">
                         
+                            <li class="index-item method private">
+                                <a href="#method__dataget">_dataget</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__getFormatAjaxType">_getFormatAjaxType</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__loadJsonTilesets">_loadJsonTilesets</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__loadXmlTilesets">_loadXmlTilesets</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__onTilesetError">_onTilesetError</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__onTilesetLoaded">_onTilesetLoaded</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method">
                                 <a href="#method_add">add</a>
 
@@ -358,14 +408,21 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
+                                <a href="#method_fileComplete">fileComplete</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
                                 <a href="#method_fileDone">fileDone</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method private">
                                 <a href="#method_fileError">fileError</a>
 
                                 
@@ -569,6 +626,13 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
                                 
                             </li>
                         
+                            <li class="index-item event">
+                                <a href="#event_start">start</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -577,6 +641,598 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method__dataget" class="method item private">
+    <h3 class="name"><code>_dataget</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>file</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[callback]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_loader_Loader.js.html#l709"><code>src\loader\Loader.js:709</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Gets a file&#39;s data via ajax.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">file</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The file descriptor object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The callback to call once the file has loaded. <code>fileDone</code> or <code>fileError</code> will be
+     called for you.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__getFormatAjaxType" class="method item private">
+    <h3 class="name"><code>_getFormatAjaxType</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_loader_Loader.js.html#l686"><code>src\loader\Loader.js:686</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Returns the ajax type that represents each format type</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">type</code>
+                        <span class="type">ATLAS_FORMAT | FILE_FORMAT</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The format to get an ajax type for</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__loadJsonTilesets" class="method item private">
+    <h3 class="name"><code>_loadJsonTilesets</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>file</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_loader_Loader.js.html#l739"><code>src\loader\Loader.js:739</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Loads the tilesets found in a JSON formatted tilemap object.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">file</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The file descriptor object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__loadXmlTilesets" class="method item private">
+    <h3 class="name"><code>_loadXmlTilesets</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>file</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_loader_Loader.js.html#l769"><code>src\loader\Loader.js:769</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Loads the tilesets found in a XML formatted tilemap object.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">file</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The file descriptor object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__onTilesetError" class="method item private">
+    <h3 class="name"><code>_onTilesetError</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>file</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>error</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_loader_Loader.js.html#l816"><code>src\loader\Loader.js:816</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Called each time a tileset has an error when loading.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">file</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The file descriptor object.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">error</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The error thrown when loading.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__onTilesetLoaded" class="method item private">
+    <h3 class="name"><code>_onTilesetLoaded</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>file</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_loader_Loader.js.html#l800"><code>src\loader\Loader.js:800</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Called each time a tileset is loaded successfully.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">file</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The file descriptor object.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="method_add" class="method item">
@@ -615,6 +1271,10 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>
+        </span>
+    
 
     
 
@@ -639,7 +1299,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l157"><code>src\loader\Loader.js:157</code></a>
+        <a href="../files/src_loader_Loader.js.html#l163"><code>src\loader\Loader.js:163</code></a>
         
         </p>
 
@@ -718,7 +1378,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
                     
 
                     <div class="param-description">
-                        <p>Extra options to apply to the asset (such as crossOrigin)</p>
+                        <p>Extra options to apply to the asset, different asset types may require extra options</p>
 
                     </div>
 
@@ -748,6 +1408,20 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
         </div>
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -784,6 +1458,10 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>
+        </span>
+    
 
     
 
@@ -808,7 +1486,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l235"><code>src\loader\Loader.js:235</code></a>
+        <a href="../files/src_loader_Loader.js.html#l253"><code>src\loader\Loader.js:253</code></a>
         
         </p>
 
@@ -871,7 +1549,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
                     
 
                     <div class="param-description">
-                        <p>If an entry with a matching key already exists this will over-write it</p>
+                        <p>If an entry with a matching key already exists this will over-write it.</p>
 
                     </div>
 
@@ -882,6 +1560,20 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
         </div>
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -936,6 +1628,10 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>
+        </span>
+    
 
     
 
@@ -960,7 +1656,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l284"><code>src\loader\Loader.js:284</code></a>
+        <a href="../files/src_loader_Loader.js.html#l308"><code>src\loader\Loader.js:308</code></a>
         
         </p>
 
@@ -1086,6 +1782,20 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
+    
 
     
 </div>
@@ -1199,8 +1909,8 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
 </div>
 
                 
-                    <div id="method_fileDone" class="method item">
-    <h3 class="name"><code>fileDone</code></h3>
+                    <div id="method_fileComplete" class="method item private">
+    <h3 class="name"><code>fileComplete</code></h3>
 
     
         <div class="args">
@@ -1212,12 +1922,6 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
                     
                 </li>
             
-                <li class="arg">
-                    
-                        <code>fail</code>
-                    
-                </li>
-            
             </ul><span class="paren">)</span>
         </div>
     
@@ -1226,6 +1930,8 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1247,7 +1953,104 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l583"><code>src\loader\Loader.js:583</code></a>
+        <a href="../files/src_loader_Loader.js.html#l582"><code>src\loader\Loader.js:582</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Called when a file is successfully loaded.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">key</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Key of the successfully loaded file.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_fileDone" class="method item private">
+    <h3 class="name"><code>fileDone</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>key</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>error</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_loader_Loader.js.html#l658"><code>src\loader\Loader.js:658</code></a>
         
         </p>
 
@@ -1286,14 +2089,14 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
                 <li class="param">
                     
-                        <code class="param-name">fail</code>
-                        <span class="type">Boolean</span>
+                        <code class="param-name">error</code>
+                        <span class="type">Mixed</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Whether this was a failure or not</p>
+                        <p>The error that occurred (if there was one)</p>
 
                     </div>
 
@@ -1310,7 +2113,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
 </div>
 
                 
-                    <div id="method_fileError" class="method item">
+                    <div id="method_fileError" class="method item private">
     <h3 class="name"><code>fileError</code></h3>
 
     
@@ -1323,6 +2126,12 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
                     
                 </li>
             
+                <li class="arg">
+                    
+                        <code>error</code>
+                    
+                </li>
+            
             </ul><span class="paren">)</span>
         </div>
     
@@ -1331,6 +2140,8 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -1352,7 +2163,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l493"><code>src\loader\Loader.js:493</code></a>
+        <a href="../files/src_loader_Loader.js.html#l567"><code>src\loader\Loader.js:567</code></a>
         
         </p>
 
@@ -1389,6 +2200,22 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
                     
                 </li>
             
+                <li class="param">
+                    
+                        <code class="param-name">error</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The error that was thrown.</p>
+
+                    </div>
+
+                    
+                </li>
+            
             </ul>
         </div>
     
@@ -1403,67 +2230,12 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     <h3 class="name"><code>getAudioUrl</code></h3>
 
     
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_loader_Loader.js.html#l474"><code>src\loader\Loader.js:474</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Chooses the audio url to use based on browser support</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_hasKey" class="method item">
-    <h3 class="name"><code>hasKey</code></h3>
-
-    
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
             
                 <li class="arg">
                     
-                        <code>key</code>
+                        <code>urls</code>
                     
                 </li>
             
@@ -1473,7 +2245,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
 
     
         <span class="returns-inline">
-            <span class="type">Bool</span>
+            <span class="type">String</span>
         </span>
     
 
@@ -1500,7 +2272,115 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l131"><code>src\loader\Loader.js:131</code></a>
+        <a href="../files/src_loader_Loader.js.html#l545"><code>src\loader\Loader.js:545</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Chooses the audio url to use based on browser support.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">urls</code>
+                        <span class="type">Array<String></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>An array of URLs to choose from, chooses the first in the array to be
+     supported by the browser.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">String</span>:
+                    
+                    <p>Returns the URL that was chosen, or <code>undefined</code> if none are supported.</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_hasKey" class="method item">
+    <h3 class="name"><code>hasKey</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>key</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_loader_Loader.js.html#l134"><code>src\loader\Loader.js:134</code></a>
         
         </p>
 
@@ -1548,7 +2428,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             <div class="returns-description">
                 
                     
-                        <span class="type">Bool</span>:
+                        <span class="type">Boolean</span>:
                     
                     <p>Return true if exists, otherwise return false.</p>
 
@@ -1591,6 +2471,10 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>
+        </span>
+    
 
     
 
@@ -1615,7 +2499,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l189"><code>src\loader\Loader.js:189</code></a>
+        <a href="../files/src_loader_Loader.js.html#l198"><code>src\loader\Loader.js:198</code></a>
         
         </p>
 
@@ -1690,6 +2574,20 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
+    
 
     
 </div>
@@ -1702,6 +2600,10 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
         <span class="paren">()</span>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>
+        </span>
     
 
     
@@ -1727,7 +2629,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l388"><code>src\loader\Loader.js:388</code></a>
+        <a href="../files/src_loader_Loader.js.html#l452"><code>src\loader\Loader.js:452</code></a>
         
         </p>
 
@@ -1738,12 +2640,29 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     </div>
 
     <div class="description">
-        <p>Loads a single asset from the assets in this Loader.</p>
+        <p>Loads a single asset from the queued assets in this Loader. To load a single file first queue it by using
+one of the methods named for an asset (like <code>audio</code>, <code>image</code>, <code>tilemap</code>, etc.), then call this to load the
+first in the queue.</p>
+<p>Note: To load the entire queue at once use <code>start</code>.</p>
 
     </div>
 
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -2082,6 +3001,10 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>
+        </span>
+    
 
     
 
@@ -2106,7 +3029,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l142"><code>src\loader\Loader.js:142</code></a>
+        <a href="../files/src_loader_Loader.js.html#l145"><code>src\loader\Loader.js:145</code></a>
         
         </p>
 
@@ -2117,12 +3040,26 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     </div>
 
     <div class="description">
-        <p>Reset loader, this will remove all loaded assets.</p>
+        <p>Reset loader, this will remove all loaded assets from the loader&#39;s stored list (but not from the cache).</p>
 
     </div>
 
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -2177,6 +3114,10 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>
+        </span>
+    
 
     
 
@@ -2201,7 +3142,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l215"><code>src\loader\Loader.js:215</code></a>
+        <a href="../files/src_loader_Loader.js.html#l230"><code>src\loader\Loader.js:230</code></a>
         
         </p>
 
@@ -2324,6 +3265,20 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
+    
 
     
 </div>
@@ -2336,6 +3291,10 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
         <span class="paren">()</span>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>
+        </span>
     
 
     
@@ -2361,7 +3320,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l364"><code>src\loader\Loader.js:364</code></a>
+        <a href="../files/src_loader_Loader.js.html#l425"><code>src\loader\Loader.js:425</code></a>
         
         </p>
 
@@ -2372,12 +3331,26 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     </div>
 
     <div class="description">
-        <p>Starts the loading of all the assets added</p>
+        <p>Starts the loading of all the assets that are queued to load</p>
 
     </div>
 
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -2414,6 +3387,10 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>
+        </span>
+    
 
     
 
@@ -2438,7 +3415,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l202"><code>src\loader\Loader.js:202</code></a>
+        <a href="../files/src_loader_Loader.js.html#l214"><code>src\loader\Loader.js:214</code></a>
         
         </p>
 
@@ -2513,6 +3490,20 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
+    
 
     
 </div>
@@ -2560,6 +3551,10 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>
+        </span>
+    
 
     
 
@@ -2584,7 +3579,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l248"><code>src\loader\Loader.js:248</code></a>
+        <a href="../files/src_loader_Loader.js.html#l269"><code>src\loader\Loader.js:269</code></a>
         
         </p>
 
@@ -2692,6 +3687,20 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
         </div>
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Loader.html" class="crosslink">Loader</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -3189,7 +4198,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l123"><code>src\loader\Loader.js:123</code></a>
+        <a href="../files/src_loader_Loader.js.html#l126"><code>src\loader\Loader.js:126</code></a>
         
         </p>
 
@@ -3233,7 +4242,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l104"><code>src\loader\Loader.js:104</code></a>
+        <a href="../files/src_loader_Loader.js.html#l111"><code>src\loader\Loader.js:111</code></a>
         
         </p>
 
@@ -3255,48 +4264,33 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
                 <li class="param">
                     
-                        <code class="param-name">eventData</code>
-                        <span class="type">Object</span>
+                        <code class="param-name">error</code>
+                        <span class="type">Mixed</span>
                     
 
                     
 
                     <div class="param-description">
-                         
+                        <p>The error that occured when loading</p>
+
                     </div>
 
                     
-                        <ul class="params-list">
-                            
-                            <li class="param">
-                                
-                                    <code class="param-name">assetType</code>
-                                    <span class="type">String</span>
-                                
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">key</code>
+                        <span class="type">String</span>
+                    
 
-                                <div class="param-description">
-                                    <p>The type of asset</p>
+                    
 
-                                </div>
+                    <div class="param-description">
+                        <p>The key for the asset that was being loaded</p>
 
-                                
-                            </li>
-                            
-                            <li class="param">
-                                
-                                    <code class="param-name">message</code>
-                                    <span class="type">String</span>
-                                
+                    </div>
 
-                                <div class="param-description">
-                                    <p>The message of the error</p>
-
-                                </div>
-
-                                
-                            </li>
-                            
-                        </ul>
                     
                 </li>
             
@@ -3332,7 +4326,7 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
         
         
-        <a href="../files/src_loader_Loader.js.html#l113"><code>src\loader\Loader.js:113</code></a>
+        <a href="../files/src_loader_Loader.js.html#l119"><code>src\loader\Loader.js:119</code></a>
         
         </p>
 
@@ -3354,62 +4348,85 @@ and Spritesheet files (published from <a href="http://www.codeandweb.com/texture
             
                 <li class="param">
                     
-                        <code class="param-name">eventData</code>
-                        <span class="type">Object</span>
+                        <code class="param-name">progress</code>
+                        <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                         
+                        <p>The integer progress value, between 0 and 100.</p>
+
                     </div>
 
                     
-                        <ul class="params-list">
-                            
-                            <li class="param">
-                                
-                                    <code class="param-name">assetType</code>
-                                    <span class="type">String</span>
-                                
+                </li>
+            
+            </ul>
+        </div>
+    
 
-                                <div class="param-description">
-                                    <p>The type of asset</p>
 
-                                </div>
+    
+</div>
 
-                                
-                            </li>
-                            
-                            <li class="param">
-                                
-                                    <code class="param-name">url</code>
-                                    <span class="type">String</span>
-                                
+                
+                    <div id="event_start" class="events item">
+    <h3 class="name"><code>start</code></h3>
+    <span class="type"></span>
 
-                                <div class="param-description">
-                                    <p>The url the asset loaded from</p>
+    
 
-                                </div>
+    
 
-                                
-                            </li>
-                            
-                            <li class="param">
-                                
-                                    <code class="param-name">data</code>
-                                    <span class="type">Mixed</span>
-                                
+    
 
-                                <div class="param-description">
-                                    <p>The data that was loaded</p>
+    
 
-                                </div>
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_loader_Loader.js.html#l104"><code>src\loader\Loader.js:104</code></a>
+        
+        </p>
 
-                                
-                            </li>
-                            
-                        </ul>
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when an item has started loading</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">numAssets</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The number of assets that are going to be loaded</p>
+
+                    </div>
+
                     
                 </li>
             

@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -193,10 +201,10 @@ var Pointers = function(game) {
     Input.call(this, game);
 
     /**
-     * The pointer instances currently being used
+     * The pointer instances currently being used, keyed by an ID
      *
      * @property pointers
-     * @type Array&lt;Pointer&gt;
+     * @type Object&lt;Pointer&gt;
      */
     this.pointers = {};
 
@@ -253,9 +261,73 @@ var Pointers = function(game) {
     game.canvas.addEventListener(&#x27;pointercancel&#x27;,   this.onPointer.bind(this, &#x27;cancel&#x27;),  false);
     game.canvas.addEventListener(&#x27;pointerenter&#x27;,    this.onPointer.bind(this, &#x27;enter&#x27;),   false);
     game.canvas.addEventListener(&#x27;pointerleave&#x27;,    this.onPointer.bind(this, &#x27;leave&#x27;),   false);
+
+    /**
+     * Fired when a pointer is pressed on the canvas
+     *
+     * @event down
+     * @param pointer {Pointer} The pointer instance that had a &#x27;pointerdown&#x27; event
+     */
+
+    /**
+     * Fired when a pointer is released off the canvas
+     *
+     * @event up
+     * @param pointer {Pointer} The pointer instance that had a &#x27;pointerup&#x27; event
+     */
+
+    /**
+     * Fired when a pointer is moved while on the canvas
+     *
+     * @event move
+     * @param pointer {Pointer} The pointer instance that had a &#x27;pointermove&#x27; event
+     */
+
+    /**
+     * Fired when a pointer moves over the canvas
+     *
+     * @event over
+     * @param pointer {Pointer} The pointer instance that had a &#x27;pointerover&#x27; event
+     */
+
+    /**
+     * Fired when a pointer moves out of the canvas
+     *
+     * @event out
+     * @param pointer {Pointer} The pointer instance that had a &#x27;pointerout&#x27; event
+     */
+
+    /**
+     * Fired when a pointer event is canceled
+     *
+     * @event cancel
+     * @param pointer {Pointer} The pointer instance that had a &#x27;pointercancel&#x27; event
+     */
+
+    /**
+     * Fired when a pointer enters the canvas
+     *
+     * @event enter
+     * @param pointer {Pointer} The pointer instance that had a &#x27;pointerenter&#x27; event
+     */
+
+    /**
+     * Fired when a pointer leaves the canvas
+     *
+     * @event leave
+     * @param pointer {Pointer} The pointer instance that had a &#x27;pointerleave&#x27; event
+     */
 };
 
 inherit(Pointers, Input, {
+    /**
+     * Callback that is called when a pointer event occurs.
+     *
+     * @method onPointer
+     * @param name {String} The name of the pointer event with out the &#x27;pointer&#x27; prefix
+     * @param evt {DOMEvent} The DOM Event
+     * @private
+     */
     onPointer: function(name, evt) {
         var id = evt.pointerId,
             pointer = this.pointers[id];
@@ -276,6 +348,14 @@ inherit(Pointers, Input, {
 
         this.emit(name, pointer);
     },
+    /**
+     * Called internally every frame. Updates all the pointers
+     *
+     * @method update
+     * @param dt {Number} The delta time (in seconds) since the last update
+     * @return {Pointers} Returns iteself for chainability
+     * @private
+     */
     update: function(dt) {
         var p = this.pointers;
         for(var i = 0; i &lt; p.length; ++i) {
@@ -283,6 +363,8 @@ inherit(Pointers, Input, {
                 p[i].update(dt);
             }
         }
+
+        return this;
     }
 });
 

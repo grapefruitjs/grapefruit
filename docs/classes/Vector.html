@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -324,6 +332,8 @@
             <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
         
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+        
         
         
     </ul>
@@ -361,13 +371,6 @@
                         
                             <li class="index-item method">
                                 <a href="#method_ceil">ceil</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_clear">clear</a>
 
                                 
                                 
@@ -437,20 +440,6 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_getIndex">getIndex</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_insert">insert</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
                                 <a href="#method_length">length</a>
 
                                 
@@ -514,7 +503,7 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_retrieve">retrieve</a>
+                                <a href="#method_rotate">rotate</a>
 
                                 
                                 
@@ -522,13 +511,6 @@
                         
                             <li class="index-item method">
                                 <a href="#method_set">set</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_setBounds">setBounds</a>
 
                                 
                                 
@@ -563,13 +545,6 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_split">split</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
                                 <a href="#method_sub">sub</a>
 
                                 
@@ -594,6 +569,23 @@
                 </div>
             
 
+            
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties extends">
+                        
+                            <li class="index-item property">
+                                <a href="#property_ZERO">ZERO</a>
+
+                                
+                                    <span class="flag static">static</span>
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
             
 
             
@@ -1020,61 +1012,6 @@
 </div>
 
                 
-                    <div id="method_clear" class="method item">
-    <h3 class="name"><code>clear</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_QuadTree.js.html#l194"><code>src\math\QuadTree.js:194</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Clear the quadtree, removing all bodies</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="method_clone" class="method item">
     <h3 class="name"><code>clone</code></h3>
 
@@ -1111,7 +1048,7 @@
             
         
         
-        <a href="../files/src_math_Vector.js.html#l475"><code>src\math\Vector.js:475</code></a>
+        <a href="../files/src_math_Vector.js.html#l491"><code>src\math\Vector.js:491</code></a>
         
         </p>
 
@@ -1728,7 +1665,7 @@
             
         
         
-        <a href="../files/src_math_Vector.js.html#l456"><code>src\math\Vector.js:456</code></a>
+        <a href="../files/src_math_Vector.js.html#l472"><code>src\math\Vector.js:472</code></a>
         
         </p>
 
@@ -1963,201 +1900,6 @@
                 
             </div>
         </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_getIndex" class="method item">
-    <h3 class="name"><code>getIndex</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>body</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_QuadTree.js.html#l129"><code>src\math\QuadTree.js:129</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Determine which node the object belongs to</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">body</code>
-                        <span class="type">Body</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The body to check for which quad it goes into</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>Number Index of the subnode (0-3), or -1 if the body cannot completely fit within a subnode and is part of the parent node</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_insert" class="method item">
-    <h3 class="name"><code>insert</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>body</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_QuadTree.js.html#l86"><code>src\math\QuadTree.js:86</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Insert an object into the node. If the node exceeds the max capacity, it will split and add all
-objects to their corresponding subnodes.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">body</code>
-                        <span class="type">Body</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The physics body to add to the tree</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
     
 
     
@@ -2448,6 +2190,113 @@ objects to their corresponding subnodes.</p>
             
                 <li class="arg">
                     
+                        <code>vector</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_math_Vector.js.html#l248"><code>src\math\Vector.js:248</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets this vector components to the maximum value when compared to the passed vector&#39;s components</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">vector</code>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The vector to compare to</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>:
+                    
+                    <p>Returns itself</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_max" class="method item">
+    <h3 class="name"><code>max</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
                         <code>min</code>
                     
                 </li>
@@ -2538,113 +2387,6 @@ objects to their corresponding subnodes.</p>
 
                     <div class="param-description">
                         <p>The maximum value a component can be</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>:
-                    
-                    <p>Returns itself</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_max" class="method item">
-    <h3 class="name"><code>max</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>vector</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_Vector.js.html#l248"><code>src\math\Vector.js:248</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Sets this vector components to the maximum value when compared to the passed vector&#39;s components</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">vector</code>
-                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The vector to compare to</p>
 
                     </div>
 
@@ -3035,8 +2777,8 @@ objects to their corresponding subnodes.</p>
 </div>
 
                 
-                    <div id="method_retrieve" class="method item">
-    <h3 class="name"><code>retrieve</code></h3>
+                    <div id="method_rotate" class="method item">
+    <h3 class="name"><code>rotate</code></h3>
 
     
         <div class="args">
@@ -3044,7 +2786,13 @@ objects to their corresponding subnodes.</p>
             
                 <li class="arg">
                     
-                        <code>body</code>
+                        <code>angle</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>anchor</code>
                     
                 </li>
             
@@ -3054,7 +2802,7 @@ objects to their corresponding subnodes.</p>
 
     
         <span class="returns-inline">
-            <span class="type"></span>
+            <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
         </span>
     
 
@@ -3081,7 +2829,7 @@ objects to their corresponding subnodes.</p>
             
         
         
-        <a href="../files/src_math_QuadTree.js.html#l166"><code>src\math\QuadTree.js:166</code></a>
+        <a href="../files/src_math_Vector.js.html#l456"><code>src\math\Vector.js:456</code></a>
         
         </p>
 
@@ -3092,7 +2840,7 @@ objects to their corresponding subnodes.</p>
     </div>
 
     <div class="description">
-        <p>Return all objects that could collide with the given body</p>
+        <p>Rotates the vector by an arbitrary angle around an arbitrary point in space</p>
 
     </div>
 
@@ -3104,14 +2852,30 @@ objects to their corresponding subnodes.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">body</code>
-                        <span class="type">Body</span>
+                        <code class="param-name">angle</code>
+                        <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The body to be checked</p>
+                        <p>The angle in radians to rotate by</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">anchor</code>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The anchor point to rotate around</p>
 
                     </div>
 
@@ -3129,7 +2893,9 @@ objects to their corresponding subnodes.</p>
             <div class="returns-description">
                 
                     
-                    <p>Array<Body> Array with all detected bodies</p>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>:
+                    
+                    <p>Returns itself</p>
 
                 
             </div>
@@ -3263,61 +3029,6 @@ objects to their corresponding subnodes.</p>
                 
             </div>
         </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_setBounds" class="method item">
-    <h3 class="name"><code>setBounds</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_QuadTree.js.html#l213"><code>src\math\QuadTree.js:213</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Sets the bounds of the quad tree</p>
-
-    </div>
-
-    
-
     
 
     
@@ -3774,61 +3485,6 @@ objects to their corresponding subnodes.</p>
 </div>
 
                 
-                    <div id="method_split" class="method item">
-    <h3 class="name"><code>split</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_math_QuadTree.js.html#l64"><code>src\math\QuadTree.js:64</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Split the node into 4 subnodes</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="method_sub" class="method item">
     <h3 class="name"><code>sub</code></h3>
 
@@ -4099,7 +3755,7 @@ objects to their corresponding subnodes.</p>
             
         
         
-        <a href="../files/src_math_Vector.js.html#l466"><code>src\math\Vector.js:466</code></a>
+        <a href="../files/src_math_Vector.js.html#l482"><code>src\math\Vector.js:482</code></a>
         
         </p>
 
@@ -4139,6 +3795,59 @@ objects to their corresponding subnodes.</p>
             </div>
         
 
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_ZERO" class="property item">
+    <h3 class="name"><code>ZERO</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+        <span class="flag static">static</span>
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_math_Vector.js.html#l502"><code>src\math\Vector.js:502</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>A vector that is always 0,0</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
         
 
         

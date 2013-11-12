@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -185,6 +193,7 @@ var inherit = require(&#x27;../utils/inherit&#x27;),
  * @class StateManager
  * @extends Object
  * @constructor
+ * @param game {Game} The game this manager bleongs to.
  */
 var StateManager = function(game) {
     /**
@@ -224,9 +233,41 @@ var StateManager = function(game) {
 };
 
 inherit(StateManager, Object, {
+    /**
+     * Creates the default state
+     *
+     * @method _createDefault
+     * @return {State} The default state
+     */
     _createDefault: function() {
         return this.add(&#x27;__default&#x27;, true);
     },
+    /**
+     * Adds a state to the game, creating one if necessary.
+     *
+     * There are 3 ways to use this function to add a state to the manager. The simplest case
+     * is to pass a string for the name, and let the manager create a normal gf.State for you
+     * with the name you provided. The second usage is to pass a class that is a decendant of gf.State.
+     *
+     * For example:
+     *
+     * &#x60;&#x60;&#x60;
+     * function MyState(game) {
+     *     gf.State.call(game, &#x27;some-name&#x27;);
+     * }
+     * gf.inherit(MyState, gf.State);
+     *
+     * game.state.add(MyState); //adds a new instance of your state
+     * &#x60;&#x60;&#x60;
+     *
+     * The final usage is to pass a state that is already created. In this case the manager will
+     * add the state to the list based on &#x60;state.name&#x60; and set the game to be the manager&#x27;s game
+     * instance with &#x60;state.game = this.game&#x60;;
+     *
+     * @method add
+     * @param state {String|Function|State} The state name, constructor, or state instance to add.
+     * @return {State} The state that was added
+     */
     add: function(Name, enable) {
         var state;
 
@@ -254,6 +295,13 @@ inherit(StateManager, Object, {
 
         return state;
     },
+    /**
+     * Removes a state from the game
+     *
+     * @method remove
+     * @param state {String|State} The name of the state to remove, or the state instance itself.
+     * @return {StateManager} Returns itself.
+     */
     remove: function(state) {
         if(typeof state === &#x27;string&#x27;)
             state = this.states[state];
@@ -267,22 +315,36 @@ inherit(StateManager, Object, {
 
         return this;
     },
+    /**
+     * Enables a state in the game.
+     *
+     * @method enable
+     * @param state {String|State} The name of the state to enable, or the state instance itself.
+     * @return {StateManager} Returns itself.
+     */
     enable: function(state) {
         if(typeof state !== &#x27;string&#x27;)
             state = state.name;
 
         if(this.states[state]) {
-            if(this.active)
-                this.active.disable();
+            if(this.active) {
+                this.active.visible = false;
+            }
 
-            this.active = this.states[state].enable();
+            this.active = this.states[state];
+            this.active.visible = true;
         }
 
         return this;
     },
+    /**
+     * Destroys the state manager completely
+     *
+     * @method destroy
+     */
     destroy: function() {
         this.game = null;
-        this.states = {};
+        this.states = null;
     }
 });
 

@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -489,6 +497,13 @@ for more information.</p>
                             </li>
                         
                             <li class="index-item method inherited">
+                                <a href="#method_hide">hide</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
                                 <a href="#method_off">off</a>
 
                                 
@@ -510,14 +525,14 @@ for more information.</p>
                             </li>
                         
                             <li class="index-item method inherited">
-                                <a href="#method_onCollide">onCollide</a>
+                                <a href="#method_play">play</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method inherited">
-                                <a href="#method_play">play</a>
+                                <a href="#method_show">show</a>
 
                                 
                                 
@@ -617,6 +632,20 @@ for more information.</p>
                         
                             <li class="index-item event inherited">
                                 <a href="#event_click">click</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event inherited">
+                                <a href="#event_complete">complete</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event inherited">
+                                <a href="#event_frame">frame</a>
 
                                 
                                 
@@ -738,6 +767,10 @@ for more information.</p>
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+        </span>
+    
 
     
 
@@ -759,7 +792,7 @@ for more information.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l191"><code>src\display\Sprite.js:191</code></a>
+        <a href="../files/src_display_Sprite.js.html#l230"><code>src\display\Sprite.js:230</code></a>
         
         </p>
 
@@ -851,6 +884,20 @@ for more information.</p>
     
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                    
+                    <p>Returns itself</p>
+
+                
+            </div>
+        </div>
+    
 
     
 </div>
@@ -863,6 +910,10 @@ for more information.</p>
         <span class="paren">()</span>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+        </span>
     
 
     
@@ -885,7 +936,7 @@ for more information.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l139"><code>src\display\Sprite.js:139</code></a>
+        <a href="../files/src_display_Sprite.js.html#l177"><code>src\display\Sprite.js:177</code></a>
         
         </p>
 
@@ -902,6 +953,20 @@ for more information.</p>
 
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                    
+                    <p>Returns the new sprite</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -937,7 +1002,7 @@ for more information.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l258"><code>src\display\Sprite.js:258</code></a>
+        <a href="../files/src_display_Sprite.js.html#l301"><code>src\display\Sprite.js:301</code></a>
         
         </p>
 
@@ -1092,6 +1157,10 @@ for more information.</p>
     
 
     
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+        </span>
+    
 
     
 
@@ -1113,7 +1182,7 @@ for more information.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l214"><code>src\display\Sprite.js:214</code></a>
+        <a href="../files/src_display_Sprite.js.html#l254"><code>src\display\Sprite.js:254</code></a>
         
         </p>
 
@@ -1172,6 +1241,90 @@ pass the name of a new aniamtion to start playing.</p>
         </div>
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                    
+                    <p>Returns itself</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_hide" class="method item inherited">
+    <h3 class="name"><code>hide</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_hide">Sprite</a>:
+            
+        
+        
+        <a href="../files/src_display_Sprite.js.html#l167"><code>src\display\Sprite.js:167</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the sprite to visible = false</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                    
+                    <p>Returns itself</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -1502,135 +1655,6 @@ pass the name of a new aniamtion to start playing.</p>
 </div>
 
                 
-                    <div id="method_onCollide" class="method item inherited">
-    <h3 class="name"><code>onCollide</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>sprite</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>collision</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Boolean</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                <p>Inherited from
-                <a href="..\classes\Sprite.html#method_onCollide">Sprite</a>:
-            
-        
-        
-        <a href="../files/src_display_Sprite.js.html#l318"><code>src\display\Sprite.js:318</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Called whenever a collision occurs</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">sprite</code>
-                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The sprite that you collide with</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">collision</code>
-                        <span class="type">Collision</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Collision data object that contains
-     information about the intersection</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Boolean</span>:
-                    
-                    <p>If you return <code>false</code> explicitly the engine will <em>not</em>
-     solve the collision. In this way you can make thing &quot;not collide&quot; if
-     you don&#39;t want their types to collide.</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_play" class="method item inherited">
     <h3 class="name"><code>play</code></h3>
 
@@ -1638,6 +1662,10 @@ pass the name of a new aniamtion to start playing.</p>
         <span class="paren">()</span>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+        </span>
     
 
     
@@ -1660,7 +1688,7 @@ pass the name of a new aniamtion to start playing.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l240"><code>src\display\Sprite.js:240</code></a>
+        <a href="../files/src_display_Sprite.js.html#l281"><code>src\display\Sprite.js:281</code></a>
         
         </p>
 
@@ -1678,6 +1706,90 @@ pass the name of a new aniamtion to start playing.</p>
     
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                    
+                    <p>Returns itself</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_show" class="method item inherited">
+    <h3 class="name"><code>show</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#method_show">Sprite</a>:
+            
+        
+        
+        <a href="../files/src_display_Sprite.js.html#l157"><code>src\display\Sprite.js:157</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the sprite to visible = true</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                    
+                    <p>Returns itself</p>
+
+                
+            </div>
+        </div>
+    
 
     
 </div>
@@ -1690,6 +1802,10 @@ pass the name of a new aniamtion to start playing.</p>
         <span class="paren">()</span>
     
 
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+        </span>
     
 
     
@@ -1712,7 +1828,7 @@ pass the name of a new aniamtion to start playing.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l249"><code>src\display\Sprite.js:249</code></a>
+        <a href="../files/src_display_Sprite.js.html#l291"><code>src\display\Sprite.js:291</code></a>
         
         </p>
 
@@ -1729,6 +1845,20 @@ pass the name of a new aniamtion to start playing.</p>
 
     
 
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                    
+                    <p>Returns itself</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -1766,7 +1896,7 @@ pass the name of a new aniamtion to start playing.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l284"><code>src\display\Sprite.js:284</code></a>
+        <a href="../files/src_display_Sprite.js.html#l323"><code>src\display\Sprite.js:323</code></a>
         
         </p>
 
@@ -1817,7 +1947,7 @@ pass the name of a new aniamtion to start playing.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l94"><code>src\display\Sprite.js:94</code></a>
+        <a href="../files/src_display_Sprite.js.html#l99"><code>src\display\Sprite.js:99</code></a>
         
         </p>
 
@@ -1859,7 +1989,7 @@ pass the name of a new aniamtion to start playing.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l103"><code>src\display\Sprite.js:103</code></a>
+        <a href="../files/src_display_Sprite.js.html#l108"><code>src\display\Sprite.js:108</code></a>
         
         </p>
 
@@ -1901,7 +2031,7 @@ pass the name of a new aniamtion to start playing.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l112"><code>src\display\Sprite.js:112</code></a>
+        <a href="../files/src_display_Sprite.js.html#l117"><code>src\display\Sprite.js:117</code></a>
         
         </p>
 
@@ -1945,7 +2075,7 @@ pass the name of a new aniamtion to start playing.</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l63"><code>src\display\Sprite.js:63</code></a>
+        <a href="../files/src_display_Sprite.js.html#l68"><code>src\display\Sprite.js:68</code></a>
         
         </p>
 
@@ -1991,7 +2121,7 @@ no longer be rendered. NOT YET IMPLEMENTED</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l84"><code>src\display\Sprite.js:84</code></a>
+        <a href="../files/src_display_Sprite.js.html#l89"><code>src\display\Sprite.js:89</code></a>
         
         </p>
 
@@ -2036,7 +2166,7 @@ on a per-animation level</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l54"><code>src\display\Sprite.js:54</code></a>
+        <a href="../files/src_display_Sprite.js.html#l59"><code>src\display\Sprite.js:59</code></a>
         
         </p>
 
@@ -2080,7 +2210,7 @@ on a per-animation level</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l121"><code>src\display\Sprite.js:121</code></a>
+        <a href="../files/src_display_Sprite.js.html#l126"><code>src\display\Sprite.js:126</code></a>
         
         </p>
 
@@ -2122,7 +2252,7 @@ on a per-animation level</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l75"><code>src\display\Sprite.js:75</code></a>
+        <a href="../files/src_display_Sprite.js.html#l80"><code>src\display\Sprite.js:80</code></a>
         
         </p>
 
@@ -2176,7 +2306,7 @@ on a per-animation level</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l349"><code>src\display\Sprite.js:349</code></a>
+        <a href="../files/src_display_Sprite.js.html#l374"><code>src\display\Sprite.js:374</code></a>
         
         </p>
 
@@ -2220,6 +2350,152 @@ on a per-animation level</p>
 </div>
 
                 
+                    <div id="event_complete" class="events item inherited">
+    <h3 class="name"><code>complete</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#event_complete">Sprite</a>:
+            
+        
+        
+        <a href="../files/src_display_Sprite.js.html#l148"><code>src\display\Sprite.js:148</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when the running animation completes</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">animation</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The animation that has completed</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_frame" class="events item inherited">
+    <h3 class="name"><code>frame</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Sprite.html#event_frame">Sprite</a>:
+            
+        
+        
+        <a href="../files/src_display_Sprite.js.html#l140"><code>src\display\Sprite.js:140</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when a new frame of the running animation is shown</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">animation</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The animation name that is playing</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">frameId</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The frame that is being shown</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
                     <div id="event_mousedown" class="events item inherited">
     <h3 class="name"><code>mousedown</code></h3>
     <span class="type"></span>
@@ -2240,7 +2516,7 @@ on a per-animation level</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l356"><code>src\display\Sprite.js:356</code></a>
+        <a href="../files/src_display_Sprite.js.html#l381"><code>src\display\Sprite.js:381</code></a>
         
         </p>
 
@@ -2304,7 +2580,7 @@ on a per-animation level</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l393"><code>src\display\Sprite.js:393</code></a>
+        <a href="../files/src_display_Sprite.js.html#l418"><code>src\display\Sprite.js:418</code></a>
         
         </p>
 
@@ -2368,7 +2644,7 @@ on a per-animation level</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l386"><code>src\display\Sprite.js:386</code></a>
+        <a href="../files/src_display_Sprite.js.html#l411"><code>src\display\Sprite.js:411</code></a>
         
         </p>
 
@@ -2432,7 +2708,7 @@ on a per-animation level</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l379"><code>src\display\Sprite.js:379</code></a>
+        <a href="../files/src_display_Sprite.js.html#l404"><code>src\display\Sprite.js:404</code></a>
         
         </p>
 
@@ -2496,7 +2772,7 @@ on a per-animation level</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l363"><code>src\display\Sprite.js:363</code></a>
+        <a href="../files/src_display_Sprite.js.html#l388"><code>src\display\Sprite.js:388</code></a>
         
         </p>
 
@@ -2561,7 +2837,7 @@ for this callback to be fired the mouse must have been pressed down over the spr
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l371"><code>src\display\Sprite.js:371</code></a>
+        <a href="../files/src_display_Sprite.js.html#l396"><code>src\display\Sprite.js:396</code></a>
         
         </p>
 
@@ -2626,7 +2902,7 @@ for this callback to be fired, The touch must have started over the sprite</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l404"><code>src\display\Sprite.js:404</code></a>
+        <a href="../files/src_display_Sprite.js.html#l429"><code>src\display\Sprite.js:429</code></a>
         
         </p>
 
@@ -2691,7 +2967,7 @@ basically a touch version of click</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l419"><code>src\display\Sprite.js:419</code></a>
+        <a href="../files/src_display_Sprite.js.html#l444"><code>src\display\Sprite.js:444</code></a>
         
         </p>
 
@@ -2755,7 +3031,7 @@ basically a touch version of click</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l426"><code>src\display\Sprite.js:426</code></a>
+        <a href="../files/src_display_Sprite.js.html#l451"><code>src\display\Sprite.js:451</code></a>
         
         </p>
 
@@ -2820,7 +3096,7 @@ for this callback to be fired, The touch must have started over the sprite</p>
             
         
         
-        <a href="../files/src_display_Sprite.js.html#l412"><code>src\display\Sprite.js:412</code></a>
+        <a href="../files/src_display_Sprite.js.html#l437"><code>src\display\Sprite.js:437</code></a>
         
         </p>
 

@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -201,8 +209,8 @@ var utils = require(&#x27;../utils/utils&#x27;),
  * @param [settings.tileoffset.x=0] {Number} The X offset to apply to the tile
  * @param [settings.tileoffset.y=0] {Number} The Y offset to apply to the tile
  * @param [settings.properties] {Object} User-defined, custom properties that apply to the tileset
- * @param [settings.tileproperties] {Object} User-defined, custom properties that apply to tiles in the tileset
- *  The keys of this object should the tile id to apply to
+ * @param [settings.tileproperties] {Object} User-defined, custom properties that apply to tiles in the tileset.
+ *          The keys of this object should the tile id of the properties
  * @param [settings.imagewidth] {Number} An override for the image width
  * @param [settings.imageheight] {Number} An override for the image height
  */
@@ -265,7 +273,7 @@ var Tileset = function(texture, settings) {
         settings.tileoffset ? settings.tileoffset.y : 0
     );
 
-    //TODO: Support for &quot;tileoffset,&quot; &quot;terraintypes,&quot; &quot;image&quot;
+    //TODO: Support for &quot;terraintypes,&quot; &quot;image&quot;
     //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
 
     //Custom/Optional properties
@@ -277,7 +285,7 @@ var Tileset = function(texture, settings) {
      * @type Vector
      */
     this.numTiles = new Vector(
-        math.floor((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)), //75 / 
+        math.floor((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)),
         math.floor((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing))
     );
 
@@ -406,6 +414,13 @@ inherit(Tileset, Texture, {
 
         return this.textures[tileId];
     },
+    /**
+     * Returns whether or not this tileset contains the given tile guid
+     *
+     * @method contains
+     * @param tileId {Number} The ID of the tile to check
+     * @return {Boolean}
+     */
     contains: function(tileId) {
         if(!tileId) return false;
 
@@ -415,7 +430,12 @@ inherit(Tileset, Texture, {
     }
 });
 
-//Tileset GID flags
+/**
+ * Tileset GID flags, these flags are set on a tile&#x27;s ID to give it a special property
+ *
+ * @property FLAGS
+ * @static
+ */
 Tileset.FLAGS = {
     FlippedX: 0x80000000,
     FlippedY: 0x40000000,

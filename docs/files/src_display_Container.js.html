@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -177,12 +185,14 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 var EventEmitter = require(&#x27;../utils/EventEmitter&#x27;),
+    PhysicsTarget = require(&#x27;../physics/PhysicsTarget&#x27;),
     utils = require(&#x27;../utils/utils&#x27;),
     inherit = require(&#x27;../utils/inherit&#x27;),
     PIXI = require(&#x27;../vendor/pixi&#x27;);
 
 /**
  * The base display object, that anything being put on the screen inherits from
+ * Container or Sprite at some point. This class extends PIXI&#x27;s DisplayObjectContainer.
  *
  * @class Container
  * @extends [PIXI.DisplayObjectContainer](http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html)
@@ -193,6 +203,7 @@ var EventEmitter = require(&#x27;../utils/EventEmitter&#x27;),
 var Container = function(settings) {
     PIXI.DisplayObjectContainer.call(this);
     EventEmitter.call(this);
+    PhysicsTarget.call(this);
 
     //mixin user&#x27;s settings
     utils.setValues(this, settings);
@@ -278,6 +289,26 @@ var Container = function(settings) {
 
 inherit(Container, PIXI.DisplayObjectContainer, {
     /**
+     * Sets the container to visible = true
+     *
+     * @method show
+     * @return {Container} Returns itself
+     */
+    show: function() {
+        this.visible = true;
+        return this;
+    },
+    /**
+     * Sets the container to visible = false
+     *
+     * @method hide
+     * @return {Container} Returns itself
+     */
+    hide: function() {
+        this.visible = false;
+        return this;
+    },
+    /**
      * Adds a child to the container and returns the child
      *
      * @method addChild
@@ -285,10 +316,7 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     addChild: function(child) {
-        if(child._container !== this) {
-            child._container = this;
-            PIXI.DisplayObjectContainer.prototype.addChild.apply(this, arguments);
-        }
+        PIXI.DisplayObjectContainer.prototype.addChild.apply(this, arguments);
 
         return child;
     },
@@ -302,10 +330,7 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     addChildAt: function(child) {
-        if(child._container !== this) {
-            child._container = this;
-            PIXI.DisplayObjectContainer.prototype.addChildAt.apply(this, arguments);
-        }
+        PIXI.DisplayObjectContainer.prototype.addChildAt.apply(this, arguments);
 
         return child;
     },
@@ -318,25 +343,19 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     removeChild: function(child) {
-        if(child._container === this) {
-            child._container = null;
-            PIXI.DisplayObjectContainer.prototype.removeChild.apply(this, arguments);
-        }
+        PIXI.DisplayObjectContainer.prototype.removeChild.apply(this, arguments);
 
         return child;
     },
 
     /**
-     * Removes a child from the object.
+     * Removes all children from the object.
      *
      * @method removeAllChildren
      * @return {Container} Returns iteself
      */
     removeAllChildren: function() {
         while(this.children.length) {
-            if(this.children[0].destroy)
-                this.children[0].destroy();
-
             this.removeChild(this.children[0]);
         }
 
@@ -344,31 +363,63 @@ inherit(Container, PIXI.DisplayObjectContainer, {
     },
 
     /**
-     * Brings a child to the top of the Z pile
+     * Brings a child to the top of the Z pile.
      *
      * @method bringChildToTop
      * @param child {Container|Sprite} Any container or sprite
      * @return {Container|Sprite} The child that was added
      */
     bringChildToTop: function(child) {
-        if(child._container === this) {
-            this.removeChild(child);
-            this.addChild(child);
+        if(child.parent === this) {
+            this.addChild(this.removeChild(child));
         }
 
         return child;
     },
 
     /**
-     * Destroys this objects
+     * Destroys this object.
      *
      * @method destroy
      */
     destroy: function() {
-        this.removeAllChildren();
+        this.disablePhysics();
+        this.destroyAllChildren();
 
         if(this.parent)
             this.parent.removeChild(this);
+    },
+
+    /**
+     * Destroys all the children of the object.
+     *
+     * @method destroyAllChildren
+     */
+    destroyAllChildren: function() {
+        while(this.children.length) {
+            if(this.children[0].destroy) {
+                this.children[0].destroy();
+            } else {
+                this.removeChild(this.children[0]);
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Called whenever a collision occurs
+     *
+     * @method onCollide
+     * @param obj {Sprite|Container} The sprite that you collide with
+     * @param collision {Collision} Collision data object that contains
+     *      information about the intersection
+     * @return {Boolean} If you return &#x60;false&#x60; explicitly the engine will *not*
+     *      solve the collision. In this way you can make thing &quot;not collide&quot; if
+     *      you don&#x27;t want their types to collide.
+     */
+    onCollide: function() {
+        /* To be overriden */
     }
 });
 

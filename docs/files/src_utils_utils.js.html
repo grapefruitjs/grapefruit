@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -221,7 +229,7 @@ var utils = {
         sets.dataType = sets.dataType || &#x27;text&#x27;;
 
         if(!sets.url)
-            throw &#x27;No URL passed to ajax&#x27;;
+            throw new TypeError(&#x27;Undefined URL passed to ajax&#x27;);
 
         //callbacks
         sets.progress = sets.progress || utils.noop;
@@ -360,18 +368,6 @@ var utils = {
                 } else if(curVal instanceof Vector &amp;&amp; typeof newVal === &#x27;number&#x27;) {
                     curVal.set(newVal, newVal);
                 }
-                //massage points
-                else if(curVal.x !== undefined &amp;&amp; newVal instanceof Array) {
-                    curVal.x = parseFloat(newVal[0], 10) || 0;
-                    curVal.y = parseFloat(newVal[1], 10) || parseFloat(newVal[0], 10) || 0;
-                } else if(curVal.x !== undefined &amp;&amp; typeof newVal === &#x27;string&#x27;) {
-                    var a2 = newVal.split(utils._arrayDelim, 2);
-                    curVal.x = parseFloat(a2[0], 10) || 0;
-                    curVal.y = parseFloat(a2[1], 10) || parseFloat(a2[0], 10) || 0;
-                } else if(curVal.x !== undefined &amp;&amp; typeof newVal === &#x27;number&#x27;) {
-                    curVal.x = newVal;
-                    curVal.y = newVal;
-                }
                 //massage arrays
                 else if(curVal instanceof Array &amp;&amp; typeof newVal === &#x27;string&#x27;) {
                     obj[key] = newVal.split(utils._arrayDelim);
@@ -461,6 +457,8 @@ var utils = {
      * taken straight from jQuery 2.0.3
      *
      * @method isPlainObject
+     * @param obj {mixed} The object to test
+     * @return {Boolean}
      */
     isPlainObject: function(obj) {
         // Not plain objects:
@@ -506,12 +504,22 @@ var utils = {
             box.top + scrollTop - clientTop
         );
     },
+    /**
+     * Parses an array of numbers that represent a hitArea into the actual shape.
+     *
+     * For example: &#x60;[1, 1, 15]&#x60; is a Circle (&#x60;[x, y, radius]&#x60;); &#x60;[1, 1, 15, 15]&#x60; is a Rectangle
+     * (&#x60;[x, y, width, height]&#x60;); and any length &gt;= 5 is a polygon in the form &#x60;[x1, y1, x2, y2, ..., xN, yN]&#x60;.
+     *
+     * @method parseHitArea
+     * @param value {Array&lt;Number&gt;} The array to parse
+     * @return {Circle|Rectangle|Polygon} The parsed out shape
+     */
     parseHitArea: function(hv) {
         var ha;
 
         //odd number of values
         if(hv.length % 2 !== 0 &amp;&amp; hv.length !== 3) {
-            throw &#x27;Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.&#x27;;
+            throw new RangeError(&#x27;Strange number of values for hitArea! Should be a flat array of values, like: [x,y,r] for a circle, [x,y,w,h] for a rectangle, or [x,y,x,y,...] for other polygons.&#x27;);
         }
 
         //a circle x,y,r
@@ -524,21 +532,31 @@ var utils = {
         }
         //generic polygon
         else {
-            ha = new Polygon(hv);
+            ha = new Polygon(0, 0, hv);
         }
 
         return ha;
     },
+    /**
+     * Parses an object of string properties into potential javascript types. First it attempts to
+     * convert to a number, if that fails it checks for the string &#x27;true&#x27; or &#x27;false&#x27; and changes it
+     * to the actual Boolean value, then it attempts to parse a string as JSON.
+     *
+     * @method parseTiledProperties
+     * @param value {Array&lt;Number&gt;} The array to parse
+     * @return {Circle|Rectangle|Polygon} The parsed out shape
+     */
     parseTiledProperties: function(obj) {
         if(!obj || obj.__tiledparsed)
             return obj;
 
         for(var k in obj) {
-            var v = obj[k];
+            var v = obj[k],
+                n = parseFloat(v, 10);
 
             //try to massage numbers
-            if(!isNaN(v))
-                obj[k] = parseFloat(v, 10);
+            if(n === 0 || n)
+                obj[k] = n;
             //true values
             else if(v === &#x27;true&#x27;)
                 obj[k] = true;
@@ -558,7 +576,7 @@ var utils = {
         if(obj.hitArea)
             obj.hitArea = utils.parseHitArea(obj.hitArea);
 
-        if(obj.static || obj.sensor) {
+        if(obj.body === &#x27;static&#x27; || obj.sensor) {
             obj.mass = Infinity;
             obj.inertia = Infinity;
         }
@@ -567,36 +585,75 @@ var utils = {
 
         return obj;
     },
-    log: window.console &amp;&amp; window.console.log,
-    warn: window.console &amp;&amp; window.console.warn,
-    error: window.console &amp;&amp; window.console.error
+    _logger: window.console || {},
+    /**
+     * Safe way to log to console, if console.log doesn&#x27;t exist nothing happens.
+     *
+     * @method log
+     */
+    log: function() {
+        if(utils._logger.log)
+            utils._logger.log.apply(utils._logger, arguments);
+    },
+    /**
+     * Safe way to warn to console, if console.warn doesn&#x27;t exist nothing happens.
+     *
+     * @method warn
+     */
+    warn: function() {
+        if(utils._logger.warn)
+            utils._logger.warn.apply(utils._logger, arguments);
+    },
+    /**
+     * Safe way to error to console, if console.error doesn&#x27;t exist nothing happens.
+     *
+     * @method error
+     */
+    error: function() {
+        if(utils._logger.error)
+            utils._logger.error.apply(utils._logger, arguments);
+    }
 };
 
-//XML Parser
+/**
+ * Parses an XML string into a Document object. Will use window.DOMParser
+ * if available, falling back to Microsoft.XMLDOM ActiveXObject in IE.
+ *
+ * Eventually, it would be nice to include a node.js alternative as well
+ * for running in that environment.
+ *
+ * @method parseXML
+ * @param xmlStr {String} The xml string to parse
+ * @return {Document} An XML Document
+ */
+//XML Parser in window
 if(typeof window.DOMParser !== &#x27;undefined&#x27;) {
     utils.parseXML = function(xmlStr) {
         return (new window.DOMParser()).parseFromString(xmlStr, &#x27;text/xml&#x27;);
     };
-} else if(typeof window.ActiveXObject !== &#x27;undefined&#x27; &amp;&amp; new window.ActiveXObject(&#x27;Microsoft.XMLDOM&#x27;)) {
+}
+//IE specific XML parser
+else if(typeof window.ActiveXObject !== &#x27;undefined&#x27; &amp;&amp; new window.ActiveXObject(&#x27;Microsoft.XMLDOM&#x27;)) {
     utils.parseXML = function(xmlStr) {
         var xmlDoc = new window.ActiveXObject(&#x27;Microsoft.XMLDOM&#x27;);
         xmlDoc.async = &#x27;false&#x27;;
         xmlDoc.loadXML(xmlStr);
         return xmlDoc;
     };
-} else {
-    //node.js environment
-    /*if(__isNode) {
-        utils.parseXML = function(xmlStr) {
-            var DOMParser = require(&#x27;xmldom&#x27;).DOMParser;
-            return (new DOMParser()).parseFromString(xmlStr, &quot;text/xml&quot;);
-        };
-    } else {*/
+}
+//node.js environment
+/*else if(__isNode) {
+    utils.parseXML = function(xmlStr) {
+        var DOMParser = require(&#x27;xmldom&#x27;).DOMParser;
+        return (new DOMParser()).parseFromString(xmlStr, &quot;text/xml&quot;);
+    };
+}*/
+// no parser available
+else {
     utils.warn(&#x27;XML parser not available, trying to parse any XML will result in an error.&#x27;);
     utils.parseXML = function() {
-        throw &#x27;Trying to parse XML, but not XML parser is available in this environment&#x27;;
+        throw new Error(&#x27;Trying to parse XML, but not XML parser is available in this environment&#x27;);
     };
-    //}
 }
 
 module.exports = utils;

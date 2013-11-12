@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -448,12 +456,14 @@ inherit(Cache, Object, {
         var key = &#x27;__default&#x27;;
 
         var base = new BaseTexture();
-        base.width = 32;
-        base.height = 32;
+        base.width = 0;
+        base.height = 0;
         base.hasLoaded = true; // avoids a hanging event listener
 
         PIXI.BaseTextureCache[key] = base;
         PIXI.TextureCache[key] = new Texture(base);
+
+        Texture.__default = PIXI.TextureCache[key];
 
         this._images[key] = {
             texture: PIXI.TextureCache[key]
@@ -607,15 +617,18 @@ inherit(Cache, Object, {
     },
 
     /**
-     * Clean up cache memory.
+     * Destroys this object, removing references so the GC can cleanup
+     *
+     * @method destroy
      */
     destroy: function() {
         //lose references to let GC cleanup
-        this._canvases = {};
-        this._images = {};
-        this._sounds = {};
-        this._text = {};
-        this._tilemaps = {};
+        this.game = null;
+        this._canvases = null;
+        this._images = null;
+        this._sounds = null;
+        this._text = null;
+        this._tilemaps = null;
     }
 });
 

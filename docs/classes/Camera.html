@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -184,7 +192,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/src_camera_Camera.js.html#l10"><code>src\camera\Camera.js:10</code></a>
+            Defined in: <a href="../files/src_camera_Camera.js.html#l18"><code>src\camera\Camera.js:18</code></a>
         </div>
     
 
@@ -196,7 +204,7 @@
 
 
 <div class="box intro">
-    <p>A basic Camera object that provides some effects. It also will contain the HUD and GUI
+    <p>A basic Camera object that provides some effects. It also will contain the GUI
 to ensure they are using &quot;screen-coords&quot;.</p>
 
 </div>
@@ -208,7 +216,17 @@ to ensure they are using &quot;screen-coords&quot;.</p>
     <h3 class="name"><code>Camera</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>state</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -236,7 +254,7 @@ to ensure they are using &quot;screen-coords&quot;.</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l10"><code>src\camera\Camera.js:10</code></a>
+        <a href="../files/src_camera_Camera.js.html#l18"><code>src\camera\Camera.js:18</code></a>
         
         </p>
 
@@ -250,6 +268,30 @@ to ensure they are using &quot;screen-coords&quot;.</p>
         
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">state</code>
+                        <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The game state this camera belongs to</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -286,6 +328,20 @@ to ensure they are using &quot;screen-coords&quot;.</p>
 
                     <ul class="index-list methods extends">
                         
+                            <li class="index-item method private">
+                                <a href="#method__fxCallback">_fxCallback</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__outsideBounds">_outsideBounds</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method inherited">
                                 <a href="#method_addChild">addChild</a>
 
@@ -308,6 +364,13 @@ to ensure they are using &quot;screen-coords&quot;.</p>
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_close">close</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_constrain">constrain</a>
 
                                 
@@ -322,7 +385,42 @@ to ensure they are using &quot;screen-coords&quot;.</p>
                             </li>
                         
                             <li class="index-item method inherited">
+                                <a href="#method_destroyAllChildren">destroyAllChildren</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited inherited">
+                                <a href="#method_disablePhysics">disablePhysics</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
                                 <a href="#method_emit">emit</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_enablePhysics">enablePhysics</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_fade">fade</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_flash">flash</a>
 
                                 
                                 
@@ -350,6 +448,13 @@ to ensure they are using &quot;screen-coords&quot;.</p>
                             </li>
                         
                             <li class="index-item method inherited">
+                                <a href="#method_hide">hide</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
                                 <a href="#method_off">off</a>
 
                                 
@@ -365,6 +470,20 @@ to ensure they are using &quot;screen-coords&quot;.</p>
                         
                             <li class="index-item method inherited">
                                 <a href="#method_once">once</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_onCollide">onCollide</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited inherited">
+                                <a href="#method_onCollision">onCollision</a>
 
                                 
                                 
@@ -393,6 +512,55 @@ to ensure they are using &quot;screen-coords&quot;.</p>
                         
                             <li class="index-item method private">
                                 <a href="#method_resize">resize</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_scanlines - color, axis, spacing, thickness, alpha, cb">scanlines - color, axis, spacing, thickness, alpha, cb</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setMass">setMass</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setPosition">setPosition</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setRotation">setRotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_setVelocity">setVelocity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_shake">shake</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method inherited">
+                                <a href="#method_show">show</a>
 
                                 
                                 
@@ -436,8 +604,22 @@ to ensure they are using &quot;screen-coords&quot;.</p>
                                 
                             </li>
                         
+                            <li class="index-item property private inherited">
+                                <a href="#property__phys">_phys</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property private">
                                 <a href="#property__target">_target</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__targetPos">_targetPos</a>
 
                                 
                                 
@@ -466,6 +648,13 @@ to ensure they are using &quot;screen-coords&quot;.</p>
                         
                             <li class="index-item property inherited">
                                 <a href="#property_children">children</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_fxpools">fxpools</a>
 
                                 
                                 
@@ -500,7 +689,21 @@ to ensure they are using &quot;screen-coords&quot;.</p>
                             </li>
                         
                             <li class="index-item property inherited">
+                                <a href="#property_inertia">inertia</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
                                 <a href="#property_interactive">interactive</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
+                                <a href="#property_mass">mass</a>
 
                                 
                                 
@@ -668,6 +871,274 @@ to ensure they are using &quot;screen-coords&quot;.</p>
                 <h2 class="off-left">Methods</h2>
 
                 
+                    <div id="method__fxCallback" class="method item private">
+    <h3 class="name"><code>_fxCallback</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>fx</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>type</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[callback]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_camera_Camera.js.html#l224"><code>src\camera\Camera.js:224</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The base callback for camera FX. This is called at the end of each aniamtion to
+free the FX class back into the pool.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">fx</code>
+                        <span class="type">Mixed</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The FX instance to free</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">type</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the instance type</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The user callback to call.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__outsideBounds" class="method item private">
+    <h3 class="name"><code>_outsideBounds</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>x</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>y</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_camera_Camera.js.html#l402"><code>src\camera\Camera.js:402</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Checks if a point is outside the bounds of the camera constraints.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">x</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new X position to test</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">y</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new Y position to test</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    <p>true if the camera will move outside bounds to go to this point</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_addChild" class="method item inherited">
     <h3 class="name"><code>addChild</code></h3>
 
@@ -711,7 +1182,7 @@ to ensure they are using &quot;screen-coords&quot;.</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l102"><code>src\display\Container.js:102</code></a>
+        <a href="../files/src_display_Container.js.html#l125"><code>src\display\Container.js:125</code></a>
         
         </p>
 
@@ -821,7 +1292,7 @@ to ensure they are using &quot;screen-coords&quot;.</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l118"><code>src\display\Container.js:118</code></a>
+        <a href="../files/src_display_Container.js.html#l138"><code>src\display\Container.js:138</code></a>
         
         </p>
 
@@ -940,7 +1411,7 @@ to ensure they are using &quot;screen-coords&quot;.</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l168"><code>src\display\Container.js:168</code></a>
+        <a href="../files/src_display_Container.js.html#l179"><code>src\display\Container.js:179</code></a>
         
         </p>
 
@@ -951,7 +1422,7 @@ to ensure they are using &quot;screen-coords&quot;.</p>
     </div>
 
     <div class="description">
-        <p>Brings a child to the top of the Z pile</p>
+        <p>Brings a child to the top of the Z pile.</p>
 
     </div>
 
@@ -991,6 +1462,183 @@ to ensure they are using &quot;screen-coords&quot;.</p>
                         <span class="type"><a href="..\classes\Container.html" class="crosslink">Container</a> | <a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
                     
                     <p>The child that was added</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_close" class="method item">
+    <h3 class="name"><code>close</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[shape=&#x27;circle&#x27;]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[duration=1000]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[position]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[callback]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Close</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_camera_Camera.js.html#l189"><code>src\camera\Camera.js:189</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Performs a &quot;close&quot; animation that will cover the screen with a color.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[shape=&#x27;circle&#x27;]</code>
+                        <span class="type">String</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The shape to close with, can be either &#39;ellipse&#39;, &#39;circle&#39;, or &#39;rectangle&#39;</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[duration=1000]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Number of milliseconds for the animation to complete</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[position]</code>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The position for the animation to close in on, defaults to camera center</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>A callback to call once the animation completes.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Close</span>:
+                    
+                    <p>The close effect that was created.</p>
 
                 
             </div>
@@ -1047,7 +1695,7 @@ to ensure they are using &quot;screen-coords&quot;.</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l285"><code>src\camera\Camera.js:285</code></a>
+        <a href="../files/src_camera_Camera.js.html#l439"><code>src\camera\Camera.js:439</code></a>
         
         </p>
 
@@ -1138,7 +1786,7 @@ size unless you set it manually.</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l184"><code>src\display\Container.js:184</code></a>
+        <a href="../files/src_display_Container.js.html#l194"><code>src\display\Container.js:194</code></a>
         
         </p>
 
@@ -1149,7 +1797,114 @@ size unless you set it manually.</p>
     </div>
 
     <div class="description">
-        <p>Destroys this objects</p>
+        <p>Destroys this object.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_destroyAllChildren" class="method item inherited">
+    <h3 class="name"><code>destroyAllChildren</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Container.html#method_destroyAllChildren">Container</a>:
+            
+        
+        
+        <a href="../files/src_display_Container.js.html#l207"><code>src\display\Container.js:207</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Destroys all the children of the object.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_disablePhysics" class="method item inherited">
+    <h3 class="name"><code>disablePhysics</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="..\classes\PhysicsTarget.html#method_disablePhysics">
+                PhysicsTarget
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l80"><code>src\physics\PhysicsTarget.js:80</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Disbales physics for this sprite</p>
 
     </div>
 
@@ -1269,6 +2024,412 @@ size unless you set it manually.</p>
 </div>
 
                 
+                    <div id="method_enablePhysics" class="method item inherited">
+    <h3 class="name"><code>enablePhysics</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>system</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\PhysicsTarget.html#method_enablePhysics">PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l40"><code>src\physics\PhysicsTarget.js:40</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Enables physics for this sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">system</code>
+                        <span class="type"><a href="..\classes\PhysicsSystem.html" class="crosslink">PhysicsSystem</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The system for the sprite to be in</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_fade" class="method item">
+    <h3 class="name"><code>fade</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[color=0xFFFFFF]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[duration=1000]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[alpha=1]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[callback]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_camera_Camera.js.html#l155"><code>src\camera\Camera.js:155</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fade the screen into a color. This will fade into a color that will
+eventually cover the screen.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[color=0xFFFFFF]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The color to fade into</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[duration=1000]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The time it should take (in milliseconds) to fade in</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[alpha=1]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The opacity to fade into (final opacity)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>A callback to call once the animation completes.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_flash" class="method item">
+    <h3 class="name"><code>flash</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[color=0xFFFFFF]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[duration=1000]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[alpha=1]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[callback]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_camera_Camera.js.html#l144"><code>src\camera\Camera.js:144</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Flash the screen with a color. This will cover the screen in a
+color then fade it out.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[color=0xFFFFFF]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The color to flash the screen with</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[duration=1000]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The time it should take (in milliseconds) to fade out</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[alpha=1]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The opacity of the initial flash of color (start opacity)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>A callback to call once the animation completes.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_focus" class="method item">
     <h3 class="name"><code>focus</code></h3>
 
@@ -1321,7 +2482,7 @@ size unless you set it manually.</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l195"><code>src\camera\Camera.js:195</code></a>
+        <a href="../files/src_camera_Camera.js.html#l338"><code>src\camera\Camera.js:338</code></a>
         
         </p>
 
@@ -1445,7 +2606,7 @@ not go outside the bounds set with setBounds()</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l182"><code>src\camera\Camera.js:182</code></a>
+        <a href="../files/src_camera_Camera.js.html#l312"><code>src\camera\Camera.js:312</code></a>
         
         </p>
 
@@ -1558,7 +2719,7 @@ not go outside the bounds set with setBounds()</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l116"><code>src\camera\Camera.js:116</code></a>
+        <a href="../files/src_camera_Camera.js.html#l244"><code>src\camera\Camera.js:244</code></a>
         
         </p>
 
@@ -1628,6 +2789,76 @@ to move with them.</p>
                         <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>:
                     
                     <p>Returns iteself for chainability</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_hide" class="method item inherited">
+    <h3 class="name"><code>hide</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Container.html" class="crosslink">Container</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Container.html#method_hide">Container</a>:
+            
+        
+        
+        <a href="../files/src_display_Container.js.html#l115"><code>src\display\Container.js:115</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the container to visible = false</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Container.html" class="crosslink">Container</a></span>:
+                    
+                    <p>Returns itself</p>
 
                 
             </div>
@@ -1962,6 +3193,294 @@ to move with them.</p>
 </div>
 
                 
+                    <div id="method_onCollide" class="method item inherited">
+    <h3 class="name"><code>onCollide</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>obj</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>collision</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Container.html#method_onCollide">Container</a>:
+            
+        
+        
+        <a href="../files/src_display_Container.js.html#l224"><code>src\display\Container.js:224</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Called whenever a collision occurs</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">obj</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a> | <a href="..\classes\Container.html" class="crosslink">Container</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The sprite that you collide with</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">collision</code>
+                        <span class="type">Collision</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Collision data object that contains
+     information about the intersection</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    <p>If you return <code>false</code> explicitly the engine will <em>not</em>
+     solve the collision. In this way you can make thing &quot;not collide&quot; if
+     you don&#39;t want their types to collide.</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_onCollision" class="method item inherited">
+    <h3 class="name"><code>onCollision</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>obj</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>vec</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>colShape</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>myShape</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            <p>Inherited from
+            <a href="..\classes\PhysicsTarget.html#method_onCollision">
+                PhysicsTarget
+            </a>
+            
+            but overwritten in
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l171"><code>src\physics\PhysicsTarget.js:171</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>On Collision Event
+     called when this sprite collides into another, or is being collided into by another.
+     By default if something collides with a collectable sprite we destroy the collectable
+     and if we collide with a solid tile we kill our velocity. This method will emit a
+     &#39;collision&#39; event that you can listen for</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">obj</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Colliding sprite</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">vec</code>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Collision vector (for sensors this is normalized)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">colShape</code>
+                        <span class="type">cp.Shape</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The colliding physics shape</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">myShape</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Your physics shape that caused the collision</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_pan" class="method item">
     <h3 class="name"><code>pan</code></h3>
 
@@ -2014,7 +3533,7 @@ to move with them.</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l216"><code>src\camera\Camera.js:216</code></a>
+        <a href="../files/src_camera_Camera.js.html#l359"><code>src\camera\Camera.js:359</code></a>
         
         </p>
 
@@ -2125,7 +3644,7 @@ not go outside the bounds set with setBounds()</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l151"><code>src\display\Container.js:151</code></a>
+        <a href="../files/src_display_Container.js.html#l165"><code>src\display\Container.js:165</code></a>
         
         </p>
 
@@ -2136,7 +3655,7 @@ not go outside the bounds set with setBounds()</p>
     </div>
 
     <div class="description">
-        <p>Removes a child from the object.</p>
+        <p>Removes all children from the object.</p>
 
     </div>
 
@@ -2205,7 +3724,7 @@ not go outside the bounds set with setBounds()</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l135"><code>src\display\Container.js:135</code></a>
+        <a href="../files/src_display_Container.js.html#l152"><code>src\display\Container.js:152</code></a>
         
         </p>
 
@@ -2320,7 +3839,7 @@ not go outside the bounds set with setBounds()</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l266"><code>src\camera\Camera.js:266</code></a>
+        <a href="../files/src_camera_Camera.js.html#l420"><code>src\camera\Camera.js:420</code></a>
         
         </p>
 
@@ -2398,6 +3917,822 @@ when you call mygame.resize(). DO NOT CALL THIS DIRECTLY</p>
 </div>
 
                 
+                    <div id="method_scanlines - color, axis, spacing, thickness, alpha, cb" class="method item">
+    <h3 class="name"><code>scanlines - color, axis, spacing, thickness, alpha, cb</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[color=0x000000]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[axis=gf.AXIS.HORIZONTAL]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[spacing=4]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[thickness=1]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[alpha=0.3]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[callback]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Close</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_camera_Camera.js.html#l176"><code>src\camera\Camera.js:176</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds arcade-style scanlines to the camera viewport.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[color=0x000000]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The color for the scanlines to be</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[axis=gf.AXIS.HORIZONTAL]</code>
+                        <span class="type">gf.AXIS</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The axis to draw the lines on</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[spacing=4]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Number of pixels between each line</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[thickness=1]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Number of pixels thick each line is</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[alpha=0.3]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The opacity of the lines</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>A callback to call once the animation completes.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Close</span>:
+                    
+                    <p>The close effect that was created.</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_setMass" class="method item inherited">
+    <h3 class="name"><code>setMass</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>mass</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\PhysicsTarget.html#method_setMass">PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l109"><code>src\physics\PhysicsTarget.js:109</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the mass of this sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">mass</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new mass of the object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setPosition" class="method item inherited">
+    <h3 class="name"><code>setPosition</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>x</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>y</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\PhysicsTarget.html#method_setPosition">PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l153"><code>src\physics\PhysicsTarget.js:153</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the position of this sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">x</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">y</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setRotation" class="method item inherited">
+    <h3 class="name"><code>setRotation</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>rotation</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\PhysicsTarget.html#method_setRotation">PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l137"><code>src\physics\PhysicsTarget.js:137</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the rotation of this sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">rotation</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new rotation of the object in radians</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setVelocity" class="method item inherited">
+    <h3 class="name"><code>setVelocity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>velocity</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\PhysicsTarget.html#method_setVelocity">PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l123"><code>src\physics\PhysicsTarget.js:123</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the velocity of this sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">velocity</code>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new velocity of the object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_shake" class="method item">
+    <h3 class="name"><code>shake</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[intensity=0.01]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[duration=1000]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[direction=gf.AXIS.BOTH]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[callback]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_camera_Camera.js.html#l166"><code>src\camera\Camera.js:166</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Shakes the camera around a bit.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[intensity=0.01]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The intensity of the shaking</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[duration=1000]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The amount of time the screen shakes for (in milliseconds)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[direction=gf.AXIS.BOTH]</code>
+                        <span class="type">gf.AXIS</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The axis to shake on</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[callback]</code>
+                        <span class="type">Function</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>A callback to call once the animation completes.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_show" class="method item inherited">
+    <h3 class="name"><code>show</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Container.html" class="crosslink">Container</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\Container.html#method_show">Container</a>:
+            
+        
+        
+        <a href="../files/src_display_Container.js.html#l105"><code>src\display\Container.js:105</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the container to visible = true</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Container.html" class="crosslink">Container</a></span>:
+                    
+                    <p>Returns itself</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_unconstrain" class="method item">
     <h3 class="name"><code>unconstrain</code></h3>
 
@@ -2434,7 +4769,7 @@ when you call mygame.resize(). DO NOT CALL THIS DIRECTLY</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l298"><code>src\camera\Camera.js:298</code></a>
+        <a href="../files/src_camera_Camera.js.html#l452"><code>src\camera\Camera.js:452</code></a>
         
         </p>
 
@@ -2507,7 +4842,7 @@ when you call mygame.resize(). DO NOT CALL THIS DIRECTLY</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l172"><code>src\camera\Camera.js:172</code></a>
+        <a href="../files/src_camera_Camera.js.html#l301"><code>src\camera\Camera.js:301</code></a>
         
         </p>
 
@@ -2592,7 +4927,7 @@ when you call mygame.resize(). DO NOT CALL THIS DIRECTLY</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l309"><code>src\camera\Camera.js:309</code></a>
+        <a href="../files/src_camera_Camera.js.html#l463"><code>src\camera\Camera.js:463</code></a>
         
         </p>
 
@@ -2686,7 +5021,7 @@ when you call mygame.resize(). DO NOT CALL THIS DIRECTLY</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l53"><code>src\camera\Camera.js:53</code></a>
+        <a href="../files/src_camera_Camera.js.html#l62"><code>src\camera\Camera.js:62</code></a>
         
         </p>
 
@@ -2701,6 +5036,56 @@ before the camera moves to track it.</p>
 
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__phys" class="property item private inherited">
+    <h3 class="name"><code>_phys</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\PhysicsTarget.html#property__phys">PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l8"><code>src\physics\PhysicsTarget.js:8</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The physics namespace that all physics properties go into. Those properties are:</p>
+<ul>
+<li>system {PhysicsSystem} PhysicsSystem that this object is a part of.</li>
+<li>active {Boolean} Whether or not this target is actively having physics simulated.</li>
+</ul>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> {}</p>
     
 
     
@@ -2734,7 +5119,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l64"><code>src\camera\Camera.js:64</code></a>
+        <a href="../files/src_camera_Camera.js.html#l73"><code>src\camera\Camera.js:73</code></a>
         
         </p>
 
@@ -2745,6 +5130,53 @@ before the camera moves to track it.</p>
 
     <div class="description">
         <p>The target that the camera will follow</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__targetPos" class="property item private">
+    <h3 class="name"><code>_targetPos</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_camera_Camera.js.html#l83"><code>src\camera\Camera.js:83</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The target&#39;s last position, to cache if we should try to move the camera or not</p>
 
     </div>
 
@@ -2779,7 +5211,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l101"><code>src\camera\Camera.js:101</code></a>
+        <a href="../files/src_camera_Camera.js.html#l120"><code>src\camera\Camera.js:120</code></a>
         
         </p>
 
@@ -2821,7 +5253,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l53"><code>src\display\Container.js:53</code></a>
+        <a href="../files/src_display_Container.js.html#l56"><code>src\display\Container.js:56</code></a>
         
         </p>
 
@@ -2868,7 +5300,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l43"><code>src\camera\Camera.js:43</code></a>
+        <a href="../files/src_camera_Camera.js.html#l52"><code>src\camera\Camera.js:52</code></a>
         
         </p>
 
@@ -2910,7 +5342,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l26"><code>src\display\Container.js:26</code></a>
+        <a href="../files/src_display_Container.js.html#l29"><code>src\display\Container.js:29</code></a>
         
         </p>
 
@@ -2921,6 +5353,53 @@ before the camera moves to track it.</p>
 
     <div class="description">
         <p>[read-only] The of children of this object.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_fxpools" class="property item private">
+    <h3 class="name"><code>fxpools</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_camera_Camera.js.html#l128"><code>src\camera\Camera.js:128</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The fxpools for doing camera effects</p>
 
     </div>
 
@@ -2955,7 +5434,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l27"><code>src\camera\Camera.js:27</code></a>
+        <a href="../files/src_camera_Camera.js.html#l36"><code>src\camera\Camera.js:36</code></a>
         
         </p>
 
@@ -3000,7 +5479,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l92"><code>src\camera\Camera.js:92</code></a>
+        <a href="../files/src_camera_Camera.js.html#l111"><code>src\camera\Camera.js:111</code></a>
         
         </p>
 
@@ -3042,7 +5521,7 @@ before the camera moves to track it.</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l83"><code>src\display\Container.js:83</code></a>
+        <a href="../files/src_display_Container.js.html#l86"><code>src\display\Container.js:86</code></a>
         
         </p>
 
@@ -3089,7 +5568,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l83"><code>src\camera\Camera.js:83</code></a>
+        <a href="../files/src_camera_Camera.js.html#l102"><code>src\camera\Camera.js:102</code></a>
         
         </p>
 
@@ -3103,6 +5582,50 @@ will use (as it will not need to hit test all the children)</p>
 
     </div>
 
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_inertia" class="property item inherited">
+    <h3 class="name"><code>inertia</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\PhysicsTarget.html#property_inertia">PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l31"><code>src\physics\PhysicsTarget.js:31</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The moment of inertia of this object, only set this before enabling physics (has no effect after enabling)</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -3131,7 +5654,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l92"><code>src\display\Container.js:92</code></a>
+        <a href="../files/src_display_Container.js.html#l95"><code>src\display\Container.js:95</code></a>
         
         </p>
 
@@ -3147,6 +5670,50 @@ will use (as it will not need to hit test all the children)</p>
 
     
         <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_mass" class="property item inherited">
+    <h3 class="name"><code>mass</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\PhysicsTarget.html#property_mass">PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l21"><code>src\physics\PhysicsTarget.js:21</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The mass of this object, please use setMass to set this value</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -3175,7 +5742,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l67"><code>src\display\Container.js:67</code></a>
+        <a href="../files/src_display_Container.js.html#l70"><code>src\display\Container.js:70</code></a>
         
         </p>
 
@@ -3217,7 +5784,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l32"><code>src\display\Container.js:32</code></a>
+        <a href="../files/src_display_Container.js.html#l35"><code>src\display\Container.js:35</code></a>
         
         </p>
 
@@ -3259,7 +5826,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l46"><code>src\display\Container.js:46</code></a>
+        <a href="../files/src_display_Container.js.html#l49"><code>src\display\Container.js:49</code></a>
         
         </p>
 
@@ -3301,7 +5868,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l39"><code>src\display\Container.js:39</code></a>
+        <a href="../files/src_display_Container.js.html#l42"><code>src\display\Container.js:42</code></a>
         
         </p>
 
@@ -3346,7 +5913,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l74"><code>src\camera\Camera.js:74</code></a>
+        <a href="../files/src_camera_Camera.js.html#l93"><code>src\camera\Camera.js:93</code></a>
         
         </p>
 
@@ -3388,7 +5955,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l75"><code>src\display\Container.js:75</code></a>
+        <a href="../files/src_display_Container.js.html#l78"><code>src\display\Container.js:78</code></a>
         
         </p>
 
@@ -3433,7 +6000,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l35"><code>src\camera\Camera.js:35</code></a>
+        <a href="../files/src_camera_Camera.js.html#l44"><code>src\camera\Camera.js:44</code></a>
         
         </p>
 
@@ -3475,7 +6042,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l60"><code>src\display\Container.js:60</code></a>
+        <a href="../files/src_display_Container.js.html#l63"><code>src\display\Container.js:63</code></a>
         
         </p>
 
@@ -3520,7 +6087,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_camera_Camera.js.html#l19"><code>src\camera\Camera.js:19</code></a>
+        <a href="../files/src_camera_Camera.js.html#l28"><code>src\camera\Camera.js:28</code></a>
         
         </p>
 
@@ -3572,7 +6139,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l212"><code>src\display\Container.js:212</code></a>
+        <a href="../files/src_display_Container.js.html#l255"><code>src\display\Container.js:255</code></a>
         
         </p>
 
@@ -3636,7 +6203,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l219"><code>src\display\Container.js:219</code></a>
+        <a href="../files/src_display_Container.js.html#l262"><code>src\display\Container.js:262</code></a>
         
         </p>
 
@@ -3700,7 +6267,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l256"><code>src\display\Container.js:256</code></a>
+        <a href="../files/src_display_Container.js.html#l299"><code>src\display\Container.js:299</code></a>
         
         </p>
 
@@ -3764,7 +6331,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l249"><code>src\display\Container.js:249</code></a>
+        <a href="../files/src_display_Container.js.html#l292"><code>src\display\Container.js:292</code></a>
         
         </p>
 
@@ -3828,7 +6395,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l242"><code>src\display\Container.js:242</code></a>
+        <a href="../files/src_display_Container.js.html#l285"><code>src\display\Container.js:285</code></a>
         
         </p>
 
@@ -3892,7 +6459,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l226"><code>src\display\Container.js:226</code></a>
+        <a href="../files/src_display_Container.js.html#l269"><code>src\display\Container.js:269</code></a>
         
         </p>
 
@@ -3957,7 +6524,7 @@ for this callback to be fired the mouse must have been pressed down over the dis
             
         
         
-        <a href="../files/src_display_Container.js.html#l234"><code>src\display\Container.js:234</code></a>
+        <a href="../files/src_display_Container.js.html#l277"><code>src\display\Container.js:277</code></a>
         
         </p>
 
@@ -4022,7 +6589,7 @@ for this callback to be fired, The touch must have started over the displayObjec
             
         
         
-        <a href="../files/src_display_Container.js.html#l267"><code>src\display\Container.js:267</code></a>
+        <a href="../files/src_display_Container.js.html#l310"><code>src\display\Container.js:310</code></a>
         
         </p>
 
@@ -4087,7 +6654,7 @@ basically a touch version of click</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l282"><code>src\display\Container.js:282</code></a>
+        <a href="../files/src_display_Container.js.html#l325"><code>src\display\Container.js:325</code></a>
         
         </p>
 
@@ -4151,7 +6718,7 @@ basically a touch version of click</p>
             
         
         
-        <a href="../files/src_display_Container.js.html#l289"><code>src\display\Container.js:289</code></a>
+        <a href="../files/src_display_Container.js.html#l332"><code>src\display\Container.js:332</code></a>
         
         </p>
 
@@ -4216,7 +6783,7 @@ for this callback to be fired, The touch must have started over the displayObjec
             
         
         
-        <a href="../files/src_display_Container.js.html#l275"><code>src\display\Container.js:275</code></a>
+        <a href="../files/src_display_Container.js.html#l318"><code>src\display\Container.js:318</code></a>
         
         </p>
 

@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -180,7 +188,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/src_geom_Rectangle.js.html#l8"><code>src\geom\Rectangle.js:8</code></a>
+            Defined in: <a href="../files/src_geom_Rectangle.js.html#l9"><code>src\geom\Rectangle.js:9</code></a>
         </div>
     
 
@@ -260,7 +268,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l8"><code>src\geom\Rectangle.js:8</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l9"><code>src\geom\Rectangle.js:9</code></a>
         
         </p>
 
@@ -395,7 +403,21 @@ top-left corner point (x, y) and by its width and its height.</p>
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_contains">contains</a>
+                                <a href="#method_copy">copy</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_equals">equals</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_overlaps">overlaps</a>
 
                                 
                                 
@@ -403,6 +425,13 @@ top-left corner point (x, y) and by its width and its height.</p>
                         
                             <li class="index-item method">
                                 <a href="#method_toPolygon">toPolygon</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_union">union</a>
 
                                 
                                 
@@ -427,6 +456,13 @@ top-left corner point (x, y) and by its width and its height.</p>
                         
                             <li class="index-item property private">
                                 <a href="#property__width">_width</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_area">area</a>
 
                                 
                                 
@@ -462,6 +498,13 @@ top-left corner point (x, y) and by its width and its height.</p>
                         
                             <li class="index-item property">
                                 <a href="#property_left">left</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_perimeter">perimeter</a>
 
                                 
                                 
@@ -559,7 +602,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l66"><code>src\geom\Rectangle.js:66</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l67"><code>src\geom\Rectangle.js:67</code></a>
         
         </p>
 
@@ -648,7 +691,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l76"><code>src\geom\Rectangle.js:76</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l93"><code>src\geom\Rectangle.js:93</code></a>
         
         </p>
 
@@ -725,8 +768,222 @@ top-left corner point (x, y) and by its width and its height.</p>
 </div>
 
                 
-                    <div id="method_contains" class="method item">
-    <h3 class="name"><code>contains</code></h3>
+                    <div id="method_copy" class="method item">
+    <h3 class="name"><code>copy</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>rectangle</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Rectangle.js.html#l77"><code>src\geom\Rectangle.js:77</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Copies the values from another rectangle to this one</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">rectangle</code>
+                        <span class="type"><a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The rectangle to copy vlaues from</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a></span>:
+                    
+                    <p>Returns itself</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_equals" class="method item">
+    <h3 class="name"><code>equals</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>rectangle</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Rectangle.js.html#l148"><code>src\geom\Rectangle.js:148</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Checks if this rectangle&#39;s values are equal to anothers</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">rectangle</code>
+                        <span class="type"><a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The rectangle to check against</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    <p>True if they are equal</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_overlaps" class="method item">
+    <h3 class="name"><code>overlaps</code></h3>
 
     
         <div class="args">
@@ -771,7 +1028,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l100"><code>src\geom\Rectangle.js:100</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l117"><code>src\geom\Rectangle.js:117</code></a>
         
         </p>
 
@@ -868,7 +1125,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l114"><code>src\geom\Rectangle.js:114</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l131"><code>src\geom\Rectangle.js:131</code></a>
         
         </p>
 
@@ -894,6 +1151,136 @@ top-left corner point (x, y) and by its width and its height.</p>
                     
                         <span class="type"><a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>:
                     
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_union" class="method item">
+    <h3 class="name"><code>union</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>rectangle</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[output]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Rectangle.js.html#l161"><code>src\geom\Rectangle.js:161</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Combines two rectangles together to create a new rectangle</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">rectangle</code>
+                        <span class="type"><a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The rectangle to union with</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[output]</code>
+                        <span class="type"><a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a></span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The rectangle object to output to, a new one is created by default</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Rectangle.html" class="crosslink">Rectangle</a></span>:
+                    
+                    <p>a new rectangle object that is the combonation of both</p>
+
                 
             </div>
         </div>
@@ -936,7 +1323,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l39"><code>src\geom\Rectangle.js:39</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l40"><code>src\geom\Rectangle.js:40</code></a>
         
         </p>
 
@@ -984,7 +1371,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l31"><code>src\geom\Rectangle.js:31</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l32"><code>src\geom\Rectangle.js:32</code></a>
         
         </p>
 
@@ -999,6 +1386,51 @@ top-left corner point (x, y) and by its width and its height.</p>
 
     
         <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_area" class="property item">
+    <h3 class="name"><code>area</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Rectangle.js.html#l313"><code>src\geom\Rectangle.js:313</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The area of the rectangle</p>
+
+    </div>
+
     
 
     
@@ -1030,7 +1462,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l236"><code>src\geom\Rectangle.js:236</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l287"><code>src\geom\Rectangle.js:287</code></a>
         
         </p>
 
@@ -1075,7 +1507,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l54"><code>src\geom\Rectangle.js:54</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l55"><code>src\geom\Rectangle.js:55</code></a>
         
         </p>
 
@@ -1121,7 +1553,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l47"><code>src\geom\Rectangle.js:47</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l48"><code>src\geom\Rectangle.js:48</code></a>
         
         </p>
 
@@ -1167,7 +1599,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l180"><code>src\geom\Rectangle.js:180</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l231"><code>src\geom\Rectangle.js:231</code></a>
         
         </p>
 
@@ -1212,7 +1644,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l210"><code>src\geom\Rectangle.js:210</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l261"><code>src\geom\Rectangle.js:261</code></a>
         
         </p>
 
@@ -1223,6 +1655,51 @@ top-left corner point (x, y) and by its width and its height.</p>
 
     <div class="description">
         <p>Returns the left most X coord</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_perimeter" class="property item">
+    <h3 class="name"><code>perimeter</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Rectangle.js.html#l300"><code>src\geom\Rectangle.js:300</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The perimeter of the rectangle</p>
 
     </div>
 
@@ -1257,7 +1734,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l20"><code>src\geom\Rectangle.js:20</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l21"><code>src\geom\Rectangle.js:21</code></a>
         
         </p>
 
@@ -1303,7 +1780,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l197"><code>src\geom\Rectangle.js:197</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l248"><code>src\geom\Rectangle.js:248</code></a>
         
         </p>
 
@@ -1348,7 +1825,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l223"><code>src\geom\Rectangle.js:223</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l274"><code>src\geom\Rectangle.js:274</code></a>
         
         </p>
 
@@ -1393,7 +1870,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l163"><code>src\geom\Rectangle.js:163</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l214"><code>src\geom\Rectangle.js:214</code></a>
         
         </p>
 
@@ -1440,7 +1917,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l130"><code>src\geom\Rectangle.js:130</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l181"><code>src\geom\Rectangle.js:181</code></a>
         
         </p>
 
@@ -1487,7 +1964,7 @@ top-left corner point (x, y) and by its width and its height.</p>
             
         
         
-        <a href="../files/src_geom_Rectangle.js.html#l146"><code>src\geom\Rectangle.js:146</code></a>
+        <a href="../files/src_geom_Rectangle.js.html#l197"><code>src\geom\Rectangle.js:197</code></a>
         
         </p>
 

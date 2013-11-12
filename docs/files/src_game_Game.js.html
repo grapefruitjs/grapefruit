@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -198,7 +206,7 @@ var StateManager = require(&#x27;./StateManager&#x27;),
  * @extends Object
  * @uses EventEmitter
  * @constructor
- * @param contId {String} The container for the new canvas we will create for the game
+ * @param container {DOMElement|String} The container for the new canvas we will create for the game, or the ID of one
  * @param settings {Object} All the settings for the game instance
  * @param settings.width {Number} The width of the viewport
  * @param settings.height {Number} The height of the viewport
@@ -372,7 +380,7 @@ var Game = function(container, settings) {
      * The state manager, to switch between game states
      *
      * @property state
-     * @type Array
+     * @type StateManager
      * @readOnly
      */
     this.state = new StateManager(this);
@@ -385,17 +393,6 @@ var Game = function(container, settings) {
      * @readOnly
      */
     this.offset = new Vector();
-
-    //TODO:
-    //
-    //add (obj factory?)
-    //world (doc for objs?)
-    //camera (should a world own this?)
-    //debug (moved in from gf-debug)
-    //particles (TODO)
-    //
-    //implement state manager, remove state code from here
-    //
 
     /**
      * Holds timing data for the previous loop
@@ -416,16 +413,31 @@ var Game = function(container, settings) {
     view.addEventListener(&#x27;click&#x27;, function() {
         view.focus();
     }, false);
+
+    /**
+     * Fired each frame after everything has updated, but just before rendering
+     *
+     * @event tick
+     * @param dt {Number} The number of seconds passed since the last tick call (delta time)
+     */
 };
 
 inherit(Game, Object, {
+    /**
+     * Creates the underlying renderer based on browser support. It will also set&#x27;s &#x60;game.renderMethod&#x60; for a user
+     * to be able to check.
+     *
+     * @method _createRenderer
+     * @return {PIXI.WebGLRenderer|PIXI.CanvasRenderer} The renderer to use
+     * @private
+     */
     _createRenderer: function() {
         var method = this.renderMethod,
             render = null;
 
         //no support
         if(!support.webgl &amp;&amp; !support.canvas) {
-            throw &#x27;Neither WebGL nor Canvas is supported by this browser!&#x27;;
+            throw new Error(&#x27;Neither WebGL nor Canvas is supported by this browser!&#x27;);
         }
         else if((method === C.RENDERER.WEBGL || method === C.RENDERER.AUTO) &amp;&amp; support.webgl) {
             method = C.RENDERER.WEBGL;
@@ -434,10 +446,9 @@ inherit(Game, Object, {
         else if((method === C.RENDERER.CANVAS || method === C.RENDERER.AUTO) &amp;&amp; support.canvas) {
             method = C.RENDERER.CANVAS;
             render = new PIXI.CanvasRenderer(this.width, this.height, this.canvas, this.transparent);
-            //TODO: setSmoothingEnabled based on this.antialias
         }
         else {
-            throw &#x27;Your render method (&quot;&#x27; + method + &#x27;&quot;) is not supported by this browser!&#x27;;
+            throw new Error(&#x27;Your render method (&quot;&#x27; + method + &#x27;&quot;) is not supported by this browser!&#x27;);
         }
 
         //append the renderer view only if the user didn&#x27;t pass their own
@@ -452,7 +463,7 @@ inherit(Game, Object, {
         return render;
     },
     /**
-     * Allows you to resize the game area
+     * Allows you to resize the game area.
      *
      * @method resize
      * @param width {Number} Width to resize to
@@ -474,7 +485,7 @@ inherit(Game, Object, {
         return this;
     },
     /**
-     * Requests that the browser go into fullscreen mode
+     * Requests that the browser go into fullscreen mode.
      *
      * @method requestFullscreen
      * @return {Game} Returns itself for chainability
@@ -493,7 +504,7 @@ inherit(Game, Object, {
         return this;
     },
     /**
-     * Begins the render loop
+     * Begins the render loop.
      *
      * @method render
      * @return {Game} Returns itself for chainability
@@ -505,7 +516,7 @@ inherit(Game, Object, {
         return this;
     },
     /**
-     * The looping render tick
+     * The looping render tick.
      *
      * @method _tick
      * @private

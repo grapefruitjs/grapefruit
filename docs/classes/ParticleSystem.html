@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>State - GrapeFruit Game Engine</title>
+    <title>ParticleSystem - GrapeFruit Game Engine</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -180,7 +180,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>State Class</h1>
+                        <h1>ParticleSystem Class</h1>
 <div class="box meta">
     
 
@@ -192,7 +192,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/src_game_State.js.html#l9"><code>src\game\State.js:9</code></a>
+            Defined in: <a href="../files/src_particles_ParticleSystem.js.html#l5"><code>src\particles\ParticleSystem.js:5</code></a>
         </div>
     
 
@@ -204,40 +204,20 @@
 
 
 <div class="box intro">
-    <p>States are containers that represent different states of a game</p>
+    <p>The ParticleSystem controls the system of particle emitters and their particles. It contains all the emitters
+and updates them each frame. An instance of this is created for you in a world instance, which is a property
+of a game state. The general usage for this class is:</p>
 
 </div>
 
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_State" class="method item">
-    <h3 class="name"><code>State</code></h3>
+        <div id="method_ParticleSystem" class="method item">
+    <h3 class="name"><code>ParticleSystem</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>game</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[name]</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[physicsOptions]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -265,7 +245,7 @@
             
         
         
-        <a href="../files/src_game_State.js.html#l9"><code>src\game\State.js:9</code></a>
+        <a href="../files/src_particles_ParticleSystem.js.html#l5"><code>src\particles\ParticleSystem.js:5</code></a>
         
         </p>
 
@@ -280,99 +260,9 @@
     </div>
 
     
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">game</code>
-                        <span class="type"><a href="..\classes\Game.html" class="crosslink">Game</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The game instance this state belongs to</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[name]</code>
-                        <span class="type">String</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The name of this state</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[physicsOptions]</code>
-                        <span class="type">Object</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>All the settings for the physics environment</p>
-
-                    </div>
-
-                    
-                        <ul class="params-list">
-                            
-                            <li class="param">
-                                
-                                    <code class="param-name optional">[gravity]</code>
-                                    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-                                
-
-                                <div class="param-description">
-                                    <p>The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)</p>
-
-                                </div>
-
-                                
-                            </li>
-                            
-                        </ul>
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
 
     
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> var state = game.state.add(&#39;battle&#39;);
- state.addChild(battlePlayer);
- state.addChild(enemy);
-
- state.enable();</code></pre>
-
-            </div>
-        </div>
     
 </div>
 
@@ -404,6 +294,13 @@
                     <h3>Methods</h3>
 
                     <ul class="index-list methods extends">
+                        
+                            <li class="index-item method">
+                                <a href="#method_add">add</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item method inherited">
                                 <a href="#method_addChild">addChild</a>
@@ -449,13 +346,6 @@
                         
                             <li class="index-item method inherited">
                                 <a href="#method_emit">emit</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_enable">enable</a>
 
                                 
                                 
@@ -510,6 +400,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_remove">remove</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method inherited">
                                 <a href="#method_removeAllChildren">removeAllChildren</a>
 
@@ -519,13 +416,6 @@
                         
                             <li class="index-item method inherited">
                                 <a href="#method_removeChild">removeChild</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_resize">resize</a>
 
                                 
                                 
@@ -597,20 +487,6 @@
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_audio">audio</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_camera">camera</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item property inherited">
                                 <a href="#property_children">children</a>
 
@@ -619,7 +495,7 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_game">game</a>
+                                <a href="#property_emitter">emitter</a>
 
                                 
                                 
@@ -653,8 +529,8 @@
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_name">name</a>
+                            <li class="index-item property private">
+                                <a href="#property_nextId">nextId</a>
 
                                 
                                 
@@ -662,13 +538,6 @@
                         
                             <li class="index-item property inherited">
                                 <a href="#property_parent">parent</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_physics">physics</a>
 
                                 
                                 
@@ -704,13 +573,6 @@
                         
                             <li class="index-item property inherited">
                                 <a href="#property_visible">visible</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_world">world</a>
 
                                 
                                 
@@ -813,6 +675,125 @@
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_add" class="method item">
+    <h3 class="name"><code>add</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>emitter</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\ParticleEmitter.html" class="crosslink">ParticleEmitter</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleSystem.js.html#l37"><code>src\particles\ParticleSystem.js:37</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Adds a particle emitter to the system, creating one if necessary.</p>
+<p>There are 3 ways to use this function to add an emitter to the system. The simplest case
+is to pass a string for the name, and let the manager create a normal gf.ParticleEmitter for you
+with the name you provided. The second usage is to pass a class that is a decendant of gf.ParticleEmitter.</p>
+<p>For example:</p>
+<pre class="code prettyprint"><code>function MyEmitter(name) {
+    gf.ParticleEmitter.call(name);
+}
+gf.inherit(MyEmitter, gf.ParticleEmitter);
+
+game.world.particles.add(MyEmitter); //adds a new instance of your emitter</code></pre>
+<p>The final usage is to pass an Emitter that is already created. In this case the system will
+add the emitter to the list based on <code>emitter.name</code>.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">emitter</code>
+                        <span class="type">String | Function | <a href="..\classes\ParticleEmitter.html" class="crosslink">ParticleEmitter</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The emitter name, constructor, or emitter instance to add.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\ParticleEmitter.html" class="crosslink">ParticleEmitter</a></span>:
+                    
+                    <p>The emitter that was added</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
 
                 
                     <div id="method_addChild" class="method item inherited">
@@ -1014,7 +995,7 @@
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -1409,79 +1390,6 @@
         </div>
     
 
-    
-
-    
-</div>
-
-                
-                    <div id="method_enable" class="method item">
-    <h3 class="name"><code>enable</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_game_State.js.html#l99"><code>src\game\State.js:99</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Enables (shows) the game state</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>:
-                    
-                    <p>Returns itself.</p>
-
-                
-            </div>
-        </div>
     
 
     
@@ -2256,6 +2164,113 @@
 </div>
 
                 
+                    <div id="method_remove" class="method item">
+    <h3 class="name"><code>remove</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>emitter</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\ParticleSystem.html" class="crosslink">ParticleSystem</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleSystem.js.html#l86"><code>src\particles\ParticleSystem.js:86</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Removes an emitter from the system</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">emitter</code>
+                        <span class="type">String | <a href="..\classes\ParticleEmitter.html" class="crosslink">ParticleEmitter</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The name of the emitter to remove, or the emitter instance itself.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\ParticleSystem.html" class="crosslink">ParticleSystem</a></span>:
+                    
+                    <p>Returns itself.</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_removeAllChildren" class="method item inherited">
     <h3 class="name"><code>removeAllChildren</code></h3>
 
@@ -2430,138 +2445,6 @@
 </div>
 
                 
-                    <div id="method_resize" class="method item private">
-    <h3 class="name"><code>resize</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>width</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>height</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_game_State.js.html#l110"><code>src\game\State.js:110</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Called internally by <code>game.resize</code>. This ensures that the camera
-is the correct size, and renders the world with the new viewport size.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">width</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The width of the new viewport</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">height</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The height of the new viewport</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>:
-                    
-                    <p>Returns itself.</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_setMass" class="method item inherited">
     <h3 class="name"><code>setMass</code></h3>
 
@@ -2723,7 +2606,7 @@ is the correct size, and renders the world with the new viewport size.</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -2738,7 +2621,7 @@ is the correct size, and renders the world with the new viewport size.</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -3040,7 +2923,7 @@ is the correct size, and renders the world with the new viewport size.</p>
             
         
         
-        <a href="../files/src_game_State.js.html#l126"><code>src\game\State.js:126</code></a>
+        <a href="../files/src_particles_ParticleSystem.js.html#l104"><code>src\particles\ParticleSystem.js:104</code></a>
         
         </p>
 
@@ -3051,7 +2934,7 @@ is the correct size, and renders the world with the new viewport size.</p>
     </div>
 
     <div class="description">
-        <p>Called by the game each frame to update the state objects.</p>
+        <p>Called internally by the World each frame to update each Particle Emitter</p>
 
     </div>
 
@@ -3070,7 +2953,7 @@ is the correct size, and renders the world with the new viewport size.</p>
                     
 
                     <div class="param-description">
-                        <p>The number of seconds passed since the last update call.</p>
+                        <p>The number of seconds that have passed since last call</p>
 
                     </div>
 
@@ -3187,97 +3070,6 @@ is the correct size, and renders the world with the new viewport size.</p>
 </div>
 
                 
-                    <div id="property_audio" class="property item">
-    <h3 class="name"><code>audio</code></h3>
-    <span class="type"><a href="..\classes\AudioManager.html" class="crosslink">AudioManager</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_game_State.js.html#l47"><code>src\game\State.js:47</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The audio manager for this game state</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_camera" class="property item">
-    <h3 class="name"><code>camera</code></h3>
-    <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_game_State.js.html#l74"><code>src\game\State.js:74</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The camera you view the scene through, will be set
-when setup() is called with a game instance.</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="property_children" class="property item inherited">
     <h3 class="name"><code>children</code></h3>
     <span class="type">Array</span>
@@ -3320,9 +3112,9 @@ when setup() is called with a game instance.</p>
 </div>
 
                 
-                    <div id="property_game" class="property item">
-    <h3 class="name"><code>game</code></h3>
-    <span class="type"><a href="..\classes\Game.html" class="crosslink">Game</a></span>
+                    <div id="property_emitter" class="property item">
+    <h3 class="name"><code>emitter</code></h3>
+    <span class="type">Object</span>
 
     
 
@@ -3343,7 +3135,7 @@ when setup() is called with a game instance.</p>
             
         
         
-        <a href="../files/src_game_State.js.html#l38"><code>src\game\State.js:38</code></a>
+        <a href="../files/src_particles_ParticleSystem.js.html#l17"><code>src\particles\ParticleSystem.js:17</code></a>
         
         </p>
 
@@ -3353,8 +3145,7 @@ when setup() is called with a game instance.</p>
     </div>
 
     <div class="description">
-        <p>The game instance that this state belongs too, will be set
-when setup() is called with a game instance.</p>
+        <p>The emitters that are contained in this system, keyed by name</p>
 
     </div>
 
@@ -3542,12 +3333,14 @@ will use (as it will not need to hit test all the children)</p>
 </div>
 
                 
-                    <div id="property_name" class="property item">
-    <h3 class="name"><code>name</code></h3>
-    <span class="type">String</span>
+                    <div id="property_nextId" class="property item private">
+    <h3 class="name"><code>nextId</code></h3>
+    <span class="type">Number</span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -3565,7 +3358,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_game_State.js.html#l30"><code>src\game\State.js:30</code></a>
+        <a href="../files/src_particles_ParticleSystem.js.html#l26"><code>src\particles\ParticleSystem.js:26</code></a>
         
         </p>
 
@@ -3575,7 +3368,7 @@ will use (as it will not need to hit test all the children)</p>
     </div>
 
     <div class="description">
-        <p>The name of this game state</p>
+        <p>The next ID to use for an emitter where no name was passed</p>
 
     </div>
 
@@ -3618,51 +3411,6 @@ will use (as it will not need to hit test all the children)</p>
 
     <div class="description">
         <p>[read-only] The display object that contains this display object.</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_physics" class="property item">
-    <h3 class="name"><code>physics</code></h3>
-    <span class="type">Physics</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_game_State.js.html#l65"><code>src\game\State.js:65</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The physics system to simulate the world physics</p>
 
     </div>
 
@@ -3884,51 +3632,6 @@ will use (as it will not need to hit test all the children)</p>
 </div>
 
                 
-                    <div id="property_world" class="property item">
-    <h3 class="name"><code>world</code></h3>
-    <span class="type"><a href="..\classes\Tilemap.html" class="crosslink">Tilemap</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_game_State.js.html#l56"><code>src\game\State.js:56</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The container that holds all non-gui sprites and the tilemap</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
             </div>
         
 
@@ -3988,7 +3691,7 @@ will use (as it will not need to hit test all the children)</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -4052,7 +3755,7 @@ will use (as it will not need to hit test all the children)</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -4116,7 +3819,7 @@ will use (as it will not need to hit test all the children)</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -4180,7 +3883,7 @@ will use (as it will not need to hit test all the children)</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -4244,7 +3947,7 @@ will use (as it will not need to hit test all the children)</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -4309,7 +4012,7 @@ for this callback to be fired the mouse must have been pressed down over the dis
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -4374,7 +4077,7 @@ for this callback to be fired, The touch must have started over the displayObjec
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -4439,7 +4142,7 @@ basically a touch version of click</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -4503,7 +4206,7 @@ basically a touch version of click</p>
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -4568,7 +4271,7 @@ for this callback to be fired, The touch must have started over the displayObjec
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     
@@ -4632,7 +4335,7 @@ for this callback to be fired, The touch must have started over the displayObjec
                     
 
                     <div class="param-description">
-                         
+                        
                     </div>
 
                     

@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -180,8 +188,8 @@
  * A texture stores the information that represents an image or part of an image. It cannot be added
  * to the display list directly. It is used to desribe how a Sprite looks. If no frame is provided
  * then the whole image is used.
- * See [PIXI.Texture](http://www.goodboydigital.com/pixijs/docs/classes/Texture.html)
- * for more information.
+ * *This is directly exposing [PIXI.Texture](http://www.goodboydigital.com/pixijs/docs/classes/Texture.html)*
+ * though it does add some extra methods.
  *
  * @class Texture
  * @uses EventEmitter
@@ -253,20 +261,20 @@ Texture.fromXML = function(key, xml, baseTexture) {
 
     for(var i = 0; i &lt; frames.length; i++) {
         var frame = frames[i],
-            attrs = frame.attributes.getNamedItem,
-            name = attrs(&#x27;name&#x27;) || attrs(&#x27;n&#x27;),
+            attrs = frame.attributes,
+            name = attrs.getNamedItem(&#x27;name&#x27;) || attrs.getNamedItem(&#x27;n&#x27;),
             //sprite
-            x = attrs(&#x27;x&#x27;),
-            y = attrs(&#x27;y&#x27;),
-            width = attrs(&#x27;width&#x27;) || attrs(&#x27;w&#x27;),
-            height = attrs(&#x27;height&#x27;) || attrs(&#x27;h&#x27;),
+            x = attrs.getNamedItem(&#x27;x&#x27;),
+            y = attrs.getNamedItem(&#x27;y&#x27;),
+            width = attrs.getNamedItem(&#x27;width&#x27;) || attrs.getNamedItem(&#x27;w&#x27;),
+            height = attrs.getNamedItem(&#x27;height&#x27;) || attrs.getNamedItem(&#x27;h&#x27;),
             //trim
-            ox = attrs(&#x27;frameX&#x27;) || attrs(&#x27;oX&#x27;),
-            oy = attrs(&#x27;frameY&#x27;) || attrs(&#x27;oY&#x27;),
-            owidth = attrs(&#x27;frameWidth&#x27;) || attrs(&#x27;oW&#x27;),
-            oheight = attrs(&#x27;frameHeight&#x27;) || attrs(&#x27;oH&#x27;),
+            ox = attrs.getNamedItem(&#x27;frameX&#x27;) || attrs.getNamedItem(&#x27;oX&#x27;),
+            oy = attrs.getNamedItem(&#x27;frameY&#x27;) || attrs.getNamedItem(&#x27;oY&#x27;),
+            owidth = attrs.getNamedItem(&#x27;frameWidth&#x27;) || attrs.getNamedItem(&#x27;oW&#x27;),
+            oheight = attrs.getNamedItem(&#x27;frameHeight&#x27;) || attrs.getNamedItem(&#x27;oH&#x27;),
             //rotated (generic xml export)
-            rotated = !!attrs(&#x27;r&#x27;);
+            rotated = !!attrs.getNamedItem(&#x27;r&#x27;);
 
         var tx = textures[name] = PIXI.TextureCache[key + &#x27;_&#x27; + name] = new Texture(baseTexture, {
             x: parseInt(x.nodeValue, 10),

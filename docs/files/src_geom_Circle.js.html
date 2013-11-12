@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -189,7 +197,7 @@ var inherit = require(&#x27;../utils/inherit&#x27;),
  * @param center {Vector} The point of the center of the circle
  * @param radius {Number} The radius of the circle
  */
-var Circle = function(x, y, radius) {
+var Circle = function(x, y, radius, scale) {
     /**
      * The center of the circle
      *
@@ -197,6 +205,16 @@ var Circle = function(x, y, radius) {
      * @type Vector
      */
     this.position = new Vector();
+
+    /**
+     * The unscaled radius of the circle
+     *
+     * @property _radius
+     * @type Number
+     * @default 0
+     * @private
+     */
+    this._radius = radius || 0;
 
     /**
      * The radius of the circle
@@ -207,12 +225,23 @@ var Circle = function(x, y, radius) {
      */
     this.radius = radius || 0;
 
+    /**
+     * The scale of the circle
+     *
+     * @property scale
+     * @type Vector
+     * @default new Vector(1, 1)
+     */
+    this.scale = scale || new Vector(1, 1);
+
     //set position
     this.x = x || 0;
     this.y = y || 0;
 
     //internal shape type
     this._shapetype = C.SHAPE.CIRCLE;
+
+    this.recalc();
 };
 
 inherit(Circle, Object, {
@@ -220,10 +249,25 @@ inherit(Circle, Object, {
      * Creates a clone of this Circle instance
      *
      * @method clone
-     * @return {Circle} a copy of the polygon
+     * @return {Circle} a copy of the circle
      */
     clone: function() {
         return new Circle(this.x, this.y, this.radius);
+    },
+
+    /**
+     * Copies the values from another circle to this one
+     *
+     * @method copy
+     * @param circle {Circle} The circle to copy vlaues from
+     * @return {Circle} Returns itself
+     */
+    copy: function(circle) {
+        this.x = circle.x;
+        this.y = circle.y;
+        this.radius = circle.radius;
+
+        return this;
     },
 
     /**
@@ -247,6 +291,46 @@ inherit(Circle, Object, {
         dy *= dy;
 
         return (dx + dy &lt;= r2);
+    },
+
+    /**
+     * Checks if this circle overlaps another
+     *
+     * @method overlaps
+     * @param circle {Circle} The circle to check if this overlaps
+     * @return {Boolean} if the circle overlaps
+     */
+    overlaps: function(circle) {
+        var differenceV = this.position.clone().sub(circle.position),
+            totalRadius = this.radius + circle.radius,
+            totalRadiusSq = totalRadius * totalRadius,
+            distanceSq = differenceV.lengthSq();
+
+        //if distanceSq is greater than totalRadiusSq then they do not intersect,
+        //so we return the inverse of that value.
+        /*jshint -W018*/
+        return !(distanceSq &gt; totalRadiusSq);
+    },
+
+    /**
+     * Checks if this circle&#x27;s values are equal to anothers
+     *
+     * @method equals
+     * @param circle {Circle} The circle to check against
+     * @return {Boolean} True if they are equal
+     */
+    equals: function(circle) {
+        return this.position.equals(circle.position) &amp;&amp;
+                this.radius === circle.radius;
+    },
+
+    /**
+     * Recalculates the scaled radius
+     *
+     * @method recalc
+     */
+    recalc: function() {
+        this.radius = this._radius * this.scale.x;
     }
 });
 
@@ -279,6 +363,48 @@ Object.defineProperty(Circle.prototype, &#x27;y&#x27;, {
     },
     set: function(v) {
         this.position.y = v;
+    }
+});
+
+/**
+ * The radius circle
+ *
+ * @property radius
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Circle.prototype, &#x27;radius&#x27;, {
+    get: function() {
+        return this._radius * this.scale.x;
+    },
+    set: function(v) {
+        this._radius = v;
+    }
+});
+
+/**
+ * The circumference of the circle
+ *
+ * @property circumference
+ * @type Number
+ * @readOnly
+ */
+Object.defineProperty(Circle.prototype, &#x27;circumference&#x27;, {
+    get: function() {
+        return 2 * (Math.PI * this.radius);
+    }
+});
+
+/**
+ * The area of the circle
+ *
+ * @property area
+ * @type Number
+ * @readOnly
+ */
+Object.defineProperty(Circle.prototype, &#x27;area&#x27;, {
+    get: function() {
+        return Math.PI * this.radius * this.radius;
     }
 });
 

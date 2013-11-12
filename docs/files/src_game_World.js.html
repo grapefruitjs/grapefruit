@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -180,7 +188,8 @@ var inherit = require(&#x27;../utils/inherit&#x27;),
     Container = require(&#x27;../display/Container&#x27;),
     Rectangle = require(&#x27;../geom/Rectangle&#x27;),
     ObjectFactory = require(&#x27;../utils/ObjectFactory&#x27;),
-    ParticleSystem = require(&#x27;../particles/ParticleSystem&#x27;);
+    ParticleSystem = require(&#x27;../particles/ParticleSystem&#x27;),
+    math = require(&#x27;../math/math&#x27;);
 
 /**
  * The world is the container for all game objects in a game state.
@@ -243,8 +252,8 @@ inherit(World, Container, {
      * @return {World} Returns itself for chainability
      */
     pan: function(x, y) {
-        y = x.y !== undefined ? x.y : (y || 0);
-        x = x.x !== undefined ? x.x : (x || 0);
+        y = math.floor(x.y !== undefined ? x.y : (y || 0));
+        x = math.floor(x.x !== undefined ? x.x : (x || 0));
 
         this.position.x += x * this.scale.x;
         this.position.y += y * this.scale.y;
@@ -275,6 +284,16 @@ inherit(World, Container, {
         }
 
         return this;
+    },
+    /**
+     * Called by the state each frame to update the particle system.
+     *
+     * @method update
+     * @param dt {Number} The number of seconds passed since the last update call.
+     * @private
+     */
+    update: function(dt) {
+        this.particles.update(dt);
     }
 });
 

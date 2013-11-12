@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -196,8 +204,9 @@
 
 
 <div class="box intro">
-    <p>Grapefruit Audio API, provides an easy interface to use HTML5 Audio
-The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Howler.js</a></p>
+    <p>Grapefruit Audio API, provides an easy interface to use WebAudoiAPI with a fallback to HTML5 Audio
+The GF Audio API was originally based on <a href="https://github.com/goldfire/howler.js">Howler.js</a>
+Generally you will use this via the <code>game.audio</code> or <code>state.audio</code> properties.</p>
 
 </div>
 
@@ -208,7 +217,23 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
     <h3 class="name"><code>AudioManager</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>game</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>parent</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -251,6 +276,47 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
     </div>
 
     
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">game</code>
+                        <span class="type"><a href="..\classes\Game.html" class="crosslink">Game</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The game instance this manager belongs to</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">parent</code>
+                        <span class="type"><a href="..\classes\AudioManager.html" class="crosslink">AudioManager</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The parent audio manager this manager belongs to.
+     This is used to create a web audio API node heirarchy.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
 
     
 
@@ -285,6 +351,13 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
                     <ul class="index-list methods extends">
                         
                             <li class="index-item method">
+                                <a href="#method_add">add</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_attach">attach</a>
 
                                 
@@ -292,7 +365,7 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_create">create</a>
+                                <a href="#method_detach">detach</a>
 
                                 
                                 
@@ -307,6 +380,13 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
                         
                             <li class="index-item method">
                                 <a href="#method_mute">mute</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_remove">remove</a>
 
                                 
                                 
@@ -413,99 +493,8 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_attach" class="method item">
-    <h3 class="name"><code>attach</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>sound</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_audio_AudioManager.js.html#l193"><code>src\audio\AudioManager.js:193</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Attaches an AudioPlayer to this manager, if using webAudio this means
-that the sound will connect to this masterGain node and inherit anything
-that happens to it (such as muting).</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">sound</code>
-                        <span class="type">AudioPlayer</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The player to attach to this manager</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_create" class="method item">
-    <h3 class="name"><code>create</code></h3>
+                    <div id="method_add" class="method item">
+    <h3 class="name"><code>add</code></h3>
 
     
         <div class="args">
@@ -529,7 +518,7 @@ that happens to it (such as muting).</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -556,7 +545,7 @@ that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l214"><code>src\audio\AudioManager.js:214</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l247"><code>src\audio\AudioManager.js:247</code></a>
         
         </p>
 
@@ -730,9 +719,227 @@ that happens to it (such as muting).</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                     <p>Will return the new audio player, or false if we couldn&#39;t determine a compatible url</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_attach" class="method item">
+    <h3 class="name"><code>attach</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>sound</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioManager.js.html#l197"><code>src\audio\AudioManager.js:197</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Attaches an AudioPlayer to this manager, if using webAudio this means
+that the sound will connect to this masterGain node and inherit anything
+that happens to it (such as muting).</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">sound</code>
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The player to attach to this manager</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
+                    
+                    <p>The newly attached audio player</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_detach" class="method item">
+    <h3 class="name"><code>detach</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>sound</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioManager.js.html#l224"><code>src\audio\AudioManager.js:224</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Detaches an AudioPlayer from this manager, if using webAudio this means
+that the sound will disconnect from this masterGain node and stop inheriting
+anything that happens to it (such as muting).</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">sound</code>
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The player to detach from this manager</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
+                    
+                    <p>The detached audio player</p>
 
                 
             </div>
@@ -775,7 +982,7 @@ that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l96"><code>src\audio\AudioManager.js:96</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l100"><code>src\audio\AudioManager.js:100</code></a>
         
         </p>
 
@@ -830,7 +1037,7 @@ that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l131"><code>src\audio\AudioManager.js:131</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l135"><code>src\audio\AudioManager.js:135</code></a>
         
         </p>
 
@@ -847,6 +1054,113 @@ that happens to it (such as muting).</p>
 
     
 
+    
+
+    
+</div>
+
+                
+                    <div id="method_remove" class="method item">
+    <h3 class="name"><code>remove</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>key</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioManager.js.html#l275"><code>src\audio\AudioManager.js:275</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Removes an audio player from the manager</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">key</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The unique cache key for the preloaded audio</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
+                    
+                    <p>Will return the audio player removed, or false if none was removed</p>
+
+                
+            </div>
+        </div>
     
 
     
@@ -885,7 +1199,7 @@ that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l147"><code>src\audio\AudioManager.js:147</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l151"><code>src\audio\AudioManager.js:151</code></a>
         
         </p>
 
@@ -950,7 +1264,7 @@ that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l171"><code>src\audio\AudioManager.js:171</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l175"><code>src\audio\AudioManager.js:175</code></a>
         
         </p>
 
@@ -1041,7 +1355,7 @@ anything that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l104"><code>src\audio\AudioManager.js:104</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l108"><code>src\audio\AudioManager.js:108</code></a>
         
         </p>
 
@@ -1119,7 +1433,7 @@ anything that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l139"><code>src\audio\AudioManager.js:139</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l143"><code>src\audio\AudioManager.js:143</code></a>
         
         </p>
 
@@ -1175,7 +1489,7 @@ anything that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l44"><code>src\audio\AudioManager.js:44</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l48"><code>src\audio\AudioManager.js:48</code></a>
         
         </p>
 
@@ -1222,7 +1536,7 @@ anything that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l75"><code>src\audio\AudioManager.js:75</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l79"><code>src\audio\AudioManager.js:79</code></a>
         
         </p>
 
@@ -1267,7 +1581,7 @@ anything that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l66"><code>src\audio\AudioManager.js:66</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l70"><code>src\audio\AudioManager.js:70</code></a>
         
         </p>
 
@@ -1312,7 +1626,7 @@ anything that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l18"><code>src\audio\AudioManager.js:18</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l22"><code>src\audio\AudioManager.js:22</code></a>
         
         </p>
 
@@ -1359,7 +1673,7 @@ anything that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l34"><code>src\audio\AudioManager.js:34</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l38"><code>src\audio\AudioManager.js:38</code></a>
         
         </p>
 
@@ -1406,7 +1720,7 @@ anything that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l26"><code>src\audio\AudioManager.js:26</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l30"><code>src\audio\AudioManager.js:30</code></a>
         
         </p>
 
@@ -1451,7 +1765,7 @@ anything that happens to it (such as muting).</p>
             
         
         
-        <a href="../files/src_audio_AudioManager.js.html#l54"><code>src\audio\AudioManager.js:54</code></a>
+        <a href="../files/src_audio_AudioManager.js.html#l58"><code>src\audio\AudioManager.js:58</code></a>
         
         </p>
 

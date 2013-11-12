@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -180,7 +188,7 @@ var AudioManager = require(&#x27;../audio/AudioManager&#x27;),
     Container = require(&#x27;../display/Container&#x27;),
     World = require(&#x27;./World&#x27;),
     Camera = require(&#x27;../camera/Camera&#x27;),
-    Physics = require(&#x27;../physics/Physics&#x27;),
+    PhysicsSystem = require(&#x27;../physics/PhysicsSystem&#x27;),
     math = require(&#x27;../math/math&#x27;),
     inherit = require(&#x27;../utils/inherit&#x27;);
 
@@ -190,17 +198,18 @@ var AudioManager = require(&#x27;../audio/AudioManager&#x27;),
  * @class State
  * @extends Container
  * @constructor
+ * @param game {Game} The game instance this state belongs to
  * @param [name] {String} The name of this state
- * @param [settings] {Object} All the settings for this game state
- * @param [settings.gravity] {Number} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
+ * @param [physicsOptions] {Object} All the settings for the physics environment
+ * @param [physicsOptions.gravity] {Vector} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
  * @example
- *      var state = new GameState(game, &#x27;battle&#x27;);
+ *      var state = game.state.add(&#x27;battle&#x27;);
  *      state.addChild(battlePlayer);
  *      state.addChild(enemy);
  *
- *      game.enableState(state); //or you can use the name from the ctor &#x27;battle&#x27;
+ *      state.enable();
  */
-var State = function(game, name) {
+var State = function(game, name, physOptions) {
     if(!name)
         name = math.randomString();
 
@@ -246,7 +255,7 @@ var State = function(game, name) {
      * @type Physics
      * @readOnly
      */
-    this.physics = new Physics(this);
+    this.physics = new PhysicsSystem(this, physOptions);
 
     /**
      * The camera you view the scene through, will be set
@@ -262,11 +271,11 @@ var State = function(game, name) {
     Container.call(this);
 
     //start disabled
-    this.disable();
+    this.visible = false;
 
     //add world/camera
-    this.addChild(this.camera);
     this.addChild(this.world);
+    this.addChild(this.camera);
 
     //ensure the camera is the right size
     this.camera.resize(game.width, game.height);
@@ -277,30 +286,34 @@ inherit(State, Container, {
      * Enables (shows) the game state
      *
      * @method enable
+     * @return {State} Returns itself.
      */
     enable: function() {
-        this.visible = true;
+        this.game.state.enable(this);
 
         return this;
     },
     /**
-     * Disables (hides) the game state
+     * Called internally by &#x60;game.resize&#x60;. This ensures that the camera
+     * is the correct size, and renders the world with the new viewport size.
      *
-     * @method disable
+     * @method resize
+     * @param width {Number} The width of the new viewport
+     * @param height {Number} The height of the new viewport
+     * @return {State} Returns itself.
+     * @private
      */
-    disable: function() {
-        this.visible = false;
-
-        return this;
-    },
     resize: function(w, h) {
         this.camera.resize(w, h);
         this.world.resize(w, h);
+
+        return this;
     },
     /**
-     * Called by the game each frame to update the camera object
+     * Called by the game each frame to update the state objects.
      *
      * @method update
+     * @param dt {Number} The number of seconds passed since the last update call.
      * @private
      */
     update: function(dt) {
@@ -308,6 +321,11 @@ inherit(State, Container, {
         this.game.timings.cameraStart = this.game.clock.now();
         this.camera.update(dt);
         this.game.timings.cameraEnd = this.game.clock.now();
+
+        //update world
+        this.game.timings.worldStart = this.game.clock.now();
+        this.world.update(dt);
+        this.game.timings.worldEnd = this.game.clock.now();
 
         //simulate physics and detect/resolve collisions
         this.game.timings.physicsStart = this.game.clock.now();

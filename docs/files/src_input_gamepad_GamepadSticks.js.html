@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -199,11 +207,10 @@ var GamepadSticks = function() {
     this.threshold = 0.5;
 
     /**
-     * Track the status of each of the axes
+     * Track the status of each of the axes on the gamepad
      *
      * @property axes
      * @type Object
-     * @private
      */
     this.axes = {};
 
@@ -246,7 +253,7 @@ inherit(GamepadSticks, Input, {
 /**
  * Bindable Gamepad Axes
  *
- * @property GP_AXIS
+ * @property AXIS
  * @type Object
  * @static
  */

@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -193,29 +201,86 @@ var Input = require(&#x27;../Input&#x27;),
 var Pointer = function(id, manager) {
     Input.call(this);
 
-    //the id of this pointer
+    /**
+     * The id of this pointer
+     *
+     * @property id
+     * @type String|Number
+     * @readOnly
+     */
     this.id = id;
 
-    //the pointers manager
+    /**
+     * The pointer&#x27;s manager
+     *
+     * @property manager
+     * @type Pointers
+     * @readOnly
+     */
     this.manager = manager;
 
-    //the game instance of the pointer
+    /**
+     * The game instance of the pointer
+     *
+     * @property game
+     * @type Game
+     * @readOnly
+     */
     this.game = manager.game;
 
-    //is this an active pointer (currently touching)?
+    /**
+     * Is this an active pointer (currently touching)?
+     *
+     * @property active
+     * @type Boolean
+     * @readOnly
+     */
     this.active = false;
 
-    //is this the mouse pointer?
+    /**
+     * Is this the mouse pointer?
+     *
+     * @property mouse
+     * @type Boolean
+     * @readOnly
+     */
     this.mouse = (id === 1);
 
-    //the clock for timing stuffz
+    /**
+     * The clock for timing stuffz
+     *
+     * @property clock
+     * @type Clock
+     * @readOnly
+     * @private
+     */
     this.clock = new Clock();
 
-    //to copy some event stuff
+    /**
+     * The button on the pointer being pressed
+     *
+     * @property button
+     * @type Number
+     * @readOnly
+     */
     this.button = null;
-    this.type = null; //Pointer.TYPE
 
-    //have we emitted the hold event already?
+    /**
+     * The type of the pointer
+     *
+     * @property type
+     * @type TYPE
+     */
+    this.type = null;
+
+    /**
+     * Have we emitted the hold event already?
+     *
+     * @property _holdSent
+     * @type Boolean
+     * @readOnly
+     * @private
+     */
     this._holdSent = false;
 
     this.position = new Vector();
@@ -223,6 +288,12 @@ var Pointer = function(id, manager) {
 };
 
 inherit(Pointer, Input, {
+    /**
+     * Callback for when a pointerdown event occurs
+     *
+     * @method down
+     * @param evt {DOMEvent} The original DOM Event
+     */
     down: function(evt) {
         this.originalEvent = evt;
 
@@ -244,6 +315,12 @@ inherit(Pointer, Input, {
             this.manager.activePointers++;
         }
     },
+    /**
+     * Callback for when a pointerup event occurs
+     *
+     * @method up
+     * @param evt {DOMEvent} The original DOM Event
+     */
     up: function(evt) {
         var emit;
 
@@ -277,6 +354,12 @@ inherit(Pointer, Input, {
             this.manager.emit(emit, this);
         }
     },
+    /**
+     * Callback for when a pointermove event occurs
+     *
+     * @method move
+     * @param evt {DOMEvent} The original DOM Event
+     */
     move: function(evt) {
         this.originalEvent = evt;
 
@@ -289,9 +372,22 @@ inherit(Pointer, Input, {
             evt.pageY - this.game.offset.y
         );
     },
+    /**
+     * Callback for when a pointerleave event occurs
+     *
+     * @method leave
+     * @param evt {DOMEvent} The original DOM Event
+     */
     leave: function(evt) {
         this.move(evt);
     },
+    /**
+     * Called internally every frame. Updates the pointer
+     *
+     * @method update
+     * @param dt {Number} The delta time (in seconds) since the last update
+     * @private
+     */
     update: function() {
         if(!this.active || this._holdSent)
             return;
@@ -302,6 +398,12 @@ inherit(Pointer, Input, {
             this.manager.emit(&#x27;hold&#x27;, this);
         }
     },
+    /**
+     * Contains the X/Y position in the world of the pointer object
+     *
+     * @property positionWorld
+     * @type Object
+     */
     positionWorld: {}
 });
 
@@ -317,6 +419,12 @@ Object.defineProperty(Pointer.prototype.positionWorld, &#x27;y&#x27;, {
     }
 });
 
+/**
+ * The type of a pointer
+ *
+ * @property TYPE
+ * @type Object
+ */
 Pointer.TYPE = {
     TOUCH: &#x27;touch&#x27;,
     PEN: &#x27;pen&#x27;,

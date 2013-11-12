@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\core.js - GrapeFruit Game Engine</title>
+    <title>src\particles\ParticleSystem.js - GrapeFruit Game Engine</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -180,149 +180,131 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\core.js</h1>
+                        <h1 class="file-heading">File: src\particles\ParticleSystem.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
+var Emitter = require(&#x27;./ParticleEmitter&#x27;),
+    Contianer = require(&#x27;../display/Container&#x27;),
+    inherit = require(&#x27;../utils/inherit&#x27;);
+
 /**
-* @license GrapeFruit Game Engine
-* Copyright (c) 2012-2014, Chad Engler
-*
-* GrapeFruit is licensed under the MIT License.
-* http://www.opensource.org/licenses/mit-license.php
-*
-* Known Limiting Features:
-*   - Canvas
-*       - IE 9+
-*       - FF 2+
-*       - Chrome 4+
-*       - Safari 3.1+
-*       - Opera 9+
-*
-*   - WebGL
-*       - IE 11+
-*       - FF 4+
-*       - Chrome 8+
-*       - Safari 6+
-*       - Opera 12+
-*
-*   - Object.create
-*       - IE 9+
-*       - FF 4+
-*       - Chrome 7+
-*       - Safari 5+
-*       - Opera 12+
-*/
+ * The ParticleSystem controls the system of particle emitters and their particles. It contains all the emitters
+ * and updates them each frame. An instance of this is created for you in a world instance, which is a property
+ * of a game state. The general usage for this class is:
+ *
+ * @class ParticleSystem
+ * @extends Container
+ * @constructor
+ */
+var ParticleSystem = function() {
+    Contianer.call(this);
 
-var gf = {
-    //audio
-    AudioManager:       require(&#x27;./audio/AudioManager&#x27;),
-    AudioPlayer:        require(&#x27;./audio/AudioPlayer&#x27;),
+    /**
+     * The emitters that are contained in this system, keyed by name
+     *
+     * @property emitter
+     * @type Object
+     * @readOnly
+     */
+    this.emitters = {};
 
-    //camera
-    Camera:             require(&#x27;./camera/Camera&#x27;),
-
-    //display
-    BaseTexture:        require(&#x27;./display/BaseTexture&#x27;),
-    Container:          require(&#x27;./display/Container&#x27;),
-    Graphics:           require(&#x27;./display/Graphics&#x27;),
-    RenderTexture:      require(&#x27;./display/RenderTexture&#x27;),
-    Sprite:             require(&#x27;./display/Sprite&#x27;),
-    Texture:            require(&#x27;./display/Texture&#x27;),
-    TilingSprite:       require(&#x27;./display/TilingSprite&#x27;),
-
-    //fx
-    fx: {
-        camera: {
-            Effect:     require(&#x27;./fx/camera/Effect&#x27;),
-            Close:      require(&#x27;./fx/camera/Close&#x27;),
-            Fade:       require(&#x27;./fx/camera/Fade&#x27;),
-            Flash:      require(&#x27;./fx/camera/Flash&#x27;),
-            Scanlines:  require(&#x27;./fx/camera/Scanlines&#x27;),
-            Shake:      require(&#x27;./fx/camera/Shake&#x27;)
-        }
-    },
-
-    //game
-    Game:               require(&#x27;./game/Game&#x27;),
-    State:              require(&#x27;./game/State&#x27;),
-    StateManager:       require(&#x27;./game/StateManager&#x27;),
-    World:              require(&#x27;./game/World&#x27;),
-
-    //geometry
-    Circle:             require(&#x27;./geom/Circle&#x27;),
-    Ellipse:            require(&#x27;./geom/Ellipse&#x27;),
-    Polygon:            require(&#x27;./geom/Polygon&#x27;),
-    Rectangle:          require(&#x27;./geom/Rectangle&#x27;),
-
-    //gui
-    GuiItem:            require(&#x27;./gui/GuiItem&#x27;),
-
-    //input
-    Input:              require(&#x27;./input/Input&#x27;),
-    InputManager:       require(&#x27;./input/InputManager&#x27;),
-    Keyboard:           require(&#x27;./input/Keyboard&#x27;),
-    Gamepad:            require(&#x27;./input/Gamepad&#x27;),
-    GamepadButtons:     require(&#x27;./input/gamepad/GamepadButtons&#x27;),
-    GamepadSticks:      require(&#x27;./input/gamepad/GamepadSticks&#x27;),
-    Pointers:           require(&#x27;./input/Pointers&#x27;),
-    Pointer:            require(&#x27;./input/pointer/Pointer&#x27;),
-
-    //loader
-    Loader:             require(&#x27;./loader/Loader&#x27;),
-
-    //math
-    math:               require(&#x27;./math/math&#x27;),
-    Vector:             require(&#x27;./math/Vector&#x27;),
-
-    //particles
-    ParticleEmitter:    require(&#x27;./particles/ParticleEmitter&#x27;),
-    ParticleSystem:     require(&#x27;./particles/ParticleSystem&#x27;),
-
-    //physics
-    PhysicsSystem:      require(&#x27;./physics/PhysicsSystem&#x27;),
-    PhysicsTarget:      require(&#x27;./physics/PhysicsTarget&#x27;),
-
-    //text
-    BitmapText:         require(&#x27;./text/BitmapText&#x27;),
-    Text:               require(&#x27;./text/Text&#x27;),
-
-    //tilemap
-    Tile:               require(&#x27;./tilemap/Tile&#x27;),
-    Tilelayer:          require(&#x27;./tilemap/Tilelayer&#x27;),
-    Tilemap:            require(&#x27;./tilemap/Tilemap&#x27;),
-    Tileset:            require(&#x27;./tilemap/Tileset&#x27;),
-    ObjectGroup:        require(&#x27;./tilemap/ObjectGroup&#x27;),
-
-    //utils
-    utils:              require(&#x27;./utils/utils&#x27;),
-    support:            require(&#x27;./utils/support&#x27;),
-    inherit:            require(&#x27;./utils/inherit&#x27;),
-    Cache:              require(&#x27;./utils/Cache&#x27;),
-    Clock:              require(&#x27;./utils/Clock&#x27;),
-    EventEmitter:       require(&#x27;./utils/EventEmitter&#x27;),
-    ObjectPool:         require(&#x27;./utils/ObjectPool&#x27;),
-    SpritePool:         require(&#x27;./utils/SpritePool&#x27;),
-    ObjectFactory:      require(&#x27;./utils/ObjectFactory&#x27;),
-
-    //plugin
-    plugin:             require(&#x27;./plugin&#x27;),
-
-    //vendor files
-    PIXI:               require(&#x27;./vendor/pixi&#x27;)
+    /**
+     * The next ID to use for an emitter where no name was passed
+     *
+     * @property nextId
+     * @type Number
+     * @private
+     */
+    this.nextId = 0;
 };
 
-//replace the pixi point with a powerful vector class
-gf.PIXI.Point = gf.Vector;
+inherit(ParticleSystem, Contianer, {
+    /**
+     * Adds a particle emitter to the system, creating one if necessary.
+     *
+     * There are 3 ways to use this function to add an emitter to the system. The simplest case
+     * is to pass a string for the name, and let the manager create a normal gf.ParticleEmitter for you
+     * with the name you provided. The second usage is to pass a class that is a decendant of gf.ParticleEmitter.
+     *
+     * For example:
+     *
+     * &#x60;&#x60;&#x60;
+     * function MyEmitter(name) {
+     *     gf.ParticleEmitter.call(name);
+     * }
+     * gf.inherit(MyEmitter, gf.ParticleEmitter);
+     *
+     * game.world.particles.add(MyEmitter); //adds a new instance of your emitter
+     * &#x60;&#x60;&#x60;
+     *
+     * The final usage is to pass an Emitter that is already created. In this case the system will
+     * add the emitter to the list based on &#x60;emitter.name&#x60;.
+     *
+     * @method add
+     * @param emitter {String|Function|ParticleEmitter} The emitter name, constructor, or emitter instance to add.
+     * @return {ParticleEmitter} The emitter that was added
+     */
+    add: function(Name) {
+        var emitter;
 
-//copy over constants
-var C = require(&#x27;./constants&#x27;);
+        //create an emitter if a string is passed
+        if(typeof Name === &#x27;string&#x27;) {
+            emitter = new Emitter(Name);
+        }
+        //create an emitter of the instance passed
+        else if(typeof Name === &#x27;function&#x27;) {
+            emitter = new Name();
+        }
+        //a pre-created emitter, ensure game is set correctly
+        else {
+            emitter = Name;
+        }
 
-for(var k in C) {
-    gf[k] = C[k];
-}
+        if(!emitter.name)
+            emitter.name = &#x27;emitter_&#x27; + (this.nextId++);
 
-module.exports = gf;
+        this.emitters[emitter.name] = emitter;
+        this.addChild(emitter);
+
+        return emitter;
+    },
+    /**
+     * Removes an emitter from the system
+     *
+     * @method remove
+     * @param emitter {String|ParticleEmitter} The name of the emitter to remove, or the emitter instance itself.
+     * @return {ParticleSystem} Returns itself.
+     */
+    remove: function(emitter) {
+        if(typeof emitter === &#x27;string&#x27;)
+            emitter = this.emitters[emitter];
+
+        if(emitter.parent)
+            emitter.parent.removeChild(emitter);
+
+        delete this.emitters[emitter.name];
+
+        return this;
+    },
+    /**
+     * Called internally by the World each frame to update each Particle Emitter
+     *
+     * @method update
+     * @param dt {Number} The number of seconds that have passed since last call
+     * @private
+     */
+    update: function(dt) {
+        for(var i = 0, il = this.children.length; i &lt; il; ++i) {
+            var emitter = this.children[i];
+
+            if(emitter.update)
+                emitter.update(dt);
+        }
+    }
+});
+
+module.exports = ParticleSystem;
 
     </pre>
 </div>

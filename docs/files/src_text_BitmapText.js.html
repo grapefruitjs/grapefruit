@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -207,8 +215,43 @@ var Container = require(&#x27;../display/Container&#x27;),
 var BitmapText = function(text, font, style) {
     Container.call(this);
 
-    this.dirty = true;
+    /**
+     * Whether or not the bitmap text is dirty and should be redrawn
+     *
+     * @property dirty
+     * @type Boolean
+     * @default false
+     */
+    this.dirty = false;
+
+    /**
+     * The font descriptor that holds the font data (name, size, chars, etc)
+     *
+     * @property font
+     * @type Object
+     * @readOnly
+     */
     this.font = font;
+
+    /**
+     * A monospacing to apply to the font instead of the actual character/kerning spacing.
+     * When set to &#x60;0&#x60; the default font values will be used.
+     *
+     * @property monospace
+     * @type Number
+     * @default 0
+     */
+    this.monospace = 0;
+
+    /**
+     * The actual text that is currently rendered, please use the &#x60;text&#x60; property
+     * and do not set this directly.
+     *
+     * @property _text
+     * @type String
+     * @readOnly
+     * @private
+     */
     this._text = text;
 
     /**
@@ -221,11 +264,19 @@ var BitmapText = function(text, font, style) {
      */
     this.sprites = new ObjectPool(Sprite, this);
 
-    this.setText(text);
+    this.text = text;
     this.setStyle(style);
 };
 
 inherit(BitmapText, Container, {
+    /**
+     * Sets the style of the text based on a style object.
+     *
+     * @method setStyle
+     * @param style {Object} The style object
+     * @param style.align {String} The alignment of the text, can be &#x27;left&#x27;, &#x27;center&#x27;, or &#x27;right&#x27;
+     * @param style.size {Number} The font size of the text to display
+     */
     setStyle: function(style) {
         style = style || {};
 
@@ -236,7 +287,7 @@ inherit(BitmapText, Container, {
     },
     /**
      * Renders the text character sprites when the text is dirty. This is
-     * automatically called when the text/style becomes dirty
+     * automatically called when the text/style becomes dirty.
      *
      * @method renderText
      */
@@ -286,7 +337,7 @@ inherit(BitmapText, Container, {
             });
 
             //advance the position
-            pos.x += data.xAdvance;
+            pos.x += (this.monospace || data.xAdvance);
 
             //remember this code for kernings next char
             prevCode = code;
@@ -330,7 +381,7 @@ inherit(BitmapText, Container, {
         this.height = (pos.y + font.lineHeight) * scale;
     },
     /**
-     * Clones this font to get another just like it
+     * Clones this BitmapText to get another just like it
      *
      * @method clone
      * @return BitmapText
@@ -342,7 +393,7 @@ inherit(BitmapText, Container, {
         });
     },
     /**
-     * Updates the text when dirty
+     * Updates the text when dirty, called each frame by PIXI&#x27;s render methods
      *
      * @method updateTransform
      * @private
@@ -365,6 +416,12 @@ inherit(BitmapText, Container, {
     }
 });
 
+/**
+ * The text that will be rendered.
+ *
+ * @property text
+ * @type String
+ */
 Object.defineProperty(BitmapText.prototype, &#x27;text&#x27;, {
     get: function() {
         return this._text;
@@ -375,6 +432,16 @@ Object.defineProperty(BitmapText.prototype, &#x27;text&#x27;, {
     }
 });
 
+/**
+ * Parses an XML font file into a font object that can be passed into a BitmapText instance.
+ * This is called by the Cache when XML bitmap data is added.
+ *
+ * @method parseXML
+ * @param key {String} The cache key for the font
+ * @param xml {Document} The XML document to parse
+ * @param texture {Texture} The texture to use for creating character textures
+ * @static
+ */
 BitmapText.parseXML = function(key, xml, texture) {
     var btx = texture.baseTexture;
 
@@ -396,20 +463,20 @@ BitmapText.parseXML = function(key, xml, texture) {
 
     for(var i = 0, il = chars.length; i &lt; il; ++i) {
         var letter = chars[i],
-            attrs = letter.attributes.getNamedItem,
-            code = parseInt(attrs(&#x27;id&#x27;).nodeValue, 10),
+            attrs = letter.attributes,
+            code = parseInt(attrs.getNamedItem(&#x27;id&#x27;).nodeValue, 10),
             rect = new Rectangle(
-                parseInt(attrs(&#x27;x&#x27;).nodeValue, 10),
-                parseInt(attrs(&#x27;y&#x27;).nodeValue, 10),
-                parseInt(attrs(&#x27;width&#x27;).nodeValue, 10),
-                parseInt(attrs(&#x27;height&#x27;).nodeValue, 10)
+                parseInt(attrs.getNamedItem(&#x27;x&#x27;).nodeValue, 10),
+                parseInt(attrs.getNamedItem(&#x27;y&#x27;).nodeValue, 10),
+                parseInt(attrs.getNamedItem(&#x27;width&#x27;).nodeValue, 10),
+                parseInt(attrs.getNamedItem(&#x27;height&#x27;).nodeValue, 10)
             ),
             tx = PIXI.TextureCache[key + &#x27;_&#x27; + code] = new Texture(btx, rect);
 
         data.chars[code] = {
-            xOffset: parseInt(attrs(&#x27;xoffset&#x27;).nodeValue, 10),
-            yOffset: parseInt(attrs(&#x27;yoffset&#x27;).nodeValue, 10),
-            xAdvance: parseInt(attrs(&#x27;xadvance&#x27;).nodeValue, 10),
+            xOffset: parseInt(attrs.getNamedItem(&#x27;xoffset&#x27;).nodeValue, 10),
+            yOffset: parseInt(attrs.getNamedItem(&#x27;yoffset&#x27;).nodeValue, 10),
+            xAdvance: parseInt(attrs.getNamedItem(&#x27;xadvance&#x27;).nodeValue, 10),
             kerning: {},
             texture: tx
         };
@@ -420,10 +487,10 @@ BitmapText.parseXML = function(key, xml, texture) {
 
     for(i = 0, il = kernings.length; i &lt; il; ++i) {
         var kern = kernings[i],
-            attrs2 = kern.attributes.getNamedItem,
-            first = parseInt(attrs2(&#x27;first&#x27;).nodeValue, 10),
-            second = parseInt(attrs2(&#x27;second&#x27;).nodeValue, 10),
-            amount = parseInt(attrs2(&#x27;amount&#x27;).nodeValue, 10);
+            attrs2 = kern.attributes,
+            first = parseInt(attrs2.getNamedItem(&#x27;first&#x27;).nodeValue, 10),
+            second = parseInt(attrs2.getNamedItem(&#x27;second&#x27;).nodeValue, 10),
+            amount = parseInt(attrs2.getNamedItem(&#x27;amount&#x27;).nodeValue, 10);
 
         data.chars[second].kerning[first] = amount;
     }

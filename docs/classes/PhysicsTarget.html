@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Polygon - GrapeFruit Game Engine</title>
+    <title>PhysicsTarget - GrapeFruit Game Engine</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -180,7 +180,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Polygon Class</h1>
+                        <h1>PhysicsTarget Class</h1>
 <div class="box meta">
     
 
@@ -188,7 +188,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/src_geom_Polygon.js.html#l5"><code>src\geom\Polygon.js:5</code></a>
+            Defined in: <a href="../files/src_physics_PhysicsTarget.js.html#l1"><code>src\physics\PhysicsTarget.js:1</code></a>
         </div>
     
 
@@ -200,46 +200,18 @@
 
 
 <div class="box intro">
-    <p>A <em>convex</em> clockwise Polygon.</p>
+    <p>Physics mixin. This will add physics capabilities to the class it mixes into.</p>
 
 </div>
 
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_Polygon" class="method item">
-    <h3 class="name"><code>Polygon</code></h3>
+        <div id="method_PhysicsTarget" class="method item">
+    <h3 class="name"><code>PhysicsTarget</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>x</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>y</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>points</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>scale</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -267,7 +239,7 @@
             
         
         
-        <a href="../files/src_geom_Polygon.js.html#l5"><code>src\geom\Polygon.js:5</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l1"><code>src\physics\PhysicsTarget.js:1</code></a>
         
         </p>
 
@@ -281,79 +253,6 @@
         
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">x</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The X origin of the polygon, all X coords for all points are relative to this</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">y</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The Y origin of the polygon, all Y coords for all points are relative to this</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">points</code>
-                        <span class="type">Array<Vector> | Array<Number></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>This can be an array of Vectors that form the polygon,
-     a flat array of numbers that will be interpreted as [x,y, x,y, ...]</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">scale</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The scale of the polygon</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -389,35 +288,63 @@
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_clone">clone</a>
+                                <a href="#method_disablePhysics">disablePhysics</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_contains">contains</a>
+                                <a href="#method_disablePhysics">disablePhysics</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_copy">copy</a>
+                                <a href="#method_enablePhysics">enablePhysics</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_equals">equals</a>
+                                <a href="#method_onCollision">onCollision</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_recalc">recalc</a>
+                                <a href="#method_onCollision">onCollision</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setMass">setMass</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setPosition">setPosition</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setRotation">setRotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_setVelocity">setVelocity</a>
 
                                 
                                 
@@ -434,56 +361,21 @@
                     <ul class="index-list properties">
                         
                             <li class="index-item property private">
-                                <a href="#property__points">_points</a>
+                                <a href="#property__phys">_phys</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_edges">edges</a>
+                                <a href="#property_inertia">inertia</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_normals">normals</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_points">points</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_position">position</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_scale">scale</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_x">x</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_x">x</a>
+                                <a href="#property_mass">mass</a>
 
                                 
                                 
@@ -503,17 +395,13 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_clone" class="method item">
-    <h3 class="name"><code>clone</code></h3>
+                    <div id="method_disablePhysics" class="method item">
+    <h3 class="name"><code>disablePhysics</code></h3>
 
     
         <span class="paren">()</span>
     
 
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>
-        </span>
     
 
     
@@ -539,7 +427,7 @@
             
         
         
-        <a href="../files/src_geom_Polygon.js.html#l104"><code>src\geom\Polygon.js:104</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l80"><code>src\physics\PhysicsTarget.js:80</code></a>
         
         </p>
 
@@ -550,34 +438,550 @@
     </div>
 
     <div class="description">
-        <p>Creates a clone of this polygon</p>
+        <p>Disbales physics for this sprite</p>
 
     </div>
 
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
 
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>:
-                    
-                    <p>a copy of the polygon</p>
+    
+</div>
 
                 
-            </div>
-        </div>
+                    <div id="method_disablePhysics" class="method item">
+    <h3 class="name"><code>disablePhysics</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l94"><code>src\physics\PhysicsTarget.js:94</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Reindexes the collisions for this sprite, useful when moving the sprite a great deal
+(like to a new world)</p>
+
+    </div>
+
+    
+
     
 
     
 </div>
 
                 
-                    <div id="method_contains" class="method item">
-    <h3 class="name"><code>contains</code></h3>
+                    <div id="method_enablePhysics" class="method item">
+    <h3 class="name"><code>enablePhysics</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>system</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l40"><code>src\physics\PhysicsTarget.js:40</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Enables physics for this sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">system</code>
+                        <span class="type"><a href="..\classes\PhysicsSystem.html" class="crosslink">PhysicsSystem</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The system for the sprite to be in</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_onCollision" class="method item">
+    <h3 class="name"><code>onCollision</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>obj</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>vec</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>colShape</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>myShape</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l171"><code>src\physics\PhysicsTarget.js:171</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>On Collision Event
+     called when this sprite collides into another, or is being collided into by another.
+     By default if something collides with a collectable sprite we destroy the collectable
+     and if we collide with a solid tile we kill our velocity. This method will emit a
+     &#39;collision&#39; event that you can listen for</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">obj</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Colliding sprite</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">vec</code>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Collision vector (for sensors this is normalized)</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">colShape</code>
+                        <span class="type">cp.Shape</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The colliding physics shape</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">myShape</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Your physics shape that caused the collision</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_onCollision" class="method item">
+    <h3 class="name"><code>onCollision</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>obj</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>colShape</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>myShape</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l188"><code>src\physics\PhysicsTarget.js:188</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>On Seperate Event
+     called when this sprite collides into another, or is being collided into by another.
+     By default if something collides with a collectable sprite we destroy the collectable
+     and if we collide with a solid tile we kill our velocity. This method will emit a
+     &#39;collision&#39; event that you can listen for</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">obj</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Colliding sprite</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">colShape</code>
+                        <span class="type">cp.Shape</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The colliding physics shape</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">myShape</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Your physics shape that caused the collision</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setMass" class="method item">
+    <h3 class="name"><code>setMass</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>mass</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l109"><code>src\physics\PhysicsTarget.js:109</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets the mass of this sprite</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">mass</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The new mass of the object</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_setPosition" class="method item">
+    <h3 class="name"><code>setPosition</code></h3>
 
     
         <div class="args">
@@ -600,10 +1004,6 @@
     
 
     
-        <span class="returns-inline">
-            <span class="type">Boolean</span>
-        </span>
-    
 
     
 
@@ -628,7 +1028,7 @@
             
         
         
-        <a href="../files/src_geom_Polygon.js.html#l144"><code>src\geom\Polygon.js:144</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l153"><code>src\physics\PhysicsTarget.js:153</code></a>
         
         </p>
 
@@ -639,7 +1039,7 @@
     </div>
 
     <div class="description">
-        <p>Checks if the x, and y coords passed to this function are contained within this polygon</p>
+        <p>Sets the position of this sprite</p>
 
     </div>
 
@@ -658,8 +1058,7 @@
                     
 
                     <div class="param-description">
-                        <p>The X coord of the point to test</p>
-
+                         
                     </div>
 
                     
@@ -674,8 +1073,7 @@
                     
 
                     <div class="param-description">
-                        <p>The Y coord of the point to test</p>
-
+                         
                     </div>
 
                     
@@ -686,27 +1084,13 @@
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Boolean</span>:
-                    
-                    <p>if the x/y coords are within this polygon</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_copy" class="method item">
-    <h3 class="name"><code>copy</code></h3>
+                    <div id="method_setRotation" class="method item">
+    <h3 class="name"><code>setRotation</code></h3>
 
     
         <div class="args">
@@ -714,7 +1098,7 @@
             
                 <li class="arg">
                     
-                        <code>polygon</code>
+                        <code>rotation</code>
                     
                 </li>
             
@@ -722,10 +1106,6 @@
         </div>
     
 
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>
-        </span>
     
 
     
@@ -751,7 +1131,7 @@
             
         
         
-        <a href="../files/src_geom_Polygon.js.html#l119"><code>src\geom\Polygon.js:119</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l137"><code>src\physics\PhysicsTarget.js:137</code></a>
         
         </p>
 
@@ -762,7 +1142,7 @@
     </div>
 
     <div class="description">
-        <p>Copies the values from another polygon to this one</p>
+        <p>Sets the rotation of this sprite</p>
 
     </div>
 
@@ -774,14 +1154,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">polygon</code>
-                        <span class="type"><a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>
+                        <code class="param-name">rotation</code>
+                        <span class="type">Number</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The polygon to copy vlaues from</p>
+                        <p>The new rotation of the object in radians</p>
 
                     </div>
 
@@ -793,27 +1173,13 @@
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>:
-                    
-                    <p>Returns itself</p>
-
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_equals" class="method item">
-    <h3 class="name"><code>equals</code></h3>
+                    <div id="method_setVelocity" class="method item">
+    <h3 class="name"><code>setVelocity</code></h3>
 
     
         <div class="args">
@@ -821,7 +1187,7 @@
             
                 <li class="arg">
                     
-                        <code>polygon</code>
+                        <code>velocity</code>
                     
                 </li>
             
@@ -829,10 +1195,6 @@
         </div>
     
 
-    
-        <span class="returns-inline">
-            <span class="type">Boolean</span>
-        </span>
     
 
     
@@ -858,7 +1220,7 @@
             
         
         
-        <a href="../files/src_geom_Polygon.js.html#l168"><code>src\geom\Polygon.js:168</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l123"><code>src\physics\PhysicsTarget.js:123</code></a>
         
         </p>
 
@@ -869,7 +1231,7 @@
     </div>
 
     <div class="description">
-        <p>Checks if this polygon&#39;s values are equal to anothers</p>
+        <p>Sets the velocity of this sprite</p>
 
     </div>
 
@@ -881,14 +1243,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">polygon</code>
-                        <span class="type"><a href="..\classes\Polygon.html" class="crosslink">Polygon</a></span>
+                        <code class="param-name">velocity</code>
+                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The polygon to check against</p>
+                        <p>The new velocity of the object</p>
 
                     </div>
 
@@ -897,76 +1259,6 @@
             
             </ul>
         </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Boolean</span>:
-                    
-                    <p>True if they are equal</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_recalc" class="method item">
-    <h3 class="name"><code>recalc</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_geom_Polygon.js.html#l191"><code>src\geom\Polygon.js:191</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Recalculates the scaled points, edges, and normals of this polygon
-based on the relative points</p>
-
-    </div>
-
     
 
     
@@ -983,9 +1275,9 @@ based on the relative points</p>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property__points" class="property item private">
-    <h3 class="name"><code>_points</code></h3>
-    <span class="type">Array<Vector></span>
+                    <div id="property__phys" class="property item private">
+    <h3 class="name"><code>_phys</code></h3>
+    <span class="type">Object</span>
 
     
 
@@ -1008,7 +1300,7 @@ based on the relative points</p>
             
         
         
-        <a href="../files/src_geom_Polygon.js.html#l25"><code>src\geom\Polygon.js:25</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l8"><code>src\physics\PhysicsTarget.js:8</code></a>
         
         </p>
 
@@ -1018,13 +1310,16 @@ based on the relative points</p>
     </div>
 
     <div class="description">
-        <p>The unscaled points of the polygon, the X &amp; Y values here should be
-relative to the origin X &amp; Y.</p>
+        <p>The physics namespace that all physics properties go into. Those properties are:</p>
+<ul>
+<li>system {PhysicsSystem} PhysicsSystem that this object is a part of.</li>
+<li>active {Boolean} Whether or not this target is actively having physics simulated.</li>
+</ul>
 
     </div>
 
     
-        <p><strong>Default:</strong> []</p>
+        <p><strong>Default:</strong> {}</p>
     
 
     
@@ -1033,244 +1328,8 @@ relative to the origin X &amp; Y.</p>
 </div>
 
                 
-                    <div id="property_edges" class="property item">
-    <h3 class="name"><code>edges</code></h3>
-    <span class="type">Array<Vector></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_geom_Polygon.js.html#l55"><code>src\geom\Polygon.js:55</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>These vectors are calculated by <code>this.recalc()</code> and represent the edges
-of the polygon defined by it&#39;s points.</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> []</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_normals" class="property item">
-    <h3 class="name"><code>normals</code></h3>
-    <span class="type">Array<Vector></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_geom_Polygon.js.html#l66"><code>src\geom\Polygon.js:66</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>These vectors are calculated by <code>this.recalc()</code> and represent the normals
-of the polygon edges defined by it&#39;s points.</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> []</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_points" class="property item">
-    <h3 class="name"><code>points</code></h3>
-    <span class="type">Array<Vector></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_geom_Polygon.js.html#l45"><code>src\geom\Polygon.js:45</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The points of the polygon, the X &amp; Y values here should be
-relative to the origin X &amp; Y values.</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> []</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_position" class="property item">
-    <h3 class="name"><code>position</code></h3>
-    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_geom_Polygon.js.html#l17"><code>src\geom\Polygon.js:17</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The origin point of the polygon, all points are relative to this</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_scale" class="property item">
-    <h3 class="name"><code>scale</code></h3>
-    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_geom_Polygon.js.html#l36"><code>src\geom\Polygon.js:36</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The scale of the polygon</p>
-
-    </div>
-
-    
-        <p><strong>Default:</strong> new Vector(1, 1)</p>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_x" class="property item">
-    <h3 class="name"><code>x</code></h3>
+                    <div id="property_inertia" class="property item">
+    <h3 class="name"><code>inertia</code></h3>
     <span class="type">Number</span>
 
     
@@ -1292,7 +1351,7 @@ relative to the origin X &amp; Y values.</p>
             
         
         
-        <a href="../files/src_geom_Polygon.js.html#l229"><code>src\geom\Polygon.js:229</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l31"><code>src\physics\PhysicsTarget.js:31</code></a>
         
         </p>
 
@@ -1302,7 +1361,7 @@ relative to the origin X &amp; Y values.</p>
     </div>
 
     <div class="description">
-        <p>The origin X coord of the polygon</p>
+        <p>The moment of inertia of this object, only set this before enabling physics (has no effect after enabling)</p>
 
     </div>
 
@@ -1316,8 +1375,8 @@ relative to the origin X &amp; Y values.</p>
 </div>
 
                 
-                    <div id="property_x" class="property item">
-    <h3 class="name"><code>x</code></h3>
+                    <div id="property_mass" class="property item">
+    <h3 class="name"><code>mass</code></h3>
     <span class="type">Number</span>
 
     
@@ -1339,7 +1398,7 @@ relative to the origin X &amp; Y values.</p>
             
         
         
-        <a href="../files/src_geom_Polygon.js.html#l245"><code>src\geom\Polygon.js:245</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l21"><code>src\physics\PhysicsTarget.js:21</code></a>
         
         </p>
 
@@ -1349,7 +1408,7 @@ relative to the origin X &amp; Y values.</p>
     </div>
 
     <div class="description">
-        <p>The origin Y coord of the polygon</p>
+        <p>The mass of this object, please use setMass to set this value</p>
 
     </div>
 

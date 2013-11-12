@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -187,13 +195,11 @@ var inherit = require(&#x27;../utils/inherit&#x27;),
  * @constructor
  * @param x {Number} The X origin of the polygon, all X coords for all points are relative to this
  * @param y {Number} The Y origin of the polygon, all Y coords for all points are relative to this
- * @param points* {Array&lt;Vector&gt;|Array&lt;Number&gt;|Point...|Number...} This can be an array of Vectors that form the polygon,
- *      a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arugments passed can be
- *      all the points of the polygon e.g. &#x60;new Polygon(X, Y, new Vector(), new Vector(), ...)&#x60;, or the
- *      arguments passed can be flat x,y values e.g. &#x60;new Polygon(X, Y, x,y, x,y, x,y, ...)&#x60; where &#x60;x&#x60; and &#x60;y&#x60; are
- *      Numbers.
+ * @param points {Array&lt;Vector&gt;|Array&lt;Number&gt;} This can be an array of Vectors that form the polygon,
+ *      a flat array of numbers that will be interpreted as [x,y, x,y, ...]
+ * @param scale {Number} The scale of the polygon
  */
-var Polygon = function(x, y, points) {
+var Polygon = function(x, y, points, scale) {
     /**
      * The origin point of the polygon, all points are relative to this
      *
@@ -203,6 +209,26 @@ var Polygon = function(x, y, points) {
     this.position = new Vector();
 
     /**
+     * The unscaled points of the polygon, the X &amp; Y values here should be
+     * relative to the origin X &amp; Y.
+     *
+     * @property _points
+     * @type Array&lt;Vector&gt;
+     * @default []
+     * @private
+     */
+    this._points = null;
+
+    /**
+     * The scale of the polygon
+     *
+     * @property scale
+     * @type Vector
+     * @default new Vector(1, 1)
+     */
+    this.scale = scale || new Vector(1, 1);
+
+    /**
      * The points of the polygon, the X &amp; Y values here should be
      * relative to the origin X &amp; Y values.
      *
@@ -210,7 +236,7 @@ var Polygon = function(x, y, points) {
      * @type Array&lt;Vector&gt;
      * @default []
      */
-    this.points = null;
+    this.points = [];
 
     /**
      * These vectors are calculated by &#x60;this.recalc()&#x60; and represent the edges
@@ -234,10 +260,6 @@ var Polygon = function(x, y, points) {
      */
     this.normals = [];
 
-    //if points isn&#x27;t an array, use arguments as the array
-    if(!(points instanceof Array))
-        points = Array.prototype.slice.call(arguments, 2);
-
     //if this is a flat array of numbers, convert it to points
     if(typeof points[0] === &#x27;number&#x27;) {
         var p = [];
@@ -250,13 +272,14 @@ var Polygon = function(x, y, points) {
         points = p;
     }
 
-    this.points = points;
+    //assign the points
+    this._points = points;
 
     //set position
     this.x = x || 0;
     this.y = y || 0;
 
-    //recalculate edges and normals
+    //recalculate scaled points, edges, and normals
     this.recalc();
 
     //internal shape type
@@ -272,11 +295,36 @@ inherit(Polygon, Object, {
      */
     clone: function() {
         var points = [];
-        for (var i=0; i&lt;this.points.length; i++) {
-            points.push(this.points[i].clone());
+        for (var i=0; i&lt;this._points.length; i++) {
+            points.push(this._points[i].clone());
         }
 
-        return new Polygon(points);
+        return new Polygon(points, this.scale);
+    },
+
+    /**
+     * Copies the values from another polygon to this one
+     *
+     * @method copy
+     * @param polygon {Polygon} The polygon to copy vlaues from
+     * @return {Polygon} Returns itself
+     */
+    copy: function(poly) {
+        //copy the position
+        this.position.copy(poly.position);
+
+        //clone the points to this polygon
+        this._points.length = this.points.length = 0;
+        for(var i = 0; i &lt; poly._points.length; ++i) {
+            this._points.push(poly._points[i].clone());
+        }
+
+        this.scale.copy(poly.scale);
+
+        //update our edges and normals
+        this.recalc();
+
+        return this;
     },
 
     /**
@@ -304,18 +352,55 @@ inherit(Polygon, Object, {
     },
 
     /**
-     * Recalculates the edges and normals of this polygon based on the points
+     * Checks if this polygon&#x27;s values are equal to anothers
+     *
+     * @method equals
+     * @param polygon {Polygon} The polygon to check against
+     * @return {Boolean} True if they are equal
+     */
+    equals: function(poly) {
+        //check position and points array length
+        if(!this.position.equals(poly.position) || this.points.length !== poly.points.length) {
+            return false;
+        }
+
+        //check each point
+        for(var i = 0; i &lt; poly.points.length; ++i) {
+            if(!this.points[i].equals(poly.points[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    },
+
+    /**
+     * Recalculates the scaled points, edges, and normals of this polygon
+     * based on the relative points
      *
      * @method recalc
      */
     recalc: function() {
-        var points = this.points,
+        var points = this._points,
             len = points.length,
-            p1, p2, e, n;
+            p1, p2, e, n, i = 0;
 
+        //scale our points
+        for(i = 0; i &lt; len; i++) {
+            if(!this.points[i])
+                this.points[i] = new Vector();
+
+            this.points[i].set(
+                this._points[i].x * this.scale.x,
+                this._points[i].y * this.scale.y
+            );
+        }
+
+        // reset edges and normals
         this.edges.length = this.normals.length = 0;
 
-        for(var i = 0; i &lt; len; ++i) {
+        //calculate edges and normals
+        for(i = 0; i &lt; len; ++i) {
             p1 = points[i];
             p2 = i &lt; len - 1 ? points[i + 1] : points[0];
             e = p2.clone().sub(p1);

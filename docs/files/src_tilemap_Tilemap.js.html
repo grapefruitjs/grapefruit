@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -337,8 +345,6 @@ var Tilemap = function(state, map, tilesetTextures) {
     var w = this.game.state.active.world;
     w.bounds.width = Math.max(w.bounds.width, this.realSize.x);
     w.bounds.height = Math.max(w.bounds.height, this.realSize.y);
-
-    this.state.physics.tree.setBounds(w.bounds.clone());
 };
 
 inherit(Tilemap, Container, {
@@ -400,6 +406,22 @@ inherit(Tilemap, Container, {
 
             if(o.type === &#x27;objectgroup&#x27;) {
                 o.despawn();
+            }
+        }
+
+        return this;
+    },
+    /**
+     * Clears all the tiles that are currently used on all tile layers
+     *
+     * @method clearTiles
+     */
+    clearTiles: function() {
+        for(var i = 0, il = this.children.length; i &lt; il; ++i) {
+            var o = this.children[i];
+
+            if(o.type === &#x27;tilelayer&#x27;) {
+                o.clearTiles();
             }
         }
 
@@ -481,6 +503,12 @@ inherit(Tilemap, Container, {
      * @return {Tilemap}
      */
     render: function(x, y, width, height) {
+        //defaults
+        x = x || -this.state.world.position.x;
+        y = y || -this.state.world.position.y;
+        width = width || this.game.width;
+        height = height || this.game.height;
+
         //render the layers
         for(var i = 0, il = this.children.length; i &lt; il; ++i) {
             var o = this.children[i];

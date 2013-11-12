@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>AudoPlayer - GrapeFruit Game Engine</title>
+    <title>AudioPlayer - GrapeFruit Game Engine</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -172,7 +180,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>AudoPlayer Class</h1>
+                        <h1>AudioPlayer Class</h1>
 <div class="box meta">
     
         <div class="uses">
@@ -213,8 +221,8 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_AudoPlayer" class="method item">
-    <h3 class="name"><code>AudoPlayer</code></h3>
+        <div id="method_AudioPlayer" class="method item">
+    <h3 class="name"><code>AudioPlayer</code></h3>
 
     
         <div class="args">
@@ -234,7 +242,7 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
             
                 <li class="arg">
                     
-                        <code>settings</code>
+                        <code class="optional">[settings]</code>
                     
                 </li>
             
@@ -306,7 +314,7 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
                 <li class="param">
                     
                         <code class="param-name">audio</code>
-                        <span class="type">ArrayBuffer | Audio</span>
+                        <span class="type">Object</span>
                     
 
                     
@@ -367,8 +375,9 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
             
                 <li class="param">
                     
-                        <code class="param-name">settings</code>
+                        <code class="param-name optional">[settings]</code>
                         <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
                     
 
                     
@@ -378,6 +387,71 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
 
                     </div>
 
+                    
+                        <ul class="params-list">
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[autoplay=false]</code>
+                                    <span class="type">Boolean</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>Whether to automatically start playing the audio file</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[loop=false]</code>
+                                    <span class="type">Boolean</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>Whether the audio should loop or not</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[pos3d]</code>
+                                    <span class="type">Array<Number></span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>The 3d position of the audio to play in the form [x, y, z]</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[sprite]</code>
+                                    <span class="type">Object</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>The audio sprite, if this audio clip has multiple sounds in it.
+     This object is in the form <code>{ &#39;sound&#39;: [start, duration] }</code>, and you can use them with <code>.play(&#39;sound&#39;)</code>.</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                        </ul>
                     
                 </li>
             
@@ -404,6 +478,8 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
             <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
         
+        
+            <li class="api-class-tab events"><a href="#events">Events</a></li>
         
     </ul>
 
@@ -453,6 +529,13 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
                             </li>
                         
                             <li class="index-item method private">
+                                <a href="#method__load">_load</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
                                 <a href="#method__nodeById">_nodeById</a>
 
                                 
@@ -489,13 +572,6 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
                         
                             <li class="index-item method">
                                 <a href="#method_getVolume">getVolume</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method private">
-                                <a href="#method_load">load</a>
 
                                 
                                 
@@ -610,7 +686,56 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
                     <ul class="index-list properties extends">
                         
                             <li class="index-item property private">
+                                <a href="#property__duration">_duration</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
                                 <a href="#property__file">_file</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__loaded">_loaded</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__nodes">_nodes</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__onendTimer">_onendTimer</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__volum_manager">_volum_manager</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__volume">_volume</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property__webAudio">_webAudio</a>
 
                                 
                                 
@@ -686,6 +811,42 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
             
 
             
+                <div class="index-section events">
+                    <h3>Events</h3>
+
+                    <ul class="index-list events extends">
+                        
+                            <li class="index-item event">
+                                <a href="#event_end">end</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_paused">paused</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_play">play</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_ready">ready</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
         </div>
 
         
@@ -702,7 +863,7 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -731,7 +892,7 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l716"><code>src\audio\AudioPlayer.js:716</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l794"><code>src\audio\AudioPlayer.js:794</code></a>
         
         </p>
 
@@ -755,7 +916,7 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                     <p>Audio node.</p>
 
@@ -812,7 +973,7 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l803"><code>src\audio\AudioPlayer.js:803</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l881"><code>src\audio\AudioPlayer.js:881</code></a>
         
         </p>
 
@@ -893,7 +1054,7 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l678"><code>src\audio\AudioPlayer.js:678</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l756"><code>src\audio\AudioPlayer.js:756</code></a>
         
         </p>
 
@@ -950,7 +1111,7 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l775"><code>src\audio\AudioPlayer.js:775</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l853"><code>src\audio\AudioPlayer.js:853</code></a>
         
         </p>
 
@@ -1017,7 +1178,7 @@ The GF Audio API was based on <a href="https://github.com/goldfire/howler.js">Ho
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l739"><code>src\audio\AudioPlayer.js:739</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l817"><code>src\audio\AudioPlayer.js:817</code></a>
         
         </p>
 
@@ -1065,8 +1226,8 @@ If there is none, create a new one and add it to the pool.</p>
 </div>
 
                 
-                    <div id="method__nodeById" class="method item private">
-    <h3 class="name"><code>_nodeById</code></h3>
+                    <div id="method__load" class="method item private">
+    <h3 class="name"><code>_load</code></h3>
 
     
         <span class="paren">()</span>
@@ -1074,7 +1235,7 @@ If there is none, create a new one and add it to the pool.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -1103,7 +1264,81 @@ If there is none, create a new one and add it to the pool.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l696"><code>src\audio\AudioPlayer.js:696</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l224"><code>src\audio\AudioPlayer.js:224</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Load the audio file for this player, this is called from the ctor
+there is no reason to call it manually.</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method__nodeById" class="method item private">
+    <h3 class="name"><code>_nodeById</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l774"><code>src\audio\AudioPlayer.js:774</code></a>
         
         </p>
 
@@ -1127,7 +1362,7 @@ If there is none, create a new one and add it to the pool.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                     <p>Audio node.</p>
 
@@ -1178,7 +1413,7 @@ If there is none, create a new one and add it to the pool.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l821"><code>src\audio\AudioPlayer.js:821</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l899"><code>src\audio\AudioPlayer.js:899</code></a>
         
         </p>
 
@@ -1366,7 +1601,7 @@ If there is none, create a new one and add it to the pool.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -1393,7 +1628,7 @@ If there is none, create a new one and add it to the pool.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l544"><code>src\audio\AudioPlayer.js:544</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l622"><code>src\audio\AudioPlayer.js:622</code></a>
         
         </p>
 
@@ -1507,7 +1742,7 @@ If there is none, create a new one and add it to the pool.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                 
             </div>
@@ -1564,7 +1799,7 @@ If there is none, create a new one and add it to the pool.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l514"><code>src\audio\AudioPlayer.js:514</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l592"><code>src\audio\AudioPlayer.js:592</code></a>
         
         </p>
 
@@ -1660,7 +1895,7 @@ If there is none, create a new one and add it to the pool.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l586"><code>src\audio\AudioPlayer.js:586</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l664"><code>src\audio\AudioPlayer.js:664</code></a>
         
         </p>
 
@@ -1688,80 +1923,6 @@ If there is none, create a new one and add it to the pool.</p>
                     
                     <p>The current volume</p>
 
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_load" class="method item private">
-    <h3 class="name"><code>load</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_audio_AudioPlayer.js.html#l135"><code>src\audio\AudioPlayer.js:135</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Load the audio file for this player, this is called from the ctor
-there is no reason to call it manually.</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">AudioPlayer</span>:
-                    
                 
             </div>
         </div>
@@ -1815,7 +1976,7 @@ there is no reason to call it manually.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l847"><code>src\audio\AudioPlayer.js:847</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l925"><code>src\audio\AudioPlayer.js:925</code></a>
         
         </p>
 
@@ -1881,7 +2042,7 @@ there is no reason to call it manually.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -1908,7 +2069,7 @@ there is no reason to call it manually.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l427"><code>src\audio\AudioPlayer.js:427</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l505"><code>src\audio\AudioPlayer.js:505</code></a>
         
         </p>
 
@@ -1957,7 +2118,7 @@ there is no reason to call it manually.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                 
             </div>
@@ -2317,7 +2478,7 @@ there is no reason to call it manually.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -2344,7 +2505,7 @@ there is no reason to call it manually.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l330"><code>src\audio\AudioPlayer.js:330</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l411"><code>src\audio\AudioPlayer.js:411</code></a>
         
         </p>
 
@@ -2410,7 +2571,7 @@ there is no reason to call it manually.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                 
             </div>
@@ -2446,7 +2607,7 @@ there is no reason to call it manually.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -2473,7 +2634,7 @@ there is no reason to call it manually.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l194"><code>src\audio\AudioPlayer.js:194</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l281"><code>src\audio\AudioPlayer.js:281</code></a>
         
         </p>
 
@@ -2539,7 +2700,7 @@ there is no reason to call it manually.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                 
             </div>
@@ -2600,7 +2761,7 @@ there is no reason to call it manually.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l874"><code>src\audio\AudioPlayer.js:874</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l949"><code>src\audio\AudioPlayer.js:949</code></a>
         
         </p>
 
@@ -2689,7 +2850,7 @@ there is no reason to call it manually.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -2716,7 +2877,7 @@ there is no reason to call it manually.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l478"><code>src\audio\AudioPlayer.js:478</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l556"><code>src\audio\AudioPlayer.js:556</code></a>
         
         </p>
 
@@ -2781,7 +2942,7 @@ there is no reason to call it manually.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                 
             </div>
@@ -2817,7 +2978,7 @@ there is no reason to call it manually.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -2844,7 +3005,7 @@ there is no reason to call it manually.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l447"><code>src\audio\AudioPlayer.js:447</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l525"><code>src\audio\AudioPlayer.js:525</code></a>
         
         </p>
 
@@ -2908,7 +3069,7 @@ there is no reason to call it manually.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                 
             </div>
@@ -2956,7 +3117,7 @@ there is no reason to call it manually.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -2983,7 +3144,7 @@ there is no reason to call it manually.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l634"><code>src\audio\AudioPlayer.js:634</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l712"><code>src\audio\AudioPlayer.js:712</code></a>
         
         </p>
 
@@ -3085,7 +3246,7 @@ will not be affected.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                 
             </div>
@@ -3121,7 +3282,7 @@ will not be affected.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -3148,7 +3309,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l595"><code>src\audio\AudioPlayer.js:595</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l673"><code>src\audio\AudioPlayer.js:673</code></a>
         
         </p>
 
@@ -3213,7 +3374,7 @@ will not be affected.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                 
             </div>
@@ -3249,7 +3410,7 @@ will not be affected.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -3276,7 +3437,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l381"><code>src\audio\AudioPlayer.js:381</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l459"><code>src\audio\AudioPlayer.js:459</code></a>
         
         </p>
 
@@ -3342,7 +3503,7 @@ will not be affected.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                 
             </div>
@@ -3372,7 +3533,7 @@ will not be affected.</p>
 
     
         <span class="returns-inline">
-            <span class="type">AudioPlayer</span>
+            <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>
         </span>
     
 
@@ -3399,7 +3560,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l437"><code>src\audio\AudioPlayer.js:437</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l515"><code>src\audio\AudioPlayer.js:515</code></a>
         
         </p>
 
@@ -3448,7 +3609,7 @@ will not be affected.</p>
             <div class="returns-description">
                 
                     
-                        <span class="type">AudioPlayer</span>:
+                        <span class="type"><a href="..\classes\AudioPlayer.html" class="crosslink">AudioPlayer</a></span>:
                     
                 
             </div>
@@ -3465,6 +3626,53 @@ will not be affected.</p>
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property__duration" class="property item private">
+    <h3 class="name"><code>_duration</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l130"><code>src\audio\AudioPlayer.js:130</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The full duration of the file to play</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="property__file" class="property item private">
@@ -3492,7 +3700,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l107"><code>src\audio\AudioPlayer.js:107</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l112"><code>src\audio\AudioPlayer.js:112</code></a>
         
         </p>
 
@@ -3503,6 +3711,289 @@ will not be affected.</p>
 
     <div class="description">
         <p>The preloaded audio file object</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__loaded" class="property item private">
+    <h3 class="name"><code>_loaded</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l139"><code>src\audio\AudioPlayer.js:139</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Has this player data been loaded?</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__nodes" class="property item private">
+    <h3 class="name"><code>_nodes</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l166"><code>src\audio\AudioPlayer.js:166</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The actual player nodes, these are either WebAudio Nodes
+or HTML5 Audio elements.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__onendTimer" class="property item private">
+    <h3 class="name"><code>_onendTimer</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l176"><code>src\audio\AudioPlayer.js:176</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Array of timeouts to track end events</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__volum_manager" class="property item private">
+    <h3 class="name"><code>_volum_manager</code></h3>
+    <span class="type"><a href="..\classes\AudioManager.html" class="crosslink">AudioManager</a></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l148"><code>src\audio\AudioPlayer.js:148</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The manager of the player</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__volume" class="property item private">
+    <h3 class="name"><code>_volume</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l121"><code>src\audio\AudioPlayer.js:121</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The current volume of the player</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__webAudio" class="property item private">
+    <h3 class="name"><code>_webAudio</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l157"><code>src\audio\AudioPlayer.js:157</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Does the browser support WebAudio API</p>
 
     </div>
 
@@ -3537,7 +4028,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l49"><code>src\audio\AudioPlayer.js:49</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l54"><code>src\audio\AudioPlayer.js:54</code></a>
         
         </p>
 
@@ -3584,7 +4075,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l58"><code>src\audio\AudioPlayer.js:58</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l63"><code>src\audio\AudioPlayer.js:63</code></a>
         
         </p>
 
@@ -3631,7 +4122,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l33"><code>src\audio\AudioPlayer.js:33</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l38"><code>src\audio\AudioPlayer.js:38</code></a>
         
         </p>
 
@@ -3676,7 +4167,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l41"><code>src\audio\AudioPlayer.js:41</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l46"><code>src\audio\AudioPlayer.js:46</code></a>
         
         </p>
 
@@ -3721,7 +4212,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l67"><code>src\audio\AudioPlayer.js:67</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l72"><code>src\audio\AudioPlayer.js:72</code></a>
         
         </p>
 
@@ -3768,7 +4259,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l76"><code>src\audio\AudioPlayer.js:76</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l81"><code>src\audio\AudioPlayer.js:81</code></a>
         
         </p>
 
@@ -3815,7 +4306,7 @@ will not be affected.</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l85"><code>src\audio\AudioPlayer.js:85</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l90"><code>src\audio\AudioPlayer.js:90</code></a>
         
         </p>
 
@@ -3863,7 +4354,7 @@ be used to put multiple sound bits in one file, and play them separately</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l25"><code>src\audio\AudioPlayer.js:25</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l30"><code>src\audio\AudioPlayer.js:30</code></a>
         
         </p>
 
@@ -3908,7 +4399,7 @@ be used to put multiple sound bits in one file, and play them separately</p>
             
         
         
-        <a href="../files/src_audio_AudioPlayer.js.html#l95"><code>src\audio\AudioPlayer.js:95</code></a>
+        <a href="../files/src_audio_AudioPlayer.js.html#l100"><code>src\audio\AudioPlayer.js:100</code></a>
         
         </p>
 
@@ -3937,6 +4428,284 @@ be used to put multiple sound bits in one file, and play them separately</p>
 
         
 
+        
+            <div id="events" class="api-class-tabpanel">
+                <h2 class="off-left">Events</h2>
+
+                
+                    <div id="event_end" class="events item">
+    <h3 class="name"><code>end</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l215"><code>src\audio\AudioPlayer.js:215</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when audio finishes playing</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The id of the node that has finished playing</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_paused" class="events item">
+    <h3 class="name"><code>paused</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l208"><code>src\audio\AudioPlayer.js:208</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when audio is paused</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The id of the node that is paused</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_play" class="events item">
+    <h3 class="name"><code>play</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l201"><code>src\audio\AudioPlayer.js:201</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when audio starts playing</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The id of the node that is used to play the audio</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+                    <div id="event_ready" class="events item">
+    <h3 class="name"><code>ready</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_audio_AudioPlayer.js.html#l194"><code>src\audio\AudioPlayer.js:194</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Fired when the player is ready to play</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Event Payload:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">source</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The source URL that will be used as the audio source</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+
+    
+</div>
+
+                
+            </div>
         
     </div>
 </div>

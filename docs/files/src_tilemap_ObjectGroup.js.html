@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -256,9 +264,20 @@ var ObjectGroup = function(map, group) {
     this.objects = group.objects;
 
     //translate some tiled properties to our inherited properties
-    this.type = group.type;
-    this.alpha = group.opacity;
-    this.visible = group.visible;
+    /**
+     * The type of the layer, should always be &#x27;objectgroup&#x27;
+     *
+     * @property type
+     * @type String
+     * @default &#x27;objectgroup&#x27;
+     */
+    this.type = group.type || &#x27;objectgroup&#x27;;
+
+    //translate some tiled properties to our inherited properties
+    this.position.x = group.x || 0;
+    this.position.y = group.y || 0;
+    this.alpha = group.opacity !== undefined ? group.opacity : 1;
+    this.visible = group.visible !== undefined ? group.visible : true;
 };
 
 inherit(ObjectGroup, Container, {
@@ -330,15 +349,16 @@ inherit(ObjectGroup, Container, {
                 obj.height = o.height;
                 obj.name = o.name;
                 obj.type = o.type;
-                obj.hitArea = props.hitArea;
                 obj.rotation = o.rotation;
-                obj.sensor = true;
 
                 //these are treated as sensor bodies, so always enable physics
-                obj.setPosition(o.x, o.y);
+                obj.position.x = o.x;
+                obj.position.y = o.y;
+
+                obj.sensor = true;
+                obj.hitArea = props.hitArea;
+
                 obj.enablePhysics(game.physics);
-                if(this.parent._showPhysics)
-                    obj.showPhysics();
             } else {
                 //some variable for the user if they want them
                 //these will be passed through to a custom sprite if wanted
@@ -351,22 +371,21 @@ inherit(ObjectGroup, Container, {
                 //assign some values
                 obj.name = o.name;
                 obj.type = o.type;
-                obj.hitArea = props.hitArea;
+                obj.position.x = o.x;
+                obj.position.y = o.y;
+
                 obj.mass = props.mass || props.tileprops.mass;
                 obj.inertia = props.inertia || props.tileprops.inertia;
                 obj.friction = props.friction || props.tileprops.friction;
                 obj.sensor = props.sensor || props.tileprops.sensor;
-                obj.setPosition(o.x, o.y);
+                obj.hitArea = props.hitArea;
 
                 var a = props.anchor || props.tileprops.anchor;
                 obj.anchor.y = a ? a[1] : 1;
                 obj.anchor.x = a ? a[0] : (this.parent.orientation === &#x27;isometric&#x27; ? 0.5 : 0);
 
-                if(props.mass || props.tileprops.mass) {
+                if(obj.mass) {
                     obj.enablePhysics(game.physics);
-
-                    if(this.parent._showPhysics)
-                        obj.showPhysics();
                 }
 
                 if(props.tileprops) {
@@ -380,7 +399,7 @@ inherit(ObjectGroup, Container, {
                         obj.anchor.y = a ? a[1] : 0;
                     }
 
-                    //IDK if this is right
+                    //IDK if this is the correct angle, there are no docs for &#x60;rotatedCW&#x60;
                     if(props.tileprops.rotatedCW) {
                         obj.rotation = math.degreesToRadians(45);
                     }
@@ -438,9 +457,26 @@ inherit(ObjectGroup, Container, {
 
         return this;
     },
+    /**
+     * Called internally whenever an event happens on an object, used to echo to the parent.
+     *
+     * @method onObjectEvent
+     * @param eventName {String} The name of the event
+     * @param obj {Container|Sprite} The object the event happened to
+     * @param data {mixed} The event data that was passed along
+     * @private
+     */
     onObjectEvent: function(eventName, obj, data) {
         this.parent.onObjectEvent(eventName, obj, data);
     },
+    /**
+     * Creates a polygon from the vertices in a polygon Tiled property
+     *
+     * @method _getPolygon
+     * @param obj {Object} The polygon Tiled object
+     * @return {Polygon} The polygon created
+     * @private
+     */
     _getPolygon: function(o) {
         var points = [];
         for(var i = 0, il = o.polygon.length; i &lt; il; ++i) {
@@ -449,6 +485,14 @@ inherit(ObjectGroup, Container, {
 
         return new Polygon(points);
     },
+    /**
+     * Creates a polyline from the vertices in a polyline Tiled property
+     *
+     * @method _getPolyline
+     * @param obj {Object} The polyline Tiled object
+     * @return {Polygon} The polyline created
+     * @private
+     */
     _getPolyline: function(o) {
         var points = [];
         for(var i = 0, il = o.polyline.length; i &lt; il; ++i) {
@@ -457,13 +501,39 @@ inherit(ObjectGroup, Container, {
 
         return new Polygon(points);
     },
+    /**
+     * Creates a ellipse from the vertices in a ellipse Tiled property
+     *
+     * @method _getEllipse
+     * @param obj {Object} The ellipse Tiled object
+     * @return {Ellipse} The ellipse created
+     * @private
+     */
     _getEllipse: function(o) {
         return new Ellipse(0, 0, o.width, o.height);
     },
+    /**
+     * Creates a rectangle from the vertices in a rectangle Tiled property
+     *
+     * @method _getRectangle
+     * @param obj {Object} The rectangle Tiled object
+     * @return {Rectangle} The rectangle created
+     * @private
+     */
     _getRectangle: function(o) {
         return new Rectangle(0, 0, o.width, o.height);
     },
+    /**
+     * Checks if an object should be marked as interactive
+     *
+     * @method _getInteractive
+     * @param set {Tileset} The tileset for the object
+     * @param props {Object} The Tiled properties object
+     * @return {Boolean} Whether or not the item is interactive
+     * @private
+     */
     _getInteractive: function(set, props) {
+        //TODO: This is wrong, if &#x27;false&#x27; is set on a lower level a higher level will override
         //first check the lowest level value (on the tile iteself)
         return props.interactive || //obj interactive
                 props.tileprops.interactive || //tile object interactive
@@ -478,19 +548,25 @@ inherit(ObjectGroup, Container, {
      * @return {ObjectGroup} Returns itself for chainability
      */
     despawn: function() {
-        //remove each sprite from the game
-        for(var i = this.children.length - 1; i &gt; -1; --i) {
-            var c = this.children[i];
-
-            if(c.destroy)
-                c.destroy();
-        }
-
-        return this;
+        return Container.prototype.removeAllChildren.call(this);
     },
+    /**
+     * Destroys the group completely
+     *
+     * @method destroy
+     */
     destroy: function() {
         this.despawn();
         Container.prototype.destroy.call(this);
+
+        this.map = null;
+        this.game = null;
+        this.state = null;
+        this.name = null;
+        this.color = null;
+        this.properties = null;
+        this.objects = null;
+        this.type = null;
     }
 });
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>State - GrapeFruit Game Engine</title>
+    <title>ParticleEmitter - GrapeFruit Game Engine</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -180,7 +180,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>State Class</h1>
+                        <h1>ParticleEmitter Class</h1>
 <div class="box meta">
     
 
@@ -192,7 +192,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/src_game_State.js.html#l9"><code>src\game\State.js:9</code></a>
+            Defined in: <a href="../files/src_particles_ParticleEmitter.js.html#l9"><code>src\particles\ParticleEmitter.js:9</code></a>
         </div>
     
 
@@ -204,15 +204,17 @@
 
 
 <div class="box intro">
-    <p>States are containers that represent different states of a game</p>
+    <p>The ParticleEmitter is the object that is placed in the world and will fire off particles based
+on the rules and properties set on it. Generally you will want to create/use these by adding
+them to a ParticleSystem.</p>
 
 </div>
 
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_State" class="method item">
-    <h3 class="name"><code>State</code></h3>
+        <div id="method_ParticleEmitter" class="method item">
+    <h3 class="name"><code>ParticleEmitter</code></h3>
 
     
         <div class="args">
@@ -220,19 +222,7 @@
             
                 <li class="arg">
                     
-                        <code>game</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[name]</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[physicsOptions]</code>
+                        <code>name</code>
                     
                 </li>
             
@@ -265,7 +255,7 @@
             
         
         
-        <a href="../files/src_game_State.js.html#l9"><code>src\game\State.js:9</code></a>
+        <a href="../files/src_particles_ParticleEmitter.js.html#l9"><code>src\particles\ParticleEmitter.js:9</code></a>
         
         </p>
 
@@ -287,70 +277,17 @@
             
                 <li class="param">
                     
-                        <code class="param-name">game</code>
-                        <span class="type"><a href="..\classes\Game.html" class="crosslink">Game</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The game instance this state belongs to</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[name]</code>
+                        <code class="param-name">name</code>
                         <span class="type">String</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The name of this state</p>
+                        <p>The string name of the particle emitter.</p>
 
                     </div>
 
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[physicsOptions]</code>
-                        <span class="type">Object</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>All the settings for the physics environment</p>
-
-                    </div>
-
-                    
-                        <ul class="params-list">
-                            
-                            <li class="param">
-                                
-                                    <code class="param-name optional">[gravity]</code>
-                                    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
-                                    <span class="flag optional" title="This parameter is optional.">optional</span>
-                                
-
-                                <div class="param-description">
-                                    <p>The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)</p>
-
-                                </div>
-
-                                
-                            </li>
-                            
-                        </ul>
                     
                 </li>
             
@@ -360,19 +297,6 @@
 
     
 
-    
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                <pre class="code prettyprint"><code> var state = game.state.add(&#39;battle&#39;);
- state.addChild(battlePlayer);
- state.addChild(enemy);
-
- state.enable();</code></pre>
-
-            </div>
-        </div>
     
 </div>
 
@@ -404,6 +328,20 @@
                     <h3>Methods</h3>
 
                     <ul class="index-list methods extends">
+                        
+                            <li class="index-item method private">
+                                <a href="#method__free">_free</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method__get">_get</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item method inherited">
                                 <a href="#method_addChild">addChild</a>
@@ -455,7 +393,7 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_enable">enable</a>
+                                <a href="#method_emitParticle">emitParticle</a>
 
                                 
                                 
@@ -524,13 +462,6 @@
                                 
                             </li>
                         
-                            <li class="index-item method private">
-                                <a href="#method_resize">resize</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item method inherited">
                                 <a href="#method_setMass">setMass</a>
 
@@ -552,6 +483,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_setup">setup</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method inherited">
                                 <a href="#method_setVelocity">setVelocity</a>
 
@@ -561,6 +499,20 @@
                         
                             <li class="index-item method inherited">
                                 <a href="#method_show">show</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_start">start</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_stop">stop</a>
 
                                 
                                 
@@ -590,22 +542,15 @@
                                 
                             </li>
                         
+                            <li class="index-item property">
+                                <a href="#property_active">active</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property inherited">
                                 <a href="#property_alpha">alpha</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_audio">audio</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_camera">camera</a>
 
                                 
                                 
@@ -619,7 +564,14 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_game">game</a>
+                                <a href="#property_delay">delay</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_height">height</a>
 
                                 
                                 
@@ -646,8 +598,64 @@
                                 
                             </li>
                         
+                            <li class="index-item property">
+                                <a href="#property_lifespan">lifespan</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property inherited">
                                 <a href="#property_mass">mass</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_maxParticles">maxParticles</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_maxRotation">maxRotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_maxScale">maxScale</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_maxSpeed">maxSpeed</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_minRotation">minRotation</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_minScale">minScale</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_minSpeed">minSpeed</a>
 
                                 
                                 
@@ -667,8 +675,8 @@
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_physics">physics</a>
+                            <li class="index-item property private">
+                                <a href="#property_particles">particles</a>
 
                                 
                                 
@@ -710,7 +718,7 @@
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_world">world</a>
+                                <a href="#property_width">width</a>
 
                                 
                                 
@@ -813,6 +821,172 @@
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method__free" class="method item private">
+    <h3 class="name"><code>_free</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>sprite</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l255"><code>src\particles\ParticleEmitter.js:255</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Frees a particle back into the pool and hides it.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">sprite</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The particle to free</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__get" class="method item private">
+    <h3 class="name"><code>_get</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>
+        </span>
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l230"><code>src\particles\ParticleEmitter.js:230</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Gets a particle from the pool and sets it up.</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a></span>:
+                    
+                    <p>The particle to use</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
 
                 
                     <div id="method_addChild" class="method item inherited">
@@ -1415,17 +1589,13 @@
 </div>
 
                 
-                    <div id="method_enable" class="method item">
-    <h3 class="name"><code>enable</code></h3>
+                    <div id="method_emitParticle" class="method item">
+    <h3 class="name"><code>emitParticle</code></h3>
 
     
         <span class="paren">()</span>
     
 
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>
-        </span>
     
 
     
@@ -1451,7 +1621,7 @@
             
         
         
-        <a href="../files/src_game_State.js.html#l99"><code>src\game\State.js:99</code></a>
+        <a href="../files/src_particles_ParticleEmitter.js.html#l269"><code>src\particles\ParticleEmitter.js:269</code></a>
         
         </p>
 
@@ -1462,26 +1632,12 @@
     </div>
 
     <div class="description">
-        <p>Enables (shows) the game state</p>
+        <p>Emits a single particle and sets the position, scale, lifespan, and velocity</p>
 
     </div>
 
     
 
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>:
-                    
-                    <p>Returns itself.</p>
-
-                
-            </div>
-        </div>
     
 
     
@@ -2430,138 +2586,6 @@
 </div>
 
                 
-                    <div id="method_resize" class="method item private">
-    <h3 class="name"><code>resize</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>width</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>height</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>
-        </span>
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_game_State.js.html#l110"><code>src\game\State.js:110</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Called internally by <code>game.resize</code>. This ensures that the camera
-is the correct size, and renders the world with the new viewport size.</p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">width</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The width of the new viewport</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">height</code>
-                        <span class="type">Number</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The height of the new viewport</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="..\classes\State.html" class="crosslink">State</a></span>:
-                    
-                    <p>Returns itself.</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_setMass" class="method item inherited">
     <h3 class="name"><code>setMass</code></h3>
 
@@ -2840,6 +2864,120 @@ is the correct size, and renders the world with the new viewport size.</p>
 </div>
 
                 
+                    <div id="method_setup" class="method item">
+    <h3 class="name"><code>setup</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>sprite</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[collide=gf.DIRECTION.ALL]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l201"><code>src\particles\ParticleEmitter.js:201</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Sets up the particles to be emitted</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">sprite</code>
+                        <span class="type"><a href="..\classes\Sprite.html" class="crosslink">Sprite</a> | Array<Texture> | <a href="..\classes\Texture.html" class="crosslink">Texture</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Pass a sprite to be clones as a particle,
+     or an array of textures to be randomly chosen from for different particles,
+     or a single texture to use for each particle.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[collide=gf.DIRECTION.ALL]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The directions the particles are allowed to collide in, use gf.DIRECTION bit flags</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_setVelocity" class="method item inherited">
     <h3 class="name"><code>setVelocity</code></h3>
 
@@ -2996,6 +3134,222 @@ is the correct size, and renders the world with the new viewport size.</p>
 </div>
 
                 
+                    <div id="method_start" class="method item">
+    <h3 class="name"><code>start</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code class="optional">[lifespan=2000]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[delay=250]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[rate=1]</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[total=gf.PARTICLES.MAX_EMITTER_PARTICLES]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l172"><code>src\particles\ParticleEmitter.js:172</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Starts the particle emission, must call <code>setup</code> first to setup
+what kind of particle to emit.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[lifespan=2000]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The lifespan of a particle in ms</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[delay=250]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The time between each particle emission in ms</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[rate=1]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The number of particles to emit each emission</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[total=gf.PARTICLES.MAX_EMITTER_PARTICLES]</code>
+                        <span class="type">Number</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The total number of particles to emit</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_stop" class="method item">
+    <h3 class="name"><code>stop</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l192"><code>src\particles\ParticleEmitter.js:192</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Deactivates the emitter. Particles that are already emitted will continue to
+decay and die, but no new particles will be emitted.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_update" class="method item private">
     <h3 class="name"><code>update</code></h3>
 
@@ -3040,7 +3394,7 @@ is the correct size, and renders the world with the new viewport size.</p>
             
         
         
-        <a href="../files/src_game_State.js.html#l126"><code>src\game\State.js:126</code></a>
+        <a href="../files/src_particles_ParticleEmitter.js.html#l300"><code>src\particles\ParticleEmitter.js:300</code></a>
         
         </p>
 
@@ -3051,7 +3405,7 @@ is the correct size, and renders the world with the new viewport size.</p>
     </div>
 
     <div class="description">
-        <p>Called by the game each frame to update the state objects.</p>
+        <p>Called internally by the ParticleSystem each frame to update each particle&#39;s lifespan.</p>
 
     </div>
 
@@ -3070,7 +3424,7 @@ is the correct size, and renders the world with the new viewport size.</p>
                     
 
                     <div class="param-description">
-                        <p>The number of seconds passed since the last update call.</p>
+                        <p>The number of seconds that have passed since last call</p>
 
                     </div>
 
@@ -3145,6 +3499,53 @@ is the correct size, and renders the world with the new viewport size.</p>
 </div>
 
                 
+                    <div id="property_active" class="property item">
+    <h3 class="name"><code>active</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l140"><code>src\particles\ParticleEmitter.js:140</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>If true the emitter will emit particles, otherwise it will not.</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_alpha" class="property item inherited">
     <h3 class="name"><code>alpha</code></h3>
     <span class="type">Number</span>
@@ -3176,97 +3577,6 @@ is the correct size, and renders the world with the new viewport size.</p>
 
     <div class="description">
         <p>The opacity of the object.</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_audio" class="property item">
-    <h3 class="name"><code>audio</code></h3>
-    <span class="type"><a href="..\classes\AudioManager.html" class="crosslink">AudioManager</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_game_State.js.html#l47"><code>src\game\State.js:47</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The audio manager for this game state</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_camera" class="property item">
-    <h3 class="name"><code>camera</code></h3>
-    <span class="type"><a href="..\classes\Camera.html" class="crosslink">Camera</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_game_State.js.html#l74"><code>src\game\State.js:74</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The camera you view the scene through, will be set
-when setup() is called with a game instance.</p>
 
     </div>
 
@@ -3320,9 +3630,9 @@ when setup() is called with a game instance.</p>
 </div>
 
                 
-                    <div id="property_game" class="property item">
-    <h3 class="name"><code>game</code></h3>
-    <span class="type"><a href="..\classes\Game.html" class="crosslink">Game</a></span>
+                    <div id="property_delay" class="property item">
+    <h3 class="name"><code>delay</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -3343,7 +3653,7 @@ when setup() is called with a game instance.</p>
             
         
         
-        <a href="../files/src_game_State.js.html#l38"><code>src\game\State.js:38</code></a>
+        <a href="../files/src_particles_ParticleEmitter.js.html#l131"><code>src\particles\ParticleEmitter.js:131</code></a>
         
         </p>
 
@@ -3353,11 +3663,60 @@ when setup() is called with a game instance.</p>
     </div>
 
     <div class="description">
-        <p>The game instance that this state belongs too, will be set
-when setup() is called with a game instance.</p>
+        <p>The time in milliseconds between emissions of particles</p>
 
     </div>
 
+    
+        <p><strong>Default:</strong> 100</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_height" class="property item">
+    <h3 class="name"><code>height</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l52"><code>src\particles\ParticleEmitter.js:52</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The height of the emitter, particles are emitted in a random integer location
+within the width and height of the emitter.</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     
@@ -3498,6 +3857,53 @@ will use (as it will not need to hit test all the children)</p>
 </div>
 
                 
+                    <div id="property_lifespan" class="property item">
+    <h3 class="name"><code>lifespan</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l62"><code>src\particles\ParticleEmitter.js:62</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The default lifespan of a particle that is emitted by this ParticleEmitter, in milliseconds</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 2000</p>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_mass" class="property item inherited">
     <h3 class="name"><code>mass</code></h3>
     <span class="type">Number</span>
@@ -3542,6 +3948,342 @@ will use (as it will not need to hit test all the children)</p>
 </div>
 
                 
+                    <div id="property_maxParticles" class="property item">
+    <h3 class="name"><code>maxParticles</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l32"><code>src\particles\ParticleEmitter.js:32</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The maximum number of particles an emitter can have active at any time.
+This is set from PARTICLES.MAX_PARTICLES</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> gf.PARTICLES.MAX_PARTICLES</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_maxRotation" class="property item">
+    <h3 class="name"><code>maxRotation</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l121"><code>src\particles\ParticleEmitter.js:121</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The default maxRotation of a particle that is emitted by this ParticleEmitter
+The actual rotation will be a random integer between <code>minRotation</code> and <code>maxRotation</code>.</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 2 * Math.PI</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_maxScale" class="property item">
+    <h3 class="name"><code>maxScale</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l101"><code>src\particles\ParticleEmitter.js:101</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The default maxScale of a particle that is emitted by this ParticleEmitter
+The actual scale will be a random number between <code>minScale</code> and <code>maxScale</code>.</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_maxSpeed" class="property item">
+    <h3 class="name"><code>maxSpeed</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l81"><code>src\particles\ParticleEmitter.js:81</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The default maxSpeed of a particle that is emitted by this ParticleEmitter
+The actual speed will be a random Vector between <code>minSpeed</code> and <code>maxSpeed</code>.</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> new Vector(100, 100)</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_minRotation" class="property item">
+    <h3 class="name"><code>minRotation</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l111"><code>src\particles\ParticleEmitter.js:111</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The default minRotation of a particle that is emitted by this ParticleEmitter
+The actual rotation will be a random integer between <code>minRotation</code> and <code>maxRotation</code>.</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> -2 * Math.PI</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_minScale" class="property item">
+    <h3 class="name"><code>minScale</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l91"><code>src\particles\ParticleEmitter.js:91</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The default minScale of a particle that is emitted by this ParticleEmitter
+The actual scale will be a random number between <code>minScale</code> and <code>maxScale</code>.</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 1</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_minSpeed" class="property item">
+    <h3 class="name"><code>minSpeed</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_particles_ParticleEmitter.js.html#l71"><code>src\particles\ParticleEmitter.js:71</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The default minSpeed of a particle that is emitted by this ParticleEmitter
+The actual speed will be a random Vector between <code>minSpeed</code> and <code>maxSpeed</code>.</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> new Vector(-100, 100)</p>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_name" class="property item">
     <h3 class="name"><code>name</code></h3>
     <span class="type">String</span>
@@ -3565,7 +4307,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_game_State.js.html#l30"><code>src\game\State.js:30</code></a>
+        <a href="../files/src_particles_ParticleEmitter.js.html#l22"><code>src\particles\ParticleEmitter.js:22</code></a>
         
         </p>
 
@@ -3575,7 +4317,8 @@ will use (as it will not need to hit test all the children)</p>
     </div>
 
     <div class="description">
-        <p>The name of this game state</p>
+        <p>The name of the ParticleEmitter instance. This should be unique in a system, and set by the param
+passed to the constructor.</p>
 
     </div>
 
@@ -3629,12 +4372,14 @@ will use (as it will not need to hit test all the children)</p>
 </div>
 
                 
-                    <div id="property_physics" class="property item">
-    <h3 class="name"><code>physics</code></h3>
-    <span class="type">Physics</span>
+                    <div id="property_particles" class="property item private">
+    <h3 class="name"><code>particles</code></h3>
+    <span class="type">Array<Sprite></span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -3652,7 +4397,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_game_State.js.html#l65"><code>src\game\State.js:65</code></a>
+        <a href="../files/src_particles_ParticleEmitter.js.html#l149"><code>src\particles\ParticleEmitter.js:149</code></a>
         
         </p>
 
@@ -3662,7 +4407,7 @@ will use (as it will not need to hit test all the children)</p>
     </div>
 
     <div class="description">
-        <p>The physics system to simulate the world physics</p>
+        <p>The internal pool to create and reuse particles from</p>
 
     </div>
 
@@ -3884,9 +4629,9 @@ will use (as it will not need to hit test all the children)</p>
 </div>
 
                 
-                    <div id="property_world" class="property item">
-    <h3 class="name"><code>world</code></h3>
-    <span class="type"><a href="..\classes\Tilemap.html" class="crosslink">Tilemap</a></span>
+                    <div id="property_width" class="property item">
+    <h3 class="name"><code>width</code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -3907,7 +4652,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_game_State.js.html#l56"><code>src\game\State.js:56</code></a>
+        <a href="../files/src_particles_ParticleEmitter.js.html#l42"><code>src\particles\ParticleEmitter.js:42</code></a>
         
         </p>
 
@@ -3917,10 +4662,13 @@ will use (as it will not need to hit test all the children)</p>
     </div>
 
     <div class="description">
-        <p>The container that holds all non-gui sprites and the tilemap</p>
+        <p>The width of the emitter, particles are emitted in a random integer location
+within the width and height of the emitter.</p>
 
     </div>
 
+    
+        <p><strong>Default:</strong> 0</p>
     
 
     

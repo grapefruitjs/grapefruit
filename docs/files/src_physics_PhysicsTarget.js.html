@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\core.js - GrapeFruit Game Engine</title>
+    <title>src\physics\PhysicsTarget.js - GrapeFruit Game Engine</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -180,150 +180,213 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src\core.js</h1>
+                        <h1 class="file-heading">File: src\physics\PhysicsTarget.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
-* @license GrapeFruit Game Engine
-* Copyright (c) 2012-2014, Chad Engler
-*
-* GrapeFruit is licensed under the MIT License.
-* http://www.opensource.org/licenses/mit-license.php
-*
-* Known Limiting Features:
-*   - Canvas
-*       - IE 9+
-*       - FF 2+
-*       - Chrome 4+
-*       - Safari 3.1+
-*       - Opera 9+
-*
-*   - WebGL
-*       - IE 11+
-*       - FF 4+
-*       - Chrome 8+
-*       - Safari 6+
-*       - Opera 12+
-*
-*   - Object.create
-*       - IE 9+
-*       - FF 4+
-*       - Chrome 7+
-*       - Safari 5+
-*       - Opera 12+
-*/
+ * Physics mixin. This will add physics capabilities to the class it mixes into.
+ *
+ * @class PhysicsTarget
+ * @constructor
+ */
+module.exports = function() {
+    /**
+     * The physics namespace that all physics properties go into. Those properties are:
+     *  - system {PhysicsSystem} PhysicsSystem that this object is a part of.
+     *  - active {Boolean} Whether or not this target is actively having physics simulated.
+     *
+     * @property _phys
+     * @type Object
+     * @default {}
+     * @private
+     * @readOnly
+     */
+    this._phys = {};
 
-var gf = {
-    //audio
-    AudioManager:       require(&#x27;./audio/AudioManager&#x27;),
-    AudioPlayer:        require(&#x27;./audio/AudioPlayer&#x27;),
+    /**
+     * The mass of this object, please use setMass to set this value
+     *
+     * @property mass
+     * @type Number
+     * @default 0
+     * @readOnly
+     */
+    this.mass = 0;
 
-    //camera
-    Camera:             require(&#x27;./camera/Camera&#x27;),
+    /**
+     * The moment of inertia of this object, only set this before enabling physics (has no effect after enabling)
+     *
+     * @property inertia
+     * @type Number
+     * @default 0
+     */
+    this.inertia = 0;
 
-    //display
-    BaseTexture:        require(&#x27;./display/BaseTexture&#x27;),
-    Container:          require(&#x27;./display/Container&#x27;),
-    Graphics:           require(&#x27;./display/Graphics&#x27;),
-    RenderTexture:      require(&#x27;./display/RenderTexture&#x27;),
-    Sprite:             require(&#x27;./display/Sprite&#x27;),
-    Texture:            require(&#x27;./display/Texture&#x27;),
-    TilingSprite:       require(&#x27;./display/TilingSprite&#x27;),
+    /**
+     * Enables physics for this sprite
+     *
+     * @method enablePhysics
+     * @param system {PhysicsSystem} The system for the sprite to be in
+     */
+    this.enablePhysics = function(sys, cb) {
+        var self = this;
 
-    //fx
-    fx: {
-        camera: {
-            Effect:     require(&#x27;./fx/camera/Effect&#x27;),
-            Close:      require(&#x27;./fx/camera/Close&#x27;),
-            Fade:       require(&#x27;./fx/camera/Fade&#x27;),
-            Flash:      require(&#x27;./fx/camera/Flash&#x27;),
-            Scanlines:  require(&#x27;./fx/camera/Scanlines&#x27;),
-            Shake:      require(&#x27;./fx/camera/Shake&#x27;)
+        if(typeof sys === &#x27;function&#x27;) {
+            cb = sys;
+            sys = null;
         }
-    },
 
-    //game
-    Game:               require(&#x27;./game/Game&#x27;),
-    State:              require(&#x27;./game/State&#x27;),
-    StateManager:       require(&#x27;./game/StateManager&#x27;),
-    World:              require(&#x27;./game/World&#x27;),
+        //is a system is passed use it
+        if(sys) {
+            //if active, remove from current system
+            if(this._phys.active) {
+                //remove from old system
+                this._phys.system.remove(this, function() {
+                    //add to new system when completed
+                    sys.add(self, cb);
+                });
+            }
+            //if inactive add to new system immediately
+            else {
+                sys.add(this, cb);
+            }
 
-    //geometry
-    Circle:             require(&#x27;./geom/Circle&#x27;),
-    Ellipse:            require(&#x27;./geom/Ellipse&#x27;),
-    Polygon:            require(&#x27;./geom/Polygon&#x27;),
-    Rectangle:          require(&#x27;./geom/Rectangle&#x27;),
+            //reassign new system
+            this._phys.system = sys;
+        }
+        //if no system passed (or same one passed) just add to current stored system
+        else {
+            this._phys.system.add(this, cb);
+        }
 
-    //gui
-    GuiItem:            require(&#x27;./gui/GuiItem&#x27;),
+        return this;
+    };
 
-    //input
-    Input:              require(&#x27;./input/Input&#x27;),
-    InputManager:       require(&#x27;./input/InputManager&#x27;),
-    Keyboard:           require(&#x27;./input/Keyboard&#x27;),
-    Gamepad:            require(&#x27;./input/Gamepad&#x27;),
-    GamepadButtons:     require(&#x27;./input/gamepad/GamepadButtons&#x27;),
-    GamepadSticks:      require(&#x27;./input/gamepad/GamepadSticks&#x27;),
-    Pointers:           require(&#x27;./input/Pointers&#x27;),
-    Pointer:            require(&#x27;./input/pointer/Pointer&#x27;),
+    /**
+     * Disbales physics for this sprite
+     *
+     * @method disablePhysics
+     */
+    this.disablePhysics = function(cb) {
+        //if we have a cached system, remove from it
+        if(this._phys.system) {
+            this._phys.system.remove(this, cb);
+        }
 
-    //loader
-    Loader:             require(&#x27;./loader/Loader&#x27;),
+        return this;
+    };
 
-    //math
-    math:               require(&#x27;./math/math&#x27;),
-    Vector:             require(&#x27;./math/Vector&#x27;),
+    /**
+     * Reindexes the collisions for this sprite, useful when moving the sprite a great deal
+     * (like to a new world)
+     *
+     * @method disablePhysics
+     */
+    this.reindex = function(cb) {
+        //if we have a cached system, reindex
+        if(this._phys.system) {
+            this._phys.system.reindex(this, cb);
+        }
 
-    //particles
-    ParticleEmitter:    require(&#x27;./particles/ParticleEmitter&#x27;),
-    ParticleSystem:     require(&#x27;./particles/ParticleSystem&#x27;),
+        return this;
+    };
 
-    //physics
-    PhysicsSystem:      require(&#x27;./physics/PhysicsSystem&#x27;),
-    PhysicsTarget:      require(&#x27;./physics/PhysicsTarget&#x27;),
+    /**
+     * Sets the mass of this sprite
+     *
+     * @method setMass
+     * @param mass {Number} The new mass of the object
+     */
+    this.setMass = function(mass) {
+        if(this._phys.system) {
+            this._phys.system.setMass(this, mass);
+        }
 
-    //text
-    BitmapText:         require(&#x27;./text/BitmapText&#x27;),
-    Text:               require(&#x27;./text/Text&#x27;),
+        return this;
+    };
 
-    //tilemap
-    Tile:               require(&#x27;./tilemap/Tile&#x27;),
-    Tilelayer:          require(&#x27;./tilemap/Tilelayer&#x27;),
-    Tilemap:            require(&#x27;./tilemap/Tilemap&#x27;),
-    Tileset:            require(&#x27;./tilemap/Tileset&#x27;),
-    ObjectGroup:        require(&#x27;./tilemap/ObjectGroup&#x27;),
+    /**
+     * Sets the velocity of this sprite
+     *
+     * @method setVelocity
+     * @param velocity {Vector} The new velocity of the object
+     */
+    this.setVelocity = function(vel) {
+        if(this._phys.system) {
+            this._phys.system.setVelocity(this, vel);
+        }
 
-    //utils
-    utils:              require(&#x27;./utils/utils&#x27;),
-    support:            require(&#x27;./utils/support&#x27;),
-    inherit:            require(&#x27;./utils/inherit&#x27;),
-    Cache:              require(&#x27;./utils/Cache&#x27;),
-    Clock:              require(&#x27;./utils/Clock&#x27;),
-    EventEmitter:       require(&#x27;./utils/EventEmitter&#x27;),
-    ObjectPool:         require(&#x27;./utils/ObjectPool&#x27;),
-    SpritePool:         require(&#x27;./utils/SpritePool&#x27;),
-    ObjectFactory:      require(&#x27;./utils/ObjectFactory&#x27;),
+        return this;
+    };
 
-    //plugin
-    plugin:             require(&#x27;./plugin&#x27;),
+    /**
+     * Sets the rotation of this sprite
+     *
+     * @method setRotation
+     * @param rotation {Number} The new rotation of the object in radians
+     */
+    this.setRotation = function(rads) {
+        this.rotation = rads;
 
-    //vendor files
-    PIXI:               require(&#x27;./vendor/pixi&#x27;)
+        if(this._phys.system) {
+            this._phys.system.setRotation(this, rads);
+        }
+
+        return this;
+    };
+
+    /**
+     * Sets the position of this sprite
+     *
+     * @method setPosition
+     * @param x {Number}
+     * @param y {Number}
+     */
+    this.setPosition = function(x, y) {
+        this.position.x = x;
+        this.position.y = y;
+
+        if(this._phys.system) {
+            this._phys.system.setPosition(this, this.position);
+        }
+
+        return this;
+    };
+
+    /**
+     * On Collision Event
+     *      called when this sprite collides into another, or is being collided into by another.
+     *      By default if something collides with a collectable sprite we destroy the collectable
+     *      and if we collide with a solid tile we kill our velocity. This method will emit a
+     *      &#x27;collision&#x27; event that you can listen for
+     *
+     * @method onCollision
+     * @param obj {Sprite} Colliding sprite
+     * @param vec {Vector} Collision vector (for sensors this is normalized)
+     * @param colShape {cp.Shape} The colliding physics shape
+     * @param myShape {Sprite} Your physics shape that caused the collision
+     */
+    this.onCollision = function(obj, vec, colShape, myShape) {
+        this.emit(&#x27;collision&#x27;, obj, vec, colShape, myShape);
+    };
+
+    /**
+     * On Seperate Event
+     *      called when this sprite collides into another, or is being collided into by another.
+     *      By default if something collides with a collectable sprite we destroy the collectable
+     *      and if we collide with a solid tile we kill our velocity. This method will emit a
+     *      &#x27;collision&#x27; event that you can listen for
+     *
+     * @method onCollision
+     * @param obj {Sprite} Colliding sprite
+     * @param colShape {cp.Shape} The colliding physics shape
+     * @param myShape {Sprite} Your physics shape that caused the collision
+     */
+    this.onSeparate = function(obj, colShape, myShape) {
+        this.emit(&#x27;separate&#x27;, obj, colShape, myShape);
+    };
 };
-
-//replace the pixi point with a powerful vector class
-gf.PIXI.Point = gf.Vector;
-
-//copy over constants
-var C = require(&#x27;./constants&#x27;);
-
-for(var k in C) {
-    gf[k] = C[k];
-}
-
-module.exports = gf;
-
     </pre>
 </div>
 

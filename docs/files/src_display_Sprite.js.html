@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -178,7 +186,7 @@
     <pre class="code prettyprint linenums">
 var EventEmitter = require(&#x27;../utils/EventEmitter&#x27;),
     Rectangle = require(&#x27;../geom/Rectangle&#x27;),
-    Body = require(&#x27;../physics/Body&#x27;),
+    PhysicsTarget = require(&#x27;../physics/PhysicsTarget&#x27;),
     inherit = require(&#x27;../utils/inherit&#x27;),
     Texture = require(&#x27;./Texture&#x27;),
     math = require(&#x27;../math/math&#x27;),
@@ -186,14 +194,14 @@ var EventEmitter = require(&#x27;../utils/EventEmitter&#x27;),
     PIXI = require(&#x27;../vendor/pixi&#x27;);
 
 /**
- * The base Sprite class. This class is the base for all images on the screen
+ * The base Sprite class. This class is the base for all images on the screen. This class extends PIXI&#x27;s Sprite.
  *
  * @class Sprite
  * @extends [PIXI.Sprite](http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html)
  * @uses EventEmitter
  * @constructor
  * @param textures {Texture|Array&lt;Texture&gt;|Object} The texture for the sprite to display, an array of texture to animation through, or an animation object.
- *      The later looks like: &#x60;{ animationName: { frames: [frame1, frame2], rate: 2 } }&#x60; where each frame is a Texture object
+ *      The later looks like: &#x60;{ animationName: { frames: [frame1, frame2], speed: 0.5, loop: false } }&#x60; where each frame is a Texture object
  * @param [speed] {Number} The speed of the animations (can be overriden on a specific animations)
  * @param [start] {String} The animation to start with, defaults to the first found key otherwise
  * @example
@@ -201,16 +209,19 @@ var EventEmitter = require(&#x27;../utils/EventEmitter&#x27;),
  */
 var Sprite = function(anims, speed, start) {
     EventEmitter.call(this);
+    PhysicsTarget.call(this);
+
+    if(!anims) {
+        anims = Texture.__default;
+    }
 
     //parse tx into correct format
     if(anims instanceof Texture) {
         anims = { _default: { frames: [anims] } };
-        speed = 1;
         start = &#x27;_default&#x27;;
     }
     else if(anims instanceof Array) {
         anims = { _default: { frames: anims } };
-        speed = 1;
         start = &#x27;_default&#x27;;
     } else {
         //massage animations into full format
@@ -221,9 +232,11 @@ var Sprite = function(anims, speed, start) {
             var anim = anims[a];
 
             if(anim instanceof Array)
-                anims[a] = { frames: anim };
+                anims[a] = { name: a, frames: anim };
             else if(anim instanceof Texture)
-                anims[a] = { frames: [anim] };
+                anims[a] = { name: a, frames: [anim] };
+            else
+                anims[a].name = a;
         }
     }
 
@@ -307,17 +320,51 @@ var Sprite = function(anims, speed, start) {
 
     this.hitArea = this.hitArea || new Rectangle(0, 0, this.width, this.height);
 
-    this.body = new Body(this);
-
     //show first frame
     this.goto(0, this.currentAnimation);
+
+    /**
+     * Fired when a new frame of the running animation is shown
+     *
+     * @event frame
+     * @param animation {String} The animation name that is playing
+     * @param frameId {Number} The frame that is being shown
+     */
+
+    /**
+     * Fired when the running animation completes
+     *
+     * @event complete
+     * @param animation {String} The animation that has completed
+     */
 };
 
 inherit(Sprite, PIXI.Sprite, {
     /**
+     * Sets the sprite to visible = true
+     *
+     * @method show
+     * @return {Sprite} Returns itself
+     */
+    show: function() {
+        this.visible = true;
+        return this;
+    },
+    /**
+     * Sets the sprite to visible = false
+     *
+     * @method hide
+     * @return {Sprite} Returns itself
+     */
+    hide: function() {
+        this.visible = false;
+        return this;
+    },
+    /**
      * Creates a new Sprite instance with the same values as this one
      *
      * @method clone
+     * @return {Sprite} Returns the new sprite
      */
     clone: function() {
         //make a copy of our animations object
@@ -374,6 +421,7 @@ inherit(Sprite, PIXI.Sprite, {
      * @param frames {Array&lt;Texture&gt;} The array of texture frames
      * @param [speed] {Number} The animation speed
      * @param [loop] {Boolean} Loop the animation or not
+     * @return {Sprite} Returns itself
      */
     addAnimation: function(name, frames, speed, loop) {
         if(typeof name === &#x27;object&#x27;) {
@@ -396,6 +444,7 @@ inherit(Sprite, PIXI.Sprite, {
      * @method goto
      * @param frame {Number} The index of the frame to start on
      * @param [name] {String} The string name of the animation to go to
+     * @return {Sprite} Returns itself
      */
     goto: function(frame, anim) {
         if(typeof frame === &#x27;string&#x27;) {
@@ -419,6 +468,7 @@ inherit(Sprite, PIXI.Sprite, {
      * Starts playing the currently active animation
      *
      * @method play
+     * @return {Sprite} Returns itself
      */
     play: function() {
         this.playing = true;
@@ -428,6 +478,7 @@ inherit(Sprite, PIXI.Sprite, {
      * Stops playing the currently active animation
      *
      * @method stop
+     * @return {Sprite} Returns itself
      */
     stop: function() {
         this.playing = false;
@@ -440,11 +491,7 @@ inherit(Sprite, PIXI.Sprite, {
      */
     destroy: function() {
         this.stop();
-
-        if(this._physics) {
-            this._physics.removeSprite(this);
-            this._physics = null;
-        }
+        this.disablePhysics();
 
         if(this.parent)
             this.parent.removeChild(this);
@@ -492,20 +539,6 @@ inherit(Sprite, PIXI.Sprite, {
                 this.emit(&#x27;complete&#x27;, this.currentAnimation);
             }
         }
-    },
-    /**
-     * Called whenever a collision occurs
-     *
-     * @method onCollide
-     * @param sprite {Sprite} The sprite that you collide with
-     * @param collision {Collision} Collision data object that contains
-     *      information about the intersection
-     * @return {Boolean} If you return &#x60;false&#x60; explicitly the engine will *not*
-     *      solve the collision. In this way you can make thing &quot;not collide&quot; if
-     *      you don&#x27;t want their types to collide.
-     */
-    onCollide: function() {
-        /* To be overriden */
     }
 });
 

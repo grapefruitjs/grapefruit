@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -206,7 +214,7 @@ var support = {
      * @property webgl
      * @type Boolean
      */
-    webgl: (function () { try { return !!window.WebGLRenderingContext &amp;&amp; !!document.createElement(&#x27;canvas&#x27;).getContext(&#x27;experimental-webgl&#x27;); } catch(e) { return false; } })(),
+    webgl: (function () { try { var c = document.createElement(&#x27;canvas&#x27;); return !!window.WebGLRenderingContext &amp;&amp; (c.getContext(&#x27;webgl&#x27;) || c.getContext(&#x27;experimental-webgl&#x27;)); } catch(e) { return false; } })(),
 
     /**
      * Whether or not the crypto API is supported
@@ -262,7 +270,7 @@ var support = {
      * @property htmlAudio
      * @type Boolean
      */
-    htmlAudio: !!document.createElement(&#x27;audio&#x27;).canPlayType,
+    htmlAudio: !!document.createElement(&#x27;audio&#x27;).canPlayType &amp;&amp; !!window.Audio,
 
     /**
      * Whether or not local storage is supported
@@ -289,16 +297,24 @@ var support = {
     gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf(&#x27;Firefox/&#x27;) !== -1)
 };
 
-var audioTest = new Audio();
+/**
+ * Describes which audio codecs a browser supports
+ *
+ * @property codec
+ * @type Object
+ */
+if(support.htmlAudio) {
+    var audioTest = new Audio();
 
-support.codec = {
-    mp3: !!audioTest.canPlayType(&#x27;audio/mpeg;&#x27;).replace(/^no$/,&#x27;&#x27;),
-    opus: !!audioTest.canPlayType(&#x27;audio/ogg; codecs=&quot;opus&quot;&#x27;).replace(/^no$/,&#x27;&#x27;),
-    ogg: !!audioTest.canPlayType(&#x27;audio/ogg; codecs=&quot;vorbis&quot;&#x27;).replace(/^no$/,&#x27;&#x27;),
-    wav: !!audioTest.canPlayType(&#x27;audio/wav; codecs=&quot;1&quot;&#x27;).replace(/^no$/,&#x27;&#x27;),
-    m4a: !!(audioTest.canPlayType(&#x27;audio/x-m4a;&#x27;) || audioTest.canPlayType(&#x27;audio/aac;&#x27;)).replace(/^no$/,&#x27;&#x27;),
-    webm: !!audioTest.canPlayType(&#x27;audio/webm; codecs=&quot;vorbis&quot;&#x27;).replace(/^no$/,&#x27;&#x27;)
-};
+    support.codec = {
+        mp3: !!audioTest.canPlayType(&#x27;audio/mpeg;&#x27;).replace(/^no$/,&#x27;&#x27;),
+        opus: !!audioTest.canPlayType(&#x27;audio/ogg; codecs=&quot;opus&quot;&#x27;).replace(/^no$/,&#x27;&#x27;),
+        ogg: !!audioTest.canPlayType(&#x27;audio/ogg; codecs=&quot;vorbis&quot;&#x27;).replace(/^no$/,&#x27;&#x27;),
+        wav: !!audioTest.canPlayType(&#x27;audio/wav; codecs=&quot;1&quot;&#x27;).replace(/^no$/,&#x27;&#x27;),
+        m4a: !!(audioTest.canPlayType(&#x27;audio/x-m4a;&#x27;) || audioTest.canPlayType(&#x27;audio/aac;&#x27;)).replace(/^no$/,&#x27;&#x27;),
+        webm: !!audioTest.canPlayType(&#x27;audio/webm; codecs=&quot;vorbis&quot;&#x27;).replace(/^no$/,&#x27;&#x27;)
+    };
+}
 
 module.exports = support;
 

@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -350,6 +358,34 @@ center point (x, y) and by its radius.</p>
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_copy">copy</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_equals">equals</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_overlaps">overlaps</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_recalc">recalc</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -360,6 +396,27 @@ center point (x, y) and by its radius.</p>
 
                     <ul class="index-list properties">
                         
+                            <li class="index-item property private">
+                                <a href="#property__radius">_radius</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_area">area</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_circumference">circumference</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property">
                                 <a href="#property_position">position</a>
 
@@ -369,6 +426,20 @@ center point (x, y) and by its radius.</p>
                         
                             <li class="index-item property">
                                 <a href="#property_radius">radius</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_radius">radius</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_scale">scale</a>
 
                                 
                                 
@@ -438,7 +509,7 @@ center point (x, y) and by its radius.</p>
             
         
         
-        <a href="../files/src_geom_Circle.js.html#l41"><code>src\geom\Circle.js:41</code></a>
+        <a href="../files/src_geom_Circle.js.html#l62"><code>src\geom\Circle.js:62</code></a>
         
         </p>
 
@@ -464,7 +535,7 @@ center point (x, y) and by its radius.</p>
                     
                         <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a></span>:
                     
-                    <p>a copy of the polygon</p>
+                    <p>a copy of the circle</p>
 
                 
             </div>
@@ -527,7 +598,7 @@ center point (x, y) and by its radius.</p>
             
         
         
-        <a href="../files/src_geom_Circle.js.html#l51"><code>src\geom\Circle.js:51</code></a>
+        <a href="../files/src_geom_Circle.js.html#l87"><code>src\geom\Circle.js:87</code></a>
         
         </p>
 
@@ -605,12 +676,527 @@ or on the edge of the circle</p>
 </div>
 
                 
+                    <div id="method_copy" class="method item">
+    <h3 class="name"><code>copy</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>circle</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Circle.js.html#l72"><code>src\geom\Circle.js:72</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Copies the values from another circle to this one</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">circle</code>
+                        <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The circle to copy vlaues from</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a></span>:
+                    
+                    <p>Returns itself</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_equals" class="method item">
+    <h3 class="name"><code>equals</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>circle</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Circle.js.html#l129"><code>src\geom\Circle.js:129</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Checks if this circle&#39;s values are equal to anothers</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">circle</code>
+                        <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The circle to check against</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    <p>True if they are equal</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_overlaps" class="method item">
+    <h3 class="name"><code>overlaps</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>circle</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Circle.js.html#l110"><code>src\geom\Circle.js:110</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Checks if this circle overlaps another</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">circle</code>
+                        <span class="type"><a href="..\classes\Circle.html" class="crosslink">Circle</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The circle to check if this overlaps</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    <p>if the circle overlaps</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_recalc" class="method item">
+    <h3 class="name"><code>recalc</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Circle.js.html#l141"><code>src\geom\Circle.js:141</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Recalculates the scaled radius</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
             </div>
         
 
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property__radius" class="property item private">
+    <h3 class="name"><code>_radius</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Circle.js.html#l23"><code>src\geom\Circle.js:23</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The unscaled radius of the circle</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_area" class="property item">
+    <h3 class="name"><code>area</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Circle.js.html#l212"><code>src\geom\Circle.js:212</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The area of the circle</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_circumference" class="property item">
+    <h3 class="name"><code>circumference</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Circle.js.html#l199"><code>src\geom\Circle.js:199</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The circumference of the circle</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="property_position" class="property item">
@@ -681,7 +1267,7 @@ or on the edge of the circle</p>
             
         
         
-        <a href="../files/src_geom_Circle.js.html#l23"><code>src\geom\Circle.js:23</code></a>
+        <a href="../files/src_geom_Circle.js.html#l33"><code>src\geom\Circle.js:33</code></a>
         
         </p>
 
@@ -697,6 +1283,100 @@ or on the edge of the circle</p>
 
     
         <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_radius" class="property item">
+    <h3 class="name"><code>radius</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Circle.js.html#l183"><code>src\geom\Circle.js:183</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The radius circle</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> 0</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_scale" class="property item">
+    <h3 class="name"><code>scale</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_geom_Circle.js.html#l42"><code>src\geom\Circle.js:42</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The scale of the circle</p>
+
+    </div>
+
+    
+        <p><strong>Default:</strong> new Vector(1, 1)</p>
     
 
     
@@ -728,7 +1408,7 @@ or on the edge of the circle</p>
             
         
         
-        <a href="../files/src_geom_Circle.js.html#l75"><code>src\geom\Circle.js:75</code></a>
+        <a href="../files/src_geom_Circle.js.html#l151"><code>src\geom\Circle.js:151</code></a>
         
         </p>
 
@@ -775,7 +1455,7 @@ or on the edge of the circle</p>
             
         
         
-        <a href="../files/src_geom_Circle.js.html#l91"><code>src\geom\Circle.js:91</code></a>
+        <a href="../files/src_geom_Circle.js.html#l167"><code>src\geom\Circle.js:167</code></a>
         
         </p>
 

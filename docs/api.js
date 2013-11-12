@@ -2,7 +2,7 @@ YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
         "AudioManager",
-        "AudoPlayer",
+        "AudioPlayer",
         "BaseTexture",
         "BitmapText",
         "Cache",
@@ -25,6 +25,10 @@ YUI.add("yuidoc-meta", function(Y) {
         "ObjectFactory",
         "ObjectGroup",
         "ObjectPool",
+        "ParticleEmitter",
+        "ParticleSystem",
+        "PhysicsSystem",
+        "PhysicsTarget",
         "Pointer",
         "Pointers",
         "Polygon",

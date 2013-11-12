@@ -43,7 +43,7 @@
             
                 <li><a href="../classes/AudioManager.html">AudioManager</a></li>
             
-                <li><a href="../classes/AudoPlayer.html">AudoPlayer</a></li>
+                <li><a href="../classes/AudioPlayer.html">AudioPlayer</a></li>
             
                 <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
             
@@ -90,6 +90,14 @@
                 <li><a href="../classes/ObjectGroup.html">ObjectGroup</a></li>
             
                 <li><a href="../classes/ObjectPool.html">ObjectPool</a></li>
+            
+                <li><a href="../classes/ParticleEmitter.html">ParticleEmitter</a></li>
+            
+                <li><a href="../classes/ParticleSystem.html">ParticleSystem</a></li>
+            
+                <li><a href="../classes/PhysicsSystem.html">PhysicsSystem</a></li>
+            
+                <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
@@ -208,11 +216,11 @@ var plugin = {
         }
 
         if(typeof obj[name] !== &#x27;function&#x27;) {
-            throw new Error(name + &#x27; is not a function in the passed object.&#x27;);
+            throw new TypeError(name + &#x27; is not a function in the passed object.&#x27;);
         }
 
         if(typeof fn !== &#x27;function&#x27;) {
-            throw new Error(&#x27;The passed patch function is not a function.&#x27;);
+            throw new TypeError(&#x27;The passed patch function is not a function.&#x27;);
         }
 
         var _super = obj[name];
@@ -241,14 +249,14 @@ var plugin = {
      *      gf.plugin.register(MyPluginObject, &#x27;MyPluginName&#x27;);
      *      var plg = new gf.MyPluginName();
      */
-    register: function(plugin, name) {
+    register: function(obj, name) {
         //ensure we don&#x27;t overrite a name
         if(window.gf[name]) {
-            throw new Error(&#x27;Unable to register plugin: &quot;&#x27; + name + &#x27;&quot; already exists in the gf namespace, please choose something else!&#x27;);
+            throw new RangeError(&#x27;Unable to register plugin: &quot;&#x27; + name + &#x27;&quot; already exists in the gf namespace, please choose something else!&#x27;);
         }
 
         //store the plugin in the namespace
-        window.gf[name] = plugin;
+        window.gf[name] = obj;
     }
 };
 
