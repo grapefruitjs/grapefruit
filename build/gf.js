@@ -575,6 +575,7 @@ define(
           list.splice(position, 1);
         }
       }
+      return this;
     };
     this.once = function (type, listener) {
       if (typeof listener !== "function")
@@ -891,6 +892,7 @@ define(
     },
     recalc: function () {
       this.radius = this._radius * this.scale.x;
+      return this;
     }
   });
   Object.defineProperty(Circle.prototype, "x", {
@@ -1013,6 +1015,7 @@ define(
         this.edges.push(e);
         this.normals.push(n);
       }
+      return this;
     }
   });
   Object.defineProperty(Polygon.prototype, "x", {
@@ -7979,6 +7982,7 @@ define(
           this.masterGain.connect(this.ctx.destination);
         }
       }
+      return this;
     },
     attach: function (sound) {
       if (sound._manager !== this) {
@@ -8145,11 +8149,7 @@ define(
     },
     removeAllChildren: function () {
       while (this.children.length) {
-        if (this.children[0].destroy) {
-          this.children[0].destroy();
-        } else {
-          this.removeChild(this.children[0]);
-        }
+        this.removeChild(this.children[0]);
       }
       return this;
     },
@@ -8161,9 +8161,19 @@ define(
     },
     destroy: function () {
       this.disablePhysics();
-      this.removeAllChildren();
+      this.destroyAllChildren();
       if (this.parent)
         this.parent.removeChild(this);
+    },
+    destroyAllChildren: function () {
+      while (this.children.length) {
+        if (this.children[0].destroy) {
+          this.children[0].destroy();
+        } else {
+          this.removeChild(this.children[0]);
+        }
+      }
+      return this;
     },
     onCollide: function () {
     }
@@ -8524,9 +8534,11 @@ define(
     this.color = group.color;
     this.properties = group.properties || {};
     this.objects = group.objects;
-    this.type = group.type;
-    this.alpha = group.opacity;
-    this.visible = group.visible;
+    this.type = group.type || "objectgroup";
+    this.position.x = group.x || 0;
+    this.position.y = group.y || 0;
+    this.alpha = group.opacity !== undefined ? group.opacity : 1;
+    this.visible = group.visible !== undefined ? group.visible : true;
   };
   inherit(ObjectGroup, Container, {
     spawn: function () {
@@ -8675,7 +8687,15 @@ define(
     },
     destroy: function () {
       this.despawn();
-      return Container.prototype.destroy.call(this);
+      Container.prototype.destroy.call(this);
+      this.map = null;
+      this.game = null;
+      this.state = null;
+      this.name = null;
+      this.color = null;
+      this.properties = null;
+      this.objects = null;
+      this.type = null;
     }
   });
   module.exports = ObjectGroup;
@@ -8716,13 +8736,13 @@ define(
     this.size = new Vector(layer.width || 0, layer.height || 0);
     this.tileIds = support.typedArrays ? new Uint32Array(layer.data) : layer.data;
     this.properties = utils.parseTiledProperties(layer.properties) || {};
-    this.type = layer.type;
-    this.position.x = layer.x;
-    this.position.y = layer.y;
-    this.alpha = layer.opacity;
-    this.visible = layer.visible;
-    this.preRender = this.properties.preRender;
-    this.chunkSize = new Vector(this.properties.chunkSizeX || this.properties.chunkSize || 512, this.properties.chunkSizeY || this.properties.chunkSize || 512);
+    this.type = layer.type || "tilelayer";
+    this.preRender = layer.preRender || this.properties.preRender || false;
+    this.chunkSize = new Vector(layer.chunkSizeX || layer.chunkSize || this.properties.chunkSizeX || this.properties.chunkSize || 512, layer.chunkSizeY || layer.chunkSize || this.properties.chunkSizeY || this.properties.chunkSize || 512);
+    this.position.x = layer.x || 0;
+    this.position.y = layer.y || 0;
+    this.alpha = layer.opacity !== undefined ? layer.opacity : 1;
+    this.visible = layer.visible !== undefined ? layer.visible : true;
     this._preRendered = false;
     this._tilePool = [];
     this._buffered = {
@@ -8750,6 +8770,7 @@ define(
         this.tileSize = this.map.tileSize;
       this.clearTiles();
       this._renderTiles(x, y, width, height);
+      return this;
     },
     _preRender: function () {
       if (!this.visible)
@@ -8829,6 +8850,7 @@ define(
         this.clearTile(this.children[c], remove);
       }
       this.tiles.length = 0;
+      return this;
     },
     clearTile: function (tile, remove) {
       tile.visible = false;
@@ -8837,6 +8859,7 @@ define(
         this.removeChild(tile);
       else
         this._tilePool.push(tile);
+      return this;
     },
     moveTileSprite: function (fromTileX, fromTileY, toTileX, toTileY) {
       if (toTileX < 0 || toTileY < 0 || toTileX >= this.map.size.x || toTileY >= this.map.size.y) {
@@ -10067,9 +10090,11 @@ define(
       this._rate = rate || 1;
       this._total = total || C.PARTICLES.MAX_EMITTER_PARTICLES;
       this._timer = 0;
+      return this;
     },
     stop: function () {
       this.active = false;
+      return this;
     },
     setup: function (sprite, collide) {
       if (collide === undefined)
@@ -10084,6 +10109,7 @@ define(
         this._particle = sprite;
         this._textures = [sprite.texture];
       }
+      return this;
     },
     _get: function () {
       if (this._emitted >= this._total || this._emitted > this.maxParticles)
@@ -10112,6 +10138,7 @@ define(
       part.scale.x = part.scale.y = math.randomReal(this.minScale, this.maxScale);
       part.lifespan = this.lifespan;
       part.setVelocity(math.randomInt(this.minSpeed.x, this.maxSpeed.x), math.randomInt(this.minSpeed.y, this.maxSpeed.y));
+      return this;
     },
     update: function (dt) {
       var t = dt * 1000;
@@ -13680,12 +13707,16 @@ define(
   
 // uRequire v0.6.5: START body of original nodejs module
   var Rectangle = require("../geom/Rectangle"), Circle = require("../geom/Circle"), Polygon = require("../geom/Polygon"), Vector = require("../math/Vector"), Tile = require("../tilemap/Tile"), inherit = require("../utils/inherit"), cp = require("../vendor/cp");
-  var PhysicsSystem = function (game, gravity) {
-    this.game = game;
+  var PhysicsSystem = function (state, options) {
+    options = options || {};
+    options.gravity = options.gravity instanceof Vector ? options.gravity : new Vector(0, 9.87);
+    options.sleepTimeThreshold = options.sleepTimeThreshold !== undefined ? options.sleepTimeThreshold : 0.2;
+    options.collisionSlop = options.collisionSlop !== undefined ? options.collisionSlop : 0.1;
+    this.state = state;
     this.space = new cp.Space();
-    this.gravity = this.space.gravity = gravity !== undefined ? gravity : new Vector(0, 9.87);
-    this.space.sleepTimeThreshold = 0.2;
-    this.space.collisionSlop = 0.1;
+    this.gravity = this.space.gravity = options.gravity;
+    this.space.sleepTimeThreshold = options.sleepTimeThreshold;
+    this.space.collisionSlop = options.collisionSlop;
     this.space.addCollisionHandler(PhysicsSystem.COLLISION_TYPE.SPRITE, PhysicsSystem.COLLISION_TYPE.SPRITE, this.onCollisionBegin.bind(this), null, this.onCollisionPostSolve.bind(this), this.onCollisionEnd.bind(this));
     this.space.addCollisionHandler(PhysicsSystem.COLLISION_TYPE.SPRITE, PhysicsSystem.COLLISION_TYPE.TILE, this.onCollisionBegin.bind(this), null, this.onCollisionPostSolve.bind(this), this.onCollisionEnd.bind(this));
     this.actionQueue = [];
@@ -13693,50 +13724,24 @@ define(
     this._skip = 0;
   };
   inherit(PhysicsSystem, Object, {
-    _createBody: function (spr) {
-      var body = new cp.Body(spr.mass || 1, spr.inertia || cp.momentForBox(spr.mass || 1, spr.width, spr.height) || Infinity);
-      if (spr.mass === Infinity) {
-        body.nodeIdleTime = Infinity;
-      }
-      return body;
+    pause: function () {
+      this._paused = true;
+      return this;
     },
-    _createShape: function (spr, body, poly) {
-      var shape, hit = poly || spr.hitArea, ax = spr.anchor ? spr.anchor.x : 0, ay = spr.anchor ? spr.anchor.y : 0, aw = spr.width * ax, ah = spr.height * ay;
-      if (hit) {
-        if (hit instanceof Rectangle) {
-          var l = hit.x, r = hit.x + hit.width, b = hit.y - spr.height, t = b + hit.height;
-          l -= aw;
-          r -= aw;
-          b += spr.height - ah;
-          t += spr.height - ah;
-          shape = new cp.BoxShape2(body, new cp.BB(l, b, r, t));
-        } else if (hit instanceof Circle) {
-          var offset = new Vector(spr.width / 2 - aw + hit.x, spr.height / 2 - ah + hit.y);
-          shape = new cp.CircleShape(body, hit.radius, offset);
-        } else if (hit instanceof Polygon) {
-          var points = [], ps = hit.points;
-          for (var i = 0; i < ps.length; ++i) {
-            var p = ps[i];
-            points.push(p.x - aw);
-            points.push(p.y - ah);
-          }
-          shape = new cp.PolyShape(body, cp.convexHull(points, null, 0), cp.vzero);
-        }
-      }
-      if (!shape) {
-        shape = new cp.BoxShape2(body, new cp.BB(0, -spr.height, spr.width, 0));
-      }
-      shape.width = spr.width;
-      shape.height = spr.height;
-      shape.sprite = spr;
-      shape.setElasticity(0);
-      shape.setSensor(spr.sensor);
-      shape.setCollisionType(this.getCollisionType(spr));
-      shape.setFriction(spr.friction || 0);
-      return shape;
+    resume: function () {
+      this._paused = false;
+      return this;
+    },
+    skip: function (num) {
+      this._skip += num;
+      return this;
+    },
+    skipNext: function () {
+      return this.skip(1);
     },
     nextTick: function (fn) {
       this.tickCallbacks.push(fn);
+      return this;
     },
     getCollisionType: function (spr) {
       if (spr instanceof Tile) {
@@ -13773,6 +13778,7 @@ define(
         cb
       ]);
       this.act();
+      return spr;
     },
     remove: function (spr, cb) {
       if (!spr || !spr._phys.active)
@@ -13784,6 +13790,7 @@ define(
         cb
       ]);
       this.act();
+      return spr;
     },
     reindex: function (spr, cb) {
       if (!spr || !spr._phys.active)
@@ -13795,6 +13802,7 @@ define(
         cb
       ]);
       this.act();
+      return this;
     },
     reindexStatic: function (cb) {
       this.actionQueue.push([
@@ -13803,6 +13811,7 @@ define(
         cb
       ]);
       this.act();
+      return this;
     },
     addCustomShape: function (spr, poly, sensor, cb) {
       if (!spr || !spr._phys.body)
@@ -13831,6 +13840,7 @@ define(
       if (!spr || !spr._phys.body)
         return;
       spr._phys.body.setMass(mass);
+      return this;
     },
     setVelocity: function (spr, vel) {
       if (!spr)
@@ -13840,6 +13850,7 @@ define(
       } else {
         spr._phys.body.setVel(vel);
       }
+      return this;
     },
     setPosition: function (spr, pos) {
       if (!spr)
@@ -13850,6 +13861,7 @@ define(
       if (spr._phys.control) {
         spr._phys.control.body.setPos(pos);
       }
+      return this;
     },
     setRotation: function (spr, rads) {
       if (!spr)
@@ -13859,6 +13871,7 @@ define(
       } else if (spr._phys.body) {
         spr._phys.body.setAngle(rads);
       }
+      return this;
     },
     update: function (dt) {
       if (this._paused)
@@ -13907,18 +13920,6 @@ define(
           self.onPostStep();
         }, 1);
       }
-    },
-    pause: function () {
-      this._paused = true;
-    },
-    resume: function () {
-      this._paused = false;
-    },
-    skip: function (num) {
-      this._skip += num;
-    },
-    skipNext: function () {
-      this.skip(1);
     },
     onPostStep: function () {
       while (this.actionQueue.length) {
@@ -13973,6 +13974,48 @@ define(
         if (cb)
           cb.call(this);
       }
+    },
+    _createBody: function (spr) {
+      var body = new cp.Body(spr.mass || 1, spr.inertia || cp.momentForBox(spr.mass || 1, spr.width, spr.height) || Infinity);
+      if (spr.mass === Infinity) {
+        body.nodeIdleTime = Infinity;
+      }
+      return body;
+    },
+    _createShape: function (spr, body, poly) {
+      var shape, hit = poly || spr.hitArea, ax = spr.anchor ? spr.anchor.x : 0, ay = spr.anchor ? spr.anchor.y : 0, aw = spr.width * ax, ah = spr.height * ay;
+      if (hit) {
+        if (hit instanceof Rectangle) {
+          var l = hit.x, r = hit.x + hit.width, b = hit.y - spr.height, t = b + hit.height;
+          l -= aw;
+          r -= aw;
+          b += spr.height - ah;
+          t += spr.height - ah;
+          shape = new cp.BoxShape2(body, new cp.BB(l, b, r, t));
+        } else if (hit instanceof Circle) {
+          var offset = new Vector(spr.width / 2 - aw + hit.x, spr.height / 2 - ah + hit.y);
+          shape = new cp.CircleShape(body, hit.radius, offset);
+        } else if (hit instanceof Polygon) {
+          var points = [], ps = hit.points;
+          for (var i = 0; i < ps.length; ++i) {
+            var p = ps[i];
+            points.push(p.x - aw);
+            points.push(p.y - ah);
+          }
+          shape = new cp.PolyShape(body, cp.convexHull(points, null, 0), cp.vzero);
+        }
+      }
+      if (!shape) {
+        shape = new cp.BoxShape2(body, new cp.BB(0, -spr.height, spr.width, 0));
+      }
+      shape.width = spr.width;
+      shape.height = spr.height;
+      shape.sprite = spr;
+      shape.setElasticity(0);
+      shape.setSensor(spr.sensor);
+      shape.setCollisionType(this.getCollisionType(spr));
+      shape.setFriction(spr.friction || 0);
+      return shape;
     }
   });
   PhysicsSystem.COLLISION_TYPE = {
@@ -14281,14 +14324,17 @@ define(
     start: function () {
       this.startTime = this.oldTime = this.now();
       this.running = true;
+      return this;
     },
     stop: function () {
       this.getElapsedTime();
       this.running = false;
+      return this;
     },
     reset: function () {
       this.elapsedTime = 0;
       this.startTime = this.oldTime = this.now();
+      return this;
     },
     getElapsedTime: function () {
       this.getDelta();
