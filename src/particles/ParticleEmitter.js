@@ -6,37 +6,153 @@ var Sprite = require('../display/Sprite'),
     inherit = require('../utils/inherit'),
     C = require('../constants');
 
+/**
+ * The ParticleEmitter is the object that is placed in the world and will fire off particles based
+ * on the rules and properties set on it. Generally you will want to create/use these by adding
+ * them to a ParticleSystem.
+ *
+ * @class ParticleEmitter
+ * @extends Container
+ * @constructor
+ * @param name {String} The string name of the particle emitter.
+ */
 var ParticleEmitter = function(name) {
     Container.call(this);
 
-    this.maxParticles = C.PARTICLES.MAX_PARTICLES;
-
+    /**
+     * The name of the ParticleEmitter instance. This should be unique in a system, and set by the param
+     * passed to the constructor.
+     *
+     * @property name
+     * @type String
+     * @readOnly
+     */
     this.name = name;
 
-    //particles are emitted in a random integer location within these values
+    /**
+     * The maximum number of particles an emitter can have active at any time.
+     * This is set from PARTICLES.MAX_PARTICLES
+     *
+     * @property maxParticles
+     * @type Number
+     * @default gf.PARTICLES.MAX_PARTICLES
+     */
+    this.maxParticles = C.PARTICLES.MAX_PARTICLES;
+
+    /**
+     * The width of the emitter, particles are emitted in a random integer location
+     * within the width and height of the emitter.
+     *
+     * @property width
+     * @type Number
+     * @default 0
+     */
     this.width = 0;
+
+    /**
+     * The height of the emitter, particles are emitted in a random integer location
+     * within the width and height of the emitter.
+     *
+     * @property height
+     * @type Number
+     * @default 0
+     */
     this.height = 0;
 
-    //options set on the particle when created
-    this.lifespan = Infinity;
+    /**
+     * The default lifespan of a particle that is emitted by this ParticleEmitter, in milliseconds
+     *
+     * @property lifespan
+     * @type Number
+     * @default 2000
+     */
+    this.lifespan = 2000;
+
+    /**
+     * The default minSpeed of a particle that is emitted by this ParticleEmitter
+     * The actual speed will be a random Vector between `minSpeed` and `maxSpeed`.
+     *
+     * @property minSpeed
+     * @type Vector
+     * @default new Vector(-100, 100)
+     */
     this.minSpeed = new Vector(-100, -100);
+
+    /**
+     * The default maxSpeed of a particle that is emitted by this ParticleEmitter
+     * The actual speed will be a random Vector between `minSpeed` and `maxSpeed`.
+     *
+     * @property maxSpeed
+     * @type Vector
+     * @default new Vector(100, 100)
+     */
     this.maxSpeed = new Vector(100, 100);
+
+    /**
+     * The default minScale of a particle that is emitted by this ParticleEmitter
+     * The actual scale will be a random number between `minScale` and `maxScale`.
+     *
+     * @property minScale
+     * @type Number
+     * @default 1
+     */
     this.minScale = 1;
+
+    /**
+     * The default maxScale of a particle that is emitted by this ParticleEmitter
+     * The actual scale will be a random number between `minScale` and `maxScale`.
+     *
+     * @property maxScale
+     * @type Number
+     * @default 1
+     */
     this.maxScale = 1;
+
+    /**
+     * The default minRotation of a particle that is emitted by this ParticleEmitter
+     * The actual rotation will be a random integer between `minRotation` and `maxRotation`.
+     *
+     * @property minRotation
+     * @type Number
+     * @default -2 * Math.PI
+     */
     this.minRotation = -2 * Math.PI;
+
+    /**
+     * The default maxRotation of a particle that is emitted by this ParticleEmitter
+     * The actual rotation will be a random integer between `minRotation` and `maxRotation`.
+     *
+     * @property maxRotation
+     * @type Number
+     * @default 2 * Math.PI
+     */
     this.maxRotation = 2 * Math.PI;
-    this.gravity = new Vector(0, 5);
 
-    //the spread of the emitted particles
-    this.spread = Math.PI / 32;
-
-    //time in ms between emissions (if explode = false)
+    /**
+     * The time in milliseconds between emissions of particles
+     *
+     * @property delay
+     * @type Number
+     * @default 100
+     */
     this.delay = 100;
 
-    //should we be actively emitting particles?
+    /**
+     * If true the emitter will emit particles, otherwise it will not.
+     *
+     * @property active
+     * @type Boolean
+     * @default false
+     */
     this.active = false;
 
-    //the pool to create particles from
+    /**
+     * The internal pool to create and reuse particles from
+     *
+     * @property particles
+     * @type Array<Sprite>
+     * @private
+     */
     this.particles = [];
 
     //some internal trackers
@@ -58,7 +174,7 @@ inherit(ParticleEmitter, Container, {
      * what kind of particle to emit.
      *
      * @method start
-     * @param [lifespan=Infinity] {Number} The lifespan of a particle in ms
+     * @param [lifespan=2000] {Number} The lifespan of a particle in ms
      * @param [delay=250] {Number} The time between each particle emission in ms
      * @param [rate=1] {Number} The number of particles to emit each emission
      * @param [total=gf.PARTICLES.MAX_EMITTER_PARTICLES] {Number} The total number of particles to emit
@@ -66,7 +182,7 @@ inherit(ParticleEmitter, Container, {
     start: function(lifespan, delay, rate, total) {
         this.active = true;
 
-        this.lifespan = lifespan || Infinity;
+        this.lifespan = lifespan || 2000;
         this.delay = delay || 250;
         this._rate = rate || 1;
         this._total = total || C.PARTICLES.MAX_EMITTER_PARTICLES;
@@ -111,6 +227,13 @@ inherit(ParticleEmitter, Container, {
             this._textures = [sprite.texture];
         }
     },
+    /**
+     * Gets a particle from the pool and sets it up.
+     *
+     * @method _get
+     * @return {Sprite} The particle to use
+     * @private
+     */
     _get: function() {
         if(this._emitted >= this._total || this._emitted > this.maxParticles)
             return null;
@@ -129,6 +252,13 @@ inherit(ParticleEmitter, Container, {
 
         return spr;
     },
+    /**
+     * Frees a particle back into the pool and hides it.
+     *
+     * @method _free
+     * @param sprite {Sprite} The particle to free
+     * @private
+     */
     _free: function(spr) {
         spr.visible = false;
         this._pool.push(spr);
@@ -136,6 +266,11 @@ inherit(ParticleEmitter, Container, {
         this.removeChild(spr);
         this._emitted--;
     },
+    /**
+     * Emits a single particle and sets the position, scale, lifespan, and velocity
+     *
+     * @method emitParticle
+     */
     emitParticle: function() {
         var part = this._get();
 
@@ -162,6 +297,13 @@ inherit(ParticleEmitter, Container, {
 
         //part.body.angularVelocity = math.randomInt(this.minRotation, this.maxRotation);
     },
+    /**
+     * Called internally by the ParticleSystem each frame to update each particle's lifespan.
+     *
+     * @method update
+     * @param dt {Number} The number of seconds that have passed since last call
+     * @private
+     */
     update: function(dt) {
         var t = dt * 1000;
 
