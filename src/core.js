@@ -87,7 +87,6 @@ var gf = {
 
     //math
     math:               require('./math/math'),
-    QuadTree:           require('./math/QuadTree'),
     Vector:             require('./math/Vector'),
 
     //particles
