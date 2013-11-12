@@ -15,7 +15,7 @@ var AudioManager = require('../audio/AudioManager'),
  * @param game {Game} The game instance this state belongs to
  * @param [name] {String} The name of this state
  * @param [physicsOptions] {Object} All the settings for the physics environment
- * @param [physicsOptions.gravity] {Vectore} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
+ * @param [physicsOptions.gravity] {Vector} The gravity constant for the physics system (default is 9.87, which is normal Earth gravity)
  * @example
  *      var state = game.state.add('battle');
  *      state.addChild(battlePlayer);

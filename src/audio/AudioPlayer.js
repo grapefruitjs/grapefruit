@@ -8,7 +8,7 @@ var AudioPlayer = require('./AudioPlayer'),
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
  * The GF Audio API was based on [Howler.js](https://github.com/goldfire/howler.js)
  *
- * @class AudoPlayer
+ * @class AudioPlayer
  * @extends Object
  * @uses EventEmitter
  * @constructor
