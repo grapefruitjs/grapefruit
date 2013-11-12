@@ -158,7 +158,8 @@ inherit(Sprite, PIXI.Sprite, {
      * Sets the sprite to visible = true
      *
      * @method show
-     * @return {Sprite} Returns itself
+     * @return {Sprite} Returns itself.
+     * @chainable
      */
     show: function() {
         this.visible = true;
@@ -168,7 +169,8 @@ inherit(Sprite, PIXI.Sprite, {
      * Sets the sprite to visible = false
      *
      * @method hide
-     * @return {Sprite} Returns itself
+     * @return {Sprite} Returns itself.
+     * @chainable
      */
     hide: function() {
         this.visible = false;
@@ -235,7 +237,8 @@ inherit(Sprite, PIXI.Sprite, {
      * @param frames {Array<Texture>} The array of texture frames
      * @param [speed] {Number} The animation speed
      * @param [loop] {Boolean} Loop the animation or not
-     * @return {Sprite} Returns itself
+     * @return {Sprite} Returns itself.
+     * @chainable
      */
     addAnimation: function(name, frames, speed, loop) {
         if(typeof name === 'object') {
@@ -258,7 +261,8 @@ inherit(Sprite, PIXI.Sprite, {
      * @method goto
      * @param frame {Number} The index of the frame to start on
      * @param [name] {String} The string name of the animation to go to
-     * @return {Sprite} Returns itself
+     * @return {Sprite} Returns itself.
+     * @chainable
      */
     goto: function(frame, anim) {
         if(typeof frame === 'string') {
@@ -282,7 +286,8 @@ inherit(Sprite, PIXI.Sprite, {
      * Starts playing the currently active animation
      *
      * @method play
-     * @return {Sprite} Returns itself
+     * @return {Sprite} Returns itself.
+     * @chainable
      */
     play: function() {
         this.playing = true;
@@ -292,7 +297,8 @@ inherit(Sprite, PIXI.Sprite, {
      * Stops playing the currently active animation
      *
      * @method stop
-     * @return {Sprite} Returns itself
+     * @return {Sprite} Returns itself.
+     * @chainable
      */
     stop: function() {
         this.playing = false;

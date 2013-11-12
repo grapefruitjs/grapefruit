@@ -117,43 +117,61 @@ inherit(PhysicsSystem, Object, {
      * Pauses physics simulation
      *
      * @method pause
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     pause: function() {
         this._paused = true;
+
+        return this;
     },
     /**
      * Resumes physics simulation
      *
      * @method resume
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     resume: function() {
         this._paused = false;
+
+        return this;
     },
     /**
      * Skips the specified number of frame steps
      *
      * @method skip
      * @param num {Number} Number of steps to skip
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     skip: function(num) {
         this._skip += num;
+
+        return this;
     },
     /**
      * Skips the next frame step
      *
      * @method skipNext
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     skipNext: function() {
-        this.skip(1);
+        return this.skip(1);
     },
     /**
      * Registers a callback to be executed on the next frame step
      *
      * @method nextTick
      * @param fn {Function} The callback to register
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     nextTick: function(fn) {
         this.tickCallbacks.push(fn);
+
+        return this;
     },
     /**
      * Returns the collision type of a sprite
@@ -175,6 +193,7 @@ inherit(PhysicsSystem, Object, {
      * @method add
      * @param spr {Sprite} The sprite to add
      * @param [callback] {Function} The callback to call once the sprite has been added
+     * @return {Sprite} The sprite that was added
      */
     add: function(spr, cb) {
         //already in space with body(s)
@@ -212,6 +231,8 @@ inherit(PhysicsSystem, Object, {
             control: control
         }, cb]);
         this.act();
+
+        return spr;
     },
     /**
      * Removes a sprite from the physics simulation
@@ -219,6 +240,7 @@ inherit(PhysicsSystem, Object, {
      * @method remove
      * @param spr {Sprite} The sprite to remove
      * @param [callback] {Function} The callback to call once the sprite has been removed
+     * @return {Sprite} The sprite that was removed
      */
     remove: function(spr, cb) {
         if(!spr || !spr._phys.active)
@@ -227,6 +249,8 @@ inherit(PhysicsSystem, Object, {
         spr._phys.active = false;
         this.actionQueue.push(['remove', spr._phys, cb]);
         this.act();
+
+        return spr;
     },
     /**
      * Reindexes a sprite's shape in the simulation, useful if it looks
@@ -235,6 +259,8 @@ inherit(PhysicsSystem, Object, {
      * @method reindex
      * @param spr {Sprite} The sprite to reindex
      * @param [callback] {Function} The callback to call once the sprite has been reindexed
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     reindex: function(spr, cb) {
         if(!spr || !spr._phys.active)
@@ -243,16 +269,22 @@ inherit(PhysicsSystem, Object, {
         spr._phys._cb = cb;
         this.actionQueue.push(['reindex', spr._phys.shape, cb]);
         this.act();
+
+        return this;
     },
     /**
      * Reindexes all static bodies in the simulation.
      *
      * @method reindexStatic
      * @param [callback] {Function} The callback to call once reindexing completes
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     reindexStatic: function(cb) {
         this.actionQueue.push(['reindexStatic', null, cb]);
         this.act();
+
+        return this;
     },
     /**
      * Adds a custom shape to a sprite, useful for a single sprite to have multiple
@@ -263,6 +295,7 @@ inherit(PhysicsSystem, Object, {
      * @param poly {Circle|Rectangle|Polygon} The shape to create
      * @param sensor {Boolean} Is this a sensor shape, if so you will get a collision callback, but no solve
      * @param [callback] {Function} The callback to call once the shape has been added
+     * @return {cp.Shape} The shape that was created
      */
     addCustomShape: function(spr, poly, sensor, cb) {
         if(!spr || !spr._phys.body)
@@ -290,12 +323,16 @@ inherit(PhysicsSystem, Object, {
      * @method setMass
      * @param spr {Sprite} The sprite to set the mass for
      * @param mass {Number} The mass to set
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     setMass: function(spr, mass) {
         if(!spr || !spr._phys.body)
             return;
 
         spr._phys.body.setMass(mass);
+
+        return this;
     },
     /**
      * Sets the velocity of a sprite's physics body.
@@ -303,6 +340,8 @@ inherit(PhysicsSystem, Object, {
      * @method setVelocity
      * @param spr {Sprite} The sprite to set the velocity for
      * @param velocity {Vector} The velocity to set to
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     setVelocity: function(spr, vel) {
         if(!spr)
@@ -316,6 +355,8 @@ inherit(PhysicsSystem, Object, {
         else {
             spr._phys.body.setVel(vel);
         }
+
+        return this;
     },
     /**
      * Sets the position of a sprite's physics body.
@@ -323,6 +364,8 @@ inherit(PhysicsSystem, Object, {
      * @method setPosition
      * @param spr {Sprite} The sprite to set the position for
      * @param position {Vector} The position to set to
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     setPosition: function(spr, pos) {
         if(!spr)
@@ -337,6 +380,8 @@ inherit(PhysicsSystem, Object, {
         if(spr._phys.control) {
             spr._phys.control.body.setPos(pos);
         }
+
+        return this;
     },
     /**
      * Sets the rotation of a sprite's physics body.
@@ -344,6 +389,8 @@ inherit(PhysicsSystem, Object, {
      * @method setRotation
      * @param spr {Sprite} The sprite to set the rotation for
      * @param rotation {Number} The rotation to set to in radians
+     * @return {PhysicsSystem} Returns itself.
+     * @chainable
      */
     setRotation: function(spr, rads) {
         if(!spr)
@@ -358,6 +405,7 @@ inherit(PhysicsSystem, Object, {
             spr._phys.body.setAngle(rads);
         }
 
+        return this;
     },
     /**
      * Called each frame by the game state to update the physics simulations

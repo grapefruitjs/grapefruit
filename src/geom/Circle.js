@@ -74,7 +74,8 @@ inherit(Circle, Object, {
      *
      * @method copy
      * @param circle {Circle} The circle to copy vlaues from
-     * @return {Circle} Returns itself
+     * @return {Circle} Returns itself.
+     * @chainable
      */
     copy: function(circle) {
         this.x = circle.x;
@@ -142,9 +143,13 @@ inherit(Circle, Object, {
      * Recalculates the scaled radius
      *
      * @method recalc
+     * @return {Circle} Returns itself.
+     * @chainable
      */
     recalc: function() {
         this.radius = this._radius * this.scale.x;
+
+        return this;
     }
 });
 

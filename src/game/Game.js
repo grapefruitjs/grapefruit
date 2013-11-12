@@ -282,7 +282,8 @@ inherit(Game, Object, {
      * @method resize
      * @param width {Number} Width to resize to
      * @param height {Number} Height to resize to
-     * @return {Game} Returns itself for chainability
+     * @return {Game} Returns itself.
+     * @chainable
      */
     resize: function(w, h) {
         this.renderer.resize(w, h);
@@ -302,7 +303,8 @@ inherit(Game, Object, {
      * Requests that the browser go into fullscreen mode.
      *
      * @method requestFullscreen
-     * @return {Game} Returns itself for chainability
+     * @return {Game} Returns itself.
+     * @chainable
      */
     requestFullscreen: function() {
         var elem = this.renderer.view;
@@ -321,7 +323,8 @@ inherit(Game, Object, {
      * Begins the render loop.
      *
      * @method render
-     * @return {Game} Returns itself for chainability
+     * @return {Game} Returns itself.
+     * @chainable
      */
     render: function() {
         this.clock.start();

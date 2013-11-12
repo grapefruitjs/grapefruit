@@ -6,6 +6,7 @@ var support = require('../utils/support'),
  *
  * @class math
  * @extends Object
+ * @static
  */
 var math = {
     /**

@@ -121,7 +121,8 @@ inherit(Polygon, Object, {
      *
      * @method copy
      * @param polygon {Polygon} The polygon to copy vlaues from
-     * @return {Polygon} Returns itself
+     * @return {Polygon} Returns itself.
+     * @chainable
      */
     copy: function(poly) {
         //copy the position
@@ -193,6 +194,8 @@ inherit(Polygon, Object, {
      * based on the relative points
      *
      * @method recalc
+     * @return {Polygon} Returns itself.
+     * @chainable
      */
     recalc: function() {
         var points = this._points,
@@ -223,6 +226,8 @@ inherit(Polygon, Object, {
             this.edges.push(e);
             this.normals.push(n);
         }
+
+        return this;
     }
 });
 

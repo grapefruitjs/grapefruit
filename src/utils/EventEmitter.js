@@ -15,6 +15,8 @@ var EventEmitter = function() {
      * @method on
      * @param type {String} The event name to listen for
      * @param listener {Function} The function to execute when the event happens
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.addEventListener = this.on = function(type, listener) {
         if(typeof listener !== 'function')
@@ -42,6 +44,8 @@ var EventEmitter = function() {
      * @method emit
      * @param type {String} The event name to emit
      * @param data {mixed} Any data you want passed along with the event
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.dispatchEvent = this.emit = function(type) {
         var handler, len, args, i, listeners;
@@ -97,6 +101,8 @@ var EventEmitter = function() {
      * @method off
      * @param type {String} The event name to emit
      * @param listener {Function} The function to remove
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.removeEventListener = this.off = function(type, listener) {
         var list, position, length, i;
@@ -132,6 +138,8 @@ var EventEmitter = function() {
                 list.splice(position, 1);
             }
         }
+
+        return this;
     };
 
     /**
@@ -140,6 +148,8 @@ var EventEmitter = function() {
      * @method once
      * @param type {String} The event name to listen for
      * @param listener {Function} the callback to call when the event occurs
+     * @return {mixed} Returns itself.
+     * @chainable
      */
     this.once = function(type, listener) {
         if(typeof listener !== 'function')

@@ -284,7 +284,8 @@ inherit(AudioPlayer, Object, {
      * @method play
      * @param [sprite] {String} Plays from the specified position in the sound sprite definition.
      * @param [callback] {Function} Returns the unique playback id for this sound instance.
-     * @return {AudioPlayer}
+     * @return {AudioPlayer} Returns itself.
+     * @chainable
      */
     play: function(sprite, cb) {
         var self = this;
@@ -414,7 +415,8 @@ inherit(AudioPlayer, Object, {
      * @method pause
      * @param [id] {String} The play instance ID.
      * @param [timerId] {String} Clear the correct timeout ID.
-     * @return {AudioPlayer}
+     * @return {AudioPlayer} Returns itself.
+     * @chainable
      */
     pause: function(id, timerId) {
         var self = this;
@@ -462,7 +464,8 @@ inherit(AudioPlayer, Object, {
      * @method stop
      * @param [id] {String} The play instance ID.
      * @param [timerId] {String} Clear the correct timeout ID.
-     * @return {AudioPlayer}
+     * @return {AudioPlayer} Returns itself.
+     * @chainable
      */
     stop: function(id, timerId) {
         var self = this;
@@ -507,7 +510,8 @@ inherit(AudioPlayer, Object, {
      *
      * @method mute
      * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
+     * @return {AudioPlayer} Returns itself.
+     * @chainable
      */
     mute: function(id) {
         return this.setMuted(true, id);
@@ -517,7 +521,8 @@ inherit(AudioPlayer, Object, {
      *
      * @method unmute
      * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
+     * @return {AudioPlayer} Returns itself.
+     * @chainable
      */
     unmute: function(id) {
         return this.setMuted(false, id);
@@ -528,7 +533,8 @@ inherit(AudioPlayer, Object, {
      * @method setMuted
      * @param muted {Boolean}
      * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
+     * @return {AudioPlayer} Returns itself.
+     * @chainable
      */
     setMuted: function(muted, id) {
         var self  = this;
@@ -559,7 +565,8 @@ inherit(AudioPlayer, Object, {
      * @method seek
      * @param pos {Number} The position to move current playback to.
      * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
+     * @return {AudioPlayer} Returns itself.
+     * @chainable
      */
     seek: function(pos, id) {
         var self = this;
@@ -628,7 +635,8 @@ inherit(AudioPlayer, Object, {
      * @param len {Number} Time in milliseconds to fade.
      * @param [id] {String} The play instance ID.
      * @param [callback] {Function} Fired when the fade is complete.
-     * @return {AudioPlayer}
+     * @return {AudioPlayer} Returns itself.
+     * @chainable
      */
     fade: function(from, to, len, id, cb) {
         var self = this,
@@ -676,7 +684,8 @@ inherit(AudioPlayer, Object, {
      * @method setVolume
      * @param vol {Number} The current volume
      * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
+     * @return {AudioPlayer} Returns itself.
+     * @chainable
      */
     setVolume: function(vol, id) {
         var self = this;
@@ -722,7 +731,8 @@ inherit(AudioPlayer, Object, {
      * @param y {Number} The y-position of the playback from -1000.0 to 1000.0
      * @param z {Number} The z-position of the playback from -1000.0 to 1000.0
      * @param [id] {String} The play instance ID.
-     * @return {AudioPlayer}
+     * @return {AudioPlayer} Returns itself.
+     * @chainable
      */
     setPosition: function(x, y, z, id) {
         var self = this;

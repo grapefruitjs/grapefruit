@@ -147,6 +147,7 @@ inherit(Loader, Object, {
      *
      * @method reset
      * @return {Loader} Returns itself.
+     * @chainable
      */
     reset: function() {
         this.progress = 0;
@@ -170,6 +171,7 @@ inherit(Loader, Object, {
      * @param [options] {Object} Extra options to apply to the asset, different asset types may require extra options
      * @param [options.crossOrigin=false] {Boolean} True if an image load should be treated as crossOrigin
      * @return {Loader} Returns itself.
+     * @chainable
      */
     add: function(type, key, url, opts) {
         var entry = {
@@ -203,6 +205,7 @@ inherit(Loader, Object, {
      * @param url {String} URL of image file.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
      * @return {Loader} Returns itself.
+     * @chainable
      */
     image: function(key, url, overwrite) {
         if(overwrite || !this.hasKey(key))
@@ -219,6 +222,7 @@ inherit(Loader, Object, {
      * @param url {String} URL of image file.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
      * @return {Loader} Returns itself.
+     * @chainable
      */
     text: function(key, url, overwrite) {
         if(overwrite || !this.hasKey(key))
@@ -238,6 +242,7 @@ inherit(Loader, Object, {
      * @param numFrames {Number} How many frames in this sprite sheet.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
      * @return {Loader} Returns itself.
+     * @chainable
      */
     spritesheet: function(key, url, frameWidth, frameHeight, numFrames, overwrite) {
         if(overwrite || !this.hasKey(key))
@@ -258,6 +263,7 @@ inherit(Loader, Object, {
      * @param urls {Array<String>} URLs of audio files.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
      * @return {Loader} Returns itself.
+     * @chainable
      */
     audio: function(key, urls, overwrite) {
         if(overwrite || !this.hasKey(key))
@@ -276,6 +282,7 @@ inherit(Loader, Object, {
      * @param [format=FILE_FORMAT.JSON] {Number} The format of the map data.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
      * @return {Loader} Returns itself.
+     * @chainable
      */
     tilemap: function(key, url, data, format, overwrite) {
         if(overwrite || !this.hasKey(key)) {
@@ -316,6 +323,7 @@ inherit(Loader, Object, {
      * @param [format=FILE_FORMAT.XML] {FILE_FORMAT} The format of the bitmap font data.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
      * @return {Loader} Returns itself.
+     * @chainable
      */
     bitmapFont: function(key, textureUrl, dataUrl, data, format, overwrite) {
         if(overwrite || !this.hasKey(key)) {
@@ -352,6 +360,7 @@ inherit(Loader, Object, {
      * @param [dataUrl] {string} The url of the texture atlas data file (json/xml)
      * @param [data] {object} A JSON or XML data object (to use instead of loading from a URL)
      * @return {Loader} Returns itself.
+     * @chainable
      */
     atlasJSONArray: function(key, textureURL, dataUrl, data) {
         return this.atlas(key, textureURL, dataUrl, data, C.ATLAS_FORMAT.JSON_ARRAY);
@@ -366,6 +375,7 @@ inherit(Loader, Object, {
      * @param [dataUrl] {string} The url of the texture atlas data file (json/xml)
      * @param [data] {object} A JSON or XML data object (to use instead of loading from a URL)
      * @return {Loader} Returns itself.
+     * @chainable
      */
     atlasJSONHash: function(key, textureURL, dataUrl, data) {
         return this.atlas(key, textureURL, dataUrl, data, C.ATLAS_FORMAT.JSON_HASH);
@@ -380,6 +390,7 @@ inherit(Loader, Object, {
      * @param [dataUrl] {string} The url of the texture atlas data file (json/xml)
      * @param [data] {object} A JSON or XML data object (to use instead of loading from a URL)
      * @return {Loader} Returns itself.
+     * @chainable
      */
     atlasXML: function(key, textureURL, dataUrl, data) {
         return this.atlas(key, textureURL, dataUrl, data, C.ATLAS_FORMAT.XML_STARLING);
@@ -394,6 +405,7 @@ inherit(Loader, Object, {
      * @param [format] {number} A value describing the format of the data.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
      * @return {Loader} Returns itself.
+     * @chainable
      */
     atlas: function(key, textureUrl, dataUrl, data, format, overwrite) {
         if(overwrite || !this.hasKey(key)) {
@@ -427,6 +439,7 @@ inherit(Loader, Object, {
      *
      * @method start
      * @return {Loader} Returns itself.
+     * @chainable
      */
     start: function() {
         if(this.isLoading) return;
@@ -458,6 +471,7 @@ inherit(Loader, Object, {
      *
      * @method loadFile
      * @return {Loader} Returns itself.
+     * @chainable
      */
     loadFile: function() {
         var file = this.assets[this.keys.shift()],

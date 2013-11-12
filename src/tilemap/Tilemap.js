@@ -197,6 +197,8 @@ inherit(Tilemap, Container, {
      * Spawns all the objects in the ObjectGroups of this map
      *
      * @method spawnObjects
+     * @return {Tilemap} Returns itself.
+     * @chainable
      */
     spawnObjects: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
@@ -213,6 +215,8 @@ inherit(Tilemap, Container, {
      * Spawns all the objects in the ObjectGroups of this map
      *
      * @method despawnObjects
+     * @return {Tilemap} Returns itself.
+     * @chainable
      */
     despawnObjects: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
@@ -229,6 +233,8 @@ inherit(Tilemap, Container, {
      * Clears all the tiles that are currently used on all tile layers
      *
      * @method clearTiles
+     * @return {Tilemap} Returns itself.
+     * @chainable
      */
     clearTiles: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
@@ -294,7 +300,8 @@ inherit(Tilemap, Container, {
      * @method pan
      * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
      * @param y {Number} The y ammount to pan
-     * @return {Tilemap} Returns itself for chainability
+     * @return {Tilemap} Returns itself.
+     * @chainable
      */
     pan: function(x, y) {
         for(var i = 0, il = this.children.length; i < il; ++i) {
@@ -314,7 +321,8 @@ inherit(Tilemap, Container, {
      * @param y {Number} The y offset to consider the top-left
      * @param width {Number} The width (in pixels) to render
      * @param height {Number} The height (in pixels) to render
-     * @return {Tilemap}
+     * @return {Tilemap} Returns itself.
+     * @chainable
      */
     render: function(x, y, width, height) {
         //defaults

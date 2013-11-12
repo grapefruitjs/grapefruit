@@ -22,7 +22,8 @@ inherit(Vector, Object, {
      * @method set
      * @param x {Number} The x component of the vector
      * @param y {Number} The y component of the vector
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     set: function(x, y) {
         this.x = x;
@@ -35,7 +36,8 @@ inherit(Vector, Object, {
      *
      * @method setX
      * @param x {Number} The x component of the vector
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     setX: function(x) {
         this.x = x;
@@ -47,7 +49,8 @@ inherit(Vector, Object, {
      *
      * @method setY
      * @param y {Number} The y component of the vector
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     setY: function(y) {
         this.y = y;
@@ -60,7 +63,8 @@ inherit(Vector, Object, {
      * @method setComponent
      * @param index {Number} The index of the component to set (0 = x, 1 = y)
      * @param value {Number} The value to set the component to
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     setComponent: function(index, value) {
         switch(index) {
@@ -98,7 +102,8 @@ inherit(Vector, Object, {
      *
      * @method copy
      * @param vector {Vector} The vector to copy the values from
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     copy: function(v) {
         this.x = v.x;
@@ -110,7 +115,8 @@ inherit(Vector, Object, {
      * Floors the vector components
      *
      * @method floor
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     floor: function () {
         this.x = Math.floor(this.x);
@@ -122,7 +128,8 @@ inherit(Vector, Object, {
      * Ceils the vector components
      *
      * @method ceil
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     ceil: function () {
         this.x = Math.ceil(this.x);
@@ -135,7 +142,8 @@ inherit(Vector, Object, {
      *
      * @method add
      * @param vector {Vector} The vector to add to this one
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     add: function(v) {
         this.x += v.x;
@@ -149,7 +157,8 @@ inherit(Vector, Object, {
      * @method addVectors
      * @param vector1 {Vector}
      * @param vector2 {Vector}
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     addVectors: function(a, b) {
         this.x = a.x + b.x;
@@ -162,7 +171,8 @@ inherit(Vector, Object, {
      *
      * @method addScalar
      * @param scalar {Number} The scalar value to add
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     addScalar: function(s) {
         this.x += s;
@@ -175,7 +185,8 @@ inherit(Vector, Object, {
      *
      * @method sub
      * @param vector {Vector} The vector to subtract from this one
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     sub: function(v) {
         this.x -= v.x;
@@ -189,7 +200,8 @@ inherit(Vector, Object, {
      * @method subVectors
      * @param vector1 {Vector}
      * @param vector2 {Vector}
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     subVectors: function(a, b) {
         this.x = a.x - b.x;
@@ -202,7 +214,8 @@ inherit(Vector, Object, {
      *
      * @method multiplyScalar
      * @param scalar {Number} The value to multiply by
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     multiplyScalar: function(s) {
         this.x *= s;
@@ -215,7 +228,8 @@ inherit(Vector, Object, {
      *
      * @method divideScalar
      * @param scalar {Number} The value to divide by
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     divideScalar: function(s) {
         if(s !== 0) {
@@ -232,7 +246,8 @@ inherit(Vector, Object, {
      *
      * @method min
      * @param vector {Vector} The vector to compare to
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     min: function(v) {
         if(this.x > v.x) {
@@ -250,7 +265,8 @@ inherit(Vector, Object, {
      *
      * @method max
      * @param vector {Vector} The vector to compare to
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     max: function(v) {
         if(this.x < v.x) {
@@ -269,7 +285,8 @@ inherit(Vector, Object, {
      * @method max
      * @param min {Vector} The minimum value a component can be
      * @param max {Vector} The maximum value a component can be
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     clamp: function(min, max) {
         // This function assumes min < max, if this assumption
@@ -292,7 +309,8 @@ inherit(Vector, Object, {
      * Negates this vector (multiplies by -1)
      *
      * @method negate
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     negate: function() {
         return this.multiplyScalar(-1);
@@ -301,7 +319,8 @@ inherit(Vector, Object, {
      * Project this vector on to another vector.
      *
      * @param v {Vector} The vector to project onto.
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     project: function(v) {
         var amt = this.dot(v) / v.lengthSq();
@@ -314,7 +333,8 @@ inherit(Vector, Object, {
      * Project this vector onto a vector of unit length.
      *
      * @param v {Vector} The unit vector to project onto.
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     projectN: function(v) {
         var amt = this.dot(v);
@@ -327,7 +347,8 @@ inherit(Vector, Object, {
      * Reflect this vector on an arbitrary axis.
      *
      * @param axis {Vector} The vector representing the axis.
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     reflect: function(axis) {
         var x = this.x;
@@ -342,7 +363,8 @@ inherit(Vector, Object, {
      * Reflect this vector on an arbitrary axis (represented by a unit vector)
      *
      * @param axis {Vector} The unit vector representing the axis.
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     reflectN: function(axis) {
         var x = this.x;
@@ -416,7 +438,8 @@ inherit(Vector, Object, {
      *
      * @method setLength
      * @param length {Number} The length to set this vector to
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     setLength: function(l) {
         var oldLength = this.length();
@@ -433,7 +456,8 @@ inherit(Vector, Object, {
      * @method lerp
      * @param vector {Vector} The vector to interpolate with
      * @param alpha {Number} The amount to interpolate [0-1] or extrapolate (1-]
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     lerp: function(v, alpha) {
         this.x += (v.x - this.x) * alpha;
@@ -444,7 +468,8 @@ inherit(Vector, Object, {
     /**
      * Rotates the vector by 90 degrees
      *
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     perp: function() {
         var x = this.x;
@@ -459,7 +484,8 @@ inherit(Vector, Object, {
      * @method rotate
      * @param angle {Number} The angle in radians to rotate by
      * @param anchor {Vector} The anchor point to rotate around
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     rotate: function(angle, anchor) {
         var dist = anchor.distanceTo(this);
@@ -474,7 +500,8 @@ inherit(Vector, Object, {
      *
      * @method equals
      * @param vector {Vector} The vector to compare with
-     * @return {Vector} Returns itself
+     * @return {Vector} Returns itself.
+     * @chainable
      */
     equals: function(v) {
         return ((v.x === this.x) && (v.y === this.y));
@@ -506,6 +533,7 @@ inherit(Vector, Object, {
  * @type Vector
  * @readOnly
  * @static
+ * @final
  */
 Vector.ZERO = new Vector();
 
