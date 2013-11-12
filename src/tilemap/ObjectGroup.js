@@ -78,9 +78,20 @@ var ObjectGroup = function(map, group) {
     this.objects = group.objects;
 
     //translate some tiled properties to our inherited properties
-    this.type = group.type;
-    this.alpha = group.opacity;
-    this.visible = group.visible;
+    /**
+     * The type of the layer, should always be 'objectgroup'
+     *
+     * @property type
+     * @type String
+     * @default 'objectgroup'
+     */
+    this.type = group.type || 'objectgroup';
+
+    //translate some tiled properties to our inherited properties
+    this.position.x = group.x || 0;
+    this.position.y = group.y || 0;
+    this.alpha = group.opacity !== undefined ? group.opacity : 1;
+    this.visible = group.visible !== undefined ? group.visible : true;
 };
 
 inherit(ObjectGroup, Container, {
@@ -260,9 +271,26 @@ inherit(ObjectGroup, Container, {
 
         return this;
     },
+    /**
+     * Called internally whenever an event happens on an object, used to echo to the parent.
+     *
+     * @method onObjectEvent
+     * @param eventName {String} The name of the event
+     * @param obj {Container|Sprite} The object the event happened to
+     * @param data {mixed} The event data that was passed along
+     * @private
+     */
     onObjectEvent: function(eventName, obj, data) {
         this.parent.onObjectEvent(eventName, obj, data);
     },
+    /**
+     * Creates a polygon from the vertices in a polygon Tiled property
+     *
+     * @method _getPolygon
+     * @param obj {Object} The polygon Tiled object
+     * @return {Polygon} The polygon created
+     * @private
+     */
     _getPolygon: function(o) {
         var points = [];
         for(var i = 0, il = o.polygon.length; i < il; ++i) {
@@ -271,6 +299,14 @@ inherit(ObjectGroup, Container, {
 
         return new Polygon(points);
     },
+    /**
+     * Creates a polyline from the vertices in a polyline Tiled property
+     *
+     * @method _getPolyline
+     * @param obj {Object} The polyline Tiled object
+     * @return {Polygon} The polyline created
+     * @private
+     */
     _getPolyline: function(o) {
         var points = [];
         for(var i = 0, il = o.polyline.length; i < il; ++i) {
@@ -279,12 +315,37 @@ inherit(ObjectGroup, Container, {
 
         return new Polygon(points);
     },
+    /**
+     * Creates a ellipse from the vertices in a ellipse Tiled property
+     *
+     * @method _getEllipse
+     * @param obj {Object} The ellipse Tiled object
+     * @return {Ellipse} The ellipse created
+     * @private
+     */
     _getEllipse: function(o) {
         return new Ellipse(0, 0, o.width, o.height);
     },
+    /**
+     * Creates a rectangle from the vertices in a rectangle Tiled property
+     *
+     * @method _getRectangle
+     * @param obj {Object} The rectangle Tiled object
+     * @return {Rectangle} The rectangle created
+     * @private
+     */
     _getRectangle: function(o) {
         return new Rectangle(0, 0, o.width, o.height);
     },
+    /**
+     * Checks if an object should be marked as interactive
+     *
+     * @method _getInteractive
+     * @param set {Tileset} The tileset for the object
+     * @param props {Object} The Tiled properties object
+     * @return {Boolean} Whether or not the item is interactive
+     * @private
+     */
     _getInteractive: function(set, props) {
         //TODO: This is wrong, if 'false' is set on a lower level a higher level will override
         //first check the lowest level value (on the tile iteself)
@@ -303,9 +364,23 @@ inherit(ObjectGroup, Container, {
     despawn: function() {
         return Container.prototype.removeAllChildren.call(this);
     },
+    /**
+     * Destroys the group completely
+     *
+     * @method destroy
+     */
     destroy: function() {
         this.despawn();
-        return Container.prototype.destroy.call(this);
+        return Container.prototype.destroy.call(this);all(this, group);
+
+        this.map = null;
+        this.game = null;
+        this.state = null;
+        this.name = null;
+        this.color = null;
+        this.properties = null;
+        this.objects = null;
+        this.type = null;
     }
 });
 

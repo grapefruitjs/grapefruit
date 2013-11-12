@@ -163,25 +163,21 @@ inherit(Container, PIXI.DisplayObjectContainer, {
     },
 
     /**
-     * Removes a child from the object.
+     * Removes all children from the object.
      *
      * @method removeAllChildren
      * @return {Container} Returns iteself
      */
     removeAllChildren: function() {
         while(this.children.length) {
-            if(this.children[0].destroy) {
-                this.children[0].destroy();
-            } else {
-                this.removeChild(this.children[0]);
-            }
+            this.removeChild(this.children[0]);
         }
 
         return this;
     },
 
     /**
-     * Brings a child to the top of the Z pile
+     * Brings a child to the top of the Z pile.
      *
      * @method bringChildToTop
      * @param child {Container|Sprite} Any container or sprite
@@ -196,16 +192,33 @@ inherit(Container, PIXI.DisplayObjectContainer, {
     },
 
     /**
-     * Destroys this objects
+     * Destroys this object.
      *
      * @method destroy
      */
     destroy: function() {
         this.disablePhysics();
-        this.removeAllChildren();
+        this.destroyAllChildren();
 
         if(this.parent)
             this.parent.removeChild(this);
+    },
+
+    /**
+     * Destroys all the children of the object.
+     *
+     * @method destroyAllChildren
+     */
+    destroyAllChildren: function() {
+        while(this.children.length) {
+            if(this.children[0].destroy) {
+                this.children[0].destroy();
+            } else {
+                this.removeChild(this.children[0]);
+            }
+        }
+
+        return this;
     },
 
     /**

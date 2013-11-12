@@ -225,6 +225,11 @@ inherit(Tilemap, Container, {
 
         return this;
     },
+    /**
+     * Clears all the tiles that are currently used on all tile layers
+     *
+     * @method clearTiles
+     */
     clearTiles: function() {
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
