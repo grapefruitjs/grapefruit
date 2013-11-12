@@ -390,7 +390,7 @@ var utils = {
         if(obj.hitArea)
             obj.hitArea = utils.parseHitArea(obj.hitArea);
 
-        if(obj.static || obj.sensor) {
+        if(obj.body === 'static' || obj.sensor) {
             obj.mass = Infinity;
             obj.inertia = Infinity;
         }

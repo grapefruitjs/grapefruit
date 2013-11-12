@@ -388,12 +388,7 @@ inherit(Tilelayer, Container, {
         tile.collisionType = props.type;
         tile.interactive = interactive;
         tile.hitArea = hitArea;
-
-        if(props.body === 'static') {
-            tile.mass = Infinity;
-        } else {
-            tile.mass = props.mass || 0;
-        }
+        tile.mass = props.mass || 0;
 
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);
