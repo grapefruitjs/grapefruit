@@ -56,25 +56,25 @@ var EventEmitter = function() {
 
         if(typeof handler === 'function') {
             switch(arguments.length) {
-            // fast cases
-            case 1:
-                handler.call(this);
-                break;
-            case 2:
-                handler.call(this, arguments[1]);
-                break;
-            case 3:
-                handler.call(this, arguments[1], arguments[2]);
-                break;
-            // slower
-            default:
-                len = arguments.length;
-                args = new Array(len - 1);
-                for (i = 1; i < len; i++)
-                    args[i - 1] = arguments[i];
+                // fast cases
+                case 1:
+                    handler.call(this);
+                    break;
+                case 2:
+                    handler.call(this, arguments[1]);
+                    break;
+                case 3:
+                    handler.call(this, arguments[1], arguments[2]);
+                    break;
+                // slower
+                default:
+                    len = arguments.length;
+                    args = new Array(len - 1);
+                    for (i = 1; i < len; i++)
+                        args[i - 1] = arguments[i];
 
-                handler.apply(this, args);
-                break;
+                    handler.apply(this, args);
+                    break;
             }
         } else if (typeof handler === 'object') {
             len = arguments.length;
