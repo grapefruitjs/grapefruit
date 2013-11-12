@@ -190,6 +190,34 @@ var AudioPlayer = function(manager, audio, settings) {
     }
 
     this._load();
+
+    /**
+     * Fired when the player is ready to play
+     *
+     * @event ready
+     * @param source {String} The source URL that will be used as the audio source
+     */
+
+    /**
+     * Fired when audio starts playing
+     *
+     * @event play
+     * @param id {String} The id of the node that is used to play the audio
+     */
+
+    /**
+     * Fired when audio is paused
+     *
+     * @event paused
+     * @param id {String} The id of the node that is paused
+     */
+
+    /**
+     * Fired when audio finishes playing
+     *
+     * @event end
+     * @param id {String} The id of the node that has finished playing
+     */
 };
 
 inherit(AudioPlayer, Object, {
@@ -239,10 +267,7 @@ inherit(AudioPlayer, Object, {
             //check if loaded
             if(!this._loaded) {
                 this._loaded = true;
-                this.emit('load', {
-                    message: 'Audio file loaded.',
-                    data: this.src
-                });
+                this.emit('ready', this.src);
             }
 
             //if autoplay then start it
@@ -276,7 +301,7 @@ inherit(AudioPlayer, Object, {
 
         //if we haven't loaded yet, wait until we do
         if(!this._loaded) {
-            this.on('load', function() {
+            this.on('ready', function() {
                 self.play(sprite, cb);
             });
 
@@ -318,10 +343,7 @@ inherit(AudioPlayer, Object, {
                     }
 
                     //fire off the end event
-                    self.emit('end', {
-                        message: 'Audio has finished playing',
-                        data: o.id
-                    });
+                    self.emit('end', o.id);
                 }, duration * 1000);
 
                 //store the timer
@@ -378,10 +400,7 @@ inherit(AudioPlayer, Object, {
                 }
             }
 
-            self.emit('play', {
-                message: 'Playing audio file',
-                data: soundId
-            });
+            self.emit('play', soundId);
 
             if(typeof cb === 'function')
                 cb(soundId);
@@ -433,10 +452,7 @@ inherit(AudioPlayer, Object, {
             }
         }
 
-        this.emit('pause', {
-            message: 'Audio file paused',
-            data: id
-        });
+        this.emit('pause', activeNode ? activeNode.id : id);
 
         return this;
     },
@@ -550,7 +566,7 @@ inherit(AudioPlayer, Object, {
 
         //if we haven't loaded this sound yet, wait until it is to seek it
         if(!this._loaded) {
-            this.on('load', function() {
+            this.on('ready', function() {
                 self.seek(pos, id);
             });
 
@@ -585,7 +601,7 @@ inherit(AudioPlayer, Object, {
 
         //if we haven't loaded this sound yet, wait until it is to seek it
         if(!this._loaded) {
-            this.on('load', function() {
+            this.on('ready', function() {
                 self.getPosition(id);
             });
 
@@ -628,7 +644,7 @@ inherit(AudioPlayer, Object, {
 
         //if we haven't loaded this sound yet, wait until it is to seek it
         if(!this._loaded) {
-            this.on('load', function() {
+            this.on('ready', function() {
                 self.fade(from, to, len, id, cb);
             });
 
@@ -922,10 +938,7 @@ inherit(AudioPlayer, Object, {
         //fire the load event
         if(!this._loaded) {
             this._loaded = true;
-            this.emit('load', {
-                message: 'Audio file loaded.',
-                data: this.src
-            });
+            this.emit('ready', this.src);
         }
 
         //if autoplay is appropriate
