@@ -210,6 +210,7 @@ inherit(Clock, Object, {
      * Gets the current time from the underlying timer
      *
      * @method now
+     * @return {Number} The current timestamp
      * @example
      *      clock.now();
      */
@@ -220,34 +221,46 @@ inherit(Clock, Object, {
      * Starts the timer
      *
      * @method start
+     * @return {Clock} Returns itself.
+     * @chainable
      * @example
      *      clock.start();
      */
     start: function() {
         this.startTime = this.oldTime = this.now();
         this.running = true;
+
+        return this;
     },
     /**
      * Stops the timer
      *
      * @method stop
+     * @return {Clock} Returns itself.
+     * @chainable
      * @example
      *      clock.stop();
      */
     stop: function() {
         this.getElapsedTime();
         this.running = false;
+
+        return this;
     },
     /**
      * Resets the timer
      *
-     * @method stop
+     * @method reset
+     * @return {Clock} Returns itself.
+     * @chainable
      * @example
-     *      clock.stop();
+     *      clock.reset();
      */
     reset: function() {
         this.elapsedTime = 0;
         this.startTime = this.oldTime = this.now();
+
+        return this;
     },
     /**
      * Gets the total time that the timer has been running

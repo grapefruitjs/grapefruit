@@ -209,6 +209,7 @@ inherit(ObjectPool, Object, {
      * pulls one that is already created out of the pool
      *
      * @method create
+     * @return {mixed} The instance of the object pulled from the pool
      */
     create: function() {
         var o = this.pool.pop();

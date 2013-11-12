@@ -249,7 +249,8 @@ inherit(World, Container, {
      * @method pan
      * @param x {Number|Point} The x amount to pan, if a Vector is passed the y param is ignored
      * @param y {Number} The y ammount to pan
-     * @return {World} Returns itself for chainability
+     * @return {World} Returns itself.
+     * @chainable
      */
     pan: function(x, y) {
         y = math.floor(x.y !== undefined ? x.y : (y || 0));
@@ -273,7 +274,8 @@ inherit(World, Container, {
      * @method resize
      * @param width {Number} Width to resize to
      * @param height {Number} Height to resize to
-     * @return {World} Returns itself for chainability
+     * @return {World} Returns itself.
+     * @chainable
      */
     resize: function(w, h) {
         for(var i = 0, il = this.children.length; i &lt; il; ++i) {

@@ -435,7 +435,8 @@ inherit(Camera, Container, {
      * @method follow
      * @param sprite {Sprite} The sprite to follow
      * @param [style=CAMERA_FOLLOW.LOCKON] {CAMERA_FOLLOW} The style of following
-     * @return {Camera} Returns iteself for chainability
+     * @return {Camera} Returns itself.
+     * @chainable
      */
     follow: function(spr, style) {
         if(!(spr instanceof Sprite))
@@ -488,7 +489,8 @@ inherit(Camera, Container, {
      * Stops following any sprites
      *
      * @method unfollow
-     * @return {Camera} Returns iteself for chainability
+     * @return {Camera} Returns itself.
+     * @chainable
      */
     unfollow: function() {
         this._target = null;
@@ -500,7 +502,8 @@ inherit(Camera, Container, {
      *
      * @method focusSprite
      * @param sprite {Sprite} The sprite to focus on
-     * @return {Camera} Returns iteself for chainability
+     * @return {Camera} Returns itself.
+     * @chainable
      */
     focusSprite: function(spr) {
         var x = spr.position.x,
@@ -528,7 +531,8 @@ inherit(Camera, Container, {
      * @method focus
      * @param x {Number|Vector} The x coord to focus on, if a Vector is passed the y param is ignored
      * @param y {Number} The y coord to focus on
-     * @return {Camera} Returns iteself for chainability
+     * @return {Camera} Returns itself.
+     * @chainable
      */
     focus: function(x, y) {
         y = x.y !== undefined ? x.y : (y || 0);
@@ -549,7 +553,8 @@ inherit(Camera, Container, {
      * @method pan
      * @param x {Number|Vector} The x amount to pan, if a Point is passed the y param is ignored
      * @param y {Number} The y ammount to pan
-     * @return {Camera} Returns iteself for chainability
+     * @return {Camera} Returns itself.
+     * @chainable
      */
     pan: function(dx, dy) {
         dy = dx.y !== undefined ? dx.y : (dy || 0);
@@ -611,7 +616,8 @@ inherit(Camera, Container, {
      * @private
      * @param w {Number} The new width
      * @param h {Number} The new height
-     * @return {Camera} Returns iteself for chainability
+     * @return {Camera} Returns itself.
+     * @chainable
      */
     resize: function(w, h) {
         this.size.set(w, h);
@@ -628,7 +634,8 @@ inherit(Camera, Container, {
      *
      * @method constrain
      * @param shape {Rectangle|Polygon|Circle|Ellipse} The shape to constrain the camera into
-     * @return {Camera} Returns iteself for chainability
+     * @return {Camera} Returns itself.
+     * @chainable
      */
     constrain: function(shape) {
         this.bounds = shape;
@@ -639,7 +646,8 @@ inherit(Camera, Container, {
      * Removes the constraints of the camera, to allow free movement around the world
      *
      * @method unconstrain
-     * @return {Camera} Returns iteself for chainability
+     * @return {Camera} Returns itself.
+     * @chainable
      */
     unconstrain: function() {
         this.bounds = null;
