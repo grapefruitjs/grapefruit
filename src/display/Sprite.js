@@ -136,6 +136,21 @@ var Sprite = function(anims, speed, start) {
 
     //show first frame
     this.goto(0, this.currentAnimation);
+
+    /**
+     * Fired when a new frame of the running animation is shown
+     *
+     * @event frame
+     * @param animation {String} The animation name that is playing
+     * @param frameId {Number} The frame that is being shown
+     */
+
+    /**
+     * Fired when the running animation completes
+     *
+     * @event complete
+     * @param animation {String} The animation that has completed
+     */
 };
 
 inherit(Sprite, PIXI.Sprite, {

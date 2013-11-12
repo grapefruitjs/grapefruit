@@ -227,6 +227,13 @@ var Game = function(container, settings) {
     view.addEventListener('click', function() {
         view.focus();
     }, false);
+
+    /**
+     * Fired each frame after everything has updated, but just before rendering
+     *
+     * @event tick
+     * @param dt {Number} The number of seconds passed since the last tick call (delta time)
+     */
 };
 
 inherit(Game, Object, {
