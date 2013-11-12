@@ -7397,7 +7397,7 @@ define(
         }
         if (obj.hitArea)
           obj.hitArea = utils.parseHitArea(obj.hitArea);
-        if (obj.static || obj.sensor) {
+        if (obj.body === "static" || obj.sensor) {
           obj.mass = Infinity;
           obj.inertia = Infinity;
         }
@@ -7506,10 +7506,7 @@ define(
         ];
         if (!this._loaded) {
           this._loaded = true;
-          this.emit("load", {
-            message: "Audio file loaded.",
-            data: this.src
-          });
+          this.emit("ready", this.src);
         }
         if (this.autoplay) {
           this.play();
@@ -7527,7 +7524,7 @@ define(
         sprite = "_default";
       }
       if (!this._loaded) {
-        this.on("load", function () {
+        this.on("ready", function () {
           self.play(sprite, cb);
         });
         return this;
@@ -7551,10 +7548,7 @@ define(
             if (!self._webAudio && !o.loop) {
               self.stop(o.id, o.timer);
             }
-            self.emit("end", {
-              message: "Audio has finished playing",
-              data: o.id
-            });
+            self.emit("end", o.id);
           }, duration * 1000);
           self._onendTimer.push(timerId);
           o.timer = timerId;
@@ -7598,10 +7592,7 @@ define(
             return self;
           }
         }
-        self.emit("play", {
-          message: "Playing audio file",
-          data: soundId
-        });
+        self.emit("play", soundId);
         if (typeof cb === "function")
           cb(soundId);
       });
@@ -7633,10 +7624,7 @@ define(
           activeNode.pause();
         }
       }
-      this.emit("pause", {
-        message: "Audio file paused",
-        data: id
-      });
+      this.emit("pause", activeNode ? activeNode.id : id);
       return this;
     },
     stop: function (id, timerId) {
@@ -7694,7 +7682,7 @@ define(
     seek: function (pos, id) {
       var self = this;
       if (!this._loaded) {
-        this.on("load", function () {
+        this.on("ready", function () {
           self.seek(pos, id);
         });
         return this;
@@ -7715,7 +7703,7 @@ define(
     getPosition: function (id) {
       var self = this;
       if (!this._loaded) {
-        this.on("load", function () {
+        this.on("ready", function () {
           self.getPosition(id);
         });
         return this;
@@ -7737,7 +7725,7 @@ define(
         id = null;
       }
       if (!this._loaded) {
-        this.on("load", function () {
+        this.on("ready", function () {
           self.fade(from, to, len, id, cb);
         });
         return this;
@@ -7893,10 +7881,7 @@ define(
       ];
       if (!this._loaded) {
         this._loaded = true;
-        this.emit("load", {
-          message: "Audio file loaded.",
-          data: this.src
-        });
+        this.emit("ready", this.src);
       }
       if (this.autoplay) {
         this.play();
@@ -8294,9 +8279,17 @@ define(
           start = a;
         var anim = anims[a];
         if (anim instanceof Array)
-          anims[a] = { frames: anim };
+          anims[a] = {
+            name: a,
+            frames: anim
+          };
         else if (anim instanceof Texture)
-          anims[a] = { frames: [anim] };
+          anims[a] = {
+            name: a,
+            frames: [anim]
+          };
+        else
+          anims[a].name = a;
       }
     }
     PIXI.Sprite.call(this, anims[start].frames[0]);
@@ -8879,16 +8872,12 @@ define(
         this.addChild(tile);
       }
       tile.collisionType = props.type;
-      tile.visible = true;
       tile.interactive = interactive;
+      tile.hitArea = hitArea;
+      tile.mass = props.mass || 0;
       tile.setTexture(texture);
       tile.setPosition(position[0], position[1]);
-      tile.hitArea = hitArea;
-      if (props.body === "static") {
-        tile.mass = Infinity;
-      } else {
-        tile.mass = props.mass || 0;
-      }
+      tile.show();
       if (tile.mass) {
         tile.enablePhysics(this.state.physics);
       }
@@ -9230,8 +9219,8 @@ define(
     Container.call(this);
     this.dirty = false;
     this.font = font;
-    this._text = text;
     this.monospace = 0;
+    this._text = text;
     this.sprites = new ObjectPool(Sprite, this);
     this.text = text;
     this.setStyle(style);
@@ -10048,19 +10037,17 @@ define(
   var Sprite = require("../display/Sprite"), Texture = require("../display/Texture"), Container = require("../display/Container"), Vector = require("../math/Vector"), math = require("../math/math"), inherit = require("../utils/inherit"), C = require("../constants");
   var ParticleEmitter = function (name) {
     Container.call(this);
-    this.maxParticles = C.PARTICLES.MAX_PARTICLES;
     this.name = name;
+    this.maxParticles = C.PARTICLES.MAX_PARTICLES;
     this.width = 0;
     this.height = 0;
-    this.lifespan = Infinity;
+    this.lifespan = 2000;
     this.minSpeed = new Vector(-100, -100);
     this.maxSpeed = new Vector(100, 100);
     this.minScale = 1;
     this.maxScale = 1;
     this.minRotation = -2 * Math.PI;
     this.maxRotation = 2 * Math.PI;
-    this.gravity = new Vector(0, 5);
-    this.spread = Math.PI / 32;
     this.delay = 100;
     this.active = false;
     this.particles = [];
@@ -10075,7 +10062,7 @@ define(
   inherit(ParticleEmitter, Container, {
     start: function (lifespan, delay, rate, total) {
       this.active = true;
-      this.lifespan = lifespan || Infinity;
+      this.lifespan = lifespan || 2000;
       this.delay = delay || 250;
       this._rate = rate || 1;
       this._total = total || C.PARTICLES.MAX_EMITTER_PARTICLES;
@@ -10234,6 +10221,9 @@ define(
           o.render(-this.position.x, -this.position.y, w, h);
       }
       return this;
+    },
+    update: function (dt) {
+      this.particles.update(dt);
     }
   });
   module.exports = World;
@@ -14030,6 +14020,9 @@ define(
       this.game.timings.cameraStart = this.game.clock.now();
       this.camera.update(dt);
       this.game.timings.cameraEnd = this.game.clock.now();
+      this.game.timings.worldStart = this.game.clock.now();
+      this.world.update(dt);
+      this.game.timings.worldEnd = this.game.clock.now();
       this.game.timings.physicsStart = this.game.clock.now();
       this.physics.update(dt);
       this.game.timings.physicsEnd = this.game.clock.now();
@@ -14254,11 +14247,12 @@ define(
       delete this._text[key];
     },
     destroy: function () {
-      this._canvases = {};
-      this._images = {};
-      this._sounds = {};
-      this._text = {};
-      this._tilemaps = {};
+      this.game = null;
+      this._canvases = null;
+      this._images = null;
+      this._sounds = null;
+      this._text = null;
+      this._tilemaps = null;
     }
   });
   module.exports = Cache;
@@ -14381,6 +14375,7 @@ define(
       this.isLoading = false;
       this.assets = {};
       this.keys.length = 0;
+      return this;
     },
     add: function (type, key, url, opts) {
       var entry = {
@@ -14400,14 +14395,17 @@ define(
       this.assets[key] = entry;
       this.keys.push(key);
       this.total++;
+      return this;
     },
     image: function (key, url, overwrite) {
       if (overwrite || !this.hasKey(key))
         this.add("image", key, url);
+      return this;
     },
     text: function (key, url, overwrite) {
       if (overwrite || !this.hasKey(key))
         this.add("text", key, url);
+      return this;
     },
     spritesheet: function (key, url, frameWidth, frameHeight, numFrames, overwrite) {
       if (overwrite || !this.hasKey(key))
@@ -14416,10 +14414,12 @@ define(
           frameHeight: frameHeight,
           numFrames: numFrames
         });
+      return this;
     },
     audio: function (key, urls, overwrite) {
       if (overwrite || !this.hasKey(key))
         this.add("audio", key, urls);
+      return this;
     },
     tilemap: function (key, url, data, format, overwrite) {
       if (overwrite || !this.hasKey(key)) {
@@ -14442,6 +14442,7 @@ define(
           format: format
         });
       }
+      return this;
     },
     bitmapFont: function (key, textureUrl, dataUrl, data, format, overwrite) {
       if (overwrite || !this.hasKey(key)) {
@@ -14463,15 +14464,16 @@ define(
           format: format
         });
       }
+      return this;
     },
-    atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
-      this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.JSON_ARRAY);
+    atlasJSONArray: function (key, textureURL, dataUrl, data) {
+      return this.atlas(key, textureURL, dataUrl, data, C.ATLAS_FORMAT.JSON_ARRAY);
     },
-    atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
-      this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.JSON_HASH);
+    atlasJSONHash: function (key, textureURL, dataUrl, data) {
+      return this.atlas(key, textureURL, dataUrl, data, C.ATLAS_FORMAT.JSON_HASH);
     },
-    atlasXML: function (key, textureURL, atlasURL, atlasData) {
-      this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.XML_STARLING);
+    atlasXML: function (key, textureURL, dataUrl, data) {
+      return this.atlas(key, textureURL, dataUrl, data, C.ATLAS_FORMAT.XML_STARLING);
     },
     atlas: function (key, textureUrl, dataUrl, data, format, overwrite) {
       if (overwrite || !this.hasKey(key)) {
@@ -14494,6 +14496,7 @@ define(
           format: format
         });
       }
+      return this;
     },
     start: function () {
       if (this.isLoading)
@@ -14510,6 +14513,7 @@ define(
         this.hasLoaded = true;
         this.emit("complete");
       }
+      return this;
     },
     loadFile: function () {
       var file = this.assets[this.keys.shift()], self = this;
@@ -14580,6 +14584,7 @@ define(
         });
         break;
       }
+      return this;
     },
     getAudioUrl: function (urls) {
       for (var i = 0, il = urls.length; i < il; ++i) {
@@ -14592,10 +14597,8 @@ define(
     },
     fileError: function (key, error) {
       this.assets[key].loaded = true;
-      this.assets[key].error = true;
-      this.emit("error", key);
-      utils.warn("Error loading file \"" + key + "\", error received:", error);
-      this.fileDone(key, true);
+      this.assets[key].error = error;
+      this.fileDone(key, error);
     },
     fileComplete: function (key) {
       if (!this.assets[key])
@@ -14651,12 +14654,13 @@ define(
         this.fileDone(file.key);
       }
     },
-    fileDone: function (key, fail) {
+    fileDone: function (key, error) {
       this.done++;
       this.progress = Math.round(this.done / this.total * 100);
       this.emit("progress", this.progress);
-      if (fail) {
-        this.emit("error", key);
+      if (error) {
+        utils.warn("Error loading file \"" + key + "\", error received:", error);
+        this.emit("error", error, key);
       }
       if (this.progress >= 100) {
         this.progress = 100;
@@ -14681,7 +14685,7 @@ define(
     _dataget: function (file, cb) {
       var self = this;
       if (!file.dataUrl) {
-        setTimeout(cb);
+        setTimeout(cb, 1);
       } else {
         utils.ajax({
           url: this.baseUrl + file.dataUrl,
@@ -14732,14 +14736,14 @@ define(
       file.numLoaded++;
       if (file.numImages === file.numLoaded) {
         this.game.cache.addTilemap(file);
-        this.fileDone(file.key, file.error);
+        this.fileDone(file.key);
       }
     },
-    _onTilesetError: function (file) {
-      file.error = true;
+    _onTilesetError: function (file, error) {
+      file.error = error;
       file.numLoaded++;
       if (file.numImages === file.numLoaded) {
-        this.fileDone(file.key, file.error);
+        this.fileDone(file.key, error);
       }
     }
   });
@@ -15400,111 +15404,6 @@ return module.exports;
 }
 );
 define(
-  'math/QuadTree',['require','exports','module','../geom/Rectangle','./math','../utils/inherit'],function (require, exports, module) {
-  
-// uRequire v0.6.5: START body of original nodejs module
-  var Rectangle = require("../geom/Rectangle"), math = require("./math"), inherit = require("../utils/inherit");
-  var QuadTree = function (bounds, maxObjects, maxLevels, level) {
-    this.maxObjects = maxObjects || 10;
-    this.maxLevels = maxLevels || 4;
-    this.level = level || 0;
-    this.setBounds(bounds);
-    this.objects = [];
-    this.nodes = [];
-  };
-  inherit(QuadTree, Object, {
-    split: function () {
-      var b = this.bounds, next = this.level + 1;
-      this.nodes[0] = new QuadTree(new Rectangle(b.midX, b.y, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, next);
-      this.nodes[1] = new QuadTree(new Rectangle(b.x, b.y, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, next);
-      this.nodes[2] = new QuadTree(new Rectangle(b.x, b.midY, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, next);
-      this.nodes[3] = new QuadTree(new Rectangle(b.midX, b.midY, b.subWidth, b.subHeight), this.maxObjects, this.maxLevels, next);
-    },
-    insert: function (body) {
-      var i = 0, index = -1;
-      if (this.nodes[0]) {
-        index = this.getIndex(body);
-        if (index !== -1) {
-          this.nodes[index].insert(body);
-          return;
-        }
-      }
-      this.objects.push(body);
-      if (this.objects.length > this.maxObjects && this.level < this.maxLevels) {
-        if (!this.nodes[0]) {
-          this.split();
-        }
-        while (i < this.objects.length) {
-          index = this.getIndex(this.objects[i]);
-          if (index !== -1) {
-            this.nodes[index].insert(this.objects.splice(i, 1)[0]);
-          } else {
-            i++;
-          }
-        }
-      }
-    },
-    getIndex: function (body) {
-      var index = -1;
-      if (body.x < this.bounds.midX && body.right < this.bounds.midX) {
-        if (body.y < this.bounds.midY && body.bottom < this.bounds.midY) {
-          index = 1;
-        } else if (body.y > this.bounds.midY) {
-          index = 2;
-        }
-      } else if (body.x > this.bounds.midX) {
-        if (body.y < this.bounds.midY && body.bottom < this.bounds.midY) {
-          index = 0;
-        } else if (body.y > this.bounds.midY) {
-          index = 3;
-        }
-      }
-      return index;
-    },
-    retrieve: function (body) {
-      var returnObjects = this.objects, index = this.getIndex(body);
-      if (this.nodes[0]) {
-        if (index !== -1) {
-          returnObjects = returnObjects.concat(this.nodes[index].retrieve(body));
-        } else {
-          returnObjects = returnObjects.concat(this.nodes[0].retrieve(body));
-          returnObjects = returnObjects.concat(this.nodes[1].retrieve(body));
-          returnObjects = returnObjects.concat(this.nodes[2].retrieve(body));
-          returnObjects = returnObjects.concat(this.nodes[3].retrieve(body));
-        }
-      }
-      return returnObjects;
-    },
-    clear: function () {
-      if (this.nodes[0]) {
-        this.nodes[0].clear();
-        this.nodes[1].clear();
-        this.nodes[2].clear();
-        this.nodes[3].clear();
-      }
-      this.objects.length = 0;
-      this.nodes.length = 0;
-    },
-    setBounds: function (bounds) {
-      this.bounds = bounds;
-      bounds.x = math.round(bounds.x);
-      bounds.y = math.round(bounds.y);
-      bounds.width = math.round(bounds.width);
-      bounds.height = math.round(bounds.height);
-      bounds.subWidth = math.floor(bounds.width / 2);
-      bounds.subHeight = math.floor(bounds.height / 2);
-      bounds.midX = bounds.x + bounds.subWidth;
-      bounds.midY = bounds.y + bounds.subHeight;
-    }
-  });
-  module.exports = QuadTree;
-// uRequire v0.6.5: END body of original nodejs module
-
-
-return module.exports;
-}
-);
-define(
   'text/Text',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
   
 // uRequire v0.6.5: START body of original nodejs module
@@ -15556,7 +15455,7 @@ define(
 return module.exports;
 }
 );
-define('core.js',['require', 'exports', 'module', './constants', './audio/AudioManager', './audio/AudioPlayer', './camera/Camera', './display/BaseTexture', './display/Container', './display/Graphics', './display/RenderTexture', './display/Sprite', './display/Texture', './display/TilingSprite', './fx/camera/Effect', './fx/camera/Close', './fx/camera/Fade', './fx/camera/Flash', './fx/camera/Scanlines', './fx/camera/Shake', './game/Game', './game/State', './game/StateManager', './game/World', './geom/Circle', './geom/Ellipse', './geom/Polygon', './geom/Rectangle', './gui/GuiItem', './input/Input', './input/InputManager', './input/Keyboard', './input/Gamepad', './input/gamepad/GamepadButtons', './input/gamepad/GamepadSticks', './input/Pointers', './input/pointer/Pointer', './loader/Loader', './math/math', './math/QuadTree', './math/Vector', './particles/ParticleEmitter', './particles/ParticleSystem', './physics/PhysicsSystem', './physics/PhysicsTarget', './text/BitmapText', './text/Text', './tilemap/Tile', './tilemap/Tilelayer', './tilemap/Tilemap', './tilemap/Tileset', './tilemap/ObjectGroup', './utils/utils', './utils/support', './utils/inherit', './utils/Cache', './utils/Clock', './utils/EventEmitter', './utils/ObjectPool', './utils/SpritePool', './utils/ObjectFactory', './plugin', './vendor/pixi'], 
+define('core.js',['require', 'exports', 'module', './constants', './audio/AudioManager', './audio/AudioPlayer', './camera/Camera', './display/BaseTexture', './display/Container', './display/Graphics', './display/RenderTexture', './display/Sprite', './display/Texture', './display/TilingSprite', './fx/camera/Effect', './fx/camera/Close', './fx/camera/Fade', './fx/camera/Flash', './fx/camera/Scanlines', './fx/camera/Shake', './game/Game', './game/State', './game/StateManager', './game/World', './geom/Circle', './geom/Ellipse', './geom/Polygon', './geom/Rectangle', './gui/GuiItem', './input/Input', './input/InputManager', './input/Keyboard', './input/Gamepad', './input/gamepad/GamepadButtons', './input/gamepad/GamepadSticks', './input/Pointers', './input/pointer/Pointer', './loader/Loader', './math/math', './math/Vector', './particles/ParticleEmitter', './particles/ParticleSystem', './physics/PhysicsSystem', './physics/PhysicsTarget', './text/BitmapText', './text/Text', './tilemap/Tile', './tilemap/Tilelayer', './tilemap/Tilemap', './tilemap/Tileset', './tilemap/ObjectGroup', './utils/utils', './utils/support', './utils/inherit', './utils/Cache', './utils/Clock', './utils/EventEmitter', './utils/ObjectPool', './utils/SpritePool', './utils/ObjectFactory', './plugin', './vendor/pixi'], 
   function (require, exports, module) {
   var __umodule__ = (function (require, exports, module) {
   
@@ -15601,7 +15500,6 @@ define('core.js',['require', 'exports', 'module', './constants', './audio/AudioM
       Pointer: require("./input/pointer/Pointer"),
       Loader: require("./loader/Loader"),
       math: require("./math/math"),
-      QuadTree: require("./math/QuadTree"),
       Vector: require("./math/Vector"),
       ParticleEmitter: require("./particles/ParticleEmitter"),
       ParticleSystem: require("./particles/ParticleSystem"),
