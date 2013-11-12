@@ -44,6 +44,7 @@ module.exports = function() {
      * @param system {PhysicsSystem} The system for the sprite to be in
      * @return {mixed} Returns itself.
      * @chainable
+     * @async
      */
     this.enablePhysics = function(sys, cb) {
         var self = this;
@@ -85,6 +86,7 @@ module.exports = function() {
      * @method disablePhysics
      * @return {mixed} Returns itself.
      * @chainable
+     * @async
      */
     this.disablePhysics = function(cb) {
         //if we have a cached system, remove from it
@@ -102,6 +104,7 @@ module.exports = function() {
      * @method disablePhysics
      * @return {mixed} Returns itself.
      * @chainable
+     * @async
      */
     this.reindex = function(cb) {
         //if we have a cached system, reindex
