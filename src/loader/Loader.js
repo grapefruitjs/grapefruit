@@ -102,22 +102,25 @@ var Loader = function(game) {
     this.baseUrl = '';
 
     /**
+     * Fired when an item has started loading
+     *
+     * @event start
+     * @param numAssets {Number} The number of assets that are going to be loaded
+     */
+
+    /**
      * Fired if a loader encounters an error
      *
      * @event error
-     * @param eventData {Object}
-     * @param eventData.assetType {String} The type of asset
-     * @param eventData.message {String} The message of the error
+     * @param error {mixed} The error that occured when loading
+     * @param key {String} The key for the asset that was being loaded
      */
 
     /**
      * Fired when an item has loaded
      *
      * @event progress
-     * @param eventData {Object}
-     * @param eventData.assetType {String} The type of asset
-     * @param eventData.url {String} The url the asset loaded from
-     * @param eventData.data {mixed} The data that was loaded
+     * @param progress {Number} The integer progress value, between 0 and 100.
      */
 
     /**
@@ -133,16 +136,17 @@ inherit(Loader, Object, {
      *
      * @method hasKey
      * @param key {String} Key of the asset you want to check.
-     * @return {bool} Return true if exists, otherwise return false.
+     * @return {Boolean} Return true if exists, otherwise return false.
      */
     hasKey: function(key) {
         return !!this.assets[key];
     },
 
     /**
-     * Reset loader, this will remove all loaded assets.
+     * Reset loader, this will remove all loaded assets from the loader's stored list (but not from the cache).
      *
      * @method reset
+     * @return {Loader} Returns itself.
      */
     reset: function() {
         this.progress = 0;
@@ -152,6 +156,8 @@ inherit(Loader, Object, {
         this.isLoading = false;
         this.assets = {};
         this.keys.length = 0;
+
+        return this;
     },
 
     /**
@@ -161,8 +167,9 @@ inherit(Loader, Object, {
      * @param type {String} The type of asset ot load (image, spritesheet, textureatlas, bitmapfont, tilemap, tileset, audio, etc)
      * @param key {String} The unique key of the asset to identify it
      * @param url {String} The URL to load the resource from
-     * @param [options] {Object} Extra options to apply to the asset (such as crossOrigin)
+     * @param [options] {Object} Extra options to apply to the asset, different asset types may require extra options
      * @param [options.crossOrigin=false] {Boolean} True if an image load should be treated as crossOrigin
+     * @return {Loader} Returns itself.
      */
     add: function(type, key, url, opts) {
         var entry = {
@@ -184,6 +191,8 @@ inherit(Loader, Object, {
         this.assets[key] = entry;
         this.keys.push(key);
         this.total++;
+
+        return this;
     },
 
     /**
@@ -193,10 +202,13 @@ inherit(Loader, Object, {
      * @param key {String} Unique asset key of this image file.
      * @param url {String} URL of image file.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+     * @return {Loader} Returns itself.
      */
     image: function(key, url, overwrite) {
         if(overwrite || !this.hasKey(key))
             this.add('image', key, url);
+
+        return this;
     },
 
     /**
@@ -206,10 +218,13 @@ inherit(Loader, Object, {
      * @param key {String} Unique asset key of this image file.
      * @param url {String} URL of image file.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+     * @return {Loader} Returns itself.
      */
     text: function(key, url, overwrite) {
         if(overwrite || !this.hasKey(key))
             this.add('text', key, url);
+
+        return this;
     },
 
     /**
@@ -222,6 +237,7 @@ inherit(Loader, Object, {
      * @param frameHeight {Number} Height of each single frame.
      * @param numFrames {Number} How many frames in this sprite sheet.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+     * @return {Loader} Returns itself.
      */
     spritesheet: function(key, url, frameWidth, frameHeight, numFrames, overwrite) {
         if(overwrite || !this.hasKey(key))
@@ -230,6 +246,8 @@ inherit(Loader, Object, {
                 frameHeight: frameHeight,
                 numFrames: numFrames
             });
+
+        return this;
     },
 
     /**
@@ -238,11 +256,14 @@ inherit(Loader, Object, {
      * @method audio
      * @param key {String} Unique asset key of this image file.
      * @param urls {Array<String>} URLs of audio files.
-     * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it
+     * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+     * @return {Loader} Returns itself.
      */
     audio: function(key, urls, overwrite) {
         if(overwrite || !this.hasKey(key))
             this.add('audio', key, urls);
+
+        return this;
     },
 
     /**
@@ -254,6 +275,7 @@ inherit(Loader, Object, {
      * @param [data] {String|Object} The data for the map, (to use instead of loading from a URL)
      * @param [format=FILE_FORMAT.JSON] {Number} The format of the map data.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+     * @return {Loader} Returns itself.
      */
     tilemap: function(key, url, data, format, overwrite) {
         if(overwrite || !this.hasKey(key)) {
@@ -279,6 +301,8 @@ inherit(Loader, Object, {
                 format: format
             });
         }
+
+        return this;
     },
 
     /**
@@ -291,6 +315,7 @@ inherit(Loader, Object, {
      * @param [data] {Object} An optional XML data object (to use instead of loading from a URL)
      * @param [format=FILE_FORMAT.XML] {FILE_FORMAT} The format of the bitmap font data.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+     * @return {Loader} Returns itself.
      */
     bitmapFont: function(key, textureUrl, dataUrl, data, format, overwrite) {
         if(overwrite || !this.hasKey(key)) {
@@ -314,17 +339,50 @@ inherit(Loader, Object, {
                 format: format
             });
         }
+
+        return this;
     },
 
-    //shortcuts for different atlas types
-    atlasJSONArray: function(key, textureURL, atlasURL, atlasData) {
-        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.JSON_ARRAY);
+    /**
+     * Add a JSON-Array formatted texture atlas. Equivalent to running
+     * `atlas(key, textureURL, dataUrl, data, gf.ATLAS_FORMAT.JSON_ARRAY);`
+     *
+     * @param key {string} Unique asset key of the texture atlas file.
+     * @param textureUrl {string} The url of the texture atlas image file.
+     * @param [dataUrl] {string} The url of the texture atlas data file (json/xml)
+     * @param [data] {object} A JSON or XML data object (to use instead of loading from a URL)
+     * @return {Loader} Returns itself.
+     */
+    atlasJSONArray: function(key, textureURL, dataUrl, data) {
+        return this.atlas(key, textureURL, dataUrl, data, C.ATLAS_FORMAT.JSON_ARRAY);
     },
-    atlasJSONHash: function(key, textureURL, atlasURL, atlasData) {
-        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.JSON_HASH);
+
+    /**
+     * Add a JSON-Hash formatted texture atlas. Equivalent to running
+     * `atlas(key, textureURL, dataUrl, data, gf.ATLAS_FORMAT.JSON_HASH);`
+     *
+     * @param key {string} Unique asset key of the texture atlas file.
+     * @param textureUrl {string} The url of the texture atlas image file.
+     * @param [dataUrl] {string} The url of the texture atlas data file (json/xml)
+     * @param [data] {object} A JSON or XML data object (to use instead of loading from a URL)
+     * @return {Loader} Returns itself.
+     */
+    atlasJSONHash: function(key, textureURL, dataUrl, data) {
+        return this.atlas(key, textureURL, dataUrl, data, C.ATLAS_FORMAT.JSON_HASH);
     },
-    atlasXML: function(key, textureURL, atlasURL, atlasData) {
-        this.atlas(key, textureURL, atlasURL, atlasData, C.ATLAS_FORMAT.XML_STARLING);
+
+    /**
+     * Add an XML formatted texture atlas. Equivalent to running
+     * `atlas(key, textureURL, dataUrl, data, gf.ATLAS_FORMAT.XML_STARLING);`
+     *
+     * @param key {string} Unique asset key of the texture atlas file.
+     * @param textureUrl {string} The url of the texture atlas image file.
+     * @param [dataUrl] {string} The url of the texture atlas data file (json/xml)
+     * @param [data] {object} A JSON or XML data object (to use instead of loading from a URL)
+     * @return {Loader} Returns itself.
+     */
+    atlasXML: function(key, textureURL, dataUrl, data) {
+        return this.atlas(key, textureURL, dataUrl, data, C.ATLAS_FORMAT.XML_STARLING);
     },
 
     /**
@@ -335,6 +393,7 @@ inherit(Loader, Object, {
      * @param [data] {object} A JSON or XML data object (to use instead of loading from a URL)
      * @param [format] {number} A value describing the format of the data.
      * @param [overwrite=false] {Boolean} If an entry with a matching key already exists this will over-write it.
+     * @return {Loader} Returns itself.
      */
     atlas: function(key, textureUrl, dataUrl, data, format, overwrite) {
         if(overwrite || !this.hasKey(key)) {
@@ -359,12 +418,15 @@ inherit(Loader, Object, {
                 format: format
             });
         }
+
+        return this;
     },
 
     /**
-     * Starts the loading of all the assets added
+     * Starts the loading of all the assets that are queued to load
      *
      * @method start
+     * @return {Loader} Returns itself.
      */
     start: function() {
         if(this.isLoading) return;
@@ -383,12 +445,19 @@ inherit(Loader, Object, {
             this.hasLoaded = true;
             this.emit('complete');
         }
+
+        return this;
     },
 
     /**
-     * Loads a single asset from the assets in this Loader.
+     * Loads a single asset from the queued assets in this Loader. To load a single file first queue it by using
+     * one of the methods named for an asset (like `audio`, `image`, `tilemap`, etc.), then call this to load the
+     * first in the queue.
+     *
+     * Note: To load the entire queue at once use `start`.
      *
      * @method loadFile
+     * @return {Loader} Returns itself.
      */
     loadFile: function() {
         var file = this.assets[this.keys.shift()],
@@ -469,12 +538,17 @@ inherit(Loader, Object, {
                 });
                 break;
         }
+
+        return this;
     },
 
     /**
-     * Chooses the audio url to use based on browser support
+     * Chooses the audio url to use based on browser support.
      *
      * @method getAudioUrl
+     * @param urls {Array<String>} An array of URLs to choose from, chooses the first in the array to be
+     *      supported by the browser.
+     * @return {String} Returns the URL that was chosen, or `undefined` if none are supported.
      */
     getAudioUrl: function(urls) {
         for(var i = 0, il = urls.length; i < il; ++i) {
@@ -495,21 +569,22 @@ inherit(Loader, Object, {
      *
      * @method fileError
      * @param key {String} Key of the error loading file.
+     * @param error {mixed} The error that was thrown.
+     * @private
      */
     fileError: function(key, error) {
         this.assets[key].loaded = true;
-        this.assets[key].error = true;
+        this.assets[key].error = error;
 
-        this.emit('error', key);
-
-        utils.warn('Error loading file "' + key + '", error received:', error);
-
-        this.fileDone(key, true);
+        this.fileDone(key, error);
     },
 
     /**
      * Called when a file is successfully loaded.
+     *
+     * @method fileComplete
      * @param key {string} Key of the successfully loaded file.
+     * @private
      */
     fileComplete: function(key) {
         if(!this.assets[key])
@@ -585,16 +660,18 @@ inherit(Loader, Object, {
      *
      * @method fileDone
      * @param key {String} Key of the file done
-     * @param fail {Boolean} Whether this was a failure or not
+     * @param error {mixed} The error that occurred (if there was one)
+     * @private
      */
-    fileDone: function(key, fail) {
+    fileDone: function(key, error) {
         this.done++;
         this.progress = Math.round((this.done / this.total) * 100);
 
         this.emit('progress', this.progress);
 
-        if(fail) {
-            this.emit('error', key);
+        if(error) {
+            utils.warn('Error loading file "' + key + '", error received:', error);
+            this.emit('error', error, key);
         }
 
         if(this.progress >= 100) {
@@ -606,6 +683,13 @@ inherit(Loader, Object, {
         }
     },
 
+    /**
+     * Returns the ajax type that represents each format type
+     *
+     * @method _getFormatAjaxType
+     * @param type {ATLAS_FORMAT|FILE_FORMAT} The format to get an ajax type for
+     * @private
+     */
     _getFormatAjaxType: function(type) {
         switch(type) {
             case C.ATLAS_FORMAT.JSON_ARRAY:
@@ -622,11 +706,20 @@ inherit(Loader, Object, {
         }
     },
 
+    /**
+     * Gets a file's data via ajax.
+     *
+     * @method _dataget
+     * @param file {Object} The file descriptor object
+     * @param [callback] {Function} The callback to call once the file has loaded. `fileDone` or `fileError` will be
+     *      called for you.
+     * @private
+     */
     _dataget: function(file, cb) {
         var self = this;
 
         if(!file.dataUrl) {
-            setTimeout(cb);
+            setTimeout(cb, 1);
         } else {
             utils.ajax({
                 url: this.baseUrl + file.dataUrl,
@@ -643,6 +736,13 @@ inherit(Loader, Object, {
         }
     },
 
+    /**
+     * Loads the tilesets found in a JSON formatted tilemap object.
+     *
+     * @method _loadJsonTilesets
+     * @param file {Object} The file descriptor object
+     * @private
+     */
     _loadJsonTilesets: function(file) {
         var data = file.data,
             baseUrl = file.baseUrl;
@@ -666,6 +766,13 @@ inherit(Loader, Object, {
         }
     },
 
+    /**
+     * Loads the tilesets found in a XML formatted tilemap object.
+     *
+     * @method _loadXmlTilesets
+     * @param file {Object} The file descriptor object
+     * @private
+     */
     _loadXmlTilesets: function(file) {
         var data = file.data,
             baseUrl = file.baseUrl,
@@ -690,21 +797,36 @@ inherit(Loader, Object, {
         }
     },
 
+    /**
+     * Called each time a tileset is loaded successfully.
+     *
+     * @method _onTilesetLoaded
+     * @param file {Object} The file descriptor object.
+     * @private
+     */
     _onTilesetLoaded: function(file) {
         file.numLoaded++;
 
         if(file.numImages === file.numLoaded) {
             this.game.cache.addTilemap(file);
-            this.fileDone(file.key, file.error);
+            this.fileDone(file.key);
         }
     },
 
-    _onTilesetError: function(file) {
-        file.error = true;
+    /**
+     * Called each time a tileset has an error when loading.
+     *
+     * @method _onTilesetError
+     * @param file {Object} The file descriptor object.
+     * @param error {mixed} The error thrown when loading.
+     * @private
+     */
+    _onTilesetError: function(file, error) {
+        file.error = error;
         file.numLoaded++;
 
         if(file.numImages === file.numLoaded) {
-            this.fileDone(file.key, file.error);
+            this.fileDone(file.key, error);
         }
     }
 });

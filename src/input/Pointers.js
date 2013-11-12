@@ -75,6 +75,62 @@ var Pointers = function(game) {
     game.canvas.addEventListener('pointercancel',   this.onPointer.bind(this, 'cancel'),  false);
     game.canvas.addEventListener('pointerenter',    this.onPointer.bind(this, 'enter'),   false);
     game.canvas.addEventListener('pointerleave',    this.onPointer.bind(this, 'leave'),   false);
+
+    /**
+     * Fired when a pointer is pressed on the canvas
+     *
+     * @event down
+     * @param pointer {Pointer} The pointer instance that had a 'pointerdown' event
+     */
+
+    /**
+     * Fired when a pointer is released off the canvas
+     *
+     * @event up
+     * @param pointer {Pointer} The pointer instance that had a 'pointerup' event
+     */
+
+    /**
+     * Fired when a pointer is moved while on the canvas
+     *
+     * @event move
+     * @param pointer {Pointer} The pointer instance that had a 'pointermove' event
+     */
+
+    /**
+     * Fired when a pointer moves over the canvas
+     *
+     * @event over
+     * @param pointer {Pointer} The pointer instance that had a 'pointerover' event
+     */
+
+    /**
+     * Fired when a pointer moves out of the canvas
+     *
+     * @event out
+     * @param pointer {Pointer} The pointer instance that had a 'pointerout' event
+     */
+
+    /**
+     * Fired when a pointer event is canceled
+     *
+     * @event cancel
+     * @param pointer {Pointer} The pointer instance that had a 'pointercancel' event
+     */
+
+    /**
+     * Fired when a pointer enters the canvas
+     *
+     * @event enter
+     * @param pointer {Pointer} The pointer instance that had a 'pointerenter' event
+     */
+
+    /**
+     * Fired when a pointer leaves the canvas
+     *
+     * @event leave
+     * @param pointer {Pointer} The pointer instance that had a 'pointerleave' event
+     */
 };
 
 inherit(Pointers, Input, {

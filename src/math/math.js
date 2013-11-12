@@ -8,11 +8,52 @@ var support = require('../utils/support'),
  * @extends Object
  */
 var math = {
+    /**
+     * The factor to multiply by to convert Degrees into Radians. The value is π/180
+     *
+     * @property DEG_TO_RAD
+     * @type Number
+     * @readOnly
+     */
     DEG_TO_RAD: Math.PI / 180,
+    /**
+     * The factor to multiply by to convert Radians into Degrees. The value is 180/π
+     *
+     * @property RAD_TO_DEG
+     * @type Number
+     * @readOnly
+     */
     RAD_TO_DEG: 180 / Math.PI,
+    /**
+     * The RNG seed that allows for deterministic random numbers. Change this to a certain value
+     * to ensure you will have the same sequence of "random" numbers. Useful for playbacks, save files,
+     * procedural generation, etc.
+     *
+     * @property SEED
+     * @type Number
+     * @default Math.random()
+     */
     SEED: Math.random(),
+    /**
+     * A Matrix class, directory exposes PIXI.Matrix.
+     *
+     * @property Matrix
+     * @type Matrix
+     */
     Matrix: PIXI.Matrix,
+    /**
+     * A 3x3 Matrix namespace, directory exposes PIXI.mat3. You can use this to create 3x3 Matrix classes.
+     *
+     * @property mat3
+     * @type Object
+     */
     mat3: PIXI.mat3,
+    /**
+     * A 4x4 Matrix namespace, directory exposes PIXI.mat4. You can use this to create 4x4 Matrix classes.
+     *
+     * @property mat3
+     * @type Object
+     */
     mat4: PIXI.mat4,
     /**
      * Alias some native functions for great justice (or incase we want to override)
@@ -20,7 +61,8 @@ var math = {
      */
     /**
      * Applys a Floor operation to a value, currently uses native Math.floor
-     * since it deals with all edge cases
+     * since it deals with all edge cases that quicker solutions like `~~value`
+     * or `value | 0` do not.
      *
      * @method floor
      * @param num {Number} The number to floor
@@ -390,7 +432,7 @@ math._getRandomValuesTyped = function(ary) {
 };
 
 //without typed array support we can do one that returns an array of values
-//but you would need to use new Array(num), so there is a length
+//but you would need to use `new Array(num)`, so there is a length
 //or something like `var a = []; a[num - 1] = undefined;` so length is expanded
 math._getRandomValuesArray = function(ary) {
     //fill the array with random values
