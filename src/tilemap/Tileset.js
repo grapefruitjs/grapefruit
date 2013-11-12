@@ -228,6 +228,13 @@ inherit(Tileset, Texture, {
 
         return this.textures[tileId];
     },
+    /**
+     * Returns whether or not this tileset contains the given tile guid
+     *
+     * @method contains
+     * @param tileId {Number} The ID of the tile to check
+     * @return {Boolean}
+     */
     contains: function(tileId) {
         if(!tileId) return false;
 
@@ -237,7 +244,12 @@ inherit(Tileset, Texture, {
     }
 });
 
-//Tileset GID flags
+/**
+ * Tileset GID flags, these flags are set on a tile's ID to give it a special property
+ *
+ * @property FLAGS
+ * @static
+ */
 Tileset.FLAGS = {
     FlippedX: 0x80000000,
     FlippedY: 0x40000000,

@@ -29,6 +29,8 @@ var math = {
      * to ensure you will have the same sequence of "random" numbers. Useful for playbacks, save files,
      * procedural generation, etc.
      *
+     * Note: Deterministic randomness is not yet implemented. Scheduled for v0.2.0
+     *
      * @property SEED
      * @type Number
      * @default Math.random()

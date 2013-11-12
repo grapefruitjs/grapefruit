@@ -499,6 +499,14 @@ inherit(Vector, Object, {
     }
 });
 
+/**
+ * A vector that is always 0,0
+ *
+ * @property ZERO
+ * @type Vector
+ * @readOnly
+ * @static
+ */
 Vector.ZERO = new Vector();
 
 module.exports = Vector;

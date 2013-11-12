@@ -271,6 +271,8 @@ var utils = {
      * taken straight from jQuery 2.0.3
      *
      * @method isPlainObject
+     * @param obj {mixed} The object to test
+     * @return {Boolean}
      */
     isPlainObject: function(obj) {
         // Not plain objects:
@@ -316,6 +318,16 @@ var utils = {
             box.top + scrollTop - clientTop
         );
     },
+    /**
+     * Parses an array of numbers that represent a hitArea into the actual shape.
+     *
+     * For example: `[1, 1, 15]` is a Circle (`[x, y, radius]`); `[1, 1, 15, 15]` is a Rectangle
+     * (`[x, y, width, height]`); and any length >= 5 is a polygon in the form `[x1, y1, x2, y2, ..., xN, yN]`.
+     *
+     * @method parseHitArea
+     * @param value {Array<Number>} The array to parse
+     * @return {Circle|Rectangle|Polygon} The parsed out shape
+     */
     parseHitArea: function(hv) {
         var ha;
 
@@ -339,6 +351,15 @@ var utils = {
 
         return ha;
     },
+    /**
+     * Parses an object of string properties into potential javascript types. First it attempts to
+     * convert to a number, if that fails it checks for the string 'true' or 'false' and changes it
+     * to the actual Boolean value, then it attempts to parse a string as JSON.
+     *
+     * @method parseTiledProperties
+     * @param value {Array<Number>} The array to parse
+     * @return {Circle|Rectangle|Polygon} The parsed out shape
+     */
     parseTiledProperties: function(obj) {
         if(!obj || obj.__tiledparsed)
             return obj;
@@ -379,20 +400,46 @@ var utils = {
         return obj;
     },
     _logger: window.console || {},
+    /**
+     * Safe way to log to console, if console.log doesn't exist nothing happens.
+     *
+     * @method log
+     */
     log: function() {
         if(utils._logger.log)
             utils._logger.log.apply(utils._logger, arguments);
     },
+    /**
+     * Safe way to warn to console, if console.warn doesn't exist nothing happens.
+     *
+     * @method warn
+     */
     warn: function() {
         if(utils._logger.warn)
             utils._logger.warn.apply(utils._logger, arguments);
     },
+    /**
+     * Safe way to error to console, if console.error doesn't exist nothing happens.
+     *
+     * @method error
+     */
     error: function() {
         if(utils._logger.error)
             utils._logger.error.apply(utils._logger, arguments);
     }
 };
 
+/**
+ * Parses an XML string into a Document object. Will use window.DOMParser
+ * if available, falling back to Microsoft.XMLDOM ActiveXObject in IE.
+ *
+ * Eventually, it would be nice to include a node.js alternative as well
+ * for running in that environment.
+ *
+ * @method parseXML
+ * @param xmlStr {String} The xml string to parse
+ * @return {Document} An XML Document
+ */
 //XML Parser in window
 if(typeof window.DOMParser !== 'undefined') {
     utils.parseXML = function(xmlStr) {

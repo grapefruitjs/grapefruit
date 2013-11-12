@@ -61,7 +61,11 @@ inherit(SpritePool, Object, {
 
         return new this.types[name](texture, props);
     },
-    //currently doesn't do any recycling unfortunately
+    /**
+     * Frees an object back into the pool to be recycled, currently doesn't do any recycling unfortunately
+     *
+     * @method free
+     */
     free: function() {
         return;
     }

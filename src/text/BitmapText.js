@@ -29,10 +29,44 @@ var Container = require('../display/Container'),
 var BitmapText = function(text, font, style) {
     Container.call(this);
 
+    /**
+     * Whether or not the bitmap text is dirty and should be redrawn
+     *
+     * @property dirty
+     * @type Boolean
+     * @default false
+     */
     this.dirty = false;
+
+    /**
+     * The font descriptor that holds the font data (name, size, chars, etc)
+     *
+     * @property font
+     * @type Object
+     * @readOnly
+     */
     this.font = font;
-    this._text = text;
+
+    /**
+     * A monospacing to apply to the font instead of the actual character/kerning spacing.
+     * When set to `0` the default font values will be used.
+     *
+     * @property monospace
+     * @type Number
+     * @default 0
+     */
     this.monospace = 0;
+
+    /**
+     * The actual text that is currently rendered, please use the `text` property
+     * and do not set this directly.
+     *
+     * @property _text
+     * @type String
+     * @readOnly
+     * @private
+     */
+    this._text = text;
 
     /**
      * The sprite pool to grab character sprites from
@@ -49,6 +83,14 @@ var BitmapText = function(text, font, style) {
 };
 
 inherit(BitmapText, Container, {
+    /**
+     * Sets the style of the text based on a style object.
+     *
+     * @method setStyle
+     * @param style {Object} The style object
+     * @param style.align {String} The alignment of the text, can be 'left', 'center', or 'right'
+     * @param style.size {Number} The font size of the text to display
+     */
     setStyle: function(style) {
         style = style || {};
 
@@ -59,7 +101,7 @@ inherit(BitmapText, Container, {
     },
     /**
      * Renders the text character sprites when the text is dirty. This is
-     * automatically called when the text/style becomes dirty
+     * automatically called when the text/style becomes dirty.
      *
      * @method renderText
      */
@@ -153,7 +195,7 @@ inherit(BitmapText, Container, {
         this.height = (pos.y + font.lineHeight) * scale;
     },
     /**
-     * Clones this font to get another just like it
+     * Clones this BitmapText to get another just like it
      *
      * @method clone
      * @return BitmapText
@@ -165,7 +207,7 @@ inherit(BitmapText, Container, {
         });
     },
     /**
-     * Updates the text when dirty
+     * Updates the text when dirty, called each frame by PIXI's render methods
      *
      * @method updateTransform
      * @private
@@ -188,6 +230,12 @@ inherit(BitmapText, Container, {
     }
 });
 
+/**
+ * The text that will be rendered.
+ *
+ * @property text
+ * @type String
+ */
 Object.defineProperty(BitmapText.prototype, 'text', {
     get: function() {
         return this._text;
@@ -198,6 +246,16 @@ Object.defineProperty(BitmapText.prototype, 'text', {
     }
 });
 
+/**
+ * Parses an XML font file into a font object that can be passed into a BitmapText instance.
+ * This is called by the Cache when XML bitmap data is added.
+ *
+ * @method parseXML
+ * @param key {String} The cache key for the font
+ * @param xml {Document} The XML document to parse
+ * @param texture {Texture} The texture to use for creating character textures
+ * @static
+ */
 BitmapText.parseXML = function(key, xml, texture) {
     var btx = texture.baseTexture;
 

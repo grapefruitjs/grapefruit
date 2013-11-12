@@ -431,15 +431,18 @@ inherit(Cache, Object, {
     },
 
     /**
-     * Clean up cache memory.
+     * Destroys this object, removing references so the GC can cleanup
+     *
+     * @method destroy
      */
     destroy: function() {
         //lose references to let GC cleanup
-        this._canvases = {};
-        this._images = {};
-        this._sounds = {};
-        this._text = {};
-        this._tilemaps = {};
+        this.game = null;
+        this._canvases = null;
+        this._images = null;
+        this._sounds = null;
+        this._text = null;
+        this._tilemaps = null;
     }
 });
 

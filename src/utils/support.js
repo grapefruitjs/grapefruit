@@ -111,6 +111,12 @@ var support = {
     gamepad: !!navigator.webkitGetGamepads || !!navigator.webkitGamepads || (navigator.userAgent.indexOf('Firefox/') !== -1)
 };
 
+/**
+ * Describes which audio codecs a browser supports
+ *
+ * @property codec
+ * @type Object
+ */
 if(support.htmlAudio) {
     var audioTest = new Audio();
 
