@@ -19,7 +19,7 @@ var Rectangle = require('../geom/Rectangle'),
  * @param [options] {Object} The options for the physics system.
  * @param [options.gravity=new Vector(0, 9.87)] {Vector} The gravity of the space
  */
-var PhysicsSystem = function(game, options) {
+var PhysicsSystem = function(state, options) {
     //default options
     options = options || {};
     options.gravity = options.gravity instanceof Vector ? options.gravity : new Vector(0, 9.87);
