@@ -167,6 +167,7 @@ inherit(PhysicsSystem, Object, {
      * @param fn {Function} The callback to register
      * @return {PhysicsSystem} Returns itself.
      * @chainable
+     * @async
      */
     nextTick: function(fn) {
         this.tickCallbacks.push(fn);
@@ -194,6 +195,7 @@ inherit(PhysicsSystem, Object, {
      * @param spr {Sprite} The sprite to add
      * @param [callback] {Function} The callback to call once the sprite has been added
      * @return {Sprite} The sprite that was added
+     * @async
      */
     add: function(spr, cb) {
         //already in space with body(s)
@@ -241,6 +243,7 @@ inherit(PhysicsSystem, Object, {
      * @param spr {Sprite} The sprite to remove
      * @param [callback] {Function} The callback to call once the sprite has been removed
      * @return {Sprite} The sprite that was removed
+     * @async
      */
     remove: function(spr, cb) {
         if(!spr || !spr._phys.active)
@@ -261,6 +264,7 @@ inherit(PhysicsSystem, Object, {
      * @param [callback] {Function} The callback to call once the sprite has been reindexed
      * @return {PhysicsSystem} Returns itself.
      * @chainable
+     * @async
      */
     reindex: function(spr, cb) {
         if(!spr || !spr._phys.active)
@@ -279,6 +283,7 @@ inherit(PhysicsSystem, Object, {
      * @param [callback] {Function} The callback to call once reindexing completes
      * @return {PhysicsSystem} Returns itself.
      * @chainable
+     * @async
      */
     reindexStatic: function(cb) {
         this.actionQueue.push(['reindexStatic', null, cb]);
@@ -296,6 +301,7 @@ inherit(PhysicsSystem, Object, {
      * @param sensor {Boolean} Is this a sensor shape, if so you will get a collision callback, but no solve
      * @param [callback] {Function} The callback to call once the shape has been added
      * @return {cp.Shape} The shape that was created
+     * @async
      */
     addCustomShape: function(spr, poly, sensor, cb) {
         if(!spr || !spr._phys.body)
