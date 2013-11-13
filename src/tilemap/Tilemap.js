@@ -3,6 +3,7 @@ var Container = require('../display/Container'),
     Sprite = require('../display/Sprite'),
     Vector = require('../math/Vector'),
     Tilelayer = require('./Tilelayer'),
+	IsoTilelayer = require('./IsoTilelayer'),
     Tileset = require('./Tileset'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit');
@@ -147,7 +148,10 @@ var Tilemap = function(state, map, tilesetTextures) {
 
         switch(map.layers[i].type) {
         case 'tilelayer':
-            lyr = new Tilelayer(this, map.layers[i]);
+			if(this.orientation == 'isometric')
+				lyr = new IsoTilelayer(this, map.layers[i]);
+			else
+				lyr = new Tilelayer(this, map.layers[i]);
             break;
 
         case 'objectgroup':
