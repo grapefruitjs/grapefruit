@@ -293,13 +293,13 @@ inherit(Tilelayer, Container, {
      * @param sh {Number} The height of the viewport
      * @private
      */
-    _renderTiles: function(sx, sy, sw, sh) {
- 	  var upperLeft = maputils.screenToMap(0, 0, sx, sy, sw, sh, this.map.unitsPerPixel).floor();
-      var maxTilesWidth = math.floor(sw / this.map.scaledTileSize.x + this.maxSizeX * 2);
-      var maxTilesHeight = math.floor((2 * sh / this.map.scaledTileSize.y + 2 * this.maxSizeY) * 2);
+	_renderTiles: function(sx, sy, sw, sh) {
+		var upperLeft = maputils.screenToMap(0, 0, sx, sy, sw, sh, this.map.unitsPerPixel).floor();
+		var maxTilesWidth = math.floor(sw / this.map.scaledTileSize.x + this.maxSizeX * 2);
+		var maxTilesHeight = math.floor((2 * sh / this.map.scaledTileSize.y + 2 * this.maxSizeY) * 2);
       
-	  var j = upperLeft.y - this.maxSizeY + this.maxSizeX;
-      var i = upperLeft.x - this.maxSizeY - this.maxSizeX;
+		var j = upperLeft.y - this.maxSizeY + this.maxSizeX;
+		var i = upperLeft.x - this.maxSizeY - this.maxSizeX;
 		
 		for (var y = maxTilesHeight; y; --y) {
 			var tilesWidth = 0;

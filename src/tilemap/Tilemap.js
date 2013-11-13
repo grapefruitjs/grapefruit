@@ -129,7 +129,7 @@ var Tilemap = function(state, map, tilesetTextures) {
         this.size.y * this.scaledTileSize.y
     );
 	
-	if(map.orientation == 'isometric') // store orientation constants
+	if(map.orientation === 'isometric') { // store orientation constants
 		this.unitsPerPixel = new Vector(
 			(2.0) / map.tilewidth,
 			(2.0) / map.tileheight
@@ -148,7 +148,7 @@ var Tilemap = function(state, map, tilesetTextures) {
 
         switch(map.layers[i].type) {
         case 'tilelayer':
-			if(this.orientation == 'isometric')
+			if(this.orientation === 'isometric')
 				lyr = new IsoTilelayer(this, map.layers[i]);
 			else
 				lyr = new Tilelayer(this, map.layers[i]);

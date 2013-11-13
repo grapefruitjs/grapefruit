@@ -18,8 +18,8 @@ var maputils = {
 		var adjustX = ((stageWidth/2) + 0.5) * unitsPerPixel.x;
 		var adjustY = ((stageHeight/2) + 0.5) * unitsPerPixel.y;
 		
-		 r.x = (x - camx - y + camy + adjustX)/unitsPerPixel.x;
-         r.y = (x - camx + y - camy + adjustY)/unitsPerPixel.y;
+		r.x = (x - camx - y + camy + adjustX)/unitsPerPixel.x;
+		r.y = (x - camx + y - camy + adjustY)/unitsPerPixel.y;
 				
 		return r;
 	},
