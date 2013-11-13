@@ -148,10 +148,6 @@ module.exports = function(grunt) {
         }
     });
 
-    //xunit file directory, if none is passed
-    if(!process.env.XUNIT_FILE)
-        process.env.XUNIT_FILE = './test/result/unit.xml';
-
     //load npm tasks
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-connect');
