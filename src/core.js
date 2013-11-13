@@ -28,6 +28,9 @@
 *       - Opera 12+
 */
 
+//include hand.js to polyfill and normalize pointer events
+require('./vendor/hand-1.1.2.js');
+
 var gf = {
     //audio
     AudioManager:       require('./audio/AudioManager'),
