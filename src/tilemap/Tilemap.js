@@ -127,6 +127,13 @@ var Tilemap = function(state, map, tilesetTextures) {
         this.size.x * this.scaledTileSize.x,
         this.size.y * this.scaledTileSize.y
     );
+	
+	if(map.orientation == 'isometric') // store orientation constants
+		this.unitsPerPixel = new Vector(
+			(2.0) / map.tilewidth,
+			(2.0) / map.tileheight
+		);
+	}
 
     //create each tileset
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
