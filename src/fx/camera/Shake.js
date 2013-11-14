@@ -7,9 +7,8 @@ var Effect = require('./Effect'),
 /**
  * Shakes the camera around a bit.
  *
- * @class Shake
- * @extends Effect
- * @namespace fx.camera
+ * @class fx.camera.Shake
+ * @extends fx.camera.Effect
  * @constructor
  */
 var Shake = function() {
