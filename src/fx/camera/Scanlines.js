@@ -2,14 +2,33 @@ var Effect = require('./Effect'),
     inherit = require('../../utils/inherit'),
     C = require('../../constants');
 
+/**
+ * Adds arcade-style scanlines to the camera viewport.
+ *
+ * @class Scanlines
+ * @extends Effect
+ * @namespace fx.camera
+ * @constructor
+ */
 var Scanlines = function() {
     Effect.call(this);
 };
 
 inherit(Scanlines, Effect, {
+    /**
+     * Starts running the effect
+     *
+     * @method start
+     * @param [color=0x000000] {Number} The color for the scanlines to be
+     * @param [axis=gf.AXIS.HORIZONTAL] {gf.AXIS} The axis to draw the lines on
+     * @param [spacing=4] {Number} Number of pixels between each line
+     * @param [thickness=1] {Number} Number of pixels thick each line is
+     * @param [alpha=0.3] {Number} The opacity of the lines
+     * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {fx.camera.Scanlines} Returns itself.
+     * @chainable
+     */
     start: function(color, axis, spacing, thickness, alpha, cb) {
-        Effect.prototype.start.call(this);
-
         if(typeof alpha ==='function') {
             cb = alpha;
             alpha = null;
@@ -45,13 +64,13 @@ inherit(Scanlines, Effect, {
             color = null;
         }
 
+        Effect.prototype.start.call(this, cb);
+
         color = color || 0x000000;
         axis = axis || C.AXIS.HORIZONTAL;
         spacing = spacing || 4;
         thickness = thickness || 1;
         alpha = alpha || 0.3;
-
-        this.cb = cb;
 
         var sx = this.parent.size.x,
             sy = this.parent.size.y;
@@ -76,6 +95,13 @@ inherit(Scanlines, Effect, {
 
         return this;
     },
+    /**
+     * Stops running the effect, and removes it from display
+     *
+     * @method stop
+     * @return {fx.camera.Scanlines} Returns itself.
+     * @chainable
+     */
     stop: function() {
         Effect.prototype.stop.call(this);
 

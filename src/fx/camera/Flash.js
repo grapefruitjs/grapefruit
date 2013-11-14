@@ -1,14 +1,32 @@
 var Effect = require('./Effect'),
     inherit = require('../../utils/inherit');
 
+/**
+ * Flash the screen with a color. This will cover the screen in a
+ * color then fade it out.
+ *
+ * @class Flash
+ * @extends Effect
+ * @namespace fx.camera
+ * @constructor
+ */
 var Flash = function() {
     Effect.call(this);
 };
 
 inherit(Flash, Effect, {
+    /**
+     * Starts running the effect
+     *
+     * @method start
+     * @param [color=0xFFFFFF] {Number} The color to flash the screen with
+     * @param [duration=1000] {Number} The time it should take (in milliseconds) to fade out
+     * @param [alpha=1] {Number} The opacity of the initial flash of color (start opacity)
+     * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {fx.camera.Flash} Returns itself.
+     * @chainable
+     */
     start: function(color, duration, alpha, cb) {
-        Effect.prototype.start.call(this);
-
         if(typeof alpha === 'function') {
             cb = duration;
             alpha = null;
@@ -27,10 +45,11 @@ inherit(Flash, Effect, {
             color = null;
         }
 
+        Effect.prototype.start.call(this, cb);
+
         alpha = alpha || 1;
         color = typeof color === 'number' ? color : 0xFFFFFF;
         this.duration = duration && duration > 0 ? duration : 1000;
-        this.cb = cb;
 
         this.gfx.visible = true;
         this.gfx.alpha = alpha;
@@ -40,6 +59,13 @@ inherit(Flash, Effect, {
 
         return this;
     },
+    /**
+     * Stops running the effect, and removes it from display
+     *
+     * @method stop
+     * @return {fx.camera.Flash} Returns itself.
+     * @chainable
+     */
     stop: function() {
         Effect.prototype.stop.call(this);
 
@@ -48,6 +74,14 @@ inherit(Flash, Effect, {
 
         return this;
     },
+    /**
+     * Called internally by the camera each frame to update the effect
+     *
+     * @method update
+     * @return {fx.camera.Flash} Returns itself.
+     * @chainable
+     * @private
+     */
     update: function(dt) {
         if(this.done) return;
 
