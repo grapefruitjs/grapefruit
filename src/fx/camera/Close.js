@@ -5,9 +5,8 @@ var Effect = require('./Effect'),
  * Close camera effect. This effect creates a mask on the world that will animated to cover
  * the screen working from the outside-in. It is like a camera shutter "closing" around the target
  *
- * @class Close
- * @extends Effect
- * @namespace fx.camera
+ * @class fx.camera.Close
+ * @extends fx.camera.Effect
  * @constructor
  */
 var Close = function() {

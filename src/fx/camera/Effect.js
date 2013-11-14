@@ -5,9 +5,8 @@ var Container = require('../../display/Container'),
 /**
  * Base camera effect class.
  *
- * @class Effect
+ * @class fx.camera.Effect
  * @extends Container
- * @namespace fx.camera
  * @constructor
  */
 var Effect = function() {

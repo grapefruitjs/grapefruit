@@ -31,13 +31,12 @@ var ParticleEmitter = function(name) {
 
     /**
      * The maximum number of particles an emitter can have active at any time.
-     * This is set from PARTICLES.MAX_PARTICLES
      *
      * @property maxParticles
      * @type Number
-     * @default gf.PARTICLES.MAX_PARTICLES
+     * @default 100
      */
-    this.maxParticles = C.PARTICLES.MAX_PARTICLES;
+    this.maxParticles = 100;
 
     /**
      * The width of the emitter, particles are emitted in a random integer location

@@ -5,9 +5,8 @@ var Effect = require('./Effect'),
  * Flash the screen with a color. This will cover the screen in a
  * color then fade it out.
  *
- * @class Flash
- * @extends Effect
- * @namespace fx.camera
+ * @class fx.camera.Flash
+ * @extends fx.camera.Effect
  * @constructor
  */
 var Flash = function() {

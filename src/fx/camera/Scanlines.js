@@ -5,9 +5,8 @@ var Effect = require('./Effect'),
 /**
  * Adds arcade-style scanlines to the camera viewport.
  *
- * @class Scanlines
- * @extends Effect
- * @namespace fx.camera
+ * @class fx.camera.Scanlines
+ * @extends fx.camera.Effect
  * @constructor
  */
 var Scanlines = function() {
