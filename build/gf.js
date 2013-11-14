@@ -480,17 +480,7 @@ define(
         CIRCLE: 1,
         POLYGON: 2,
         RECTANGLE: 3
-      },
-      PHYSICS_TYPE: {
-        STATIC: 0,
-        KINEMATIC: 1,
-        DYNAMIC: 2
-      },
-      PHYSICS: {
-        MAX_QUAD_OBJECTS: 10,
-        MAX_QUAD_LEVELS: 5
-      },
-      PARTICLES: { MAX_PARTICLES: 100 }
+      }
     };
   module.exports = constants;
 // uRequire v0.6.5: END body of original nodejs module
@@ -9979,19 +9969,32 @@ return module.exports;
 }
 );
 define(
-  'fx/camera/Effect',['require','exports','module','../../display/Container','../../utils/inherit','../../vendor/pixi'],function (require, exports, module) {
+  'display/Graphics',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
   
 // uRequire v0.6.5: START body of original nodejs module
-  var Container = require("../../display/Container"), inherit = require("../../utils/inherit"), PIXI = require("../../vendor/pixi");
+  var Graphics = require("../vendor/pixi").Graphics;
+  module.exports = Graphics;
+// uRequire v0.6.5: END body of original nodejs module
+
+
+return module.exports;
+}
+);
+define(
+  'fx/camera/Effect',['require','exports','module','../../display/Container','../../utils/inherit','../../display/Graphics'],function (require, exports, module) {
+  
+// uRequire v0.6.5: START body of original nodejs module
+  var Container = require("../../display/Container"), inherit = require("../../utils/inherit"), Graphics = require("../../display/Graphics");
   var Effect = function () {
     Container.call(this);
-    this.addChild(this.gfx = new PIXI.Graphics());
+    this.gfx = this.addChild(new Graphics());
     this.gfx.visible = false;
     this.done = true;
   };
   inherit(Effect, Container, {
-    start: function () {
+    start: function (cb) {
       this.done = false;
+      this.cb = cb;
       return this;
     },
     stop: function () {
@@ -10029,7 +10032,6 @@ define(
   };
   inherit(Close, Effect, {
     start: function (shape, duration, pos, cb) {
-      Effect.prototype.start.call(this);
       if (typeof pos === "function") {
         cb = pos;
         pos = null;
@@ -10045,9 +10047,9 @@ define(
         duration = null;
         shape = null;
       }
+      Effect.prototype.start.call(this, cb);
       this.shape = shape || "circle";
       this.duration = duration && duration > 0 ? duration : 1000;
-      this.cb = cb;
       this.cx = pos ? pos.x : this.parent.size.x / 2;
       this.cy = pos ? pos.y : this.parent.size.y / 2;
       this.w = this.mx = this.parent.size.x;
@@ -10120,7 +10122,6 @@ define(
   };
   inherit(Fade, Effect, {
     start: function (color, duration, alpha, cb) {
-      Effect.prototype.start.call(this);
       if (typeof alpha === "function") {
         cb = duration;
         alpha = null;
@@ -10136,10 +10137,10 @@ define(
         duration = null;
         color = null;
       }
+      Effect.prototype.start.call(this, cb);
       color = typeof color === "number" ? color : 16777215;
       this.goal = alpha || 1;
       this.duration = duration && duration > 0 ? duration : 1000;
-      this.cb = cb;
       this.gfx.visible = true;
       this.gfx.alpha = 0;
       this.gfx.clear();
@@ -10182,7 +10183,6 @@ define(
   };
   inherit(Flash, Effect, {
     start: function (color, duration, alpha, cb) {
-      Effect.prototype.start.call(this);
       if (typeof alpha === "function") {
         cb = duration;
         alpha = null;
@@ -10198,10 +10198,10 @@ define(
         duration = null;
         color = null;
       }
+      Effect.prototype.start.call(this, cb);
       alpha = alpha || 1;
       color = typeof color === "number" ? color : 16777215;
       this.duration = duration && duration > 0 ? duration : 1000;
-      this.cb = cb;
       this.gfx.visible = true;
       this.gfx.alpha = alpha;
       this.gfx.clear();
@@ -10244,7 +10244,6 @@ define(
   };
   inherit(Scanlines, Effect, {
     start: function (color, axis, spacing, thickness, alpha, cb) {
-      Effect.prototype.start.call(this);
       if (typeof alpha === "function") {
         cb = alpha;
         alpha = null;
@@ -10275,12 +10274,12 @@ define(
         axis = null;
         color = null;
       }
+      Effect.prototype.start.call(this, cb);
       color = color || 0;
       axis = axis || C.AXIS.HORIZONTAL;
       spacing = spacing || 4;
       thickness = thickness || 1;
       alpha = alpha || 0.3;
-      this.cb = cb;
       var sx = this.parent.size.x, sy = this.parent.size.y;
       this.gfx.clear();
       this.gfx.visible = true;
@@ -10322,7 +10321,6 @@ define(
   };
   inherit(Shake, Effect, {
     start: function (intensity, duration, direction, cb) {
-      Effect.prototype.start.call(this);
       if (typeof direction === "function") {
         cb = direction;
         direction = null;
@@ -10338,11 +10336,11 @@ define(
         duration = null;
         intensity = null;
       }
+      Effect.prototype.start.call(this, cb);
       this.intensity = intensity || 0.01;
       this.duration = duration || 1000;
       this.direction = direction || C.AXIS.BOTH;
       this.offset.x = this.offset.y = 0;
-      this.cb = cb;
       return this;
     },
     stop: function () {
@@ -10557,18 +10555,6 @@ return module.exports;
 }
 );
 define(
-  'display/Graphics',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
-  
-// uRequire v0.6.5: START body of original nodejs module
-  var Graphics = require("../vendor/pixi").Graphics;
-  module.exports = Graphics;
-// uRequire v0.6.5: END body of original nodejs module
-
-
-return module.exports;
-}
-);
-define(
   'display/RenderTexture',['require','exports','module','../vendor/pixi'],function (require, exports, module) {
   
 // uRequire v0.6.5: START body of original nodejs module
@@ -10600,7 +10586,7 @@ define(
   var ParticleEmitter = function (name) {
     Container.call(this);
     this.name = name;
-    this.maxParticles = C.PARTICLES.MAX_PARTICLES;
+    this.maxParticles = 100;
     this.width = 0;
     this.height = 0;
     this.lifespan = 2000;
