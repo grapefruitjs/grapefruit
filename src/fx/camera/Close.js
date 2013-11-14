@@ -1,14 +1,32 @@
 var Effect = require('./Effect'),
     inherit = require('../../utils/inherit');
 
+/**
+ * Close camera effect. This effect creates a mask on the world that will animated to cover
+ * the screen working from the outside-in. It is like a camera shutter "closing" around the target
+ *
+ * @class Close
+ * @extends Effect
+ * @namespace fx.camera
+ * @constructor
+ */
 var Close = function() {
     Effect.call(this);
 };
 
 inherit(Close, Effect, {
+    /**
+     * Starts running the effect
+     *
+     * @method start
+     * @param [shape='circle'] {String} The shape to close with, can be either 'ellipse', 'circle', or 'rectangle'
+     * @param [duration=1000] {Number} Number of milliseconds for the animation to complete
+     * @param [position] {Vector} The position for the animation to close in on, defaults to camera center
+     * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {fx.camera.Close} Returns itself.
+     * @chainable
+     */
     start: function(shape, duration, pos, cb) {
-        Effect.prototype.start.call(this);
-
         if(typeof pos ==='function') {
             cb = pos;
             pos = null;
@@ -27,9 +45,10 @@ inherit(Close, Effect, {
             shape = null;
         }
 
+        Effect.prototype.start.call(this, cb);
+
         this.shape = shape || 'circle';
         this.duration = duration && duration > 0 ? duration : 1000;
-        this.cb = cb;
 
         this.cx = pos ? pos.x : this.parent.size.x / 2;
         this.cy = pos ? pos.y : this.parent.size.y / 2;
@@ -52,6 +71,13 @@ inherit(Close, Effect, {
 
         return this;
     },
+    /**
+     * Stops running the effect, and removes it from display
+     *
+     * @method stop
+     * @return {fx.camera.Close} Returns itself.
+     * @chainable
+     */
     stop: function() {
         Effect.prototype.stop.call(this);
 
@@ -63,6 +89,14 @@ inherit(Close, Effect, {
 
         return this;
     },
+    /**
+     * Called internally by the camera each frame to update the effect
+     *
+     * @method update
+     * @return {fx.camera.Close} Returns itself.
+     * @chainable
+     * @private
+     */
     update: function(dt) {
         if(this.done) return;
 

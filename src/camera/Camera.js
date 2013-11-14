@@ -150,6 +150,7 @@ var Camera = function(state) {
      * @param [duration=1000] {Number} The time it should take (in milliseconds) to fade out
      * @param [alpha=1] {Number} The opacity of the initial flash of color (start opacity)
      * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {fx.camera.Flash} The close effect that was created.
      */
 
     /**
@@ -161,6 +162,7 @@ var Camera = function(state) {
      * @param [duration=1000] {Number} The time it should take (in milliseconds) to fade in
      * @param [alpha=1] {Number} The opacity to fade into (final opacity)
      * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {fx.camera.Fade} The close effect that was created.
      */
 
     /**
@@ -171,6 +173,7 @@ var Camera = function(state) {
      * @param [duration=1000] {Number} The amount of time the screen shakes for (in milliseconds)
      * @param [direction=gf.AXIS.BOTH] {gf.AXIS} The axis to shake on
      * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {fx.camera.Shake} The close effect that was created.
      */
 
     /**
@@ -183,7 +186,7 @@ var Camera = function(state) {
      * @param [thickness=1] {Number} Number of pixels thick each line is
      * @param [alpha=0.3] {Number} The opacity of the lines
      * @param [callback] {Function} A callback to call once the animation completes.
-     * @return {Close} The close effect that was created.
+     * @return {fx.camera.Scanlines} The close effect that was created.
      */
 
     /**
@@ -194,7 +197,7 @@ var Camera = function(state) {
      * @param [duration=1000] {Number} Number of milliseconds for the animation to complete
      * @param [position] {Vector} The position for the animation to close in on, defaults to camera center
      * @param [callback] {Function} A callback to call once the animation completes.
-     * @return {Close} The close effect that was created.
+     * @return {fx.camera.Close} The close effect that was created.
      */
 
     //Dynamic addition of fx shortcuts

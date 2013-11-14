@@ -1,14 +1,32 @@
 var Effect = require('./Effect'),
     inherit = require('../../utils/inherit');
 
+/**
+ * Fade the screen into a color. This will fade into a color that will
+ * eventually cover the screen.
+ *
+ * @class Fade
+ * @extends Effect
+ * @namespace fx.camera
+ * @constructor
+ */
 var Fade = function() {
     Effect.call(this);
 };
 
 inherit(Fade, Effect, {
+    /**
+     * Starts running the effect
+     *
+     * @method start
+     * @param [color=0xFFFFFF] {Number} The color to fade into
+     * @param [duration=1000] {Number} The time it should take (in milliseconds) to fade in
+     * @param [alpha=1] {Number} The opacity to fade into (final opacity)
+     * @param [callback] {Function} A callback to call once the animation completes.
+     * @return {fx.camera.Fade} Returns itself.
+     * @chainable
+     */
     start: function(color, duration, alpha, cb) {
-        Effect.prototype.start.call(this);
-
         if(typeof alpha === 'function') {
             cb = duration;
             alpha = null;
@@ -27,10 +45,11 @@ inherit(Fade, Effect, {
             color = null;
         }
 
+        Effect.prototype.start.call(this, cb);
+
         color = typeof color === 'number' ? color : 0xFFFFFF;
         this.goal = alpha || 1;
         this.duration = duration && duration > 0 ? duration : 1000;
-        this.cb = cb;
 
         this.gfx.visible = true;
         this.gfx.alpha = 0;
@@ -40,6 +59,13 @@ inherit(Fade, Effect, {
 
         return this;
     },
+    /**
+     * Stops running the effect, and removes it from display
+     *
+     * @method stop
+     * @return {fx.camera.Fade} Returns itself.
+     * @chainable
+     */
     stop: function() {
         Effect.prototype.stop.call(this);
 
@@ -48,6 +74,14 @@ inherit(Fade, Effect, {
 
         return this;
     },
+    /**
+     * Called internally by the camera each frame to update the effect
+     *
+     * @method update
+     * @return {fx.camera.Fade} Returns itself.
+     * @chainable
+     * @private
+     */
     update: function(dt) {
         if(this.done) return;
 
