@@ -3,21 +3,21 @@
 module.exports = function(grunt) {
     var glob = require('glob'),
         source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; }),
-        testPort = grunt.option('port-test') || 9002;
-        //banner = [
-        //    '/**',
-        //    ' * @license',
-        //    ' * <%= pkg.longName %> - v<%= pkg.version %>',
-        //    ' * Copyright (c) 2012, Chad Engler',
-        //    ' * <%= pkg.homepage %>',
-        //    ' *',
-        //    ' * Compiled: <%= grunt.template.today("yyyy-mm-dd") %>',
-        //    ' *',
-        //    ' * <%= pkg.longName %> is licensed under the <%= pkg.license %> License.',
-        //    ' * <%= pkg.licenseUrl %>',
-        //    ' */',
-        //    ''
-        //].join('\n');
+        testPort = grunt.option('port-test') || 9002,
+        banner = [
+            '/**',
+            ' * @license',
+            ' * <%= pkg.longName %> - v<%= pkg.version %>',
+            ' * Copyright (c) 2012, Chad Engler',
+            ' * <%= pkg.homepage %>',
+            ' *',
+            ' * Compiled: <%= grunt.template.today("yyyy-mm-dd") %>',
+            ' *',
+            ' * <%= pkg.longName %> is licensed under the <%= pkg.license %> License.',
+            ' * <%= pkg.licenseUrl %>',
+            ' */',
+            ''
+        ].join('\n');
 
     //Project Configuration
     grunt.initConfig({
@@ -33,21 +33,46 @@ module.exports = function(grunt) {
         files: {
             dev: '<%= dirs.dist %>/<%= pkg.name %>.js',
             dist: '<%= dirs.dist %>/<%= pkg.name %>.min.js',
+            sourceMap: '<%= dirs.dist %>/<%= pkg.name %>.min.map',
             main: 'core.js'
         },
-        replace: {
+        concat: {
+            options: {
+                stripBanners: true,
+                banner: banner
+            },
+            dev: {
+                src: ['<%= files.dev %>'],
+                dest: '<%= files.dev %>'
+            },
             dist: {
-                options: {
-                    variables: {
-                        'VERSION': '<%= pkg.version %>'
-                    },
-                    prefix: '@@'
+                src: ['<%= files.dist %>'],
+                dest: '<%= files.dist %>'
+            }
+        },
+        replace: {
+            options: {
+                variables: {
+                    'VERSION': '<%= pkg.version %>'
                 },
+                prefix: '@@'
+            },
+            dev: {
                 files: [
                     {
                         expand: true,
                         flatten: true,
-                        src: ['<%= files.dev %>', '<%= files.dist %>'],
+                        src: ['<%= files.dev %>'],
+                        dest: '<%= dirs.dist %>'
+                    }
+                ]
+            },
+            dist: {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: ['<%= files.dist %>'],
                         dest: '<%= dirs.dist %>'
                     }
                 ]
@@ -153,16 +178,31 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-mocha');
     grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-urequire');
 
     //setup shortcut tasks
     grunt.registerTask('default', ['jshint', 'build']);
-    grunt.registerTask('build', ['urequire:dev', 'urequire:dist', 'replace:dist']);
     grunt.registerTask('test', ['mocha:dist']);
     grunt.registerTask('testci', ['jshint', 'mocha:dist']);
     grunt.registerTask('docs', ['yuidoc']);
 
     grunt.registerTask('dev', ['watch:src']);
+
+    //build task
+    var _buildTasks = ['urequire:%t', 'concat:%t', 'replace:%t'];
+
+    grunt.registerTask('build', 'Builds the compiled Grapefruit files', function(type) {
+        if(type) {
+            grunt.task.run(_replace(type));
+        } else {
+            grunt.task.run(_replace('dev').concat(_replace('dist')));
+        }
+    });
+
+    function _replace(type) {
+        return _buildTasks.map(function(v) { return v.replace('%t', type); });
+    }
 };
