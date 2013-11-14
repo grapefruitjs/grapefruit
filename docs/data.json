@@ -3,7 +3,7 @@
         "name": "GrapeFruit Game Engine",
         "description": "A fun and easy WebGL-enabled JavaScript Game Engine",
         "version": "v0.1.0",
-        "url": "https://github.com/englercj/grapefruit",
+        "url": "https://github.com/grapefruitjs/grapefruit",
         "logo": "https://en.gravatar.com/userimage/49218683/8654d0c767f327312ebb1ace7f5a8d8d.png"
     },
     "files": {
@@ -93,6 +93,60 @@
             "modules": {},
             "classes": {
                 "TilingSprite": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\fx\\camera\\Close.js": {
+            "name": "src\\fx\\camera\\Close.js",
+            "modules": {},
+            "classes": {
+                "fx.camera.Close": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\fx\\camera\\Effect.js": {
+            "name": "src\\fx\\camera\\Effect.js",
+            "modules": {},
+            "classes": {
+                "fx.camera.Effect": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\fx\\camera\\Fade.js": {
+            "name": "src\\fx\\camera\\Fade.js",
+            "modules": {},
+            "classes": {
+                "fx.camera.Fade": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\fx\\camera\\Flash.js": {
+            "name": "src\\fx\\camera\\Flash.js",
+            "modules": {},
+            "classes": {
+                "fx.camera.Flash": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\fx\\camera\\Scanlines.js": {
+            "name": "src\\fx\\camera\\Scanlines.js",
+            "modules": {},
+            "classes": {
+                "fx.camera.Scanlines": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\fx\\camera\\Shake.js": {
+            "name": "src\\fx\\camera\\Shake.js",
+            "modules": {},
+            "classes": {
+                "fx.camera.Shake": 1
             },
             "fors": {},
             "namespaces": {}
@@ -455,6 +509,21 @@
             "fors": {},
             "namespaces": {}
         },
+        "src\\constants.js": {
+            "name": "src\\constants.js",
+            "modules": {},
+            "classes": {
+                "version": 1,
+                "RENDERER": 1,
+                "FILE_FORMAT": 1,
+                "ATLAS_FORMAT": 1,
+                "CAMERA_FOLLOW": 1,
+                "AXIS": 1,
+                "DIRECTION": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "src\\core.js": {
             "name": "src\\core.js",
             "modules": {},
@@ -779,6 +848,90 @@
                     "type": "Number"
                 }
             ]
+        },
+        "fx.camera.Close": {
+            "name": "fx.camera.Close",
+            "shortname": "fx.camera.Close",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\fx\\camera\\Close.js",
+            "line": 4,
+            "description": "Close camera effect. This effect creates a mask on the world that will animated to cover\nthe screen working from the outside-in. It is like a camera shutter \"closing\" around the target",
+            "extends": "fx.camera.Effect",
+            "is_constructor": 1
+        },
+        "fx.camera.Effect": {
+            "name": "fx.camera.Effect",
+            "shortname": "fx.camera.Effect",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\fx\\camera\\Effect.js",
+            "line": 5,
+            "description": "Base camera effect class.",
+            "extends": "Container",
+            "is_constructor": 1
+        },
+        "fx.camera.Fade": {
+            "name": "fx.camera.Fade",
+            "shortname": "fx.camera.Fade",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\fx\\camera\\Fade.js",
+            "line": 4,
+            "description": "Fade the screen into a color. This will fade into a color that will\neventually cover the screen.",
+            "extends": "fx.camera.Effect",
+            "is_constructor": 1
+        },
+        "fx.camera.Flash": {
+            "name": "fx.camera.Flash",
+            "shortname": "fx.camera.Flash",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\fx\\camera\\Flash.js",
+            "line": 4,
+            "description": "Flash the screen with a color. This will cover the screen in a\ncolor then fade it out.",
+            "extends": "fx.camera.Effect",
+            "is_constructor": 1
+        },
+        "fx.camera.Scanlines": {
+            "name": "fx.camera.Scanlines",
+            "shortname": "fx.camera.Scanlines",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\fx\\camera\\Scanlines.js",
+            "line": 5,
+            "description": "Adds arcade-style scanlines to the camera viewport.",
+            "extends": "fx.camera.Effect",
+            "is_constructor": 1
+        },
+        "fx.camera.Shake": {
+            "name": "fx.camera.Shake",
+            "shortname": "fx.camera.Shake",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\fx\\camera\\Shake.js",
+            "line": 7,
+            "description": "Shakes the camera around a bit.",
+            "extends": "fx.camera.Effect",
+            "is_constructor": 1
         },
         "Game": {
             "name": "Game",
@@ -1903,6 +2056,104 @@
             "description": "The grapefruit utility object, used for misc functions used throughout the code base",
             "extends": "Object",
             "static": 1
+        },
+        "version": {
+            "name": "version",
+            "shortname": "version",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\constants.js",
+            "line": 2,
+            "description": "The version of the library",
+            "static": 1,
+            "final": 1
+        },
+        "RENDERER": {
+            "name": "RENDERER",
+            "shortname": "RENDERER",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\constants.js",
+            "line": 11,
+            "description": "The types of renderers supported",
+            "static": 1,
+            "final": 1
+        },
+        "FILE_FORMAT": {
+            "name": "FILE_FORMAT",
+            "shortname": "FILE_FORMAT",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\constants.js",
+            "line": 51,
+            "description": "The types of files that the loader supports for types that have multiple formats (like tilemaps).",
+            "static": 1,
+            "final": 1
+        },
+        "ATLAS_FORMAT": {
+            "name": "ATLAS_FORMAT",
+            "shortname": "ATLAS_FORMAT",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\constants.js",
+            "line": 91,
+            "description": "The types of texture atlas file formats that the loader supports.",
+            "static": 1,
+            "final": 1
+        },
+        "CAMERA_FOLLOW": {
+            "name": "CAMERA_FOLLOW",
+            "shortname": "CAMERA_FOLLOW",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\constants.js",
+            "line": 131,
+            "description": "The follow types that the camera can execute",
+            "static": 1,
+            "final": 1
+        },
+        "AXIS": {
+            "name": "AXIS",
+            "shortname": "AXIS",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\constants.js",
+            "line": 182,
+            "description": "These represent different axis. They are bitmap flags and can be combined together.",
+            "static": 1,
+            "final": 1
+        },
+        "DIRECTION": {
+            "name": "DIRECTION",
+            "shortname": "DIRECTION",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\constants.js",
+            "line": 232,
+            "description": "These represent different directions in the world. They are bitmap flags and can be combined together.",
+            "static": 1,
+            "final": 1
         },
         "plugin": {
             "name": "plugin",
@@ -3056,11 +3307,15 @@
                     "optional": true
                 }
             ],
+            "return": {
+                "description": "The close effect that was created.",
+                "type": "fx.camera.Flash"
+            },
             "class": "Camera"
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 155,
+            "line": 156,
             "description": "Fade the screen into a color. This will fade into a color that will\neventually cover the screen.",
             "itemtype": "method",
             "name": "fade",
@@ -3093,11 +3348,15 @@
                     "optional": true
                 }
             ],
+            "return": {
+                "description": "The close effect that was created.",
+                "type": "fx.camera.Fade"
+            },
             "class": "Camera"
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 166,
+            "line": 168,
             "description": "Shakes the camera around a bit.",
             "itemtype": "method",
             "name": "shake",
@@ -3130,11 +3389,15 @@
                     "optional": true
                 }
             ],
+            "return": {
+                "description": "The close effect that was created.",
+                "type": "fx.camera.Shake"
+            },
             "class": "Camera"
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 176,
+            "line": 179,
             "description": "Adds arcade-style scanlines to the camera viewport.",
             "itemtype": "method",
             "name": "scanlines - color, axis, spacing, thickness, alpha, cb",
@@ -3183,13 +3446,13 @@
             ],
             "return": {
                 "description": "The close effect that was created.",
-                "type": "Close"
+                "type": "fx.camera.Scanlines"
             },
             "class": "Camera"
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 189,
+            "line": 192,
             "description": "Performs a \"close\" animation that will cover the screen with a color.",
             "itemtype": "method",
             "name": "close",
@@ -3223,13 +3486,13 @@
             ],
             "return": {
                 "description": "The close effect that was created.",
-                "type": "Close"
+                "type": "fx.camera.Close"
             },
             "class": "Camera"
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 224,
+            "line": 227,
             "description": "The base callback for camera FX. This is called at the end of each aniamtion to\nfree the FX class back into the pool.",
             "itemtype": "method",
             "name": "_fxCallback",
@@ -3257,7 +3520,7 @@
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 244,
+            "line": 247,
             "description": "Follows an sprite with the camera, ensuring they are always center view. You can\npass a follow style to change the area an sprite can move around in before we start\nto move with them.",
             "itemtype": "method",
             "name": "follow",
@@ -3284,7 +3547,7 @@
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 302,
+            "line": 305,
             "description": "Stops following any sprites",
             "itemtype": "method",
             "name": "unfollow",
@@ -3297,7 +3560,7 @@
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 314,
+            "line": 317,
             "description": "Focuses the camera on a sprite.",
             "itemtype": "method",
             "name": "focusSprite",
@@ -3317,7 +3580,7 @@
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 341,
+            "line": 344,
             "description": "Focuses the camera on an x,y position. Ensures that the camera does\nnot go outside the bounds set with setBounds()",
             "itemtype": "method",
             "name": "focus",
@@ -3342,7 +3605,7 @@
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 363,
+            "line": 366,
             "description": "Pans the camera around by the x,y amount. Ensures that the camera does\nnot go outside the bounds set with setBounds()",
             "itemtype": "method",
             "name": "pan",
@@ -3367,7 +3630,7 @@
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 407,
+            "line": 410,
             "description": "Checks if a point is outside the bounds of the camera constraints.",
             "itemtype": "method",
             "name": "_outsideBounds",
@@ -3393,7 +3656,7 @@
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 425,
+            "line": 428,
             "description": "Resizes the viewing area, this is called internally by your game instance\nwhen you call mygame.resize(). DO NOT CALL THIS DIRECTLY",
             "itemtype": "method",
             "name": "resize",
@@ -3420,7 +3683,7 @@
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 445,
+            "line": 448,
             "description": "Sets the bounds the camera is allowed to go. Usually this is the world's\nsize unless you set it manually.",
             "itemtype": "method",
             "name": "constrain",
@@ -3440,7 +3703,7 @@
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 459,
+            "line": 462,
             "description": "Removes the constraints of the camera, to allow free movement around the world",
             "itemtype": "method",
             "name": "unconstrain",
@@ -3453,7 +3716,7 @@
         },
         {
             "file": "src\\camera\\Camera.js",
-            "line": 471,
+            "line": 474,
             "description": "Called internally every frame. Updates all effects and the follow",
             "itemtype": "method",
             "name": "update",
@@ -4322,6 +4585,433 @@
                 }
             ],
             "class": "Sprite"
+        },
+        {
+            "file": "src\\fx\\camera\\Close.js",
+            "line": 17,
+            "description": "Starts running the effect",
+            "itemtype": "method",
+            "name": "start",
+            "params": [
+                {
+                    "name": "shape",
+                    "description": "The shape to close with, can be either 'ellipse', 'circle', or 'rectangle'",
+                    "type": "String",
+                    "optional": true,
+                    "optdefault": "'circle'"
+                },
+                {
+                    "name": "duration",
+                    "description": "Number of milliseconds for the animation to complete",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "1000"
+                },
+                {
+                    "name": "position",
+                    "description": "The position for the animation to close in on, defaults to camera center",
+                    "type": "Vector",
+                    "optional": true
+                },
+                {
+                    "name": "callback",
+                    "description": "A callback to call once the animation completes.",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Close"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Close"
+        },
+        {
+            "file": "src\\fx\\camera\\Close.js",
+            "line": 73,
+            "description": "Stops running the effect, and removes it from display",
+            "itemtype": "method",
+            "name": "stop",
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Close"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Close"
+        },
+        {
+            "file": "src\\fx\\camera\\Close.js",
+            "line": 91,
+            "description": "Called internally by the camera each frame to update the effect",
+            "itemtype": "method",
+            "name": "update",
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Close"
+            },
+            "chainable": 1,
+            "access": "private",
+            "tagname": "",
+            "class": "fx.camera.Close"
+        },
+        {
+            "file": "src\\fx\\camera\\Effect.js",
+            "line": 15,
+            "description": "A graphics instance that can be used by effects to draw",
+            "itemtype": "property",
+            "name": "gfx",
+            "type": "Graphics",
+            "class": "fx.camera.Effect"
+        },
+        {
+            "file": "src\\fx\\camera\\Effect.js",
+            "line": 24,
+            "description": "Whether or not the effect has completed, and is no longer runnning.",
+            "itemtype": "property",
+            "name": "done",
+            "type": "Boolean",
+            "default": "false",
+            "readonly": "",
+            "class": "fx.camera.Effect"
+        },
+        {
+            "file": "src\\fx\\camera\\Effect.js",
+            "line": 36,
+            "description": "Starts running the effect",
+            "itemtype": "method",
+            "name": "start",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "Called when the animation completes",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Returns itself.",
+                "type": "Effect"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Effect"
+        },
+        {
+            "file": "src\\fx\\camera\\Effect.js",
+            "line": 49,
+            "description": "Stops running the effect",
+            "itemtype": "method",
+            "name": "stop",
+            "return": {
+                "description": "Returns itself.",
+                "type": "Effect"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Effect"
+        },
+        {
+            "file": "src\\fx\\camera\\Effect.js",
+            "line": 60,
+            "description": "Called internally by the camera each frame to update the effect",
+            "itemtype": "method",
+            "name": "update",
+            "return": {
+                "description": "Returns itself.",
+                "type": "Effect"
+            },
+            "chainable": 1,
+            "access": "private",
+            "tagname": "",
+            "class": "fx.camera.Effect"
+        },
+        {
+            "file": "src\\fx\\camera\\Effect.js",
+            "line": 71,
+            "description": "Called when the effect finishes to call the registered callback (if there is one).\nIf the callback explicitly returns `false` then `.stop()` will not be called. `done`\nwill still be set to `true`but the effect will not be removed from the display.\n\nThis is useful if you want to run an animation and keep the final state active until\nyou manually remove the item with `.stop()`. For example: fading to black then running\nsome async process, then removing the black manually.",
+            "itemtype": "method",
+            "name": "_complete",
+            "access": "private",
+            "tagname": "",
+            "class": "fx.camera.Effect"
+        },
+        {
+            "file": "src\\fx\\camera\\Fade.js",
+            "line": 17,
+            "description": "Starts running the effect",
+            "itemtype": "method",
+            "name": "start",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "The color to fade into",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "0xFFFFFF"
+                },
+                {
+                    "name": "duration",
+                    "description": "The time it should take (in milliseconds) to fade in",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "1000"
+                },
+                {
+                    "name": "alpha",
+                    "description": "The opacity to fade into (final opacity)",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "1"
+                },
+                {
+                    "name": "callback",
+                    "description": "A callback to call once the animation completes.",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Fade"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Fade"
+        },
+        {
+            "file": "src\\fx\\camera\\Fade.js",
+            "line": 61,
+            "description": "Stops running the effect, and removes it from display",
+            "itemtype": "method",
+            "name": "stop",
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Fade"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Fade"
+        },
+        {
+            "file": "src\\fx\\camera\\Fade.js",
+            "line": 76,
+            "description": "Called internally by the camera each frame to update the effect",
+            "itemtype": "method",
+            "name": "update",
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Fade"
+            },
+            "chainable": 1,
+            "access": "private",
+            "tagname": "",
+            "class": "fx.camera.Fade"
+        },
+        {
+            "file": "src\\fx\\camera\\Flash.js",
+            "line": 17,
+            "description": "Starts running the effect",
+            "itemtype": "method",
+            "name": "start",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "The color to flash the screen with",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "0xFFFFFF"
+                },
+                {
+                    "name": "duration",
+                    "description": "The time it should take (in milliseconds) to fade out",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "1000"
+                },
+                {
+                    "name": "alpha",
+                    "description": "The opacity of the initial flash of color (start opacity)",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "1"
+                },
+                {
+                    "name": "callback",
+                    "description": "A callback to call once the animation completes.",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Flash"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Flash"
+        },
+        {
+            "file": "src\\fx\\camera\\Flash.js",
+            "line": 61,
+            "description": "Stops running the effect, and removes it from display",
+            "itemtype": "method",
+            "name": "stop",
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Flash"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Flash"
+        },
+        {
+            "file": "src\\fx\\camera\\Flash.js",
+            "line": 76,
+            "description": "Called internally by the camera each frame to update the effect",
+            "itemtype": "method",
+            "name": "update",
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Flash"
+            },
+            "chainable": 1,
+            "access": "private",
+            "tagname": "",
+            "class": "fx.camera.Flash"
+        },
+        {
+            "file": "src\\fx\\camera\\Scanlines.js",
+            "line": 17,
+            "description": "Starts running the effect",
+            "itemtype": "method",
+            "name": "start",
+            "params": [
+                {
+                    "name": "color",
+                    "description": "The color for the scanlines to be",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "0x000000"
+                },
+                {
+                    "name": "axis",
+                    "description": "The axis to draw the lines on",
+                    "type": "gf.AXIS",
+                    "optional": true,
+                    "optdefault": "gf.AXIS.HORIZONTAL"
+                },
+                {
+                    "name": "spacing",
+                    "description": "Number of pixels between each line",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "4"
+                },
+                {
+                    "name": "thickness",
+                    "description": "Number of pixels thick each line is",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "1"
+                },
+                {
+                    "name": "alpha",
+                    "description": "The opacity of the lines",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "0.3"
+                },
+                {
+                    "name": "callback",
+                    "description": "A callback to call once the animation completes.",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Scanlines"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Scanlines"
+        },
+        {
+            "file": "src\\fx\\camera\\Scanlines.js",
+            "line": 97,
+            "description": "Stops running the effect, and removes it from display",
+            "itemtype": "method",
+            "name": "stop",
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Scanlines"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Scanlines"
+        },
+        {
+            "file": "src\\fx\\camera\\Shake.js",
+            "line": 20,
+            "description": "Starts running the effect",
+            "itemtype": "method",
+            "name": "start",
+            "params": [
+                {
+                    "name": "intensity",
+                    "description": "The intensity of the shaking",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "0.01"
+                },
+                {
+                    "name": "duration",
+                    "description": "The amount of time the screen shakes for (in milliseconds)",
+                    "type": "Number",
+                    "optional": true,
+                    "optdefault": "1000"
+                },
+                {
+                    "name": "direction",
+                    "description": "The axis to shake on",
+                    "type": "gf.AXIS",
+                    "optional": true,
+                    "optdefault": "gf.AXIS.BOTH"
+                },
+                {
+                    "name": "callback",
+                    "description": "A callback to call once the animation completes.",
+                    "type": "Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Shake"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Shake"
+        },
+        {
+            "file": "src\\fx\\camera\\Shake.js",
+            "line": 59,
+            "description": "Stops running the effect, and removes it from display",
+            "itemtype": "method",
+            "name": "stop",
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Shake"
+            },
+            "chainable": 1,
+            "class": "fx.camera.Shake"
+        },
+        {
+            "file": "src\\fx\\camera\\Shake.js",
+            "line": 73,
+            "description": "Called internally by the camera each frame to update the effect",
+            "itemtype": "method",
+            "name": "update",
+            "return": {
+                "description": "Returns itself.",
+                "type": "fx.camera.Shake"
+            },
+            "chainable": 1,
+            "access": "private",
+            "tagname": "",
+            "class": "fx.camera.Shake"
         },
         {
             "file": "src\\game\\Game.js",
@@ -8642,16 +9332,16 @@
         {
             "file": "src\\particles\\ParticleEmitter.js",
             "line": 32,
-            "description": "The maximum number of particles an emitter can have active at any time.\nThis is set from PARTICLES.MAX_PARTICLES",
+            "description": "The maximum number of particles an emitter can have active at any time.",
             "itemtype": "property",
             "name": "maxParticles",
             "type": "Number",
-            "default": "gf.PARTICLES.MAX_PARTICLES",
+            "default": "100",
             "class": "ParticleEmitter"
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 42,
+            "line": 41,
             "description": "The width of the emitter, particles are emitted in a random integer location\nwithin the width and height of the emitter.",
             "itemtype": "property",
             "name": "width",
@@ -8661,7 +9351,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 52,
+            "line": 51,
             "description": "The height of the emitter, particles are emitted in a random integer location\nwithin the width and height of the emitter.",
             "itemtype": "property",
             "name": "height",
@@ -8671,7 +9361,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 62,
+            "line": 61,
             "description": "The default lifespan of a particle that is emitted by this ParticleEmitter, in milliseconds",
             "itemtype": "property",
             "name": "lifespan",
@@ -8681,7 +9371,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 71,
+            "line": 70,
             "description": "The default minSpeed of a particle that is emitted by this ParticleEmitter\nThe actual speed will be a random Vector between `minSpeed` and `maxSpeed`.",
             "itemtype": "property",
             "name": "minSpeed",
@@ -8691,7 +9381,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 81,
+            "line": 80,
             "description": "The default maxSpeed of a particle that is emitted by this ParticleEmitter\nThe actual speed will be a random Vector between `minSpeed` and `maxSpeed`.",
             "itemtype": "property",
             "name": "maxSpeed",
@@ -8701,7 +9391,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 91,
+            "line": 90,
             "description": "The default minScale of a particle that is emitted by this ParticleEmitter\nThe actual scale will be a random number between `minScale` and `maxScale`.",
             "itemtype": "property",
             "name": "minScale",
@@ -8711,7 +9401,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 101,
+            "line": 100,
             "description": "The default maxScale of a particle that is emitted by this ParticleEmitter\nThe actual scale will be a random number between `minScale` and `maxScale`.",
             "itemtype": "property",
             "name": "maxScale",
@@ -8721,7 +9411,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 111,
+            "line": 110,
             "description": "The default minRotation of a particle that is emitted by this ParticleEmitter\nThe actual rotation will be a random integer between `minRotation` and `maxRotation`.",
             "itemtype": "property",
             "name": "minRotation",
@@ -8731,7 +9421,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 121,
+            "line": 120,
             "description": "The default maxRotation of a particle that is emitted by this ParticleEmitter\nThe actual rotation will be a random integer between `minRotation` and `maxRotation`.",
             "itemtype": "property",
             "name": "maxRotation",
@@ -8741,7 +9431,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 131,
+            "line": 130,
             "description": "The time in milliseconds between emissions of particles",
             "itemtype": "property",
             "name": "delay",
@@ -8751,7 +9441,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 140,
+            "line": 139,
             "description": "If true the emitter will emit particles, otherwise it will not.",
             "itemtype": "property",
             "name": "active",
@@ -8761,7 +9451,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 149,
+            "line": 148,
             "description": "The internal pool to create and reuse particles from",
             "itemtype": "property",
             "name": "particles",
@@ -8772,7 +9462,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 172,
+            "line": 171,
             "description": "Starts the particle emission, must call `setup` first to setup\nwhat kind of particle to emit.",
             "itemtype": "method",
             "name": "start",
@@ -8815,7 +9505,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 196,
+            "line": 195,
             "description": "Deactivates the emitter. Particles that are already emitted will continue to\ndecay and die, but no new particles will be emitted.",
             "itemtype": "method",
             "name": "stop",
@@ -8828,7 +9518,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 209,
+            "line": 208,
             "description": "Sets up the particles to be emitted",
             "itemtype": "method",
             "name": "setup",
@@ -8855,7 +9545,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 242,
+            "line": 241,
             "description": "Gets a particle from the pool and sets it up.",
             "itemtype": "method",
             "name": "_get",
@@ -8869,7 +9559,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 267,
+            "line": 266,
             "description": "Frees a particle back into the pool and hides it.",
             "itemtype": "method",
             "name": "_free",
@@ -8886,7 +9576,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 281,
+            "line": 280,
             "description": "Emits a single particle and sets the position, scale, lifespan, and velocity",
             "itemtype": "method",
             "name": "emitParticle",
@@ -8899,7 +9589,7 @@
         },
         {
             "file": "src\\particles\\ParticleEmitter.js",
-            "line": 316,
+            "line": 315,
             "description": "Called internally by the ParticleSystem each frame to update each particle's lifespan.",
             "itemtype": "method",
             "name": "update",
@@ -12533,6 +13223,282 @@
                 "type": "Document"
             },
             "class": "utils"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 19,
+            "description": "Represents automatically choosing a renderer",
+            "itemtype": "property",
+            "name": "AUTO",
+            "type": "String",
+            "default": "'auto'",
+            "static": 1,
+            "final": 1,
+            "class": "RENDERER"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 29,
+            "description": "Represents the canvas renderer",
+            "itemtype": "property",
+            "name": "CANVAS",
+            "type": "String",
+            "default": "'canvas'",
+            "static": 1,
+            "final": 1,
+            "class": "RENDERER"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 39,
+            "description": "Represents the webgl renderer",
+            "itemtype": "property",
+            "name": "WEBGL",
+            "type": "String",
+            "default": "'webgl'",
+            "static": 1,
+            "final": 1,
+            "class": "RENDERER"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 59,
+            "description": "Represents the json file type",
+            "itemtype": "property",
+            "name": "JSON",
+            "type": "String",
+            "default": "'json'",
+            "static": 1,
+            "final": 1,
+            "class": "FILE_FORMAT"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 69,
+            "description": "Represents the xml file type",
+            "itemtype": "property",
+            "name": "XML",
+            "type": "String",
+            "default": "'xml'",
+            "static": 1,
+            "final": 1,
+            "class": "FILE_FORMAT"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 79,
+            "description": "Represents the csv file type",
+            "itemtype": "property",
+            "name": "CSV",
+            "type": "String",
+            "default": "'csv'",
+            "static": 1,
+            "final": 1,
+            "class": "FILE_FORMAT"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 99,
+            "description": "Represents the JSON Array export type of TexturePacker",
+            "itemtype": "property",
+            "name": "JSON_ARRAY",
+            "type": "String",
+            "default": "'json_array'",
+            "static": 1,
+            "final": 1,
+            "class": "ATLAS_FORMAT"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 109,
+            "description": "Represents the JSON Hash export type of TexturePacker",
+            "itemtype": "property",
+            "name": "JSON_HASH",
+            "type": "String",
+            "default": "'json_hash'",
+            "static": 1,
+            "final": 1,
+            "class": "ATLAS_FORMAT"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 119,
+            "description": "Represents the Starling XML format, this export type is supported by TexturePacker",
+            "itemtype": "property",
+            "name": "XML_STARLING",
+            "type": "String",
+            "default": "'xml_starling'",
+            "static": 1,
+            "final": 1,
+            "class": "ATLAS_FORMAT"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 139,
+            "description": "Represents platformer follow style",
+            "itemtype": "property",
+            "name": "PLATFORMER",
+            "type": "Number",
+            "default": "0",
+            "static": 1,
+            "final": 1,
+            "class": "CAMERA_FOLLOW"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 149,
+            "description": "Represents topdown follow style",
+            "itemtype": "property",
+            "name": "TOPDOWN",
+            "type": "Number",
+            "default": "1",
+            "static": 1,
+            "final": 1,
+            "class": "CAMERA_FOLLOW"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 159,
+            "description": "Represents a tight topdown follow style",
+            "itemtype": "property",
+            "name": "TOPDOWN_TIGHT",
+            "type": "Number",
+            "default": "2",
+            "static": 1,
+            "final": 1,
+            "class": "CAMERA_FOLLOW"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 169,
+            "description": "Represents a lockon follow style, this has no deadzone and the camera will\nfollow the target movement exactly.",
+            "itemtype": "property",
+            "name": "LOCKON",
+            "type": "Number",
+            "default": "3",
+            "static": 1,
+            "final": 1,
+            "class": "CAMERA_FOLLOW"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 190,
+            "description": "Represents no axis, binary value: 0000",
+            "itemtype": "property",
+            "name": "NONE",
+            "type": "Number",
+            "default": "0",
+            "static": 1,
+            "final": 1,
+            "class": "AXIS"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 200,
+            "description": "Represents a horizontal axis, binary value: 0001",
+            "itemtype": "property",
+            "name": "HORIZONTAL",
+            "type": "Number",
+            "default": "1",
+            "static": 1,
+            "final": 1,
+            "class": "AXIS"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 210,
+            "description": "Represents a vertical axis, binary value: 0010",
+            "itemtype": "property",
+            "name": "VERTICAL",
+            "type": "Number",
+            "default": "2",
+            "static": 1,
+            "final": 1,
+            "class": "AXIS"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 220,
+            "description": "Represents both axes, binary value: 0011",
+            "itemtype": "property",
+            "name": "VERTICAL",
+            "type": "Number",
+            "default": "3",
+            "static": 1,
+            "final": 1,
+            "class": "AXIS"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 240,
+            "description": "Represents no direction, binary value: 0000",
+            "itemtype": "property",
+            "name": "NONE",
+            "type": "Number",
+            "default": "0",
+            "static": 1,
+            "final": 1,
+            "class": "DIRECTION"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 250,
+            "description": "Represents left direction, binary value: 0001",
+            "itemtype": "property",
+            "name": "LEFT",
+            "type": "Number",
+            "default": "1",
+            "static": 1,
+            "final": 1,
+            "class": "DIRECTION"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 260,
+            "description": "Represents right direction, binary value: 0010",
+            "itemtype": "property",
+            "name": "RIGHT",
+            "type": "Number",
+            "default": "2",
+            "static": 1,
+            "final": 1,
+            "class": "DIRECTION"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 270,
+            "description": "Represents top (up) direction, binary value: 0100",
+            "itemtype": "property",
+            "name": "TOP",
+            "type": "Number",
+            "default": "4",
+            "static": 1,
+            "final": 1,
+            "class": "DIRECTION"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 280,
+            "description": "Represents bottom (down) direction, binary value: 1000",
+            "itemtype": "property",
+            "name": "BOTTOM",
+            "type": "Number",
+            "default": "8",
+            "static": 1,
+            "final": 1,
+            "class": "DIRECTION"
+        },
+        {
+            "file": "src\\constants.js",
+            "line": 290,
+            "description": "Represents all directions, binary value: 1111",
+            "itemtype": "property",
+            "name": "ALL",
+            "type": "Number",
+            "default": "15",
+            "static": 1,
+            "final": 1,
+            "class": "DIRECTION"
         },
         {
             "file": "src\\core.js",
