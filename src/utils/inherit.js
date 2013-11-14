@@ -9,16 +9,13 @@
 var inherit = function(child, parent, proto) {
     proto = proto || {};
 
-    //get the property descriptors from the child proto and the passed proto
-    var desc = {};
-    [child.prototype, proto].forEach(function (s) {
-        Object.getOwnPropertyNames(s).forEach(function (k) {
-            desc[k] = Object.getOwnPropertyDescriptor(s, k);
-        });
+    //get the property descriptors from the child proto and copy to the passed in proto
+    Object.getOwnPropertyNames(child.prototype).forEach(function (k) {
+        proto[k] = Object.getOwnPropertyDescriptor(child.prototype, k);
     });
 
     //set the constructor descriptor
-    desc.constructor = {
+    proto.constructor = {
         value: child,
         enumerable: false,
         writable: true,
@@ -26,7 +23,7 @@ var inherit = function(child, parent, proto) {
     };
 
     //create the prototype
-    child.prototype = Object.create(parent.prototype, desc);
+    child.prototype = Object.create(parent.prototype, proto);
 };
 
 module.exports = inherit;
