@@ -131,7 +131,7 @@ module.exports = function(grunt) {
 
             _defaults: {
                 build: {
-                    debugLevel: 0,
+                    debugLevel: 1,
                     verbose: false,
                     scanAllow: true,
                     allNodeRequires: true,
