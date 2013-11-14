@@ -42,17 +42,5 @@ describe('constants', function() {
         gf.SHAPE.CIRCLE.should.equal(1);
         gf.SHAPE.POLYGON.should.equal(2);
         gf.SHAPE.RECTANGLE.should.equal(3);
-
-        //types of physics bodies
-        gf.PHYSICS_TYPE.STATIC.should.equal(0);
-        gf.PHYSICS_TYPE.KINEMATIC.should.equal(1);
-        gf.PHYSICS_TYPE.DYNAMIC.should.equal(2);
-
-        //some constants that control how physics work
-        gf.PHYSICS.MAX_QUAD_OBJECTS.should.equal(10);
-        gf.PHYSICS.MAX_QUAD_LEVELS.should.equal(5);
-
-        //some constants that control how particles work
-        gf.PARTICLES.MAX_PARTICLES.should.equal(100);
     });
 });
