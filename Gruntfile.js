@@ -112,8 +112,8 @@ module.exports = function(grunt) {
                     }
                 },
                 resources: [
-                    ['~+inject:VERSION', ['constants.js'], function(m) {
-                        m.beforeBody = 'var PACKAGE = ' + pkg;
+                    ['+inject:VERSION', ['constants.js'], function(m) {
+                        m.afterBody = 'constants.pkg = ' + pkg + ';';
                     }]
                 ]
             }

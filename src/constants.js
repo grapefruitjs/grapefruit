@@ -1,17 +1,4 @@
-// This file has some variables inserted during build, so jshint can ignore
-// undefined variables here.
-/*jshint -W117*/
-
 var constants = {
-    /**
-     * The pkg object contains all the grapefruit package information from package.json
-     *
-     * @class package
-     * @static
-     * @final
-     */
-    pkg: PACKAGE, //PACKAGE is inserted by urequire at build time
-
     /**
      * The types of renderers supported
      *
@@ -311,3 +298,12 @@ var constants = {
 };
 
 module.exports = constants;
+
+/**
+ * The pkg object contains all the grapefruit package information from package.json,
+ * inserted at build time.
+ *
+ * @class pkg
+ * @static
+ * @final
+ */
