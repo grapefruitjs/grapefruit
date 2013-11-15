@@ -1,23 +1,9 @@
 {
     // --------------------------------------------------------------------
-    // JSHint Configuration, Strict Edition
+    // JSHint Configuration
     // --------------------------------------------------------------------
     //
-    // This is a options template for [JSHint][1], using [JSHint example][2]
-    // and [Ory Band's example][3] as basis and setting config values to
-    // be most strict:
-    //
-    // * set all enforcing options to true
-    // * set all relaxing options to false
-    // * set all environment options to false, except the browser value
-    // * set all JSLint legacy options to false
-    //
-    // [1]: http://www.jshint.com/
-    // [2]: https://github.com/jshint/node-jshint/blob/master/example/config.json
-    // [3]: https://github.com/oryband/dotfiles/blob/master/jshintrc
-    //
-    // @author http://michael.haschke.biz/
-    // @license http://unlicense.org/
+    // @author Chad Engler <chad@pantherdev.com>
 
     // == Enforcing Options ===============================================
     //
