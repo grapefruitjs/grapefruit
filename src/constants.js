@@ -1,12 +1,16 @@
+// This file has some variables inserted during build, so jshint can ignore
+// undefined variables here.
+/*jshint -W117*/
+
 var constants = {
     /**
-     * The version of the library
+     * The pkg object contains all the grapefruit package information from package.json
      *
-     * @class version
+     * @class package
      * @static
      * @final
      */
-    version: '@@VERSION', //this is replaced by the grunt replace task with the version in package.json
+    pkg: PACKAGE, //PACKAGE is inserted by urequire at build time
 
     /**
      * The types of renderers supported

@@ -4,6 +4,7 @@ module.exports = function(grunt) {
     var glob = require('glob'),
         source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; }),
         testPort = grunt.option('port-test') || 9002,
+        pkg = grunt.file.read('package.json'),
         banner = [
             '/**',
             ' * @license',
@@ -21,7 +22,7 @@ module.exports = function(grunt) {
 
     //Project Configuration
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: JSON.parse(pkg),
         dirs: {
             dist: 'build',
             docs: 'docs',
@@ -48,34 +49,6 @@ module.exports = function(grunt) {
             dist: {
                 src: ['<%= files.dist %>'],
                 dest: '<%= files.dist %>'
-            }
-        },
-        replace: {
-            options: {
-                variables: {
-                    'VERSION': '<%= pkg.version %>'
-                },
-                prefix: '@@'
-            },
-            dev: {
-                files: [
-                    {
-                        expand: true,
-                        flatten: true,
-                        src: ['<%= files.dev %>'],
-                        dest: '<%= dirs.dist %>'
-                    }
-                ]
-            },
-            dist: {
-                files: [
-                    {
-                        expand: true,
-                        flatten: true,
-                        src: ['<%= files.dist %>'],
-                        dest: '<%= dirs.dist %>'
-                    }
-                ]
             }
         },
         jshint: {
@@ -137,7 +110,12 @@ module.exports = function(grunt) {
                             'core': ['gf']
                         }
                     }
-                }
+                },
+                resources: [
+                    ['~+inject:VERSION', ['constants.js'], function(m) {
+                        m.beforeBody = 'var PACKAGE = ' + pkg;
+                    }]
+                ]
             }
         },
         mocha: {
@@ -174,7 +152,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-mocha');
-    grunt.loadNpmTasks('grunt-replace');
     grunt.loadNpmTasks('grunt-urequire');
 
     //setup shortcut tasks
@@ -186,7 +163,7 @@ module.exports = function(grunt) {
     grunt.registerTask('dev', ['watch:src']);
 
     //build task
-    var _buildTasks = ['urequire:%t', 'concat:%t', 'replace:%t'];
+    var _buildTasks = ['urequire:%t', 'concat:%t'];
 
     grunt.registerTask('build', 'Builds the compiled Grapefruit files', function(type) {
         if(type) {
