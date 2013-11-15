@@ -28,7 +28,6 @@
         "grunt-contrib-watch": "~0.5",
         "grunt-contrib-concat": "~0.3",
         "grunt-mocha": "git+https://github.com/englercj/grunt-mocha.git",
-        "grunt-replace": "~0.5",
         "grunt-urequire": "~0.6",
         "glob": "~3.2",
         "should": "~2.1"
