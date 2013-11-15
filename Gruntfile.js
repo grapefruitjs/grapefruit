@@ -85,12 +85,6 @@ module.exports = function(grunt) {
             }
         },
         connect: {
-            test: {
-                options: {
-                    port: testPort,
-                    base: './'
-                }
-            },
             dev: {
                 options: {
                     port: testPort,
@@ -105,7 +99,7 @@ module.exports = function(grunt) {
                 description: '<%= pkg.description %>',
                 version: 'v<%= pkg.version %>',
                 url: '<%= pkg.homepage %>',
-                logo: 'https://en.gravatar.com/userimage/49218683/8654d0c767f327312ebb1ace7f5a8d8d.png',
+                logo: 'http://www.gravatar.com/avatar/e60ee7bcb380d1ab175251890046b3d8.png',
                 options: {
                     paths: '<%= dirs.src %>',
                     exclude: 'vendor',
