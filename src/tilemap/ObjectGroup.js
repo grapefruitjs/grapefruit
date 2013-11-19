@@ -364,7 +364,7 @@ inherit(ObjectGroup, Container, {
      * @chainable
      */
     despawn: function() {
-        return Container.prototype.removeAllChildren.call(this);
+        return Container.prototype.destroyAllChildren.call(this);
     },
     /**
      * Destroys the group completely
