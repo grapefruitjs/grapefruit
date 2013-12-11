@@ -9,7 +9,7 @@ module.exports = function(grunt) {
             '/**',
             ' * @license',
             ' * <%= pkg.longName %> - v<%= pkg.version %>',
-            ' * Copyright (c) 2012, Chad Engler',
+            ' * Copyright © 2012-2014, Chad Engler',
             ' * <%= pkg.homepage %>',
             ' *',
             ' * Compiled: <%= grunt.template.today("yyyy-mm-dd") %>',
@@ -35,7 +35,7 @@ module.exports = function(grunt) {
             dev: '<%= dirs.dist %>/<%= pkg.name %>.js',
             dist: '<%= dirs.dist %>/<%= pkg.name %>.min.js',
             sourceMap: '<%= dirs.dist %>/<%= pkg.name %>.min.map',
-            main: 'core.js'
+            main: 'core'
         },
         concat: {
             options: {
@@ -82,21 +82,18 @@ module.exports = function(grunt) {
         },
         urequire: {
             dev: {
-                template: 'combined',
-                path: '<%= dirs.src %>',
-                dstPath: '<%= files.dev %>',
-                main: '<%= files.main %>'
+                dstPath: '<%= files.dev %>'
             },
 
             dist: {
-                template: 'combined',
-                path: '<%= dirs.src %>',
                 dstPath: '<%= files.dist %>',
-                main: '<%= files.main %>',
                 optimize: true
             },
 
             _defaults: {
+                template: 'combined',
+                path: '<%= dirs.src %>',
+                main: '<%= files.main %>',
                 build: {
                     debugLevel: 1,
                     verbose: false,
@@ -167,13 +164,13 @@ module.exports = function(grunt) {
 
     grunt.registerTask('build', 'Builds the compiled Grapefruit files', function(type) {
         if(type) {
-            grunt.task.run(_replace(type));
+            grunt.task.run(_getTasks(type));
         } else {
-            grunt.task.run(_replace('dev').concat(_replace('dist')));
+            grunt.task.run(_getTasks('dev').concat(_getTasks('dist')));
         }
     });
 
-    function _replace(type) {
+    function _getTasks(type) {
         return _buildTasks.map(function(v) { return v.replace('%t', type); });
     }
 };
