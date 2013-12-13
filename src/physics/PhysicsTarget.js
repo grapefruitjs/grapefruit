@@ -1,3 +1,5 @@
+var Vector = require('../math/Vector');
+
 /**
  * Physics mixin. This will add physics capabilities to the class it mixes into.
  *
@@ -161,7 +163,7 @@ module.exports = function() {
         this._velocity.set(x, y);
 
         if(this._phys.system) {
-            this._phys.system.setVelocity(this, vel);
+            this._phys.system.setVelocity(this, this._velocity);
         }
 
         return this;
