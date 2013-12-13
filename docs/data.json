@@ -2,7 +2,7 @@
     "project": {
         "name": "GrapeFruit Game Engine",
         "description": "A fun and easy WebGL-enabled JavaScript Game Engine",
-        "version": "v0.1.0",
+        "version": "v0.1.1",
         "url": "https://github.com/grapefruitjs/grapefruit",
         "logo": "http://www.gravatar.com/avatar/e60ee7bcb380d1ab175251890046b3d8.png"
     },
@@ -1542,7 +1542,7 @@
                 "Sprite"
             ],
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 1,
+            "line": 3,
             "description": "Physics mixin. This will add physics capabilities to the class it mixes into.",
             "is_constructor": 1
         },
@@ -2069,7 +2069,7 @@
             "extension_for": [],
             "file": "src\\constants.js",
             "line": 2,
-            "description": "The types of renderers supported",
+            "description": "The types of renderers supported. These are generally passed in to the constructor of\na {{#crossLink \"Game\"}}{{/crossLink}} instance.",
             "static": 1,
             "final": 1
         },
@@ -2082,7 +2082,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 42,
+            "line": 43,
             "description": "The types of files that the loader supports for types that have multiple formats (like tilemaps).",
             "static": 1,
             "final": 1
@@ -2096,7 +2096,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 82,
+            "line": 83,
             "description": "The types of texture atlas file formats that the loader supports.",
             "static": 1,
             "final": 1
@@ -2110,7 +2110,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 122,
+            "line": 123,
             "description": "The follow types that the camera can execute",
             "static": 1,
             "final": 1
@@ -2124,8 +2124,8 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 173,
-            "description": "These represent different axis. They are bitmap flags and can be combined together.",
+            "line": 174,
+            "description": "These represent different axis. They are bitwise flags and can be combined together.",
             "static": 1,
             "final": 1
         },
@@ -2138,8 +2138,8 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 223,
-            "description": "These represent different directions in the world. They are bitmap flags and can be combined together.",
+            "line": 224,
+            "description": "These represent different directions in the world. They are bitwise flags and can be combined together.",
             "static": 1,
             "final": 1
         },
@@ -2152,7 +2152,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 302,
+            "line": 303,
             "description": "The pkg object contains all the grapefruit package information from package.json,\ninserted at build time.",
             "static": 1,
             "final": 1
@@ -10238,7 +10238,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 8,
+            "line": 10,
             "description": "The physics namespace that all physics properties go into. Those properties are:\n - system {PhysicsSystem} PhysicsSystem that this object is a part of.\n - active {Boolean} Whether or not this target is actively having physics simulated.",
             "itemtype": "property",
             "name": "_phys",
@@ -10251,7 +10251,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 21,
+            "line": 23,
             "description": "The mass of this object, please use setMass to set this value",
             "itemtype": "property",
             "name": "mass",
@@ -10262,7 +10262,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 31,
+            "line": 33,
             "description": "The moment of inertia of this object, only set this before enabling physics (has no effect after enabling)",
             "itemtype": "property",
             "name": "inertia",
@@ -10272,7 +10272,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 40,
+            "line": 42,
             "description": "The internal velocity value, used as a reusable vector for the setVelocity function. Setting\nthis directly *has no effect*.",
             "itemtype": "property",
             "name": "_velocity",
@@ -10284,7 +10284,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 51,
+            "line": 53,
             "description": "Enables physics for this sprite",
             "itemtype": "method",
             "name": "enablePhysics",
@@ -10310,7 +10310,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 95,
+            "line": 97,
             "description": "Disbales physics for this sprite",
             "itemtype": "method",
             "name": "disablePhysics",
@@ -10331,7 +10331,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 113,
+            "line": 115,
             "description": "Reindexes the collisions for this sprite, useful when moving the sprite a great deal\n(like to a new world)",
             "itemtype": "method",
             "name": "disablePhysics",
@@ -10352,7 +10352,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 132,
+            "line": 134,
             "description": "Sets the mass of this sprite",
             "itemtype": "method",
             "name": "setMass",
@@ -10372,7 +10372,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 148,
+            "line": 150,
             "description": "Sets the velocity of this sprite",
             "itemtype": "method",
             "name": "setVelocity",
@@ -10397,7 +10397,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 170,
+            "line": 172,
             "description": "Sets the rotation of this sprite",
             "itemtype": "method",
             "name": "setRotation",
@@ -10417,7 +10417,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 188,
+            "line": 190,
             "description": "Sets the position of this sprite",
             "itemtype": "method",
             "name": "setPosition",
@@ -10442,7 +10442,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 210,
+            "line": 212,
             "description": "On Collision Event\n     called when this sprite collides into another, or is being collided into by another.\n     By default if something collides with a collectable sprite we destroy the collectable\n     and if we collide with a solid tile we kill our velocity. This method will emit a\n     'collision' event that you can listen for",
             "itemtype": "event",
             "name": "collision",
@@ -10472,7 +10472,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 227,
+            "line": 229,
             "description": "On Seperate Event\n     called when this sprite collides into another, or is being collided into by another.\n     By default if something collides with a collectable sprite we destroy the collectable\n     and if we collide with a solid tile we kill our velocity. This method will emit a\n     'collision' event that you can listen for",
             "itemtype": "event",
             "name": "separate",
@@ -13264,7 +13264,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 10,
+            "line": 11,
             "description": "Represents automatically choosing a renderer",
             "itemtype": "property",
             "name": "AUTO",
@@ -13276,7 +13276,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 20,
+            "line": 21,
             "description": "Represents the canvas renderer",
             "itemtype": "property",
             "name": "CANVAS",
@@ -13288,7 +13288,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 30,
+            "line": 31,
             "description": "Represents the webgl renderer",
             "itemtype": "property",
             "name": "WEBGL",
@@ -13300,7 +13300,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 50,
+            "line": 51,
             "description": "Represents the json file type",
             "itemtype": "property",
             "name": "JSON",
@@ -13312,7 +13312,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 60,
+            "line": 61,
             "description": "Represents the xml file type",
             "itemtype": "property",
             "name": "XML",
@@ -13324,7 +13324,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 70,
+            "line": 71,
             "description": "Represents the csv file type",
             "itemtype": "property",
             "name": "CSV",
@@ -13336,7 +13336,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 90,
+            "line": 91,
             "description": "Represents the JSON Array export type of TexturePacker",
             "itemtype": "property",
             "name": "JSON_ARRAY",
@@ -13348,7 +13348,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 100,
+            "line": 101,
             "description": "Represents the JSON Hash export type of TexturePacker",
             "itemtype": "property",
             "name": "JSON_HASH",
@@ -13360,7 +13360,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 110,
+            "line": 111,
             "description": "Represents the Starling XML format, this export type is supported by TexturePacker",
             "itemtype": "property",
             "name": "XML_STARLING",
@@ -13372,7 +13372,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 130,
+            "line": 131,
             "description": "Represents platformer follow style",
             "itemtype": "property",
             "name": "PLATFORMER",
@@ -13384,7 +13384,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 140,
+            "line": 141,
             "description": "Represents topdown follow style",
             "itemtype": "property",
             "name": "TOPDOWN",
@@ -13396,7 +13396,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 150,
+            "line": 151,
             "description": "Represents a tight topdown follow style",
             "itemtype": "property",
             "name": "TOPDOWN_TIGHT",
@@ -13408,7 +13408,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 160,
+            "line": 161,
             "description": "Represents a lockon follow style, this has no deadzone and the camera will\nfollow the target movement exactly.",
             "itemtype": "property",
             "name": "LOCKON",
@@ -13420,7 +13420,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 181,
+            "line": 182,
             "description": "Represents no axis, binary value: 0000",
             "itemtype": "property",
             "name": "NONE",
@@ -13432,7 +13432,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 191,
+            "line": 192,
             "description": "Represents a horizontal axis, binary value: 0001",
             "itemtype": "property",
             "name": "HORIZONTAL",
@@ -13444,7 +13444,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 201,
+            "line": 202,
             "description": "Represents a vertical axis, binary value: 0010",
             "itemtype": "property",
             "name": "VERTICAL",
@@ -13456,7 +13456,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 211,
+            "line": 212,
             "description": "Represents both axes, binary value: 0011",
             "itemtype": "property",
             "name": "VERTICAL",
@@ -13468,7 +13468,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 231,
+            "line": 232,
             "description": "Represents no direction, binary value: 0000",
             "itemtype": "property",
             "name": "NONE",
@@ -13480,7 +13480,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 241,
+            "line": 242,
             "description": "Represents left direction, binary value: 0001",
             "itemtype": "property",
             "name": "LEFT",
@@ -13492,7 +13492,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 251,
+            "line": 252,
             "description": "Represents right direction, binary value: 0010",
             "itemtype": "property",
             "name": "RIGHT",
@@ -13504,7 +13504,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 261,
+            "line": 262,
             "description": "Represents top (up) direction, binary value: 0100",
             "itemtype": "property",
             "name": "TOP",
@@ -13516,7 +13516,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 271,
+            "line": 272,
             "description": "Represents bottom (down) direction, binary value: 1000",
             "itemtype": "property",
             "name": "BOTTOM",
@@ -13528,7 +13528,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 281,
+            "line": 282,
             "description": "Represents all directions, binary value: 1111",
             "itemtype": "property",
             "name": "ALL",
