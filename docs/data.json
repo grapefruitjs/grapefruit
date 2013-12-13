@@ -10273,6 +10273,18 @@
         {
             "file": "src\\physics\\PhysicsTarget.js",
             "line": 40,
+            "description": "The internal velocity value, used as a reusable vector for the setVelocity function. Setting\nthis directly *has no effect*.",
+            "itemtype": "property",
+            "name": "_velocity",
+            "type": "Vector",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "PhysicsTarget"
+        },
+        {
+            "file": "src\\physics\\PhysicsTarget.js",
+            "line": 51,
             "description": "Enables physics for this sprite",
             "itemtype": "method",
             "name": "enablePhysics",
@@ -10281,6 +10293,11 @@
                     "name": "system",
                     "description": "The system for the sprite to be in",
                     "type": "PhysicsSystem"
+                },
+                {
+                    "name": "callback",
+                    "description": "The callback function to call after physics have been enabled",
+                    "type": "Function"
                 }
             ],
             "return": {
@@ -10293,10 +10310,17 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 83,
+            "line": 95,
             "description": "Disbales physics for this sprite",
             "itemtype": "method",
             "name": "disablePhysics",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "The callback function to call after physics have been disabled",
+                    "type": "Function"
+                }
+            ],
             "return": {
                 "description": "Returns itself.",
                 "type": "Mixed"
@@ -10307,10 +10331,17 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 100,
+            "line": 113,
             "description": "Reindexes the collisions for this sprite, useful when moving the sprite a great deal\n(like to a new world)",
             "itemtype": "method",
             "name": "disablePhysics",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "The callback function to call after the sprite has been reindexed",
+                    "type": "Function"
+                }
+            ],
             "return": {
                 "description": "Returns itself.",
                 "type": "Mixed"
@@ -10321,7 +10352,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 118,
+            "line": 132,
             "description": "Sets the mass of this sprite",
             "itemtype": "method",
             "name": "setMass",
@@ -10341,15 +10372,20 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 134,
+            "line": 148,
             "description": "Sets the velocity of this sprite",
             "itemtype": "method",
             "name": "setVelocity",
             "params": [
                 {
-                    "name": "velocity",
-                    "description": "The new velocity of the object",
-                    "type": "Vector"
+                    "name": "x",
+                    "description": "The x coord to set the velocity to, if a Vector is passed the y param is ignored",
+                    "type": "Number|Vector"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coord to set the velocity to",
+                    "type": "Number"
                 }
             ],
             "return": {
@@ -10361,7 +10397,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 150,
+            "line": 170,
             "description": "Sets the rotation of this sprite",
             "itemtype": "method",
             "name": "setRotation",
@@ -10381,19 +10417,19 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 168,
+            "line": 188,
             "description": "Sets the position of this sprite",
             "itemtype": "method",
             "name": "setPosition",
             "params": [
                 {
                     "name": "x",
-                    "description": "",
-                    "type": "Number"
+                    "description": "The x coord to set position to, if a Vector is passed the y param is ignored",
+                    "type": "Number|Vector"
                 },
                 {
                     "name": "y",
-                    "description": "",
+                    "description": "The y coord to set position to",
                     "type": "Number"
                 }
             ],
@@ -10406,7 +10442,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 188,
+            "line": 210,
             "description": "On Collision Event\n     called when this sprite collides into another, or is being collided into by another.\n     By default if something collides with a collectable sprite we destroy the collectable\n     and if we collide with a solid tile we kill our velocity. This method will emit a\n     'collision' event that you can listen for",
             "itemtype": "event",
             "name": "collision",
@@ -10436,7 +10472,7 @@
         },
         {
             "file": "src\\physics\\PhysicsTarget.js",
-            "line": 205,
+            "line": 227,
             "description": "On Seperate Event\n     called when this sprite collides into another, or is being collided into by another.\n     By default if something collides with a collectable sprite we destroy the collectable\n     and if we collide with a solid tile we kill our velocity. This method will emit a\n     'collision' event that you can listen for",
             "itemtype": "event",
             "name": "separate",

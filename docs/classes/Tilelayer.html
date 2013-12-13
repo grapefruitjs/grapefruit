@@ -639,6 +639,13 @@ create an instance on your own.</p>
                                 
                             </li>
                         
+                            <li class="index-item property private inherited">
+                                <a href="#property__velocity">_velocity</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item property inherited">
                                 <a href="#property_alpha">alpha</a>
 
@@ -2601,7 +2608,17 @@ then the canvases are used as a textures for tiles the size of chunks.</p>
     <h3 class="name"><code>disablePhysics</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>callback</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -2637,7 +2654,7 @@ then the canvases are used as a textures for tiles the size of chunks.</p>
             
         
         
-        <a href="../files/src_physics_PhysicsTarget.js.html#l83"><code>src\physics\PhysicsTarget.js:83</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l95"><code>src\physics\PhysicsTarget.js:95</code></a>
         
         </p>
 
@@ -2652,6 +2669,30 @@ then the canvases are used as a textures for tiles the size of chunks.</p>
 
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">callback</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The callback function to call after physics have been disabled</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -2815,6 +2856,12 @@ then the canvases are used as a textures for tiles the size of chunks.</p>
                     
                 </li>
             
+                <li class="arg">
+                    
+                        <code>callback</code>
+                    
+                </li>
+            
             </ul><span class="paren">)</span>
         </div>
     
@@ -2849,7 +2896,7 @@ then the canvases are used as a textures for tiles the size of chunks.</p>
             
         
         
-        <a href="../files/src_physics_PhysicsTarget.js.html#l40"><code>src\physics\PhysicsTarget.js:40</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l51"><code>src\physics\PhysicsTarget.js:51</code></a>
         
         </p>
 
@@ -2880,6 +2927,22 @@ then the canvases are used as a textures for tiles the size of chunks.</p>
 
                     <div class="param-description">
                         <p>The system for the sprite to be in</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">callback</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The callback function to call after physics have been enabled</p>
 
                     </div>
 
@@ -4287,7 +4350,7 @@ if the old position didn&#39;t have a sprite</p>
             
         
         
-        <a href="../files/src_physics_PhysicsTarget.js.html#l118"><code>src\physics\PhysicsTarget.js:118</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l132"><code>src\physics\PhysicsTarget.js:132</code></a>
         
         </p>
 
@@ -4399,7 +4462,7 @@ if the old position didn&#39;t have a sprite</p>
             
         
         
-        <a href="../files/src_physics_PhysicsTarget.js.html#l168"><code>src\physics\PhysicsTarget.js:168</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l188"><code>src\physics\PhysicsTarget.js:188</code></a>
         
         </p>
 
@@ -4423,13 +4486,14 @@ if the old position didn&#39;t have a sprite</p>
                 <li class="param">
                     
                         <code class="param-name">x</code>
-                        <span class="type">Number</span>
+                        <span class="type">Number | <a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        
+                        <p>The x coord to set position to, if a Vector is passed the y param is ignored</p>
+
                     </div>
 
                     
@@ -4444,7 +4508,8 @@ if the old position didn&#39;t have a sprite</p>
                     
 
                     <div class="param-description">
-                        
+                        <p>The y coord to set position to</p>
+
                     </div>
 
                     
@@ -4519,7 +4584,7 @@ if the old position didn&#39;t have a sprite</p>
             
         
         
-        <a href="../files/src_physics_PhysicsTarget.js.html#l150"><code>src\physics\PhysicsTarget.js:150</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l170"><code>src\physics\PhysicsTarget.js:170</code></a>
         
         </p>
 
@@ -4589,7 +4654,13 @@ if the old position didn&#39;t have a sprite</p>
             
                 <li class="arg">
                     
-                        <code>velocity</code>
+                        <code>x</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>y</code>
                     
                 </li>
             
@@ -4625,7 +4696,7 @@ if the old position didn&#39;t have a sprite</p>
             
         
         
-        <a href="../files/src_physics_PhysicsTarget.js.html#l134"><code>src\physics\PhysicsTarget.js:134</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l148"><code>src\physics\PhysicsTarget.js:148</code></a>
         
         </p>
 
@@ -4648,14 +4719,30 @@ if the old position didn&#39;t have a sprite</p>
             
                 <li class="param">
                     
-                        <code class="param-name">velocity</code>
-                        <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+                        <code class="param-name">x</code>
+                        <span class="type">Number | <a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The new velocity of the object</p>
+                        <p>The x coord to set the velocity to, if a Vector is passed the y param is ignored</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">y</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The y coord to set the velocity to</p>
 
                     </div>
 
@@ -4808,6 +4895,51 @@ if the old position didn&#39;t have a sprite</p>
 
     
         <p><strong>Default:</strong> {}</p>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property__velocity" class="property item private inherited">
+    <h3 class="name"><code>_velocity</code></h3>
+    <span class="type"><a href="..\classes\Vector.html" class="crosslink">Vector</a></span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="..\classes\PhysicsTarget.html#property__velocity">PhysicsTarget</a>:
+            
+        
+        
+        <a href="../files/src_physics_PhysicsTarget.js.html#l40"><code>src\physics\PhysicsTarget.js:40</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The internal velocity value, used as a reusable vector for the setVelocity function. Setting
+this directly <em>has no effect</em>.</p>
+
+    </div>
+
     
 
     
@@ -5927,7 +6059,7 @@ will use (as it will not need to hit test all the children)</p>
             
         
         
-        <a href="../files/src_physics_PhysicsTarget.js.html#l188"><code>src\physics\PhysicsTarget.js:188</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l210"><code>src\physics\PhysicsTarget.js:210</code></a>
         
         </p>
 
@@ -6430,7 +6562,7 @@ for this callback to be fired, The touch must have started over the displayObjec
             
         
         
-        <a href="../files/src_physics_PhysicsTarget.js.html#l205"><code>src\physics\PhysicsTarget.js:205</code></a>
+        <a href="../files/src_physics_PhysicsTarget.js.html#l227"><code>src\physics\PhysicsTarget.js:227</code></a>
         
         </p>
 
