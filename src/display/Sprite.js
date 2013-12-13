@@ -13,6 +13,7 @@ var EventEmitter = require('../utils/EventEmitter'),
  * @class Sprite
  * @extends [PIXI.Sprite](http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html)
  * @uses EventEmitter
+ * @uses PhysicsTarget
  * @constructor
  * @param textures {Texture|Array<Texture>|Object} The texture for the sprite to display, an array of texture to animation through, or an animation object.
  *      The later looks like: `{ animationName: { frames: [frame1, frame2], speed: 0.5, loop: false } }` where each frame is a Texture object
