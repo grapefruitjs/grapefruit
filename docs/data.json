@@ -4,7 +4,7 @@
         "description": "A fun and easy WebGL-enabled JavaScript Game Engine",
         "version": "v0.1.0",
         "url": "https://github.com/grapefruitjs/grapefruit",
-        "logo": "https://en.gravatar.com/userimage/49218683/8654d0c767f327312ebb1ace7f5a8d8d.png"
+        "logo": "http://www.gravatar.com/avatar/e60ee7bcb380d1ab175251890046b3d8.png"
     },
     "files": {
         "src\\audio\\AudioManager.js": {
@@ -513,13 +513,13 @@
             "name": "src\\constants.js",
             "modules": {},
             "classes": {
-                "version": 1,
                 "RENDERER": 1,
                 "FILE_FORMAT": 1,
                 "ATLAS_FORMAT": 1,
                 "CAMERA_FOLLOW": 1,
                 "AXIS": 1,
-                "DIRECTION": 1
+                "DIRECTION": 1,
+                "pkg": 1
             },
             "fors": {},
             "namespaces": {}
@@ -764,7 +764,8 @@
             "description": "The base Sprite class. This class is the base for all images on the screen. This class extends PIXI's Sprite.",
             "extends": "[PIXI.Sprite](http://www.goodboydigital.com/pixijs/docs/classes/Sprite.html)",
             "uses": [
-                "EventEmitter"
+                "EventEmitter",
+                "PhysicsTarget"
             ],
             "is_constructor": 1,
             "params": [
@@ -1537,7 +1538,8 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [
-                "Container"
+                "Container",
+                "Sprite"
             ],
             "file": "src\\physics\\PhysicsTarget.js",
             "line": 1,
@@ -2057,20 +2059,6 @@
             "extends": "Object",
             "static": 1
         },
-        "version": {
-            "name": "version",
-            "shortname": "version",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "file": "src\\constants.js",
-            "line": 2,
-            "description": "The version of the library",
-            "static": 1,
-            "final": 1
-        },
         "RENDERER": {
             "name": "RENDERER",
             "shortname": "RENDERER",
@@ -2080,7 +2068,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 11,
+            "line": 2,
             "description": "The types of renderers supported",
             "static": 1,
             "final": 1
@@ -2094,7 +2082,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 51,
+            "line": 42,
             "description": "The types of files that the loader supports for types that have multiple formats (like tilemaps).",
             "static": 1,
             "final": 1
@@ -2108,7 +2096,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 91,
+            "line": 82,
             "description": "The types of texture atlas file formats that the loader supports.",
             "static": 1,
             "final": 1
@@ -2122,7 +2110,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 131,
+            "line": 122,
             "description": "The follow types that the camera can execute",
             "static": 1,
             "final": 1
@@ -2136,7 +2124,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 182,
+            "line": 173,
             "description": "These represent different axis. They are bitmap flags and can be combined together.",
             "static": 1,
             "final": 1
@@ -2150,8 +2138,22 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\constants.js",
-            "line": 232,
+            "line": 223,
             "description": "These represent different directions in the world. They are bitmap flags and can be combined together.",
+            "static": 1,
+            "final": 1
+        },
+        "pkg": {
+            "name": "pkg",
+            "shortname": "pkg",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src\\constants.js",
+            "line": 302,
+            "description": "The pkg object contains all the grapefruit package information from package.json,\ninserted at build time.",
             "static": 1,
             "final": 1
         },
@@ -4161,7 +4163,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 59,
+            "line": 60,
             "description": "The name of the sprite",
             "itemtype": "property",
             "name": "name",
@@ -4171,7 +4173,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 68,
+            "line": 69,
             "description": "The lifetime of the sprite. Once it reaches 0 (after being set)\nthe sprite's visible property is set to false, so that it will\nno longer be rendered. NOT YET IMPLEMENTED",
             "itemtype": "property",
             "name": "lifetime",
@@ -4183,7 +4185,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 80,
+            "line": 81,
             "description": "The animation speed for this sprite",
             "itemtype": "property",
             "name": "speed",
@@ -4193,7 +4195,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 89,
+            "line": 90,
             "description": "Whether or not to loop the animations. This can be overriden\non a per-animation level",
             "itemtype": "property",
             "name": "loop",
@@ -4203,7 +4205,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 99,
+            "line": 100,
             "description": "The registerd animations for this AnimatedSprite",
             "itemtype": "property",
             "name": "animations",
@@ -4213,7 +4215,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 108,
+            "line": 109,
             "description": "The currently playing animation",
             "itemtype": "property",
             "name": "currentAnimation",
@@ -4223,7 +4225,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 117,
+            "line": 118,
             "description": "The current frame being shown",
             "itemtype": "property",
             "name": "currentFrame",
@@ -4233,7 +4235,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 126,
+            "line": 127,
             "description": "Whether or not the animation is currently playing",
             "itemtype": "property",
             "name": "playing",
@@ -4243,7 +4245,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 140,
+            "line": 141,
             "description": "Fired when a new frame of the running animation is shown",
             "itemtype": "event",
             "name": "frame",
@@ -4263,7 +4265,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 148,
+            "line": 149,
             "description": "Fired when the running animation completes",
             "itemtype": "event",
             "name": "complete",
@@ -4278,7 +4280,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 157,
+            "line": 158,
             "description": "Sets the sprite to visible = true",
             "itemtype": "method",
             "name": "show",
@@ -4291,7 +4293,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 168,
+            "line": 169,
             "description": "Sets the sprite to visible = false",
             "itemtype": "method",
             "name": "hide",
@@ -4304,7 +4306,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 179,
+            "line": 180,
             "description": "Creates a new Sprite instance with the same values as this one",
             "itemtype": "method",
             "name": "clone",
@@ -4316,7 +4318,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 232,
+            "line": 233,
             "description": "Adds a new animation to this animated sprite",
             "itemtype": "method",
             "name": "addAnimation",
@@ -4353,7 +4355,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 257,
+            "line": 258,
             "description": "Goes to a frame and starts playing the animation from there. You can optionally\npass the name of a new aniamtion to start playing.",
             "itemtype": "method",
             "name": "goto",
@@ -4379,7 +4381,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 285,
+            "line": 286,
             "description": "Starts playing the currently active animation",
             "itemtype": "method",
             "name": "play",
@@ -4392,7 +4394,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 296,
+            "line": 297,
             "description": "Stops playing the currently active animation",
             "itemtype": "method",
             "name": "stop",
@@ -4405,7 +4407,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 307,
+            "line": 308,
             "description": "Removes this sprite from the stage and the physics system",
             "itemtype": "method",
             "name": "destroy",
@@ -4413,7 +4415,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 329,
+            "line": 330,
             "description": "Called by PIXI to update our textures and do the actual animation",
             "itemtype": "method",
             "name": "updateTransform",
@@ -4423,7 +4425,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 380,
+            "line": 381,
             "description": "A callback that is used when the users clicks on the sprite with their mouse",
             "itemtype": "event",
             "name": "click",
@@ -4438,7 +4440,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 387,
+            "line": 388,
             "description": "A callback that is used when the user clicks the mouse down over the sprite",
             "itemtype": "event",
             "name": "mousedown",
@@ -4453,7 +4455,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 394,
+            "line": 395,
             "description": "A callback that is used when the user releases the mouse that was over the sprite\nfor this callback to be fired the mouse must have been pressed down over the sprite",
             "itemtype": "event",
             "name": "mouseup",
@@ -4468,7 +4470,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 402,
+            "line": 403,
             "description": "A callback that is used when the user releases the mouse that was over the sprite but is no longer over the sprite\nfor this callback to be fired, The touch must have started over the sprite",
             "itemtype": "event",
             "name": "mouseupoutside",
@@ -4483,7 +4485,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 410,
+            "line": 411,
             "description": "A callback that is used when the users mouse rolls over the sprite",
             "itemtype": "event",
             "name": "mouseover",
@@ -4498,7 +4500,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 417,
+            "line": 418,
             "description": "A callback that is used when the users mouse leaves the sprite",
             "itemtype": "event",
             "name": "mouseout",
@@ -4513,7 +4515,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 424,
+            "line": 425,
             "description": "A callback that is used when the user moves the mouse while over the sprite",
             "itemtype": "event",
             "name": "mousemove",
@@ -4528,7 +4530,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 435,
+            "line": 436,
             "description": "A callback that is used when the users taps on the sprite with their finger\nbasically a touch version of click",
             "itemtype": "event",
             "name": "tap",
@@ -4543,7 +4545,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 443,
+            "line": 444,
             "description": "A callback that is used when the user touch's over the sprite",
             "itemtype": "event",
             "name": "touchstart",
@@ -4558,7 +4560,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 450,
+            "line": 451,
             "description": "A callback that is used when the user releases a touch over the sprite",
             "itemtype": "event",
             "name": "touchend",
@@ -4573,7 +4575,7 @@
         },
         {
             "file": "src\\display\\Sprite.js",
-            "line": 457,
+            "line": 458,
             "description": "A callback that is used when the user releases the touch that was over the sprite\nfor this callback to be fired, The touch must have started over the sprite",
             "itemtype": "event",
             "name": "touchendoutside",
@@ -13226,7 +13228,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 19,
+            "line": 10,
             "description": "Represents automatically choosing a renderer",
             "itemtype": "property",
             "name": "AUTO",
@@ -13238,7 +13240,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 29,
+            "line": 20,
             "description": "Represents the canvas renderer",
             "itemtype": "property",
             "name": "CANVAS",
@@ -13250,7 +13252,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 39,
+            "line": 30,
             "description": "Represents the webgl renderer",
             "itemtype": "property",
             "name": "WEBGL",
@@ -13262,7 +13264,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 59,
+            "line": 50,
             "description": "Represents the json file type",
             "itemtype": "property",
             "name": "JSON",
@@ -13274,7 +13276,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 69,
+            "line": 60,
             "description": "Represents the xml file type",
             "itemtype": "property",
             "name": "XML",
@@ -13286,7 +13288,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 79,
+            "line": 70,
             "description": "Represents the csv file type",
             "itemtype": "property",
             "name": "CSV",
@@ -13298,7 +13300,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 99,
+            "line": 90,
             "description": "Represents the JSON Array export type of TexturePacker",
             "itemtype": "property",
             "name": "JSON_ARRAY",
@@ -13310,7 +13312,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 109,
+            "line": 100,
             "description": "Represents the JSON Hash export type of TexturePacker",
             "itemtype": "property",
             "name": "JSON_HASH",
@@ -13322,7 +13324,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 119,
+            "line": 110,
             "description": "Represents the Starling XML format, this export type is supported by TexturePacker",
             "itemtype": "property",
             "name": "XML_STARLING",
@@ -13334,7 +13336,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 139,
+            "line": 130,
             "description": "Represents platformer follow style",
             "itemtype": "property",
             "name": "PLATFORMER",
@@ -13346,7 +13348,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 149,
+            "line": 140,
             "description": "Represents topdown follow style",
             "itemtype": "property",
             "name": "TOPDOWN",
@@ -13358,7 +13360,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 159,
+            "line": 150,
             "description": "Represents a tight topdown follow style",
             "itemtype": "property",
             "name": "TOPDOWN_TIGHT",
@@ -13370,7 +13372,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 169,
+            "line": 160,
             "description": "Represents a lockon follow style, this has no deadzone and the camera will\nfollow the target movement exactly.",
             "itemtype": "property",
             "name": "LOCKON",
@@ -13382,7 +13384,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 190,
+            "line": 181,
             "description": "Represents no axis, binary value: 0000",
             "itemtype": "property",
             "name": "NONE",
@@ -13394,7 +13396,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 200,
+            "line": 191,
             "description": "Represents a horizontal axis, binary value: 0001",
             "itemtype": "property",
             "name": "HORIZONTAL",
@@ -13406,7 +13408,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 210,
+            "line": 201,
             "description": "Represents a vertical axis, binary value: 0010",
             "itemtype": "property",
             "name": "VERTICAL",
@@ -13418,7 +13420,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 220,
+            "line": 211,
             "description": "Represents both axes, binary value: 0011",
             "itemtype": "property",
             "name": "VERTICAL",
@@ -13430,7 +13432,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 240,
+            "line": 231,
             "description": "Represents no direction, binary value: 0000",
             "itemtype": "property",
             "name": "NONE",
@@ -13442,7 +13444,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 250,
+            "line": 241,
             "description": "Represents left direction, binary value: 0001",
             "itemtype": "property",
             "name": "LEFT",
@@ -13454,7 +13456,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 260,
+            "line": 251,
             "description": "Represents right direction, binary value: 0010",
             "itemtype": "property",
             "name": "RIGHT",
@@ -13466,7 +13468,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 270,
+            "line": 261,
             "description": "Represents top (up) direction, binary value: 0100",
             "itemtype": "property",
             "name": "TOP",
@@ -13478,7 +13480,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 280,
+            "line": 271,
             "description": "Represents bottom (down) direction, binary value: 1000",
             "itemtype": "property",
             "name": "BOTTOM",
@@ -13490,7 +13492,7 @@
         },
         {
             "file": "src\\constants.js",
-            "line": 290,
+            "line": 281,
             "description": "Represents all directions, binary value: 1111",
             "itemtype": "property",
             "name": "ALL",

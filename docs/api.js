@@ -60,10 +60,10 @@ YUI.add("yuidoc-meta", function(Y) {
         "fx.camera.Scanlines",
         "fx.camera.Shake",
         "math",
+        "pkg",
         "plugin",
         "support",
-        "utils",
-        "version"
+        "utils"
     ],
     "modules": [],
     "allModules": []

@@ -15,7 +15,7 @@
     <div id="hd" class="yui3-g header">
         <div class="yui3-u-3-4">
             
-                <h1><img src="https://en.gravatar.com/userimage/49218683/8654d0c767f327312ebb1ace7f5a8d8d.png" title="GrapeFruit Game Engine"></h1>
+                <h1><img src="http://www.gravatar.com/avatar/e60ee7bcb380d1ab175251890046b3d8.png" title="GrapeFruit Game Engine"></h1>
             
         </div>
         <div class="yui3-u-1-4 version">
@@ -121,6 +121,8 @@
             
                 <li><a href="../classes/PhysicsTarget.html">PhysicsTarget</a></li>
             
+                <li><a href="../classes/pkg.html">pkg</a></li>
+            
                 <li><a href="../classes/plugin.html">plugin</a></li>
             
                 <li><a href="../classes/Pointer.html">Pointer</a></li>
@@ -162,8 +164,6 @@
                 <li><a href="../classes/utils.html">utils</a></li>
             
                 <li><a href="../classes/Vector.html">Vector</a></li>
-            
-                <li><a href="../classes/version.html">version</a></li>
             
                 <li><a href="../classes/World.html">World</a></li>
             
@@ -211,15 +211,6 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 var constants = {
-    /**
-     * The version of the library
-     *
-     * @class version
-     * @static
-     * @final
-     */
-    version: &#x27;@@VERSION&#x27;, //this is replaced by the grunt replace task with the version in package.json
-
     /**
      * The types of renderers supported
      *
@@ -519,6 +510,15 @@ var constants = {
 };
 
 module.exports = constants;
+
+/**
+ * The pkg object contains all the grapefruit package information from package.json,
+ * inserted at build time.
+ *
+ * @class pkg
+ * @static
+ * @final
+ */
 
     </pre>
 </div>
