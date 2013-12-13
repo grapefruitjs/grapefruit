@@ -38,10 +38,22 @@ module.exports = function() {
     this.inertia = 0;
 
     /**
+     * The internal velocity value, used as a reusable vector for the setVelocity function. Setting
+     * this directly *has no effect*.
+     *
+     * @property _velocity
+     * @type Vector
+     * @private
+     * @readOnly
+     */
+    this._velocity = new Vector();
+
+    /**
      * Enables physics for this sprite
      *
      * @method enablePhysics
      * @param system {PhysicsSystem} The system for the sprite to be in
+     * @param callback {Function} The callback function to call after physics have been enabled
      * @return {mixed} Returns itself.
      * @chainable
      * @async
@@ -84,6 +96,7 @@ module.exports = function() {
      * Disbales physics for this sprite
      *
      * @method disablePhysics
+     * @param callback {Function} The callback function to call after physics have been disabled
      * @return {mixed} Returns itself.
      * @chainable
      * @async
@@ -102,6 +115,7 @@ module.exports = function() {
      * (like to a new world)
      *
      * @method disablePhysics
+     * @param callback {Function} The callback function to call after the sprite has been reindexed
      * @return {mixed} Returns itself.
      * @chainable
      * @async
@@ -135,11 +149,17 @@ module.exports = function() {
      * Sets the velocity of this sprite
      *
      * @method setVelocity
-     * @param velocity {Vector} The new velocity of the object
+     * @param x {Number|Vector} The x coord to set the velocity to, if a Vector is passed the y param is ignored
+     * @param y {Number} The y coord to set the velocity to
      * @return {mixed} Returns itself.
      * @chainable
      */
-    this.setVelocity = function(vel) {
+    this.setVelocity = function(x, y) {
+        y = x.y !== undefined ? x.y : (y || 0);
+        x = x.x !== undefined ? x.x : (x || 0);
+
+        this._velocity.set(x, y);
+
         if(this._phys.system) {
             this._phys.system.setVelocity(this, vel);
         }
@@ -169,14 +189,16 @@ module.exports = function() {
      * Sets the position of this sprite
      *
      * @method setPosition
-     * @param x {Number}
-     * @param y {Number}
+     * @param x {Number|Vector} The x coord to set position to, if a Vector is passed the y param is ignored
+     * @param y {Number} The y coord to set position to
      * @return {mixed} Returns itself.
      * @chainable
      */
     this.setPosition = function(x, y) {
-        this.position.x = x;
-        this.position.y = y;
+        y = x.y !== undefined ? x.y : (y || 0);
+        x = x.x !== undefined ? x.x : (x || 0);
+
+        this.position.set(x, y);
 
         if(this._phys.system) {
             this._phys.system.setPosition(this, this.position);
