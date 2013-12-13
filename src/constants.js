@@ -1,6 +1,7 @@
 var constants = {
     /**
-     * The types of renderers supported
+     * The types of renderers supported. These are generally passed in to the constructor of
+     * a {{#crossLink "Game"}}{{/crossLink}} instance.
      *
      * @class RENDERER
      * @static
@@ -171,7 +172,7 @@ var constants = {
     },
 
     /**
-     * These represent different axis. They are bitmap flags and can be combined together.
+     * These represent different axis. They are bitwise flags and can be combined together.
      *
      * @class AXIS
      * @static
@@ -221,7 +222,7 @@ var constants = {
     },
 
     /**
-     * These represent different directions in the world. They are bitmap flags and can be combined together.
+     * These represent different directions in the world. They are bitwise flags and can be combined together.
      *
      * @class DIRECTION
      * @static
