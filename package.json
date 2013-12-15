@@ -36,7 +36,5 @@
     "scripts": {
         "build": "grunt build",
         "test": "grunt test"
-    },
-
-    "private": true
+    }
 }
