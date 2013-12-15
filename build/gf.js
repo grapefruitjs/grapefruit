@@ -1,10 +1,10 @@
 /**
  * @license
- * GrapeFruit Game Engine - v0.1.0
+ * GrapeFruit Game Engine - v0.1.1
  * Copyright © 2012-2014, Chad Engler
  * https://github.com/grapefruitjs/grapefruit
  *
- * Compiled: 2013-12-11
+ * Compiled: 2013-12-15
  *
  * GrapeFruit Game Engine is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -483,7 +483,7 @@ module.exports = constants;
 
 constants.pkg = {
     "name": "gf",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "longName": "GrapeFruit Game Engine",
     "description": "A fun and easy WebGL-enabled JavaScript Game Engine",
 
@@ -505,7 +505,7 @@ constants.pkg = {
     "dependencies": {},
     "devDependencies": {
         "grunt": "~0.4.1",
-        "grunt-contrib-jshint": "~0.7",
+        "grunt-contrib-jshint": "git+https://github.com/englercj/grunt-contrib-jshint.git",
         "grunt-contrib-connect": "~0.5",
         "grunt-contrib-yuidoc": "~0.5",
         "grunt-contrib-watch": "~0.5",
@@ -8039,13 +8039,15 @@ module.exports = AudioManager;
 return module.exports;
 
 });
-define('physics/PhysicsTarget',['require','exports','module'],function (require, exports, module) {
+define('physics/PhysicsTarget',['require','exports','module','../math/Vector'],function (require, exports, module) {
   
 
+var Vector = require("../math/Vector");
 module.exports = function () {
   this._phys = {};
   this.mass = 0;
   this.inertia = 0;
+  this._velocity = new Vector();
   this.enablePhysics = function (sys, cb) {
     var self = this;
     if (typeof sys === "function") {
@@ -8084,9 +8086,12 @@ module.exports = function () {
     }
     return this;
   };
-  this.setVelocity = function (vel) {
+  this.setVelocity = function (x, y) {
+    y = x.y !== undefined ? x.y : y || 0;
+    x = x.x !== undefined ? x.x : x || 0;
+    this._velocity.set(x, y);
     if (this._phys.system) {
-      this._phys.system.setVelocity(this, vel);
+      this._phys.system.setVelocity(this, this._velocity);
     }
     return this;
   };
@@ -8098,8 +8103,9 @@ module.exports = function () {
     return this;
   };
   this.setPosition = function (x, y) {
-    this.position.x = x;
-    this.position.y = y;
+    y = x.y !== undefined ? x.y : y || 0;
+    x = x.x !== undefined ? x.x : x || 0;
+    this.position.set(x, y);
     if (this._phys.system) {
       this._phys.system.setPosition(this, this.position);
     }
