@@ -3,6 +3,7 @@
 [![Dependency Status](https://gemnasium.com/grapefruitjs/grapefruit.png)](https://gemnasium.com/grapefruitjs/grapefruit)
 [![NPM version](https://badge.fury.io/js/grapefruit.png)](http://badge.fury.io/js/grapefruit)
 [![Bower version](https://badge.fury.io/bo/grapefruit.png)](http://badge.fury.io/bo/grapefruit)
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 The game engine that powers my remake of [lttp](https://github.com/englercj/lttp) and my original game [shiv](https://github.com/englercj/shiv).
 
