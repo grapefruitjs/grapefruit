@@ -11,6 +11,30 @@ describe('math', function() {
         });
     });
 
+    describe('#rand', function() {
+        it('should expose the random utilities', function() {
+            gf.math.rand.should.be.an.Object;
+        });
+    });
+
+    describe('#Matrix', function() {
+        it('should expose the Matrix class', function() {
+            gf.math.Matrix.should.be.a.Float32Array;
+        });
+    });
+
+    describe('#mat3', function() {
+        it('should expose the mat3 utility', function() {
+            gf.math.mat3.create.should.be.a.Function;
+        });
+    });
+
+    describe('#mat4', function() {
+        it('should expose the mat4 utility', function() {
+            gf.math.mat4.create.should.be.a.Function;
+        });
+    });
+
     describe('#floor', function() {
         it('should floor values properly', function() {
             gf.math.floor(10.9856).should.equal(10);
@@ -40,16 +64,6 @@ describe('math', function() {
             gf.math.ceil(-10.4856).should.equal(-10);
             gf.math.ceil(-10.1856).should.equal(-10);
             gf.math.ceil(-10.0000).should.equal(-10);
-        });
-    });
-
-    describe('#random', function() {
-        it('should return a random value between 0 and 1', function() {
-            gf.math.random().should.be.within(0, 1);
-            gf.math.random().should.be.within(0, 1);
-            gf.math.random().should.be.within(0, 1);
-            gf.math.random().should.be.within(0, 1);
-            gf.math.random().should.be.within(0, 1);
         });
     });
 
@@ -225,249 +239,5 @@ describe('math', function() {
 
     describe('#angleBetween', function() {
         it('should return the correct angle between two vectors');
-    });
-
-    describe('#randomBool', function() {
-        it('should return a random boolean value', function() {
-            gf.math.randomBool().should.be.Boolean;
-        });
-    });
-
-    describe('#randomInt', function() {
-        it('should return a random integer value', function() {
-            gf.math.randomInt().should.be.Number;
-
-            var i = 0,
-                count = 50;
-
-            for(i = 0; i < count; ++i)
-                gf.math.randomInt().should.be.within(0, 100);
-
-            for(i = 0; i < count; ++i)
-                gf.math.randomInt(-10, 10).should.be.within(-10, 10);
-
-            for(i = 0; i < count; ++i)
-                gf.math.randomInt(-1, 1).should.be.within(-1, 1);
-        });
-    });
-
-    describe('#randomReal', function() {
-        it('should return a random real value', function() {
-            gf.math.randomReal().should.be.Number;
-
-            var i = 0,
-                count = 50;
-
-            for(i = 0; i < count; ++i)
-                gf.math.randomReal().should.be.within(0, 1);
-
-            for(i = 0; i < count; ++i)
-                gf.math.randomReal(-10, 10).should.be.within(-10, 10);
-
-            for(i = 0; i < count; ++i)
-                gf.math.randomReal(-1, 1).should.be.within(-1, 1);
-        });
-    });
-
-    describe('#randomSign', function() {
-        it('should return a random sign value (either 1 or -1)', function() {
-            gf.math.randomSign().should.be.Number;
-
-            var i = 0,
-                count = 50;
-
-            for(i = 0; i < count; ++i)
-                gf.math.randomSign().should.be.within(-1, 1);
-        });
-    });
-
-    describe('#randomString', function() {
-        it('should return a random string value', function() {
-            gf.math.randomString().should.be.String;
-
-            //This check doesn't make sense since length is not guaranteed
-            /*var i = 0,
-                count = 50;
-
-            for(i = 0; i < count; ++i)
-                gf.math.randomString().length.should.be.within(10, 15);*/
-        });
-    });
-
-    describe('#randomUuid', function() {
-        it('should return a random string uuid', function() {
-            gf.math.randomUuid().should.be.String;
-
-            var i = 0,
-                count = 50;
-
-            for(i = 0; i < count; ++i)
-                gf.math.randomUuid().should.match(/\b([0-9a-f]{8}-?([0-9a-f]{4}-?){3}[0-9a-f]{12})\b/i);
-        });
-    });
-
-    describe('#randomBytes', function() {
-        it('should fill a Uint8Array with random values', function() {
-            var a = new Uint8Array(128),
-                pass = false;
-
-            gf.math.randomBytes(a).should.be.Uint8Array;
-
-            var x = a[0];
-            for(var i = 1; i < a.length; ++i) {
-                if(x !== a[i]) {
-                    pass = true;
-                    break;
-                }
-            }
-
-            pass.should.be.ok;
-        });
-
-        it('should fill a Uint16Array with random values', function() {
-            var a = new Uint16Array(64),
-                pass = false;
-
-            gf.math.randomBytes(a).should.be.Uint16Array;
-
-            var x = a[0];
-            for(var i = 1; i < a.length; ++i) {
-                if(x !== a[i]) {
-                    pass = true;
-                    break;
-                }
-            }
-        });
-
-        it('should fill a Int32Array with random values', function() {
-            var a = new Int32Array(32),
-                pass = false;
-
-            gf.math.randomBytes(a).should.be.Int32Array;
-
-            var x = a[0];
-            for(var i = 1; i < a.length; ++i) {
-                if(x !== a[i]) {
-                    pass = true;
-                    break;
-                }
-            }
-        });
-
-        it('should fill a Int16Array with random values', function() {
-            var a = new Int16Array(64),
-                pass = false;
-
-            gf.math.randomBytes(a).should.be.Int16Array;
-
-            var x = a[0];
-            for(var i = 1; i < a.length; ++i) {
-                if(x !== a[i]) {
-                    pass = true;
-                    break;
-                }
-            }
-        });
-    });
-
-    describe('#_getRandomValuesTyped', function() {
-        it('should fill a Uint8Array with random values', function() {
-            var a = new Uint8Array(128),
-                pass = false;
-
-            gf.math._getRandomValuesTyped(a).should.be.Uint8Array;
-
-            var x = a[0];
-            for(var i = 1; i < a.length; ++i) {
-                if(x !== a[i]) {
-                    pass = true;
-                    break;
-                }
-            }
-
-            pass.should.be.ok;
-        });
-
-        it('should fill a Uint16Array with random values', function() {
-            var a = new Uint16Array(64),
-                pass = false;
-
-            gf.math._getRandomValuesTyped(a).should.be.Uint16Array;
-
-            var x = a[0];
-            for(var i = 1; i < a.length; ++i) {
-                if(x !== a[i]) {
-                    pass = true;
-                    break;
-                }
-            }
-        });
-
-        it('should fill a Int32Array with random values', function() {
-            var a = new Int32Array(32),
-                pass = false;
-
-            gf.math._getRandomValuesTyped(a).should.be.Int32Array;
-
-            var x = a[0];
-            for(var i = 1; i < a.length; ++i) {
-                if(x !== a[i]) {
-                    pass = true;
-                    break;
-                }
-            }
-        });
-
-        it('should fill a Int16Array with random values', function() {
-            var a = new Int16Array(64),
-                pass = false;
-
-            gf.math._getRandomValuesTyped(a).should.be.Int16Array;
-
-            var x = a[0];
-            for(var i = 1; i < a.length; ++i) {
-                if(x !== a[i]) {
-                    pass = true;
-                    break;
-                }
-            }
-        });
-    });
-
-    describe('#_getRandomValuesArray', function() {
-        it('should return an array of random bytes', function() {
-            var a = new Array(64),
-                pass = false;
-
-            gf.math._getRandomValuesArray(a).should.be.Array;
-
-            var x = a[0];
-            for(var i = 1; i < a.length; ++i) {
-                if(x !== a[i]) {
-                    pass = true;
-                    break;
-                }
-            }
-        });
-    });
-
-    describe('#randomElement', function() {
-        it('should return a random numeric element from an array', function() {
-            var a = [1,2,3,4,5,6,7,8,9,10];
-
-            a.should.contain(gf.math.randomElement(a));
-        });
-
-        it('should return a random string element from an array', function() {
-            var a = ['a','b','c','d','e','f','g','h'];
-
-            a.should.contain(gf.math.randomElement(a));
-        });
-
-        it('should return a random object element from an array', function() {
-            var a = [{k:1},{k:2},{k:3},{k:4},{k:5},{k:6},{k:7},{k:8}];
-
-            a.should.contain(gf.math.randomElement(a));
-        });
     });
 });
