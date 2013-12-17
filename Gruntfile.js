@@ -32,9 +32,9 @@ module.exports = function(grunt) {
             vendor: 'vendor'
         },
         files: {
-            dev: '<%= dirs.dist %>/<%= pkg.name %>.js',
-            dist: '<%= dirs.dist %>/<%= pkg.name %>.min.js',
-            sourceMap: '<%= dirs.dist %>/<%= pkg.name %>.min.map',
+            dev: '<%= dirs.dist %>/gf.js',
+            dist: '<%= dirs.dist %>/gf.min.js',
+            sourceMap: '<%= dirs.dist %>/gf.min.map',
             main: 'core'
         },
         concat: {
