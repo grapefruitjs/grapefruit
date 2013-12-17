@@ -1,4 +1,4 @@
-var support = require('../utils/support'),
+var random = require('./random'),
     PIXI = require('../vendor/pixi');
 
 /**
@@ -26,17 +26,13 @@ var math = {
      */
     RAD_TO_DEG: 180 / Math.PI,
     /**
-     * The RNG seed that allows for deterministic random numbers. Change this to a certain value
-     * to ensure you will have the same sequence of "random" numbers. Useful for playbacks, save files,
-     * procedural generation, etc.
+     * Contains all the functions for generating deterministic random values.
      *
-     * Note: Deterministic randomness is not yet implemented. Scheduled for v0.2.0
-     *
-     * @property SEED
-     * @type Number
-     * @default Math.random()
+     * @property rand
+     * @type random
+     * @readOnly
      */
-    SEED: Math.random(),
+    rand: random,
     /**
      * A Matrix class, directory exposes PIXI.Matrix.
      *
@@ -58,14 +54,15 @@ var math = {
      * @type Object
      */
     mat4: PIXI.mat4,
+
     /**
      * Alias some native functions for great justice (or incase we want to override)
-     *
      */
+
     /**
      * Applys a Floor operation to a value, currently uses native Math.floor
-     * since it deals with all edge cases that quicker solutions like `~~value`
-     * or `value | 0` do not.
+     * since quicker solutions like `~~value` or `value | 0` only deal with 32-bits.
+     * For example `~~760895687099.0011` is `686475707` which is wrong.
      *
      * @method floor
      * @param num {Number} The number to floor
@@ -81,13 +78,6 @@ var math = {
      * @return {Number} The ceiling value
      */
     ceil: Math.ceil,
-    /**
-     * Generates a random number between 0 and 1, NON DETERMINISTIC
-     *
-     * @method random
-     * @return {Number} The random value
-     */
-    random: Math.random,
     /**
      * Returns the absolute value of a number, currently uses native Math.abs
      * since it is more performant than tricks you can use.
@@ -110,31 +100,32 @@ var math = {
      */
     sqrt: Math.sqrt,
     /**
-     * Returns the min of the values passed
+     * Returns the min of the values passed, currently uses native Math.min
      *
      * @method min
-     * @param num* {Number...}
+     * @param num* {Number...} The numbers to compare
      * @return {Number} The min value
      */
     min: Math.min,
     /**
-     * Returns the max of the values passed
+     * Returns the max of the values passed, currently uses native Math.max
      *
      * @method max
-     * @param num* {Number...}
+     * @param num* {Number...} The numbers to compare
      * @return {Number} The max value
      */
     max: Math.max,
     /**
-     * Quickly rounds a number. This is about twice as fast as Math.round()
+     * Rounds a number to the closest integer value (0.5 goes up), currently
+     * uses native Math.round since in modern browsers it is faster that the
+     * different tricks and will operate in the proper bit width.
      *
      * @method round
      * @param num {Number} The number to round
      * @return {Number} The rounded value
      */
-    round: function(n) {
-        return ~~(n + (n > 0 ? 0.5 : -0.5));
-    },
+    round: Math.round,
+
     /**
      * Clamps a number between two values.
      *
@@ -145,7 +136,7 @@ var math = {
      * @return {Number} The clamped value
      */
     clamp: function(n, min, max) {
-        return Math.max(min, Math.min(max, n));
+        return math.max(min, math.min(max, n));
     },
     /**
      * Truncates the decimal from a number
@@ -155,7 +146,7 @@ var math = {
      * @return {Number} The truncated value
      */
     truncate: function(n) {
-        return (n > 0) ? Math.floor(n) : Math.ceil(n);
+        return (n > 0) ? math.floor(n) : math.ceil(n);
     },
     /**
      * Snaps a number to a grid value.
@@ -174,7 +165,7 @@ var math = {
         offset = offset || 0;
 
         n -= offset;
-        n = gap * Math.round(n / gap);
+        n = gap * math.round(n / gap);
 
         return offset + n;
     },
@@ -195,7 +186,7 @@ var math = {
         offset = offset || 0;
 
         n -= offset;
-        n = gap * Math.floor(n / gap);
+        n = gap * math.floor(n / gap);
 
         return offset + n;
     },
@@ -216,7 +207,7 @@ var math = {
         offset = offset || 0;
 
         n -= offset;
-        n = gap * Math.ceil(n / gap);
+        n = gap * math.ceil(n / gap);
 
         return offset + n;
     },
@@ -250,212 +241,7 @@ var math = {
      */
     angleBetween: function(pos1, pos2) {
         return Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x);
-    },
-    /**
-     * Returns a random boolean based on the provided chance. The chance represents the
-     * percentage chance of returning: true.
-     *
-     * @method randomBool
-     * @param [chance=50] {Number} The % chance of getting true (0 - 100), defaults to 50%
-     * @return {Boolean}
-     */
-    randomBool: function(chance) {
-        if(chance === undefined)
-            chance = 50;
-
-        //no chance of true
-        if(chance <= 0)
-            return false;
-
-        //must always be true
-        if(chance >= 100)
-            return true;
-
-        //if roll is less than change, return true
-        return (Math.random() * 100 < chance);
-    },
-    /**
-     * Returns a random int between min and max.
-     *
-     * @method randomInt
-     * @param [min=0] {Number} The minimun number that the result can be
-     * @param [max=100] {Number} The maximun number that the result can be
-     * @return {Number}
-     */
-    randomInt: function(min, max) {
-        if(min !== undefined && min === max)
-            return min;
-
-        min = min || 0;
-        max = max || 100;
-
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    },
-    /**
-     * Returns a random real number between min and max.
-     *
-     * @method randomReal
-     * @param [min=0] {Number} The minimun number that the result can be
-     * @param [max=1] {Number} The maximun number that the result can be
-     * @return {Number}
-     */
-    randomReal: function(min, max) {
-        if(min !== undefined && min === max)
-            return min;
-
-        min = min || 0;
-        max = max || 1;
-
-        return math.random() * (max - min) + min;
-    },
-    /**
-     * Returns a random sign based on the provided chance. The chance represents the
-     * percentage chance of returning 1 (positive).
-     *
-     * @method randomSign
-     * @param chance {Number} The % chance of getting positive (0 - 100), defaults to 50%
-     * @return {Number} either 1 or -1
-     */
-    randomSign: function(chance) {
-        return math.randomBool(chance) ? 1 : -1;
-    },
-    /**
-     * Returns a random string based on a random value between 0 and 1, multiplied
-     * by the current date. Ex: "1158014093337", "86371874178", etc
-     *
-     * @method randomString
-     * @return {String} A random string
-     */
-    randomString: function() {
-        return Math.floor(Date.now() * Math.random()).toString();
-    },
-    /**
-     * Generates a random RFC4122 compliant (v4) UUID
-     *
-     * @method randomUuid
-     * @return {String} A random guid
-     */
-    randomUuid: function() {
-        //collect some random bytes
-        var buf = math.randomBytes(math.__uuidBytes);
-
-        // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-        buf[6] = (buf[6] & 0x0f) | 0x40;
-        buf[8] = (buf[8] & 0x3f) | 0x80;
-
-        var i = 0,
-            bth = math.__byteToHex;
-
-        //convert bytes to string
-        return bth[buf[i++]] + bth[buf[i++]] +
-                bth[buf[i++]] + bth[buf[i++]] + '-' +
-                bth[buf[i++]] + bth[buf[i++]] + '-' +
-                bth[buf[i++]] + bth[buf[i++]] + '-' +
-                bth[buf[i++]] + bth[buf[i++]] + '-' +
-                bth[buf[i++]] + bth[buf[i++]] +
-                bth[buf[i++]] + bth[buf[i++]] +
-                bth[buf[i++]] + bth[buf[i++]];
-    },
-    __uuidBytes: new Uint8Array(16),
-    __byteToHex: (function() {
-        var bth = [],
-            htb = {};
-        for (var i = 0; i < 256; i++) {
-            bth[i] = (i + 0x100).toString(16).substr(1);
-            htb[bth[i]] = i;
-        }
-
-        return bth;
-    })(),
-    /**
-     * Fills a Typed Array with random bytes. If you do not pass an output param, then a default
-     * Uint8Array(16) is created and returned for you.
-     *
-     * @method randomBytes
-     * @param [output] {TypedArray} The output array for the random data, if none specified a new Uint8Array(16) is created
-     */
-    randomBytes: function(ary) {
-        ary = ary || new Uint8Array(16);
-        window.crypto.getRandomValues(ary);
-        return ary;
-    },
-    /**
-     * Returns a random element of an array.
-     *
-     * @method randomElement
-     * @param array {Array} The array to choose from
-     * @param start {Number} The index of the first element to include, defaults to 0
-     * @param end {Number} The index of the last element to include, defaults to array.length - 1
-     * @return {Number} either 1 or -1
-     */
-    randomElement: function(array, start, end) {
-        //ensure we have an array, and there are elements to check
-        if(!array || !array.length)
-            return null;
-
-        //special case for 1 element
-        if(array.length === 1)
-            return array[0];
-
-        //default for start
-        if(!start || start < 0)
-            start = start || 0;
-
-        //default for end
-        if(!end || end < 0)
-            end = array.length - 1;
-
-        return array[math.randomInt(start, end)];
     }
 };
-
-//these polyfills are separated and exposed so that they can get tested
-
-//if we support typed arrays we can do a good approximation of crypto.getRandomValues
-math._getRandomValuesTyped = function(ary) {
-    //get a Uint8 view into the buffer
-    var buf = ary.buffer,
-        len = buf.byteLength,
-        view = new Uint8Array(buf);
-
-    //fill the buffer one random byte at a time
-    for(var i = 0, r; i < len; ++i) {
-        //we only need a new random when we have pulled all the bytes out of the last one
-        //which means every fourth byte we get a new random 32-bit value
-        if((i & 0x03) === 0) {
-            r = math.random() * 0x100000000;
-        }
-
-        //pull the next byte out of the random number
-        view[i] = r >>> ((i & 0x03) << 3) & 0xff;
-    }
-
-    //return the original view which now has the data we put into the buffer
-    return ary;
-};
-
-//without typed array support we can do one that returns an array of values
-//but you would need to use `new Array(num)`, so there is a length
-//or something like `var a = []; a[num - 1] = undefined;` so length is expanded
-math._getRandomValuesArray = function(ary) {
-    //fill the array with random values
-    for(var i = 0; i < ary.length; ++i) {
-        ary[i] = math.random() * 0x100000000;
-    }
-
-    return ary;
-};
-
-//polyfill crypto.getRandomValues if necessary
-//crypto spec: http://wiki.whatwg.org/wiki/Crypto
-if(!support.crypto) {
-    window.crypto = window.crypto || {};
-
-    if(support.typedArrays) {
-        window.crypto.getRandomValues = math._getRandomValuesTyped;
-    } else {
-        window.crypto.getRandomValues = math._getRandomValuesArray;
-    }
-}
 
 module.exports = math;
