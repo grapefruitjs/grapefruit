@@ -1,6 +1,8 @@
 # GrapeFruit Game Engine
 [![Build Status](https://travis-ci.org/grapefruitjs/grapefruit.png?branch=master)](https://travis-ci.org/grapefruitjs/grapefruit)
 [![Dependency Status](https://gemnasium.com/grapefruitjs/grapefruit.png)](https://gemnasium.com/grapefruitjs/grapefruit)
+[![NPM version](https://badge.fury.io/js/grapefruit.png)](http://badge.fury.io/js/grapefruit)
+[![Bower version](https://badge.fury.io/bo/grapefruit.png)](http://badge.fury.io/bo/grapefruit)
 
 The game engine that powers my remake of [lttp](https://github.com/englercj/lttp) and my original game [shiv](https://github.com/englercj/shiv).
 
