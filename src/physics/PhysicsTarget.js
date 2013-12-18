@@ -116,7 +116,7 @@ module.exports = function() {
      * Reindexes the collisions for this sprite, useful when moving the sprite a great deal
      * (like to a new world)
      *
-     * @method disablePhysics
+     * @method reindex
      * @param callback {Function} The callback function to call after the sprite has been reindexed
      * @return {mixed} Returns itself.
      * @chainable
