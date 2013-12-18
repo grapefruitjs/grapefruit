@@ -266,7 +266,7 @@ var r = {
     }
 };
 
-// alias next to random and real
+// alias next to random
 r.random = r.next;
 
 // set the initial seed
