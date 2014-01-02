@@ -1,21 +1,22 @@
-#sublime text 2 files
+# sublime text 2 files
 *.sublime-*
 *.*~*.TMP
 
-#temp files
+# temp files
 .DS_Store
 Thumbs.db
 Desktop.ini
 npm-debug.log
 
-#vim swap files
+# vim swap files
 *.sw*
 
-#emacs temp files
+# emacs temp files
 *~
 \#*#
 
-#project ignores
+# project ignores
+build/
 node_modules/
 !.gitkeep
 *__temp
