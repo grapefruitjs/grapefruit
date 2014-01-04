@@ -5,6 +5,11 @@
     "main": "build/gf.js",
 
     "ignore": [
+        "**/.*"
+        "node_modules",
+        "bower_components",
+        "test",
+        "tools"
     ],
     "dependencies": {
     },
