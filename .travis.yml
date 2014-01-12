@@ -8,9 +8,13 @@ branches:
         - dev
 
 install:
-    - npm install -g grunt-cli
+    - npm install grunt-cli
     - npm install
 
+cache:
+    directories:
+        - node_modules
+
 script:
-    - grunt urequire:dev
-    - grunt testci
+    - ./node_modules/.bin/grunt urequire:dev
+    - ./node_modules/.bin/grunt testci
