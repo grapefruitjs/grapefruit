@@ -454,6 +454,7 @@ inherit(Loader, Object, {
             while(this.keys.length > 0)
                 this.loadFile();
         } else {
+            this.isLoading = false;
             this.progress = 100;
             this.hasLoaded = true;
             this.emit('complete');
