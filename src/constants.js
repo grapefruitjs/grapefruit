@@ -260,25 +260,25 @@ var constants = {
          */
         RIGHT: 2,
         /**
-         * Represents top (up) direction, binary value: 0100
+         * Represents up direction, binary value: 0100
          *
-         * @property TOP
+         * @property UP
          * @type Number
          * @default 4
          * @static
          * @final
          */
-        TOP: 4,
+        UP: 4,
         /**
-         * Represents bottom (down) direction, binary value: 1000
+         * Represents down direction, binary value: 1000
          *
-         * @property BOTTOM
+         * @property DOWN
          * @type Number
          * @default 8
          * @static
          * @final
          */
-        BOTTOM: 8,
+        DOWN: 8,
         /**
          * Represents all directions, binary value: 1111
          *

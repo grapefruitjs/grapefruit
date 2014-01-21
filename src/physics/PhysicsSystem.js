@@ -518,6 +518,7 @@ inherit(PhysicsSystem, Object, {
 
                     data.spr._phys.body = data.body;
                     data.spr._phys.shape = data.shape;
+                    data.body.sprite = data.spr;
                     break;
 
                 case 'remove':
