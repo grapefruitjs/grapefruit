@@ -83,8 +83,8 @@ GamepadButtons.BUTTON = {
     START: 9,
     LEFT_ANALOGUE_STICK: 10, // Analogue sticks (if depressible)
     RIGHT_ANALOGUE_STICK: 11,
-    PAD_TOP: 12, // Directional (discrete) pad
-    PAD_BOTTOM: 13,
+    PAD_UP: 12, // Directional (discrete) pad
+    PAD_DOWN: 13,
     PAD_LEFT: 14,
     PAD_RIGHT: 15,
     SYSTEM_MENU: 16   // on console controllers this would be the button to open the system menu
