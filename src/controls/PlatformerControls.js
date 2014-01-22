@@ -3,8 +3,8 @@ var Controls = require('./Controls'),
     Vector = require('../math/Vector'),
     inherit = require('../utils/inherit'),
     KEY = require('../input/Keyboard').KEY,
-    BUTTON = require('../input/GamepadButtons').BUTTON,
-    AXIS = require('../input/GamepadSticks').AXIS;
+    BUTTON = require('../input/gamepad/GamepadButtons').BUTTON,
+    AXIS = require('../input/gamepad/GamepadSticks').AXIS;
 
 /**
  * @class PlatformerControls
@@ -125,7 +125,7 @@ PlatformerControls.lerpconst = function(f1, f2, d) {
 PlatformerControls.selectPlayerGroundNormal = function(arb, groundNormal) {
     var n = cp.v.neg(arb.getNormal(0));
 
-    if(n.y > groundNormal->y) {
+    if(n.y > groundNormal.y) {
         groundNormal = n;
     }
 };
