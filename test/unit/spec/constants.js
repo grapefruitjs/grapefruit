@@ -31,11 +31,11 @@ describe('constants', function() {
         gf.DIRECTION.NONE.should.equal(0);
         gf.DIRECTION.LEFT.should.equal(1);
         gf.DIRECTION.RIGHT.should.equal(2);
-        gf.DIRECTION.TOP.should.equal(4);
-        gf.DIRECTION.BOTTOM.should.equal(8);
+        gf.DIRECTION.UP.should.equal(4);
+        gf.DIRECTION.DOWN.should.equal(8);
         gf.DIRECTION.ALL.should.equal(
             gf.DIRECTION.LEFT | gf.DIRECTION.RIGHT |
-            gf.DIRECTION.TOP | gf.DIRECTION.BOTTOM
+            gf.DIRECTION.UP | gf.DIRECTION.DOWN
         );
 
         //types of shapes for quick shape test checking in physics
