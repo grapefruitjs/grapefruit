@@ -216,6 +216,34 @@ inherit(PhysicsSystem, Object, {
 
         return spr;
     },
+    addControlBody: function(spr, cb) {
+        //see Chipmunk2D Tank Demo:
+        //https://github.com/slembcke/Chipmunk2D/blob/master/Demo/Tank.c#L106
+        var body = spr._phys.body;
+
+        if(!body.isStatic()) {
+            var cbody = new gf.cp.Body(Infinity, Infinity),
+                cpivot = new gf.cp.PivotJoint(cbody, body, gf.Vector.ZERO, gf.Vector.ZERO),
+                cgear = new gf.cp.GearJoint(cbody, body, 0, 1);
+
+            cpivot.maxBias = 0; //disable join correction
+            cpivot.maxForce = 10000; //emulate linear friction
+
+            cgear.errorBias = 0; //attempt to fully correct the joint each step
+            cgear.maxBias = 1.2; //but limit the angular correction
+            cgear.maxForce = 50000; //emulate angular friction
+
+            this,actionQueue.push(['addControl', {
+                spr: spr,
+                body: cbody,
+                pivot: cpivot,
+                gear: cgear
+            }, cb]);
+            this.act();
+        }
+
+        return spr;
+    }
     /**
      * Removes a sprite from the physics simulation
      *
@@ -250,7 +278,6 @@ inherit(PhysicsSystem, Object, {
         if(!spr || !spr._phys.active)
             return;
 
-        spr._phys._cb = cb;
         this.actionQueue.push(['reindex', spr._phys.shape, cb]);
         this.act();
 
@@ -333,8 +360,12 @@ inherit(PhysicsSystem, Object, {
         if(!spr)
             return;
 
+        //update control body velocity (and pivot contraint makes regular follow)
+        if(spr._phys.control) {
+            spr._phys.control.body.setVel(vel);
+        }
         //if no control body then update real body
-        if(spr._phys.body) {
+        else if(spr._phys.body) {
             spr._phys.body.setVel(vel);
         }
 
@@ -358,6 +389,12 @@ inherit(PhysicsSystem, Object, {
             spr._phys.body.setPos(pos);
         }
 
+        //update control body position
+        if(spr._phys.control) {
+            spr._phys.control.body.setPos(pos);
+        }
+
+
         return this;
     },
     /**
@@ -373,8 +410,12 @@ inherit(PhysicsSystem, Object, {
         if(!spr)
             return;
 
+        //update control body rotation (and gear contraint makes regular follow)
+        if(spr._phys.control) {
+            spr._phys.control.body.setAngle(rads);
+        }
         //if no control body then update real body
-        if(spr._phys.body) {
+        else if(spr._phys.body) {
             spr._phys.body.setAngle(rads);
         }
 
@@ -521,6 +562,24 @@ inherit(PhysicsSystem, Object, {
                     data.body.sprite = data.spr;
                     break;
 
+                case 'addControl':
+                    data.body.setPos(data.spr.position);
+                    this.space.addConstraint(data.pivot);
+                    this.space.addConstraint(data.gear);
+
+                    data.spr._phys.control = data;
+                    delete data.spr; //no need for that extra reference to lay around
+                    break;
+
+                case 'addCustomShape':
+                    if(!data.spr._phys.customShapes) {
+                        data.spr._phys.customShapes = [];
+                    }
+
+                    data.spr._phys.customShapes.push(data.shape);
+                    this.space.addShape(data.shape);
+                    break;
+
                 case 'remove':
                     if(data.body.space) {
                         this.space.removeBody(data.body);
@@ -528,6 +587,16 @@ inherit(PhysicsSystem, Object, {
 
                     if(data.shape.space) {
                         this.space.removeShape(data.shape);
+                    }
+
+                    if(data.control) {
+                        if(data.control.pivot.space) {
+                            this.space.removeConstraint(data.control.pivot);
+                        }
+
+                        if(data.control.gear.space) {
+                            this.space.removeConstraint(data.control.gear);
+                        }
                     }
 
                     if(data.customShapes) {
@@ -550,16 +619,6 @@ inherit(PhysicsSystem, Object, {
                 case 'reindexStatic':
                     this.space.reindexStatic();
                     break;
-
-                case 'addCustomShape':
-                    if(!data.spr._phys.customShapes) {
-                        data.spr._phys.customShapes = [];
-                    }
-
-                    data.spr._phys.customShapes.push(data.shape);
-                    this.space.addShape(data.shape);
-                    break;
-
             }
 
             if(cb)
