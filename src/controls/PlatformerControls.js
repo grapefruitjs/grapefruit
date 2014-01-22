@@ -1,6 +1,7 @@
 /* jshint ignore:start */
 var Controls = require('./Controls'),
     Vector = require('../math/Vector'),
+    inherit = require('../utils/inherit'),
     KEY = require('../input/Keyboard').KEY,
     BUTTON = require('../input/GamepadButtons').BUTTON,
     AXIS = require('../input/GamepadSticks').AXIS;
