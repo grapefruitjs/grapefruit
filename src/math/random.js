@@ -60,6 +60,8 @@ var r = {
      * @static
      */
     seed: function(x, y, z) {
+        this._seed = arguments;
+
         /* jshint -W116 */
         //use == check for undefined or null
         if(y == null && z == null) {
