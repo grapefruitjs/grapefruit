@@ -16,5 +16,4 @@ cache:
         - node_modules
 
 script:
-    - ./node_modules/.bin/grunt urequire:dev
-    - ./node_modules/.bin/grunt testci
+    - ./node_modules/.bin/grunt build testci
