@@ -7,6 +7,10 @@ branches:
         - master
         - dev
 
+env:
+    global:
+        secure: "UleMG0+ggQz7z2TQDvNRJNrl3fAYS+/CVzubFMAmKkuEtjetfk4QVlsL7qouxxwS/VmJWk0HoWceEKSn2HG/RyRlalJd3rpeF++kixL59Z+LQmODX1V6zfKl+KkFi2eQBa26KSDuq1pGsEFVQgg9yVMr/nHCjha73oE8CBWvje0="
+
 install:
     - npm install grunt-cli coveralls
     - npm install
@@ -17,4 +21,4 @@ cache:
 
 script:
     - ./node_modules/.bin/grunt build testci
-    #- cat ./test/result/lcov.info | ./node_modules/.bin/coveralls
+    - cat ./test/result/lcov.info | ./node_modules/.bin/coveralls
