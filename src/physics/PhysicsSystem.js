@@ -222,9 +222,9 @@ inherit(PhysicsSystem, Object, {
         var body = spr._phys.body;
 
         if(!body.isStatic()) {
-            var cbody = new gf.cp.Body(Infinity, Infinity),
-                cpivot = new gf.cp.PivotJoint(cbody, body, gf.Vector.ZERO, gf.Vector.ZERO),
-                cgear = new gf.cp.GearJoint(cbody, body, 0, 1);
+            var cbody = new cp.Body(Infinity, Infinity),
+                cpivot = new cp.PivotJoint(cbody, body, cp.vzero, cp.vzero),
+                cgear = new cp.GearJoint(cbody, body, 0, 1);
 
             cpivot.maxBias = 0; //disable join correction
             cpivot.maxForce = 10000; //emulate linear friction
@@ -233,7 +233,7 @@ inherit(PhysicsSystem, Object, {
             cgear.maxBias = 1.2; //but limit the angular correction
             cgear.maxForce = 50000; //emulate angular friction
 
-            this,actionQueue.push(['addControl', {
+            this.actionQueue.push(['addControl', {
                 spr: spr,
                 body: cbody,
                 pivot: cpivot,
@@ -243,7 +243,7 @@ inherit(PhysicsSystem, Object, {
         }
 
         return spr;
-    }
+    },
     /**
      * Removes a sprite from the physics simulation
      *
@@ -636,11 +636,6 @@ inherit(PhysicsSystem, Object, {
     _createBody: function(spr) {
         var mass = spr.mass || 1,
             inertia = spr.inertia || cp.momentForBox(mass, spr.width, spr.height) || Infinity;
-
-        var body = new cp.Body(
-            spr.mass || 1,
-            spr.inertia || cp.momentForBox(spr.mass || 1, spr.width, spr.height) || Infinity
-        );
 
         if(mass === Infinity && inertia === Infinity) {
             return this.space.staticBody;

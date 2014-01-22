@@ -1,3 +1,5 @@
+var inherit = require('../utils/inherit');
+
 /**
  * @class Controls
  * @extends Object
