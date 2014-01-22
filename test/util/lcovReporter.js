@@ -1,7 +1,11 @@
 (function() {
+    var base = 'grapefruit/';
+
     function getLcov(filename, data) {
+        var name = filename.substr(filename.lastIndexOf(base) + base.length);
+
         //generate lcov info
-        var str = 'SF:' + filename + '\n';
+        var str = 'SF:' + name + '\n';
 
         data.source.forEach(function(line, num) {
             // increase the line number, as JS arrays are zero-based
