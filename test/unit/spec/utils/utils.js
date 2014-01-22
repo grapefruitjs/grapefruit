@@ -8,7 +8,7 @@ describe('utils', function() {
 
     describe('#noop', function() {
         it('should be an empty function', function() {
-            gf.utils.noop.toString().should.match(/^function\s\(\)\s{\s+}$/);
+            gf.utils.noop.toString().should.match(/^function\s\(\)\s{\s*}$/);
         });
     });
 
