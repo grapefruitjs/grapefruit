@@ -1,25 +1,37 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
         <title>Grapefruit Test Suite</title>
+
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
         <link href="../../node_modules/grunt-mocha/node_modules/mocha/mocha.css" media="screen" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <!-- Required for browser reporter -->
         <div id="mocha"></div>
 
-        <!-- Include mocha scripts -->
+        <!-- Include mocha -->
         <script src="../../node_modules/grunt-mocha/node_modules/mocha/mocha.js"></script>
+
+        <!-- Include grapefruit build -->
+        <script src="../../build/gf.js"></script>
+
+        <!-- Include Coverage -->
+        <script
+            src="../../node_modules/blanket/dist/qunit/blanket.js"
+            data-cover-adapter="../util/mochaBlanket.js"
+            data-cover-reporter="../util/lcovReporter.js"
+            data-cover-only="build/"
+        ></script>
+
+        <!-- Setup Mocha -->
         <script>
             mocha.setup('bdd');
         </script>
 
         <!-- Include should.js -->
         <script src="../../node_modules/should/should.js"></script>
-
-        <!-- Include grapefruit build -->
-        <script src="../../build/gf.js"></script>
 
         <!-- Include tests -->
         <script src="spec/constants.js"></script>
@@ -88,13 +100,5 @@
         <script src="spec/utils/inherit.js"></script>
         <script src="spec/utils/support.js"></script>
         <script src="spec/utils/utils.js"></script>
-
-        <!-- Run tests -->
-        <script>
-            // If tests run in a real browser
-            if (navigator.userAgent.indexOf('PhantomJS') === -1) {
-                mocha.run();
-            }
-        </script>
     </body>
 </html>

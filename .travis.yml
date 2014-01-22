@@ -8,7 +8,7 @@ branches:
         - dev
 
 install:
-    - npm install grunt-cli
+    - npm install grunt-cli coveralls
     - npm install
 
 cache:
@@ -17,3 +17,4 @@ cache:
 
 script:
     - ./node_modules/.bin/grunt build testci
+    - cat ./test/result/lcov.info | ./node_modules/.bin/coveralls

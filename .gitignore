@@ -18,6 +18,6 @@ npm-debug.log
 # project ignores
 build/
 node_modules/
+test/result/
 !.gitkeep
 *__temp
-unit.xml
