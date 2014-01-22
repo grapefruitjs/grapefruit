@@ -1,9 +1,7 @@
 //need to allow script urls so that mocha: works below
 /* jshint scripturl:true */
 module.exports = function(grunt) {
-    var glob = require('glob'),
-        source = glob.sync('src/**/*.js').filter(function(v) { return v.indexOf('vendor') === -1; }),
-        testPort = grunt.option('port-test') || 9002,
+    var testPort = grunt.option('port-test') || 9002,
         pkg = grunt.file.read('package.json'),
         banner = [
             '/**',
@@ -29,13 +27,22 @@ module.exports = function(grunt) {
             src: 'src',
             test: 'test',
             tools: 'tools',
-            vendor: 'vendor'
+            vendor: 'src/vendor'
         },
         files: {
             dev: '<%= dirs.dist %>/gf.js',
             dist: '<%= dirs.dist %>/gf.min.js',
             sourceMap: '<%= dirs.dist %>/gf.min.map',
-            main: 'core'
+            main: '<%= dirs.src %>/core.js'
+        },
+        browserify: {
+            options: {
+                standalone: 'gf'
+            },
+            dev: {
+                src: '<%= files.main %>',
+                dest: '<%= files.dev %>'
+            }
         },
         concat: {
             options: {
@@ -45,21 +52,33 @@ module.exports = function(grunt) {
             dev: {
                 src: ['<%= files.dev %>'],
                 dest: '<%= files.dev %>'
+            }
+        },
+        uglify: {
+            options: {
+                banner: banner,
+                mangle: true,
+                report: 'min',
+                sourceMap: true,
+                sourceMapName: '<%= files.sourceMap %>'
             },
             dist: {
-                src: ['<%= files.dist %>'],
-                dest: '<%= files.dist %>'
+                files: {
+                    '<%= files.dist %>': '<%= files.dev %>'
+                }
             }
         },
         jshint: {
-            src: source.concat('Gruntfile.js'),
             options: {
-                jshintrc: '.jshintrc'
-            }
+                jshintrc: '.jshintrc',
+                ignores: '<%= dirs.vendor %>/**.js'
+            },
+            src: '<%= dirs.src %>/**/*.js'
         },
         connect: {
             dev: {
                 options: {
+                    hostname: '0.0.0.0',
                     port: testPort,
                     base: './',
                     keepalive: true
@@ -78,41 +97,6 @@ module.exports = function(grunt) {
                     exclude: 'vendor',
                     outdir: '<%= dirs.docs %>'
                 }
-            }
-        },
-        urequire: {
-            dev: {
-                dstPath: '<%= files.dev %>'
-            },
-
-            dist: {
-                dstPath: '<%= files.dist %>',
-                optimize: true
-            },
-
-            _defaults: {
-                template: 'combined',
-                path: '<%= dirs.src %>',
-                main: '<%= files.main %>',
-                build: {
-                    debugLevel: 1,
-                    verbose: false,
-                    scanAllow: true,
-                    allNodeRequires: true,
-                    noRootExports: false
-                },
-                dependencies: {
-                    exports: {
-                        root: {
-                            'core': ['gf']
-                        }
-                    }
-                },
-                resources: [
-                    ['+inject:VERSION', ['constants.js'], function(m) {
-                        m.afterBody = 'constants.pkg = ' + pkg + ';';
-                    }]
-                ]
             }
         },
         mocha: {
@@ -137,7 +121,7 @@ module.exports = function(grunt) {
             },
             src: {
                 files: ['<%= dirs.src %>/**/*.js'],
-                tasks: ['build']
+                tasks: ['build:dev']
             }
         }
     });
@@ -148,29 +132,23 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-mocha');
-    grunt.loadNpmTasks('grunt-urequire');
 
-    //setup shortcut tasks
+    //default
     grunt.registerTask('default', ['jshint', 'build']);
+
+    //build taks
+    grunt.registerTask('build:dev', ['browserify:dev', 'concat:dev']);
+    grunt.registerTask('build:dist', ['build:dev', 'uglify:dist']);
+    grunt.registerTask('build', ['build:dist']);
+
+    //test tasks
     grunt.registerTask('test', ['mocha:dist']);
     grunt.registerTask('testci', ['jshint', 'mocha:dist']);
+
+    //misc tasks
     grunt.registerTask('docs', ['yuidoc']);
-
-    grunt.registerTask('dev', ['watch:src']);
-
-    //build task
-    var _buildTasks = ['urequire:%t', 'concat:%t'];
-
-    grunt.registerTask('build', 'Builds the compiled Grapefruit files', function(type) {
-        if(type) {
-            grunt.task.run(_getTasks(type));
-        } else {
-            grunt.task.run(_getTasks('dev').concat(_getTasks('dist')));
-        }
-    });
-
-    function _getTasks(type) {
-        return _buildTasks.map(function(v) { return v.replace('%t', type); });
-    }
+    grunt.registerTask('dev', ['build', 'watch:src']);
 };
