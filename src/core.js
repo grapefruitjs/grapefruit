@@ -36,6 +36,10 @@ var gf = {
     //camera
     Camera:             require('./camera/Camera'),
 
+    //controls
+    Controls:           require('./controls/Controls'),
+    TopDownControls:    require('./controls/TopDownControls'),
+
     //display
     BaseTexture:        require('./display/BaseTexture'),
     Container:          require('./display/Container'),
