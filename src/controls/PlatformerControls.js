@@ -1,3 +1,4 @@
+/* jshint ignore:start */
 var Controls = require('./Controls'),
     Vector = require('../math/Vector'),
     KEY = require('../input/Keyboard').KEY,
@@ -147,3 +148,4 @@ PlatformerControls.DEFAULT_AXES = {
 };
 
 module.exports = PlatformerControls;
+/* jshint ignore:end */
