@@ -25,14 +25,14 @@ var TopDownControls = function(game, settings) {
     this.actionmap.right.callbacks[Controls.BIND_TYPE.GPAXIS] = this.onGpAxis.bind(this, 'right');
 
     //setup callbacks for up
-    this.actionmap.jump.callbacks[Controls.BIND_TYPE.KEYBOARD] = this.onKey.bind(this, 'up');
-    this.actionmap.jump.callbacks[Controls.BIND_TYPE.GPBUTTON] = this.onKey.bind(this, 'up');
-    this.actionmap.jump.callbacks[Controls.BIND_TYPE.GPAXIS] = this.onGpAxis.bind(this, 'up');
+    this.actionmap.up.callbacks[Controls.BIND_TYPE.KEYBOARD] = this.onKey.bind(this, 'up');
+    this.actionmap.up.callbacks[Controls.BIND_TYPE.GPBUTTON] = this.onKey.bind(this, 'up');
+    this.actionmap.up.callbacks[Controls.BIND_TYPE.GPAXIS] = this.onGpAxis.bind(this, 'up');
 
     //setup callbacks for down
-    this.actionmap.jump.callbacks[Controls.BIND_TYPE.KEYBOARD] = this.onKey.bind(this, 'down');
-    this.actionmap.jump.callbacks[Controls.BIND_TYPE.GPBUTTON] = this.onGpBtn.bind(this, 'down');
-    this.actionmap.jump.callbacks[Controls.BIND_TYPE.GPAXIS] = this.onGpAxis.bind(this, 'down');
+    this.actionmap.down.callbacks[Controls.BIND_TYPE.KEYBOARD] = this.onKey.bind(this, 'down');
+    this.actionmap.down.callbacks[Controls.BIND_TYPE.GPBUTTON] = this.onKey.bind(this, 'down');
+    this.actionmap.down.callbacks[Controls.BIND_TYPE.GPAXIS] = this.onGpAxis.bind(this, 'down');
 
     //setup binds
     for(var i = 0; i < this.actions.length; ++i) {
@@ -161,7 +161,7 @@ TopDownControls.DEFAULT_KEYS = {
     down:   [KEY.S, KEY.DOWN]
 };
 
-TopDownControls.BUTTONS = {
+TopDownControls.DEFAULT_BUTTONS = {
     left:   [BUTTON.PAD_LEFT],
     right:  [BUTTON.PAD_RIGHT],
     up:     [BUTTON.PAD_UP],
