@@ -337,8 +337,8 @@ inherit(Camera, Container, {
 
         return this.focus(
             //multiple the calculated point by the world scale for this sprite
-            math.floor(x * this.world.localTransform[0]),
-            math.floor(y * this.world.localTransform[4])
+            x * this.world.localTransform[0],
+            y * this.world.localTransform[4]
         );
     },
     /**
