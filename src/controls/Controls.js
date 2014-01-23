@@ -21,7 +21,7 @@ var Controls = function(game, actions) {
 
         //add all the supported bind types (inputs)
         for(var type in Controls.BIND_TYPE) {
-            obj[type] = []; //binds for an action on an input
+            obj[Controls.BIND_TYPE[type]] = []; //binds for an action on an input
             obj.callbacks[type] = null; //the callback for this action on this input
         }
     }
@@ -38,7 +38,7 @@ inherit(Controls, Object, {
      */
     control: function(spr) {
         if(this.sprites.indexOf(spr) === -1) {
-            this.sprites.add(spr);
+            this.sprites.push(spr);
         }
 
         return this;
