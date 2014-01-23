@@ -23,8 +23,8 @@ var PhysicsSystem = function(state, options) {
     //default options
     options = options || {};
     options.gravity = options.gravity instanceof Vector ? options.gravity : new Vector(0, 9.87);
-    options.iterations = options.iterations || 20;
-    options.sleepTimeThreshold = options.sleepTimeThreshold !== undefined ? options.sleepTimeThreshold : 0.2;
+    options.iterations = options.iterations || 10;
+    options.sleepTimeThreshold = options.sleepTimeThreshold !== undefined ? options.sleepTimeThreshold : 0.5;
     options.collisionSlop = options.collisionSlop !== undefined ? options.collisionSlop : 0.1;
 
     /**
@@ -564,6 +564,7 @@ inherit(PhysicsSystem, Object, {
 
                 case 'addControl':
                     data.body.setPos(data.spr.position.clone());
+                    this.space.addBody(data.body);
                     this.space.addConstraint(data.pivot);
                     this.space.addConstraint(data.gear);
 
@@ -590,6 +591,10 @@ inherit(PhysicsSystem, Object, {
                     }
 
                     if(data.control) {
+                        if(data.control.body.space) {
+                            this.space.removeBody(data.control.body);
+                        }
+
                         if(data.control.pivot.space) {
                             this.space.removeConstraint(data.control.pivot);
                         }
@@ -640,6 +645,8 @@ inherit(PhysicsSystem, Object, {
 
         if(mass === Infinity) {
             body.nodeIdleTime = Infinity;
+        } else {
+            body.nodeIdleTime = 0;
         }
 
         return body;
