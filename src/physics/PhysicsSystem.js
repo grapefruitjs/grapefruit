@@ -23,7 +23,7 @@ var PhysicsSystem = function(state, options) {
     //default options
     options = options || {};
     options.gravity = options.gravity instanceof Vector ? options.gravity : new Vector(0, 9.87);
-    options.iterations = options.iterations || 10;
+    options.iterations = options.iterations || 20;
     options.sleepTimeThreshold = options.sleepTimeThreshold !== undefined ? options.sleepTimeThreshold : 0.2;
     options.collisionSlop = options.collisionSlop !== undefined ? options.collisionSlop : 0.1;
 
@@ -386,12 +386,12 @@ inherit(PhysicsSystem, Object, {
 
         //update body position
         if(spr._phys.body) {
-            spr._phys.body.setPos(pos);
+            spr._phys.body.setPos(pos.clone());
         }
 
         //update control body position
         if(spr._phys.control) {
-            spr._phys.control.body.setPos(pos);
+            spr._phys.control.body.setPos(pos.clone());
         }
 
 
@@ -550,7 +550,7 @@ inherit(PhysicsSystem, Object, {
 
             switch(act) {
                 case 'add':
-                    data.body.setPos(data.spr.position);
+                    data.body.setPos(data.spr.position.clone());
                     if(!data.body.isStatic()) {
                         this.space.addBody(data.body);
                     }
@@ -563,7 +563,7 @@ inherit(PhysicsSystem, Object, {
                     break;
 
                 case 'addControl':
-                    data.body.setPos(data.spr.position);
+                    data.body.setPos(data.spr.position.clone());
                     this.space.addConstraint(data.pivot);
                     this.space.addConstraint(data.gear);
 
@@ -635,13 +635,14 @@ inherit(PhysicsSystem, Object, {
      */
     _createBody: function(spr) {
         var mass = spr.mass || 1,
-            inertia = spr.inertia || cp.momentForBox(mass, spr.width, spr.height) || Infinity;
+            inertia = spr.inertia || cp.momentForBox(mass, spr.width, spr.height) || Infinity,
+            body = new cp.Body(mass, inertia);
 
-        if(mass === Infinity && inertia === Infinity) {
-            return this.space.staticBody;
+        if(mass === Infinity) {
+            body.nodeIdleTime = Infinity;
         }
 
-        return new cp.Body(mass, inertia);
+        return body;
     },
     /**
      * Creates a collision shape for a sprite
