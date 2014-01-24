@@ -111,6 +111,8 @@ var PhysicsSystem = function(state, options) {
      * @private
      */
     this._skip = 0;
+
+    this._updateNum = 0;
 };
 
 inherit(PhysicsSystem, Object, {
@@ -442,7 +444,14 @@ inherit(PhysicsSystem, Object, {
         this.space.step(dt);
 
         //go through each changed shape
+        var num = this._updateNum++;
         this.space.activeShapes.each(function(shape) {
+            //already updated this body
+            if(shape.body._updateNum === num)
+                return;
+
+            shape.body._updateNum = num;
+
             //since the anchor for a cp shape is 0.5 0.5, we have to modify the pos a bit
             //to make it match the sprite's anchor point
             var spr = shape.sprite;
