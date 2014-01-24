@@ -26,6 +26,7 @@ var PhysicsSystem = function(state, options) {
     options.iterations = options.iterations || 10;
     options.sleepTimeThreshold = options.sleepTimeThreshold !== undefined ? options.sleepTimeThreshold : 0.5;
     options.collisionSlop = options.collisionSlop !== undefined ? options.collisionSlop : 0.1;
+    options.stepTime = options.stepTime || (1 / 60);
 
     /**
      * The state instance this system belongs to
@@ -34,6 +35,15 @@ var PhysicsSystem = function(state, options) {
      * @type State
      */
     this.state = state;
+
+    /**
+     * The delta time to use as the constant for physics simulation
+     *
+     * @property stepTime
+     * @type Number
+     * @default (1 / 60)
+     */
+    this.stepTime = options.stepTime;
 
     /**
      * The chipmunk space instance that will run all the physics simulations
@@ -441,7 +451,7 @@ inherit(PhysicsSystem, Object, {
             return this._skip--;
 
         //execute the physics step
-        this.space.step(dt);
+        this.space.step(this.stepTime);
 
         //go through each changed shape
         var num = this._updateNum++;
