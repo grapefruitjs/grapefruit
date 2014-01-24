@@ -145,10 +145,12 @@ inherit(StateManager, Object, {
         if(this.states[state]) {
             if(this.active) {
                 this.active.visible = false;
+                this.active.physics.pause();
             }
 
             this.active = this.states[state];
             this.active.visible = true;
+            this.active.physics.resume();
         }
 
         return this;
