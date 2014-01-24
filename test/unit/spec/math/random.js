@@ -162,19 +162,19 @@ describe('random', function() {
         it('should return a random numeric element from an array', function() {
             var a = [1,2,3,4,5,6,7,8,9,10];
 
-            a.should.contain(gf.math.rand.element(a));
+            a.should.containDeep([gf.math.rand.element(a)]);
         });
 
         it('should return a random string element from an array', function() {
             var a = ['a','b','c','d','e','f','g','h'];
 
-            a.should.contain(gf.math.rand.element(a));
+            a.should.containDeep([gf.math.rand.element(a)]);
         });
 
         it('should return a random object element from an array', function() {
             var a = [{k:1},{k:2},{k:3},{k:4},{k:5},{k:6},{k:7},{k:8}];
 
-            a.should.contain(gf.math.rand.element(a));
+            a.should.containDeep([gf.math.rand.element(a)]);
         });
     });
 
