@@ -123,6 +123,8 @@ var PhysicsSystem = function(state, options) {
     this._skip = 0;
 
     this._updateNum = 0;
+
+    this.resume();
 };
 
 inherit(PhysicsSystem, Object, {
@@ -134,7 +136,7 @@ inherit(PhysicsSystem, Object, {
      * @chainable
      */
     pause: function() {
-        this._paused = true;
+        clearInterval(this._updateInterval);
 
         return this;
     },
@@ -146,7 +148,7 @@ inherit(PhysicsSystem, Object, {
      * @chainable
      */
     resume: function() {
-        this._paused = false;
+        this._updateInterval = setInterval(this.update.bind(this), this.stepTime * 1000);
 
         return this;
     },
@@ -434,15 +436,15 @@ inherit(PhysicsSystem, Object, {
         return this;
     },
     /**
-     * Called each frame by the game state to update the physics simulations
+     * Called each physics step iteration. This is detached from the frame rendering and
+     * runs at a constant step.
      *
      * @method update
      * @param dt {Number} The number of seconds passed since the last call
      * @private
      */
     update: function(dt) {
-        if(this._paused)
-            return;
+        this.state.game.timings.physicsStart = this.state.game.clock.now();
 
         while(this.tickCallbacks.length)
             (this.tickCallbacks.shift()).call(this);
@@ -472,6 +474,7 @@ inherit(PhysicsSystem, Object, {
             //the sprite has changed due to a physics update, emit that event
             spr.emit('physUpdate');
         });
+        this.state.game.timings.physicsEnd = this.state.game.clock.now();
     },
     /**
      * Called when a collision begins in the system
