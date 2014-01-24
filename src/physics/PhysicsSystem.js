@@ -440,10 +440,9 @@ inherit(PhysicsSystem, Object, {
      * runs at a constant step.
      *
      * @method update
-     * @param dt {Number} The number of seconds passed since the last call
      * @private
      */
-    update: function(dt) {
+    update: function() {
         this.state.game.timings.physicsStart = this.state.game.clock.now();
 
         while(this.tickCallbacks.length)
