@@ -55,9 +55,10 @@ Texture._createFrame = function(key, data, baseTexture) {
         });
 
         tx.trimmed = data.trimmed;
-        tx.rotated = data.rotated;
-        tx.sourceSize = data.sourceSize;
-        tx.realSize = data.spriteSourceSize;
+        tx.trim.x = data.spriteSourceSize.x;
+        tx.trim.y = data.spriteSourceSize.y;
+        tx.trim.realWidth = data.sourceSize.w;
+        tx.trim.realHeight = data.sourceSize.h;
 
         return tx;
     }
