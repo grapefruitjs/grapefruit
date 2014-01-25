@@ -481,42 +481,42 @@ inherit(Camera, Container, {
      */
     update: function(dt) {
         //follow sprite
-        if(this._target && !this._target.position.equals(this._targetPos)) {
-            this._targetPos.copy(this._target.position);
+        if(this._target) {
+            var worldTransform = this._target.worldTransform,
+                x = worldTransform[2],
+                y = worldTransform[5];
 
-            if(!this._deadzone) {
-                this.focusSprite(this._target);
-            } else {
-                var moveX, moveY,
-                    dx, dy,
-                    //get the x,y of the sprite on the screen
-                    camX = this._target.position.x + this.world.position.x,
-                    camY = this._target.position.y + this.world.position.y;
+            if(this._targetPos.x !== x || this._targetPos.y !== y) {
+                this._targetPos.set(x, y);
 
-                moveX = moveY = dx = dy = 0;
+                if(!this._deadzone) {
+                    this.focusSprite(this._target);
+                } else {
+                    var moveX, moveY,
+                        dx, dy;
 
-                //check less than
-                dx = camX - this._deadzone.x;
-                dy = camY - this._deadzone.y;
+                    moveX = moveY = dx = dy = 0;
 
-                if(dx < 0)
-                    moveX = dx;
-                if(dy < 0)
-                    moveY = dy;
+                    //check less than
+                    dx = x - this._deadzone.x;
+                    dy = y - this._deadzone.y;
 
-                //check greater than
-                dx = camX - (this._deadzone.x + this._deadzone.width);
-                dy = camY - (this._deadzone.y + this._deadzone.height);
+                    if(dx < 0)
+                        moveX = dx;
+                    if(dy < 0)
+                        moveY = dy;
 
-                if(dx > 0)
-                    moveX = dx;
-                if(dy > 0)
-                    moveY = dy;
+                    //check greater than
+                    dx = x - (this._deadzone.x + this._deadzone.width);
+                    dy = y - (this._deadzone.y + this._deadzone.height);
 
-                this.pan(
-                    math.round(moveX),
-                    math.round(moveY)
-                );
+                    if(dx > 0)
+                        moveX = dx;
+                    if(dy > 0)
+                        moveY = dy;
+
+                    this.pan(moveX, moveY);
+                }
             }
         }
 
