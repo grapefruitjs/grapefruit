@@ -309,8 +309,8 @@ inherit(Tilelayer, Container, {
         //set rendered area
         this._rendered.x = sx;
         this._rendered.y = sy;
-        this._rendered.width = sw;
-        this._rendered.height = sh;
+        this._rendered.width = sw - 1;
+        this._rendered.height = sh - 1;
 
         //reset buffered status
         this._buffered.left = this._buffered.right = this._buffered.top = this._buffered.bottom = false;
