@@ -339,10 +339,11 @@ inherit(Game, Object, {
      * @private
      */
     _tick: function() {
-        this.timings.tickStart = this.clock.now();
-
         //start render loop
         window.requestAnimFrame(this._tick.bind(this));
+
+        this.timings.lastTickStart = this.timings.tickStart;
+        this.timings.tickStart = this.clock.now();
 
         var dt = this.clock.getDelta();
 
