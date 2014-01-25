@@ -455,7 +455,10 @@ inherit(PhysicsSystem, Object, {
         this.space.step(this.stepTime);
 
         //go through each changed shape
-        var num = this._updateNum++;
+        var num = this._updateNum++,
+            step = this.stepTime,
+            stepInv = 1 - step;
+
         this.space.activeShapes.each(function(shape) {
             //already updated this body
             if(shape.body._updateNum === num)
@@ -466,9 +469,9 @@ inherit(PhysicsSystem, Object, {
             //since the anchor for a cp shape is 0.5 0.5, we have to modify the pos a bit
             //to make it match the sprite's anchor point
             var spr = shape.sprite;
-            spr.position.x = shape.body.p.x;// + ((spr.anchor.x * shape.width) - (shape.width / 2));
-            spr.position.y = shape.body.p.y;// + ((spr.anchor.y * shape.height) - (shape.height / 2));
-            spr.rotation = shape.body.a;
+            spr.position.x = (spr.position.x * step) + (shape.body.p.x * stepInv);
+            spr.position.y = (spr.position.y * step) + (shape.body.p.y * stepInv);
+            spr.rotation = (spr.rotation * step) + (shape.body.a * stepInv);
 
             //the sprite has changed due to a physics update, emit that event
             spr.emit('physUpdate');
