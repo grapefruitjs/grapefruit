@@ -1,6 +1,5 @@
 var Controls = require('./Controls'),
     Vector = require('../math/Vector'),
-    math = require('../math/math'),
     inherit = require('../utils/inherit'),
     KEY = require('../input/Keyboard').KEY,
     BUTTON = require('../input/gamepad/GamepadButtons').BUTTON,
@@ -141,7 +140,7 @@ inherit(TopDownControls, Controls, {
     _checkMovement: function() {
         var spr, speed;
 
-        this.move.vec.clamp(minVec, maxVec);
+        this.move.vec.clamp(this.move.minVec, this.move.maxVec);
 
         for(var i = 0; i < this.sprites.length; ++i) {
             spr = this.sprites[i];
