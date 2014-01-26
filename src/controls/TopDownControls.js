@@ -51,6 +51,7 @@ var TopDownControls = function(game, settings) {
         lastHorzGpValue: 0,
         lastVertGpValue: 0,
         vec: new Vector(),
+        lastVec: new Vector(),
         dir: {
             left: ['x', -1],
             right: ['x', 1],
@@ -109,7 +110,7 @@ inherit(TopDownControls, Controls, {
             }
             this.move.lastHorzGpValue = evt.value;
         }
-        else {
+        else if(evt.code === AXIS.LEFT_ANALOGUE_VERT) {
             if(evt.value === 0) {
                 if(!this.move.lastVertGpValue)
                     return;
@@ -133,7 +134,10 @@ inherit(TopDownControls, Controls, {
             this.move.lastVertGpValue = evt.value;
         }
 
-        this._checkMovement();
+        if(!this.move.vec.equals(this.move.lastVec)) {
+            this.move.lastVec.copy(this.move.vec);
+            this._checkMovement();
+        }
     },
     _checkMovement: function() {
         var spr, speed;
