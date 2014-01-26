@@ -1,5 +1,6 @@
 var Controls = require('./Controls'),
     Vector = require('../math/Vector'),
+    math = require('../math/math'),
     inherit = require('../utils/inherit'),
     KEY = require('../input/Keyboard').KEY,
     BUTTON = require('../input/gamepad/GamepadButtons').BUTTON,
@@ -51,6 +52,8 @@ var TopDownControls = function(game, settings) {
         lastHorzGpValue: 0,
         lastVertGpValue: 0,
         vec: new Vector(),
+        maxVec: new Vector(1, 1),
+        minVec: new Vector(-1, -1),
         dir: {
             left: ['x', -1],
             right: ['x', 1],
@@ -137,6 +140,8 @@ inherit(TopDownControls, Controls, {
     },
     _checkMovement: function() {
         var spr, speed;
+
+        this.move.vec.clamp(minVec, maxVec);
 
         for(var i = 0; i < this.sprites.length; ++i) {
             spr = this.sprites[i];
