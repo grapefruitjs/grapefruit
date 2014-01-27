@@ -97,6 +97,8 @@ var Pointer = function(id, manager) {
      */
     this._holdSent = false;
 
+    this.hitSprites = [];
+
     this.position = new Vector();
     this.positionDown = new Vector();
 };
@@ -128,6 +130,13 @@ inherit(Pointer, Input, {
             this.active = true;
             this.manager.activePointers++;
         }
+
+        for (var i = 0; i < this.hitSprites.length; ++i) {
+            var sprite = this.hitSprites[i];
+
+            sprite.__isDown = true;
+            sprite.emit('pointerdown', this);
+        }
     },
     /**
      * Callback for when a pointerup event occurs
@@ -147,11 +156,11 @@ inherit(Pointer, Input, {
         if(this.timeHold >= 0 && this.timeHold <= this.manager.clickDelay) {
             //is this a double click?
             if((this.timeUp - this.previousClickTime) <= this.manager.doubleClickDelay) {
-                emit = 'doubleclick';
+                emit = 'pointerdoubleclick';
             }
             //only a single click
             else {
-                emit = 'click';
+                emit = 'pointerclick';
             }
 
             this.previousClickTime = this.timeUp;
@@ -163,9 +172,15 @@ inherit(Pointer, Input, {
             this.manager.activePointers--;
         }
 
-        //emit click/doubleclick if needed
-        if(emit) {
-            this.manager.emit(emit, this);
+        for(var i = 0; i < this.hitSprites.length; ++i) {
+            var sprite = this.hitSprites[i];
+
+            if(sprite.__isDown) {
+                sprite.emit('pointerup', this);
+                sprite.emit(emit, this);
+            }
+
+            sprite.__isDown = false;
         }
     },
     /**
@@ -181,10 +196,16 @@ inherit(Pointer, Input, {
         this.button = evt.button;
         this.type = evt.pointerType;
 
+        var rect = this.manager.game.canvas.getBoundingClientRect(); //can we cache this? Maybe update on resize?
+
         this.position.set(
-            evt.pageX - this.game.offset.x,
-            evt.pageY - this.game.offset.y
+            (evt.clientX - rect.left) * (this.manager.game.width / rect.width),
+            (evt.clientY - rect.top) * (this.manager.game.height / rect.height)
         );
+
+        for(var i = 0; i < this.hitSprites.length; ++i) {
+            this.hitSprites[i].emit('pointermove', this);
+        }
     },
     /**
      * Callback for when a pointerleave event occurs
@@ -194,6 +215,15 @@ inherit(Pointer, Input, {
      */
     leave: function(evt) {
         this.move(evt);
+
+        for(var i = 0; i < this.hitSprites.length; ++i) {
+            var sprite = this.hitSprites[i];
+
+            if(sprite.__isOver) {
+                sprite.__isOver = false;
+                sprite.emit('pointerout', this);
+            }
+        }
     },
     /**
      * Called internally every frame. Updates the pointer
@@ -203,33 +233,83 @@ inherit(Pointer, Input, {
      * @private
      */
     update: function() {
-        if(!this.active || this._holdSent)
+        if(!this.active)
             return;
 
         this.timeHold += this.clock.now() - this.timeDown;
-        if(this.timeHold >= this.manager.holdDelay) {
-            this._holdSent = true;
-            this.manager.emit('hold', this);
+
+        var holding = (this.timeHold >= this.manager.holdDelay),
+            self = this;
+
+        this.checkHits(function(sprite) {
+            if(holding && sprite.__isDown) {
+                sprite.emit('pointerhold', self);
+            }
+        });
+    },
+    hitTest: function(spr) {
+        if(!spr.worldVisible)
+            return false;
+
+        var worldTransform = spr.worldTransform,
+            a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
+            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+            id = 1 / (a00 * a11 + a01 * -a10),
+            x = a11 * id * this.position.x + -a01 * id * this.position.y + (a12 * a01 - a02 * a11) * id,
+            y = a00 * id * this.position.y + -a10 * id * this.position.x + (-a12 * a00 + a02 * a10) * id;
+
+        if(spr.hitArea && spr.hitArea.contains) {
+            return spr.hitArea.contains(x, y);
+        } else {
+            var width = spr.texture.frame.width,
+                height = spr.texture.frame.height,
+                x1 = -width * spr.anchor.x,
+                y1;
+
+            if(x > x1 && x < x1 + width) {
+                y1 = -height * spr.anchor.y;
+
+                return (y > y1 && y < y1 + height);
+            }
+        }
+
+        return false;
+    },
+    checkHits: function(fn) {
+        this.hitSprites.length = 0;
+
+        var sprite;
+
+        //hit-test each interactive sprite
+        for(var i = 0; i < this.manager.interactiveSprites.length; ++i) {
+            sprite = this.manager.interactiveSprites[i];
+
+            if(this.hitTest(sprite)) {
+                this.hitSprites.push(sprite);
+
+                if(fn) fn(sprite);
+
+                if(!sprite.__isOver) {
+                    sprite.emit('pointerover', this);
+                    sprite.__isOver = true;
+                }
+            } else if(sprite.__isOver) {
+                sprite.emit('pointerout', this);
+                sprite.__isOver = false;
+            }
         }
     },
-    /**
-     * Contains the X/Y position in the world of the pointer object
-     *
-     * @property positionWorld
-     * @type Object
-     */
-    positionWorld: {}
-});
+    getLocalPosition: function(spr) {
+        var worldTransform = spr.worldTransform,
+            a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
+            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+            id = 1 / (a00 * a11 + a01 * -a10);
 
-Object.defineProperty(Pointer.prototype.positionWorld, 'x', {
-    get: function() {
-        return this.position.x - this.game.world.position.x;
-    }
-});
-
-Object.defineProperty(Pointer.prototype.positionWorld, 'y', {
-    get: function() {
-        return this.position.y - this.game.world.position.y;
+        // set the mouse coords...
+        return new Vector(
+            a11 * id * this.position.x + -a01 * id * this.position.y + (a12 * a01 - a02 * a11) * id,
+            a00 * id * this.position.y + -a10 * id * this.position.x + (-a12 * a00 + a02 * a10) * id
+        );
     }
 });
 

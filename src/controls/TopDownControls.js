@@ -52,6 +52,8 @@ var TopDownControls = function(game, settings) {
         lastVertGpValue: 0,
         vec: new Vector(),
         lastVec: new Vector(),
+        maxVec: new Vector(1, 1),
+        minVec: new Vector(-1, -1),
         dir: {
             left: ['x', -1],
             right: ['x', 1],
@@ -141,6 +143,8 @@ inherit(TopDownControls, Controls, {
     },
     _checkMovement: function() {
         var spr, speed;
+
+        this.move.vec.clamp(this.move.minVec, this.move.maxVec);
 
         for(var i = 0; i < this.sprites.length; ++i) {
             spr = this.sprites[i];
