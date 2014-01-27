@@ -123,8 +123,7 @@ var PhysicsSystem = function(state, options) {
     this._skip = 0;
 
     this._updateNum = 0;
-
-    this.resume();
+    this._paused = false;
 };
 
 inherit(PhysicsSystem, Object, {
@@ -136,7 +135,7 @@ inherit(PhysicsSystem, Object, {
      * @chainable
      */
     pause: function() {
-        clearInterval(this._updateInterval);
+        this._paused = true;
 
         return this;
     },
@@ -148,7 +147,7 @@ inherit(PhysicsSystem, Object, {
      * @chainable
      */
     resume: function() {
-        this._updateInterval = setInterval(this.update.bind(this), this.stepTime * 1000);
+        this._paused = false;
 
         return this;
     },
@@ -442,8 +441,9 @@ inherit(PhysicsSystem, Object, {
      * @method update
      * @private
      */
-    update: function() {
-        this.state.game.timings.physicsStart = this.state.game.clock.now();
+    update: function(dt) {
+        if(this._paused)
+            return;
 
         while(this.tickCallbacks.length)
             (this.tickCallbacks.shift()).call(this);
@@ -455,9 +455,13 @@ inherit(PhysicsSystem, Object, {
         this.space.step(this.stepTime);
 
         //go through each changed shape
-        var num = this._updateNum++,
-            step = this.stepTime,
-            stepInv = 1 - step;
+        var alpha = dt / this.stepTime,
+            num = this._updateNum++;
+
+        if(alpha > 1) {
+            this.update(dt - this.stepTime);
+            alpha = 1;
+        }
 
         this.space.activeShapes.each(function(shape) {
             //already updated this body
@@ -469,14 +473,12 @@ inherit(PhysicsSystem, Object, {
             //since the anchor for a cp shape is 0.5 0.5, we have to modify the pos a bit
             //to make it match the sprite's anchor point
             var spr = shape.sprite;
-            spr.position.x = (spr.position.x * step) + (shape.body.p.x * stepInv);
-            spr.position.y = (spr.position.y * step) + (shape.body.p.y * stepInv);
-            spr.rotation = (spr.rotation * step) + (shape.body.a * stepInv);
+            spr.position.lerp(shape.body.p, alpha);
+            spr.rotation += (shape.body.a - spr.rotation) * alpha;
 
             //the sprite has changed due to a physics update, emit that event
             spr.emit('physUpdate');
         });
-        this.state.game.timings.physicsEnd = this.state.game.clock.now();
     },
     /**
      * Called when a collision begins in the system
