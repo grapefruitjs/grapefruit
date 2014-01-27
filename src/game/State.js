@@ -144,9 +144,9 @@ inherit(State, Container, {
         this.game.timings.worldEnd = this.game.clock.now();
 
         //simulate physics and detect/resolve collisions
-        //this.game.timings.physicsStart = this.game.clock.now();
-        //this.physics.update(dt);
-        //this.game.timings.physicsEnd = this.game.clock.now();
+        this.game.timings.physicsStart = this.game.clock.now();
+        this.physics.update(dt);
+        this.game.timings.physicsEnd = this.game.clock.now();
 
         return this;
     }
