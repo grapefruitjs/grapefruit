@@ -132,7 +132,7 @@ var Pointers = function(game) {
      * @param pointer {Pointer} The pointer instance that had a 'pointerleave' event
      */
 
-     this.interactiveSprites = [];
+    this.interactiveSprites = [];
 };
 
 inherit(Pointers, Input, {
@@ -177,8 +177,7 @@ inherit(Pointers, Input, {
      * @private
      */
     update: function(dt) {
-        var pointer,
-            item;
+        var pointer;
 
         //go through each pointer and update
         for(var id in this.pointers) {
