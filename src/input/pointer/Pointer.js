@@ -278,8 +278,7 @@ inherit(Pointer, Input, {
     checkHits: function(fn) {
         this.hitSprites.length = 0;
 
-        var sprite,
-            over = false;
+        var sprite;
 
         //hit-test each interactive sprite
         for(var i = 0; i < this.manager.interactiveSprites.length; ++i) {
@@ -301,7 +300,7 @@ inherit(Pointer, Input, {
         }
     },
     getLocalPosition: function(spr) {
-        var worldTransform = displayObject.worldTransform,
+        var worldTransform = spr.worldTransform,
             a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
             a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
             id = 1 / (a00 * a11 + a01 * -a10);
