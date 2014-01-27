@@ -573,10 +573,12 @@ inherit(Loader, Object, {
             ext = (ext && ext.length >= 2) ? ext[1] : url.match(/data\:audio\/([^?]+);/)[1];
 
             //if we can play this url, then set the source of the player
-            if(support.codec[ext]) {
+            if(support.codec && support.codec[ext]) {
                 return url;
             }
         }
+
+        return false;
     },
 
     /**
