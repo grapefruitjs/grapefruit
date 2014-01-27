@@ -155,6 +155,10 @@ var Sprite = function(anims, speed, start) {
 };
 
 inherit(Sprite, PIXI.Sprite, {
+    enableInteractivity: function(game) {
+        game.input.pointers.watchSprite(this);
+        return this;
+    },
     /**
      * Sets the sprite to visible = true
      *
