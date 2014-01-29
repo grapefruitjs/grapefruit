@@ -89,13 +89,14 @@ var utils = {
             }
         };
 
+        xhr.open(sets.method, sets.url, true);
+
         //chrome doesn't support json responseType, some browsers choke on XML type
-        if(sets.dataType !== 'json' && sets.dataType !== 'xml')
-            xhr.responseType = sets.dataType;
+        if(sets.dataType === 'arraybuffer')
+            xhr.responseType = 'arraybuffer';
         else
             xhr.responseType = 'text';
 
-        xhr.open(sets.method, sets.url, true);
         xhr.send();
 
         return xhr;
@@ -146,7 +147,7 @@ var utils = {
      *      utils.setValues(obj, vals);
      *      //now obj is:
      *      // { vec: Vector(2, 5), arr: [5, 10, 11] }
-     *      
+     *
      */
     //similar to https://github.com/mrdoob/three.js/blob/master/src/materials/Material.js#L42
     setValues: function(obj, values) {
