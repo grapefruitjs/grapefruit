@@ -58,6 +58,9 @@ var gf = {
             Flash:      require('./fx/camera/Flash'),
             Scanlines:  require('./fx/camera/Scanlines'),
             Shake:      require('./fx/camera/Shake')
+        },
+        filters: {
+            Filter:     require('./fx/filters/Filter')
         }
     },
 
@@ -132,6 +135,19 @@ var gf = {
 
 //replace the pixi point with a powerful vector class
 gf.PIXI.Point = gf.Vector;
+
+//expose whitelisted pixi filters
+var filters = [
+    'FilterBlock', 'WebGLFilterManager', 'FilterTexture', 'AlphaMaskFilter',
+    'ColorMatrixFilter', 'GrayFilter', 'DisplacementFilter', 'PixelateFilter',
+    'BlurXFilter', 'BlurYFilter', 'BlurFilter', 'InvertFilter', 'SepiaFilter',
+    'TwistFilter', 'ColorStepFilter', 'DotScreenFilter', 'CrossHatchFilter',
+    'RGBSplitFilter'
+];
+
+for(var f = 0; f < filters.length; ++f) {
+    gf.fx.filters[filters[f]] = gf.PIXI[filters[f]];
+}
 
 //copy over constants
 var C = require('./constants');
