@@ -121,6 +121,7 @@ var gf = {
     inherit:            require('./utils/inherit'),
     Cache:              require('./utils/Cache'),
     Clock:              require('./utils/Clock'),
+    Color:              require('./utils/Color'),
     EventEmitter:       require('./utils/EventEmitter'),
     ObjectPool:         require('./utils/ObjectPool'),
     SpritePool:         require('./utils/SpritePool'),
