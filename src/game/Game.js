@@ -219,13 +219,22 @@ var Game = function(container, settings) {
 
     //pixi does some prevent default on mousedown, so we need to
     //make sure mousedown will focus the canvas or keyboard events break
-    var view = this.canvas;
+    var view = this.canvas,
+        self = this;
+
     if(!view.getAttribute('tabindex'))
         view.setAttribute('tabindex','1');
 
     view.focus();
     view.addEventListener('click', function() {
         view.focus();
+    }, false);
+
+    window.addEventListener('blur', function() {
+        self.state.active.physics.pause();
+    }, false);
+    window.addEventListener('focus', function() {
+        self.state.active.physics.resume();
     }, false);
 
     /**
