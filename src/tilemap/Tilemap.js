@@ -2,6 +2,7 @@ var Container = require('../display/Container'),
     ObjectGroup = require('./ObjectGroup'),
     Sprite = require('../display/Sprite'),
     Vector = require('../math/Vector'),
+    Rectangle = require('../geom/Rectangle'),
     Tilelayer = require('./Tilelayer'),
     Tileset = require('./Tileset'),
     utils = require('../utils/utils'),
@@ -155,6 +156,8 @@ var Tilemap = function(state, map, tilesetTextures) {
         this.addChild(lyr);
     }
 
+    this._bounds = new Rectangle(0, 0, this.realSize.x, this.realSize.y);
+
     //update the world bounds
     var w = this.game.state.active.world;
     w.bounds.width = Math.max(w.bounds.width, this.realSize.x);
@@ -162,6 +165,20 @@ var Tilemap = function(state, map, tilesetTextures) {
 };
 
 inherit(Tilemap, Container, {
+    getBounds: function() {
+        this.scaledTileSize.set(
+            this.tileSize.x * this.scale.x,
+            this.tileSize.y * this.scale.y
+        );
+        this.realSize.set(
+            this.size.x * this.scaledTileSize.x,
+            this.size.y * this.scaledTileSize.y
+        );
+        this._bounds.width = this.realSize.x;
+        this._bounds.height = this.realSize.y;
+
+        return this._bounds;
+    },
     /**
      * Gets the tileset that an ID is associated with
      *

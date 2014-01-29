@@ -95,6 +95,9 @@ var ObjectGroup = function(map, group) {
 };
 
 inherit(ObjectGroup, Container, {
+    getBounds: function() {
+        return this.map.getBounds();
+    },
     /**
      * Spawns all the entities associated with this layer, and properly sets their attributes
      *

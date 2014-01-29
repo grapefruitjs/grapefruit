@@ -135,6 +135,9 @@ var Tilelayer = function(map, layer) {
 };
 
 inherit(Tilelayer, Container, {
+    getBounds: function() {
+        return this.map.getBounds();
+    },
     /**
      * Creates all the tile sprites needed to display the layer
      *
