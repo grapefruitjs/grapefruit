@@ -237,14 +237,18 @@ inherit(PhysicsSystem, Object, {
         if(!body.isStatic()) {
             var cbody = new cp.Body(Infinity, Infinity),
                 cpivot = new cp.PivotJoint(cbody, body, cp.vzero, cp.vzero),
-                cgear = new cp.GearJoint(cbody, body, 0, 1);
+                cgear;
 
             cpivot.maxBias = 0; //disable join correction
             cpivot.maxForce = 10000; //emulate linear friction
 
-            cgear.errorBias = 0; //attempt to fully correct the joint each step
-            cgear.maxBias = 1.2; //but limit the angular correction
-            cgear.maxForce = 50000; //emulate angular friction
+            //infinite inertia cannot rotate, so we wouldn't need a gear joint
+            if(body.i !== Infinity) {
+                cgear = new cp.GearJoint(cbody, body, 0, 1);
+                cgear.errorBias = 0; //attempt to fully correct the joint each step
+                cgear.maxBias = 1.2; //but limit the angular correction
+                cgear.maxForce = 50000; //emulate angular friction
+            }
 
             this.actionQueue.push(['addControl', {
                 spr: spr,
@@ -329,10 +333,11 @@ inherit(PhysicsSystem, Object, {
 
         var s = this._createShape(spr, spr._phys.body, poly);
 
-        s.setSensor(sensor);
         s.width = spr.width;
         s.height = spr.height;
         s.sprite = spr;
+
+        s.setSensor(sensor);
         s.setElasticity(0);
         s.setSensor(sensor !== undefined ? sensor : spr.sensor);
         s.setCollisionType(this.getCollisionType(spr));
@@ -594,7 +599,8 @@ inherit(PhysicsSystem, Object, {
                     data.body.setPos(data.spr.position.clone());
                     this.space.addBody(data.body);
                     this.space.addConstraint(data.pivot);
-                    this.space.addConstraint(data.gear);
+
+                    if(data.gear) this.space.addConstraint(data.gear);
 
                     data.spr._phys.control = data;
                     delete data.spr; //no need for that extra reference to lay around
