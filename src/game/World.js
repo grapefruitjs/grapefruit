@@ -2,7 +2,6 @@ var inherit = require('../utils/inherit'),
     Container = require('../display/Container'),
     Rectangle = require('../geom/Rectangle'),
     ObjectFactory = require('../utils/ObjectFactory'),
-    ParticleSystem = require('../particles/ParticleSystem'),
     math = require('../math/math');
 
 /**
@@ -92,16 +91,6 @@ inherit(World, Container, {
         }
 
         return this;
-    },
-    /**
-     * Called by the state each frame to update the particle system.
-     *
-     * @method update
-     * @param dt {Number} The number of seconds passed since the last update call.
-     * @private
-     */
-    update: function(dt) {
-        //this.particles.update(dt);
     }
 });
 

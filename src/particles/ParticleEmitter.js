@@ -147,7 +147,7 @@ var ParticleEmitter = function(state, name) {
      */
     this.active = false;
 
-    this.gravity = new gf.Vector(0, 9.87);
+    this.gravity = new Vector(0, 9.87);
 
     //some internal trackers
     this._rate = 0; //the number of particles to emit each emission cycle

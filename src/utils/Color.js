@@ -1,4 +1,5 @@
-var inherit = require('./inherit');
+var inherit = require('./inherit'),
+    math = require('../math/math');
 
 var Color = function(r, g, b, a) {
     this._color = 0x000000;
@@ -24,7 +25,7 @@ var Color = function(r, g, b, a) {
     else {
         this.setRgba(r, g, b, a);
     }
-}
+};
 
 inherit(Color, Object, {
     setRgba: function(r, g, b, a) {
@@ -70,7 +71,7 @@ Object.defineProperty(Color.prototype, 'alpha', {
         return this._rgba.a;
     },
     set: function(alpha) {
-        this._rgba.a = gf.math.clamp(alpha, 0, 255);
+        this._rgba.a = math.clamp(alpha, 0, 255);
     }
 });
 
