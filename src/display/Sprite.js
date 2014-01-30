@@ -1,6 +1,7 @@
 var EventEmitter = require('../utils/EventEmitter'),
     Rectangle = require('../geom/Rectangle'),
     PhysicsTarget = require('../physics/PhysicsTarget'),
+    Clock = require('../utils/Clock'),
     inherit = require('../utils/inherit'),
     Texture = require('./Texture'),
     math = require('../math/math'),
@@ -16,13 +17,13 @@ var EventEmitter = require('../utils/EventEmitter'),
  * @uses PhysicsTarget
  * @constructor
  * @param textures {Texture|Array<Texture>|Object} The texture for the sprite to display, an array of texture to animation through, or an animation object.
- *      The later looks like: `{ animationName: { frames: [frame1, frame2], speed: 0.5, loop: false } }` where each frame is a Texture object
- * @param [speed] {Number} The speed of the animations (can be overriden on a specific animations)
+ *      The later looks like: `{ animationName: { frames: [frame1, frame2], frameTime: 0.5, loop: false } }` where each frame is a Texture object
+ * @param [frameTime] {Number} The frame time of the animations (can be overriden on a specific animations)
  * @param [start] {String} The animation to start with, defaults to the first found key otherwise
  * @example
  *      var spr = new gf.Sprite(texture);
  */
-var Sprite = function(anims, speed, start) {
+var Sprite = function(anims, frameTime, start) {
     EventEmitter.call(this);
     PhysicsTarget.call(this);
 
@@ -79,13 +80,13 @@ var Sprite = function(anims, speed, start) {
     this.lifespan = Infinity;
 
     /**
-     * The animation speed for this sprite
+     * The animation frameTime for this sprite
      *
-     * @property speed
+     * @property frameTime
      * @type Number
      * @default 1
      */
-    this.speed = speed || 1;
+    this.frameTime = frameTime || 250;
 
     /**
      * Whether or not to loop the animations. This can be overriden
@@ -152,6 +153,10 @@ var Sprite = function(anims, speed, start) {
      * @event complete
      * @param animation {String} The animation that has completed
      */
+
+    this._clock = new Clock();
+    this._clock.start();
+    this._frameTime = 0;
 };
 
 inherit(Sprite, PIXI.Sprite, {
@@ -190,7 +195,7 @@ inherit(Sprite, PIXI.Sprite, {
     clone: function() {
         //make a copy of our animations object
         var anims = utils.extend(true, {}, this.animations),
-            spr = new Sprite(anims, this.speed, this.currentAnimation);
+            spr = new Sprite(anims, this.frameTime, this.currentAnimation);
 
         spr.name = this.name;
         spr.loop = this.loop;
@@ -240,19 +245,19 @@ inherit(Sprite, PIXI.Sprite, {
      * @method addAnimation
      * @param name {String} The string name of the animation
      * @param frames {Array<Texture>} The array of texture frames
-     * @param [speed] {Number} The animation speed
+     * @param [frameTime] {Number} The animation frame time
      * @param [loop] {Boolean} Loop the animation or not
      * @return {Sprite} Returns itself.
      * @chainable
      */
-    addAnimation: function(name, frames, speed, loop) {
+    addAnimation: function(name, frames, frameTime, loop) {
         if(typeof name === 'object') {
             this.animations[name.name] = name;
         } else {
             this.animations[name] = {
                 name: name,
                 frames: frames,
-                speed: speed,
+                frameTime: frameTime,
                 loop: loop
             };
         }
@@ -276,14 +281,13 @@ inherit(Sprite, PIXI.Sprite, {
         }
 
         this.currentFrame = frame || 0;
-        this.lastRound = math.round(frame || 0);
 
         if(anim) {
             this.currentAnimation = anim;
         }
 
         this.setTexture(this.animations[this.currentAnimation].frames[this.currentFrame]);
-        this.emit('frame', this.currentAnimation, this.lastRound);
+        this.emit('frame', this.currentAnimation, this.currentFrame);
 
         return this;
     },
@@ -323,7 +327,7 @@ inherit(Sprite, PIXI.Sprite, {
 
         this.name = null;
         this.lifetime = null;
-        this.speed = null;
+        this.frameTime = null;
         this.loop = null;
         this.animations = null;
         this.currentAnimation = null;
@@ -340,21 +344,28 @@ inherit(Sprite, PIXI.Sprite, {
     updateTransform: function() {
         PIXI.Sprite.prototype.updateTransform.call(this);
 
+        //get delta
+        var dt = this._clock.getDelta();
+
+        //if not playing, quit
         if(!this.playing) return;
 
-        var anim = this.animations[this.currentAnimation],
-            round,
-            loop = anim.loop !== undefined ? anim.loop : this.loop;
+        //get anim and test time
+        var anim = this.animations[this.currentAnimation];
 
-        this.currentFrame += anim.speed || this.speed;
-        round = math.round(this.currentFrame);
+        this._frameTime += dt * 1000;
 
-        if(round < anim.frames.length) {
-            if(round !== this.lastRound) {
-                this.lastRound = round;
-                this.setTexture(anim.frames[round]);
-                this.emit('frame', this.currentAnimation, round);
-            }
+        if(this._frameTime < (anim.frameTime || 500)) return;
+
+        //update animation to next frame
+        var loop = anim.loop !== undefined ? anim.loop : this.loop,
+            frame = ++this.currentFrame;
+
+        this._frameTime = 0;
+
+        if(frame < anim.frames.length) {
+            this.setTexture(anim.frames[frame]);
+            this.emit('frame', this.currentAnimation, frame);
         }
         else {
             if(loop) {
