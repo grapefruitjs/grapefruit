@@ -217,6 +217,8 @@ var Game = function(container, settings) {
      */
     this.timings = {};
 
+    this.maxDelta = 5;
+
     //pixi does some prevent default on mousedown, so we need to
     //make sure mousedown will focus the canvas or keyboard events break
     var view = this.canvas,
@@ -228,13 +230,6 @@ var Game = function(container, settings) {
     view.focus();
     view.addEventListener('click', function() {
         view.focus();
-    }, false);
-
-    window.addEventListener('blur', function() {
-        self.state.active.physics.pause();
-    }, false);
-    window.addEventListener('focus', function() {
-        self.state.active.physics.resume();
     }, false);
 
     /**
@@ -351,10 +346,12 @@ inherit(Game, Object, {
         //start render loop
         window.requestAnimFrame(this._tick.bind(this));
 
+        var dt = this.clock.getDelta();
+
+        if(dt > this.maxDelta) return;
+
         this.timings.lastTickStart = this.timings.tickStart;
         this.timings.tickStart = this.clock.now();
-
-        var dt = this.clock.getDelta();
 
         this.timings.lastDelta = dt;
 
