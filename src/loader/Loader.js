@@ -625,7 +625,7 @@ inherit(Loader, Object, {
             case 'tilemap':
                 file.baseUrl = file.url.replace(/[^\/]*$/, '');
                 file.numImages = file.numLoaded = 0;
-                file.images = [];
+                file.images = {};
 
                 if(file.format === C.FILE_FORMAT.JSON) {
                     done = false;
@@ -761,25 +761,21 @@ inherit(Loader, Object, {
      * @private
      */
     _loadJsonTilesets: function(file) {
-        var data = file.data,
-            baseUrl = file.baseUrl;
+        var data = file.data;
 
         //loop through each tileset and load the texture
         for(var i = 0, il = data.tilesets.length; i < il; ++i) {
-            var set = data.tilesets[i],
-                img;
+            var set = data.tilesets[i];
 
-            if(!set.image) continue;
-
-            file.numImages++;
-
-            img = new Image();
-            img.addEventListener('load', this._onTilesetLoaded.bind(this, file), false);
-            img.addEventListener('error', this._onTilesetError.bind(this, file), false);
-            img.crossOrigin = file.crossOrigin !== undefined ? file.crossOrigin : this.crossOrigin;
-            img.src = this.baseUrl + baseUrl + set.image;
-
-            file.images.push(img);
+            if(set.image) {
+                file.numImages++;
+                file.images[set.image] = this._getTilesetImage(file, set.image);
+            } else if(set.tiles) {
+                for(var t in set.tiles) {
+                    file.numImages++;
+                    file.images[set.tiles[t].image] = this._getTilesetImage(file, set.tiles[t].image);
+                }
+            }
         }
     },
 
@@ -804,14 +800,20 @@ inherit(Loader, Object, {
 
             file.numImages++;
 
-            img = new Image();
-            img.addEventListener('load', this._onTilesetLoaded.bind(this, file), false);
-            img.addEventListener('error', this._onTilesetError.bind(this, file), false);
-            img.crossOrigin = file.crossOrigin !== undefined ? file.crossOrigin : this.crossOrigin;
-            img.src = this.baseUrl + baseUrl + imgElm.attributes.getNamedItem('source').nodeValue;
-
-            file.images.push(img);
+            var src = imgElm.attributes.getNamedItem('source').nodeValue;
+            file.images[src] = this._getTilesetImage(file, src);
         }
+    },
+
+    _getTilesetImage: function(file, src) {
+        var img = new Image();
+
+        img.addEventListener('load', this._onTilesetLoaded.bind(this, file), false);
+        img.addEventListener('error', this._onTilesetError.bind(this, file), false);
+        img.crossOrigin = file.crossOrigin !== undefined ? file.crossOrigin : this.crossOrigin;
+        img.src = this.baseUrl + file.baseUrl + src;
+
+        return img;
     },
 
     /**
