@@ -6,7 +6,8 @@ var Container = require('../display/Container'),
     math = require('../math/math'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
-    support = require('../utils/support');
+    support = require('../utils/support'),
+    PIXI = require('../vendor/pixi');
 
 /**
  * The Tilelayer is the visual tiled layer that actually displays on the screen
@@ -461,6 +462,7 @@ inherit(Tilelayer, Container, {
         tile.interactive = interactive;
         tile.hitArea = hitArea;
         tile.mass = props.mass || 0;
+        tile.blendMode = (props.blendMode || this.properties.blendMode) ? PIXI.blendModes[(props.blendMode || this.properties.blendMode)] : PIXI.blendModes.NORMAL;
 
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);

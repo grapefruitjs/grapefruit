@@ -5,7 +5,8 @@ var Container = require('../display/Container'),
     Rectangle = require('../geom/Rectangle'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
-    math = require('../math/math');
+    math = require('../math/math'),
+    PIXI = require('../vendor/pixi');
 
 /**
  * Tiled object group is a special layer that contains entities
@@ -197,6 +198,7 @@ inherit(ObjectGroup, Container, {
                 obj.friction = props.friction || props.tileprops.friction;
                 obj.sensor = props.sensor || props.tileprops.sensor;
                 obj.hitArea = props.hitArea;
+                obj.blendMode = (props.blendMode || this.properties.blendMode) ? PIXI.blendModes[(props.blendMode || this.properties.blendMode)] : PIXI.blendModes.NORMAL;
 
                 var a = props.anchor || props.tileprops.anchor;
                 obj.anchor.y = a ? a[1] : 1;
