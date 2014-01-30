@@ -16,8 +16,10 @@ var Sprite = require('../display/Sprite'),
  * @constructor
  * @param name {String} The string name of the particle emitter.
  */
-var ParticleEmitter = function(name) {
+var ParticleEmitter = function(state, name) {
     Container.call(this);
+
+    this.state = state;
 
     /**
      * The name of the ParticleEmitter instance. This should be unique in a system, and set by the param
@@ -145,14 +147,7 @@ var ParticleEmitter = function(name) {
      */
     this.active = false;
 
-    /**
-     * The internal pool to create and reuse particles from
-     *
-     * @property particles
-     * @type Array<Sprite>
-     * @private
-     */
-    this.particles = [];
+    this.gravity = new gf.Vector(0, 9.87);
 
     //some internal trackers
     this._rate = 0; //the number of particles to emit each emission cycle
@@ -174,21 +169,32 @@ inherit(ParticleEmitter, Container, {
      *
      * @method start
      * @param [lifespan=2000] {Number} The lifespan of a particle in ms
+     * @param [rate=1] {Number} The number of particles to emit each emission, Infinity means to operate in "burst" mode.
+     *      Burst mode is when the emitter dumps all the particles at once, then goes inactive. The "delay" param is
+     *      ignored when the emitter is in burst mode.
+     * @param [total=100] {Number} The total number of particles to emit
      * @param [delay=250] {Number} The time between each particle emission in ms
-     * @param [rate=1] {Number} The number of particles to emit each emission
-     * @param [total=gf.PARTICLES.MAX_EMITTER_PARTICLES] {Number} The total number of particles to emit
      * @return {ParticleEmitter} Returns itself.
      * @chainable
      */
-    start: function(lifespan, delay, rate, total) {
+    start: function(lifespan, rate, total, delay) {
         this.active = true;
 
         this.lifespan = lifespan || 2000;
         this.delay = delay || 250;
         this._rate = rate || 1;
-        this._total = total || C.PARTICLES.MAX_EMITTER_PARTICLES;
+        this._total = total || 100;
 
         this._timer = 0;
+
+        //special case for burst mode
+        if(this._rate === Infinity) {
+            this.active = false;
+
+            for(var i = 0; i < this._total; ++i) {
+                this.emitParticle();
+            }
+        }
 
         return this;
     },
@@ -255,7 +261,7 @@ inherit(ParticleEmitter, Container, {
             spr = this._particle.clone();
         }
 
-        spr.setTexture(math.randomElement(this._textures));
+        spr.setTexture(math.rand.element(this._textures));
         spr.visible = true;
 
         this.addChild(spr);
@@ -292,23 +298,23 @@ inherit(ParticleEmitter, Container, {
 
         //set optionally random position
         part.setPosition(
-            math.randomInt(0, this.width),
-            math.randomInt(0, this.height)
+            math.rand.int(0, this.width),
+            math.rand.int(0, this.height)
         );
 
         //set scale
-        part.scale.x = part.scale.y = math.randomReal(this.minScale, this.maxScale);
+        part.scale.x = part.scale.y = math.rand.real(this.minScale, this.maxScale);
 
         //set lifespan
         part.lifespan = this.lifespan;
 
         //set velocity
         part.setVelocity(
-            math.randomInt(this.minSpeed.x, this.maxSpeed.x),
-            math.randomInt(this.minSpeed.y, this.maxSpeed.y)
+            math.rand.int(this.minSpeed.x, this.maxSpeed.x),
+            math.rand.int(this.minSpeed.y, this.maxSpeed.y)
         );
 
-        //part.body.angularVelocity = math.randomInt(this.minRotation, this.maxRotation);
+        //part.body.angularVelocity = math.rand.int(this.minRotation, this.maxRotation);
 
         return this;
     },
@@ -327,8 +333,13 @@ inherit(ParticleEmitter, Container, {
             var child = this.children[c];
             child.lifespan -= t;
 
-            if(child.lifespan <= 0)
+            child.position.x += (child._velocity.x += this.gravity.x) * dt;
+            child.position.y += (child._velocity.y += this.gravity.y) * dt;
+
+            if(child.lifespan <= 0) {
+                this.emit('particle_expire', child);
                 this._free(child);
+            }
         }
 
         //if no longer active, we are done here
@@ -339,8 +350,8 @@ inherit(ParticleEmitter, Container, {
         this._timer += t;
 
         //if we waited more than delay, emit some particles
-        if(this._timer >= this._delay) {
-            this._timer -= this._delay;
+        if(this._timer >= this.delay) {
+            this._timer -= this.delay;
 
             for(var i = 0; i < this._rate; ++i) {
                 this.emitParticle();
