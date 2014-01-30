@@ -23,6 +23,7 @@
         "pixi.js": "~1.5",
         "chipmunk": "~6.1.1",
         "zlibjs": "~0.1"
+        "p2": "git+https://github.com/schteppe/p2.js.git"
     },
     "devDependencies": {
         "grunt": "~0.4.1",

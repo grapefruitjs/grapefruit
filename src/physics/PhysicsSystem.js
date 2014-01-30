@@ -5,7 +5,7 @@ var Rectangle = require('../geom/Rectangle'),
     Tile = require('../tilemap/Tile'),
     math = require('../math/math'),
     inherit = require('../utils/inherit'),
-    cp = require('chipmunk');
+    p2 = require('p2');
 
 /**
  * The PhysicsSystem is the wrapper around the chipmunk-js physics library that integrates
@@ -47,84 +47,49 @@ var PhysicsSystem = function(state, options) {
     this.stepTime = options.stepTime;
 
     /**
-     * The chipmunk space instance that will run all the physics simulations
+     * The p2 world instance that will run all the physics simulations
      *
      * @property space
-     * @type cp.Space
+     * @type p2.World
      * @readOnly
      */
-    this.space = new cp.Space();
+    this.world = new p2.World();
 
-    /**
-     * The gravity of the physics space
-     *
-     * @property gravity
-     * @type Vector
-     */
-    this.gravity = this.space.gravity = options.gravity;
-
-    //Time a body must remain idle to fall asleep
-    //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#a928d74741904aae266a9efff5b5f68f7
-    this.space.sleepTimeThreshold = options.sleepTimeThreshold;
-
-    //Amount of encouraged penetration between colliding shapes.
-    //see: http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/structcp_space.html#af1bec644a24e12bfc642a942a88520f7
-    this.space.collisionSlop = options.collisionSlop;
-
-    //These two collision scenarios are separate because we don't
-    //want tiles to collide with tiles all the time
-
-    //sprite - sprite collisions
-    this.space.addCollisionHandler(
-        PhysicsSystem.COLLISION_TYPE.SPRITE,
-        PhysicsSystem.COLLISION_TYPE.SPRITE,
-        this.onCollisionBegin.bind(this), //begin
-        null, //preSolve
-        this.onCollisionPostSolve.bind(this), //postSolve
-        this.onCollisionEnd.bind(this) //separate
-    );
-
-    //sprite - tile collisions
-    this.space.addCollisionHandler(
-        PhysicsSystem.COLLISION_TYPE.SPRITE,
-        PhysicsSystem.COLLISION_TYPE.TILE,
-        this.onCollisionBegin.bind(this), //begin
-        null, //preSolve
-        this.onCollisionPostSolve.bind(this), //postSolve
-        this.onCollisionEnd.bind(this) //separate
-    );
-
-    /**
-     * The actions to perform at the next post-step callback. These are
-     * for actions (like add, remove) that cannot be performed during a
-     * simulation step.
-     *
-     * @property actonQueue
-     * @type Array<Object>
-     * @private
-     */
-    this.actionQueue = [];
+    if(options.gravity) {
+        this.world.gravity[0] = options.gravity.x;
+        this.world.gravity[1] = options.gravity.y;
+    }
 
     /**
      * The callback functions to call on the next frame
      *
-     * @property tickCallbacks
+     * @property _tickCallbacks
      * @type Array<Function>
      * @private
      */
-    this.tickCallbacks = [];
+    this._tickCallbacks = [];
+
+    /**
+     * Whether or not the physics simulartion is paused
+     *
+     * @property _paused
+     * @type Boolean
+     * @readOnly
+     * @private
+     */
+    this._paused = false;
 
     /**
      * The number of steps to skip, tracks `this.skip(num)`
      *
      * @property _skip
      * @type Number
+     * @readOnly
      * @private
      */
     this._skip = 0;
 
-    this._updateNum = 0;
-    this._paused = false;
+    this.world.on('postStep', this.onPostStep.bind(this));
 };
 
 inherit(PhysicsSystem, Object, {
@@ -185,23 +150,9 @@ inherit(PhysicsSystem, Object, {
      * @async
      */
     nextTick: function(fn) {
-        this.tickCallbacks.push(fn);
+        this._tickCallbacks.push(fn);
 
         return this;
-    },
-    /**
-     * Returns the collision type of a sprite
-     *
-     * @method getCollisionType
-     * @param spr {Sprite} The sprite to check
-     * @return {Number} The collision type
-     */
-    getCollisionType: function(spr) {
-        if(spr instanceof Tile) {
-            return PhysicsSystem.COLLISION_TYPE.TILE;
-        } else {
-            return PhysicsSystem.COLLISION_TYPE.SPRITE;
-        }
     },
     /**
      * Adds a sprite to the physics simulation
@@ -212,53 +163,22 @@ inherit(PhysicsSystem, Object, {
      * @return {Sprite} The sprite that was added
      * @async
      */
-    add: function(spr, cb) {
+    add: function(spr) {
         //already in space with body(s)
-        if(spr._phys.active)
+        if(spr._physics.active)
             return;
 
-        var body = this._createBody(spr),
-            shape = this._createShape(spr, body);
+        var shape = this._createShape(spr),
+            body = this._createBody(spr);
 
-        spr._phys.active = true;
-        this.actionQueue.push(['add', {
-            spr: spr,
-            body: body,
-            shape: shape
-        }, cb]);
-        this.act();
+        body.addShape(shape);
+        body.__sprite = spr;
 
-        return spr;
-    },
-    addControlBody: function(spr, cb) {
-        //see Chipmunk2D Tank Demo:
-        //https://github.com/slembcke/Chipmunk2D/blob/master/Demo/Tank.c#L106
-        var body = spr._phys.body;
+        this.world.addBody(body);
 
-        if(!body.isStatic()) {
-            var cbody = new cp.Body(Infinity, Infinity),
-                cpivot = new cp.PivotJoint(cbody, body, cp.vzero, cp.vzero),
-                cgear;
-
-            cpivot.maxBias = 0; //disable join correction
-            cpivot.maxForce = 10000; //emulate linear friction
-
-            //infinite inertia cannot rotate, so we wouldn't need a gear joint
-            if(body.i !== Infinity) {
-                cgear = new cp.GearJoint(cbody, body, 0, 1);
-                cgear.errorBias = 0; //attempt to fully correct the joint each step
-                cgear.maxBias = 1.2; //but limit the angular correction
-                cgear.maxForce = 50000; //emulate angular friction
-            }
-
-            this.actionQueue.push(['addControl', {
-                spr: spr,
-                body: cbody,
-                pivot: cpivot,
-                gear: cgear
-            }, cb]);
-            this.act();
-        }
+        spr._physics.active = true;
+        spr._physics.body = body;
+        spr._physics.shape = shape;
 
         return spr;
     },
@@ -271,50 +191,25 @@ inherit(PhysicsSystem, Object, {
      * @return {Sprite} The sprite that was removed
      * @async
      */
-    remove: function(spr, cb) {
-        if(!spr || !spr._phys.active)
+    remove: function(spr) {
+        if(!spr._physics.active)
             return;
 
-        spr._phys.active = false;
-        this.actionQueue.push(['remove', spr._phys, cb]);
-        this.act();
+        var body = spr._physics.body;
+
+        //remove shapes from body
+        for(var i = body.shapes.length; i >= 0; --i)
+            body.removeShape(body.shapes[i]);
+
+        //remove body from world
+        this.world.removeBody(body);
+
+        //null references
+        spr._physics.active = false;
+        spr._physics.body = null;
+        spr._physics.shape = null;
 
         return spr;
-    },
-    /**
-     * Reindexes a sprite's shape in the simulation, useful if it looks
-     * like changes are being cached.
-     *
-     * @method reindex
-     * @param spr {Sprite} The sprite to reindex
-     * @param [callback] {Function} The callback to call once the sprite has been reindexed
-     * @return {PhysicsSystem} Returns itself.
-     * @chainable
-     * @async
-     */
-    reindex: function(spr, cb) {
-        if(!spr || !spr._phys.active)
-            return;
-
-        this.actionQueue.push(['reindex', spr._phys.shape, cb]);
-        this.act();
-
-        return this;
-    },
-    /**
-     * Reindexes all static bodies in the simulation.
-     *
-     * @method reindexStatic
-     * @param [callback] {Function} The callback to call once reindexing completes
-     * @return {PhysicsSystem} Returns itself.
-     * @chainable
-     * @async
-     */
-    reindexStatic: function(cb) {
-        this.actionQueue.push(['reindexStatic', null, cb]);
-        this.act();
-
-        return this;
     },
     /**
      * Adds a custom shape to a sprite, useful for a single sprite to have multiple
@@ -328,26 +223,15 @@ inherit(PhysicsSystem, Object, {
      * @return {cp.Shape} The shape that was created
      * @async
      */
-    addCustomShape: function(spr, poly, sensor, cb) {
-        if(!spr || !spr._phys.body)
+    addCustomShape: function(spr, poly, sensor) {
+        if(!spr._physics.active)
             return;
 
-        var s = this._createShape(spr, spr._phys.body, poly);
+        var shape = this._createShape(spr, spr._physics.body, poly);
 
-        s.width = spr.width;
-        s.height = spr.height;
-        s.sprite = spr;
+        spr._physics.body.addShape(shape);
 
-        s.setSensor(sensor);
-        s.setElasticity(0);
-        s.setSensor(sensor !== undefined ? sensor : spr.sensor);
-        s.setCollisionType(this.getCollisionType(spr));
-        s.setFriction(spr.friction || 0);
-
-        this.actionQueue.push(['addCustomShape', { spr: spr, shape: s }, cb]);
-        this.act();
-
-        return s;
+        return shape;
     },
     /**
      * Sets the mass of a sprite's physics body.
@@ -359,10 +243,11 @@ inherit(PhysicsSystem, Object, {
      * @chainable
      */
     setMass: function(spr, mass) {
-        if(!spr || !spr._phys.body)
+        if(!spr._physics.active)
             return;
 
-        spr._phys.body.setMass(mass);
+        spr._physics.body.mass = mass;
+        spr._physics.body.updateMassProperties();
 
         return this;
     },
@@ -376,17 +261,11 @@ inherit(PhysicsSystem, Object, {
      * @chainable
      */
     setVelocity: function(spr, vel) {
-        if(!spr)
+        if(!spr._physics.active || spr._physics.body.motionState === p2.Body.STATIC)
             return;
 
-        //update control body velocity (and pivot contraint makes regular follow)
-        if(spr._phys.control) {
-            spr._phys.control.body.setVel(vel);
-        }
-        //if no control body then update real body
-        else if(spr._phys.body) {
-            spr._phys.body.setVel(vel);
-        }
+        spr._physics.body.velocity[0] = vel.x;
+        spr._physics.body.velocity[1] = vel.y;
 
         return this;
     },
@@ -400,18 +279,12 @@ inherit(PhysicsSystem, Object, {
      * @chainable
      */
     setPosition: function(spr, pos) {
-        if(!spr)
+        if(!spr._physics.active)
             return;
 
-        //update body position
-        if(spr._phys.body) {
-            spr._phys.body.setPos(pos.clone());
-        }
+        spr._physics.body.position[0] = pos.x;
+        spr._physics.body.position[1] = pos.y;
 
-        //update control body position
-        if(spr._phys.control) {
-            spr._phys.control.body.setPos(pos.clone());
-        }
 
 
         return this;
@@ -426,17 +299,10 @@ inherit(PhysicsSystem, Object, {
      * @chainable
      */
     setRotation: function(spr, rads) {
-        if(!spr)
+        if(!spr._physics.active)
             return;
 
-        //update control body rotation (and gear contraint makes regular follow)
-        if(spr._phys.control) {
-            spr._phys.control.body.setAngle(rads);
-        }
-        //if no control body then update real body
-        else if(spr._phys.body) {
-            spr._phys.body.setAngle(rads);
-        }
+        spr._physics.body.angle = rads;
 
         return this;
     },
@@ -451,220 +317,36 @@ inherit(PhysicsSystem, Object, {
         if(this._paused)
             return;
 
-        while(this.tickCallbacks.length)
-            (this.tickCallbacks.shift()).call(this);
+        while(this._tickCallbacks.length)
+            (this._tickCallbacks.shift()).call(this);
 
         if(this._skip)
             return this._skip--;
 
         //execute the physics step
-        this.space.step(this.stepTime);
-
-        //go through each changed shape
-        var alpha = dt / this.stepTime,
-            num = this._updateNum++,
-            spr, body;
-
-        if(alpha > 1) {
-            this.update(dt - this.stepTime);
-            alpha = 1;
-        }
-
-        this.space.activeShapes.each(function(shape) {
-            body = shape.body;
-            spr = shape.sprite;
-
-            //already updated this body
-            if(body._updateNum === num)
-                return;
-
-            body._updateNum = num;
-
-            //update sprite
-            spr.position.lerp(body.p, alpha).round();
-            spr.rotation += (body.a - spr.rotation) * alpha;
-            spr.rotation = math.round(spr.rotation);
-
-            //the sprite has changed due to a physics update, emit that event
-            spr.emit('physUpdate');
-        });
+        this.world.step(1/60);
     },
-    /**
-     * Called when a collision begins in the system
-     *
-     * @method onCollisionBegin
-     * @param arbiter {cp.Arbiter} The arbiter of the collision
-     * @param space {cp.Space} The space the collision occurred in
-     * @private
-     */
-    onCollisionBegin: function(arbiter) {//, space) {
-        var shapes = arbiter.getShapes(),
-            spr1 = shapes[0].sprite,
-            spr2 = shapes[1].sprite;
-
-        //only call the sensor collisions here
-        if(shapes[0].sensor || shapes[1].sensor) {
-            spr1.onCollision(spr2, arbiter.getNormal(0), shapes[1], shapes[0]);
-            spr2.onCollision(spr1, arbiter.getNormal(0), shapes[0], shapes[1]);
-        }
-
-        //maintain the colliding state
-        return true;
-    },
-    /**
-     * Called after a collision is solved in the system
-     *
-     * @method onCollisionPostSolve
-     * @param arbiter {cp.Arbiter} The arbiter of the collision
-     * @param space {cp.Space} The space the collision occurred in
-     * @private
-     */
-    onCollisionPostSolve: function(arbiter) {//, space) {
-        var shapes = arbiter.getShapes(),
-            spr1 = shapes[0].sprite,
-            spr2 = shapes[1].sprite;
-
-        if(arbiter.isFirstContact()) {
-            spr1.onCollision(spr2, arbiter.totalImpulse(), shapes[1], shapes[0]);
-            spr2.onCollision(spr1, arbiter.totalImpulse(), shapes[0], shapes[1]);
-        }
-
-        //maintain the colliding state
-        return true;
-    },
-    /**
-     * Called after a collision ends in the system (separation)
-     *
-     * @method onCollisionEnd
-     * @param arbiter {cp.Arbiter} The arbiter of the collision
-     * @param space {cp.Space} The space the collision occurred in
-     * @private
-     */
-    onCollisionEnd: function(arbiter) {//, space) {
-        var shapes = arbiter.getShapes(),
-            spr1 = shapes[0].sprite,
-            spr2 = shapes[1].sprite;
-
-        spr1.onSeparate(spr2, shapes[1], shapes[0]);
-        spr2.onSeparate(spr1, shapes[0], shapes[1]);
-
-        //maintain the colliding state
-        return true;
-    },
-    /**
-     * Attempts to perform the postStep actions that have been queued. If the space
-     * is currently locked, then it waits until after the step to run the actions.
-     *
-     * @method onCollisionEnd
-     * @private
-     */
-    act: function() {
-        if(this.space.locked) {
-            this.space.addPostStepCallback(this.onPostStep.bind(this));
-        } else {
-            //for async behavior
-            var self = this;
-            setTimeout(function() {
-                self.onPostStep();
-            }, 1);
-        }
-    },
-    /**
-     * Processes the action queue after a step is unlocked.
-     *
-     * @method onPostStep
-     * @private
-     */
     onPostStep: function() {
-        //remove items
-        while(this.actionQueue.length) {
-            var a = this.actionQueue.shift(),
-                act = a[0],
-                data = a[1],
-                cb = a[2];
+        //go through each body and update the sprite
+        var bodies = this.world.bodies,
+            body = null,
+            i = 0;
 
-            switch(act) {
-                case 'add':
-                    data.body.setPos(data.spr.position.clone());
-                    if(!data.body.isStatic()) {
-                        this.space.addBody(data.body);
-                    }
+        for(i = 0; i < bodies.length; ++i) {
+            body = bodies[i];
 
-                    this.space.addShape(data.shape);
+            body.__sprite.position.x = body.position[0];
+            body.__sprite.position.y = body.position[1];
+            body.__sprite.rotation = -body.angl }
 
-                    data.spr._phys.body = data.body;
-                    data.spr._phys.shape = data.shape;
-                    data.body.sprite = data.spr;
-                    break;
-
-                case 'addControl':
-                    data.body.setPos(data.spr.position.clone());
-                    this.space.addBody(data.body);
-                    this.space.addConstraint(data.pivot);
-
-                    if(data.gear) this.space.addConstraint(data.gear);
-
-                    data.spr._phys.control = data;
-                    delete data.spr; //no need for that extra reference to lay around
-                    break;
-
-                case 'addCustomShape':
-                    if(!data.spr._phys.customShapes) {
-                        data.spr._phys.customShapes = [];
-                    }
-
-                    data.spr._phys.customShapes.push(data.shape);
-                    this.space.addShape(data.shape);
-                    break;
-
-                case 'remove':
-                    if(data.body.space) {
-                        this.space.removeBody(data.body);
-                    }
-
-                    if(data.shape.space) {
-                        this.space.removeShape(data.shape);
-                    }
-
-                    if(data.control) {
-                        if(data.control.body.space) {
-                            this.space.removeBody(data.control.body);
-                        }
-
-                        if(data.control.pivot.space) {
-                            this.space.removeConstraint(data.control.pivot);
-                        }
-
-                        if(data.control.gear && data.control.gear.space) {
-                            this.space.removeConstraint(data.control.gear);
-                        }
-                    }
-
-                    if(data.customShapes) {
-                        for(var i = data.customShapes.length - 1; i > -1; --i) {
-                            this.space.removeShape(data.customShapes[i]);
-                        }
-                    }
-
-                    //remove references
-                    data.body = null;
-                    data.shape.sprite = null;
-                    data.shape = null;
-                    data.customShapes = null;
-                    break;
-
-                case 'reindex':
-                    this.space.reindexShape(data);
-                    break;
-
-                case 'reindexStatic':
-                    this.space.reindexStatic();
-                    break;
+        //notify of any collisions
+        var np = this.world.narrowphase;
+        for(i = 0; i < np.contactEquations.length; ++i) {
+            var eq = np.contactEquations[i];
+            if(eq.firstImpact) {
+                eq.bi.__sprite.emit('collision', eq.bj, eq.ni, eq.shapeB, eq.shapeA);
+                eq.bj.__sprite.emit('collision', eq.bi, eq.ni, eq.shapeA, eq.shapeB);
             }
-
-            if(cb)
-                cb.call(this);
-        }
     },
     /**
      * Creates a physics body for a sprite
@@ -675,17 +357,10 @@ inherit(PhysicsSystem, Object, {
      * @private
      */
     _createBody: function(spr) {
-        var mass = spr.mass || 1,
-            inertia = spr.inertia || cp.momentForBox(mass, spr.width, spr.height) || Infinity,
-            body = new cp.Body(mass, inertia);
-
-        if(mass === Infinity) {
-            body.nodeIdleTime = Infinity;
-        } else {
-            body.nodeIdleTime = 0;
-        }
-
-        return body;
+        return new p2.Body({
+            mass: spr.mass || 0,
+            position: [spr.position.x, spr.position.y]
+        });
     },
     /**
      * Creates a collision shape for a sprite
@@ -697,7 +372,11 @@ inherit(PhysicsSystem, Object, {
      * @return {cp.Shape} The chipmunk-js collision shape
      * @private
      */
-    _createShape: function(spr, body, poly) {
+    _createShape: function(spr) {
+        var shape = new p2.Rectangle(16, 16);
+        return shape;
+
+        /*
         var shape,
             hit = poly || spr.hitArea,
             ax = spr.anchor ? spr.anchor.x : 0,
@@ -754,25 +433,16 @@ inherit(PhysicsSystem, Object, {
             shape = new cp.BoxShape2(body, new cp.BB(0, -spr.height, spr.width, 0));
         }
 
-        //this.space.addShape(shape);
-
-        shape.width = spr.width;
-        shape.height = spr.height;
-        shape.sprite = spr;
+        //this.space.addShape(shape)r;
         shape.setElasticity(spr.bounce || spr.elasticity || 0);
         shape.setSensor(spr.sensor);
         shape.setCollisionType(this.getCollisionType(spr));
-        shape.setFriction(spr.friction || 0);
-
-        shape.group = spr.shapeGroup || 0;
-
-        return shape;
+        shape.setFriction(spr.friction || 0)e;
+        shape.group = spr.shapeGroup || 
+e;
+        return shap
+		e;*/
     }
 });
-
-PhysicsSystem.COLLISION_TYPE = {
-    SPRITE: 0,
-    TILE: 1
-};
 
 module.exports = PhysicsSystem;

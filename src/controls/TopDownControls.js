@@ -68,7 +68,6 @@ inherit(TopDownControls, Controls, {
     control: function(spr) {
         Controls.prototype.control.call(this, spr);
 
-        spr._phys.system.addControlBody(spr);
         spr._moveVector = new Vector();
     },
     onKey: function(action, evt) {

@@ -479,11 +479,10 @@ inherit(Tilelayer, SpriteBatch, {
             this.addChild(tile);
         }
 
-        //tile.collisionType = props.type;
         tile.interactive = interactive;
         tile.hitArea = hitArea;
-        //tile.mass = props.mass || 0;
         tile.blendMode = (props.blendMode || this.properties.blendMode) ? PIXI.blendModes[(props.blendMode || this.properties.blendMode)] : PIXI.blendModes.NORMAL;
+        tile.mass = 0;//props.mass || 0;
 
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);
