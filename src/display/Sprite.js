@@ -4,7 +4,6 @@ var EventEmitter = require('../utils/EventEmitter'),
     Clock = require('../utils/Clock'),
     inherit = require('../utils/inherit'),
     Texture = require('./Texture'),
-    math = require('../math/math'),
     utils = require('../utils/utils'),
     PIXI = require('../vendor/pixi');
 
@@ -194,8 +193,9 @@ inherit(Sprite, PIXI.Sprite, {
      */
     clone: function(spr) {
         //make a copy of our animations object
-        var anims = utils.extend(true, {}, this.animations),
-            spr = spr || new Sprite(anims, this.frameTime, this.currentAnimation);
+        var anims = utils.extend(true, {}, this.animations);
+
+        spr = spr || new Sprite(anims, this.frameTime, this.currentAnimation);
 
         spr.name = this.name;
         spr.loop = this.loop;

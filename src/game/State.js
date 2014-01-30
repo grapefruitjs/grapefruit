@@ -138,11 +138,6 @@ inherit(State, Container, {
         this.camera.update(dt);
         this.game.timings.cameraEnd = this.game.clock.now();
 
-        //update world
-        this.game.timings.worldStart = this.game.clock.now();
-        this.world.update(dt);
-        this.game.timings.worldEnd = this.game.clock.now();
-
         //simulate physics and detect/resolve collisions
         this.game.timings.physicsStart = this.game.clock.now();
         this.physics.update(dt);
