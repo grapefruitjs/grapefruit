@@ -633,7 +633,7 @@ inherit(PhysicsSystem, Object, {
                             this.space.removeConstraint(data.control.pivot);
                         }
 
-                        if(data.control.gear.space) {
+                        if(data.control.gear && data.control.gear.space) {
                             this.space.removeConstraint(data.control.gear);
                         }
                     }
