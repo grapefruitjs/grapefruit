@@ -192,18 +192,16 @@ inherit(Sprite, PIXI.Sprite, {
      * @method clone
      * @return {Sprite} Returns the new sprite
      */
-    clone: function() {
+    clone: function(spr) {
         //make a copy of our animations object
         var anims = utils.extend(true, {}, this.animations),
-            spr = new Sprite(anims, this.frameTime, this.currentAnimation);
+            spr = spr || new Sprite(anims, this.frameTime, this.currentAnimation);
 
         spr.name = this.name;
         spr.loop = this.loop;
         spr.currentFrame = this.currentFrame;
         spr.playing = this.playing;
         spr.hitArea = this.hitArea.clone();
-
-        spr.body = this.body.clone();
 
         spr.blendMode = this.blendMode;
 
