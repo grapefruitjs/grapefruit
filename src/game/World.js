@@ -32,14 +32,6 @@ var World = function(state) {
     this.state = state;
 
     /**
-     * The particle system for the world
-     *
-     * @property particles
-     * @type ParticleSystem
-     */
-    this.particles = this.addChild(new ParticleSystem());
-
-    /**
      * The bounds of the world
      *
      * @property bounds
@@ -109,7 +101,7 @@ inherit(World, Container, {
      * @private
      */
     update: function(dt) {
-        this.particles.update(dt);
+        //this.particles.update(dt);
     }
 });
 

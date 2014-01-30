@@ -1,5 +1,5 @@
 var Emitter = require('./ParticleEmitter'),
-    Contianer = require('../display/Container'),
+    Container = require('../display/Container'),
     inherit = require('../utils/inherit');
 
 /**
@@ -11,8 +11,10 @@ var Emitter = require('./ParticleEmitter'),
  * @extends Container
  * @constructor
  */
-var ParticleSystem = function() {
-    Contianer.call(this);
+var ParticleSystem = function(state) {
+    Container.call(this);
+
+    this.state = state;
 
     /**
      * The emitters that are contained in this system, keyed by name
@@ -33,7 +35,7 @@ var ParticleSystem = function() {
     this.nextId = 0;
 };
 
-inherit(ParticleSystem, Contianer, {
+inherit(ParticleSystem, Container, {
     /**
      * Adds a particle emitter to the system, creating one if necessary.
      *
@@ -64,11 +66,11 @@ inherit(ParticleSystem, Contianer, {
 
         //create an emitter if a string is passed
         if(typeof Name === 'string') {
-            emitter = new Emitter(Name);
+            emitter = new Emitter(this.state, Name);
         }
         //create an emitter of the instance passed
         else if(typeof Name === 'function') {
-            emitter = new Name();
+            emitter = new Name(this.state);
         }
         //a pre-created emitter, ensure game is set correctly
         else {
@@ -109,7 +111,12 @@ inherit(ParticleSystem, Contianer, {
      * @param dt {Number} The number of seconds that have passed since last call
      * @private
      */
-    update: function(dt) {
+    updateTransform: function() {
+        Container.prototype.updateTransform.apply(this, arguments);
+
+        //get delta
+        var dt = this.state.game.timings.lastDelta;
+
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var emitter = this.children[i];
 
