@@ -135,18 +135,33 @@ inherit(Cache, Object, {
             tsets = obj.data.tilesets;
 
         obj.textures = {};
-        for(var i = 0, il = obj.images.length; i < il; ++i) {
+        for(var i = 0, il = tsets.length; i < il; ++i) {
+            var tset = tsets[i];
+
             if(fmt === C.FILE_FORMAT.JSON)
-                name = tsets[i].name;
+                name = tset.name;
             else if(fmt === C.FILE_FORMAT.XML)
-                name = tsets[i].attributes.getNamedItem('name').nodeValue;
+                name = teset.attributes.getNamedItem('name').nodeValue;
 
             var k = key + '_' + name;
 
-            PIXI.BaseTextureCache[k] = new BaseTexture(obj.images[i]);
-            PIXI.TextureCache[k] = new Texture(PIXI.BaseTextureCache[k]);
+            if(tset.image) {
+                PIXI.BaseTextureCache[k] = new BaseTexture(obj.images[tset.image]);
+                PIXI.TextureCache[k] = new Texture(PIXI.BaseTextureCache[k]);
 
-            obj.textures[name] = PIXI.TextureCache[k];
+                obj.textures[name] = PIXI.TextureCache[k];
+            } else if(tset.tiles) {
+                obj.textures[name] = [];
+                for(var t in tset.tiles) {
+                    var img = obj.images[tset.tiles[t].image],
+                        k2= k + '_' + t;
+
+                    PIXI.BaseTextureCache[k2] = new BaseTexture(img);
+                    PIXI.TextureCache[k2] = new Texture(PIXI.BaseTextureCache[k2]);
+
+                    obj.textures[name][t] = PIXI.TextureCache[k2];
+                }
+            }
         }
 
         this._tilemaps[key] = obj;

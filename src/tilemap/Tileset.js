@@ -32,7 +32,12 @@ var utils = require('../utils/utils'),
 //see: https://github.com/bjorn/tiled/wiki/TMX-Map-Format#tileset
 var Tileset = function(texture, settings) {
     //initialize the base Texture class
-    Texture.call(this, texture.baseTexture || texture);
+    if(texture instanceof Array) {
+        this.multi = true;
+        Texture.call(this, texture[0].baseTexture);
+    } else {
+        Texture.call(this, texture.baseTexture || texture);
+    }
 
     //Tiled Editor properties
 
@@ -98,7 +103,7 @@ var Tileset = function(texture, settings) {
      * @property numTiles
      * @type Vector
      */
-    this.numTiles = new Vector(
+    this.numTiles = this.multi ? texture.length : new Vector(
         math.floor((this.baseTexture.source.width - this.margin) / (this.tileSize.x - this.spacing)),
         math.floor((this.baseTexture.source.height - this.margin) / (this.tileSize.y - this.spacing))
     );
@@ -109,7 +114,7 @@ var Tileset = function(texture, settings) {
      * @property lastgid
      * @type Number
      */
-    this.lastgid = this.firstgid + (((this.numTiles.x * this.numTiles.y) - 1) || 0);
+    this.lastgid = this.firstgid + (this.multi ? texture.length : (((this.numTiles.x * this.numTiles.y) - 1) || 0));
 
     /**
      * The properties of the tileset
@@ -133,7 +138,7 @@ var Tileset = function(texture, settings) {
      * @property size
      * @type Vector
      */
-    this.size = new Vector(
+    this.size = this.multi ? Vector.ZERO : new Vector(
         settings.imagewidth || this.baseTexture.source.width,
         settings.imageheight || this.baseTexture.source.height
     );
@@ -144,7 +149,7 @@ var Tileset = function(texture, settings) {
      * @property textures
      * @type Array
      */
-    this.textures = [];
+    this.textures = this.multi ? texture : [];
 
     //massages strings into the values they should be
     //i.e. "true" becomes the value: true
@@ -156,21 +161,23 @@ var Tileset = function(texture, settings) {
     }
 
     //generate tile textures
-    for(var t = 0, tl = this.lastgid - this.firstgid + 1; t < tl; ++t) {
-        //convert the tileId to x,y coords of the tile in the Texture
-        var y = math.floor(t / this.numTiles.x),
-            x = (t - (y * this.numTiles.x));
+    if(!this.multi) {
+        for(var t = 0, tl = this.lastgid - this.firstgid + 1; t < tl; ++t) {
+            //convert the tileId to x,y coords of the tile in the Texture
+            var y = math.floor(t / this.numTiles.x),
+                x = (t - (y * this.numTiles.x));
 
-        //get location in pixels
-        x = (x * this.tileSize.x) + (x * this.spacing) + this.margin;
-        y = (y * this.tileSize.y) + (y * this.spacing) + this.margin;
+            //get location in pixels
+            x = (x * this.tileSize.x) + (x * this.spacing) + this.margin;
+            y = (y * this.tileSize.y) + (y * this.spacing) + this.margin;
 
-        this.textures.push(
-            new Texture(
-                this.baseTexture,
-                new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)
-            )
-        );
+            this.textures.push(
+                new Texture(
+                    this.baseTexture,
+                    new PIXI.Rectangle(x, y, this.tileSize.x, this.tileSize.y)
+                )
+            );
+        }
     }
 };
 
