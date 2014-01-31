@@ -141,7 +141,7 @@ inherit(Cache, Object, {
             if(fmt === C.FILE_FORMAT.JSON)
                 name = tset.name;
             else if(fmt === C.FILE_FORMAT.XML)
-                name = teset.attributes.getNamedItem('name').nodeValue;
+                name = tset.attributes.getNamedItem('name').nodeValue;
 
             var k = key + '_' + name;
 
