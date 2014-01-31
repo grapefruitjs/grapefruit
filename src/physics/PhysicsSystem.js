@@ -88,8 +88,6 @@ var PhysicsSystem = function(state, options) {
      * @private
      */
     this._skip = 0;
-
-    this.world.on('postStep', this.onPostStep.bind(this));
 };
 
 inherit(PhysicsSystem, Object, {
@@ -285,8 +283,6 @@ inherit(PhysicsSystem, Object, {
         spr._physics.body.position[0] = pos.x;
         spr._physics.body.position[1] = pos.y;
 
-
-
         return this;
     },
     /**
@@ -324,10 +320,9 @@ inherit(PhysicsSystem, Object, {
             return this._skip--;
 
         //execute the physics step
-        this.world.step(1/60);
-    },
-    onPostStep: function() {
-        //go through each body and update the sprite
+        this.world.step(this.stepTime, dt);
+
+        //go through each body and update the sprite with interpolated position
         var bodies = this.world.bodies,
             body = null,
             i = 0;
@@ -335,9 +330,9 @@ inherit(PhysicsSystem, Object, {
         for(i = 0; i < bodies.length; ++i) {
             body = bodies[i];
 
-            body.__sprite.position.x = body.position[0];
-            body.__sprite.position.y = body.position[1];
-            body.__sprite.rotation = -body.angl }
+            body.__sprite.position.x = body.position[0]; //interpolatedPosition[0];
+            body.__sprite.position.y = body.position[1]; //interpolatedPosition[1];
+            body.__sprite.rotation = -body.angle;
 
         //notify of any collisions
         var np = this.world.narrowphase;
@@ -359,7 +354,8 @@ inherit(PhysicsSystem, Object, {
     _createBody: function(spr) {
         return new p2.Body({
             mass: spr.mass || 0,
-            position: [spr.position.x, spr.position.y]
+            position: [spr.position.x, spr.position.y],
+            fixedRotation: spr.inertia === Infinity || spr.fixedRotation === true
         });
     },
     /**
@@ -437,11 +433,9 @@ inherit(PhysicsSystem, Object, {
         shape.setElasticity(spr.bounce || spr.elasticity || 0);
         shape.setSensor(spr.sensor);
         shape.setCollisionType(this.getCollisionType(spr));
-        shape.setFriction(spr.friction || 0)e;
-        shape.group = spr.shapeGroup || 
-e;
-        return shap
-		e;*/
+        shape.setFriction(spr.friction || 0);
+        shape.group = spr.shapeGroup || 0;
+        return shape;*/
     }
 });
 
