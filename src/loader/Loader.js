@@ -788,13 +788,11 @@ inherit(Loader, Object, {
      */
     _loadXmlTilesets: function(file) {
         var data = file.data,
-            baseUrl = file.baseUrl,
             tilesets = data.getElementsByTagName('tileset');
 
         for(var i = 0, il = tilesets.length; i < il; ++i) {
             var set = tilesets[i],
-                imgElm = set.getElementsByTagName('image')[0],
-                img;
+                imgElm = set.getElementsByTagName('image')[0];
 
             if(!imgElm) continue;
 
