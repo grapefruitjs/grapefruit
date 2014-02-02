@@ -16,14 +16,14 @@ var Container = require('../display/Container'),
  * create an instance on your own.
  *
  * @class Tilelayer
- * @extends Container
+ * @extends PIXI.SpriteBatch
  * @constructor
  * @param map {Tilemap} The tilemap instance that this belongs to
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
 var Tilelayer = function(map, layer) {
-    Container.call(this, layer);
+    PIXI.SpriteBatch.call(this);
 
     /**
      * The map instance this tilelayer belongs to
@@ -135,7 +135,7 @@ var Tilelayer = function(map, layer) {
     this._rendered = new Rectangle();
 };
 
-inherit(Tilelayer, Container, {
+inherit(Tilelayer, PIXI.SpriteBatch, {
     getBounds: function() {
         return this.map.getBounds();
     },
