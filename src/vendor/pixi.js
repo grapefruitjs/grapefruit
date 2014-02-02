@@ -4,7 +4,7 @@
  * Copyright (c) 2012-2014, Mat Groves
  * http://goodboydigital.com/
  *
- * Compiled: 2014-01-30
+ * Compiled: 2014-02-02
  *
  * pixi.js is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -60,7 +60,7 @@ PIXI.scaleModes = {
     NEAREST:1
 };
 
-// interaction frequency
+// interaction frequency 
 PIXI.INTERACTION_FREQUENCY = 30;
 PIXI.AUTO_PREVENT_DEFAULT = true;
 /**
@@ -455,13 +455,13 @@ PIXI.Ellipse.prototype.constructor = PIXI.Ellipse;
 * @class Matrix
 * The Matrix class will choose the best type of array to use between
 * a regular javascript Array and a Float32Array if the latter is available
-*
+* 
 */
 PIXI.determineMatrixArrayType = function() {
     return (typeof Float32Array !== 'undefined') ? Float32Array : Array;
 };
 
-PIXI.Matrix = PIXI.determineMatrixArrayType();
+PIXI.Matrix2 = PIXI.determineMatrixArrayType();
 
 
 /**
@@ -474,15 +474,15 @@ PIXI.Matrix = PIXI.determineMatrixArrayType();
 
 PIXI.mat3 = {};
 
-/*
+/* 
 * Creates a mat3 object
-*
+* 
 * @method mat3.create
 * @static
 */
 PIXI.mat3.create = function()
 {
-    var matrix = new PIXI.Matrix(9);
+    var matrix = new PIXI.Matrix2(9);
 
     matrix[0] = 1;
     matrix[1] = 0;
@@ -497,9 +497,9 @@ PIXI.mat3.create = function()
     return matrix;
 };
 
-/*
+/* 
 * Creates a mat3 identity matrix
-*
+* 
 * @method mat3.indentity
 * @static
 * @param matrix {Array|Float32Array}
@@ -520,9 +520,9 @@ PIXI.mat3.identity = function(matrix)
     return matrix;
 };
 
-/*
+/* 
 * Multiplies the matrices given as parameters by themselves
-*
+* 
 * @method mat3.multiply
 * @static
 * @param mat {Array|Float32Array} the first operand (matrix)
@@ -557,9 +557,9 @@ PIXI.mat3.multiply = function (mat, mat2, dest)
     return dest;
 };
 
-/*
+/* 
 * Makes a copy of the matrix given in parameter
-*
+* 
 * @method mat3.clone
 * @static
 * @param mat {Array|Float32Array}
@@ -567,7 +567,7 @@ PIXI.mat3.multiply = function (mat, mat2, dest)
 */
 PIXI.mat3.clone = function(mat)
 {
-    var matrix = new PIXI.Matrix(9);
+    var matrix = new PIXI.Matrix2(9);
 
     matrix[0] = mat[0];
     matrix[1] = mat[1];
@@ -582,7 +582,7 @@ PIXI.mat3.clone = function(mat)
     return matrix;
 };
 
-/*
+/* 
 * Re-arranges the matrix
 *
 * @method mat3.transpose
@@ -620,12 +620,12 @@ PIXI.mat3.transpose = function (mat, dest)
 
 PIXI.mat4 = {};
 
-/*
+/* 
 * Appends the mat3 into a mat4, therefore making it a regular mat4 object
-*
+* 
 * @method mat3.toMat4
 * @static
-* @param mat {Array|Float32Array}
+* @param mat {Array|Float32Array} 
 * @param [dest] {Array|Float32Array} the matrix which will hold the resulting matrix
 *
 */
@@ -657,16 +657,16 @@ PIXI.mat3.toMat4 = function (mat, dest)
 };
 
 
-/*
+/* 
 * Creates a new mat4 matrix
-*
+* 
 * @method mat4.create
 * @static
 *
 */
 PIXI.mat4.create = function()
 {
-    var matrix = new PIXI.Matrix(16);
+    var matrix = new PIXI.Matrix2(16);
 
     matrix[0] = 1;
     matrix[1] = 0;
@@ -688,9 +688,9 @@ PIXI.mat4.create = function()
     return matrix;
 };
 
-/*
+/* 
 * Re-arranges the matrix
-*
+* 
 *
 * @method mat4.transpose
 * @static
@@ -741,9 +741,9 @@ PIXI.mat4.transpose = function (mat, dest)
     return dest;
 };
 
-/*
+/* 
 * Multiplies the matrices given as parameters by themselves
-*
+* 
 * @method mat4.multiply
 * @static
 * @param mat {Array|Float32Array} the first operand (matrix)
@@ -799,6 +799,64 @@ PIXI.mat4.multiply = function (mat, mat2, dest)
 
 PIXI.identityMatrix = PIXI.mat3.create();
 PIXI.tempMatrix = PIXI.mat3.create();
+
+PIXI.Matrix = function()
+{
+    this.a = 1;
+    this.b = 0;
+    this.c = 0;
+    this.d = 1;
+    this.tx = 0;
+    this.ty = 0;
+
+    
+};
+
+PIXI.Matrix.prototype.fromArray = function(array)
+{
+
+    this.a = array[0];
+    this.b = array[1];
+    this.c = array[3];
+    this.d = array[4];
+    this.tx = array[2];
+    this.ty = array[5];
+    
+};
+
+PIXI.Matrix.prototype.toArray = function(transpose)
+{
+    if(!this.array)this.array = new Float32Array(9);
+    var array = this.array;
+
+    if(transpose)
+    {
+        this.array[0] = this.a;
+        this.array[1] = this.c;
+        this.array[2] = 0;
+        this.array[3] = this.b;
+        this.array[4] = this.d;
+        this.array[5] = 0;
+        this.array[6] = this.tx;
+        this.array[7] = this.ty;
+        this.array[8] = 1;
+    }
+    else
+    {
+        this.array[0] = this.a;
+        this.array[1] = this.b;
+        this.array[2] = this.tx;
+        this.array[3] = this.c;
+        this.array[4] = this.d;
+        this.array[5] = this.ty;
+        this.array[6] = 0;
+        this.array[7] = 0;
+        this.array[8] = 1;
+    }
+    
+    return array;//[this.a, this.b, this.tx, this.c, this.d, this.ty, 0, 0, 1];
+};
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -925,7 +983,7 @@ PIXI.DisplayObject = function()
 
     /**
      * This is the cursor that will be used when the mouse is over this object. To enable this the element must have interaction = true and buttonMode = true
-     *
+     * 
      * @property defaultCursor
      * @type String
      *
@@ -940,7 +998,7 @@ PIXI.DisplayObject = function()
      * @readOnly
      * @private
      */
-    this.worldTransform = PIXI.mat3.create(); //mat3.identity();
+    this.worldTransform = new PIXI.Matrix();//PIXI.mat3.create(); //mat3.identity();
 
     /**
      * [read-only] Current transform of the object locally
@@ -950,7 +1008,7 @@ PIXI.DisplayObject = function()
      * @readOnly
      * @private
      */
-    this.localTransform = PIXI.mat3.create(); //mat3.identity();
+   // this.localTransform = new PIXI.Matrix()//PIXI.mat3.create(); //mat3.identity();
 
     /**
      * [NYI] Unknown
@@ -975,7 +1033,7 @@ PIXI.DisplayObject = function()
     this._cr = 1;
 
     /**
-     * The area the filter is applied to
+     * The area the filter is applied to 
      *
      * @property filterArea
      * @type Rectangle
@@ -1208,40 +1266,30 @@ PIXI.DisplayObject.prototype.updateTransform = function()
         this._cr =  Math.cos(this.rotation);
     }
 
-    var localTransform = this.localTransform;
-    var parentTransform = this.parent.worldTransform;
-    var worldTransform = this.worldTransform;
+   // var localTransform = this.localTransform//.toArray();
+    var parentTransform = this.parent.worldTransform;//.toArray();
+    var worldTransform = this.worldTransform;//.toArray();
     //console.log(localTransform)
-    localTransform[0] = this._cr * this.scale.x;
-    localTransform[1] = -this._sr * this.scale.y;
-    localTransform[3] = this._sr * this.scale.x;
-    localTransform[4] = this._cr * this.scale.y;
-
-    // TODO --> do we even need a local matrix???
-
     var px = this.pivot.x;
     var py = this.pivot.y;
 
-    // Cache the matrix values (makes for huge speed increases!)
-    var a00 = localTransform[0], a01 = localTransform[1], a02 = this.position.x - localTransform[0] * px - py * localTransform[1],
-        a10 = localTransform[3], a11 = localTransform[4], a12 = this.position.y - localTransform[4] * py - px * localTransform[3],
+    var a00 = this._cr * this.scale.x,
+        a01 = -this._sr * this.scale.y,
+        a10 = this._sr * this.scale.x,
+        a11 = this._cr * this.scale.y,
+        a02 = this.position.x + a00 * px - py * a01,
+        a12 = this.position.y + a11 * py - px * a10,
+        b00 = parentTransform.a, b01 = parentTransform.b, b02 = parentTransform.tx,
+        b10 = parentTransform.c, b11 = parentTransform.d, b12 = parentTransform.ty;
 
-        b00 = parentTransform[0], b01 = parentTransform[1], b02 = parentTransform[2],
-        b10 = parentTransform[3], b11 = parentTransform[4], b12 = parentTransform[5];
+    worldTransform.a = b00 * a00 + b01 * a10;
+    worldTransform.b = b00 * a01 + b01 * a11;
+    worldTransform.tx = b00 * a02 + b01 * a12 + b02;
 
-    localTransform[2] = a02;
-    localTransform[5] = a12;
+    worldTransform.c = b10 * a00 + b11 * a10;
+    worldTransform.d = b10 * a01 + b11 * a11;
+    worldTransform.ty = b10 * a02 + b11 * a12 + b12;
 
-    worldTransform[0] = b00 * a00 + b01 * a10;
-    worldTransform[1] = b00 * a01 + b01 * a11;
-    worldTransform[2] = b00 * a02 + b01 * a12 + b02;
-
-    worldTransform[3] = b10 * a00 + b11 * a10;
-    worldTransform[4] = b10 * a01 + b11 * a11;
-    worldTransform[5] = b10 * a02 + b11 * a12 + b12;
-
-    // because we are using affine transformation, we can optimise the matrix concatenation process.. wooo!
-    // mat3.multiply(this.localTransform, this.parent.worldTransform, this.worldTransform);
     this.worldAlpha = this.alpha * this.parent.worldAlpha;
 };
 
@@ -1293,7 +1341,7 @@ PIXI.DisplayObject.prototype.setStageReference = function(stage)
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.DisplayObject.prototype._renderWebGL = function(renderSession)
@@ -1307,7 +1355,7 @@ PIXI.DisplayObject.prototype._renderWebGL = function(renderSession)
 * Renders the object using the Canvas renderer
 *
 * @method _renderCanvas
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.DisplayObject.prototype._renderCanvas = function(renderSession)
@@ -1477,7 +1525,7 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
 
     this.children[index1] = child2;
     this.children[index2] = child;
-
+    
 };
 
 /**
@@ -1552,7 +1600,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
     if(this.children.length === 0)return PIXI.EmptyRectangle;
 
     // TODO the bounds have already been calculated this render session so return what we have
-
+   
 
     var minX = Infinity;
     var minY = Infinity;
@@ -1569,13 +1617,13 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
     for(var i=0,j=this.children.length; i<j; i++)
     {
         var child = this.children[i];
-
+        
         if(!child.visible)continue;
 
         childVisible = true;
 
         childBounds = this.children[i].getBounds();
-
+     
         minX = minX < childBounds.x ? minX : childBounds.x;
         minY = minY < childBounds.y ? minY : childBounds.y;
 
@@ -1598,7 +1646,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
 
     // TODO: store a reference so that if this function gets called again in the render cycle we do not have to recalculate
     //this._currentBounds = bounds;
-
+   
     return bounds;
 };
 
@@ -1635,7 +1683,7 @@ PIXI.DisplayObjectContainer.prototype.removeStageReference = function()
     }
 
     if(this._interactive)this.stage.dirty = true;
-
+    
     this.stage = null;
 };
 
@@ -1643,13 +1691,13 @@ PIXI.DisplayObjectContainer.prototype.removeStageReference = function()
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 {
     if(!this.visible || this.alpha <= 0)return;
-
+    
     var i,j;
 
     if(this._mask || this._filters)
@@ -1677,7 +1725,7 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 
         if(this._filters)renderSession.filterManager.popFilter();
         if(this._mask)renderSession.maskManager.popMask(renderSession);
-
+        
         renderSession.spriteBatch.start();
     }
     else
@@ -1694,7 +1742,7 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 * Renders the object using the Canvas renderer
 *
 * @method _renderCanvas
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
@@ -1730,8 +1778,8 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
  * @extends DisplayObjectContainer
  * @constructor
  * @param texture {Texture} The texture for this sprite
- *
- * A sprite can be created directly from an image like this :
+ * 
+ * A sprite can be created directly from an image like this : 
  * var sprite = nex PIXI.Sprite.FromImage('assets/image.png');
  * yourStage.addChild(sprite);
  * then obviously don't forget to add it to the stage you have already created
@@ -1786,7 +1834,7 @@ PIXI.Sprite = function(texture)
      * @default 0xFFFFFF
      */
     this.tint = 0xFFFFFF;// * Math.random();
-
+    
     /**
      * The blend mode to be applied to the sprite
      *
@@ -1905,12 +1953,12 @@ PIXI.Sprite.prototype.getBounds = function()
 
     var worldTransform = this.worldTransform;
 
-    var a = worldTransform[0];
-    var b = worldTransform[3];
-    var c = worldTransform[1];
-    var d = worldTransform[4];
-    var tx = worldTransform[2];
-    var ty = worldTransform[5];
+    var a = worldTransform.a;
+    var b = worldTransform.c;
+    var c = worldTransform.b;
+    var d = worldTransform.d;
+    var tx = worldTransform.tx;
+    var ty = worldTransform.ty;
 
     var x1 = a * w1 + c * h1 + tx;
     var y1 = d * h1 + b * w1 + ty;
@@ -1968,14 +2016,14 @@ PIXI.Sprite.prototype.getBounds = function()
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.Sprite.prototype._renderWebGL = function(renderSession)
 {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if(!this.visible || this.alpha <= 0)return;
-
+    
     var i,j;
 
     // do a quick check to see if this element has a mask or a filter.
@@ -2010,7 +2058,7 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
 
         if(this._filters)renderSession.filterManager.popFilter();
         if(this._mask)renderSession.maskManager.popMask(renderSession);
-
+        
         spriteBatch.start();
     }
     else
@@ -2024,22 +2072,22 @@ PIXI.Sprite.prototype._renderWebGL = function(renderSession)
         }
     }
 
-
-    //TODO check culling
+   
+    //TODO check culling  
 };
 
 /**
 * Renders the object using the Canvas renderer
 *
 * @method _renderCanvas
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if(this.visible === false || this.alpha === 0)return;
-
+    
     var frame = this.texture.frame;
     var context = renderSession.context;
     var texture = this.texture;
@@ -2055,7 +2103,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
         renderSession.maskManager.pushMask(this._mask, renderSession.context);
     }
 
-
+    
 
     //ignore null sources
     if(frame && frame.width && frame.height && texture.baseTexture.source)
@@ -2065,8 +2113,8 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
         var transform = this.worldTransform;
 
         // allow for trimming
-
-        context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
+       
+        context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
 
         //if smoothingEnabled is supported and we need to change the smoothing property for this texture
         if(renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode) {
@@ -2076,17 +2124,17 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 
         if(this.tint !== 0xFFFFFF)
         {
-
+            
             if(this.cachedTint !== this.tint)
             {
                 // no point tinting an image that has not loaded yet!
                 if(!texture.baseTexture.hasLoaded)return;
 
                 this.cachedTint = this.tint;
-
+                
                 //TODO clean up caching - how to clean up the caches?
                 this.tintedTexture = PIXI.CanvasTinter.getTintedTexture(this, this.tint);
-
+                
             }
 
             context.drawImage(this.tintedTexture,
@@ -2102,7 +2150,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
         else
         {
 
-
+           
 
             if(texture.trimmed)
             {
@@ -2120,7 +2168,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
             }
             else
             {
-
+               
                 context.drawImage(this.texture.baseTexture.source,
                                frame.x,
                                frame.y,
@@ -2131,7 +2179,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                                frame.width,
                                frame.height);
             }
-
+            
         }
     }
 
@@ -2215,8 +2263,6 @@ PIXI.SpriteBatch.constructor = PIXI.SpriteBatch;
  */
 PIXI.SpriteBatch.prototype.initWebGL = function(gl)
 {
-
-
     this.fastSpriteBatch = new PIXI.WebGLFastSpriteBatch(gl);
 
     this.ready = true;
@@ -2240,7 +2286,7 @@ PIXI.SpriteBatch.prototype.updateTransform = function()
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.SpriteBatch.prototype._renderWebGL = function(renderSession)
@@ -2248,25 +2294,25 @@ PIXI.SpriteBatch.prototype._renderWebGL = function(renderSession)
     if(!this.visible || this.alpha <= 0 || !this.children.length)return;
 
     if(!this.ready)this.initWebGL( renderSession.gl );
-
+    
     renderSession.spriteBatch.stop();
-
+    
     renderSession.shaderManager.activateShader(renderSession.shaderManager.fastShader);
-
+    
     this.fastSpriteBatch.begin(this, renderSession);
     this.fastSpriteBatch.render(this);
 
     renderSession.shaderManager.activateShader(renderSession.shaderManager.defaultShader);
 
     renderSession.spriteBatch.start();
-
+ 
 };
 
 /**
 * Renders the object using the Canvas renderer
 *
 * @method _renderCanvas
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
@@ -2277,12 +2323,12 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
     var transform = this.worldTransform;
 
     // alow for trimming
-
-    context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
+       
+    context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
     context.save();
 
     for (var i = 0; i < this.children.length; i++) {
-
+       
         var child = this.children[i];
         var texture = child.texture;
         var frame = texture.frame;
@@ -2291,7 +2337,7 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
 
         if(child.rotation % (Math.PI * 2) === 0)
         {
-
+          
           // this is the fastest  way to optimise! - if rotation is 0 then we can avoid any kind of setTransform call
             context.drawImage(texture.baseTexture.source,
                                  frame.x,
@@ -2306,10 +2352,25 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
         else
         {
             PIXI.DisplayObject.prototype.updateTransform.call(child);
-
+           
             transform = child.localTransform;
-            context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
 
+            if(this.rotation !== this.rotationCache)
+            {
+                this.rotationCache = this.rotation;
+                this._sr =  Math.sin(this.rotation);
+                this._cr =  Math.cos(this.rotation);
+            }
+
+            var a = child._cr * child.scale.x,
+                b = -child._sr * child.scale.y,
+                c = child._sr * child.scale.x,
+                d = child._cr * child.scale.y;
+                
+            context.setTransform(a, c, b, d, child.position.x, child.position.y);
+
+            //context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
+            
             context.drawImage(texture.baseTexture.source,
                                  frame.x,
                                  frame.y,
@@ -2631,7 +2692,7 @@ PIXI.Text.prototype.updateText = function()
     this.canvas.height = lineHeight * lines.length;
 
     if(navigator.isCocoonJS) this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-
+    
     //set canvas text styles
     this.context.fillStyle = this.style.fill;
     this.context.font = this.style.font;
@@ -2692,7 +2753,7 @@ PIXI.Text.prototype.updateTexture = function()
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.Text.prototype._renderWebGL = function(renderSession)
@@ -2984,7 +3045,7 @@ PIXI.BitmapText.fonts = {};
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
-
+ 
 /**
  * Holds all information related to an Interaction event
  *
@@ -3034,8 +3095,8 @@ PIXI.InteractionData.prototype.getLocalPosition = function(displayObject)
     var global = this.global;
 
     // do a cheeky transform to get the mouse coords;
-    var a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
-        a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+    var a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,
+        a10 = worldTransform.c, a11 = worldTransform.d, a12 = worldTransform.ty,
         id = 1 / (a00 * a11 + a01 * -a10);
     // set the mouse coords...
     return new PIXI.Point(a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
@@ -3105,6 +3166,8 @@ PIXI.InteractionManager = function(stage)
     this.onTouchEnd = this.onTouchEnd.bind(this);
     this.onTouchMove = this.onTouchMove.bind(this);
     this.last = 0;
+
+    this.currentCursorStyle = 'inherit';
 };
 
 // constructor
@@ -3171,7 +3234,7 @@ PIXI.InteractionManager.prototype.setTarget = function(target)
         this.setTargetDomElement( target.view );
     }
 
-
+    
 };
 
 
@@ -3279,8 +3342,9 @@ PIXI.InteractionManager.prototype.update = function()
     // loop through interactive objects!
     var length = this.interactiveItems.length;
 
-    this.interactionDOMElement.style.cursor = 'inherit';
+    
 
+    var cursor = 'inherit';
     var over = false;
 
     for (i = 0; i < length; i++)
@@ -3302,7 +3366,7 @@ PIXI.InteractionManager.prototype.update = function()
         // looks like there was a hit!
         if(item.__hit && !over)
         {
-            if(item.buttonMode) this.interactionDOMElement.style.cursor = item.defaultCursor;
+            if(item.buttonMode) cursor = item.defaultCursor;
 
             if(!item.interactiveChildren)over = true;
 
@@ -3314,7 +3378,7 @@ PIXI.InteractionManager.prototype.update = function()
 
                 // just the one!
                 //break;
-
+                
 
             }
             //break;
@@ -3331,6 +3395,13 @@ PIXI.InteractionManager.prototype.update = function()
      //   }
         // --->
     }
+
+    if( this.currentCursorStyle !== cursor )
+    {
+        this.currentCursorStyle = cursor;
+        this.interactionDOMElement.style.cursor = cursor;
+    }
+
 };
 
 /**
@@ -3411,7 +3482,7 @@ PIXI.InteractionManager.prototype.onMouseDown = function(event)
  *
  * @method onMouseDown
  * @param event {Event} The DOM event of a mouse button being moved out
- * @private
+ * @private 
  */
 PIXI.InteractionManager.prototype.onMouseOut = function()
 {
@@ -3497,11 +3568,11 @@ PIXI.InteractionManager.prototype.hitTest = function(item, interactionData)
     if( !item.worldVisible )return false;
 
     // temp fix for if the element is in a non visible
-
+   
     var isSprite = (item instanceof PIXI.Sprite),
         worldTransform = item.worldTransform,
-        a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
-        a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+        a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,
+        a10 = worldTransform.c, a11 = worldTransform.d, a12 = worldTransform.ty,
         id = 1 / (a00 * a11 + a01 * -a10),
         x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
         y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
@@ -3607,7 +3678,7 @@ PIXI.InteractionManager.prototype.onTouchStart = function(event)
     var rect = this.interactionDOMElement.getBoundingClientRect();
 
     if(PIXI.AUTO_PREVENT_DEFAULT)event.preventDefault();
-
+    
     var changedTouches = event.changedTouches;
     for (var i=0; i < changedTouches.length; i++)
     {
@@ -3738,12 +3809,12 @@ PIXI.InteractionManager.prototype.onTouchEnd = function(event)
  * @constructor
  * @param backgroundColor {Number} the background color of the stage, you have to pass this in is in hex format
  *      like: 0xFFFFFF for white
- *
- * Creating a stage is a mandatory process when you use Pixi, which is as simple as this :
+ * 
+ * Creating a stage is a mandatory process when you use Pixi, which is as simple as this : 
  * var stage = new PIXI.Stage(0xFFFFFF);
  * where the parameter given is the background colour of the stage, in hex
  * you will use this stage instance to add your sprites to it and therefore to the renderer
- * Here is how to add a sprite to the stage :
+ * Here is how to add a sprite to the stage : 
  * stage.addChild(sprite);
  */
 PIXI.Stage = function(backgroundColor)
@@ -3758,7 +3829,7 @@ PIXI.Stage = function(backgroundColor)
      * @readOnly
      * @private
      */
-    this.worldTransform = PIXI.mat3.create();
+    this.worldTransform = new PIXI.Matrix();//PIXI.mat3.create();
 
     /**
      * Whether or not the stage is interactive
@@ -3865,7 +3936,7 @@ PIXI.Stage.prototype.getMousePosition = function()
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
-
+ 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 
@@ -3875,7 +3946,7 @@ PIXI.Stage.prototype.getMousePosition = function()
 
 /**
  * A polyfill for requestAnimationFrame
- * You can actually use both requestAnimationFrame and requestAnimFrame,
+ * You can actually use both requestAnimationFrame and requestAnimFrame, 
  * you will still benefit from the polyfill
  *
  * @method requestAnimationFrame
@@ -4002,7 +4073,7 @@ PIXI.packColorRGBA = function(r, g, b, a)//r, g, b, a)
    // var g = (i / 4096.0)%64 / 64;
   //  var b = (i / 64.0)%64 / 64;
   //  var a = (i)%64 / 64;
-
+     
   //  console.log(r, g, b, a);
   //  return i;
 
@@ -4063,7 +4134,7 @@ PIXI.getNextPowerOfTwo = function(number)
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
-
+ 
 /**
  * https://github.com/mrdoob/eventtarget.js/
  * THankS mr DOob!
@@ -4073,7 +4144,7 @@ PIXI.getNextPowerOfTwo = function(number)
  * Adds event emitter functionality to a class
  *
  * @class EventTarget
- *
+ * 
  *      function MyEmitter() {
  *          PIXI.EventTarget.call(this); //mixes in event target stuff
  *      }
@@ -4263,7 +4334,7 @@ PIXI.PolyK = {};
  * Triangulates shapes for webGL graphic fills
  *
  * @method Triangulate
- *
+ * 
  */
 PIXI.PolyK.Triangulate = function(p)
 {
@@ -4379,7 +4450,7 @@ PIXI.PolyK._PointInTriangle = function(px, py, ax, ay, bx, by, cx, cy)
  * Checks whether a shape is convex
  *
  * @method _convex
- *
+ * 
  * @private
  */
 PIXI.PolyK._convex = function(ax, ay, bx, by, cx, cy, sign)
@@ -4393,7 +4464,7 @@ PIXI.PolyK._convex = function(ax, ay, bx, by, cx, cy, sign)
 
 PIXI.initDefaultShaders = function()
 {
-
+   
   //  PIXI.stripShader = new PIXI.StripShader();
 //    PIXI.stripShader.init();
 
@@ -4500,7 +4571,7 @@ PIXI.PixiShader.prototype.init = function()
     var gl = this.gl;
 
     var program = PIXI.compileProgram(gl, this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
-
+    
     gl.useProgram(program);
 
     // get and store the uniforms for the shader
@@ -4868,7 +4939,7 @@ PIXI.PixiFastShader = function(gl)
     */
     this.textureCount = 0;
 
-
+    
     this.init();
 };
 
@@ -4883,7 +4954,7 @@ PIXI.PixiFastShader.prototype.init = function()
     var gl = this.gl;
 
     var program = PIXI.compileProgram(gl, this.vertexSrc, this.fragmentSrc);
-
+    
     gl.useProgram(program);
 
     // get and store the uniforms for the shader
@@ -4903,9 +4974,9 @@ PIXI.PixiFastShader.prototype.init = function()
 
     this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
     this.colorAttribute = gl.getAttribLocation(program, 'aColor');
+   
 
-
-
+   
     // Begin worst hack eva //
 
     // WHY??? ONLY on my chrome pixel the line above returns -1 when using filters?
@@ -4918,7 +4989,7 @@ PIXI.PixiFastShader.prototype.init = function()
     }
 
     this.attributes = [this.aVertexPosition, this.aPositionCoord,  this.aScale, this.aRotation, this.aTextureCoord, this.colorAttribute];
-
+    
     // End worst hack eva //
 
 
@@ -5185,12 +5256,10 @@ PIXI.WebGLGraphics.renderGraphics = function(graphics, renderSession)//projectio
     // This  could be speeded up for sure!
   //  var m = PIXI.mat3.clone(graphics.worldTransform);
 
-    PIXI.mat3.transpose(graphics.worldTransform, PIXI.tempMatrix);
-
     // set the matrix transform
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-    gl.uniformMatrix3fv(shader.translationMatrix, false, PIXI.tempMatrix);
+    gl.uniformMatrix3fv(shader.translationMatrix, false, graphics.worldTransform.toArray(true));
 
     gl.uniform2f(shader.projectionVector, projection.x, -projection.y);
     gl.uniform2f(shader.offsetVector, -offset.x, -offset.y);
@@ -5226,7 +5295,7 @@ PIXI.WebGLGraphics.renderGraphics = function(graphics, renderSession)//projectio
 PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
 {
     var webGL = graphics._webGL[gl.id];
-
+    
     for (var i = webGL.lastIndex; i < graphics.graphicsData.length; i++)
     {
         var data = graphics.graphicsData[i];
@@ -5256,7 +5325,7 @@ PIXI.WebGLGraphics.updateGraphics = function(graphics, gl)
 
     webGL.lastIndex = graphics.graphicsData.length;
 
-
+   
 
     webGL.glPoints = new Float32Array(webGL.points);
 
@@ -5929,7 +5998,7 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
  *
  * @method renderDIsplayObject
  * @param displayObject {DisplayObject} The DisplayObject to render
- * @param projection {Point}
+ * @param projection {Point} 
  * @param buffer {Array} buffer TODO-Alvin
  */
 PIXI.WebGLRenderer.prototype.renderDisplayObject = function(displayObject, projection, buffer)
@@ -6119,7 +6188,7 @@ PIXI.updateWebGLTexture = function(texture, gl)
 
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
-
+    
 };
 
 /**
@@ -6187,7 +6256,7 @@ PIXI.WebGLRenderer.prototype.handleContextRestored = function()
     }
 
     /**
-     * Whether the context was lost
+     * Whether the context was lost 
      * @property contextLost
      * @type Boolean
      */
@@ -6204,7 +6273,7 @@ PIXI.WebGLRenderer.prototype.destroy = function()
 {
 
     // deal with losing context..
-
+    
     // remove listeners
     this.view.removeEventListener('webglcontextlost', this.contextLost);
     this.view.removeEventListener('webglcontextrestored', this.contextRestoredLost);
@@ -6224,7 +6293,7 @@ PIXI.WebGLRenderer.prototype.destroy = function()
     this.spriteBatch = null;
     this.maskManager = null;
     this.filterManager = null;
-
+    
     this.gl = null;
     //
     this.renderSession = null;
@@ -6236,7 +6305,7 @@ PIXI.WebGLRenderer.glContextId = 0;
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
-
+ 
 
 /**
 * @class WebGLMaskManager
@@ -6254,7 +6323,7 @@ PIXI.WebGLMaskManager = function(gl)
 
 /**
 * Sets the drawing context to the one given in parameter
-* @method setContext
+* @method setContext 
 * @param gl {WebGLContext} the current WebGL drawing context
 */
 PIXI.WebGLMaskManager.prototype.setContext = function(gl)
@@ -6277,11 +6346,11 @@ PIXI.WebGLMaskManager.prototype.pushMask = function(maskData, renderSession)
         gl.enable(gl.STENCIL_TEST);
         gl.stencilFunc(gl.ALWAYS,1,1);
     }
-
+    
   //  maskData.visible = false;
 
     this.maskStack.push(maskData);
-
+    
     gl.colorMask(false, false, false, true);
     gl.stencilOp(gl.KEEP,gl.KEEP,gl.INCR);
 
@@ -6317,7 +6386,7 @@ PIXI.WebGLMaskManager.prototype.popMask = function(renderSession)
         gl.stencilFunc(gl.NOTEQUAL,0,this.maskStack.length);
         gl.stencilOp(gl.KEEP,gl.KEEP,gl.KEEP);
     }
-
+   
     if(this.maskStack.length === 0)gl.disable(gl.STENCIL_TEST);
 };
 
@@ -6359,14 +6428,14 @@ PIXI.WebGLShaderManager = function(gl)
 
 /**
 * Initialises the context and the properties
-* @method setContext
+* @method setContext 
 * @param gl {WebGLContext} the current WebGL drawing context
 * @param transparent {Boolean} Whether or not the drawing context should be transparent
 */
 PIXI.WebGLShaderManager.prototype.setContext = function(gl)
 {
     this.gl = gl;
-
+    
     // the next one is used for rendering primatives
     this.primitiveShader = new PIXI.PrimitiveShader(gl);
 
@@ -6442,7 +6511,7 @@ PIXI.WebGLShaderManager.prototype.activateShader = function(shader)
     this.setAttribs(shader.attributes);
 
    // console.log(shader.attributes)
-
+  
 };
 
 /**
@@ -6456,7 +6525,7 @@ PIXI.WebGLShaderManager.prototype.activatePrimitiveShader = function()
     gl.useProgram(this.primitiveShader.program);
 
     this.setAttribs(this.primitiveShader.attributes);
-
+    
 };
 
 /**
@@ -6494,7 +6563,7 @@ PIXI.WebGLShaderManager.prototype.destroy = function()
 
 /**
  * @author Mat Groves
- *
+ * 
  * Big thanks to the very clever Matt DesLauriers <mattdesl> https://github.com/mattdesl/
  * for creating the original pixi version!
  *
@@ -6552,7 +6621,7 @@ PIXI.WebGLSpriteBatch = function(gl)
      * @type Uint16Array
      */
     this.indices = new Uint16Array(numIndices);
-
+    
     this.lastIndexCount = 0;
 
     for (var i=0, j=0; i < numIndices; i += 6, j += 4)
@@ -6569,12 +6638,12 @@ PIXI.WebGLSpriteBatch = function(gl)
     this.drawing = false;
     this.currentBatchSize = 0;
     this.currentBaseTexture = null;
-
+    
     this.setContext(gl);
 };
 
 /**
-*
+* 
 * @method setContext
 *
 * @param gl {WebGLContext} the current WebGL drawing context
@@ -6601,7 +6670,7 @@ PIXI.WebGLSpriteBatch.prototype.setContext = function(gl)
 };
 
 /**
-*
+* 
 * @method begin
 *
 * @param renderSession {RenderSession} the RenderSession
@@ -6615,7 +6684,7 @@ PIXI.WebGLSpriteBatch.prototype.begin = function(renderSession)
 };
 
 /**
-*
+* 
 * @method end
 *
 */
@@ -6625,9 +6694,9 @@ PIXI.WebGLSpriteBatch.prototype.end = function()
 };
 
 /**
-*
+* 
 * @method render
-*
+* 
 * @param sprite {Sprite} the sprite to render TODO-Alvin
 */
 PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
@@ -6665,7 +6734,7 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     var aY = sprite.anchor.y;
 
     var w0, w1, h0, h1;
-
+        
     if (sprite.texture.trimmed)
     {
         // if the sprite is trimmed then we need to add the extra space before transforming the sprite coords..
@@ -6688,21 +6757,21 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 
     var index = this.currentBatchSize * 4 * this.vertSize;
 
-    var worldTransform = sprite.worldTransform;
+    var worldTransform = sprite.worldTransform;//.toArray();
 
-    var a = worldTransform[0];
-    var b = worldTransform[3];
-    var c = worldTransform[1];
-    var d = worldTransform[4];
-    var tx = worldTransform[2];
-    var ty = worldTransform[5];
+    var a = worldTransform.a;//[0];
+    var b = worldTransform.c;//[3];
+    var c = worldTransform.b;//[1];
+    var d = worldTransform.d;//[4];
+    var tx = worldTransform.tx;//[2];
+    var ty = worldTransform.ty;///[5];
 
     // xy
     verticies[index++] = a * w1 + c * h1 + tx;
     verticies[index++] = d * h1 + b * w1 + ty;
     // uv
-    verticies[index++] = uvs[0];
-    verticies[index++] = uvs[1];
+    verticies[index++] = uvs.x0;
+    verticies[index++] = uvs.y0;
     // color
     verticies[index++] = alpha;
     verticies[index++] = tint;
@@ -6711,8 +6780,8 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     verticies[index++] = a * w0 + c * h1 + tx;
     verticies[index++] = d * h1 + b * w0 + ty;
     // uv
-    verticies[index++] = uvs[2];
-    verticies[index++] = uvs[3];
+    verticies[index++] = uvs.x1;
+    verticies[index++] = uvs.y1;
     // color
     verticies[index++] = alpha;
     verticies[index++] = tint;
@@ -6721,8 +6790,8 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     verticies[index++] = a * w0 + c * h0 + tx;
     verticies[index++] = d * h0 + b * w0 + ty;
     // uv
-    verticies[index++] = uvs[4];
-    verticies[index++] = uvs[5];
+    verticies[index++] = uvs.x2;
+    verticies[index++] = uvs.y2;
     // color
     verticies[index++] = alpha;
     verticies[index++] = tint;
@@ -6731,12 +6800,12 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     verticies[index++] = a * w1 + c * h0 + tx;
     verticies[index++] = d * h0 + b * w1 + ty;
     // uv
-    verticies[index++] = uvs[6];
-    verticies[index++] = uvs[7];
+    verticies[index++] = uvs.x3;
+    verticies[index++] = uvs.y3;
     // color
     verticies[index++] = alpha;
     verticies[index++] = tint;
-
+    
     // increment the batchsize
     this.currentBatchSize++;
 
@@ -6744,9 +6813,9 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 };
 
 /**
-*
+* 
 * @method renderTilingSprite
-*
+* 
 * @param sprite {TilingSprite} the sprite to render TODO-Alvin
 */
 PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
@@ -6778,19 +6847,19 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     var scaleX =  (tilingSprite.width / texture.baseTexture.width)  / (tilingSprite.tileScale.x * tilingSprite.tileScaleOffset.x);
     var scaleY =  (tilingSprite.height / texture.baseTexture.height) / (tilingSprite.tileScale.y * tilingSprite.tileScaleOffset.y);
 
-    uvs[0] = 0 - offsetX;
-    uvs[1] = 0 - offsetY;
+    uvs.x0 = 0 - offsetX;
+    uvs.y0 = 0 - offsetY;
 
-    uvs[2] = (1 * scaleX) - offsetX;
-    uvs[3] = 0 - offsetY;
+    uvs.x1 = (1 * scaleX) - offsetX;
+    uvs.y1 = 0 - offsetY;
 
-    uvs[4] = (1 * scaleX) - offsetX;
-    uvs[5] = (1 * scaleY) - offsetY;
+    uvs.x2 = (1 * scaleX) - offsetX;
+    uvs.y2 = (1 * scaleY) - offsetY;
 
-    uvs[6] = 0 - offsetX;
-    uvs[7] = (1 *scaleY) - offsetY;
+    uvs.x3 = 0 - offsetX;
+    uvs.y3 = (1 *scaleY) - offsetY;
 
-
+   
     // get the tilingSprites current alpha
     var alpha = tilingSprite.worldAlpha;
     var tint = tilingSprite.tint;
@@ -6813,19 +6882,19 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
 
     var worldTransform = tilingSprite.worldTransform;
 
-    var a = worldTransform[0];
-    var b = worldTransform[3];
-    var c = worldTransform[1];
-    var d = worldTransform[4];
-    var tx = worldTransform[2];
-    var ty = worldTransform[5];
+    var a = worldTransform.a;//[0];
+    var b = worldTransform.c;//[3];
+    var c = worldTransform.b;//[1];
+    var d = worldTransform.d;//[4];
+    var tx = worldTransform.tx;//[2];
+    var ty = worldTransform.ty;///[5];
 
     // xy
     verticies[index++] = a * w1 + c * h1 + tx;
     verticies[index++] = d * h1 + b * w1 + ty;
     // uv
-    verticies[index++] = uvs[0];
-    verticies[index++] = uvs[1];
+    verticies[index++] = uvs.x0;
+    verticies[index++] = uvs.y0;
     // color
     verticies[index++] = alpha;
     verticies[index++] = tint;
@@ -6834,18 +6903,18 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     verticies[index++] = a * w0 + c * h1 + tx;
     verticies[index++] = d * h1 + b * w0 + ty;
     // uv
-    verticies[index++] = uvs[2];
-    verticies[index++] = uvs[3];
+    verticies[index++] = uvs.x1;
+    verticies[index++] = uvs.y1;
     // color
     verticies[index++] = alpha;
     verticies[index++] = tint;
-
+    
     // xy
     verticies[index++] = a * w0 + c * h0 + tx;
     verticies[index++] = d * h0 + b * w0 + ty;
     // uv
-    verticies[index++] = uvs[4];
-    verticies[index++] = uvs[5];
+    verticies[index++] = uvs.x2;
+    verticies[index++] = uvs.y2;
     // color
     verticies[index++] = alpha;
     verticies[index++] = tint;
@@ -6854,8 +6923,8 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     verticies[index++] = a * w1 + c * h0 + tx;
     verticies[index++] = d * h0 + b * w1 + ty;
     // uv
-    verticies[index++] = uvs[6];
-    verticies[index++] = uvs[7];
+    verticies[index++] = uvs.x3;
+    verticies[index++] = uvs.y3;
     // color
     verticies[index++] = alpha;
     verticies[index++] = tint;
@@ -6866,10 +6935,10 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
 
 
 /**
-*
+* 
 *
 * @method flush TODO-Alvin
-*
+* 
 */
 PIXI.WebGLSpriteBatch.prototype.flush = function()
 {
@@ -6877,12 +6946,12 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
     if (this.currentBatchSize===0)return;
 
     var gl = this.gl;
-
+    
     // bind the current texture
     gl.bindTexture(gl.TEXTURE_2D, this.currentBaseTexture._glTextures[gl.id] || PIXI.createWebGLTexture(this.currentBaseTexture, gl));
 
     // upload the verts to the buffer
-
+    
     if(this.currentBatchSize > ( this.size * 0.5 ) )
     {
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
@@ -6896,10 +6965,10 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
 
    // var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
     //gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
-
+    
     // now draw those suckas!
     gl.drawElements(gl.TRIANGLES, this.currentBatchSize * 6, gl.UNSIGNED_SHORT, 0);
-
+   
     // then reset the batch!
     this.currentBatchSize = 0;
 
@@ -6908,7 +6977,7 @@ PIXI.WebGLSpriteBatch.prototype.flush = function()
 };
 
 /**
-*
+* 
 * @method stop
 *
 */
@@ -6918,7 +6987,7 @@ PIXI.WebGLSpriteBatch.prototype.stop = function()
 };
 
 /**
-*
+* 
 * @method start
 *
 */
@@ -6951,8 +7020,8 @@ PIXI.WebGLSpriteBatch.prototype.start = function()
 };
 
 /**
-*
-* @method setBlendMode
+* 
+* @method setBlendMode 
 *
 * @param blendMode {Number} the blendMode, should be a Pixi const, such as PIXI.BlendModes.ADD
 * TODO-Alvin
@@ -6962,7 +7031,7 @@ PIXI.WebGLSpriteBatch.prototype.setBlendMode = function(blendMode)
     this.flush();
 
     this.currentBlendMode = blendMode;
-
+    
     var blendModeWebGL = PIXI.blendModesWebGL[this.currentBlendMode];
     this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
 };
@@ -6976,19 +7045,19 @@ PIXI.WebGLSpriteBatch.prototype.destroy = function()
 
     this.vertices = null;
     this.indices = null;
-
+    
     this.gl.deleteBuffer( this.vertexBuffer );
     this.gl.deleteBuffer( this.indexBuffer );
-
+    
     this.currentBaseTexture = null;
-
+    
     this.gl = null;
 };
 
 
 /**
  * @author Mat Groves
- *
+ * 
  * Big thanks to the very clever Matt DesLauriers <mattdesl> https://github.com/mattdesl/
  * for creating the original pixi version!
  *
@@ -6998,7 +7067,7 @@ PIXI.WebGLSpriteBatch.prototype.destroy = function()
 
 PIXI.WebGLFastSpriteBatch = function(gl)
 {
-
+   
 
     this.vertSize = 10;
     this.maxSize = 6000;//Math.pow(2, 16) /  this.vertSize;
@@ -7014,7 +7083,7 @@ PIXI.WebGLFastSpriteBatch = function(gl)
     this.vertices = new Float32Array(numVerts);
     //index data
     this.indices = new Uint16Array(numIndices);
-
+    
     this.vertexBuffer = null;
     this.indexBuffer = null;
 
@@ -7033,14 +7102,14 @@ PIXI.WebGLFastSpriteBatch = function(gl)
     this.drawing = false;
     this.currentBatchSize = 0;
     this.currentBaseTexture = null;
-
+   
     this.currentBlendMode = 0;
     this.renderSession = null;
-
+    
 
     this.shader = null;
 
-    this.tempMatrix = PIXI.mat3.create();
+    this.matrix = null;
 
     this.setContext(gl);
 };
@@ -7070,8 +7139,10 @@ PIXI.WebGLFastSpriteBatch.prototype.begin = function(spriteBatch, renderSession)
 {
     this.renderSession = renderSession;
     this.shader = this.renderSession.shaderManager.fastShader;
+    
+  //  PIXI.mat3.transpose(spriteBatch.worldTransform.toArray(), this.tempMatrix);
 
-    PIXI.mat3.transpose(spriteBatch.worldTransform, this.tempMatrix);
+    this.matrix = spriteBatch.worldTransform.toArray(true);
 
    // console.log(this.tempMatrix)
     this.start();
@@ -7090,17 +7161,17 @@ PIXI.WebGLFastSpriteBatch.prototype.render = function(spriteBatch)
     var sprite = children[0];
 
     // if the uvs have not updated then no point rendering just yet!
-
+    
     // check texture.
     if(!sprite.texture._uvs)return;
-
+   
     this.currentBaseTexture = sprite.texture.baseTexture;
     // check blend mode
     if(sprite.blendMode !== this.currentBlendMode)
     {
         this.setBlendMode(sprite.blendMode);
     }
-
+    
     for(var i=0,j= children.length; i<j; i++)
     {
         this.renderSprite(children[i]);
@@ -7112,7 +7183,7 @@ PIXI.WebGLFastSpriteBatch.prototype.render = function(spriteBatch)
 PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
 {
     //sprite = children[i];
-
+    
     // TODO trim??
     if(sprite.texture.baseTexture !== this.currentBaseTexture)
     {
@@ -7167,11 +7238,11 @@ PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
     verticies[index++] = sprite.rotation;
 
     // uv
-    verticies[index++] = uvs[0];
-    verticies[index++] = uvs[1];
+    verticies[index++] = uvs.x0;
+    verticies[index++] = uvs.y1;
     // color
     verticies[index++] = sprite.alpha;
-
+ 
 
     // xy
     verticies[index++] = w0;
@@ -7188,11 +7259,11 @@ PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
     verticies[index++] = sprite.rotation;
 
     // uv
-    verticies[index++] = uvs[2];
-    verticies[index++] = uvs[3];
+    verticies[index++] = uvs.x1;
+    verticies[index++] = uvs.y1;
     // color
     verticies[index++] = sprite.alpha;
-
+  
 
     // xy
     verticies[index++] = w0;
@@ -7209,11 +7280,11 @@ PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
     verticies[index++] = sprite.rotation;
 
     // uv
-    verticies[index++] = uvs[4];
-    verticies[index++] = uvs[5];
+    verticies[index++] = uvs.x2;
+    verticies[index++] = uvs.y2;
     // color
     verticies[index++] = sprite.alpha;
-
+ 
 
 
 
@@ -7232,8 +7303,8 @@ PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
     verticies[index++] = sprite.rotation;
 
     // uv
-    verticies[index++] = uvs[6];
-    verticies[index++] = uvs[7];
+    verticies[index++] = uvs.x3;
+    verticies[index++] = uvs.y3;
     // color
     verticies[index++] = sprite.alpha;
 
@@ -7248,11 +7319,12 @@ PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
 
 PIXI.WebGLFastSpriteBatch.prototype.flush = function()
 {
+
     // If the batch is length 0 then return as there is nothing to draw
     if (this.currentBatchSize===0)return;
 
     var gl = this.gl;
-
+    
     // bind the current texture
 
     if(!this.currentBaseTexture._glTextures[gl.id])PIXI.createWebGLTexture(this.currentBaseTexture, gl);
@@ -7261,7 +7333,7 @@ PIXI.WebGLFastSpriteBatch.prototype.flush = function()
 
     // upload the verts to the buffer
 
-
+   
     if(this.currentBatchSize > ( this.size * 0.5 ) )
     {
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices);
@@ -7272,11 +7344,11 @@ PIXI.WebGLFastSpriteBatch.prototype.flush = function()
 
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
     }
-
-
+    
+    
     // now draw those suckas!
     gl.drawElements(gl.TRIANGLES, this.currentBatchSize * 6, gl.UNSIGNED_SHORT, 0);
-
+   
     // then reset the batch!
     this.currentBatchSize = 0;
 
@@ -7306,7 +7378,7 @@ PIXI.WebGLFastSpriteBatch.prototype.start = function()
     gl.uniform2f(this.shader.projectionVector, projection.x, projection.y);
 
     // set the matrix
-    gl.uniformMatrix3fv(this.shader.uMatrix, false, this.tempMatrix);
+    gl.uniformMatrix3fv(this.shader.uMatrix, false, this.matrix);
 
     // set the pointers
     var stride =  this.vertSize * 4;
@@ -7330,7 +7402,7 @@ PIXI.WebGLFastSpriteBatch.prototype.setBlendMode = function(blendMode)
     this.flush();
 
     this.currentBlendMode = blendMode;
-
+    
     var blendModeWebGL = PIXI.blendModesWebGL[this.currentBlendMode];
     this.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
 };
@@ -7353,7 +7425,7 @@ PIXI.WebGLFilterManager = function(gl, transparent)
     this.transparent = transparent;
 
     this.filterStack = [];
-
+    
     this.offsetX = 0;
     this.offsetY = 0;
 
@@ -7363,7 +7435,7 @@ PIXI.WebGLFilterManager = function(gl, transparent)
 // API
 /**
 * Initialises the context and the properties
-* @method setContext
+* @method setContext 
 * @param gl {WebGLContext} the current WebGL drawing context
 */
 PIXI.WebGLFilterManager.prototype.setContext = function(gl)
@@ -7375,10 +7447,10 @@ PIXI.WebGLFilterManager.prototype.setContext = function(gl)
 };
 
 /**
-*
+* 
 * @method begin
-* @param renderSession {RenderSession}
-* @param buffer {ArrayBuffer}
+* @param renderSession {RenderSession} 
+* @param buffer {ArrayBuffer} 
 */
 PIXI.WebGLFilterManager.prototype.begin = function(renderSession, buffer)
 {
@@ -7634,7 +7706,7 @@ PIXI.WebGLFilterManager.prototype.popFilter = function()
     // bind the buffer
     gl.bindFramebuffer(gl.FRAMEBUFFER, buffer );
 
-    // set the blend mode!
+    // set the blend mode! 
     //gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
 
     // set texture
@@ -7785,7 +7857,7 @@ PIXI.WebGLFilterManager.prototype.destroy = function()
     var gl = this.gl;
 
     this.filterStack = null;
-
+    
     this.offsetX = 0;
     this.offsetY = 0;
 
@@ -7793,7 +7865,7 @@ PIXI.WebGLFilterManager.prototype.destroy = function()
     for (var i = 0; i < this.texturePool.length; i++) {
         this.texturePool.destroy();
     }
-
+    
     this.texturePool = null;
 
     //destroy buffers..
@@ -7847,7 +7919,7 @@ PIXI.FilterTexture = function(gl, width, height)
 PIXI.FilterTexture.prototype.clear = function()
 {
     var gl = this.gl;
-
+    
     gl.clearColor(0,0,0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 };
@@ -7889,8 +7961,8 @@ PIXI.FilterTexture.prototype.destroy = function()
 
 /**
  * @author Mat Groves
- *
- *
+ * 
+ * 
  */
 /**
  * A set of functions used to handle masking
@@ -7899,7 +7971,7 @@ PIXI.FilterTexture.prototype.destroy = function()
  */
 PIXI.CanvasMaskManager = function()
 {
-
+    
 };
 
 /**
@@ -7912,14 +7984,14 @@ PIXI.CanvasMaskManager = function()
 PIXI.CanvasMaskManager.prototype.pushMask = function(maskData, context)
 {
     context.save();
-
+    
     //maskData.visible = false;
     // maskData.alpha = 0;
-
+    
     var cacheAlpha = maskData.alpha;
     var transform = maskData.worldTransform;
 
-    context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
+    context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
 
     PIXI.CanvasGraphics.renderGraphicsMask(maskData, context);
 
@@ -7941,8 +8013,8 @@ PIXI.CanvasMaskManager.prototype.popMask = function(context)
 
 /**
  * @author Mat Groves
- *
- *
+ * 
+ * 
  */
 
 /**
@@ -7956,11 +8028,11 @@ PIXI.CanvasTinter = function()
 };
 
 //PIXI.CanvasTinter.cachTint = true;
-
+    
 
 /**
  * TODO-Alvin
- * @method getTintedTexture
+ * @method getTintedTexture 
  * @param sprite {Sprite} the sprite to tint
  * @param color {Number} the color to use to tint the sprite with
  */
@@ -7976,17 +8048,17 @@ PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
     color = PIXI.CanvasTinter.roundColor(color);
 
     var stringColor = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
-
+   
     texture.tintCache = texture.tintCache || {};
 
     if(texture.tintCache[stringColor]) return texture.tintCache[stringColor];
 
      // clone texture..
     var canvas = PIXI.CanvasTinter.canvas || document.createElement("canvas");
-
+    
     //PIXI.CanvasTinter.tintWithPerPixel(texture, stringColor, canvas);
 
-
+    
     PIXI.CanvasTinter.tintMethod(texture, color, canvas);
 
     if(PIXI.CanvasTinter.convertTintToImage)
@@ -7999,7 +8071,7 @@ PIXI.CanvasTinter.getTintedTexture = function(sprite, color)
     }
     else
     {
-
+      
         texture.tintCache[stringColor] = canvas;
         // if we are not converting the texture to an image then we need to lose the reference to the canvas
         PIXI.CanvasTinter.canvas = null;
@@ -8026,9 +8098,9 @@ PIXI.CanvasTinter.tintWithMultiply = function(texture, color, canvas)
     canvas.height = frame.height;
 
     context.fillStyle = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
-
+    
     context.fillRect(0, 0, frame.width, frame.height);
-
+    
     context.globalCompositeOperation = "multiply";
 
     context.drawImage(texture.baseTexture.source,
@@ -8042,7 +8114,7 @@ PIXI.CanvasTinter.tintWithMultiply = function(texture, color, canvas)
                            frame.height);
 
     context.globalCompositeOperation = "destination-atop";
-
+    
     context.drawImage(texture.baseTexture.source,
                            frame.x,
                            frame.y,
@@ -8070,8 +8142,8 @@ PIXI.CanvasTinter.tintWithOverlay = function(texture, color, canvas)
     canvas.width = frame.width;
     canvas.height = frame.height;
 
-
-
+    
+    
     context.globalCompositeOperation = "copy";
     context.fillStyle = "#" + ("00000" + ( color | 0).toString(16)).substr(-6);
     context.fillRect(0, 0, frame.width, frame.height);
@@ -8087,7 +8159,7 @@ PIXI.CanvasTinter.tintWithOverlay = function(texture, color, canvas)
                            frame.width,
                            frame.height);
 
-
+    
     //context.globalCompositeOperation = "copy";
 
 };
@@ -8107,7 +8179,7 @@ PIXI.CanvasTinter.tintWithPerPixel = function(texture, color, canvas)
 
     canvas.width = frame.width;
     canvas.height = frame.height;
-
+  
     context.globalCompositeOperation = "copy";
     context.drawImage(texture.baseTexture.source,
                            frame.x,
@@ -8155,7 +8227,7 @@ PIXI.CanvasTinter.roundColor = function(color)
 };
 
 /**
- *
+ * 
  * Number of steps which will be used as a cap when rounding colors
  *
  * @property cacheStepsPerColorChannel
@@ -8163,7 +8235,7 @@ PIXI.CanvasTinter.roundColor = function(color)
  */
 PIXI.CanvasTinter.cacheStepsPerColorChannel = 8;
 /**
- *
+ * 
  * Number of steps which will be used as a cap when rounding colors
  *
  * @property convertTintToImage
@@ -8215,7 +8287,7 @@ PIXI.CanvasRenderer = function(width, height, view, transparent)
     if(!PIXI.blendModesCanvas)
     {
         PIXI.blendModesCanvas = [];
-
+        
         if(PIXI.canUseNewCanvasBlendModes())
         {
             PIXI.blendModesCanvas[PIXI.blendModes.NORMAL]   = "source-over";
@@ -8359,6 +8431,7 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     {
         if(!this.transparent)
         {
+            this.context.globalAlpha = 1;
             this.context.fillStyle = stage.backgroundColorString;
             this.context.fillRect(0, 0, this.width, this.height);
         }
@@ -8369,7 +8442,7 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     }
 
     //console.log(this.view.style.backgroundColor)
-
+   
     this.renderDisplayObject(stage);
 
     // run interaction!
@@ -8862,7 +8935,7 @@ PIXI.Graphics = function()
      * @default 0xFFFFFF
      */
     this.tint = 0xFFFFFF;// * Math.random();
-
+    
     /**
      * The blend mode to be applied to the graphic shape
      *
@@ -8871,7 +8944,7 @@ PIXI.Graphics = function()
      * @default PIXI.blendModes.NORMAL;
      */
     this.blendMode = PIXI.blendModes.NORMAL;
-
+    
     /**
      * Current path
      *
@@ -9129,7 +9202,7 @@ PIXI.Graphics.prototype.generateTexture = function()
     var texture = PIXI.Texture.fromCanvas(canvasBuffer.canvas);
 
     canvasBuffer.context.translate(-bounds.x,-bounds.y);
-
+    
     PIXI.CanvasGraphics.renderGraphics(this, canvasBuffer.context);
 
     return texture;
@@ -9139,23 +9212,23 @@ PIXI.Graphics.prototype.generateTexture = function()
 * Renders the object using the WebGL renderer
 *
 * @method _renderWebGL
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.Graphics.prototype._renderWebGL = function(renderSession)
 {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if(this.visible === false || this.alpha === 0 || this.isMask === true)return;
-
+    
     if(this._cacheAsBitmap)
     {
-
+       
         if(this.dirty)
         {
             this._generateCachedSprite();
             // we will also need to update the texture on the gpu too!
             PIXI.updateWebGLTexture(this._cachedSprite.texture.baseTexture, renderSession.gl);
-
+            
             this.dirty =  false;
         }
 
@@ -9169,7 +9242,7 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
 
         if(this._mask)renderSession.maskManager.pushMask(this.mask, renderSession);
         if(this._filters)renderSession.filterManager.pushFilter(this._filterBlock);
-
+      
         // check blend mode
         if(this.blendMode !== renderSession.spriteBatch.currentBlendMode)
         {
@@ -9177,9 +9250,9 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
             var blendModeWebGL = PIXI.blendModesWebGL[renderSession.spriteBatch.currentBlendMode];
             renderSession.spriteBatch.gl.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
         }
-
+     
         PIXI.WebGLGraphics.renderGraphics(this, renderSession);
-
+        
         // only render if it has children!
         if(this.children.length)
         {
@@ -9196,7 +9269,7 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
 
         if(this._filters)renderSession.filterManager.popFilter();
         if(this._mask)renderSession.maskManager.popMask(renderSession);
-
+          
         renderSession.drawCount++;
 
         renderSession.spriteBatch.start();
@@ -9207,24 +9280,24 @@ PIXI.Graphics.prototype._renderWebGL = function(renderSession)
 * Renders the object using the Canvas renderer
 *
 * @method _renderCanvas
-* @param renderSession {RenderSession}
+* @param renderSession {RenderSession} 
 * @private
 */
 PIXI.Graphics.prototype._renderCanvas = function(renderSession)
 {
     // if the sprite is not visible or the alpha is 0 then no need to render this element
     if(this.visible === false || this.alpha === 0 || this.isMask === true)return;
-
+    
     var context = renderSession.context;
     var transform = this.worldTransform;
-
+    
     if(this.blendMode !== renderSession.currentBlendMode)
     {
         renderSession.currentBlendMode = this.blendMode;
         context.globalCompositeOperation = PIXI.blendModesCanvas[renderSession.currentBlendMode];
     }
 
-    context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
+    context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
     PIXI.CanvasGraphics.renderGraphics(this, context);
 
      // simple render children!
@@ -9252,12 +9325,12 @@ PIXI.Graphics.prototype.getBounds = function()
 
     var worldTransform = this.worldTransform;
 
-    var a = worldTransform[0];
-    var b = worldTransform[3];
-    var c = worldTransform[1];
-    var d = worldTransform[4];
-    var tx = worldTransform[2];
-    var ty = worldTransform[5];
+    var a = worldTransform.a;
+    var b = worldTransform.c;
+    var c = worldTransform.b;
+    var d = worldTransform.d;
+    var tx = worldTransform.tx;
+    var ty = worldTransform.ty;
 
     var x1 = a * w1 + c * h1 + tx;
     var y1 = d * h1 + b * w1 + ty;
@@ -9315,7 +9388,7 @@ PIXI.Graphics.prototype.getBounds = function()
  */
 PIXI.Graphics.prototype.updateBounds = function()
 {
-
+    
     var minX = Infinity;
     var maxX = -Infinity;
 
@@ -9392,7 +9465,7 @@ PIXI.Graphics.prototype._generateCachedSprite = function()
     {
         var canvasBuffer = new PIXI.CanvasBuffer(bounds.width, bounds.height);
         var texture = PIXI.Texture.fromCanvas(canvasBuffer.canvas);
-
+        
         this._cachedSprite = new PIXI.Sprite(texture);
         this._cachedSprite.buffer = canvasBuffer;
 
@@ -9409,7 +9482,7 @@ PIXI.Graphics.prototype._generateCachedSprite = function()
 
    // this._cachedSprite.buffer.context.save();
     this._cachedSprite.buffer.context.translate(-bounds.x,-bounds.y);
-
+    
     PIXI.CanvasGraphics.renderGraphics(this, this._cachedSprite.buffer.context);
    // this._cachedSprite.buffer.context.restore();
 };
@@ -9435,13 +9508,13 @@ PIXI.Graphics.ELIP = 3;
  */
 
  /**
- *
+ * 
  * @class Strip
  * @constructor
  * @param texture {Texture} TODO-Alvin
  * @param width {Number} the width of the TODO-Alvin
  * @param height {Number} the height of the TODO-Alvin
- *
+ * 
  */
 
 PIXI.Strip = function(texture, width, height)
@@ -9512,7 +9585,7 @@ PIXI.Strip.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
 PIXI.Strip.prototype.constructor = PIXI.Strip;
 
 /*
- * Sets the texture that the Strip will use
+ * Sets the texture that the Strip will use 
  * TODO-Alvin
  *
  * @method setTexture
@@ -9548,12 +9621,12 @@ PIXI.Strip.prototype.onTextureUpdate = function()
  */
 
 /**
- *
+ * 
  * @class Rope
  * @constructor
  * @param texture {Texture} TODO-Alvin
  * @param y {Array} TODO-Alvin
- *
+ * 
  */
 PIXI.Rope = function(texture, points)
 {
@@ -9722,7 +9795,7 @@ PIXI.Rope.prototype.updateTransform = function()
     PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
 };
 /*
- * Sets the texture that the Rope will use
+ * Sets the texture that the Rope will use 
  * TODO-Alvin
  *
  * @method setTexture
@@ -9777,13 +9850,13 @@ PIXI.TilingSprite = function(texture, width, height)
     this.tileScale = new PIXI.Point(1,1);
 
     /**
-     *
+     * 
      *
      * @property tileScaleOffset
      * @type Point
      */
     this.tileScaleOffset = new PIXI.Point(1,1);
-
+    
     /**
      * The offset position of the image that is being tiled
      *
@@ -9802,7 +9875,7 @@ PIXI.TilingSprite = function(texture, width, height)
      * @default 0xFFFFFF
      */
     this.tint = 0xFFFFFF;
-
+    
     /**
      * The blend mode to be applied to the sprite
      *
@@ -9829,7 +9902,7 @@ Object.defineProperty(PIXI.TilingSprite.prototype, 'width', {
         return this._width;
     },
     set: function(value) {
-
+        
         this._width = value;
     }
 });
@@ -9860,7 +9933,7 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function()
 {
     // so if _width is 0 then width was not set..
     //console.log("HI MUM")
-
+   
 
     this.updateFrame = true;
 };
@@ -9869,7 +9942,7 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 {
 
     if(this.visible === false || this.alpha === 0)return;
-
+    
     var i,j;
 
     if(this.mask || this.filters)
@@ -9900,14 +9973,14 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 
         if(this.filters)renderSession.filterManager.popFilter();
         if(this.mask)renderSession.maskManager.popMask(renderSession);
-
+        
         renderSession.spriteBatch.start();
     }
     else
     {
         if(!this.tilingTexture)this.generateTilingTexture(true);
         else renderSession.spriteBatch.renderTilingSprite(this);
-
+        
         // simple render children!
         for(i=0,j=this.children.length; i<j; i++)
         {
@@ -9920,7 +9993,7 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
 PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 {
     if(this.visible === false || this.alpha === 0)return;
-
+    
     var context = renderSession.context;
 
     if(this._mask)
@@ -9930,18 +10003,18 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 
     context.globalAlpha = this.worldAlpha;
 
-
+    
     var transform = this.worldTransform;
 
     // allow for trimming
 
-    context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
+    context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
 
 
     if(!this.__tilePattern)
     {
         this.generateTilingTexture(false);
-
+        
         if(this.tilingTexture)
         {
             this.__tilePattern = context.createPattern(this.tilingTexture.baseTexture.source, 'repeat');
@@ -9993,13 +10066,13 @@ PIXI.TilingSprite.prototype.getBounds = function()
 
     var worldTransform = this.worldTransform;
 
-    var a = worldTransform[0];
-    var b = worldTransform[3];
-    var c = worldTransform[1];
-    var d = worldTransform[4];
-    var tx = worldTransform[2];
-    var ty = worldTransform[5];
-
+    var a = worldTransform.a;
+    var b = worldTransform.c;
+    var c = worldTransform.b;
+    var d = worldTransform.d;
+    var tx = worldTransform.tx;
+    var ty = worldTransform.ty;
+    
     var x1 = a * w1 + c * h1 + tx;
     var y1 = d * h1 + b * w1 + ty;
 
@@ -10065,7 +10138,7 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     var targetWidth, targetHeight;
 
     // check that the frame is the same size as the base texture.
-
+    
     var isFrame = frame.width !== baseTexture.width || frame.height !== baseTexture.height;
 
     this.tilingTexture = texture;
@@ -10078,7 +10151,7 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
         {
             targetWidth = frame.width;
             targetHeight = frame.height;
-
+            
             newTextureRequired = true;
         }
     }
@@ -10093,7 +10166,7 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     if(newTextureRequired)
     {
         var canvasBuffer = new PIXI.CanvasBuffer(targetWidth, targetHeight);
-
+        
         canvasBuffer.context.drawImage(texture.baseTexture.source,
                                        frame.x,
                                        frame.y,
@@ -10110,7 +10183,7 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
         this.tileScaleOffset.y = frame.height / targetHeight;
     }
 
-
+   
     this.tilingTexture.baseTexture._powerOf2 = true;
 };
 /**
@@ -11843,7 +11916,7 @@ PIXI.Texture = function(baseTexture, frame)
     if(baseTexture.hasLoaded)
     {
         if(this.noFrame)frame = new PIXI.Rectangle(0,0, baseTexture.width, baseTexture.height);
-
+      
         this.setFrame(frame);
     }
     else
@@ -11868,7 +11941,7 @@ PIXI.Texture.prototype.onBaseTextureLoaded = function()
     baseTexture.removeEventListener( 'loaded', this.onLoaded );
 
     if(this.noFrame)this.frame = new PIXI.Rectangle(0,0, baseTexture.width, baseTexture.height);
-
+    
     this.setFrame(this.frame);
 
     this.scope.dispatchEvent( { type: 'update', content: this } );
@@ -11912,23 +11985,23 @@ PIXI.Texture.prototype.setFrame = function(frame)
 
 PIXI.Texture.prototype._updateWebGLuvs = function()
 {
-    if(!this._uvs)this._uvs = new Float32Array(8);
+    if(!this._uvs)this._uvs = new PIXI.TextureUvs();
 
     var frame = this.frame;
     var tw = this.baseTexture.width;
     var th = this.baseTexture.height;
 
-    this._uvs[0] = frame.x / tw;
-    this._uvs[1] = frame.y / th;
+    this._uvs.x0 = frame.x / tw;
+    this._uvs.y0 = frame.y / th;
 
-    this._uvs[2] = (frame.x + frame.width) / tw;
-    this._uvs[3] = frame.y / th;
+    this._uvs.x1 = (frame.x + frame.width) / tw;
+    this._uvs.y1 = frame.y / th;
 
-    this._uvs[4] = (frame.x + frame.width) / tw;
-    this._uvs[5] = (frame.y + frame.height) / th;
+    this._uvs.x2 = (frame.x + frame.width) / tw;
+    this._uvs.y2 = (frame.y + frame.height) / th;
 
-    this._uvs[6] = frame.x / tw;
-    this._uvs[7] = (frame.y + frame.height) / th;
+    this._uvs.x3 = frame.x / tw;
+    this._uvs.y3 = (frame.y + frame.height) / th;
 };
 
 /**
@@ -12019,6 +12092,28 @@ PIXI.Texture.removeTextureFromCache = function(id)
 // this is more for webGL.. it contains updated frames..
 PIXI.Texture.frameUpdates = [];
 
+PIXI.TextureUvs = function()
+{
+    this.x0 = 0;
+    this.y0 = 0;
+
+    this.x1 = 0;
+    this.y1 = 0;
+
+    this.x2 = 0;
+    this.y2 = 0;
+
+    this.x3 = 0;
+    this.y4 = 0;
+
+
+};
+
+
+
+
+
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -12068,7 +12163,7 @@ PIXI.RenderTexture = function(width, height, renderer)
     this.baseTexture._glTextures = [];
 
     this.baseTexture.hasLoaded = true;
-
+    
     // each render texture can only belong to one renderer at the moment if its webGL
     this.renderer = renderer || PIXI.defaultRenderer;
 
@@ -12090,6 +12185,8 @@ PIXI.RenderTexture = function(width, height, renderer)
     }
 
     PIXI.Texture.frameUpdates.push(this);
+
+
 };
 
 PIXI.RenderTexture.prototype = Object.create( PIXI.Texture.prototype );
@@ -12145,15 +12242,15 @@ PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, position, cle
 
     //TODO -? create a new one??? dont think so!
     var originalWorldTransform = displayObject.worldTransform;
-    displayObject.worldTransform = PIXI.mat3.create();//this.identityMatrix;
+    displayObject.worldTransform = PIXI.RenderTexture.tempMatrix;
     // modify to flip...
-    displayObject.worldTransform[4] = -1;
-    displayObject.worldTransform[5] = this.projection.y * -2;
+    displayObject.worldTransform.d = -1;
+    displayObject.worldTransform.ty = this.projection.y * -2;
 
     if(position)
     {
-        displayObject.worldTransform[2] = position.x;
-        displayObject.worldTransform[5] -= position.y;
+        displayObject.worldTransform.tx = position.x;
+        displayObject.worldTransform.ty -= position.y;
     }
 
     for(var i=0,j=children.length; i<j; i++)
@@ -12164,7 +12261,7 @@ PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, position, cle
     // update the textures!
     PIXI.WebGLRenderer.updateTextures();
 
-    //
+    // 
     this.renderer.renderDisplayObject(displayObject, this.projection, this.textureBuffer.frameBuffer);
 
     displayObject.worldTransform = originalWorldTransform;
@@ -12184,12 +12281,12 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, position, cl
     //console.log("!!")
     var children = displayObject.children;
 
-    displayObject.worldTransform = PIXI.mat3.create();
+    displayObject.worldTransform = PIXI.RenderTexture.tempMatrix;
 
     if(position)
     {
-        displayObject.worldTransform[2] = position.x;
-        displayObject.worldTransform[5] = position.y;
+        displayObject.worldTransform.tx = position.x;
+        displayObject.worldTransform.ty = position.y;
     }
 
     for(var i = 0, j = children.length; i < j; i++)
@@ -12204,8 +12301,10 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, position, cl
     this.renderer.renderDisplayObject(displayObject, context);
 
     context.setTransform(1,0,0,1,0,0);
-
 };
+
+PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
+
 
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
@@ -12479,7 +12578,7 @@ PIXI.JsonLoader.prototype.onJSONLoaded = function () {
                         if (frameData[i].trimmed) {
 
                             var texture =  PIXI.TextureCache[i];
-
+                            
                             texture.trimmed = true;
 
                             var actualSize = frameData[i].sourceSize;
@@ -13017,7 +13116,7 @@ PIXI.BitmapFontLoader.prototype.constructor = PIXI.BitmapFontLoader;
  */
 PIXI.BitmapFontLoader.prototype.load = function()
 {
-    this.ajaxRequest = new PIXI.ajaxRequest();
+    this.ajaxRequest = new PIXI.AjaxRequest();
     var scope = this;
     this.ajaxRequest.onreadystatechange = function()
     {
@@ -13235,7 +13334,7 @@ PIXI.AbstractFilter = function(fragmentSrc, uniforms)
     * @private
     */
     this.shaders = [];
-
+    
     this.dirty = true;
     this.padding = 0;
 
@@ -14292,7 +14391,7 @@ Object.defineProperty(PIXI.RGBSplitFilter.prototype, 'angle', {
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-    /*if (typeof exports !== 'undefined') {
+    if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {
             exports = module.exports = PIXI;
         }
@@ -14301,6 +14400,5 @@ Object.defineProperty(PIXI.RGBSplitFilter.prototype, 'angle', {
         define(PIXI);
     } else {
         root.PIXI = PIXI;
-    }*/
-    module.exports = PIXI;
+    }
 }).call(this);

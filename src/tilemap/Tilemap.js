@@ -6,6 +6,7 @@ var Container = require('../display/Container'),
     Tilelayer = require('./Tilelayer'),
     Tileset = require('./Tileset'),
     utils = require('../utils/utils'),
+    math = require('../math/math'),
     inherit = require('../utils/inherit');
 
 /**
@@ -174,8 +175,8 @@ inherit(Tilemap, Container, {
             this.size.x * this.scaledTileSize.x,
             this.size.y * this.scaledTileSize.y
         );
-        this._bounds.width = this.realSize.x;
-        this._bounds.height = this.realSize.y;
+        this._bounds.width = math.min(this.realSize.x, this.state.game.width);
+        this._bounds.height = math.min(this.realSize.y, this.state.game.height);
 
         return this._bounds;
     },

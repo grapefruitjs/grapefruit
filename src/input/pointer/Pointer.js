@@ -252,8 +252,8 @@ inherit(Pointer, Input, {
             return false;
 
         var worldTransform = spr.worldTransform,
-            a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
-            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+            a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,
+            a10 = worldTransform.c, a11 = worldTransform.d, a12 = worldTransform.ty,
             id = 1 / (a00 * a11 + a01 * -a10),
             x = a11 * id * this.position.x + -a01 * id * this.position.y + (a12 * a01 - a02 * a11) * id,
             y = a00 * id * this.position.y + -a10 * id * this.position.x + (-a12 * a00 + a02 * a10) * id;
@@ -301,8 +301,8 @@ inherit(Pointer, Input, {
     },
     getLocalPosition: function(spr) {
         var worldTransform = spr.worldTransform,
-            a00 = worldTransform[0], a01 = worldTransform[1], a02 = worldTransform[2],
-            a10 = worldTransform[3], a11 = worldTransform[4], a12 = worldTransform[5],
+            a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,
+            a10 = worldTransform.c, a11 = worldTransform.d, a12 = worldTransform.ty,
             id = 1 / (a00 * a11 + a01 * -a10);
 
         // set the mouse coords...
