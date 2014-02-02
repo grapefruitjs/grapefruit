@@ -337,8 +337,8 @@ inherit(Camera, Container, {
 
         return this.focus(
             //multiple the calculated point by the world scale for this sprite
-            x * this.world.localTransform[0],
-            y * this.world.localTransform[4]
+            x * this.world.scale.x,
+            y * this.world.scale.y
         );
     },
     /**
@@ -356,8 +356,8 @@ inherit(Camera, Container, {
         x = x.x !== undefined ? x.x : (x || 0);
 
         //calculate how much we need to pan
-        var goToX = x - (this.hSize.x / this.world.worldTransform[0]),
-            goToY = y - (this.hSize.y / this.world.worldTransform[4]),
+        var goToX = x - (this.hSize.x / this.world.worldTransform.a),
+            goToY = y - (this.hSize.y / this.world.worldTransform.d),
             dx = goToX + this.world.position.x, //world pos is negative
             dy = goToY + this.world.position.y;
 
@@ -483,8 +483,8 @@ inherit(Camera, Container, {
         //follow sprite
         if(this._target) {
             var worldTransform = this._target.worldTransform,
-                x = worldTransform[2],
-                y = worldTransform[5];
+                x = worldTransform.tx,
+                y = worldTransform.ty;
 
             if(this._targetPos.x !== x || this._targetPos.y !== y) {
                 this._targetPos.set(x, y);
