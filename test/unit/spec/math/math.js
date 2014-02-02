@@ -19,19 +19,7 @@ describe('math', function() {
 
     describe('#Matrix', function() {
         it('should expose the Matrix class', function() {
-            gf.math.Matrix.should.be.a.Float32Array;
-        });
-    });
-
-    describe('#mat3', function() {
-        it('should expose the mat3 utility', function() {
-            gf.math.mat3.create.should.be.a.Function;
-        });
-    });
-
-    describe('#mat4', function() {
-        it('should expose the mat4 utility', function() {
-            gf.math.mat4.create.should.be.a.Function;
+            gf.math.Matrix.should.be.a.Function;
         });
     });
 
