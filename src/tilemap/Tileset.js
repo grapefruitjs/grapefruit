@@ -114,7 +114,7 @@ var Tileset = function(texture, settings) {
      * @property lastgid
      * @type Number
      */
-    this.lastgid = this.firstgid + (this.multi ? texture.length : (((this.numTiles.x * this.numTiles.y) - 1) || 0));
+    this.lastgid = this.firstgid + (this.multi ? texture.length : ((this.numTiles.x * this.numTiles.y) || 1)) - 1;
 
     /**
      * The properties of the tileset
