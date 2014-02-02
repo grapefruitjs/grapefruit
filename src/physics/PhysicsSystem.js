@@ -3,6 +3,7 @@ var Rectangle = require('../geom/Rectangle'),
     Polygon = require('../geom/Polygon'),
     Vector = require('../math/Vector'),
     Tile = require('../tilemap/Tile'),
+    math = require('../math/math'),
     inherit = require('../utils/inherit'),
     cp = require('../vendor/cp');
 
@@ -480,8 +481,9 @@ inherit(PhysicsSystem, Object, {
             body._updateNum = num;
 
             //update sprite
-            spr.position.lerp(body.p, alpha);
+            spr.position.lerp(body.p, alpha).round();
             spr.rotation += (body.a - spr.rotation) * alpha;
+            spr.rotation = math.round(spr.rotation);
 
             //the sprite has changed due to a physics update, emit that event
             spr.emit('physUpdate');
