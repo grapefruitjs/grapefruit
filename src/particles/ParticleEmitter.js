@@ -337,7 +337,7 @@ inherit(ParticleEmitter, Container, {
             child.position.y += (child._velocity.y += this.gravity.y) * dt;
 
             if(child.lifespan <= 0) {
-                this.emit('particle_expire', child);
+                this.emit('particle.expire', child);
                 this._free(child);
             }
         }
