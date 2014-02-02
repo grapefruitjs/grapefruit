@@ -1,4 +1,5 @@
-var inherit = require('../utils/inherit');
+var inherit = require('../utils/inherit'),
+    math = require('./math');
 
 /**
  * A 2d Vector implementation stolen directly from mrdoob's THREE.js
@@ -119,8 +120,8 @@ inherit(Vector, Object, {
      * @chainable
      */
     floor: function () {
-        this.x = Math.floor(this.x);
-        this.y = Math.floor(this.y);
+        this.x = math.floor(this.x);
+        this.y = math.floor(this.y);
 
         return this;
     },
@@ -132,8 +133,14 @@ inherit(Vector, Object, {
      * @chainable
      */
     ceil: function () {
-        this.x = Math.ceil(this.x);
-        this.y = Math.ceil(this.y);
+        this.x = math.ceil(this.x);
+        this.y = math.ceil(this.y);
+
+        return this;
+    },
+    round: function() {
+        this.x = math.round(this.x);
+        this.y = math.round(this.y);
 
         return this;
     },
@@ -401,7 +408,7 @@ inherit(Vector, Object, {
      * @return {Number} Returns the length of the vector
      */
     length: function() {
-        return Math.sqrt(this.lengthSq());
+        return math.sqrt(this.lengthSq());
     },
     /**
      * Normalizes this vector (divides by its length)
@@ -420,7 +427,7 @@ inherit(Vector, Object, {
      * @return {Number} The distance
      */
     distanceTo: function(v) {
-        return Math.sqrt(this.distanceToSquared(v));
+        return math.sqrt(this.distanceToSquared(v));
     },
     /**
      * Calculates the square distance to the passed vector
@@ -491,8 +498,8 @@ inherit(Vector, Object, {
         var dist = anchor.distanceTo(this);
 
         return this.set(
-            anchor.x + (dist * Math.cos(angle)),
-            anchor.y + (dist * Math.sin(angle))
+            anchor.x + (dist * math.cos(angle)),
+            anchor.y + (dist * math.sin(angle))
         );
     },
     /**
