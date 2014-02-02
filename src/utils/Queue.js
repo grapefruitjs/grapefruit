@@ -40,3 +40,5 @@ Object.defineProperty(Queue.prototype, 'empty', {
         return (this.data.length === 0);
     }
 });
+
+module.exports = Queue;
