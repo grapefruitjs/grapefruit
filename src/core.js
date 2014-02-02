@@ -124,6 +124,7 @@ var gf = {
     Color:              require('./utils/Color'),
     EventEmitter:       require('./utils/EventEmitter'),
     ObjectPool:         require('./utils/ObjectPool'),
+    Queue:              require('./utils/Queue'),
     SpritePool:         require('./utils/SpritePool'),
     ObjectFactory:      require('./utils/ObjectFactory'),
 
