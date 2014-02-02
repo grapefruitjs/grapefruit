@@ -418,11 +418,12 @@ inherit(Tilelayer, Container, {
             hitArea,
             interactive;
 
-        //if no tileset, just ensure the "from" tile is put back in the pool
-        if(!set) {
-            this._freeTile(fromTileX, fromTileY);
-            return;
-        }
+        //free the tiles we are dealing with
+        this._freeTile(toTileX, toTileY);
+        this._freeTile(fromTileX, fromTileY);
+
+        //if no tileset, return
+        if(!set) return;
 
         //grab some values for the tile
         texture = set.getTileTexture(tileId);
@@ -437,21 +438,12 @@ inherit(Tilelayer, Container, {
         //due to the fact that we use top-left anchors for everything, but tiled uses bottom-left
         //we need to move the position of each tile down by a single map-tile height. That is why
         //there is an addition of "this.map.tileSize.y" to the coords
-        position[1] +=  this.map.tileSize.y;
+        position[1] += this.map.tileSize.y;
 
-        //if there is one to move in the map, lets just move it
-        if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
-            tile = this.tiles[fromTileX][fromTileY];
-            this.tiles[fromTileX][fromTileY] = null;
-            tile.disablePhysics();
-        }
-        //otherwise grab a new tile from the pool
-        else {
-            tile = this._tilePool.pop();
-        }
+        //grab a new tile from the pool
+        tile = this._tilePool.pop();
 
-        //if we couldn't find a tile from the pool, or one to move
-        //then create a new tile
+        //if we couldn't find a tile from the pool, then create a new tile
         if(!tile) {
             tile = new Tile(texture);
             tile.anchor.y = 1;
