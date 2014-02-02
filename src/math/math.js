@@ -40,20 +40,6 @@ var math = {
      * @type Matrix
      */
     Matrix: PIXI.Matrix,
-    /**
-     * A 3x3 Matrix namespace, directory exposes PIXI.mat3. You can use this to create 3x3 Matrix classes.
-     *
-     * @property mat3
-     * @type Object
-     */
-    mat3: PIXI.mat3,
-    /**
-     * A 4x4 Matrix namespace, directory exposes PIXI.mat4. You can use this to create 4x4 Matrix classes.
-     *
-     * @property mat3
-     * @type Object
-     */
-    mat4: PIXI.mat4,
 
     /**
      * Alias some native functions for great justice (or incase we want to override)
