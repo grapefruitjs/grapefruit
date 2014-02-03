@@ -399,12 +399,12 @@ inherit(Tilelayer, PIXI.SpriteBatch, {
      * @return {Tile} The sprite to display
      */
     moveTileSprite: function(fromTileX, fromTileY, toTileX, toTileY) {
+        //free the tiles we are dealing with
+        this._freeTile(toTileX, toTileY);
+        this._freeTile(fromTileX, fromTileY);
+
         //if off the map, just ignore it
         if(toTileX < 0 || toTileY < 0 || toTileX >= this.map.size.x || toTileY >= this.map.size.y) {
-            //remove the from tile's physics
-            if(this.tiles[fromTileX] && this.tiles[fromTileX][fromTileY]) {
-                this.tiles[fromTileX][fromTileY].disablePhysics();
-            }
             return;
         }
 
@@ -417,10 +417,6 @@ inherit(Tilelayer, PIXI.SpriteBatch, {
             position,
             hitArea,
             interactive;
-
-        //free the tiles we are dealing with
-        this._freeTile(toTileX, toTileY);
-        this._freeTile(fromTileX, fromTileY);
 
         //if no tileset, return
         if(!set) return;
