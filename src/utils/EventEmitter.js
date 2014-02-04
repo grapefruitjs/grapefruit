@@ -48,18 +48,21 @@ var EventEmitter = function() {
      * @chainable
      */
     this.dispatchEvent = this.emit = function(type) {
-        var handler, len, args, i, listeners;
-
         if(!this._events)
             this._events = {};
 
-        handler = this._events[type];
+        var handler = this._events[type],
+            len = arguments.length,
+            type = typeof handler,
+            args,
+            i,
+            listeners;
 
-        if(typeof handler === 'undefined')
+        if(type === 'undefined')
             return false;
 
-        if(typeof handler === 'function') {
-            switch(arguments.length) {
+        if(type === 'function') {
+            switch(len) {
                 // fast cases
                 case 1:
                     handler.call(this);
@@ -72,24 +75,25 @@ var EventEmitter = function() {
                     break;
                 // slower
                 default:
-                    len = arguments.length;
                     args = new Array(len - 1);
-                    for (i = 1; i < len; i++)
+                    for(i = 1; i < len; ++i)
                         args[i - 1] = arguments[i];
 
                     handler.apply(this, args);
                     break;
             }
-        } else if (typeof handler === 'object') {
-            len = arguments.length;
+        } else if (type === 'object') {
             args = new Array(len - 1);
-            for (i = 1; i < len; i++)
+            for(i = 1; i < len; ++i)
                 args[i - 1] = arguments[i];
 
-            listeners = handler.slice();
+            /*listeners = handler.slice();
             len = listeners.length;
             for (i = 0; i < len; i++)
-                listeners[i].apply(this, args);
+                listeners[i].apply(this, args);*/
+            len = handler.length;
+            for(i = 0; i < len; ++i)
+                handler[i].apply(this, args);
         }
 
         return this;
@@ -118,8 +122,7 @@ var EventEmitter = function() {
         position = -1;
 
         if(list === listener || (typeof list.listener === 'function' && list.listener === listener)) {
-            this._events[type] = undefined;
-
+            delete this._events[type];
         } else if(typeof list === 'object') {
             for(i = length; i-- > 0;) {
                 if(list[i] === listener || (list[i].listener && list[i].listener === listener)) {
@@ -133,7 +136,7 @@ var EventEmitter = function() {
 
             if(list.length === 1) {
                 list.length = 0;
-                this._events[type] = undefined;
+                delete this._events[type];
             } else {
                 list.splice(position, 1);
             }
@@ -155,9 +158,15 @@ var EventEmitter = function() {
         if(typeof listener !== 'function')
             throw new TypeError('listener must be a function');
 
+        var fired = false;
+
         function g() {
             this.off(type, g);
-            listener.apply(this, arguments);
+
+            if(!fired) {
+                fired = true;
+                listener.apply(this, arguments);
+            }
         }
 
         g.listener = listener;
