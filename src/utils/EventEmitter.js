@@ -53,15 +53,14 @@ var EventEmitter = function() {
 
         var handler = this._events[type],
             len = arguments.length,
-            type = typeof handler,
+            htype = typeof handler,
             args,
-            i,
-            listeners;
+            i;
 
-        if(type === 'undefined')
+        if(htype === 'undefined')
             return false;
 
-        if(type === 'function') {
+        if(htype === 'function') {
             switch(len) {
                 // fast cases
                 case 1:
@@ -82,7 +81,7 @@ var EventEmitter = function() {
                     handler.apply(this, args);
                     break;
             }
-        } else if (type === 'object') {
+        } else if (htype === 'object') {
             args = new Array(len - 1);
             for(i = 1; i < len; ++i)
                 args[i - 1] = arguments[i];
