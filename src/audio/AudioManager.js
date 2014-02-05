@@ -63,8 +63,8 @@ var AudioManager = function(game, parent) {
      * @default 1
      */
     Object.defineProperty(this, 'volume', {
-        get: this.getVolume.bind(this),
-        set: this.setVolume.bind(this)
+        get: this.getVolume,
+        set: this.setVolume
     });
 
     /**
