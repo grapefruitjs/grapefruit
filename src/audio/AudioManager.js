@@ -56,18 +56,6 @@ var AudioManager = function(game, parent) {
     this._volume = 1;
 
     /**
-     * The master volume of all the audio playing
-     *
-     * @property volume
-     * @type Number
-     * @default 1
-     */
-    Object.defineProperty(this, 'volume', {
-        get: this.getVolume,
-        set: this.setVolume
-    });
-
-    /**
      * The Web Audio API context if we are using it
      *
      * @property ctx
@@ -300,6 +288,19 @@ inherit(AudioManager, Object, {
 
         return audio ? audio : false;
     }
+});
+
+
+/**
+ * The master volume of all the audio playing
+ *
+ * @property volume
+ * @type Number
+ * @default 1
+ */
+Object.defineProperty(this, 'volume', {
+    get: this.getVolume,
+    set: this.setVolume
 });
 
 module.exports = AudioManager;
