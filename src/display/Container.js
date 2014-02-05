@@ -1,4 +1,5 @@
 var EventEmitter = require('../utils/EventEmitter'),
+    PhysicsTarget = require('../physics/PhysicsTarget'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
     PIXI = require('../vendor/pixi');
@@ -15,6 +16,7 @@ var EventEmitter = require('../utils/EventEmitter'),
 var Container = function(settings) {
     PIXI.DisplayObjectContainer.call(this);
     EventEmitter.call(this);
+    PhysicsTarget.call(this);
 
     //mixin user's settings
     utils.setValues(this, settings);
