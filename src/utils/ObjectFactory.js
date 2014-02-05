@@ -1,5 +1,4 @@
 var inherit = require('./inherit'),
-    GuiItem = require('../gui/GuiItem'),
     Sprite = require('../display/Sprite'),
     Tilemap = require('../tilemap/Tilemap'),
     Rectangle = require('../geom/Rectangle'),
@@ -120,20 +119,6 @@ inherit(ObjectFactory, Object, {
         tilemap._cachekey = key;
 
         return this.parent.addChild(tilemap);
-    },
-    /**
-     * Creates a new gui item and adds it to the Camera's GUI
-     *
-     * @method gui
-     * @param texture {String|Texture} The texture for the item, or the key for one in the cache
-     * @param interactive {Boolean} Can the item be interacted with by mouse (clicked, dragged, etc)
-     * @return {GuiItem} The new gui item added
-     */
-    gui: function(tx, interact) {
-        if(typeof tx === 'string')
-            tx = this.game.cache.getTexture(tx);
-
-        return this.parent.addChild(new GuiItem(tx, interact));
     },
     /**
      * Creates a new instance of BitmapText
