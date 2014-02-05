@@ -46,6 +46,7 @@ var gf = {
     Graphics:           require('./display/Graphics'),
     RenderTexture:      require('./display/RenderTexture'),
     Sprite:             require('./display/Sprite'),
+    SpriteBatch:        require('./display/SpriteBatch'),
     Texture:            require('./display/Texture'),
     TilingSprite:       require('./display/TilingSprite'),
 
@@ -75,9 +76,6 @@ var gf = {
     Ellipse:            require('./geom/Ellipse'),
     Polygon:            require('./geom/Polygon'),
     Rectangle:          require('./geom/Rectangle'),
-
-    //gui
-    GuiItem:            require('./gui/GuiItem'),
 
     //input
     Input:              require('./input/Input'),
