@@ -55,7 +55,8 @@ var EventEmitter = function() {
             len = arguments.length,
             htype = typeof handler,
             args,
-            i;
+            i,
+            listeners;
 
         if(htype === 'undefined')
             return false;
@@ -91,8 +92,9 @@ var EventEmitter = function() {
             for (i = 0; i < len; i++)
                 listeners[i].apply(this, args);*/
             len = handler.length;
+            listeners = handler.slice();
             for(i = 0; i < len; ++i)
-                handler[i].apply(this, args);
+                listeners[i].apply(this, args);
         }
 
         return this;
