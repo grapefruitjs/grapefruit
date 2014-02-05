@@ -130,7 +130,8 @@ var gf = {
     plugin:             require('./plugin'),
 
     //vendor files
-    PIXI:               require('./vendor/pixi')
+    PIXI:               require('./vendor/pixi'),
+    cp:                 require('./vendor/cp')
 };
 
 //replace the pixi point with a powerful vector class
