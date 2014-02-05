@@ -4,7 +4,7 @@
  * Copyright (c) 2012-2014, Mat Groves
  * http://goodboydigital.com/
  *
- * Compiled: 2014-02-02
+ * Compiled: 2014-02-04
  *
  * pixi.js is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license.php
@@ -911,6 +911,9 @@ PIXI.DisplayObject.prototype.updateTransform = function()
     // TODO OPTIMIZE THIS!! with dirty
     if(this.rotation !== this.rotationCache)
     {
+        if(isNaN(parseFloat(this.rotation)))
+            throw new Error('DisplayObject rotation values must be numeric.');
+
         this.rotationCache = this.rotation;
         this._sr =  Math.sin(this.rotation);
         this._cr =  Math.cos(this.rotation);
@@ -1044,6 +1047,7 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'y', {
         this.position.y = value;
     }
 });
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -2539,7 +2543,7 @@ PIXI.Text.heightCache = {};
  * http://www.bmglyph.com/ for mac.
  *
  * @class BitmapText
- * @extends DisplayObjectContainer
+ * @extends SpriteBatch
  * @constructor
  * @param text {String} The copy that you would like the text to display
  * @param style {Object} The style parameters
@@ -2548,7 +2552,9 @@ PIXI.Text.heightCache = {};
  */
 PIXI.BitmapText = function(text, style)
 {
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI.SpriteBatch.call(this);
+
+    this._pool = [];
 
     this.setText(text);
     this.setStyle(style);
@@ -2557,7 +2563,7 @@ PIXI.BitmapText = function(text, style)
 };
 
 // constructor
-PIXI.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+PIXI.BitmapText.prototype = Object.create(PIXI.SpriteBatch.prototype);
 PIXI.BitmapText.prototype.constructor = PIXI.BitmapText;
 
 /**
@@ -2591,6 +2597,7 @@ PIXI.BitmapText.prototype.setStyle = function(style)
     this.fontSize = font.length >= 2 ? parseInt(font[font.length - 2], 10) : PIXI.BitmapText.fonts[this.fontName].size;
 
     this.dirty = true;
+    this.tint = style.tint;
 };
 
 /**
@@ -2609,6 +2616,8 @@ PIXI.BitmapText.prototype.updateText = function()
     var lineWidths = [];
     var line = 0;
     var scale = this.fontSize / data.size;
+    
+
     for(var i = 0; i < this.text.length; i++)
     {
         var charCode = this.text.charCodeAt(i);
@@ -2655,13 +2664,30 @@ PIXI.BitmapText.prototype.updateText = function()
         lineAlignOffsets.push(alignOffset);
     }
 
-    for(i = 0; i < chars.length; i++)
+    var lenChildren = this.children.length;
+    var lenChars = chars.length;
+    var tint = this.tint || 0xFFFFFF;
+    for(i = 0; i < lenChars; i++)
     {
-        var c = new PIXI.Sprite(chars[i].texture); //PIXI.Sprite.fromFrame(chars[i].charCode);
+        var c = i < lenChildren ? this.children[i] : this._pool.pop(); // get old child if have. if not - take from pool.
+
+        if (c) c.setTexture(chars[i].texture); // check if got one before.
+        else c = new PIXI.Sprite(chars[i].texture); // if no create new one.
+
         c.position.x = (chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale;
         c.position.y = chars[i].position.y * scale;
         c.scale.x = c.scale.y = scale;
-        this.addChild(c);
+        c.tint = tint;
+        if (!c.parent) this.addChild(c);
+    }
+
+    // remove unnecessary children.
+    // and put their into the pool.
+    while(this.children.length > lenChars)
+    {
+        var child = this.getChildAt(this.children.length - 1);
+        this._pool.push(child);
+        this.removeChild(child);
     }
 
     this.width = maxLineWidth * scale;
@@ -2678,16 +2704,11 @@ PIXI.BitmapText.prototype.updateTransform = function()
 {
     if(this.dirty)
     {
-        while(this.children.length > 0)
-        {
-            this.removeChild(this.getChildAt(0));
-        }
         this.updateText();
-
         this.dirty = false;
     }
 
-    PIXI.DisplayObjectContainer.prototype.updateTransform.call(this);
+    PIXI.SpriteBatch.prototype.updateTransform.call(this);
 };
 
 PIXI.BitmapText.fonts = {};
@@ -2817,6 +2838,8 @@ PIXI.InteractionManager = function(stage)
     this.last = 0;
 
     this.currentCursorStyle = 'inherit';
+
+    this.mouseOut = false;
 };
 
 // constructor
@@ -3142,7 +3165,6 @@ PIXI.InteractionManager.prototype.onMouseOut = function()
     for (var i = 0; i < length; i++)
     {
         var item = this.interactiveItems[i];
-
         if(item.__isOver)
         {
             this.mouse.target = item;
@@ -3150,6 +3172,12 @@ PIXI.InteractionManager.prototype.onMouseOut = function()
             item.__isOver = false;
         }
     }
+
+    this.mouseOut = true;
+
+    // move the mouse to an impossible position
+    this.mouse.global.x = -10000;
+    this.mouse.global.y = -10000;
 };
 
 /**
@@ -6489,6 +6517,9 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
 
     var uvs = tilingSprite._uvs;
 
+    tilingSprite.tilePosition.x %= texture.baseTexture.width;
+    tilingSprite.tilePosition.y %= texture.baseTexture.height;
+
     var offsetX =  tilingSprite.tilePosition.x/texture.baseTexture.width;
     var offsetY =  tilingSprite.tilePosition.y/texture.baseTexture.height;
 
@@ -9041,7 +9072,7 @@ PIXI.Graphics.prototype.updateBounds = function()
     var minY = Infinity;
     var maxY = -Infinity;
 
-    var points, x, y;
+    var points, x, y, w, h;
 
     for (var i = 0; i < this.graphicsData.length; i++) {
         var data = this.graphicsData[i];
@@ -9052,28 +9083,29 @@ PIXI.Graphics.prototype.updateBounds = function()
 
         if(type === PIXI.Graphics.RECT)
         {
-            x = points.x - lineWidth/2;
-            y = points.y - lineWidth/2;
-            var width = points.width + lineWidth;
-            var height = points.height + lineWidth;
+            x = points[0] - lineWidth/2;
+            y = points[1] - lineWidth/2;
+            w = points[2] + lineWidth;
+            h = points[3] + lineWidth;
 
             minX = x < minX ? x : minX;
-            maxX = x + width > maxX ? x + width : maxX;
+            maxX = x + w > maxX ? x + w : maxX;
 
             minY = y < minY ? x : minY;
-            maxY = y + height > maxY ? y + height : maxY;
+            maxY = y + h > maxY ? y + h : maxY;
         }
         else if(type === PIXI.Graphics.CIRC || type === PIXI.Graphics.ELIP)
         {
-            x = points.x;
-            y = points.y;
-            var radius = points.radius + lineWidth/2;
+            x = points[0];
+            y = points[1];
+            w = points[2] + lineWidth/2;
+            h = points[3] + lineWidth/2;
 
-            minX = x - radius < minX ? x - radius : minX;
-            maxX = x + radius > maxX ? x + radius : maxX;
+            minX = x - w < minX ? x - w : minX;
+            maxX = x + w > maxX ? x + w : maxX;
 
-            minY = y - radius < minY ? y - radius : minY;
-            maxY = y + radius > maxY ? y + radius : maxY;
+            minY = y - h < minY ? y - h : minY;
+            maxY = y + h > maxY ? y + h : maxY;
         }
         else
         {
@@ -9679,6 +9711,10 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
 
     var tilePosition = this.tilePosition;
     var tileScale = this.tileScale;
+
+    tilePosition.x %= this.tilingTexture.baseTexture.width;
+    tilePosition.y %= this.tilingTexture.baseTexture.height;
+
    // console.log(tileScale.x)
     // offset
     context.scale(tileScale.x,tileScale.y);
@@ -11369,40 +11405,29 @@ PIXI.BaseTexture = function(source, scaleMode)
 
     if(!source)return;
 
-    if(this.source instanceof Image || this.source instanceof HTMLImageElement)
-    {
-        if(this.source.complete)
-        {
-            this.hasLoaded = true;
-            this.width = this.source.width;
-            this.height = this.source.height;
-
-            PIXI.texturesToUpdate.push(this);
-        }
-        else
-        {
-
-            var scope = this;
-            this.source.onload = function() {
-
-                scope.hasLoaded = true;
-                scope.width = scope.source.width;
-                scope.height = scope.source.height;
-
-                // add it to somewhere...
-                PIXI.texturesToUpdate.push(scope);
-                scope.dispatchEvent( { type: 'loaded', content: scope } );
-            };
-            //this.image.src = imageUrl;
-        }
-    }
-    else
+    if(this.source.complete || this.source.getContext)
     {
         this.hasLoaded = true;
         this.width = this.source.width;
         this.height = this.source.height;
 
         PIXI.texturesToUpdate.push(this);
+    }
+    else
+    {
+
+        var scope = this;
+        this.source.onload = function() {
+
+            scope.hasLoaded = true;
+            scope.width = scope.source.width;
+            scope.height = scope.source.height;
+
+            // add it to somewhere...
+            PIXI.texturesToUpdate.push(scope);
+            scope.dispatchEvent( { type: 'loaded', content: scope } );
+        };
+        //this.image.src = imageUrl;
     }
 
     this.imageUrl = null;
@@ -11425,10 +11450,9 @@ PIXI.BaseTexture.prototype.constructor = PIXI.BaseTexture;
  */
 PIXI.BaseTexture.prototype.destroy = function()
 {
-    if(this.source instanceof Image)
+    if(this.imageUrl)
     {
-        if (this.imageUrl in PIXI.BaseTextureCache)
-            delete PIXI.BaseTextureCache[this.imageUrl];
+        delete PIXI.BaseTextureCache[this.imageUrl];
         this.imageUrl = null;
         this.source.src = null;
     }
@@ -12173,7 +12197,7 @@ PIXI.JsonLoader.prototype.constructor = PIXI.JsonLoader;
  * @method load
  */
 PIXI.JsonLoader.prototype.load = function () {
-    this.ajaxRequest = new PIXI.AjaxRequest();
+    this.ajaxRequest = new PIXI.AjaxRequest(this.crossorigin);
     var scope = this;
     this.ajaxRequest.onreadystatechange = function () {
         scope.onJSONLoaded();
