@@ -6,7 +6,7 @@ var AudioPlayer = require('./AudioPlayer'),
 
 /**
  * Grapefruit Audio API, provides an easy interface to use HTML5 Audio
- * The GF Audio API was based on [Howler.js](https://github.com/goldfire/howler.js)
+ * The GF Audio API was originally based on [Howler.js](https://github.com/goldfire/howler.js)
  *
  * @class AudioPlayer
  * @extends Object
@@ -96,18 +96,6 @@ var AudioPlayer = function(manager, audio, settings) {
      * @default {}
      */
     this.sprite = {};
-
-    /**
-     * The volume of the audio player
-     *
-     * @property volume
-     * @type Number
-     * @default 1
-     */
-    Object.defineProperty(this, 'volume', {
-        get: this.getVolume.bind(this),
-        set: this.setVolume.bind(this)
-    });
 
     /**
      * The preloaded audio file object
@@ -978,6 +966,18 @@ inherit(AudioPlayer, Object, {
             node.bufferSource.loopEnd = loop[1] + loop[2];
         }
     }
+});
+
+/**
+ * The volume of the audio player
+ *
+ * @property volume
+ * @type Number
+ * @default 1
+ */
+Object.defineProperty(AudioPlayer.prototype, 'volume', {
+    get: AudioPlayer.prototype.getVolume,
+    set: AudioPlayer.prototype.setVolume
 });
 
 module.exports = AudioPlayer;

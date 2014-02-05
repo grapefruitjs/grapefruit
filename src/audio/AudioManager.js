@@ -263,7 +263,7 @@ inherit(AudioManager, Object, {
  * @type Number
  * @default 1
  */
-Object.defineProperty(this, 'volume', {
+Object.defineProperty(AudioManager.prototype, 'volume', {
     get: function() {
         return this._volume;
     },
