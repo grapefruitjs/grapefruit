@@ -4,23 +4,24 @@ var EventEmitter = require('../utils/EventEmitter'),
     PIXI = require('../vendor/pixi');
 
 /**
- * The base display object, that anything being put on the screen inherits from
- * Container or Sprite at some point. This class extends PIXI's DisplayObjectContainer.
+ * The same as a container, but offers improvements in render speed for single-level
+ * deep sprite children. Useful for containers like tilemap layers, bitmap text container,
+ * particle containers, etc.
  *
- * @class Container
- * @extends [PIXI.DisplayObjectContainer](http://www.goodboydigital.com/pixijs/docs/classes/DisplayObjectContainer.html)
+ * @class SpriteBatch
+ * @extends [PIXI.SpriteBatch](http://www.goodboydigital.com/pixijs/docs/classes/SpriteBatch.html)
  * @uses EventEmitter
  * @constructor
  */
-var Container = function(settings) {
-    PIXI.DisplayObjectContainer.call(this);
+var SpriteBatch = function(settings) {
+    PIXI.SpriteBatch.call(this);
     EventEmitter.call(this);
 
     //mixin user's settings
     utils.setValues(this, settings);
 
     //Add these properties in so that all objects can see them in the docs
-    //these properties are inherited from PIXI.DisplayObjectContainer
+    //these properties are inherited from PIXI.SpriteBatch
     //most of these blocks are copied straight from PIXI source
 
     /**
@@ -98,12 +99,12 @@ var Container = function(settings) {
      */
 };
 
-inherit(Container, PIXI.DisplayObjectContainer, {
+inherit(SpriteBatch, PIXI.SpriteBatch, {
     /**
      * Sets the container to visible = true
      *
      * @method show
-     * @return {Container} Returns itself.
+     * @return {SpriteBatch} Returns itself.
      * @chainable
      */
     show: function() {
@@ -114,7 +115,7 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * Sets the container to visible = false
      *
      * @method hide
-     * @return {Container} Returns itself.
+     * @return {SpriteBatch} Returns itself.
      * @chainable
      */
     hide: function() {
@@ -129,7 +130,7 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     addChild: function(child) {
-        PIXI.DisplayObjectContainer.prototype.addChild.apply(this, arguments);
+        PIXI.SpriteBatch.prototype.addChild.apply(this, arguments);
 
         return child;
     },
@@ -143,7 +144,7 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     addChildAt: function(child) {
-        PIXI.DisplayObjectContainer.prototype.addChildAt.apply(this, arguments);
+        PIXI.SpriteBatch.prototype.addChildAt.apply(this, arguments);
 
         return child;
     },
@@ -156,7 +157,7 @@ inherit(Container, PIXI.DisplayObjectContainer, {
      * @return {Container|Sprite} The child that was added
      */
     removeChild: function(child) {
-        PIXI.DisplayObjectContainer.prototype.removeChild.apply(this, arguments);
+        PIXI.SpriteBatch.prototype.removeChild.apply(this, arguments);
 
         return child;
     },
