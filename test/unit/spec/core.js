@@ -11,14 +11,19 @@ describe('core', function() {
             //camera
             'Camera',
 
+            //controls
+            'Controls',
+            'TopDownControls',
+
             //display
             'BaseTexture',
-            'Texture',
             'Container',
+            'Graphics',
+            'RenderTexture',
             'Sprite',
-
-            //font
-            'BitmapText',
+            'SpriteBatch',
+            'Texture',
+            'TilingSprite',
 
             //fx
             'fx',
@@ -27,9 +32,13 @@ describe('core', function() {
             'Game',
             'State',
             'StateManager',
+            'World',
 
-            //gui
-            'GuiItem',
+            //geometry
+            'Circle',
+            'Ellipse',
+            'Polygon',
+            'Rectangle',
 
             //input
             'Input',
@@ -44,19 +53,8 @@ describe('core', function() {
             //loader
             'Loader',
 
-            //map
-            'Tile',
-            'Tilelayer',
-            'Tilemap',
-            'Tileset',
-            'ObjectGroup',
-
             //math
             'math',
-            'Circle',
-            'Ellipse',
-            'Polygon',
-            'Rectangle',
             'Vector',
 
             //particles
@@ -67,14 +65,27 @@ describe('core', function() {
             'PhysicsSystem',
             'PhysicsTarget',
 
+            //text
+            'BitmapText',
+            'Text',
+
+            //tilemap
+            'Tile',
+            'Tilelayer',
+            'Tilemap',
+            'Tileset',
+            'ObjectGroup',
+
             //utils
             'utils',
             'support',
             'inherit',
             'Cache',
             'Clock',
+            'Color',
             'EventEmitter',
             'ObjectPool',
+            'Queue',
             'SpritePool',
             'ObjectFactory',
 
@@ -82,7 +93,8 @@ describe('core', function() {
             'plugin',
 
             //vendor files
-            'PIXI'
+            'PIXI',
+            'cp'
         ]);
 
         gf.fx.should.have.property('camera');
@@ -93,6 +105,15 @@ describe('core', function() {
             'Flash',
             'Scanlines',
             'Shake'
+        ]);
+
+        gf.fx.should.have.property('filters');
+        gf.fx.filters.should.have.properties([
+            'FilterBlock', 'WebGLFilterManager', 'FilterTexture', 'AlphaMaskFilter',
+            'ColorMatrixFilter', 'GrayFilter', 'DisplacementFilter', 'PixelateFilter',
+            'BlurXFilter', 'BlurYFilter', 'BlurFilter', 'InvertFilter', 'SepiaFilter',
+            'TwistFilter', 'ColorStepFilter', 'DotScreenFilter', 'CrossHatchFilter',
+            'RGBSplitFilter'
         ]);
     });
 });
