@@ -21,7 +21,7 @@ var support = {
      * @property canvas
      * @type Boolean
      */
-    canvas: (function () { try { return !!window.CanvasRenderingContext2D && !!document.createElement('canvas').getContext('2d'); } catch(e) { return false; } })(),
+    canvas: !!(function () { try { return window.CanvasRenderingContext2D && document.createElement('canvas').getContext('2d'); } catch(e) { return false; } })(),
 
     /**
      * Whether or not webgl is supported
@@ -29,7 +29,7 @@ var support = {
      * @property webgl
      * @type Boolean
      */
-    webgl: (function () { try { var c = document.createElement('canvas'); return !!window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')); } catch(e) { return false; } })(),
+    webgl: !!(function () { try { var c = document.createElement('canvas'); return window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')); } catch(e) { return false; } })(),
 
     /**
      * Whether or not the crypto API is supported
@@ -101,7 +101,7 @@ var support = {
      * @property touch
      * @type Boolean
      */
-    touch: ('createTouch' in document) || ('ontouchstart' in window) || (navigator.isCocoonJS),
+    touch: !!(('createTouch' in document) || ('ontouchstart' in window) || (navigator.isCocoonJS)),
 
     /**
      * Whether or not the gamepad API is supported
