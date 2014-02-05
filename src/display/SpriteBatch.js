@@ -225,4 +225,4 @@ inherit(SpriteBatch, PIXI.SpriteBatch, {
     }
 });
 
-module.exports = Container;
+module.exports = SpriteBatch;

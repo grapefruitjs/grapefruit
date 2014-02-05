@@ -228,7 +228,7 @@ inherit(BitmapText, SpriteBatch, {
             this.dirty = false;
         }
 
-        Container.prototype.updateTransform.call(this);
+        SpriteBatch.prototype.updateTransform.call(this);
     }
 });
 

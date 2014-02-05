@@ -664,7 +664,7 @@ inherit(Tilelayer, SpriteBatch, {
      * @method destroy
      */
     destroy: function() {
-        Container.prototype.destroy.call(this);
+        SpriteBatch.prototype.destroy.call(this);
 
         this.clearTiles(true);
 
