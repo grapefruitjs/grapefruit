@@ -1,4 +1,4 @@
-var Container = require('../display/Container'),
+var SpriteBatch = require('../display/SpriteBatch'),
     ObjectPool = require('../utils/ObjectPool'),
     Texture = require('../display/Texture'),
     Sprite = require('../display/Sprite'),
@@ -14,7 +14,7 @@ var Container = require('../display/Container'),
  * [bmglyph](http://www.bmglyph.com/) for mac.
  *
  * @class BitmapText
- * @extends Container
+ * @extends SpriteBatch
  * @constructor
  * @param text {String} The copy that you would like the text to display
  * @param font {Object} The font data object (this is generally grabbed from `game.cache.getBitmapFont('mykey')`);
@@ -27,7 +27,7 @@ var Container = require('../display/Container'),
  * @param [style.align="left"] {String} An alignment of the multiline text ("left", "center" or "right")
  */
 var BitmapText = function(text, font, style) {
-    Container.call(this);
+    SpriteBatch.call(this);
 
     /**
      * Whether or not the bitmap text is dirty and should be redrawn
@@ -69,6 +69,19 @@ var BitmapText = function(text, font, style) {
     this._text = text;
 
     /**
+     * The current style of the bitmap text
+     *
+     * @property _style
+     * @type Object
+     * @readOnly
+     * @private
+     */
+    this._style = {
+        size: null,
+        align: 'left'
+    };
+
+    /**
      * The sprite pool to grab character sprites from
      *
      * @property sprites
@@ -79,26 +92,10 @@ var BitmapText = function(text, font, style) {
     this.sprites = new ObjectPool(Sprite, this);
 
     this.text = text;
-    this.setStyle(style);
+    this.style = style;
 };
 
-inherit(BitmapText, Container, {
-    /**
-     * Sets the style of the text based on a style object.
-     *
-     * @method setStyle
-     * @param style {Object} The style object
-     * @param style.align {String} The alignment of the text, can be 'left', 'center', or 'right'
-     * @param style.size {Number} The font size of the text to display
-     */
-    setStyle: function(style) {
-        style = style || {};
-
-        this.align = style.align;
-        this.size = style.size || this.font.size;
-
-        this.dirty = true;
-    },
+inherit(BitmapText, SpriteBatch, {
     /**
      * Renders the text character sprites when the text is dirty. This is
      * automatically called when the text/style becomes dirty.
@@ -113,7 +110,7 @@ inherit(BitmapText, Container, {
             maxLineWidth = 0,
             lineWidths = [],
             line = 0,
-            scale = this.size / font.size;
+            scale = this._style.size / font.size;
 
         for(var i = 0; i < this.text.length; ++i) {
             var code = this.text.charCodeAt(i),
@@ -165,7 +162,7 @@ inherit(BitmapText, Container, {
         //the offsets we need, then loop through characters to apply it. If we didn't
         //support alignment, then characters could be drawn in the above loop, but nooo...
         var lineAlignOffsets = [],
-            align = this.align,
+            align = this._style.align,
             offset = 0;
 
         for(i = 0; i <= line; ++i) {
@@ -179,19 +176,34 @@ inherit(BitmapText, Container, {
         }
 
         //now add each character
-        for(i = 0; i < chars.length; ++i) {
-            var c = this.sprites.create(chars[i].texture);
-            c.setTexture(chars[i].texture);
-            c.visible = true;
+        var lenChars = chars.length,
+            lenChildren = this.children.length,
+            tint = this._style.tint || 0xFFFFFF,
+            child;
 
-            c.position.x = (chars[i].x + lineAlignOffsets[chars[i].line]) * scale;
-            c.position.y = chars[i].y * scale;
-            c.scale.x = c.scale.y = scale;
-            this.addChild(c);
+        for(i = 0; i < lenChars; ++i) {
+            child = i < lenChildren ? this.children[i] : this.sprites.create(chars[i].texture);
+
+            child.setTexture(chars[i].texture);
+
+            child.position.x = (chars[i].x + lineAlignOffsets[chars[i].line]) * scale;
+            child.position.y = chars[i].y * scale;
+            child.scale.x = child.scale.y = scale;
+            child.tint = tint;
+
+            if(!child.parent)
+                this.addChild(child);
+        }
+
+        //remove unnecesary children and free into pool
+        while(this.children.length > lenChars) {
+            child = this.children[this.children.length - 1];
+            this.sprites.free(child);
+            this.removeChild(child);
         }
 
         //set the width/height
-        this.width = pos.x * scale;
+        this.width = maxLineWidth * scale;
         this.height = (pos.y + font.lineHeight) * scale;
     },
     /**
@@ -201,10 +213,7 @@ inherit(BitmapText, Container, {
      * @return BitmapText
      */
     clone: function() {
-        return new BitmapText(this._text, this.font, {
-            align: this.align,
-            size: this.size
-        });
+        return new BitmapText(this._text, this.font, this._style);
     },
     /**
      * Updates the text when dirty, called each frame by PIXI's render methods
@@ -214,13 +223,6 @@ inherit(BitmapText, Container, {
      */
     updateTransform: function() {
         if(this.dirty) {
-            //free all sprites
-            for(var c = 0, cl = this.children.length; c < cl; ++c) {
-                var child = this.children[c];
-                child.visible = false;
-                this.sprites.free(child);
-            }
-
             this.renderText();
 
             this.dirty = false;
@@ -242,6 +244,57 @@ Object.defineProperty(BitmapText.prototype, 'text', {
     },
     set: function(text) {
         this._text = text;
+        this.dirty = true;
+    }
+});
+
+/**
+ * The style of the text to be rendered. Valid properties are
+ * `size` and `align`.
+ *
+ * @property style
+ * @type Object
+ */
+Object.defineProperty(BitmapText.prototype, 'style', {
+    get: function() {
+        return this._style;
+    },
+    set: function(style) {
+        this._style.size = (style && style.size) || this._style.size;
+        this._style.align = (style && style.align) || this._style.align;
+        this.dirty = true;
+    }
+});
+
+/**
+ * The size of the text to render.
+ *
+ * @property size
+ * @type Number
+ */
+Object.defineProperty(BitmapText.prototype, 'size', {
+    get: function() {
+        return this._style.size;
+    },
+    set: function(size) {
+        this._style.size = size || this._style.size;
+        this.dirty = true;
+    }
+});
+
+/**
+ * The alignment of the text to render, valid values are `'left'`,
+ * `'right'`, or `'center'`.
+ *
+ * @property align
+ * @type String
+ */
+Object.defineProperty(BitmapText.prototype, 'align', {
+    get: function() {
+        return this._style.align;
+    },
+    set: function(align) {
+        this._style.align = align || this._style.align;
         this.dirty = true;
     }
 });
