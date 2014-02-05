@@ -2,6 +2,7 @@ var inherit = require('../utils/inherit'),
     Container = require('../display/Container'),
     Rectangle = require('../geom/Rectangle'),
     ObjectFactory = require('../utils/ObjectFactory'),
+    Vector = require('../math/Vector'),
     math = require('../math/math');
 
 /**
@@ -45,6 +46,8 @@ var World = function(state) {
      * @type ObjectFactory
      */
     this.add = new ObjectFactory(state, this);
+
+    this.panPosition = new Vector();
 };
 
 inherit(World, Container, {
@@ -61,14 +64,16 @@ inherit(World, Container, {
         y = math.floor(x.y !== undefined ? x.y : (y || 0));
         x = math.floor(x.x !== undefined ? x.x : (x || 0));
 
-        this.position.x += x * this.scale.x;
-        this.position.y += y * this.scale.y;
+        this.panPosition.x += x * this.scale.x;
+        this.panPosition.y += y * this.scale.y;
 
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var o = this.children[i];
 
-            if(o.pan)
-                o.pan(x, y);
+            //if(o.pan)
+            //    o.pan(x, y);
+            if(o.render)
+                o.render(-this.panPosition.x, -this.panPosition.y, this.game.width, this.game.height);
         }
 
         return this;
@@ -87,7 +92,7 @@ inherit(World, Container, {
             var o = this.children[i];
 
             if(o.render)
-                o.render(-this.position.x, -this.position.y, w, h);
+                o.render(-this.panPosition.x, -this.panPosition.y, w, h);
         }
 
         return this;

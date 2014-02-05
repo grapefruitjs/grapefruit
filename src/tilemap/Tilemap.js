@@ -160,7 +160,7 @@ var Tilemap = function(state, map, tilesetTextures) {
     this._bounds = new Rectangle(0, 0, this.realSize.x, this.realSize.y);
 
     //update the world bounds
-    var w = this.game.state.active.world;
+    var w = this.state.world;
     w.bounds.width = Math.max(w.bounds.width, this.realSize.x);
     w.bounds.height = Math.max(w.bounds.height, this.realSize.y);
 };
@@ -311,25 +311,6 @@ inherit(Tilemap, Container, {
             if(o.name === name)
                 return o;
         }
-    },
-    /**
-     * Pans the map around
-     *
-     * @method pan
-     * @param x {Number|Point} The x amount to pan, if a Point is passed the y param is ignored
-     * @param y {Number} The y ammount to pan
-     * @return {Tilemap} Returns itself.
-     * @chainable
-     */
-    pan: function(x, y) {
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.pan)
-                o.pan(x, y);
-        }
-
-        return this;
     },
     /**
      * Called on resize to render the viewport again
