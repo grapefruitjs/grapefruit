@@ -1,6 +1,6 @@
 var Sprite = require('../display/Sprite'),
     Texture = require('../display/Texture'),
-    Container = require('../display/Container'),
+    SpriteBatch = require('../display/SpriteBatch'),
     Vector = require('../math/Vector'),
     math = require('../math/math'),
     inherit = require('../utils/inherit'),
@@ -12,12 +12,12 @@ var Sprite = require('../display/Sprite'),
  * them to a ParticleSystem.
  *
  * @class ParticleEmitter
- * @extends Container
+ * @extends SpriteBatch
  * @constructor
  * @param name {String} The string name of the particle emitter.
  */
 var ParticleEmitter = function(state, name) {
-    Container.call(this);
+    SpriteBatch.call(this);
 
     this.state = state;
 
@@ -162,7 +162,7 @@ var ParticleEmitter = function(state, name) {
     this._pool = []; //the pool to release particles into when they are done
 };
 
-inherit(ParticleEmitter, Container, {
+inherit(ParticleEmitter, SpriteBatch, {
     /**
      * Starts the particle emission, must call `setup` first to setup
      * what kind of particle to emit.

@@ -1,4 +1,4 @@
-var Container = require('../display/Container'),
+var SpriteBatch = require('../display/SpriteBatch'),
     Rectangle = require('../geom/Rectangle'),
     Vector = require('../math/Vector'),
     Texture = require('../display/Texture'),
@@ -16,14 +16,14 @@ var Container = require('../display/Container'),
  * create an instance on your own.
  *
  * @class Tilelayer
- * @extends PIXI.SpriteBatch
+ * @extends SpriteBatch
  * @constructor
  * @param map {Tilemap} The tilemap instance that this belongs to
  * @param layer {Object} All the settings for the layer
  */
 //see: https://github.com/GoodBoyDigital/pixi.js/issues/48
 var Tilelayer = function(map, layer) {
-    PIXI.SpriteBatch.call(this);
+    SpriteBatch.call(this);
 
     /**
      * The map instance this tilelayer belongs to
@@ -135,7 +135,7 @@ var Tilelayer = function(map, layer) {
     this._rendered = new Rectangle();
 };
 
-inherit(Tilelayer, PIXI.SpriteBatch, {
+inherit(Tilelayer, SpriteBatch, {
     getBounds: function() {
         return this.map.getBounds();
     },
