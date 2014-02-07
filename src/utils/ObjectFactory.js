@@ -108,14 +108,6 @@ inherit(ObjectFactory, Object, {
             this.state.camera.constrain(new Rectangle(0, 0, tilemap.realSize.x, tilemap.realSize.y));
         }
 
-        //force render of tilemap
-        tilemap.render(
-            -this.state.world.position.x,
-            -this.state.world.position.x,
-            this.game.width,
-            this.game.height
-        );
-
         tilemap._cachekey = key;
 
         return this.parent.addChild(tilemap);

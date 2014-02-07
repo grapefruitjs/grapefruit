@@ -1,7 +1,5 @@
 var SpriteBatch = require('../display/SpriteBatch'),
     Sprite = require('../display/Sprite'),
-    Rectangle = require('../geom/Rectangle'),
-    Vector = require('../math/Vector'),
     Texture = require('../display/Texture'),
     //Tile = require('./Tile'),
     math = require('../math/math'),
@@ -51,14 +49,6 @@ var Tilelayer = function(map, layer) {
     this.state = map.state;
 
     /**
-     * The current map of all tiles on the screen
-     *
-     * @property tiles
-     * @type Object
-     */
-    this.tiles = [];
-
-    /**
      * The name of the layer
      *
      * @property name
@@ -66,15 +56,6 @@ var Tilelayer = function(map, layer) {
      * @default ''
      */
     this.name = layer.name || '';
-
-    /**
-     * The size of the layer
-     *
-     * @property size
-     * @type Vector
-     * @default new Vector(1, 1)
-     */
-    this.size = new Vector(layer.width || 0, layer.height || 0);
 
     /**
      * The tile IDs of the tilemap
@@ -101,41 +82,13 @@ var Tilelayer = function(map, layer) {
      */
     this.type = layer.type || 'tilelayer';
 
-    /**
-     * Is this layer supposed to be preRendered?
-     *
-     * @property preRender
-     * @type Boolean
-     * @default false
-     */
-    this.preRender = layer.preRender || this.properties.preRender || false;
-
-    /**
-     * The size of a chunk when pre rendering
-     *
-     * @property chunkSize
-     * @type Vector
-     * @default new Vector(512, 512)
-     */
-    this.chunkSize = new Vector(
-        layer.chunkSizeX || layer.chunkSize || this.properties.chunkSizeX || this.properties.chunkSize || 512,
-        layer.chunkSizeY || layer.chunkSize || this.properties.chunkSizeY || this.properties.chunkSize || 512
-    );
-
     //translate some tiled properties to our inherited properties
     this.position.x = layer.x || 0;
     this.position.y = layer.y || 0;
     this.alpha = layer.opacity !== undefined ? layer.opacity : 1;
     this.visible = layer.visible !== undefined ? layer.visible : true;
 
-    //some private trackers
-    this._preRendered = false;
-    this._tilePool = [];
-    this._buffered = { left: false, right: false, top: false, bottom: false };
-    this._panDelta = new Vector();
-    this._rendered = new Rectangle();
-
-
+    //privates
     this.requiresUpdate = false;
     this.buffer = new PIXI.CanvasBuffer(this.map.game.width, this.map.game.height);
     this.texture = Texture.fromCanvas(this.buffer.canvas);
@@ -165,35 +118,37 @@ inherit(Tilelayer, SpriteBatch, {
      * @return {Tilelayer} Returns itself.
      * @chainable
      */
-    render: function(sx, sy, w, h) {
-        //copy down our tilesize
-        if(!this.tileSize)
-            this.tileSize = this.map.tileSize;
-
+    render: function(sx, sy, w, h, ctx) {
         if(this._cache.sx === sx && this._cache.sy === sy && this._cache.w === w && this._cache.h === h)
             return;
 
+        //only resize if we need to
+        if(this._cache.w !== w || this._cache.h !== h)
+            this.buffer.resize(w, h);
+
+        //update cache
         this._cache.sx = sx;
         this._cache.sy = sy;
         this._cache.w = w;
         this._cache.h = h;
 
-        //resize our buffer
-        this.buffer.resize(w, h);
-        this.buffer.context.clearRect(0, 0, w, h);
+        //get the context
+        ctx = ctx || this.buffer.context;
+
+        //clear the context
+        ctx.clearRect(0, 0, w, h);
 
         ///////////////////////////
-
-        var tsx = this.tileSize.x,
-            tsy = this.tileSize.y,
+        var tsx = this.map.tileSize.x,
+            tsy = this.map.tileSize.y,
             startX = math.max(0, math.floor(sx / tsx)),
             startY = math.max(0, math.floor(sy / tsy)),
             maxX = math.min(math.ceil(w / tsx) + 1, this.map.size.x),
             maxY = math.min(math.ceil(h / tsy) + 1, this.map.size.y),
-            dx = -(sx - (startX * tsx)),
-            dy = -(sy - (startY * tsy)),
-            tx = dx,
-            ty = dy;
+            //dx = -(sx - (startX * tsx)),
+            //dy = -(sy - (startY * tsy)),
+            tx = 0;// dx,
+            ty = 0;// dy;
 
         for(var x = startX; x < startX + maxX; ++x) {
             for(var y = startY; y < startY + maxY; ++y) {
@@ -206,7 +161,7 @@ inherit(Tilelayer, SpriteBatch, {
                     tex = set.getTileTexture(tid);
                     frame = tex.frame;
 
-                    this.buffer.context.drawImage(
+                    ctx.drawImage(
                         tex.baseTexture.source,
                         frame.x,
                         frame.y,
@@ -217,13 +172,15 @@ inherit(Tilelayer, SpriteBatch, {
                         tsx,
                         tsy
                     );
+
+                    //TODO: add physics bodies
                 }
 
                 ty += tsy;
             }
 
             tx += tsx;
-            ty = dy;
+            ty = 0;
         }
 
         /*var mapScaledTileSize = this.map.scaledTileSize,
@@ -297,22 +254,19 @@ inherit(Tilelayer, SpriteBatch, {
 
         this.state = null;
         this.name = null;
-        this.size = null;
         this.tileIds = null;
         this.properties = null;
         this.type = null;
-        this.position.x = null;
-        this.position.y = null;
-        this.alpha = null;
-        this.visible = null;
-        this.preRender = null;
-        this.chunkSize = null;
+    },
+    updateTransform: function() {
+        this.render(
+            this.state.camera.viewport.x,
+            this.state.camera.viewport.y,
+            this.state.camera.viewport.width,
+            this.state.camera.viewport.height
+        );
 
-        this._preRendered = null;
-        this._tilePool = null;
-        this._buffered = null;
-        this._panDelta = null;
-        this._rendered = null;
+        SpriteBatch.prototype.updateTransform.call(this);
     },
     _renderWebGL: function(renderSession) {
         if(this.requiresUpdate) {

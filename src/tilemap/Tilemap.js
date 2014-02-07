@@ -311,34 +311,6 @@ inherit(Tilemap, Container, {
             if(o.name === name)
                 return o;
         }
-    },
-    /**
-     * Called on resize to render the viewport again
-     *
-     * @method render
-     * @param x {Number} The x offset to consider the top-left
-     * @param y {Number} The y offset to consider the top-left
-     * @param width {Number} The width (in pixels) to render
-     * @param height {Number} The height (in pixels) to render
-     * @return {Tilemap} Returns itself.
-     * @chainable
-     */
-    render: function(x, y, width, height) {
-        //defaults
-        x = x || -this.state.world.position.x;
-        y = y || -this.state.world.position.y;
-        width = width || this.game.width;
-        height = height || this.game.height;
-
-        //render the layers
-        for(var i = 0, il = this.children.length; i < il; ++i) {
-            var o = this.children[i];
-
-            if(o.render)
-                o.render(x, y, width, height);
-        }
-
-        return this;
     }
 });
 
