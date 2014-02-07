@@ -218,48 +218,44 @@ inherit(Camera, Container, {
         return ret;
     },
     /**
-     * Follows an sprite with the camera, ensuring they are always center view. You can
+     * Follows an object with the camera, ensuring they are always center view. You can
      * pass a follow style to change the area an sprite can move around in before we start
      * to move with them.
      *
      * @method follow
-     * @param sprite {Sprite} The sprite to follow
+     * @param object {Container|Sprite} The object to follow
      * @param [style=CAMERA_FOLLOW.LOCKON] {CAMERA_FOLLOW} The style of following
      * @return {Camera} Returns itself.
      * @chainable
      */
-    follow: function(spr, style) {
-        if(!(spr instanceof Sprite))
-            return this;
-
-        this._target = spr;
-        this._targetPos.set(null, null);
+    follow: function(obj, style) {
+        this._target = obj;
 
         switch(style) {
             case C.CAMERA_FOLLOW.PLATFORMER:
-                var w = this.size.x / 8;
-                var h = this.size.y / 3;
+                var w = this.viewport.width / 8;
+                var h = this.viewport.height / 3;
                 this._deadzone = new Rectangle(
-                    (this.size.x - w) / 2,
-                    (this.size.y - h) / 2 - (h / 4),
+                    (this.viewport.width - w) / 2,
+                    (this.viewport.height - h) / 2 - (h / 4),
                     w,
                     h
                 );
                 break;
             case C.CAMERA_FOLLOW.TOPDOWN:
-                var sq4 = Math.max(this.size.x, this.size.y) / 4;
+                var sq4 = Math.max(this.viewport.width, this.viewport.height) / 4;
                 this._deadzone = new Rectangle(
-                    (this.size.x - sq4) / 2,
-                    (this.size.y - sq4) / 2,
+                    (this.viewport.width - sq4) / 2,
+                    (this.viewport.height - sq4) / 2,
                     sq4,
                     sq4
                 );
                 break;
             case C.CAMERA_FOLLOW.TOPDOWN_TIGHT:
-                var sq8 = Math.max(this.size.x, this.size.y) / 8;
+                var sq8 = Math.max(this.viewport.width, this.viewport.height) / 8;
                 this._deadzone = new Rectangle(
-                    (this.size.x - sq8) / 2,
-                    (this.size.y - sq8) / 2,
+                    (this.viewport.width - sq8) / 2,
+                    (this.viewport.height - sq8) / 2,
                     sq8,
                     sq8
                 );
@@ -395,9 +391,10 @@ inherit(Camera, Container, {
 
         //simple case of rectangle
         if(this.bounds._shapetype === C.SHAPE.RECTANGLE) {
+            /*
             this.viewport.x = math.clamp(this.viewport.x, this.bounds.left, this.bounds.right - this.viewport.width);
             this.viewport.y = math.clamp(this.viewport.y, this.bounds.top, this.bounds.bottom - this.viewport.height);
-            /*
+            */
             if(this.viewport.left < this.bounds.left) {
                 this.viewport.x = this.bounds.left;
             }
@@ -413,7 +410,6 @@ inherit(Camera, Container, {
             if(this.viewport.bottom > this.bounds.bottom) {
                 this.viewport.y = this.bounds.bottom - this.viewport.height;
             }
-            */
         }
         //complex polygon case, need to do some point queries to check what
         //the maximum values for this rectangle in the polygon are
@@ -438,10 +434,10 @@ inherit(Camera, Container, {
                 var worldTransform = this._target.worldTransform,
                     x = worldTransform.tx,
                     y = worldTransform.ty,
-                    maxX = x - this._deadzone.x,
-                    minX = (x + this._target.width) - (this._deadzone.x - this._deadzone.width),
-                    maxY = y - this._deadzone.y,
-                    minY = (y + this._target.height) - (this._deadzone.y - this._deadzone.height);
+                    minX = x - this._deadzone.x,
+                    maxX = (x + this._target.width) - (this._deadzone.x - this._deadzone.width),
+                    minY = y - this._deadzone.y,
+                    maxY = (y + this._target.height) - (this._deadzone.y - this._deadzone.height);
 
                 this.viewport.x = math.clamp(this.viewport.x, minX, maxX);
                 this.viewport.y = math.clamp(this.viewport.y, minY, maxY);
