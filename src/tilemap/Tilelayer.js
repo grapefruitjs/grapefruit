@@ -141,14 +141,19 @@ inherit(Tilelayer, SpriteBatch, {
         ///////////////////////////
         var tsx = this.map.tileSize.x,
             tsy = this.map.tileSize.y,
-            startX = math.max(0, math.floor(sx / tsx)),
-            startY = math.max(0, math.floor(sy / tsy)),
-            maxX = math.min(math.ceil(w / tsx) + 1, this.map.size.x),
-            maxY = math.min(math.ceil(h / tsy) + 1, this.map.size.y),
+            stsx = this.map.scaledTileSize.x,
+            stsy = this.map.scaledTileSize.y,
+            startX = math.max(0, math.floor(sx / stsx)),
+            startY = math.max(0, math.floor(sy / stsy)),
+            maxX = math.min(math.ceil(w / stsx) + 1, this.map.size.x - startX),
+            maxY = math.min(math.ceil(h / stsy) + 1, this.map.size.y - startY),
             //dx = -(sx - (startX * tsx)),
             //dy = -(sy - (startY * tsy)),
             tx = 0;// dx,
             ty = 0;// dy;
+
+        this.sprite.position.x = startX * tsx;
+        this.sprite.position.y = startY * tsy;
 
         for(var x = startX; x < startX + maxX; ++x) {
             for(var y = startY; y < startY + maxY; ++y) {
@@ -167,8 +172,8 @@ inherit(Tilelayer, SpriteBatch, {
                         frame.y,
                         tsx,
                         tsy,
-                        math.floor(tx) + set.tileoffset.x,
-                        math.floor(ty) + set.tileoffset.y,
+                        tx + set.tileoffset.x,
+                        ty + set.tileoffset.y,
                         tsx,
                         tsy
                     );
