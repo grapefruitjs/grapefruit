@@ -101,6 +101,9 @@ var Tilelayer = function(map, layer) {
         w: 0,
         h: 0
     };
+
+    this.physicsContainer = new SpriteBatch();
+    this.createPhysicalTiles();
 };
 
 inherit(Tilelayer, SpriteBatch, {
@@ -143,6 +146,7 @@ inherit(Tilelayer, SpriteBatch, {
             tsy = this.map.tileSize.y,
             stsx = this.map.scaledTileSize.x,
             stsy = this.map.scaledTileSize.y,
+            szx = this.map.size.x,
             startX = math.max(0, math.floor(sx / stsx)),
             startY = math.max(0, math.floor(sy / stsy)),
             maxX = math.min(math.ceil(w / stsx) + 1, this.map.size.x - startX),
@@ -153,12 +157,12 @@ inherit(Tilelayer, SpriteBatch, {
         this.sprite.position.x = startX * tsx;
         this.sprite.position.y = startY * tsy;
 
-        for(var x = startX; x < startX + maxX; ++x) {
-            for(var y = startY; y < startY + maxY; ++y) {
-                var id = (x + (y * this.map.size.x)),
+        for(var x = startX, xLen = startX + maxX; x < xLen; ++x) {
+            for(var y = startY, yLen = startY + maxY; y < yLen; ++y) {
+                var id = (x + (y * szx)),
                     tid = this.tileIds[id],
                     set = this.map.getTileset(tid),
-                    tex, frame;
+                    tex, frame, props;
 
                 if(set) {
                     tex = set.getTileTexture(tid);
@@ -175,8 +179,6 @@ inherit(Tilelayer, SpriteBatch, {
                         tsx,
                         tsy
                     );
-
-                    //TODO: add physics bodies
                 }
 
                 ty += tsy;
@@ -189,6 +191,36 @@ inherit(Tilelayer, SpriteBatch, {
         this.requiresUpdate = true;
 
         return this;
+    },
+    createPhysicalTiles: function() {
+        var tid, tex, set, props, tile, x, y,
+            szx = this.map.size.x,
+            tsx = this.map.tileSize.x,
+            tsy = this.map.tileSize.y;
+
+        for(var i = 0; i < this.tileIds.length; ++i) {
+            tid = this.tileIds[i];
+            set = this.map.getTileset(tid);
+
+            if(!set) continue;
+
+            props = set.getTileProperties(tid);
+
+            if(!props.mass) continue;
+
+            tex = set.getTileTexture(tid);
+            tile = new Sprite(tex);
+            this.physicsContainer.addChild(tile);
+
+            tile.mass = props.mass;
+            tile.hitArea = props.hitArea || set.properties.hitArea;
+            tile.setPosition(
+                (i % szx) * tsx,
+                math.floor(i / szx) * tsy
+            );
+
+            tile.enablePhysics(this.state.physics);
+        }
     },
     /**
      * Destroys the tile layer completely
