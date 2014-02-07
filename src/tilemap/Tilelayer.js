@@ -147,10 +147,8 @@ inherit(Tilelayer, SpriteBatch, {
             startY = math.max(0, math.floor(sy / stsy)),
             maxX = math.min(math.ceil(w / stsx) + 1, this.map.size.x - startX),
             maxY = math.min(math.ceil(h / stsy) + 1, this.map.size.y - startY),
-            //dx = -(sx - (startX * tsx)),
-            //dy = -(sy - (startY * tsy)),
-            tx = 0;// dx,
-            ty = 0;// dy;
+            tx = 0;
+            ty = 0;
 
         this.sprite.position.x = startX * tsx;
         this.sprite.position.y = startY * tsy;
@@ -187,61 +185,6 @@ inherit(Tilelayer, SpriteBatch, {
             tx += tsx;
             ty = 0;
         }
-
-        /*var mapScaledTileSize = this.map.scaledTileSize,
-            mapSize = this.map.size;
-
-        //setup position in tiles
-        sx = math.floor(sx / mapScaledTileSize.x);
-        sy = math.floor(sy / mapScaledTileSize.y);
-
-        sx = sx < 0 ? 0 : sx;
-        sy = sy < 0 ? 0 : sy;
-
-        //setup size in tiles
-        w = math.ceil(w / mapScaledTileSize.x);
-        h = math.ceil(h / mapScaledTileSize.y);
-
-        //ensure we don't go outside the map size
-        w = (sx + w > mapSize.x) ? (mapSize.x - sx) : w;
-        h = (sy + h > mapSize.y) ? (mapSize.y - sy) : h;
-
-        var tx = 0,
-            ty = 0;
-
-        //iterate and draw each tile
-        for(var y = sy; y < sy + h; ++y) {
-            for(var x = sx; x < sx + w; ++x) {
-                var id = (x + (y * mapSize.x)),
-                    tid = this.tileIds[id],
-                    set = this.map.getTileset(tid),
-                    tex, frame;
-
-                if(set) {
-                    tex = set.getTileTexture(tid);
-                    frame = tex.frame;
-
-                    this.buffer.context.drawImage(
-                        tex.baseTexture.source,
-                        frame.x,
-                        frame.y,
-                        frame.width,
-                        frame.height,
-                        tx + set.tileoffset.x,
-                        ty + set.tileoffset.y,
-                        frame.width,
-                        frame.height
-                    );
-                }
-
-                tx += this.tileSize.x;
-
-                //TODO: If physical, spawn an actual tile
-            }
-
-            tx = sx * this.tileSize.x;
-            ty += this.tileSize.y;
-        }*/
 
         this.requiresUpdate = true;
 
