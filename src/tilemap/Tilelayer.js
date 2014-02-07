@@ -89,7 +89,8 @@ var Tilelayer = function(map, layer) {
     this.visible = layer.visible !== undefined ? layer.visible : true;
 
     //privates
-    this.requiresUpdate = false;
+    this._webglTextureUpdate = false;
+    this.tempBuffer = new PIXI.CanvasBuffer(this.map.game.width, this.map.game.height);
     this.buffer = new PIXI.CanvasBuffer(this.map.game.width, this.map.game.height);
     this.texture = Texture.fromCanvas(this.buffer.canvas);
     this.sprite = new Sprite(this.texture);
@@ -99,7 +100,17 @@ var Tilelayer = function(map, layer) {
         sx: 0,
         sy: 0,
         w: 0,
-        h: 0
+        h: 0,
+
+        startX: 0,
+        startY: 0,
+        maxX: 0,
+        maxY: 0,
+        tx: 0,
+        ty: 0,
+
+        dx: 0,
+        dy: 0
     };
 
     this.physicsContainer = new SpriteBatch();
@@ -121,13 +132,16 @@ inherit(Tilelayer, SpriteBatch, {
      * @return {Tilelayer} Returns itself.
      * @chainable
      */
-    render: function(sx, sy, w, h, ctx) {
+    render: function(sx, sy, w, h, buffer) {
         if(this._cache.sx === sx && this._cache.sy === sy && this._cache.w === w && this._cache.h === h)
             return;
 
-        //only resize if we need to
-        if(this._cache.w !== w || this._cache.h !== h)
-            this.buffer.resize(w, h);
+        var full = !this._cache.w || !this._cache.h;
+
+        //we do old position - new position so that the delta will be the translation
+        //that is necessary for the buffer.
+        this._cache.dx += this._cache.sx - sx;
+        this._cache.dy += this._cache.sy - sy;
 
         //update cache
         this._cache.sx = sx;
@@ -135,62 +149,142 @@ inherit(Tilelayer, SpriteBatch, {
         this._cache.w = w;
         this._cache.h = h;
 
-        //get the context
-        ctx = ctx || this.buffer.context;
+        //select the buffer
+        buffer = buffer || this.buffer;
 
-        //clear the context
-        ctx.clearRect(0, 0, w, h);
+        //calculate some values needed for rendering
+        this._cache.startX = math.max(0, math.floor(sx / this.map.scaledTileSize.x));
+        this._cache.startY = math.max(0, math.floor(sy / this.map.scaledTileSize.y));
+        this._cache.maxX = math.min(math.ceil(w / this.map.scaledTileSize.x) + 1, this.map.size.x - this._cache.startX);
+        this._cache.maxY = math.min(math.ceil(h / this.map.scaledTileSize.y) + 1, this.map.size.y - this._cache.startY);
 
-        ///////////////////////////
-        var tsx = this.map.tileSize.x,
-            tsy = this.map.tileSize.y,
-            stsx = this.map.scaledTileSize.x,
-            stsy = this.map.scaledTileSize.y,
-            szx = this.map.size.x,
-            startX = math.max(0, math.floor(sx / stsx)),
-            startY = math.max(0, math.floor(sy / stsy)),
-            maxX = math.min(math.ceil(w / stsx) + 1, this.map.size.x - startX),
-            maxY = math.min(math.ceil(h / stsy) + 1, this.map.size.y - startY),
-            tx = 0;
-            ty = 0;
+        //set the size to the max value including our buffer area
+        w = math.max(w, this._cache.maxX * this.map.scaledTileSize.x);
+        h = math.max(h, this._cache.maxY * this.map.scaledTileSize.y);
 
-        this.sprite.position.x = startX * tsx;
-        this.sprite.position.y = startY * tsy;
+        //only resize if we need to
+        if(buffer.width !== w || buffer.height !== h) {
+            buffer.resize(w, h);
+            this.tempBuffer.resize(w, h);
 
-        for(var x = startX, xLen = startX + maxX; x < xLen; ++x) {
-            for(var y = startY, yLen = startY + maxY; y < yLen; ++y) {
-                var id = (x + (y * szx)),
-                    tid = this.tileIds[id],
-                    set = this.map.getTileset(tid),
-                    tex, frame, props;
+            this.texture.frame.width = w;
+            this.texture.frame.height = h;
+            this.texture.baseTexture.width = w;
+            this.texture.baseTexture.height = h;
 
-                if(set) {
-                    tex = set.getTileTexture(tid);
-                    frame = tex.frame;
-
-                    ctx.drawImage(
-                        tex.baseTexture.source,
-                        frame.x,
-                        frame.y,
-                        tsx,
-                        tsy,
-                        tx + set.tileoffset.x,
-                        ty + set.tileoffset.y,
-                        tsx,
-                        tsy
-                    );
-                }
-
-                ty += tsy;
-            }
-
-            tx += tsx;
-            ty = 0;
+            full = true;
         }
 
-        this.requiresUpdate = true;
+        //update the sprite's position to keep centered on screen based on scroll position
+        this.sprite.position.x = this._cache.startX * this.map.tileSize.x;
+        this.sprite.position.y = this._cache.startY * this.map.tileSize.y;
+
+        //perform render
+        if(full) {
+            this.renderFull(buffer, sx, sy, w, h);
+        } else {
+            //this.renderPan(buffer, this._cache.dx, this._cache.dy, w, h);
+        }
+    },
+    renderPan: function(buffer, dx, dy, w, h) {
+        //convert delta to tiles instead of pixels
+        var tdx = dx < 0 ? math.ceil(dx / this.map.scaledTileSize.x) : math.floor(dx / this.map.scaledTileSize.x),
+            tdy = dy < 0 ? math.ceil(dy / this.map.scaledTileSize.y) : math.floor(dy / this.map.scaledTileSize.y);
+
+        if(!tdx && !tdy) return;
+
+        dx = tdx * this.map.scaledTileSize.x;
+        dy = tdy * this.map.scaledTileSize.y;
+
+        this._cache.dx -= dx;
+        this._cache.dy -= dy;
+
+        var startX = dx < 0 ? this._cache.maxX - math.abs(tdx) : 0,
+            startY = dy < 0 ? this._cache.maxY - math.abs(tdy) : 0,
+            maxX = dx < 0 ? this._cache.maxX : math.abs(tdx),
+            maxY = dy < 0 ? this._cache.maxY : math.abs(tdy),
+            x = 0,
+            y = 0;
+
+        //clear the temporary buffer, and draw scene to it
+        this.tempBuffer.context.clearRect(0, 0, w, h);
+        this.tempBuffer.context.drawImage(buffer.canvas, 0, 0);
+
+        //clear the main buffer, translate for movement, redraw scene.
+        buffer.context.clearRect(0, 0, w, h);
+        buffer.context.save();
+        buffer.context.translate(dx, dy);
+        buffer.context.drawImage(this.tempBuffer.canvas, 0, 0);
+        buffer.context.restore();
+
+        //for each horizontal line (y = n) that got exposed, draw the tile
+        /*if(dy) {
+            for(y = startY; y < maxY; ++y) {
+                for(x = 0; x < this._cache.maxX; ++x) {
+                    this.drawTile(buffer.context, x, y, x * this.map.tileSize.x, y * this.map.tileSize.y);
+                }
+            }
+        }
+
+        //for each vertical line (x = n) that got exposed, draw the tile
+        if(dx) {
+            for(x = startX; x < maxX; ++x) {
+                for(y = 0; y < this._cache.maxY; ++y) {
+                    this.drawTile(buffer.context, x, y, x * this.map.tileSize.x, y * this.map.tileSize.y);
+                }
+            }
+        }*/
+
+        this._webglTextureUpdate = true;
+    },
+    renderFull: function(buffer, sx, sy, w, h) {
+        //clear the context
+        buffer.context.clearRect(0, 0, w, h);
+
+        var tsx = this.map.tileSize.x,
+            tsy = this.map.tileSize.y,
+            xLen = this._cache.startX + this._cache.maxX,
+            yLen = this._cache.startY + this._cache.maxY;
+
+        this._cache.ty = this._cache.tx = 0;
+
+        for(var x = this._cache.startX; x < xLen; ++x) {
+            for(var y = this._cache.startY; y < yLen; ++y) {
+                this.drawTile(buffer.context, x, y, this._cache.tx, this._cache.ty);
+
+                this._cache.ty += tsy;
+            }
+
+            this._cache.tx += tsx;
+            this._cache.ty = 0;
+        }
+
+        this._webglTextureUpdate = true;
 
         return this;
+    },
+    drawTile: function(ctx, x, y, tx, ty) {
+        var id = (x + (y * this.map.size.x)),
+            tid = this.tileIds[id],
+            set = this.map.getTileset(tid),
+            tex, frame, props;
+
+        if(set) {
+            tex = set.getTileTexture(tid);
+            frame = tex.frame;
+
+            ctx.drawImage(
+                tex.baseTexture.source,
+                frame.x,
+                frame.y,
+                frame.width,
+                frame.height,
+                tx + set.tileoffset.x,
+                ty + set.tileoffset.y,
+                frame.width,
+                frame.height
+            );
+        }
     },
     createPhysicalTiles: function() {
         var tid, tex, set, props, tile, x, y,
@@ -239,18 +333,18 @@ inherit(Tilelayer, SpriteBatch, {
         this.type = null;
     },
     updateTransform: function() {
+        SpriteBatch.prototype.updateTransform.call(this);
+
         this.render(
             this.state.camera.viewport.x,
             this.state.camera.viewport.y,
             this.state.camera.viewport.width,
             this.state.camera.viewport.height
         );
-
-        SpriteBatch.prototype.updateTransform.call(this);
     },
     _renderWebGL: function(renderSession) {
-        if(this.requiresUpdate) {
-            this.requiresUpdate = false;
+        if(this._webglTextureUpdate) {
+            this._webglTextureUpdate = false;
             PIXI.updateWebGLTexture(this.texture.baseTexture, renderSession.gl);
         }
 
