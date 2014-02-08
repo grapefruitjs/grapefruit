@@ -1,4 +1,5 @@
 var SpriteBatch = require('../display/SpriteBatch'),
+    Container = require('../display/Container'),
     Rectangle = require('../geom/Rectangle'),
     Vector = require('../math/Vector'),
     Texture = require('../display/Texture'),
@@ -107,7 +108,7 @@ var Tilelayer = function(map, layer) {
      * @type Boolean
      * @default false
      */
-    this.preRender = layer.preRender || this.properties.preRender || false;
+    this.preRender = layer.preRender || this.properties.preRender || this.map.properties.preRender || false;
 
     /**
      * The size of a chunk when pre rendering
@@ -133,11 +134,44 @@ var Tilelayer = function(map, layer) {
     this._buffered = { left: false, right: false, top: false, bottom: false };
     this._panDelta = new Vector();
     this._rendered = new Rectangle();
+
+    this.physicsContainer = new SpriteBatch();
+    this.createPhysicalTiles();
 };
 
 inherit(Tilelayer, SpriteBatch, {
     getBounds: function() {
         return this.map.getBounds();
+    },
+    createPhysicalTiles: function() {
+        var tid, tex, set, props, tile, x, y,
+            szx = this.map.size.x,
+            tsx = this.map.tileSize.x,
+            tsy = this.map.tileSize.y;
+
+        for(var i = 0; i < this.tileIds.length; ++i) {
+            tid = this.tileIds[i];
+            set = this.map.getTileset(tid);
+
+            if(!set) continue;
+
+            props = set.getTileProperties(tid);
+
+            if(!props.mass) continue;
+
+            tex = set.getTileTexture(tid);
+            tile = new Tile(tex);
+            this.physicsContainer.addChild(tile);
+
+            tile.mass = props.mass;
+            tile.hitArea = props.hitArea || set.properties.hitArea;
+            tile.setPosition(
+                ((i % szx) * tsx) + set.tileoffset.x,
+                (math.floor(i / szx) * tsy) + set.tileoffset.y + tsy
+            );
+
+            tile.enablePhysics(this.state.physics);
+        }
     },
     /**
      * Creates all the tile sprites needed to display the layer
@@ -378,7 +412,7 @@ inherit(Tilelayer, SpriteBatch, {
      */
     clearTile: function(tile, remove) {
         tile.visible = false;
-        tile.disablePhysics();
+        //tile.disablePhysics();
 
         if(remove)
             this.removeChild(tile);
@@ -446,19 +480,19 @@ inherit(Tilelayer, SpriteBatch, {
             this.addChild(tile);
         }
 
-        tile.collisionType = props.type;
+        //tile.collisionType = props.type;
         tile.interactive = interactive;
         tile.hitArea = hitArea;
-        tile.mass = props.mass || 0;
+        //tile.mass = props.mass || 0;
         tile.blendMode = (props.blendMode || this.properties.blendMode) ? PIXI.blendModes[(props.blendMode || this.properties.blendMode)] : PIXI.blendModes.NORMAL;
 
         tile.setTexture(texture);
         tile.setPosition(position[0], position[1]);
         tile.show();
 
-        if(tile.mass) {
+        /*if(tile.mass) {
             tile.enablePhysics(this.state.physics);
-        }
+        }*/
 
         //pass through all events
         if(interactive) {
