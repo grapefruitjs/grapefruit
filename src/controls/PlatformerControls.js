@@ -51,7 +51,7 @@ inherit(PlatformerControls, Controls, {
     control: function(spr) {
         Controls.prototype.control.call(this, spr);
 
-        spr._phys.originalVelFunc = spr._phys.body.velocity_func;
+        spr._phys.body.originalVelFunc = spr._phys.body.velocity_func;
         spr._phys.body.velocity_func = PlatformerControls.updateBodyVelocity;
     },
     onKey: function(action, evt) {
@@ -96,8 +96,8 @@ PlatformerControls.updateBodyVelocity = function(gravity, damping, dt) {
     var boost = (jumpState && this.remainingBoost > 0);
     var g = (boost ? cp.vzero : gravity);
 
-    //????
-    cpBodyUpdateVelocity(body, g, damping, dt);
+    //call the original update function
+    this.originalVelFunc(gravity, damping, dt);
 
     // Target horizontal speed for air/ground control
     var target_vx = this.sprite.moveSpeed * math.clamp(this.movement.x, -1, 1);
@@ -115,11 +115,11 @@ PlatformerControls.updateBodyVelocity = function(gravity, damping, dt) {
         this.v.x = PlatformerControls.lerpconst(this.v.x, target_vx, PLAYER_AIR_ACCEL * dt);
     }
 
-    this.v.y = math.clamp(this.v.y, -FALL_VELOCITY, INFINITY);
+    this.v.y = math.clamp(this.v.y, -FALL_VELOCITY, Infinity);
 };
 
 PlatformerControls.lerpconst = function(f1, f2, d) {
-    return f1 + clamp(f2 - f1, -d, d);
+    return f1 + math.clamp(f2 - f1, -d, d);
 };
 
 PlatformerControls.selectPlayerGroundNormal = function(arb, groundNormal) {
