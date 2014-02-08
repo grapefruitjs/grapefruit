@@ -764,6 +764,8 @@ inherit(PhysicsSystem, Object, {
         shape.setCollisionType(this.getCollisionType(spr));
         shape.setFriction(spr.friction || 0);
 
+        shape.group = spr.shapeGroup || 0;
+
         return shape;
     }
 });
