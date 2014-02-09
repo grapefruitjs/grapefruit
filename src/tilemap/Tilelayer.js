@@ -1,5 +1,4 @@
 var SpriteBatch = require('../display/SpriteBatch'),
-    Container = require('../display/Container'),
     Rectangle = require('../geom/Rectangle'),
     Vector = require('../math/Vector'),
     Texture = require('../display/Texture'),
@@ -144,7 +143,7 @@ inherit(Tilelayer, SpriteBatch, {
         return this.map.getBounds();
     },
     createPhysicalTiles: function() {
-        var tid, tex, set, props, tile, x, y,
+        var tid, tex, set, props, tile,
             szx = this.map.size.x,
             tsx = this.map.tileSize.x,
             tsy = this.map.tileSize.y;
