@@ -361,42 +361,151 @@ inherit(Tilemap, Container, {
     }
 });
 
-
-Tilemap.parseXmlMap = function(key, data, images) {
-
-};
-
 Tilemap.parseJsonMap = function(key, data, images) {
-    var tsets = data.tsets,
-        textures = {};
+    var tsets = data.tilesets,
+        tset = null,
+        textures = {},
+        name = '',
+        k;
 
     for(var i = 0, il = tsets.length; i < il; ++i) {
-        var tset = tsets[i];
+        tset = tsets[i];
 
-        if(fmt === C.FILE_FORMAT.JSON)
-            name = tset.name;
-        else if(fmt === C.FILE_FORMAT.XML)
-            name = tset.attributes.getNamedItem('name').nodeValue;
-
-        var k = key + '_' + name;
+        name = tset.name;
 
         if(tset.image) {
-            PIXI.BaseTextureCache[k] = new BaseTexture(obj.images[tset.image]);
+            k = key + '_' + name;
+
+            PIXI.BaseTextureCache[k] = new BaseTexture(images[tset.image]);
             PIXI.TextureCache[k] = new Texture(PIXI.BaseTextureCache[k]);
 
-            obj.textures[name] = PIXI.TextureCache[k];
+            textures[name] = PIXI.TextureCache[k];
         } else if(tset.tiles) {
-            obj.textures[name] = [];
+            textures[name] = [];
             for(var t in tset.tiles) {
-                var img = obj.images[tset.tiles[t].image],
-                    k2= k + '_' + t;
+                k2 = k + '_' + t;
 
-                PIXI.BaseTextureCache[k2] = new BaseTexture(img);
+                PIXI.BaseTextureCache[k2] = new BaseTexture(images[tset.tiles[t].image]);
                 PIXI.TextureCache[k2] = new Texture(PIXI.BaseTextureCache[k2]);
 
-                obj.textures[name][t] = PIXI.TextureCache[k2];
+                textures[name][t] = PIXI.TextureCache[k2];
             }
         }
+    }
+
+    return textures;
+};
+
+Tilemap.parseXmlMap = function(key, data, images) {
+    var mapElement = data.getElementsByTagName('map')[0],
+        map = {
+            version: parseInt(mapElement.attributes.getNamedItem('version').nodeValue, 10),
+            width:  mapElement.attributes.getNamedItem('width').nodeValue,
+            height:  mapElement.attributes.getNamedItem('height').nodeValue,
+            tilewidth:  mapElement.attributes.getNamedItem('tilewidth').nodeValue,
+            tileheight:  mapElement.attributes.getNamedItem('tileheight').nodeValue,
+            orientation: mapElement.attributes.getNamedItem('orientation').nodeValue,
+            layers: [],
+            properties: {},
+            tilesets: []
+        };
+
+    //add the layers
+
+    //add the properties
+
+    //add the tilesets
+    var tilesets = mapElement.getElementsByTagName('tileset');
+
+    for(var i = 0, il = tsets.length; i < il; ++i) {
+        var tset = tsets[i],
+            tiles = tset.getElementsByTagName('tile'),
+            tileset = {
+                name: tset.attributes.getNamedItem('name').nodeValue,
+                firstgid: parseInt(tset.attributes.getNamedItem('firstgid').nodeValue, 10),
+                tilewidth: parseInt(tset.attributes.getNamedItem('tilewidth').nodeValue, 10),
+                tileheight: parseInt(tset.attributes.getNamedItem('tileheight').nodeValue, 10),
+                imagewidth: 0,
+                imageheight: 0,
+                image: '',
+                margin: 0,
+                spacing: 0,
+                tileoffset: { x: 0, y: 0 },
+                terrains: [],
+                properties: {},
+                tileproperties: {},
+                tiles: {}
+            };
+
+        //add spacing / margin attributes if exist
+        var spacing = tset.attributes.getNamedItem('spacing');
+        if(spacing) {
+            tileset.spacing = parseInt(spacing.nodeValue, 10);
+        }
+
+        var margin = tset.attributes.getNamedItem('margin');
+        if(margin) {
+            tileset.margin = parseInt(spacing.nodeValue, 10);
+        }
+
+        //add .properties if element exists
+        var properties = tset.getElementsByTagName('properties');
+        if(properties) {
+            for(var p = 0; p < properties.length; ++p) {
+                var prop = properties[p];
+
+                tileset.properties[prop.attributes.getNamedItem('name').nodeValue] = prop.attributes.getNamedItem('value').nodeValue;
+            }
+        }
+
+        //add .tiles if multi-image set
+        for(var t = 0; t < tiles.length; ++t) {
+            var tile = tiles[i],
+                id = tile.attributes.getNamedItem('id').nodeValue,
+                terr = tile.attributes.getNamedItem('terrain');
+
+            //check if a tile has a terrain
+            if(terr) {
+                tileset.tiles[id] = {
+                    terrain: terr.nodeValue.split(',')
+                };
+            }
+
+            //add all the tile properties
+            var tileprops = tile.getElementsByTagName('properties');
+            if(tileprops) {
+                tileset.tileproperties[id] = {};
+                tileprops = tileprops[0].getElementsByTagName('property');
+                for(var tp = 0; tp < tileprops.length; ++tp) {
+                    var prop = tileprops[tp];
+                    tileset.tileproperties[id][prop.getNamedItem('name').nodeValue] = prop.getNamedItem('value').nodeValue;
+                }
+            }
+        }
+
+        //check for terraintypes and add those
+        var terrains = tset.getElementsByTagName('terraintypes');
+        if(terrains) {
+            terrains = terrains[0].getElementsByTagName('terrain');
+            for(var tr = 0; tr < terrains.length; ++tr) {
+                tileset.terrains.push({
+                    name: terrains[tr].attributes.getNamedItem('name').nodeValue,
+                    tile: parseInt(terrains[tr].attributes.getNamedItem('tile').nodeValue, 10)
+                });
+            }
+        }
+
+        //check for tileoffset and add that
+        var offset = tset.getElementsByTagName('tileoffset');
+        if(offset) {
+            tileset.tileoffset.x = parseInt(offset[0].attributes.getNamedItem('x').nodeValue, 10);
+            tileset.tileoffset.y = parseInt(offset[0].attributes.getNamedItem('y').nodeValue, 10);
+        }
+
+        //TODO: image, imagewidth, imageheight
+
+
+        //create textures from the images
     }
 };
 
