@@ -7,7 +7,7 @@ var SpriteBatch = require('../display/SpriteBatch'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
     support = require('../utils/support'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('pixi.js');
 
 /**
  * The Tilelayer is the visual tiled layer that actually displays on the screen

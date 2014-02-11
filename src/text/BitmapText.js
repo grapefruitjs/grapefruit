@@ -6,7 +6,7 @@ var SpriteBatch = require('../display/SpriteBatch'),
     Rectangle = require('../geom/Rectangle'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('pixi.js');
 
 /**
  * A Text Object will create (a) line(s) of text using bitmap font. To split a line you can use "\n", "\r" or "\r\n"

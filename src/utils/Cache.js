@@ -6,7 +6,7 @@ var inherit = require('./inherit'),
     Texture = require('../display/Texture'),
     BaseTexture = require('../display/BaseTexture'),
     BitmapText = require('../text/BitmapText'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('pixi.js');
 
 /**
  * A game only has one instance of a Cache and it is used to store all externally loaded assets such

@@ -2,7 +2,7 @@ var EventEmitter = require('../utils/EventEmitter'),
     PhysicsTarget = require('../physics/PhysicsTarget'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('pixi.js');
 
 /**
  * The base display object, that anything being put on the screen inherits from

@@ -5,7 +5,7 @@ var Rectangle = require('../geom/Rectangle'),
     Tile = require('../tilemap/Tile'),
     math = require('../math/math'),
     inherit = require('../utils/inherit'),
-    cp = require('../vendor/cp');
+    cp = require('chipmunk');
 
 /**
  * The PhysicsSystem is the wrapper around the chipmunk-js physics library that integrates

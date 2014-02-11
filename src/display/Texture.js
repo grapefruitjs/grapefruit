@@ -11,9 +11,10 @@
  * @param baseTexture {BaseTexture} The base texture source to create the texture from
  * @param frame {Rectangle} The rectangle frame of the texture to show
  */
-var Texture = require('../vendor/pixi').Texture,
+var Texture = require('pixi.js').Texture,
+    Rectangle = require('../geom/Rectangle'),
     utils = require('../utils/utils'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('pixi.js');
 
 //These create arrays of textures based on texture atlas data
 
@@ -54,11 +55,9 @@ Texture._createFrame = function(key, data, baseTexture) {
             height: rect.h
         });
 
-        tx.trimmed = data.trimmed;
-        tx.trim.x = data.spriteSourceSize.x;
-        tx.trim.y = data.spriteSourceSize.y;
-        tx.trim.realWidth = data.sourceSize.w;
-        tx.trim.realHeight = data.sourceSize.h;
+        if(tx.trimmed = data.trimmed) {
+            tx.trim = new Rectangle(data.spriteSourceSize.x, data.spriteSourceSize.y, data.sourceSize.w, data.sourceSize.h);
+        }
 
         return tx;
     }

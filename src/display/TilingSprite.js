@@ -9,6 +9,6 @@
  * @param width {Number}  the width of the tiling sprite
  * @param height {Number} the height of the tiling sprite
  */
-var TilingSprite = require('../vendor/pixi').TilingSprite;
+var TilingSprite = require('pixi.js').TilingSprite;
 
 module.exports = TilingSprite;

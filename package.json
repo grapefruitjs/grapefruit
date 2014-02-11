@@ -19,7 +19,10 @@
 
     "main": "build/gf.js",
 
-    "dependencies": {},
+    "dependencies": {
+        "pixi.js": "~1.5",
+        "chipmunk": "~6.1.1"
+    },
     "devDependencies": {
         "grunt": "~0.4.1",
         "grunt-contrib-jshint": "~0.8",

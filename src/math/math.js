@@ -1,5 +1,5 @@
 var random = require('./random'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('pixi.js');
 
 /**
  * The grapefruit math library, used to abstract commonly used math operations
