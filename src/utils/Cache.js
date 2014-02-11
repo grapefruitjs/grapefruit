@@ -124,11 +124,42 @@ inherit(Cache, Object, {
      * @param [obj.images] {Array<Image>} Array of images used in the tilesets of this tilemap
      */
     addTilemap: function(obj) {
-        //parse out the textures
-        if(obj.format === C.FILE_FORMAT.XML)
-            obj.textures = Tilemap.parseXMLMap(obj.key, obj.data, obj.images);
-        else if(obj.format === C.FILE_FORMAT.JSON)
-            obj.textures = Tilemap.parseJSONMap(obj.key, obj.data, obj.images);
+        //parse out an object representing the XML map
+        if(obj.format === C.FILE_FORMAT.XML) {
+            obj.xmlData = obj.data;
+            obj.data = Tilemap.parseXMLMap(obj.key, obj.data, obj.images);
+        }
+
+        //create the textures for this map
+        var tsets = data.tilesets,
+            tset = null,
+            name = '',
+            k, k2;
+
+        for(var i = 0, il = tsets.length; i < il; ++i) {
+            tset = tsets[i];
+
+            name = tset.name;
+            k = key + '_' + name;
+
+            if(tset.image) {
+
+                PIXI.BaseTextureCache[k] = new BaseTexture(images[tset.image]);
+                PIXI.TextureCache[k] = new Texture(PIXI.BaseTextureCache[k]);
+
+                obj.textures[name] = PIXI.TextureCache[k];
+            } else if(tset.tiles) {
+                obj.textures[name] = [];
+                for(var t in tset.tiles) {
+                    k2 = k + '_' + t;
+
+                    PIXI.BaseTextureCache[k2] = new BaseTexture(images[tset.tiles[t].image]);
+                    PIXI.TextureCache[k2] = new Texture(PIXI.BaseTextureCache[k2]);
+
+                    obj.textures[name][t] = PIXI.TextureCache[k2];
+                }
+            }
+        }
 
         this._tilemaps[key] = obj;
     },

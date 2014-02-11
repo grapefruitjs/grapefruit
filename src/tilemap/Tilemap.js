@@ -361,41 +361,6 @@ inherit(Tilemap, Container, {
     }
 });
 
-Tilemap.parseJsonMap = function(key, data, images) {
-    var tsets = data.tilesets,
-        tset = null,
-        textures = {},
-        name = '',
-        k;
-
-    for(var i = 0, il = tsets.length; i < il; ++i) {
-        tset = tsets[i];
-
-        name = tset.name;
-
-        if(tset.image) {
-            k = key + '_' + name;
-
-            PIXI.BaseTextureCache[k] = new BaseTexture(images[tset.image]);
-            PIXI.TextureCache[k] = new Texture(PIXI.BaseTextureCache[k]);
-
-            textures[name] = PIXI.TextureCache[k];
-        } else if(tset.tiles) {
-            textures[name] = [];
-            for(var t in tset.tiles) {
-                k2 = k + '_' + t;
-
-                PIXI.BaseTextureCache[k2] = new BaseTexture(images[tset.tiles[t].image]);
-                PIXI.TextureCache[k2] = new Texture(PIXI.BaseTextureCache[k2]);
-
-                textures[name][t] = PIXI.TextureCache[k2];
-            }
-        }
-    }
-
-    return textures;
-};
-
 Tilemap.parseXmlMap = function(key, data, images) {
     var mapElement = data.getElementsByTagName('map')[0],
         map = {
@@ -410,9 +375,9 @@ Tilemap.parseXmlMap = function(key, data, images) {
             tilesets: []
         };
 
-    //add the layers
+    //TODO: add the layers
 
-    //add the properties
+    //TODO: add the properties
 
     //add the tilesets
     var tilesets = mapElement.getElementsByTagName('tileset');
@@ -450,7 +415,7 @@ Tilemap.parseXmlMap = function(key, data, images) {
 
         //add .properties if element exists
         var properties = tset.getElementsByTagName('properties');
-        if(properties) {
+        if(properties.length) {
             for(var p = 0; p < properties.length; ++p) {
                 var prop = properties[p];
 
@@ -462,18 +427,24 @@ Tilemap.parseXmlMap = function(key, data, images) {
         for(var t = 0; t < tiles.length; ++t) {
             var tile = tiles[i],
                 id = tile.attributes.getNamedItem('id').nodeValue,
-                terr = tile.attributes.getNamedItem('terrain');
+                terr = tile.attributes.getNamedItem('terrain'),
+                img = tile.getElementsByTagName('image');
 
             //check if a tile has a terrain
             if(terr) {
-                tileset.tiles[id] = {
-                    terrain: terr.nodeValue.split(',')
-                };
+                tileset.tiles[id] = tileoffset.tiles[id] || {};
+                tileset.tiles[id].terrain = terr.nodeValue.split(',');
+            }
+
+            //check if it has an image child
+            if(img.length) {
+                tileset.tiles[id] = tileset.tiles[id] || {};
+                tileset.tiles[id].image = img[0].attributes.getNamedItem('source').nodeValue;
             }
 
             //add all the tile properties
             var tileprops = tile.getElementsByTagName('properties');
-            if(tileprops) {
+            if(tileprops.length) {
                 tileset.tileproperties[id] = {};
                 tileprops = tileprops[0].getElementsByTagName('property');
                 for(var tp = 0; tp < tileprops.length; ++tp) {
@@ -485,7 +456,7 @@ Tilemap.parseXmlMap = function(key, data, images) {
 
         //check for terraintypes and add those
         var terrains = tset.getElementsByTagName('terraintypes');
-        if(terrains) {
+        if(terrains.length) {
             terrains = terrains[0].getElementsByTagName('terrain');
             for(var tr = 0; tr < terrains.length; ++tr) {
                 tileset.terrains.push({
@@ -497,15 +468,13 @@ Tilemap.parseXmlMap = function(key, data, images) {
 
         //check for tileoffset and add that
         var offset = tset.getElementsByTagName('tileoffset');
-        if(offset) {
+        if(offset.length) {
             tileset.tileoffset.x = parseInt(offset[0].attributes.getNamedItem('x').nodeValue, 10);
             tileset.tileoffset.y = parseInt(offset[0].attributes.getNamedItem('y').nodeValue, 10);
         }
 
         //TODO: image, imagewidth, imageheight
-
-
-        //create textures from the images
+        var image = tset.
     }
 };
 
