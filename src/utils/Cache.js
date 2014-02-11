@@ -124,45 +124,11 @@ inherit(Cache, Object, {
      * @param [obj.images] {Array<Image>} Array of images used in the tilesets of this tilemap
      */
     addTilemap: function(obj) {
-        var key = obj.key,
-            fmt = obj.format,
-            tsets,
-            name;
-
-        if(fmt === C.FILE_FORMAT.XML)
-            tsets = obj.data.getElementsByTagName('tilesets');
-        else if(fmt === C.FILE_FORMAT.JSON)
-            tsets = obj.data.tilesets;
-
-        obj.textures = {};
-        for(var i = 0, il = tsets.length; i < il; ++i) {
-            var tset = tsets[i];
-
-            if(fmt === C.FILE_FORMAT.JSON)
-                name = tset.name;
-            else if(fmt === C.FILE_FORMAT.XML)
-                name = tset.attributes.getNamedItem('name').nodeValue;
-
-            var k = key + '_' + name;
-
-            if(tset.image) {
-                PIXI.BaseTextureCache[k] = new BaseTexture(obj.images[tset.image]);
-                PIXI.TextureCache[k] = new Texture(PIXI.BaseTextureCache[k]);
-
-                obj.textures[name] = PIXI.TextureCache[k];
-            } else if(tset.tiles) {
-                obj.textures[name] = [];
-                for(var t in tset.tiles) {
-                    var img = obj.images[tset.tiles[t].image],
-                        k2= k + '_' + t;
-
-                    PIXI.BaseTextureCache[k2] = new BaseTexture(img);
-                    PIXI.TextureCache[k2] = new Texture(PIXI.BaseTextureCache[k2]);
-
-                    obj.textures[name][t] = PIXI.TextureCache[k2];
-                }
-            }
-        }
+        //parse out the textures
+        if(obj.format === C.FILE_FORMAT.XML)
+            obj.textures = Tilemap.parseXMLMap(obj.key, obj.data, obj.images);
+        else if(obj.format === C.FILE_FORMAT.JSON)
+            obj.textures = Tilemap.parseJSONMap(obj.key, obj.data, obj.images);
 
         this._tilemaps[key] = obj;
     },
@@ -212,7 +178,7 @@ inherit(Cache, Object, {
         PIXI.TextureCache[key] = new Texture(PIXI.BaseTextureCache[key]);
         obj.texture = PIXI.TextureCache[key];
 
-        obj.font = BitmapText.parseXML(key, obj.data, obj.texture);
+        obj.font = BitmapText.parseXMLFont(key, obj.data, obj.texture);
 
         this._images[key] = obj;
     },

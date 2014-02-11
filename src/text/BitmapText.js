@@ -309,7 +309,7 @@ Object.defineProperty(BitmapText.prototype, 'align', {
  * @param texture {Texture} The texture to use for creating character textures
  * @static
  */
-BitmapText.parseXML = function(key, xml, texture) {
+BitmapText.parseXMLFont = function(key, xml, texture) {
     var btx = texture.baseTexture;
 
     if(!xml.getElementsByTagName('font')) {
