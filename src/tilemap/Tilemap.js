@@ -361,11 +361,46 @@ inherit(Tilemap, Container, {
     }
 });
 
-/*
-Tilemap.fromXML = function(state, data) {
+
+Tilemap.parseXmlMap = function(key, data, images) {
 
 };
 
+Tilemap.parseJsonMap = function(key, data, images) {
+    var tsets = data.tsets,
+        textures = {};
+
+    for(var i = 0, il = tsets.length; i < il; ++i) {
+        var tset = tsets[i];
+
+        if(fmt === C.FILE_FORMAT.JSON)
+            name = tset.name;
+        else if(fmt === C.FILE_FORMAT.XML)
+            name = tset.attributes.getNamedItem('name').nodeValue;
+
+        var k = key + '_' + name;
+
+        if(tset.image) {
+            PIXI.BaseTextureCache[k] = new BaseTexture(obj.images[tset.image]);
+            PIXI.TextureCache[k] = new Texture(PIXI.BaseTextureCache[k]);
+
+            obj.textures[name] = PIXI.TextureCache[k];
+        } else if(tset.tiles) {
+            obj.textures[name] = [];
+            for(var t in tset.tiles) {
+                var img = obj.images[tset.tiles[t].image],
+                    k2= k + '_' + t;
+
+                PIXI.BaseTextureCache[k2] = new BaseTexture(img);
+                PIXI.TextureCache[k2] = new Texture(PIXI.BaseTextureCache[k2]);
+
+                obj.textures[name][t] = PIXI.TextureCache[k2];
+            }
+        }
+    }
+};
+
+/*
 Tilemap.fromCSV = function(state, data) {
 
 };
