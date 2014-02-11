@@ -1,7 +1,7 @@
 var EventEmitter = require('../utils/EventEmitter'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('pixi.js');
 
 /**
  * The same as a container, but offers improvements in render speed for single-level

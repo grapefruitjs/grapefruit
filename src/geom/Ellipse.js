@@ -10,6 +10,6 @@
  * @param width {Number} The overall height of this ellipse
  * @param height {Number} The overall width of this ellipse
  */
-var Ellipse = require('../vendor/pixi').Ellipse;
+var Ellipse = require('pixi.js').Ellipse;
 
 module.exports = Ellipse;

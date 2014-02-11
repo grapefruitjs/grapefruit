@@ -7,6 +7,6 @@
  * @constructor
  * @param source {Image|Canvas} the source object (image or canvas)
  */
-var BaseTexture = require('../vendor/pixi').BaseTexture;
+var BaseTexture = require('pixi.js').BaseTexture;
 
 module.exports = BaseTexture;

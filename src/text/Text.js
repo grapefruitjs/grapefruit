@@ -16,6 +16,6 @@
  * @param [style.wordWrap=false] {Boolean} Indicates if word wrap should be used
  * @param [style.wordWrapWidth=100] {Number} The width at which text will wrap
  */
-var Text = require('../vendor/pixi').Text;
+var Text = require('pixi.js').Text;
 
 module.exports = Text;

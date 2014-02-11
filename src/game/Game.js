@@ -10,7 +10,7 @@ var StateManager = require('./StateManager'),
     utils = require('../utils/utils'),
     support = require('../utils/support'),
     inherit = require('../utils/inherit'),
-    PIXI = require('../vendor/pixi'),
+    PIXI = require('pixi.js'),
     C = require('../constants');
 
 /**

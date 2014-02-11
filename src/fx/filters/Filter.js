@@ -1,4 +1,4 @@
-var PIXI = require('../../vendor/pixi');
+var PIXI = require('pixi.js');
 
 /**
  *

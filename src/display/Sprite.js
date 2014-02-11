@@ -5,7 +5,7 @@ var EventEmitter = require('../utils/EventEmitter'),
     inherit = require('../utils/inherit'),
     Texture = require('./Texture'),
     utils = require('../utils/utils'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('pixi.js');
 
 /**
  * The base Sprite class. This class is the base for all images on the screen. This class extends PIXI's Sprite.

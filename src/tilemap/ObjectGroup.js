@@ -6,7 +6,7 @@ var Container = require('../display/Container'),
     utils = require('../utils/utils'),
     inherit = require('../utils/inherit'),
     math = require('../math/math'),
-    PIXI = require('../vendor/pixi');
+    PIXI = require('pixi.js');
 
 /**
  * Tiled object group is a special layer that contains entities

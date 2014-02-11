@@ -1,4 +1,4 @@
-//var Rectangle = module.exports = require('../vendor/pixi').Rectangle;
+//var Rectangle = module.exports = require('pixi.js').Rectangle;
 
 var inherit = require('../utils/inherit'),
     Polygon = require('./Polygon'),
@@ -11,7 +11,7 @@ var inherit = require('../utils/inherit'),
  * top-left corner point (x, y) and by its width and its height.
  *
  * @class Rectangle
- * @constructor 
+ * @constructor
  * @param x {Number} The X coord of the upper-left corner of the rectangle
  * @param y {Number} The Y coord of the upper-left corner of the rectangle
  * @param width {Number} The overall wisth of this rectangle
