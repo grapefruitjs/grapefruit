@@ -84,7 +84,23 @@ function testMap(jsonFile, tmxFile, cb) {
             //tilelayer specific
             if(jl.type === 'tilelayer') {
                 pl.should.have.property('data');
-                pl.data.should.eql(jl.data, 'Layer data should match, ' + jsonFile);
+                pl.data.length.should.equal(jl.data.length);
+
+                //can't use this because in PhantomJs a typed array serializes like:
+                //
+                //  > var a = new Uint32Array([1,2,3]);
+                //      undefined
+                //
+                //  > JSON.stringify(a)
+                //      "{"0":1,"1":2,"2":3,"length":3,"byteOffset":0,"buffer":{"byteLength":12},"byteLength":12}"
+                //
+                // The non-array properties screw up this check. Though in a normal browser this works properly.
+                //
+                //pl.data.should.eql(jl.data, 'Layer data should match, ' + jsonFile);
+
+                for(var idx = 0; idx < pl.data.length; ++idx) {
+                    pl.data[idx].should.equal(jl.data[idx], 'Layer data index ' + idx + ' should match');
+                }
             }
             //objectgroup specific
             else if(jl.type === 'objectgroup') {
