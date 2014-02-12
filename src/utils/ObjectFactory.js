@@ -2,8 +2,7 @@ var inherit = require('./inherit'),
     Sprite = require('../display/Sprite'),
     Tilemap = require('../tilemap/Tilemap'),
     Rectangle = require('../geom/Rectangle'),
-    BitmapText = require('../text/BitmapText'),
-    C = require('../constants');
+    BitmapText = require('../text/BitmapText');
 
 /**
  * The object factory makes it simple to create and add objects to a parent. One is added
@@ -89,20 +88,7 @@ inherit(ObjectFactory, Object, {
      */
     tilemap: function(key, constrain) {
         var obj = this.game.cache.getTilemap(key) || {},
-            fmt = obj.format,
-            data = obj.data,
-            txs = obj.textures,
-            tilemap;
-
-        if(fmt === C.FILE_FORMAT.JSON) {
-            tilemap = new Tilemap(this.state, data, txs);
-        }
-        else if(fmt === C.FILE_FORMAT.XML) {
-            tilemap = Tilemap.fromXML(this.state, data, txs);
-        }
-        else if(fmt === C.FILE_FORMAT.CSV) {
-            tilemap = Tilemap.fromCSV(this.state, data, txs);
-        }
+            tilemap = new Tilemap(this.state, obj.data, obj.textures);
 
         if(constrain) {
             this.state.camera.constrain(new Rectangle(0, 0, tilemap.realSize.x, tilemap.realSize.y));
