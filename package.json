@@ -21,7 +21,8 @@
 
     "dependencies": {
         "pixi.js": "~1.5",
-        "chipmunk": "~6.1.1"
+        "chipmunk": "~6.1.1",
+        "zlibjs": "~0.1"
     },
     "devDependencies": {
         "grunt": "~0.4.1",
