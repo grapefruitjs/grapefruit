@@ -126,9 +126,6 @@ var gf = {
     SpritePool:         require('./utils/SpritePool'),
     ObjectFactory:      require('./utils/ObjectFactory'),
 
-    //plugin
-    plugin:             require('./plugin'),
-
     //vendor files
     PIXI:               require('pixi.js'),
     cp:                 require('chipmunk')
