@@ -1,10 +1,11 @@
-/* jshint ignore:start */
 var Controls = require('./Controls'),
     Vector = require('../math/Vector'),
     inherit = require('../utils/inherit'),
     KEY = require('../input/Keyboard').KEY,
     BUTTON = require('../input/gamepad/GamepadButtons').BUTTON,
-    AXIS = require('../input/gamepad/GamepadSticks').AXIS;
+    AXIS = require('../input/gamepad/GamepadSticks').AXIS,
+    math = require('../math/math'),
+    cp = require('chipmunk');
 
 /**
  * @class PlatformerControls
@@ -22,17 +23,17 @@ var PlatformerControls = function(game, settings) {
 
     //setup callbacks for left
     this.actionmap.left.callbacks[Controls.BIND_TYPE.KEYBOARD] = this.onKey.bind(this, 'left');
-    this.actionmap.left.callbacks[Controls.BIND_TYPE.GPBUTTON] = this.onGpBtn.bind(this, 'left');
+    this.actionmap.left.callbacks[Controls.BIND_TYPE.GPBUTTON] = this.onKey.bind(this, 'left');
     this.actionmap.left.callbacks[Controls.BIND_TYPE.GPAXIS] = this.onGpAxis.bind(this, 'left');
 
     //setup callbacks for right
     this.actionmap.right.callbacks[Controls.BIND_TYPE.KEYBOARD] = this.onKey.bind(this, 'right');
-    this.actionmap.right.callbacks[Controls.BIND_TYPE.GPBUTTON] = this.onGpBtn.bind(this, 'right');
+    this.actionmap.right.callbacks[Controls.BIND_TYPE.GPBUTTON] = this.onKey.bind(this, 'right');
     this.actionmap.right.callbacks[Controls.BIND_TYPE.GPAXIS] = this.onGpAxis.bind(this, 'right');
 
     //setup callbacks for jump
     this.actionmap.jump.callbacks[Controls.BIND_TYPE.KEYBOARD] = this.onKey.bind(this, 'jump');
-    this.actionmap.jump.callbacks[Controls.BIND_TYPE.GPBUTTON] = this.onGpBtn.bind(this, 'jump');
+    this.actionmap.jump.callbacks[Controls.BIND_TYPE.GPBUTTON] = this.onKey.bind(this, 'jump');
     this.actionmap.jump.callbacks[Controls.BIND_TYPE.GPAXIS] = this.onGpAxis.bind(this, 'jump');
 
     //setup binds
@@ -45,38 +46,78 @@ var PlatformerControls = function(game, settings) {
     }
 
     this.movement = new Vector();
+
+    game.on('tick', this.update.bind(this));
 };
 
 inherit(PlatformerControls, Controls, {
     control: function(spr) {
         Controls.prototype.control.call(this, spr);
 
+        /* jshint -W106 */
         spr._phys.body.originalVelFunc = spr._phys.body.velocity_func;
         spr._phys.body.velocity_func = PlatformerControls.updateBodyVelocity;
+        /* jshint +W106 */
+
+        spr.moveSpeed = spr.moveSpeed || 100;
+
+        spr.groundAccel = spr.moveSpeed * 0.10;
+        spr.airAccel = spr.moveSpeed * 0.25;
+
+        spr.jumpHeight = spr.jumpHeight || 50;
+        spr.jumpBoostHeight = spr.jumpBoostHeight || 55;
+        spr.fallVelocity = spr.fallVelocity || 900;
+        spr.gravity = spr.gravity || 2000;
+
+        spr.remainingBoost = 0;
+        spr.grounded = false;
     },
     onKey: function(action, evt) {
-        if(e.originalEvent)
-            e.originalEvent.preventDefault();
+        if(evt.originalEvent)
+            evt.originalEvent.preventDefault();
 
         switch(action) {
             case 'left':
-                this.movement.x += (e.down ? -1 : 1);
+                this.movement.x += (evt.down ? -1 : 1);
                 break;
 
             case 'right':
-                this.movement.x += (e.down ? 1 : -1);
+                this.movement.x += (evt.down ? 1 : -1);
                 break;
 
             case 'jump':
-                this.movement.y += (e.down ? 1 : -1);
+                this.movement.y += (evt.down ? 1 : -1);
                 break;
         }
     },
-    onGpBtn: function(action, evt) {
-
-    },
     onGpAxis: function(action, evt) {
+        if(evt.code === AXIS.LEFT_ANALOGUE_HOR) {
+            if(evt.value === 0) {
+                this.movement.vec.x = 0;
+            } else if(evt.value > 0) {
+                this.movement.vec.x = 1;
+            } else {
+                this.movement.vec.x = -1;
+            }
+        }
+    },
+    update: function(dt) {
+        var jumpState = this.movement.y > 0,
+            spr;
 
+        for(var i = 0; i < this.sprites.length; ++i) {
+            spr = this.sprites[i];
+
+            if(jumpState && !spr.lastJumpState && spr.grounded) {
+                var jump = math.sqrt(2 * spr.jumpHeight * spr.gravity);
+                spr._phys.body.v.y += jump;
+
+                spr.remainingBoost = spr.jumpBoostHeight / jump;
+            }
+
+            spr.remainingBoost -= dt;
+            spr.lastJumpState = jumpState;
+        }
     }
 });
 
@@ -88,34 +129,36 @@ PlatformerControls.updateBodyVelocity = function(gravity, damping, dt) {
     var groundNormal = cp.vzero;
     this.eachArbiter(PlatformerControls.selectPlayerGroundNormal.bind(null, groundNormal));
 
-    this.grounded = (groundNormal.y > 0.0);
+    this.sprite.grounded = (groundNormal.y > 0.0);
 
-    if(groundNormal.y < 0) this.remainingBoost = 0;
+    if(groundNormal.y < 0) this.sprite.remainingBoost = 0;
 
     // Do a normal-ish update
-    var boost = (jumpState && this.remainingBoost > 0);
+    var boost = (jumpState && this.sprite.remainingBoost > 0);
     var g = (boost ? cp.vzero : gravity);
 
     //call the original update function
-    this.originalVelFunc(gravity, damping, dt);
+    this.originalVelFunc(g, damping, dt);
 
     // Target horizontal speed for air/ground control
-    var target_vx = this.sprite.moveSpeed * math.clamp(this.movement.x, -1, 1);
+    var targetVx = this.sprite.moveSpeed * math.clamp(this.movement.x, -1, 1);
 
     // Update the surface velocity and friction
     // Note that the "feet" move in the opposite direction of the player.
-    var surface_v = cp.v(-target_vx, 0);
+    var surfaceV = cp.v(-targetVx, 0);
 
-    this.sprite._phys.shape.surface_v = surface_v;
-    this.sprite._phys.shape.u = (grounded ? PLAYER_GROUND_ACCEL / GRAVITY : 0.0);
+    /* jshint -W106 */
+    this.sprite._phys.shape.surface_v = surfaceV;
+    this.sprite._phys.shape.u = (this.sprite.grounded ? this.sprite.groundAccel / this.sprite.gravity : 0.0);
+    /* jshint +W106 */
 
     // Apply air control if not grounded
-    if(!grounded) {
+    if(!this.sprite.grounded) {
         // Smoothly accelerate the velocity
-        this.v.x = PlatformerControls.lerpconst(this.v.x, target_vx, PLAYER_AIR_ACCEL * dt);
+        this.v.x = PlatformerControls.lerpconst(this.v.x, targetVx, this.sprite.airAccel * dt);
     }
 
-    this.v.y = math.clamp(this.v.y, -FALL_VELOCITY, Infinity);
+    this.v.y = math.clamp(this.v.y, -this.sprite.fallVelocity, Infinity);
 };
 
 PlatformerControls.lerpconst = function(f1, f2, d) {
@@ -149,4 +192,3 @@ PlatformerControls.DEFAULT_AXES = {
 };
 
 module.exports = PlatformerControls;
-/* jshint ignore:end */
