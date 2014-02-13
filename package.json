@@ -17,7 +17,7 @@
         "url": "https://github.com/grapefruitjs/grapefruit.git"
     },
 
-    "main": "build/gf.js",
+    "main": "src/core.js",
 
     "dependencies": {
         "pixi.js": "~1.5",
