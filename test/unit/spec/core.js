@@ -89,9 +89,6 @@ describe('core', function() {
             'SpritePool',
             'ObjectFactory',
 
-            //plugin
-            'plugin',
-
             //vendor files
             'PIXI',
             'cp'
