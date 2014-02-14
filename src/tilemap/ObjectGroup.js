@@ -1,4 +1,5 @@
 var Container = require('../display/Container'),
+    SpriteBatch = require('../display/SpriteBatch'),
     Vector = require('../math/Vector'),
     Polygon = require('../geom/Polygon'),
     Ellipse = require('../geom/Ellipse'),
@@ -19,7 +20,7 @@ var Container = require('../display/Container'),
  * @param group {Object} All the settings for the layer
  */
 var ObjectGroup = function(map, group) {
-    Container.call(this, group);
+    Container.call(this);
 
     /**
      * The map instance this object group belongs to
@@ -68,7 +69,7 @@ var ObjectGroup = function(map, group) {
      * @property properties
      * @type Object
      */
-    this.properties = group.properties || {};
+    this.properties = utils.parseTiledProperties(group.properties) || {};
 
     /**
      * The objects in this group that can be spawned
@@ -93,6 +94,12 @@ var ObjectGroup = function(map, group) {
     this.position.y = group.y || 0;
     this.alpha = group.opacity !== undefined ? group.opacity : 1;
     this.visible = group.visible !== undefined ? group.visible : true;
+
+    if(this.properties.batch) {
+        this.container = this.addChild(new SpriteBatch());
+    } else {
+        this.container = this;
+    }
 };
 
 inherit(ObjectGroup, Container, {
@@ -272,7 +279,7 @@ inherit(ObjectGroup, Container, {
                     obj.properties[k] = props[k];
 
             obj._objIndex = i;
-            this.addChild(obj);
+            this.container.addChild(obj);
         }
 
         return this;

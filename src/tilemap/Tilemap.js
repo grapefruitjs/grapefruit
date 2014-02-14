@@ -138,19 +138,19 @@ var Tilemap = function(state, map, tilesetTextures) {
 
     //create each layer
     for(var i = 0, il = map.layers.length; i < il; ++i) {
-        var lyr;
+        var lyr, ldata = map.layers[i];
 
-        switch(map.layers[i].type) {
+        switch(ldata.type) {
         case 'tilelayer':
-            lyr = new Tilelayer(this, map.layers[i]);
+            lyr = new Tilelayer(this, ldata);
             break;
 
         case 'objectgroup':
-            lyr = new ObjectGroup(this, map.layers[i]);
+            lyr = new ObjectGroup(this, ldata);
             break;
 
         case 'imagelayer':
-            lyr = new Sprite(map.layers[i]);
+            lyr = new Sprite(ldata);
             break;
         }
 
