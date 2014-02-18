@@ -1,7 +1,5 @@
 var Container = require('../display/Container'),
-    Sprite = require('../display/Sprite'),
     Rectangle = require('../geom/Rectangle'),
-    Vector = require('../math/Vector'),
     ObjectPool = require('../utils/ObjectPool'),
     ObjectFactory = require('../utils/ObjectFactory'),
     //camera fx
@@ -13,6 +11,7 @@ var Container = require('../display/Container'),
 
     inherit = require('../utils/inherit'),
     math = require('../math/math'),
+    Vector = require('../math/Vector'),
     C = require('../constants');
 
 /**
@@ -81,34 +80,6 @@ var Camera = function(state) {
     this._target = null;
 
     /**
-     * The target's last position, to cache if we should try to move the camera or not
-     *
-     * @property _targetPos
-     * @type Vector
-     * @readOnly
-     * @private
-     */
-    this._targetPos = new Vector();
-
-    /**
-     * The size of the camera
-     *
-     * @property size
-     * @type Vector
-     * @readOnly
-     */
-    this.size = new Vector();
-
-    /**
-     * Half of the size of the camera
-     *
-     * @property hSize
-     * @type Vector
-     * @readOnly
-     */
-    this.hSize = new Vector();
-
-    /**
      * The container that holds all the GUI items, direct children of Camera are effects
      *
      * @property gui
@@ -124,6 +95,8 @@ var Camera = function(state) {
      * @type ObjectFactory
      */
     this.add = new ObjectFactory(state, this.gui);
+
+    this.viewport = new Rectangle(0, 0, 0, 0);
 
     /**
      * The fxpools for doing camera effects
@@ -221,6 +194,9 @@ var Camera = function(state) {
 
     //add the gui child
     this.addChild(this.gui);
+
+    this._panDiff = new Vector();
+    this._tempPos = new Vector();
 };
 
 inherit(Camera, Container, {
@@ -245,48 +221,44 @@ inherit(Camera, Container, {
         return ret;
     },
     /**
-     * Follows an sprite with the camera, ensuring they are always center view. You can
+     * Follows an object with the camera, ensuring they are always center view. You can
      * pass a follow style to change the area an sprite can move around in before we start
      * to move with them.
      *
      * @method follow
-     * @param sprite {Sprite} The sprite to follow
+     * @param object {Container|Sprite} The object to follow
      * @param [style=CAMERA_FOLLOW.LOCKON] {CAMERA_FOLLOW} The style of following
      * @return {Camera} Returns itself.
      * @chainable
      */
-    follow: function(spr, style) {
-        if(!(spr instanceof Sprite))
-            return this;
-
-        this._target = spr;
-        this._targetPos.set(null, null);
+    follow: function(obj, style) {
+        this._target = obj;
 
         switch(style) {
             case C.CAMERA_FOLLOW.PLATFORMER:
-                var w = this.size.x / 8;
-                var h = this.size.y / 3;
+                var w = this.viewport.width / 8;
+                var h = this.viewport.height / 3;
                 this._deadzone = new Rectangle(
-                    (this.size.x - w) / 2,
-                    (this.size.y - h) / 2 - (h / 4),
+                    (this.viewport.width - w) / 2,
+                    (this.viewport.height - h) / 2 - (h / 4),
                     w,
                     h
                 );
                 break;
             case C.CAMERA_FOLLOW.TOPDOWN:
-                var sq4 = Math.max(this.size.x, this.size.y) / 4;
+                var sq4 = Math.max(this.viewport.width, this.viewport.height) / 4;
                 this._deadzone = new Rectangle(
-                    (this.size.x - sq4) / 2,
-                    (this.size.y - sq4) / 2,
+                    (this.viewport.width - sq4) / 2,
+                    (this.viewport.height - sq4) / 2,
                     sq4,
                     sq4
                 );
                 break;
             case C.CAMERA_FOLLOW.TOPDOWN_TIGHT:
-                var sq8 = Math.max(this.size.x, this.size.y) / 8;
+                var sq8 = Math.max(this.viewport.width, this.viewport.height) / 8;
                 this._deadzone = new Rectangle(
-                    (this.size.x - sq8) / 2,
-                    (this.size.y - sq8) / 2,
+                    (this.viewport.width - sq8) / 2,
+                    (this.viewport.height - sq8) / 2,
                     sq8,
                     sq8
                 );
@@ -298,7 +270,7 @@ inherit(Camera, Container, {
                 break;
         }
 
-        this.focusSprite(this._target);
+        this.focusOn(this._target);
 
         return this;
     },
@@ -311,35 +283,20 @@ inherit(Camera, Container, {
      */
     unfollow: function() {
         this._target = null;
-        this._targetPos.set(null, null);
         return this;
     },
     /**
-     * Focuses the camera on a sprite.
+     * Focuses the camera on an object.
      *
-     * @method focusSprite
-     * @param sprite {Sprite} The sprite to focus on
+     * @method focusOn
+     * @param object {Container|Sprite} The object to focus on
      * @return {Camera} Returns itself.
      * @chainable
      */
-    focusSprite: function(spr) {
-        var x = spr.position.x,
-            y = spr.position.y,
-            p = spr.parent;
+    focusOn: function(obj) {
+        var pos = this._getObjPosition(obj);
 
-        //need the transform of the sprite that doesn't take into account
-        //the world object. So add up the positions not including the world position.
-        while(p && p !== this.world) {
-            x += p.position.x;
-            y += p.position.y;
-            p = p.parent;
-        }
-
-        return this.focus(
-            //multiple the calculated point by the world scale for this sprite
-            x * this.world.scale.x,
-            y * this.world.scale.y
-        );
+        return this.focus(pos.x * this.world.scale.x, pos.y * this.world.scale.y);
     },
     /**
      * Focuses the camera on an x,y position. Ensures that the camera does
@@ -352,12 +309,9 @@ inherit(Camera, Container, {
      * @chainable
      */
     focus: function(x, y) {
-        y = x.y !== undefined ? x.y : (y || 0);
-        x = x.x !== undefined ? x.x : (x || 0);
-
         //calculate how much we need to pan
-        var goToX = x - (this.hSize.x / this.world.worldTransform.a),
-            goToY = y - (this.hSize.y / this.world.worldTransform.d),
+        var goToX = x - (this.viewport.halfWidth / this.world.worldTransform.a),
+            goToY = y - (this.viewport.halfHeight / this.world.worldTransform.d),
             dx = goToX + this.world.position.x, //world pos is negative
             dy = goToY + this.world.position.y;
 
@@ -374,56 +328,19 @@ inherit(Camera, Container, {
      * @chainable
      */
     pan: function(dx, dy) {
-        dy = dx.y !== undefined ? dx.y : (dy || 0);
-        dx = dx.x !== undefined ? dx.x : (dx || 0);
-
         if(!dx && !dy) return;
 
-            //world position
-        var pos = this.world.position,
-            //new world position
-            newX = pos.x - dx,
-            newY = pos.y - dy,
-            b = this.bounds;
+        this.viewport.x += dx;
+        this.viewport.y += dy;
 
-        if(b) {
-            //check if X movement is illegal
-            if(this._outsideBounds(-newX, -pos.y)) {
-                dx = (dx < 0 ? b.x : b.right - this.size.x) + pos.x; //how far can we move since dx is too much
-            }
-            //check if Y movement is illegal
-            if(this._outsideBounds(-pos.x, -newY)) {
-                dy = (dy < 0 ? b.y : b.bottom - this.size.y) + pos.y;
-            }
-        }
+        this._checkConstraint();
 
-        if(dx || dy) {
-            //prevent NaN
-            if(!dx) dx = 0;
-            if(!dy) dy = 0;
-
-            this.world.pan(-dx, -dy);
+        this._panDiff.copy(this.viewport).add(this.world.position);
+        if(this._panDiff.x || this._panDiff.y) {
+            this.world.pan(-this._panDiff.x, -this._panDiff.y);
         }
 
         return this;
-    },
-    /**
-     * Checks if a point is outside the bounds of the camera constraints.
-     *
-     * @method _outsideBounds
-     * @param x {Number} The new X position to test
-     * @param y {Number} The new Y position to test
-     * @return {Boolean} true if the camera will move outside bounds to go to this point
-     * @private
-     */
-    _outsideBounds: function(x, y) {
-        //check if each corner of the camera is within the bounds
-        return (
-            !this.bounds.contains(x, y) || //top left
-            !this.bounds.contains(x, y + this.size.y) || //bottom left
-            !this.bounds.contains(x + this.size.x, y) || //top right
-            !this.bounds.contains(x + this.size.x, y + this.size.y) //bottom right
-        );
     },
     /**
      * Resizes the viewing area, this is called internally by your game instance
@@ -437,11 +354,8 @@ inherit(Camera, Container, {
      * @chainable
      */
     resize: function(w, h) {
-        this.size.set(w, h);
-        this.hSize.set(
-            math.round(this.size.x / 2),
-            math.round(this.size.y / 2)
-        );
+        this.viewport.width = w;
+        this.viewport.height = h;
 
         return this;
     },
@@ -450,12 +364,20 @@ inherit(Camera, Container, {
      * size unless you set it manually.
      *
      * @method constrain
-     * @param shape {Rectangle|Polygon|Circle|Ellipse} The shape to constrain the camera into
+     * @param shape {Rectangle} The shape to constrain the camera into
      * @return {Camera} Returns itself.
      * @chainable
      */
     constrain: function(shape) {
         this.bounds = shape;
+
+        //TODO: Support polygons via cp.PolyShape. That will allow use to use
+        //  shape.segmentQuery to find the extent that the camera can move about
+        //  inside the shape.
+        //
+        //this.bounds = new cp.PolyShape(null, shape.points, shape.position);
+
+        this._checkConstraint();
 
         return this;
     },
@@ -471,6 +393,38 @@ inherit(Camera, Container, {
 
         return this;
     },
+    _checkConstraint: function() {
+        if(!this.bounds)
+            return;
+
+        //simple case of rectangle
+        if(this.bounds._shapetype === C.SHAPE.RECTANGLE) {
+            /*
+            this.viewport.x = math.clamp(this.viewport.x, this.bounds.left, this.bounds.right - this.viewport.width);
+            this.viewport.y = math.clamp(this.viewport.y, this.bounds.top, this.bounds.bottom - this.viewport.height);
+            */
+            if(this.viewport.left < this.bounds.left) {
+                this.viewport.x = this.bounds.left;
+            }
+
+            if(this.viewport.right > this.bounds.right) {
+                this.viewport.x = this.bounds.right - this.viewport.width;
+            }
+
+            if(this.viewport.top < this.bounds.top) {
+                this.viewport.y = this.bounds.top;
+            }
+
+            if(this.viewport.bottom > this.bounds.bottom) {
+                this.viewport.y = this.bounds.bottom - this.viewport.height;
+            }
+        }
+        //complex polygon case, need to do some point queries to check what
+        //the maximum values for this rectangle in the polygon are
+        //else {
+            //TODO!!
+        //}
+    },
     /**
      * Called internally every frame. Updates all effects and the follow
      *
@@ -480,47 +434,57 @@ inherit(Camera, Container, {
      * @private
      */
     update: function(dt) {
-        //follow sprite
+        //follow target
         if(this._target) {
-            var worldTransform = this._target.worldTransform,
-                x = worldTransform.tx,
-                y = worldTransform.ty;
+            if(!this._deadzone) {
+                this.focusOn(this._target);
+            } else {
+                var moveX, moveY,
+                    dx, dy,
+                    wt = this._target.worldTransform;
 
-            if(this._targetPos.x !== x || this._targetPos.y !== y) {
-                this._targetPos.set(x, y);
+                moveX = moveY = dx = dy = 0;
 
-                if(!this._deadzone) {
-                    this.focusSprite(this._target);
-                } else {
-                    var moveX, moveY,
-                        dx, dy;
+                //check less than
+                dx = wt.tx - this._deadzone.x;
+                dy = wt.ty - this._deadzone.y;
 
-                    moveX = moveY = dx = dy = 0;
+                if(dx < 0)
+                    moveX = dx * dt;
+                if(dy < 0)
+                    moveY = dy * dt;
 
-                    //check less than
-                    dx = x - this._deadzone.x;
-                    dy = y - this._deadzone.y;
+                //check greater than
+                dx = (wt.tx + this._target.width) - (this._deadzone.x + this._deadzone.width);
+                dy = (wt.ty + this._target.height) - (this._deadzone.y + this._deadzone.height);
 
-                    if(dx < 0)
-                        moveX = dx;
-                    if(dy < 0)
-                        moveY = dy;
+                if(dx > 0)
+                    moveX = dx * dt;
+                if(dy > 0)
+                    moveY = dy * dt;
 
-                    //check greater than
-                    dx = x - (this._deadzone.x + this._deadzone.width);
-                    dy = y - (this._deadzone.y + this._deadzone.height);
+                this.pan(moveX, moveY);
+                /*
+                var pos = this._getObjPosition(this._target),
+                    maxX = pos.x - this._deadzone.x,
+                    minX = (pos.x + this._target.width) - (this._deadzone.x + this._deadzone.width),
+                    maxY = pos.y - this._deadzone.y,
+                    minY = (pos.y + this._target.height) - (this._deadzone.y + this._deadzone.height);
 
-                    if(dx > 0)
-                        moveX = dx;
-                    if(dy > 0)
-                        moveY = dy;
-
-                    this.pan(moveX, moveY);
-                }
+                this.viewport.x = math.clamp(this.viewport.x, minX, maxX);
+                this.viewport.y = math.clamp(this.viewport.y, minY, maxY);
+                */
             }
         }
 
-        //update effects
+        //constrain
+        //this._checkConstraint();
+
+        //this.pan(0, 0);
+
+        //this.world.position.set(-this.viewport.x, -this.viewport.y);
+
+        //update effects - TODO: move to FX manager
         for(var i = 0, il = this.children.length; i < il; ++i) {
             var c = this.children[i];
             if(c.update)
@@ -528,6 +492,22 @@ inherit(Camera, Container, {
         }
 
         return this;
+    },
+    _getObjPosition: function(obj) {
+        this._tempPos.copy(obj.position);
+        var p = obj.parent;
+
+        //need the transform of the sprite that doesn't take into account
+        //the world object. So add up the positions not including the world position.
+        while(p && p !== this.world) {
+            this._tempPos.add(p.position);
+            p = p.parent;
+        }
+
+        this._tempPos.x *= this.world.worldTransform.a;
+        this._tempPos.y *= this.world.worldTransform.d;
+
+        return this._tempPos;
     }
 });
 
