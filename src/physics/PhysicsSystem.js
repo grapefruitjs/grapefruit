@@ -88,6 +88,11 @@ var PhysicsSystem = function(state, options) {
      * @private
      */
     this._skip = 0;
+
+    //setup events
+    this.world.on('beginContact', this.onContact.bind(this));
+    this.world.on('endContact', this.onSeparate.bind(this));
+    //this.world.on('preSolve', this.onPreSolve.bind(this));
 };
 
 inherit(PhysicsSystem, Object, {
@@ -333,15 +338,25 @@ inherit(PhysicsSystem, Object, {
             body.__sprite.position.x = body.position[0]; //interpolatedPosition[0];
             body.__sprite.position.y = body.position[1]; //interpolatedPosition[1];
             body.__sprite.rotation = -body.angle;
+        }
+    },
+    onContact: function(event) {
+        var len = event.contactEquations.length;
 
         //notify of any collisions
-        var np = this.world.narrowphase;
-        for(i = 0; i < np.contactEquations.length; ++i) {
-            var eq = np.contactEquations[i];
+        for(var i = 0; i < len; ++i) {
+            var eq = event.contactEquations[i];
+
             if(eq.firstImpact) {
-                eq.bi.__sprite.emit('collision', eq.bj, eq.ni, eq.shapeB, eq.shapeA);
-                eq.bj.__sprite.emit('collision', eq.bi, eq.ni, eq.shapeA, eq.shapeB);
+                var evt = { bodyA: eq.bi, bodyB: eq.bj, shapeA: eq.shapeA, shapeB: eq.shapeB };
+                eq.bi.__sprite.emit('collision', evt);
+                eq.bj.__sprite.emit('collision', evt);
             }
+        }
+    },
+    onSeparate: function(event) {
+        event.bodyA.__sprite.emit('separate', event);
+        event.bodyB.__sprite.emit('separate', event);
     },
     /**
      * Creates a physics body for a sprite
