@@ -10,7 +10,7 @@ var Container = require('../display/Container'),
     Shake = require('../fx/camera/Shake'),
 
     inherit = require('../utils/inherit'),
-    math = require('../math/math'),
+    //math = require('../math/math'),
     Vector = require('../math/Vector'),
     C = require('../constants');
 
