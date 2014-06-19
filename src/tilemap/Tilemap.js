@@ -4,6 +4,7 @@ var Container = require('../display/Container'),
     Vector = require('../math/Vector'),
     Rectangle = require('../geom/Rectangle'),
     Tilelayer = require('./Tilelayer'),
+	IsoTilelayer = require('./IsoTilelayer'),
     Tileset = require('./Tileset'),
     utils = require('../utils/utils'),
     math = require('../math/math'),
@@ -129,6 +130,13 @@ var Tilemap = function(state, map, tilesetTextures) {
         this.size.x * this.scaledTileSize.x,
         this.size.y * this.scaledTileSize.y
     );
+	
+	if(map.orientation === 'isometric') { // store orientation constants
+		this.unitsPerPixel = new Vector(
+			(2.0) / map.tilewidth,
+			(2.0) / map.tileheight
+		);
+	}
 
     //create each tileset
     for(var t = 0, tl = map.tilesets.length; t < tl; ++t) {
@@ -142,7 +150,10 @@ var Tilemap = function(state, map, tilesetTextures) {
 
         switch(map.layers[i].type) {
         case 'tilelayer':
-            lyr = new Tilelayer(this, map.layers[i]);
+			if(this.orientation === 'isometric')
+				lyr = new IsoTilelayer(this, map.layers[i]);
+			else
+				lyr = new Tilelayer(this, map.layers[i]);
             break;
 
         case 'objectgroup':
