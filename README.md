@@ -5,7 +5,7 @@
 [![Bower version](https://badge.fury.io/bo/grapefruit.png)](http://badge.fury.io/bo/grapefruit)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
-### No Longer Supported. I now spend most of my time working with [Phaser](https://github.com/photonstorm/phaser).
+## No Longer Supported. I now spend most of my time working with [Phaser](https://github.com/photonstorm/phaser).
 
 The game engine that powers my remake of [lttp](https://github.com/englercj/lttp) and my original game [shiv](https://github.com/englercj/shiv).
 
